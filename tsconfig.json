@@ -19,7 +19,12 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/types": ["./types.ts"],
+      "@/types/*": ["./types.ts"],
+      "@/services.projectService": ["./services.projectService.ts"],
+      "@/services.wbsService": ["./services.wbsService.ts"],
+      "@/services/*": ["./services.*"]
     }
   },
   "include": [
