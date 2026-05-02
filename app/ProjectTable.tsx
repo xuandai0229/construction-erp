@@ -8,12 +8,16 @@ interface TableProps {
   projects: Project[];
   currentPage: number;
   itemsPerPage: number;
+  onEdit?: (project: Project) => void;
+  onDelete?: (id: string) => void;
 }
 
 export default function ProjectTable({
   projects,
   currentPage,
   itemsPerPage,
+  onEdit,
+  onDelete,
 }: TableProps) {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -62,6 +66,8 @@ export default function ProjectTable({
               key={project.id}
               project={project}
               rowNumber={startIndex + index + 1}
+              onEdit={onEdit}
+              onDelete={onDelete}
             />
           ))}
         </tbody>

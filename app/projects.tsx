@@ -7,6 +7,9 @@ import ProjectStats from './ProjectStats';
 import ProjectFilters from './ProjectFilters';
 import ProjectTable from './ProjectTable';
 import ProjectPagination from './ProjectPagination';
+import ProjectModal from './ProjectModal';
+import ConfirmDialog from './ConfirmDialog';
+import { exportProjectsToCSV } from './export';
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -19,6 +22,13 @@ export default function ProjectsPage() {
   const [investorFilter, setInvestorFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
+
+  const [showModal, setShowModal] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | undefined>();
+  const [deleteConfirm, setDeleteConfirm] = useState<{
+    isOpen: boolean;
+    projectId: string;
+  }>({ isOpen: false, projectId: '' });
 
   useEffect(() => {
     ProjectService.initializeData();
@@ -65,6 +75,46 @@ export default function ProjectsPage() {
     setCurrentPage(1);
   }, [projects, searchTerm, statusFilter, investorFilter, typeFilter, dateRange]);
 
+  const handleAddProject = () => {
+    setEditingProject(undefined);
+    setShowModal(true);
+  };
+
+  const handleEditProject = (project: Project) => {
+    setEditingProject(project);
+    setShowModal(true);
+  };
+
+  const handleSaveProject = (projectData: Omit<Project, 'id'> | Project) => {
+    if ('id' in projectData) {
+      // Update existing
+      const updated = ProjectService.updateProject(projectData.id, projectData);
+      if (updated) {
+        setProjects(ProjectService.getAllProjects());
+      }
+    } else {
+      // Create new
+      ProjectService.createProject(projectData);
+      setProjects(ProjectService.getAllProjects());
+    }
+    setShowModal(false);
+  };
+
+  const handleDeleteProject = (id: string) => {
+    setDeleteConfirm({ isOpen: true, projectId: id });
+  };
+
+  const confirmDelete = () => {
+    if (ProjectService.deleteProject(deleteConfirm.projectId)) {
+      setProjects(ProjectService.getAllProjects());
+    }
+    setDeleteConfirm({ isOpen: false, projectId: '' });
+  };
+
+  const handleExportCSV = () => {
+    exportProjectsToCSV(filteredProjects);
+  };
+
   const stats = ProjectService.getProjectStats();
   const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
 
@@ -85,6 +135,8 @@ export default function ProjectsPage() {
         onDateRangeChange={(start, end) =>
           setDateRange({ start, end })
         }
+        onAddProject={handleAddProject}
+        onExportCSV={handleExportCSV}
       />
 
       {/* Main content - Table */}
@@ -93,6 +145,8 @@ export default function ProjectsPage() {
           projects={filteredProjects}
           currentPage={currentPage}
           itemsPerPage={itemsPerPage}
+          onEdit={handleEditProject}
+          onDelete={handleDeleteProject}
         />
       </div>
 
@@ -104,6 +158,29 @@ export default function ProjectsPage() {
         totalItems={filteredProjects.length}
         onPageChange={setCurrentPage}
         onItemsPerPageChange={setItemsPerPage}
+      />
+
+      {/* Modal */}
+      <ProjectModal
+        isOpen={showModal}
+        project={editingProject}
+        onClose={() => {
+          setShowModal(false);
+          setEditingProject(undefined);
+        }}
+        onSave={handleSaveProject}
+      />
+
+      {/* Delete Confirm */}
+      <ConfirmDialog
+        isOpen={deleteConfirm.isOpen}
+        title="Xóa dự án"
+        message="Bạn có chắc chắn muốn xóa dự án này? Hành động này không thể hoàn tác."
+        confirmText="Xóa"
+        cancelText="Hủy"
+        isDangerous={true}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteConfirm({ isOpen: false, projectId: '' })}
       />
     </div>
   );

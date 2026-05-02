@@ -6,9 +6,16 @@ import { formatCurrency, formatDate } from './utils';
 interface ProjectRowProps {
   project: Project;
   rowNumber: number;
+  onEdit?: (project: Project) => void;
+  onDelete?: (id: string) => void;
 }
 
-export default function ProjectRow({ project, rowNumber }: ProjectRowProps) {
+export default function ProjectRow({
+  project,
+  rowNumber,
+  onEdit,
+  onDelete,
+}: ProjectRowProps) {
   const getStatusBadge = (status: string) => {
     const statusMap: { [key: string]: { bg: string; text: string; label: string } } = {
       active: {
@@ -96,7 +103,10 @@ export default function ProjectRow({ project, rowNumber }: ProjectRowProps) {
 
       <td className="py-4 px-4">
         <div className="flex items-center gap-1">
-          <button className="p-2 hover:bg-[#334155] rounded-lg transition-colors" title="Xem">
+          <button
+            className="p-2 hover:bg-[#334155] rounded-lg transition-colors"
+            title="Xem"
+          >
             <svg
               className="w-4 h-4 text-[#64748b] hover:text-[#e2e8f0]"
               fill="none"
@@ -118,7 +128,11 @@ export default function ProjectRow({ project, rowNumber }: ProjectRowProps) {
             </svg>
           </button>
 
-          <button className="p-2 hover:bg-[#334155] rounded-lg transition-colors" title="Chỉnh sửa">
+          <button
+            onClick={() => onEdit?.(project)}
+            className="p-2 hover:bg-[#334155] rounded-lg transition-colors"
+            title="Chỉnh sửa"
+          >
             <svg
               className="w-4 h-4 text-[#64748b] hover:text-[#e2e8f0]"
               fill="none"
@@ -135,7 +149,10 @@ export default function ProjectRow({ project, rowNumber }: ProjectRowProps) {
           </button>
 
           <div className="relative group">
-            <button className="p-2 hover:bg-[#334155] rounded-lg transition-colors" title="Thêm">
+            <button
+              className="p-2 hover:bg-[#334155] rounded-lg transition-colors"
+              title="Thêm"
+            >
               <svg
                 className="w-4 h-4 text-[#64748b] hover:text-[#e2e8f0]"
                 fill="none"
@@ -152,11 +169,17 @@ export default function ProjectRow({ project, rowNumber }: ProjectRowProps) {
             </button>
 
             <div className="absolute right-0 mt-1 w-40 bg-[#1e293b] border border-[#334155] rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-10">
-              <button className="w-full text-left px-4 py-2 text-[#cbd5e1] text-sm hover:bg-[#334155] first:rounded-t-lg transition-colors">
-                Xóa
+              <button
+                onClick={() => onEdit?.(project)}
+                className="w-full text-left px-4 py-2 text-[#cbd5e1] text-sm hover:bg-[#334155] first:rounded-t-lg transition-colors"
+              >
+                Chỉnh sửa
               </button>
-              <button className="w-full text-left px-4 py-2 text-[#cbd5e1] text-sm hover:bg-[#334155] transition-colors">
-                Sao chép
+              <button
+                onClick={() => onDelete?.(project.id)}
+                className="w-full text-left px-4 py-2 text-red-400 text-sm hover:bg-[#334155] transition-colors"
+              >
+                Xóa
               </button>
               <button className="w-full text-left px-4 py-2 text-[#cbd5e1] text-sm hover:bg-[#334155] last:rounded-b-lg transition-colors">
                 Tải xuống

@@ -8,6 +8,8 @@ interface FilterProps {
   onInvestorChange: (value: string) => void;
   onTypeChange: (value: string) => void;
   onDateRangeChange: (start: string, end: string) => void;
+  onAddProject?: () => void;
+  onExportCSV?: () => void;
 }
 
 export default function ProjectFilters({
@@ -16,6 +18,8 @@ export default function ProjectFilters({
   onInvestorChange,
   onTypeChange,
   onDateRangeChange,
+  onAddProject,
+  onExportCSV,
 }: FilterProps) {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -128,7 +132,10 @@ export default function ProjectFilters({
         </div>
 
         <div className="flex gap-2 ml-auto">
-          <button className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 transition-all flex items-center gap-2">
+          <button
+            onClick={onAddProject}
+            className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 transition-all flex items-center gap-2"
+          >
             <svg
               className="w-4 h-4"
               fill="none"
@@ -145,7 +152,10 @@ export default function ProjectFilters({
             Thêm dự án
           </button>
 
-          <button className="px-6 py-2 bg-[#0f172a] border border-[#334155] text-[#e2e8f0] rounded-lg font-medium hover:bg-[#1e293b] transition-all flex items-center gap-2">
+          <button
+            onClick={onExportCSV}
+            className="px-6 py-2 bg-[#0f172a] border border-[#334155] text-[#e2e8f0] rounded-lg font-medium hover:bg-[#1e293b] transition-all flex items-center gap-2"
+          >
             <svg
               className="w-4 h-4"
               fill="none"
