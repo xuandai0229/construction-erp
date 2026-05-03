@@ -1,8 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import { DashboardData, formatDate, formatVnd } from './dashboard-data';
+import AddCostModal from '@/app/components/modals/AddCostModal';
+import AddBudgetModal from '@/app/components/modals/AddBudgetModal';
 
-const statusLabel = {
+import { useERPStore } from '@/store/erpStore';
+
+const statusLabel: Record<string, string> = {
   planning: 'Lập kế hoạch',
   in_progress: 'Đang thi công',
   completed: 'Hoàn thành',
@@ -10,11 +15,51 @@ const statusLabel = {
 };
 
 export default function Header({ data }: { data: DashboardData }) {
+  const [showCostModal, setShowCostModal] = useState(false);
+  const [showBudgetModal, setShowBudgetModal] = useState(false);
+  const projects = useERPStore(state => state.projects);
+  const currentProjectId = useERPStore(state => state.currentProjectId);
+  const setCurrentProject = useERPStore(state => state.setCurrentProject);
+
   return (
+    <>
+    <AddCostModal isOpen={showCostModal} onClose={() => setShowCostModal(false)} />
+    <AddBudgetModal isOpen={showBudgetModal} onClose={() => setShowBudgetModal(false)} />
     <header className="sticky top-0 z-20 border-b border-slate-800 bg-[#020617]/95 backdrop-blur">
       <div className="flex h-[74px] items-center justify-between px-6">
-        <h1 className="text-[20px] font-bold tracking-wide text-slate-50">TỔNG QUAN DỰ ÁN</h1>
         <div className="flex items-center gap-4">
+          <h1 className="text-[20px] font-bold tracking-wide text-slate-50">TỔNG QUAN DỰ ÁN</h1>
+          <div className="h-6 w-px bg-slate-800" />
+          <select 
+            value={currentProjectId}
+            onChange={(e) => setCurrentProject(e.target.value)}
+            className="bg-transparent text-[14px] font-bold text-blue-400 outline-none cursor-pointer hover:text-blue-300"
+          >
+            {projects.map(p => (
+              <option key={p.id} value={p.id} className="bg-slate-900 text-slate-200">{p.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowCostModal(true)}
+            className="flex h-9 items-center gap-2 rounded-md bg-amber-600 px-3 text-sm font-semibold text-white transition-colors hover:bg-amber-500 active:scale-95"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Ghi nhận chi phí
+          </button>
+          <button
+            onClick={() => setShowBudgetModal(true)}
+            className="flex h-9 items-center gap-2 rounded-md bg-purple-600 px-3 text-sm font-semibold text-white transition-colors hover:bg-purple-500 active:scale-95"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Lập dự toán
+          </button>
+          <div className="h-5 w-px bg-slate-800" />
           <button className="flex h-9 items-center gap-2 rounded-md border border-slate-800 bg-slate-900 px-3 text-sm font-semibold text-slate-100">
             20/06/2024
             <svg viewBox="0 0 24 24" className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -63,6 +108,7 @@ export default function Header({ data }: { data: DashboardData }) {
         </div>
       </div>
     </header>
+    </>
   );
 }
 

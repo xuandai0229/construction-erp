@@ -9,15 +9,21 @@ import WBSTable from './WBSTable';
 import CostTable from './CostTable';
 import DebtPanel from './DebtPanel';
 import ProfitPanel from './ProfitPanel';
-import { DashboardData, loadDashboardData } from './dashboard-data';
+import { useERPStore } from '@/store/erpStore';
 
 export default function Dashboard() {
-  const [data, setData] = useState<DashboardData | null>(null);
+  const init = useERPStore(state => state.init);
+  const getDashboardData = useERPStore(state => state.getDashboardData);
+  const projects = useERPStore(state => state.projects);
+  const costs = useERPStore(state => state.costs);
+  const budgets = useERPStore(state => state.budgets);
+  const isInitialized = useERPStore(state => state.initialized);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setData(loadDashboardData()), 0);
-    return () => window.clearTimeout(timer);
-  }, []);
+    init();
+  }, [init]);
+
+  const data = isInitialized && projects.length > 0 ? getDashboardData() : null;
 
   if (!data) {
     return (
