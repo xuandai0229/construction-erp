@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { AuthProvider } from './components/auth/AuthProvider';
 
 export const metadata: Metadata = {
   title: 'Construction ERP - Quản lý dự án xây dựng',
@@ -13,7 +14,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" className="dark">
-      <body className="min-h-screen bg-[#020617] text-slate-100 antialiased">{children}</body>
+      <body className="min-h-screen bg-[#020617] text-slate-100 antialiased">
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   );
 }

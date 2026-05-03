@@ -1,10 +1,33 @@
 'use client';
 
-import { EnrichedWBSNode } from './types';
+import { EnrichedWBSNode, WBSItem } from '@/app/types';
+import { useERPStore } from '@/store/erpStore';
 
-export default function WBSRow({ node, onToggleExpand, index }: { node: EnrichedWBSNode, onToggleExpand: (id: string) => void, index: string }) {
+export default function WBSRow({ node, onToggleExpand, onEdit, index }: { node: EnrichedWBSNode, onToggleExpand: (id: string) => void, onEdit: (w: WBSItem) => void, index: string }) {
+  const deleteWBS = useERPStore(state => state.deleteWBS);
+  const currentProjectId = useERPStore(state => state.currentProjectId);
+  
   const isParent = node.children && node.children.length > 0;
   const isOverBudget = node.variance < 0; 
+
+  const handleEdit = () => {
+    // Reconstruct WBSItem from EnrichedWBSNode
+    const baseItem: WBSItem = {
+      id: node.id,
+      project_id: node.project_id,
+      name: node.name,
+      parent_id: node.parent_id,
+      created_at: node.created_at,
+      children: []
+    };
+    onEdit(baseItem);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm(`Bạn có chắc muốn xóa hạng mục "${node.name}" và toàn bộ hạng mục con?`)) {
+      deleteWBS(currentProjectId, node.id);
+    }
+  };
 
   const statusMap: Record<string, string> = {
     'Đang thi công': 'border-green-500/30 text-green-400 bg-green-500/10',
@@ -46,8 +69,8 @@ export default function WBSRow({ node, onToggleExpand, index }: { node: Enriched
         </td>
         <td className="px-5 py-3 text-right text-[13px] font-bold text-slate-300 border-r border-slate-800/50">{node.budget.toLocaleString()}</td>
         <td className="px-5 py-3 text-right text-[13px] font-bold text-slate-300 border-r border-slate-800/50">{node.actual.toLocaleString()}</td>
-        <td className={`px-5 py-3 text-right text-[13px] font-bold border-r border-slate-800/50 ${isOverBudget ? 'text-rose-400' : 'text-emerald-400'}`}>
-          {node.variance.toLocaleString()}
+        <td className={`px-5 py-3 text-right text-[13px] font-bold border-r border-slate-800/50 ${node.profit < 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
+          {node.profit.toLocaleString()}
         </td>
         <td className="px-5 py-3 w-32 border-r border-slate-800/50">
           <div className="flex items-center gap-2">
@@ -73,24 +96,30 @@ export default function WBSRow({ node, onToggleExpand, index }: { node: Enriched
                 <circle cx="12" cy="12" r="3" />
               </svg>
             </button>
-            <button className="flex h-7 w-7 items-center justify-center rounded border border-slate-700 bg-slate-800/80 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white" title="Chỉnh sửa">
+            <button 
+              onClick={handleEdit}
+              className="flex h-7 w-7 items-center justify-center rounded border border-slate-700 bg-slate-800/80 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white" 
+              title="Chỉnh sửa"
+            >
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M12 20h9" />
                 <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
               </svg>
             </button>
-            <button className="flex h-7 w-7 items-center justify-center rounded border border-slate-700 bg-slate-800/80 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white" title="Thêm thao tác">
+            <button 
+              onClick={handleDelete}
+              className="flex h-7 w-7 items-center justify-center rounded border border-red-900/30 bg-red-900/10 text-red-500 transition-colors hover:bg-red-900/30 hover:text-red-400" 
+              title="Xóa"
+            >
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="1" />
-                <circle cx="19" cy="12" r="1" />
-                <circle cx="5" cy="12" r="1" />
+                <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
               </svg>
             </button>
           </div>
         </td>
       </tr>
       {node.isExpanded && isParent && node.children.map((child, i) => (
-        <WBSRow key={child.id} node={child} onToggleExpand={onToggleExpand} index={node.level === 0 ? `${index}.${i + 1}` : `${index}.${i + 1}`} />
+        <WBSRow key={child.id} node={child} onToggleExpand={onToggleExpand} onEdit={onEdit} index={node.level === 0 ? `${index}.${i + 1}` : `${index}.${i + 1}`} />
       ))}
     </>
   );

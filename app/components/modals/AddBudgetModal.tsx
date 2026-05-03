@@ -41,7 +41,7 @@ export default function AddBudgetModal({ isOpen, onClose }: Props) {
     setError('');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.projectId) return setError('Vui lòng chọn dự án');
     if (!form.wbsId) return setError('Vui lòng chọn hạng mục WBS');
@@ -49,7 +49,7 @@ export default function AddBudgetModal({ isOpen, onClose }: Props) {
     if (!form.estimatedAmount || isNaN(amount) || amount <= 0) return setError('Dự toán phải là số dương');
 
     setLoading(true);
-    const res = addBudget(form.projectId, form.wbsId, form.costType, amount);
+    const res = await addBudget(form.projectId, form.wbsId, form.costType, amount);
     setLoading(false);
 
     if (res?.success) {

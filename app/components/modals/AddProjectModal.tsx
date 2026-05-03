@@ -1,12 +1,11 @@
-'use client';
-
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useERPStore } from '@/store/erpStore';
-import { ProjectStatus } from '@/app/types';
+import { Project, ProjectStatus } from '@/app/types';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  project?: Project | null;
 }
 
 const STATUS_OPTS: { value: ProjectStatus; label: string }[] = [
@@ -16,8 +15,9 @@ const STATUS_OPTS: { value: ProjectStatus; label: string }[] = [
   { value: 'on_hold', label: 'Tạm dừng' },
 ];
 
-export default function AddProjectModal({ isOpen, onClose }: Props) {
+export default function AddProjectModal({ isOpen, onClose, project }: Props) {
   const addProject = useERPStore(state => state.addProject);
+  const updateProject = useERPStore(state => state.updateProject);
 
   const [form, setForm] = useState({
     name: '',
@@ -29,6 +29,28 @@ export default function AddProjectModal({ isOpen, onClose }: Props) {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (project) {
+      setForm({
+        name: project.name,
+        investor: project.investor || '',
+        total_value: project.total_value.toString(),
+        status: project.status,
+        start_date: project.start_date?.split('T')[0] || '',
+        end_date: project.end_date?.split('T')[0] || '',
+      });
+    } else {
+      setForm({
+        name: '',
+        investor: '',
+        total_value: '',
+        status: 'in_progress',
+        start_date: '',
+        end_date: '',
+      });
+    }
+  }, [project, isOpen]);
 
   if (!isOpen) return null;
 
@@ -42,22 +64,33 @@ export default function AddProjectModal({ isOpen, onClose }: Props) {
     if (!form.name.trim()) return setError('Vui lòng nhập tên dự án');
     if (!form.investor.trim()) return setError('Vui lòng nhập chủ đầu tư');
     const totalValue = parseFloat(form.total_value.replace(/,/g, ''));
-    if (!form.total_value || isNaN(totalValue) || totalValue <= 0)
+    if (!form.total_value || isNaN(totalValue) || totalValue < 0)
       return setError('Vui lòng nhập giá trị hợp đồng hợp lệ');
 
     setLoading(true);
-    const res = addProject(
-      form.name.trim(),
-      form.investor.trim(),
-      totalValue,
-      form.status,
-      form.start_date || undefined,
-      form.end_date || undefined
-    );
+    let res;
+    if (project) {
+      res = await updateProject(project.id, {
+        name: form.name.trim(),
+        investor: form.investor.trim(),
+        total_value: totalValue,
+        status: form.status,
+        start_date: form.start_date || undefined,
+        end_date: form.end_date || undefined,
+      });
+    } else {
+      res = await addProject(
+        form.name.trim(),
+        form.investor.trim(),
+        totalValue,
+        form.status,
+        form.start_date || undefined,
+        form.end_date || undefined
+      );
+    }
     setLoading(false);
 
     if (res?.success) {
-      setForm({ name: '', investor: '', total_value: '', status: 'in_progress', start_date: '', end_date: '' });
       onClose();
     } else {
       setError(res?.error || 'Lỗi không xác định');
@@ -76,12 +109,12 @@ export default function AddProjectModal({ isOpen, onClose }: Props) {
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600/20 text-blue-400 ring-1 ring-blue-500/30">
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 5v14M5 12h14" />
+                {project ? <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /> : <path d="M12 5v14M5 12h14" />}
               </svg>
             </div>
             <div>
-              <h2 className="text-[15px] font-bold text-slate-100">Thêm dự án mới</h2>
-              <p className="text-xs text-slate-500">Điền thông tin để tạo dự án</p>
+              <h2 className="text-[15px] font-bold text-slate-100">{project ? 'Cập nhật dự án' : 'Thêm dự án mới'}</h2>
+              <p className="text-xs text-slate-500">{project ? 'Chỉnh sửa thông tin dự án' : 'Điền thông tin để tạo dự án'}</p>
             </div>
           </div>
           <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-800 hover:text-white transition-colors">
@@ -197,7 +230,7 @@ export default function AddProjectModal({ isOpen, onClose }: Props) {
                   <path d="M12 5v14M5 12h14" />
                 </svg>
               )}
-              Tạo dự án
+              {project ? 'Cập nhật' : 'Tạo dự án'}
             </button>
           </div>
         </form>

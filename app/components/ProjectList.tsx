@@ -33,9 +33,13 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
   const [totalValue, setTotalValue] = useState('');
   const [status, setStatus] = useState<ProjectStatus>('planning');
 
+  const fetchProjects = async () => {
+    const data = await projectService.getProjects();
+    setProjects(data);
+  };
+
   useEffect(() => {
-    projectService.initSampleData();
-    setProjects(projectService.getProjects());
+    fetchProjects();
   }, []);
 
   function resetForm() {
@@ -47,18 +51,18 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
     setShowForm(false);
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const value = totalValue ? parseFloat(totalValue.replace(/,/g, '')) : 0;
 
     if (editingId) {
-      projectService.updateProject(editingId, { name, investor, total_value: value, status });
+      await projectService.updateProject(editingId, { name, investor, total_value: value, status });
     } else {
-      projectService.addProject(name, investor, value, status);
+      await projectService.addProject(name, investor, value, status);
     }
 
     resetForm();
-    setProjects(projectService.getProjects());
+    await fetchProjects();
   }
 
   function handleEdit(project: Project) {
@@ -70,10 +74,10 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
     setShowForm(true);
   }
 
-  function handleDelete(id: string) {
+  async function handleDelete(id: string) {
     if (confirm('Bạn có chắc muốn xóa dự án này?')) {
-      projectService.deleteProject(id);
-      setProjects(projectService.getProjects());
+      await projectService.deleteProject(id);
+      await fetchProjects();
     }
   }
 

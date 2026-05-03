@@ -8,9 +8,10 @@ const menuItems = [
   { id: 'wbs', label: 'Hạng mục công trình (WBS)', href: '/wbs', icon: 'M12 3v5m-6 4h12M6 12v5m12-5v5M4 17h4v4H4zm8 0h4v4h-4zm8 0h-4v4h4z' },
   { id: 'budget', label: 'Dự toán', href: '/budget', icon: 'M7 3h10v18H7zM10 7h4M10 11h4M10 15h2' },
   { id: 'costs', label: 'Chi phí', href: '/costs', icon: 'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
+  { id: 'revenue', label: 'Doanh thu', href: '/revenue', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.407 2.63 1m-2.63-1c-.74 0-1.4.194-1.92.512m3.4 1.32a2.444 2.444 0 0 0-1.127-.043m-4.478 2.48c.56 1.05 1.76 1.75 3.208 1.75 1.11 0 2.08-.407 2.63-1m-2.63 1c-.74 0-1.4-.194-1.92-.512m3.4 1.32a2.444 2.444 0 0 0-1.127-.043' },
   { id: 'debt', label: 'Công nợ', href: '/debt', icon: 'M7 4h10a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V6a2 2 0 0 1 2-2zM10 9h4M10 13h4' },
-  { id: 'schedule', label: 'Tiến độ', href: '/schedule', icon: 'M12 6v6l4 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z' },
   { id: 'reports', label: 'Báo cáo', href: '/reports', icon: 'M5 19V5m0 14h14M9 16V9m4 7V7m4 9v-5' },
+  { id: 'system', label: 'Hệ thống', href: '/system', icon: 'M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83' },
 ];
 
 function IconPath({ path }: { path: string }) {

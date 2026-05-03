@@ -6,7 +6,9 @@ import WBSHeader from '@/app/components/wbs/WBSHeader';
 import WBSStats from '@/app/components/wbs/WBSStats';
 import WBSActions from '@/app/components/wbs/WBSActions';
 import WBSTable from '@/app/components/wbs/WBSTable';
-import { EnrichedWBSNode, useERPStore } from '@/store/erpStore';
+import { EnrichedWBSNode, WBSItem } from '@/app/types';
+import { useERPStore } from '@/store/erpStore';
+import AddWBSModal from '@/app/components/modals/AddWBSModal';
 
 export default function WBSListScreen() {
   const init = useERPStore(state => state.init);
@@ -15,8 +17,9 @@ export default function WBSListScreen() {
   const budgets = useERPStore(state => state.budgets);
   const costs = useERPStore(state => state.costs);
   const isInitialized = useERPStore(state => state.initialized);
-
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+  const [editingWBS, setEditingWBS] = useState<WBSItem | null>(null);
+  const [isAddingWBS, setIsAddingWBS] = useState(false);
 
   useEffect(() => {
     init();
@@ -67,16 +70,17 @@ export default function WBSListScreen() {
         <WBSHeader />
         <div className="p-6">
           <WBSStats 
-            totalItems={stats.totalItems > 156 ? stats.totalItems : 156} 
+            totalItems={stats.totalItems} 
             totalBudget={stats.totalBudget} 
             totalActual={stats.totalActual} 
             variance={stats.variance} 
             progress={stats.progress} 
           />
-          <WBSActions />
+          <WBSActions onAdd={() => setIsAddingWBS(true)} />
           <WBSTable 
             nodes={tree} 
             onToggleExpand={handleToggleExpand} 
+            onEdit={setEditingWBS}
             totalBudget={stats.totalBudget}
             totalActual={stats.totalActual}
             variance={stats.variance}
@@ -84,6 +88,12 @@ export default function WBSListScreen() {
           />
         </div>
       </main>
+
+      <AddWBSModal 
+        isOpen={isAddingWBS || !!editingWBS} 
+        onClose={() => { setIsAddingWBS(false); setEditingWBS(null); }} 
+        wbsItem={editingWBS} 
+      />
     </div>
   );
 }

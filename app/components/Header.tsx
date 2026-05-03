@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { DashboardData, formatDate, formatVnd } from './dashboard-data';
 import AddCostModal from '@/app/components/modals/AddCostModal';
 import AddBudgetModal from '@/app/components/modals/AddBudgetModal';
+import AddRevenueModal from '@/app/components/modals/AddRevenueModal';
+import AddInvoiceModal from '@/app/components/modals/AddInvoiceModal';
 
 import { useERPStore } from '@/store/erpStore';
 
@@ -14,17 +16,26 @@ const statusLabel: Record<string, string> = {
   on_hold: 'Tạm dừng',
 };
 
-export default function Header({ data }: { data: DashboardData }) {
+export default function Header({ data: propData }: { data?: DashboardData }) {
   const [showCostModal, setShowCostModal] = useState(false);
   const [showBudgetModal, setShowBudgetModal] = useState(false);
+  const [showRevenueModal, setShowRevenueModal] = useState(false);
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  
   const projects = useERPStore(state => state.projects);
   const currentProjectId = useERPStore(state => state.currentProjectId);
   const setCurrentProject = useERPStore(state => state.setCurrentProject);
+  const userRole = useERPStore(state => state.userRole);
+  const getDashboardData = useERPStore(state => state.getDashboardData);
+
+  const data = propData || getDashboardData();
 
   return (
     <>
     <AddCostModal isOpen={showCostModal} onClose={() => setShowCostModal(false)} />
     <AddBudgetModal isOpen={showBudgetModal} onClose={() => setShowBudgetModal(false)} />
+    <AddRevenueModal isOpen={showRevenueModal} onClose={() => setShowRevenueModal(false)} />
+    <AddInvoiceModal isOpen={showInvoiceModal} onClose={() => setShowInvoiceModal(false)} />
     <header className="sticky top-0 z-20 border-b border-slate-800 bg-[#020617]/95 backdrop-blur">
       <div className="flex h-[74px] items-center justify-between px-6">
         <div className="flex items-center gap-4">
@@ -40,7 +51,25 @@ export default function Header({ data }: { data: DashboardData }) {
             ))}
           </select>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowRevenueModal(true)}
+            className="flex h-9 items-center gap-2 rounded-md bg-green-600 px-3 text-sm font-semibold text-white transition-colors hover:bg-green-500 active:scale-95"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Doanh thu
+          </button>
+          <button
+            onClick={() => setShowInvoiceModal(true)}
+            className="flex h-9 items-center gap-2 rounded-md bg-blue-600 px-3 text-sm font-semibold text-white transition-colors hover:bg-blue-500 active:scale-95"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l5 5v11a2 2 0 0 1-2 2z" />
+            </svg>
+            Hóa đơn
+          </button>
           <button
             onClick={() => setShowCostModal(true)}
             className="flex h-9 items-center gap-2 rounded-md bg-amber-600 px-3 text-sm font-semibold text-white transition-colors hover:bg-amber-500 active:scale-95"
@@ -48,7 +77,7 @@ export default function Header({ data }: { data: DashboardData }) {
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 5v14M5 12h14" />
             </svg>
-            Ghi nhận chi phí
+            Chi phí
           </button>
           <button
             onClick={() => setShowBudgetModal(true)}
@@ -57,7 +86,7 @@ export default function Header({ data }: { data: DashboardData }) {
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 5v14M5 12h14" />
             </svg>
-            Lập dự toán
+            Dự toán
           </button>
           <div className="h-5 w-px bg-slate-800" />
           <button className="flex h-9 items-center gap-2 rounded-md border border-slate-800 bg-slate-900 px-3 text-sm font-semibold text-slate-100">
@@ -66,11 +95,28 @@ export default function Header({ data }: { data: DashboardData }) {
               <path d="M8 2v4M16 2v4M4 10h16M5 5h14v16H5z" />
             </svg>
           </button>
-          <div className="grid h-9 w-9 place-items-center rounded-full bg-blue-600 text-sm font-bold text-white">AD</div>
-          <div className="text-sm font-semibold text-slate-100">admin</div>
-          <svg viewBox="0 0 24 24" className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="m6 9 6 6 6-6" />
-          </svg>
+          <div className="grid h-9 w-9 place-items-center rounded-full bg-blue-600 text-sm font-bold text-white uppercase">
+            {useERPStore.getState().userRole.substring(0, 2)}
+          </div>
+          <div className="flex flex-col">
+            <div className="text-sm font-semibold text-slate-100">User</div>
+            <div className="text-[10px] font-bold uppercase text-blue-400 leading-none">
+              {userRole}
+            </div>
+          </div>
+          <button 
+            onClick={() => {
+              import('@/app/utils/supabase').then(({ supabase }) => {
+                supabase.auth.signOut().then(() => window.location.reload());
+              });
+            }}
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-red-500/10 hover:text-red-400 transition-colors"
+            title="Đăng xuất"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+            </svg>
+          </button>
         </div>
       </div>
 

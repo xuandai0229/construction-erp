@@ -8,12 +8,35 @@ export interface Project {
   id: string;
   name: string;
   investor: string;
-  total_value: number;
+  total_value: number; // Contract value
+  contract_value: number; // Redundant but good for domain clarity
+  signed_date?: string;
   status: ProjectStatus;
   start_date?: string;
   end_date?: string;
+  progress_status?: 'on_track' | 'delayed' | 'critical';
   created_at: string;
   updated_at?: string;
+}
+
+export interface MonthlyReport {
+  month: string; // YYYY-MM
+  revenue: number;
+  cost: number;
+  profit: number;
+  cash_in: number;
+  cash_out: number;
+  running_balance: number;
+}
+
+export interface AgingReportItem {
+  id: string;
+  type: 'receivable' | 'payable';
+  entity_name: string; // Supplier or Project name
+  amount: number;
+  date: string;
+  days_overdue: number;
+  category: '0-30' | '31-60' | '61-90' | '90+';
 }
 
 export interface WBSItem {
@@ -96,6 +119,73 @@ export interface CostSummaryByWBS {
 }
 
 // ============================================
+// REVENUE & ACCOUNTING TYPES
+// ============================================
+
+export type RevenueStatus = 'paid' | 'unpaid';
+
+export interface RevenueRecord {
+  id: string;
+  project_id: string;
+  wbs_id: string;
+  invoice_id?: string; // Linked invoice
+  amount: number;
+  date: string;
+  status: RevenueStatus;
+  description: string;
+  created_at: string;
+}
+
+export interface InvoiceRecord {
+  id: string;
+  project_id: string;
+  amount: number;
+  issued_date: string;
+  paid_amount: number;
+  remaining_amount: number;
+  status: 'draft' | 'issued' | 'paid' | 'overdue';
+  created_at: string;
+}
+
+export interface PaymentRecord {
+  id: string;
+  invoice_id: string;
+  project_id: string;
+  amount: number;
+  date: string;
+  description?: string;
+  created_at: string;
+}
+
+export type UserRole = 'admin' | 'accountant' | 'staff';
+
+export interface AccountingLock {
+  month: string; // YYYY-MM
+  locked_at: string;
+  locked_by: string;
+}
+
+export interface EnrichedWBSNode extends Omit<WBSTreeNode, 'children'> {
+  code: string;
+  budget: number;
+  actual: number;
+  revenue: number;
+  profit: number;
+  variance: number;
+  percentage: number;
+  status: string;
+  isExpanded: boolean;
+  children: EnrichedWBSNode[];
+}
+
+export interface DebtSummary {
+  receivable: number;
+  payable: number;
+  total_revenue: number;
+  overdue: number;
+}
+
+// ============================================
 // DATA LAYER RESPONSE TYPES
 // ============================================
 
@@ -123,7 +213,28 @@ export interface BudgetResponse {
   error?: string;
 }
 
-// Cost type labels
+export interface RevenueResponse {
+  success: boolean;
+  data?: RevenueRecord | RevenueRecord[];
+  error?: string;
+}
+
+export interface InvoiceResponse {
+  success: boolean;
+  data?: InvoiceRecord | InvoiceRecord[];
+  error?: string;
+}
+
+export interface PaymentResponse {
+  success: boolean;
+  data?: PaymentRecord | PaymentRecord[];
+  error?: string;
+}
+
+// ============================================
+// LABELS & CONSTANTS
+// ============================================
+
 export const COST_TYPE_LABELS: Record<CostType, string> = {
   material: 'Vật liệu',
   labor: 'Nhân công',
@@ -133,7 +244,6 @@ export const COST_TYPE_LABELS: Record<CostType, string> = {
   other: 'Chi phí khác',
 };
 
-// Cost status labels
 export const COST_STATUS_LABELS: Record<CostStatus, string> = {
   paid: 'Đã thanh toán',
   unpaid: 'Chưa thanh toán',

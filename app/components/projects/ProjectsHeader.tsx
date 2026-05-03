@@ -1,11 +1,20 @@
 'use client';
 
-export default function ProjectsHeader() {
+export default function ProjectsHeader({ onAdd }: { onAdd: () => void }) {
   return (
     <header className="sticky top-0 z-20 border-b border-slate-800 bg-[#020617]/95 px-6 py-4 backdrop-blur">
       <div className="flex items-center justify-between">
         <h1 className="text-[20px] font-bold uppercase tracking-wide text-slate-50">Dự án</h1>
         <div className="flex items-center gap-6">
+          <button 
+            onClick={onAdd}
+            className="flex h-9 items-center gap-2 rounded-md bg-blue-600 px-4 text-sm font-bold text-white shadow-lg shadow-blue-900/20 transition-all hover:bg-blue-500 hover:shadow-blue-900/40 active:scale-95"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            TẠO DỰ ÁN MỚI
+          </button>
           <div className="relative">
             <svg viewBox="0 0 24 24" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -13,7 +22,7 @@ export default function ProjectsHeader() {
             <input 
               type="text" 
               placeholder="Tìm kiếm dự án..." 
-              className="h-9 w-[280px] rounded-md border border-slate-800 bg-slate-900/50 pl-9 pr-4 text-sm text-slate-200 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="h-9 w-[240px] rounded-md border border-slate-800 bg-slate-900/50 pl-9 pr-4 text-sm text-slate-200 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
           <button className="flex h-9 items-center gap-2 rounded-md border border-slate-800 bg-slate-900/50 px-3 text-sm font-semibold text-slate-300 transition-colors hover:bg-slate-800 hover:text-white">

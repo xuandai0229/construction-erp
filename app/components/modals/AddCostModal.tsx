@@ -1,19 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useERPStore } from '@/store/erpStore';
-import { CostType, COST_TYPE_LABELS } from '@/app/types';
+import { CostType, COST_TYPE_LABELS, CostRecord } from '@/app/types';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  costRecord?: CostRecord | null;
 }
 
-export default function AddCostModal({ isOpen, onClose }: Props) {
+export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
   const projects = useERPStore(state => state.projects);
   const wbsItems = useERPStore(state => state.wbs);
   const currentProjectId = useERPStore(state => state.currentProjectId);
   const addCost = useERPStore(state => state.addCost);
+  const updateCost = useERPStore(state => state.updateCost);
   const setCurrentProject = useERPStore(state => state.setCurrentProject);
 
   const [form, setForm] = useState({
@@ -27,6 +29,30 @@ export default function AddCostModal({ isOpen, onClose }: Props) {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (costRecord) {
+      setForm({
+        projectId: costRecord.project_id,
+        wbsId: costRecord.wbs_id,
+        costType: costRecord.cost_type,
+        quantity: costRecord.quantity?.toString() || '',
+        unitPrice: costRecord.unit_price?.toString() || '',
+        note: costRecord.note || '',
+        date: costRecord.date.split('T')[0],
+      });
+    } else {
+      setForm({
+        projectId: currentProjectId || projects[0]?.id || '',
+        wbsId: '',
+        costType: 'material',
+        quantity: '',
+        unitPrice: '',
+        note: '',
+        date: new Date().toISOString().split('T')[0],
+      });
+    }
+  }, [costRecord, isOpen, currentProjectId, projects]);
 
   const amount = (parseFloat(form.quantity) || 0) * (parseFloat(form.unitPrice) || 0);
 
@@ -46,7 +72,7 @@ export default function AddCostModal({ isOpen, onClose }: Props) {
     setError('');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.projectId) return setError('Vui lòng chọn dự án');
     if (!form.wbsId) return setError('Vui lòng chọn hạng mục WBS');
@@ -56,11 +82,23 @@ export default function AddCostModal({ isOpen, onClose }: Props) {
     if (!form.unitPrice || isNaN(price) || price <= 0) return setError('Đơn giá phải là số dương');
 
     setLoading(true);
-    const res = addCost(form.projectId, form.wbsId, form.costType, amount, qty, price);
+    let res;
+    if (costRecord) {
+      res = await updateCost(form.projectId, costRecord.id, {
+        wbs_id: form.wbsId,
+        cost_type: form.costType,
+        amount: amount,
+        quantity: qty,
+        unit_price: price,
+        note: form.note,
+        date: form.date,
+      });
+    } else {
+      res = await addCost(form.projectId, form.wbsId, form.costType, amount, qty, price);
+    }
     setLoading(false);
 
     if (res?.success) {
-      setForm(prev => ({ ...prev, quantity: '', unitPrice: '', note: '', wbsId: '' }));
       onClose();
     } else {
       setError(res?.error || 'Lỗi không xác định');
@@ -76,12 +114,12 @@ export default function AddCostModal({ isOpen, onClose }: Props) {
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-600/20 text-amber-400 ring-1 ring-amber-500/30">
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                {costRecord ? <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /> : <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />}
               </svg>
             </div>
             <div>
-              <h2 className="text-[15px] font-bold text-slate-100">Ghi nhận chi phí</h2>
-              <p className="text-xs text-slate-500">Thêm phát sinh chi phí thực tế</p>
+              <h2 className="text-[15px] font-bold text-slate-100">{costRecord ? 'Cập nhật chi phí' : 'Ghi nhận chi phí'}</h2>
+              <p className="text-xs text-slate-500">{costRecord ? 'Chỉnh sửa bản ghi chi phí' : 'Thêm phát sinh chi phí thực tế'}</p>
             </div>
           </div>
           <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-800 hover:text-white transition-colors">
@@ -99,8 +137,9 @@ export default function AddCostModal({ isOpen, onClose }: Props) {
               <div className="relative">
                 <select
                   value={form.projectId}
+                  disabled={!!costRecord}
                   onChange={e => handleChange('projectId', e.target.value)}
-                  className="w-full h-9 appearance-none rounded-lg border border-slate-700 bg-slate-800/50 px-3 pr-7 text-sm text-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full h-9 appearance-none rounded-lg border border-slate-700 bg-slate-800/50 px-3 pr-7 text-sm text-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
                 >
                   <option value="">-- Chọn dự án --</option>
                   {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
@@ -224,7 +263,7 @@ export default function AddCostModal({ isOpen, onClose }: Props) {
                 ? <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
                 : <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14" /></svg>
               }
-              Ghi nhận chi phí
+              {costRecord ? 'Cập nhật' : 'Ghi nhận chi phí'}
             </button>
           </div>
         </form>

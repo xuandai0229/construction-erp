@@ -1,19 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useERPStore } from '@/store/erpStore';
-import { CostType, COST_TYPE_LABELS } from '@/app/types';
+import { WBSItem } from '@/app/types';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  wbsItem?: WBSItem | null;
 }
 
-export default function AddWBSModal({ isOpen, onClose }: Props) {
+export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
   const projects = useERPStore(state => state.projects);
   const currentProjectId = useERPStore(state => state.currentProjectId);
   const wbsItems = useERPStore(state => state.wbs);
   const addWBS = useERPStore(state => state.addWBS);
+  const updateWBS = useERPStore(state => state.updateWBS);
   const setCurrentProject = useERPStore(state => state.setCurrentProject);
 
   const [form, setForm] = useState({
@@ -23,6 +25,22 @@ export default function AddWBSModal({ isOpen, onClose }: Props) {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (wbsItem) {
+      setForm({
+        projectId: wbsItem.project_id,
+        name: wbsItem.name,
+        parentId: wbsItem.parent_id || '',
+      });
+    } else {
+      setForm({
+        projectId: currentProjectId || projects[0]?.id || '',
+        name: '',
+        parentId: '',
+      });
+    }
+  }, [wbsItem, isOpen, currentProjectId, projects]);
 
   if (!isOpen) return null;
 
@@ -35,20 +53,27 @@ export default function AddWBSModal({ isOpen, onClose }: Props) {
   };
 
   const parentOptions = wbsItems.filter(w =>
-    form.projectId ? w.project_id === form.projectId : true
+    (form.projectId ? w.project_id === form.projectId : true) && (wbsItem ? w.id !== wbsItem.id : true)
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.projectId) return setError('Vui lòng chọn dự án');
     if (!form.name.trim()) return setError('Vui lòng nhập tên hạng mục');
 
     setLoading(true);
-    const res = addWBS(form.projectId, form.name.trim(), form.parentId || null);
+    let res;
+    if (wbsItem) {
+      res = await updateWBS(form.projectId, wbsItem.id, {
+        name: form.name.trim(),
+        parent_id: form.parentId || null,
+      });
+    } else {
+      res = await addWBS(form.projectId, form.name.trim(), form.parentId || null);
+    }
     setLoading(false);
 
     if (res?.success) {
-      setForm(prev => ({ ...prev, name: '', parentId: '' }));
       onClose();
     } else {
       setError(res?.error || 'Lỗi không xác định');
@@ -64,12 +89,12 @@ export default function AddWBSModal({ isOpen, onClose }: Props) {
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600/20 text-emerald-400 ring-1 ring-emerald-500/30">
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 3v5m-6 4h12M6 12v5m12-5v5" />
+                {wbsItem ? <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /> : <path d="M12 3v5m-6 4h12M6 12v5m12-5v5" />}
               </svg>
             </div>
             <div>
-              <h2 className="text-[15px] font-bold text-slate-100">Thêm hạng mục WBS</h2>
-              <p className="text-xs text-slate-500">Tạo mục công trình mới</p>
+              <h2 className="text-[15px] font-bold text-slate-100">{wbsItem ? 'Cập nhật hạng mục' : 'Thêm hạng mục WBS'}</h2>
+              <p className="text-xs text-slate-500">{wbsItem ? 'Chỉnh sửa mục công trình' : 'Tạo mục công trình mới'}</p>
             </div>
           </div>
           <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-800 hover:text-white transition-colors">
@@ -86,8 +111,9 @@ export default function AddWBSModal({ isOpen, onClose }: Props) {
             <div className="relative">
               <select
                 value={form.projectId}
+                disabled={!!wbsItem}
                 onChange={e => handleChange('projectId', e.target.value)}
-                className="w-full h-9 appearance-none rounded-lg border border-slate-700 bg-slate-800/50 px-3 pr-8 text-sm text-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full h-9 appearance-none rounded-lg border border-slate-700 bg-slate-800/50 px-3 pr-8 text-sm text-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
               >
                 <option value="">-- Chọn dự án --</option>
                 {projects.map(p => (
@@ -153,7 +179,7 @@ export default function AddWBSModal({ isOpen, onClose }: Props) {
                 ? <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
                 : <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14" /></svg>
               }
-              Thêm hạng mục
+              {wbsItem ? 'Cập nhật' : 'Thêm hạng mục'}
             </button>
           </div>
         </form>

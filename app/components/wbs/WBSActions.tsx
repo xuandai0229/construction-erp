@@ -1,23 +1,17 @@
 'use client';
 
-import { useState } from 'react';
-import AddWBSModal from '@/app/components/modals/AddWBSModal';
-
-export default function WBSActions() {
-  const [showAddModal, setShowAddModal] = useState(false);
-
+export default function WBSActions({ onAdd }: { onAdd: () => void }) {
   return (
     <>
-    <AddWBSModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} />
     <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
       <div className="flex flex-wrap items-center gap-2">
-        <button onClick={() => setShowAddModal(true)} className="flex h-9 items-center gap-2 rounded bg-blue-600 px-3 text-[13px] font-semibold text-white shadow-sm shadow-blue-900/20 transition-all hover:bg-blue-500 active:scale-95">
+        <button onClick={onAdd} className="flex h-9 items-center gap-2 rounded bg-blue-600 px-3 text-[13px] font-semibold text-white shadow-sm shadow-blue-900/20 transition-all hover:bg-blue-500 active:scale-95">
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 5v14M5 12h14" />
           </svg>
           Thêm hạng mục
         </button>
-        <button onClick={() => setShowAddModal(true)} className="flex h-9 items-center gap-2 rounded border border-slate-700 bg-slate-800/80 px-3 text-[13px] font-semibold text-slate-300 transition-all hover:bg-slate-700 hover:text-white active:scale-95">
+        <button onClick={onAdd} className="flex h-9 items-center gap-2 rounded border border-slate-700 bg-slate-800/80 px-3 text-[13px] font-semibold text-slate-300 transition-all hover:bg-slate-700 hover:text-white active:scale-95">
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 5v14M5 12h14" />
           </svg>

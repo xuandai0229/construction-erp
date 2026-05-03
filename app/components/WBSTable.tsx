@@ -28,11 +28,12 @@ export default function WBSTable({ data }: { data: DashboardData }) {
         <table className="w-full table-fixed text-sm">
           <thead className="bg-slate-900 text-xs font-bold text-slate-300">
             <tr className="border-b border-slate-800">
-              <th className="w-[34%] px-4 py-3 text-left">Hạng mục</th>
-              <th className="w-[17%] px-4 py-3 text-right">Dự toán (VND)</th>
-              <th className="w-[17%] px-4 py-3 text-right">Thực tế (VND)</th>
-              <th className="w-[17%] px-4 py-3 text-right">Chênh lệch</th>
-              <th className="w-[15%] px-4 py-3 text-right">%</th>
+              <th className="w-[30%] px-4 py-3 text-left">Hạng mục</th>
+              <th className="w-[15%] px-4 py-3 text-right">Dự toán</th>
+              <th className="w-[15%] px-4 py-3 text-right">Thực tế</th>
+              <th className="w-[15%] px-4 py-3 text-right">Chênh lệch</th>
+              <th className="w-[15%] px-4 py-3 text-right">Lợi nhuận</th>
+              <th className="w-[10%] px-4 py-3 text-right">%</th>
             </tr>
           </thead>
           <tbody>
@@ -59,6 +60,7 @@ export default function WBSTable({ data }: { data: DashboardData }) {
                   <td className="px-4 py-2.5 text-right font-medium text-slate-100">{formatVnd(row.budget)}</td>
                   <td className="px-4 py-2.5 text-right font-medium text-slate-100">{formatVnd(row.actual)}</td>
                   <td className={`px-4 py-2.5 text-right font-extrabold ${variance >= 0 ? 'text-green-400' : 'text-red-400'}`}>{formatVnd(variance)}</td>
+                  <td className={`px-4 py-2.5 text-right font-extrabold ${row.profit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>{formatVnd(row.profit)}</td>
                   <td className="px-4 py-2.5 text-right font-extrabold text-slate-100">{percentage.toFixed(1)}%</td>
                 </tr>
               );
@@ -68,6 +70,7 @@ export default function WBSTable({ data }: { data: DashboardData }) {
               <td className="px-4 py-3 text-right">{formatVnd(totalBudget)}</td>
               <td className="px-4 py-3 text-right">{formatVnd(totalActual)}</td>
               <td className={`px-4 py-3 text-right ${totalVariance >= 0 ? 'text-green-400' : 'text-red-400'}`}>{formatVnd(totalVariance)}</td>
+              <td className={`px-4 py-3 text-right font-bold ${data.revenue - totalActual >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>{formatVnd(data.revenue - totalActual)}</td>
               <td className="px-4 py-3 text-right">{totalBudget > 0 ? ((totalActual / totalBudget) * 100).toFixed(1) : '0'}%</td>
             </tr>
           </tbody>

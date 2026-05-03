@@ -1,18 +1,19 @@
 'use client';
 
-import { EnrichedWBSNode } from './types';
+import { EnrichedWBSNode, WBSItem } from '@/app/types';
 import WBSRow from './WBSRow';
 
 interface WBSTableProps {
   nodes: EnrichedWBSNode[];
   onToggleExpand: (id: string) => void;
+  onEdit: (w: WBSItem) => void;
   totalBudget: number;
   totalActual: number;
   variance: number;
   progress: number;
 }
 
-export default function WBSTable({ nodes, onToggleExpand, totalBudget, totalActual, variance, progress }: WBSTableProps) {
+export default function WBSTable({ nodes, onToggleExpand, onEdit, totalBudget, totalActual, variance, progress }: WBSTableProps) {
   return (
     <div className="mt-6 rounded-xl border border-slate-800 bg-slate-900/40 shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
@@ -27,7 +28,7 @@ export default function WBSTable({ nodes, onToggleExpand, totalBudget, totalActu
               <th className="px-5 py-4 border-r border-slate-800">Tên hạng mục</th>
               <th className="px-5 py-4 text-right border-r border-slate-800">Dự toán (VND)</th>
               <th className="px-5 py-4 text-right border-r border-slate-800">Chi phí thực tế (VND)</th>
-              <th className="px-5 py-4 text-right border-r border-slate-800">Chênh lệch (VND)</th>
+              <th className="px-5 py-4 text-right border-r border-slate-800">Lợi nhuận (VND)</th>
               <th className="px-5 py-4 text-center w-36 border-r border-slate-800">% HT</th>
               <th className="px-5 py-4 text-center border-r border-slate-800">Trạng thái</th>
               <th className="px-5 py-4 text-center w-32">Thao tác</th>
@@ -35,7 +36,7 @@ export default function WBSTable({ nodes, onToggleExpand, totalBudget, totalActu
           </thead>
           <tbody className="divide-y divide-slate-800/60">
             {nodes.map((node, index) => (
-              <WBSRow key={node.id} node={node} onToggleExpand={onToggleExpand} index={(index + 1).toString()} />
+              <WBSRow key={node.id} node={node} onToggleExpand={onToggleExpand} onEdit={onEdit} index={(index + 1).toString()} />
             ))}
             {nodes.length === 0 && (
               <tr>
@@ -58,6 +59,9 @@ export default function WBSTable({ nodes, onToggleExpand, totalBudget, totalActu
               </td>
               <td className={`px-5 py-4 text-right text-[14px] font-black border-r border-slate-800 ${variance < 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
                 {variance.toLocaleString()}
+              </td>
+              <td className="px-5 py-4 text-right text-[14px] font-black text-blue-400 border-r border-slate-800">
+                {(totalBudget - totalActual).toLocaleString()}
               </td>
               <td className="px-5 py-4 text-center border-r border-slate-800">
                 <div className="flex items-center gap-2">

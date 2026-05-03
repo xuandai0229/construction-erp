@@ -1,178 +1,111 @@
 // ============================================
-// PROJECT SERVICE - DATA LAYER
-// Uses localStorage for temporary storage
-// Architecture ready for Supabase switch
+// PROJECT SERVICE - SUPABASE DATA LAYER
 // ============================================
 
 import { Project, ProjectResponse, ProjectStatus } from '@/app/types';
-
-// Storage key
-const PROJECTS_KEY = 'construction_erp_projects';
+import { supabase } from '@/app/utils/supabase';
 
 /**
- * Generate unique ID
+ * Get all projects from Supabase
  */
-function generateId(): string {
-  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-}
+export async function getProjects(): Promise<Project[]> {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .order('created_at', { ascending: false });
 
-/**
- * Get all projects from storage
- */
-export function getProjects(): Project[] {
-  if (typeof window === 'undefined') return [];
-  const data = localStorage.getItem(PROJECTS_KEY);
-  if (!data) return [];
-  try {
-    return JSON.parse(data);
-  } catch {
+  if (error) {
+    console.error('Error fetching projects:', error);
     return [];
   }
+  return data as Project[];
 }
 
 /**
  * Get a single project by ID
  */
-export function getProject(id: string): Project | null {
-  const projects = getProjects();
-  return projects.find(p => p.id === id) || null;
+export async function getProject(id: string): Promise<Project | null> {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.error('Error fetching project:', error);
+    return null;
+  }
+  return data as Project;
 }
 
 /**
  * Add a new project
  */
-export function addProject(
+export async function addProject(
   name: string,
   investor: string = '',
-  total_value: number = 0,
+  contract_value: number = 0,
   status: ProjectStatus = 'planning'
-): ProjectResponse {
-  try {
-    const projects = getProjects();
-    
-    const newProject: Project = {
-      id: generateId(),
-      name,
-      investor,
-      total_value,
-      status,
-      created_at: new Date().toISOString(),
-    };
+): Promise<ProjectResponse> {
+  const { data, error } = await supabase
+    .from('projects')
+    .insert([
+      {
+        name,
+        investor,
+        total_value: contract_value,
+        status
+      }
+    ])
+    .select()
+    .single();
 
-    projects.push(newProject);
-    localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects));
-
-    return {
-      success: true,
-      data: newProject,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-    };
+  if (error) {
+    return { success: false, error: error.message };
   }
+
+  return {
+    success: true,
+    data: data as Project,
+  };
 }
 
 /**
  * Update an existing project
  */
-export function updateProject(
+export async function updateProject(
   id: string,
   updates: Partial<Omit<Project, 'id' | 'created_at'>>
-): ProjectResponse {
-  try {
-    const projects = getProjects();
-    const index = projects.findIndex(p => p.id === id);
+): Promise<ProjectResponse> {
+  const { data, error } = await supabase
+    .from('projects')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
 
-    if (index === -1) {
-      return {
-        success: false,
-        error: 'Project not found',
-      };
-    }
-
-    projects[index] = {
-      ...projects[index],
-      ...updates,
-      updated_at: new Date().toISOString(),
-    };
-
-    localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects));
-
-    return {
-      success: true,
-      data: projects[index],
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-    };
+  if (error) {
+    return { success: false, error: error.message };
   }
+
+  return {
+    success: true,
+    data: data as Project,
+  };
 }
 
 /**
  * Delete a project
  */
-export function deleteProject(id: string): ProjectResponse {
-  try {
-    const projects = getProjects();
-    const filtered = projects.filter(p => p.id !== id);
+export async function deleteProject(id: string): Promise<ProjectResponse> {
+  const { error } = await supabase
+    .from('projects')
+    .delete()
+    .eq('id', id);
 
-    if (filtered.length === projects.length) {
-      return {
-        success: false,
-        error: 'Project not found',
-      };
-    }
-
-    localStorage.setItem(PROJECTS_KEY, JSON.stringify(filtered));
-
-    return {
-      success: true,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-    };
+  if (error) {
+    return { success: false, error: error.message };
   }
-}
 
-/**
- * Initialize sample data (for demo purposes)
- */
-export function initSampleData(): void {
-  const existing = getProjects();
-  if (existing.length > 0) return;
-
-  const sampleProjects: Project[] = [
-    {
-      id: 'proj-1',
-      name: 'Tòa nhà văn phòng HP',
-      investor: 'Công ty HP Việt Nam',
-      total_value: 50000000000,
-      status: 'in_progress',
-      created_at: '2024-01-15T08:00:00Z',
-    },
-    {
-      id: 'proj-2',
-      name: 'Căn hộ cao cấp Sunrise',
-      investor: 'Công ty BĐS Sunrise',
-      total_value: 120000000000,
-      status: 'planning',
-      created_at: '2024-02-01T10:00:00Z',
-    },
-    {
-      id: 'proj-3',
-      name: 'Nhà máy sản xuất ABC',
-      investor: 'Tập đoàn ABC',
-      total_value: 80000000000,
-      status: 'completed',
-      created_at: '2023-11-20T14:00:00Z',
-    },
-  ];
-
-  localStorage.setItem(PROJECTS_KEY, JSON.stringify(sampleProjects));
+  return { success: true };
 }

@@ -10,6 +10,8 @@ import CostTable from './CostTable';
 import DebtPanel from './DebtPanel';
 import ProfitPanel from './ProfitPanel';
 import { useERPStore } from '@/store/erpStore';
+import AddCostModal from './modals/AddCostModal';
+import { CostRecord } from '../types';
 
 export default function Dashboard() {
   const init = useERPStore(state => state.init);
@@ -24,6 +26,7 @@ export default function Dashboard() {
   }, [init]);
 
   const data = isInitialized && projects.length > 0 ? getDashboardData() : null;
+  const [editingCost, setEditingCost] = useState<CostRecord | null>(null);
 
   if (!data) {
     return (
@@ -47,7 +50,7 @@ export default function Dashboard() {
           <div className="grid grid-cols-[1.05fr_1.25fr] gap-4">
             <WBSTable data={data} />
             <div className="space-y-4">
-              <CostTable data={data} />
+              <CostTable data={data} onEdit={setEditingCost} />
               <div className="grid grid-cols-[1.05fr_.95fr] gap-4">
                 <DebtPanel data={data} />
                 <ProfitPanel data={data} />
@@ -57,6 +60,12 @@ export default function Dashboard() {
           <footer className="py-2 text-center text-xs text-slate-500">© 2024 Construction ERP. All rights reserved.</footer>
         </div>
       </main>
+
+      <AddCostModal 
+        isOpen={!!editingCost} 
+        onClose={() => setEditingCost(null)} 
+        costRecord={editingCost} 
+      />
     </div>
   );
 }

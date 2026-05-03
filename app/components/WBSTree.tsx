@@ -21,24 +21,33 @@ export default function WBSTree({ projectId }: WBSTreeProps) {
   const [parentIdForNew, setParentIdForNew] = useState<string | null>(null);
 
   useEffect(() => {
-    projectService.initSampleData();
-    const data = projectService.getProjects();
-    setProjects(data);
-    if (data.length > 0 && projectId) {
-      setSelectedProjectId(projectId);
-    } else if (data.length > 0) {
-      setSelectedProjectId(data[0].id);
-    }
+    const fetchProjects = async () => {
+      const data = await projectService.getProjects();
+      setProjects(data);
+      if (data.length > 0) {
+        if (projectId && data.some(p => p.id === projectId)) {
+          setSelectedProjectId(projectId);
+        } else {
+          setSelectedProjectId(data[0].id);
+        }
+      }
+    };
+    fetchProjects();
   }, [projectId]);
 
-  const loadWBS = useCallback(() => {
+  const loadWBS = useCallback(async () => {
     if (selectedProjectId) {
-      wbsService.initSampleWBS(selectedProjectId);
-      const treeData = wbsService.buildWBSTree(selectedProjectId);
+      const items = await wbsService.getWBS(selectedProjectId);
+      const treeData = wbsService.buildWBSTree(items);
       setTree(treeData);
-      const expanded = new Set<string>();
-      treeData.forEach(node => expanded.add(node.id));
-      setExpandedNodes(expanded);
+      
+      setExpandedNodes(prev => {
+        const next = new Set(prev);
+        if (next.size === 0) {
+          treeData.forEach(node => next.add(node.id));
+        }
+        return next;
+      });
     }
   }, [selectedProjectId]);
 
@@ -82,38 +91,38 @@ export default function WBSTree({ projectId }: WBSTreeProps) {
     setShowForm(true);
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!selectedProjectId) return;
 
     if (editingId) {
-      wbsService.updateWBS(selectedProjectId, editingId, { name: wbsName });
+      await wbsService.updateWBS(selectedProjectId, editingId, { name: wbsName });
     } else {
-      wbsService.addWBS(selectedProjectId, wbsName, parentIdForNew);
+      await wbsService.addWBS(selectedProjectId, wbsName, parentIdForNew);
     }
 
     resetForm();
-    loadWBS();
+    await loadWBS();
     if (parentIdForNew) {
       setExpandedNodes(prev => new Set([...prev, parentIdForNew]));
     }
   }
 
-  function handleDelete(projectId: string, wbsId: string) {
+  async function handleDelete(projId: string, wbsId: string) {
     if (confirm('Xóa hạng mục này và tất cả hạng mục con?')) {
-      wbsService.deleteWBS(projectId, wbsId);
-      loadWBS();
+      await wbsService.deleteWBS(projId, wbsId);
+      await loadWBS();
     }
   }
 
-  function renderNode(node: WBSTreeNode, projectId: string): React.ReactNode {
-    const hasChildren = node.children.length > 0;
+  function renderNode(node: WBSTreeNode, projId: string): React.ReactNode {
+    const hasChildren = node.children && node.children.length > 0;
     const isExpanded = expandedNodes.has(node.id);
     const indent = node.level * 24;
 
     return (
       <div key={node.id}>
-        <div className="flex items-center gap-2 py-2 px-3 hover:bg-slate-800 rounded" style={{ paddingLeft: `${indent + 12}px` }}>
+        <div className="flex items-center gap-2 py-2 px-3 hover:bg-slate-800 rounded group" style={{ paddingLeft: `${indent + 12}px` }}>
           {hasChildren ? (
             <button onClick={() => toggleExpand(node.id)} className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white">
               {isExpanded ? '▼' : '▶'}
@@ -123,13 +132,13 @@ export default function WBSTree({ projectId }: WBSTreeProps) {
             {hasChildren && isExpanded ? '├' : '└'}
           </span>
           <span className="flex-1 text-white">{node.name}</span>
-          <div className="flex gap-1 opacity-0 group-hover:opacity-100">
+          <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <button onClick={() => handleAddChild(node.id)} className="px-2 py-1 text-xs bg-green-600/20 text-green-400 rounded hover:bg-green-600/30">+</button>
             <button onClick={() => handleEdit(node)} className="px-2 py-1 text-xs bg-slate-600/20 text-slate-400 rounded hover:bg-slate-600/30">✎</button>
-            <button onClick={() => handleDelete(projectId, node.id)} className="px-2 py-1 text-xs bg-red-600/20 text-red-400 rounded hover:bg-red-600/30">×</button>
+            <button onClick={() => handleDelete(projId, node.id)} className="px-2 py-1 text-xs bg-red-600/20 text-red-400 rounded hover:bg-red-600/30">×</button>
           </div>
         </div>
-        {hasChildren && isExpanded && <div>{node.children.map(child => renderNode(child as WBSTreeNode, projectId))}</div>}
+        {hasChildren && isExpanded && <div>{node.children.map(child => renderNode(child as WBSTreeNode, projId))}</div>}
       </div>
     );
   }
