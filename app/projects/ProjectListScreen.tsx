@@ -32,7 +32,10 @@ export default function ProjectListScreen() {
       <div className="flex min-h-screen bg-[#020617]">
         <Sidebar activeItem="projects" />
         <main className="ml-[258px] flex-1 grid place-items-center">
-           <div className="rounded-lg border border-slate-800 bg-slate-900 px-6 py-4 text-sm font-semibold text-slate-300">Đang tải dữ liệu dự án...</div>
+          <div className="flex flex-col items-center gap-4">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+            <div className="text-sm font-medium text-slate-400">Đang tải dữ liệu...</div>
+          </div>
         </main>
       </div>
     );

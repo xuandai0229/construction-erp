@@ -1,9 +1,9 @@
 'use client';
 /* eslint-disable react-hooks/set-state-in-effect, react/no-unescaped-entities */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Project, ProjectStatus } from '@/app/types';
-import * as projectService from '@/app/services/project.service';
+import { useERPStore } from '@/store/erpStore';
 
 interface ProjectListProps {
   onSelectProject?: (project: Project) => void;
@@ -24,7 +24,11 @@ const statusColors: Record<ProjectStatus, string> = {
 };
 
 export default function ProjectList({ onSelectProject }: ProjectListProps) {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const projects = useERPStore(state => state.projects);
+  const addProject = useERPStore(state => state.addProject);
+  const updateProject = useERPStore(state => state.updateProject);
+  const deleteProject = useERPStore(state => state.deleteProject);
+  
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   
@@ -32,15 +36,6 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
   const [investor, setInvestor] = useState('');
   const [totalValue, setTotalValue] = useState('');
   const [status, setStatus] = useState<ProjectStatus>('planning');
-
-  const fetchProjects = async () => {
-    const data = await projectService.getProjects();
-    setProjects(data);
-  };
-
-  useEffect(() => {
-    fetchProjects();
-  }, []);
 
   function resetForm() {
     setName('');
@@ -56,13 +51,12 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
     const value = totalValue ? parseFloat(totalValue.replace(/,/g, '')) : 0;
 
     if (editingId) {
-      await projectService.updateProject(editingId, { name, investor, total_value: value, status });
+      await updateProject(editingId, { name, investor, total_value: value, status });
     } else {
-      await projectService.addProject(name, investor, value, status);
+      await addProject(name, investor, value, status);
     }
 
     resetForm();
-    await fetchProjects();
   }
 
   function handleEdit(project: Project) {
@@ -76,8 +70,7 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
 
   async function handleDelete(id: string) {
     if (confirm('Bạn có chắc muốn xóa dự án này?')) {
-      await projectService.deleteProject(id);
-      await fetchProjects();
+      await deleteProject(id);
     }
   }
 

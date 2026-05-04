@@ -1,30 +1,31 @@
-// ============================================
-// PROJECT SERVICE - SUPABASE DATA LAYER
-// ============================================
-
-import { Project, ProjectResponse, ProjectStatus } from '@/app/types';
-import { supabase } from '@/app/utils/supabase';
+"use server";
+import { Project, ProjectResponse, ProjectStatus, ServiceResponse } from '@/app/types';
+import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
 
 /**
  * Get all projects from Supabase
  */
-export async function getProjects(): Promise<Project[]> {
+export async function getProjects(): Promise<ServiceResponse<Project[]>> {
+  console.log('[DEBUG] getProjects running on server. Client URL:', (supabase as any).supabaseUrl);
+  // @ts-ignore
+  console.log('[DEBUG] Client Key starts with:', (supabase as any).supabaseKey?.substring(0, 10));
+  
   const { data, error } = await supabase
     .from('projects')
     .select('*')
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Error fetching projects:', error);
-    return [];
+    console.error('[SERVICE ERROR] getProjects:', error.message);
+    return { success: false, error: error.message };
   }
-  return data as Project[];
+  return { success: true, data: data as Project[] || [] };
 }
 
 /**
  * Get a single project by ID
  */
-export async function getProject(id: string): Promise<Project | null> {
+export async function getProject(id: string): Promise<ServiceResponse<Project>> {
   const { data, error } = await supabase
     .from('projects')
     .select('*')
@@ -32,10 +33,10 @@ export async function getProject(id: string): Promise<Project | null> {
     .single();
 
   if (error) {
-    console.error('Error fetching project:', error);
-    return null;
+    console.error('[SERVICE ERROR] getProject:', error.message);
+    return { success: false, error: error.message };
   }
-  return data as Project;
+  return { success: true, data: data as Project };
 }
 
 /**
@@ -46,7 +47,7 @@ export async function addProject(
   investor: string = '',
   contract_value: number = 0,
   status: ProjectStatus = 'planning'
-): Promise<ProjectResponse> {
+): Promise<ServiceResponse<Project>> {
   const { data, error } = await supabase
     .from('projects')
     .insert([
@@ -61,6 +62,7 @@ export async function addProject(
     .single();
 
   if (error) {
+    console.error('[SERVICE ERROR] addProject:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -76,7 +78,7 @@ export async function addProject(
 export async function updateProject(
   id: string,
   updates: Partial<Omit<Project, 'id' | 'created_at'>>
-): Promise<ProjectResponse> {
+): Promise<ServiceResponse<Project>> {
   const { data, error } = await supabase
     .from('projects')
     .update(updates)
@@ -85,6 +87,7 @@ export async function updateProject(
     .single();
 
   if (error) {
+    console.error('[SERVICE ERROR] updateProject:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -97,13 +100,14 @@ export async function updateProject(
 /**
  * Delete a project
  */
-export async function deleteProject(id: string): Promise<ProjectResponse> {
+export async function deleteProject(id: string): Promise<ServiceResponse<void>> {
   const { error } = await supabase
     .from('projects')
     .delete()
     .eq('id', id);
 
   if (error) {
+    console.error('[SERVICE ERROR] deleteProject:', error.message);
     return { success: false, error: error.message };
   }
 

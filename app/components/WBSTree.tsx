@@ -1,19 +1,26 @@
 'use client';
 /* eslint-disable react-hooks/set-state-in-effect, react/no-unescaped-entities */
 
-import { useState, useEffect, useCallback } from 'react';
-import { Project, WBSItem, WBSTreeNode } from '@/app/types';
-import * as wbsService from '@/app/services/wbs.service';
-import * as projectService from '@/app/services/project.service';
+import { useState, useEffect, useMemo } from 'react';
+import { WBSItem, WBSTreeNode } from '@/app/types';
+import { useERPStore } from '@/store/erpStore';
+import { buildWBSTree } from '@/app/utils/wbs.utils';
 
 interface WBSTreeProps {
   projectId?: string;
 }
 
 export default function WBSTree({ projectId }: WBSTreeProps) {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('');
-  const [tree, setTree] = useState<WBSTreeNode[]>([]);
+  const projects = useERPStore(state => state.projects);
+  const currentProjectId = useERPStore(state => state.currentProjectId);
+  const setCurrentProject = useERPStore(state => state.setCurrentProject);
+  const wbs = useERPStore(state => state.wbs);
+  
+  const addWBS = useERPStore(state => state.addWBS);
+  const updateWBS = useERPStore(state => state.updateWBS);
+  const deleteWBS = useERPStore(state => state.deleteWBS);
+
+  const [selectedProjectId, setSelectedProjectId] = useState<string>(projectId || currentProjectId || '');
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -21,39 +28,28 @@ export default function WBSTree({ projectId }: WBSTreeProps) {
   const [parentIdForNew, setParentIdForNew] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const data = await projectService.getProjects();
-      setProjects(data);
-      if (data.length > 0) {
-        if (projectId && data.some(p => p.id === projectId)) {
-          setSelectedProjectId(projectId);
-        } else {
-          setSelectedProjectId(data[0].id);
-        }
-      }
-    };
-    fetchProjects();
+    if (projectId) {
+      setSelectedProjectId(projectId);
+    }
   }, [projectId]);
 
-  const loadWBS = useCallback(async () => {
-    if (selectedProjectId) {
-      const items = await wbsService.getWBS(selectedProjectId);
-      const treeData = wbsService.buildWBSTree(items);
-      setTree(treeData);
-      
-      setExpandedNodes(prev => {
-        const next = new Set(prev);
-        if (next.size === 0) {
-          treeData.forEach(node => next.add(node.id));
-        }
-        return next;
-      });
+  useEffect(() => {
+    if (selectedProjectId && selectedProjectId !== currentProjectId) {
+      setCurrentProject(selectedProjectId);
     }
-  }, [selectedProjectId]);
+  }, [selectedProjectId, currentProjectId, setCurrentProject]);
+
+  const tree = useMemo(() => {
+    return buildWBSTree(wbs);
+  }, [wbs]);
 
   useEffect(() => {
-    loadWBS();
-  }, [loadWBS]);
+    if (tree.length > 0 && expandedNodes.size === 0) {
+      const next = new Set<string>();
+      tree.forEach(node => next.add(node.id));
+      setExpandedNodes(next);
+    }
+  }, [tree, expandedNodes.size]);
 
   function toggleExpand(nodeId: string) {
     setExpandedNodes(prev => {
@@ -96,13 +92,12 @@ export default function WBSTree({ projectId }: WBSTreeProps) {
     if (!selectedProjectId) return;
 
     if (editingId) {
-      await wbsService.updateWBS(selectedProjectId, editingId, { name: wbsName });
+      await updateWBS(selectedProjectId, editingId, { name: wbsName });
     } else {
-      await wbsService.addWBS(selectedProjectId, wbsName, parentIdForNew);
+      await addWBS(selectedProjectId, wbsName, parentIdForNew);
     }
 
     resetForm();
-    await loadWBS();
     if (parentIdForNew) {
       setExpandedNodes(prev => new Set([...prev, parentIdForNew]));
     }
@@ -110,8 +105,7 @@ export default function WBSTree({ projectId }: WBSTreeProps) {
 
   async function handleDelete(projId: string, wbsId: string) {
     if (confirm('Xóa hạng mục này và tất cả hạng mục con?')) {
-      await wbsService.deleteWBS(projId, wbsId);
-      await loadWBS();
+      await deleteWBS(projId, wbsId);
     }
   }
 

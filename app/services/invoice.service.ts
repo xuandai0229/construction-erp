@@ -1,14 +1,12 @@
-// ============================================
-// INVOICE SERVICE - SUPABASE DATA LAYER
-// ============================================
+"use server";
 
-import { InvoiceRecord, InvoiceResponse } from '@/app/types';
-import { supabase } from '@/app/utils/supabase';
+import { InvoiceRecord, InvoiceResponse, ServiceResponse } from '@/app/types';
+import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
 
 /**
  * Get all invoices for a project from Supabase
  */
-export async function getInvoices(projectId: string): Promise<InvoiceRecord[]> {
+export async function getInvoices(projectId: string): Promise<ServiceResponse<InvoiceRecord[]>> {
   const { data, error } = await supabase
     .from('invoices')
     .select('*')
@@ -16,10 +14,10 @@ export async function getInvoices(projectId: string): Promise<InvoiceRecord[]> {
     .order('issued_date', { ascending: false });
 
   if (error) {
-    console.error('Error fetching invoices:', error);
-    return [];
+    console.error('[SERVICE ERROR] getInvoices:', error.message);
+    return { success: false, error: error.message };
   }
-  return data as InvoiceRecord[];
+  return { success: true, data: data as InvoiceRecord[] || [] };
 }
 
 /**
@@ -29,7 +27,7 @@ export async function addInvoice(
   projectId: string,
   amount: number,
   issuedDate: string
-): Promise<InvoiceResponse> {
+): Promise<ServiceResponse<InvoiceRecord>> {
   const { data, error } = await supabase
     .from('invoices')
     .insert([
@@ -46,6 +44,7 @@ export async function addInvoice(
     .single();
 
   if (error) {
+    console.error('[SERVICE ERROR] addInvoice:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -59,17 +58,20 @@ export async function addInvoice(
  * Update an existing invoice record
  */
 export async function updateInvoice(
+  projectId: string,
   id: string,
   updates: Partial<InvoiceRecord>
-): Promise<InvoiceResponse> {
+): Promise<ServiceResponse<InvoiceRecord>> {
   const { data, error } = await supabase
     .from('invoices')
     .update(updates)
     .eq('id', id)
+    .eq('project_id', projectId) // 🔒 Prevent cross-project updates
     .select()
     .single();
 
   if (error) {
+    console.error('[SERVICE ERROR] updateInvoice:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -82,13 +84,15 @@ export async function updateInvoice(
 /**
  * Delete an invoice record
  */
-export async function deleteInvoice(id: string): Promise<InvoiceResponse> {
+export async function deleteInvoice(projectId: string, id: string): Promise<ServiceResponse<void>> {
   const { error } = await supabase
     .from('invoices')
     .delete()
-    .eq('id', id);
+    .eq('id', id)
+    .eq('project_id', projectId); // 🔒 Prevent cross-project deletes
 
   if (error) {
+    console.error('[SERVICE ERROR] deleteInvoice:', error.message);
     return { success: false, error: error.message };
   }
 

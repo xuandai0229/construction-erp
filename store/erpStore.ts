@@ -87,44 +87,77 @@ export const useERPStore = create<ERPState>((set, get) => ({
   initialized: false,
 
   init: async () => {
-    ensureDashboardData(); 
-    let pid = get().currentProjectId;
-    
-    // If no project selected, fetch projects first
-    if (!pid) {
-      const projects = await projectService.getProjects();
-      if (projects.length > 0) {
-        pid = projects[0].id;
-        set({ projects, currentProjectId: pid });
-      } else {
-        set({ projects: [], initialized: true });
+    try {
+      ensureDashboardData(); 
+      let pid = get().currentProjectId;
+      
+      const projectsRes = await projectService.getProjects();
+      console.log('[STORE] init: fetch projects', projectsRes);
+      
+      if (!projectsRes.success) {
+        console.error('[STORE ERROR] Failed to fetch projects:', projectsRes.error);
+        set({ initialized: true });
         return;
       }
-    } else {
-      const projects = await projectService.getProjects();
-      set({ projects });
+
+      const projects = projectsRes.data || [];
+      
+      if (!pid && projects.length > 0) {
+        pid = projects[0].id;
+      }
+
+      set({ 
+        projects,
+        currentProjectId: pid,
+        // If there are no projects, we're done loading.
+        initialized: projects.length === 0 
+      });
+
+      if (!pid) {
+        console.log('[STORE] init: No projects found, stopping init');
+        return; // initialized is already set to true
+      }
+
+      const [wbsRes, costsRes, budgetsRes, revenuesRes, invoicesRes, paymentsRes] = await Promise.all([
+        wbsService.getWBS(pid),
+        costService.getCosts(pid),
+        budgetService.getBudget(pid),
+        revenueService.getRevenues(pid),
+        invoiceService.getInvoices(pid),
+        paymentService.getPayments(pid)
+      ]);
+
+      console.log('[STORE] init: related data fetch', { wbsRes, costsRes, budgetsRes, revenuesRes, invoicesRes, paymentsRes });
+
+      const updates: Partial<ERPState> = {
+        locks: JSON.parse(localStorage.getItem('accounting_locks') || '[]'),
+        snapshots: JSON.parse(localStorage.getItem('accounting_snapshots') || '{}'),
+        initialized: true,
+      };
+
+      if (wbsRes.success) updates.wbs = wbsRes.data || [];
+      else console.error('[STORE ERROR] wbs fetch failed:', wbsRes.error);
+
+      if (costsRes.success) updates.costs = costsRes.data || [];
+      else console.error('[STORE ERROR] costs fetch failed:', costsRes.error);
+
+      if (budgetsRes.success) updates.budgets = budgetsRes.data || [];
+      else console.error('[STORE ERROR] budgets fetch failed:', budgetsRes.error);
+
+      if (revenuesRes.success) updates.revenues = revenuesRes.data || [];
+      else console.error('[STORE ERROR] revenues fetch failed:', revenuesRes.error);
+
+      if (invoicesRes.success) updates.invoices = invoicesRes.data || [];
+      else console.error('[STORE ERROR] invoices fetch failed:', invoicesRes.error);
+
+      if (paymentsRes.success) updates.payments = paymentsRes.data || [];
+      else console.error('[STORE ERROR] payments fetch failed:', paymentsRes.error);
+
+      set(updates);
+    } catch (error) {
+      console.error('[STORE ERROR] init encountered an unexpected exception:', error);
+      set({ initialized: true });
     }
-
-    const [wbs, costs, budgets, revenues, invoices, payments] = await Promise.all([
-      wbsService.getWBS(pid),
-      costService.getCosts(pid),
-      budgetService.getBudget(pid),
-      revenueService.getRevenues(pid),
-      invoiceService.getInvoices(pid),
-      paymentService.getPayments(pid)
-    ]);
-
-    set({
-      wbs,
-      costs,
-      budgets,
-      revenues,
-      invoices,
-      payments,
-      locks: JSON.parse(localStorage.getItem('accounting_locks') || '[]'),
-      snapshots: JSON.parse(localStorage.getItem('accounting_snapshots') || '{}'),
-      initialized: true,
-    });
   },
 
   setCurrentProject: async (projectId: string) => {
@@ -134,49 +167,102 @@ export const useERPStore = create<ERPState>((set, get) => ({
 
   addProject: async (name, investor, total_value, status, start_date?, end_date?) => {
     const res = await projectService.addProject(name, investor, total_value, status);
-    if (res.success && res.data) {
-      const project = res.data as Project;
-      if ((start_date || end_date) && project.id) {
-        await projectService.updateProject(project.id, { start_date, end_date });
-      }
-      set({ projects: await projectService.getProjects() });
+    console.log('[STORE] addProject', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
     }
+    
+    const project = res.data;
+    if ((start_date || end_date) && project && project.id) {
+      const updateRes = await projectService.updateProject(project.id, { start_date, end_date });
+      console.log('[STORE] addProject (update dates)', updateRes);
+      if (!updateRes.success) console.error('[STORE ERROR]', updateRes.error);
+    }
+    
+    if (project && project.id) {
+      set({ currentProjectId: project.id });
+    }
+    
+    await get().init();
     return res;
   },
 
   updateProject: async (id, updates) => {
     const res = await projectService.updateProject(id, updates);
-    if (res.success) {
-      set({ projects: await projectService.getProjects() });
+    console.log('[STORE] updateProject', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
+    }
+    
+    const projectsRes = await projectService.getProjects();
+    if (projectsRes.success) {
+      set({ projects: projectsRes.data || [] });
+    } else {
+      console.error('[STORE ERROR]', projectsRes.error);
     }
     return res;
   },
 
   deleteProject: async (id) => {
     const res = await projectService.deleteProject(id);
-    if (res.success) {
-      const remaining = await projectService.getProjects();
+    console.log('[STORE] deleteProject', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
+    }
+
+    const projectsRes = await projectService.getProjects();
+    if (projectsRes.success) {
+      const remaining = projectsRes.data || [];
       set({ projects: remaining });
       if (get().currentProjectId === id) {
         set({ currentProjectId: remaining[0]?.id || '' });
         await get().init();
       }
+    } else {
+      console.error('[STORE ERROR]', projectsRes.error);
+      set({ projects: get().projects.filter(p => p.id !== id) });
     }
     return res;
   },
 
   addWBS: async (projectId, name, parentId) => {
     const res = await wbsService.addWBS(projectId, name, parentId);
-    if (res.success) {
-      set({ wbs: await wbsService.getWBS(projectId) });
+    console.log('[STORE] addWBS', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
+    }
+
+    const wbsRes = await wbsService.getWBS(projectId);
+    if (wbsRes.success) {
+      set({ wbs: wbsRes.data || [] });
+    } else {
+      console.error('[STORE ERROR]', wbsRes.error);
     }
     return res;
   },
 
   updateWBS: async (projectId, wbsId, updates) => {
     const res = await wbsService.updateWBS(projectId, wbsId, updates);
-    if (res.success) {
-      set({ wbs: await wbsService.getWBS(projectId) });
+    console.log('[STORE] updateWBS', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
+    }
+
+    const wbsRes = await wbsService.getWBS(projectId);
+    if (wbsRes.success) {
+      set({ wbs: wbsRes.data || [] });
+    } else {
+      console.error('[STORE ERROR]', wbsRes.error);
     }
     return res;
   },
@@ -186,8 +272,18 @@ export const useERPStore = create<ERPState>((set, get) => ({
     if (hasCost) return { success: false, error: 'Không thể xóa hạng mục đã có phát sinh chi phí' };
 
     const res = await wbsService.deleteWBS(projectId, wbsId);
-    if (res.success) {
-      set({ wbs: await wbsService.getWBS(projectId) });
+    console.log('[STORE] deleteWBS', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
+    }
+
+    const wbsRes = await wbsService.getWBS(projectId);
+    if (wbsRes.success) {
+      set({ wbs: wbsRes.data || [] });
+    } else {
+      console.error('[STORE ERROR]', wbsRes.error);
     }
     return res;
   },
@@ -197,8 +293,18 @@ export const useERPStore = create<ERPState>((set, get) => ({
     if (get().isPeriodLocked(today)) return { success: false, error: 'Kỳ kế toán đã bị khóa, không thể thêm chi phí' };
 
     const res = await costService.addCost(projectId, wbsId, costType, amount, quantity, unitPrice);
-    if (res.success) {
-      set({ costs: await costService.getCosts(projectId) });
+    console.log('[STORE] addCost', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
+    }
+
+    const costsRes = await costService.getCosts(projectId);
+    if (costsRes.success) {
+      set({ costs: costsRes.data || [] });
+    } else {
+      console.error('[STORE ERROR]', costsRes.error);
     }
     return res;
   },
@@ -208,8 +314,18 @@ export const useERPStore = create<ERPState>((set, get) => ({
     if (cost && get().isPeriodLocked(cost.date)) return { success: false, error: 'Không thể sửa chi phí trong kỳ kế toán đã khóa' };
 
     const res = await costService.updateCost(projectId, costId, updates);
-    if (res.success) {
-      set({ costs: await costService.getCosts(projectId) });
+    console.log('[STORE] updateCost', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
+    }
+
+    const costsRes = await costService.getCosts(projectId);
+    if (costsRes.success) {
+      set({ costs: costsRes.data || [] });
+    } else {
+      console.error('[STORE ERROR]', costsRes.error);
     }
     return res;
   },
@@ -220,24 +336,54 @@ export const useERPStore = create<ERPState>((set, get) => ({
     if (cost && get().isPeriodLocked(cost.date)) return { success: false, error: 'Không thể xóa chi phí trong kỳ kế toán đã khóa' };
 
     const res = await costService.deleteCost(projectId, costId);
-    if (res.success) {
-      set({ costs: await costService.getCosts(projectId) });
+    console.log('[STORE] deleteCost', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
+    }
+
+    const costsRes = await costService.getCosts(projectId);
+    if (costsRes.success) {
+      set({ costs: costsRes.data || [] });
+    } else {
+      console.error('[STORE ERROR]', costsRes.error);
     }
     return res;
   },
 
   addBudget: async (projectId, wbsId, costType, estimatedAmount) => {
     const res = await budgetService.addBudget(projectId, wbsId, costType, estimatedAmount);
-    if (res.success) {
-      set({ budgets: await budgetService.getBudget(projectId) });
+    console.log('[STORE] addBudget', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
+    }
+
+    const budgetRes = await budgetService.getBudget(projectId);
+    if (budgetRes.success) {
+      set({ budgets: budgetRes.data || [] });
+    } else {
+      console.error('[STORE ERROR]', budgetRes.error);
     }
     return res;
   },
 
   deleteBudget: async (projectId, budgetId) => {
     const res = await budgetService.deleteBudget(projectId, budgetId);
-    if (res.success) {
-      set({ budgets: await budgetService.getBudget(projectId) });
+    console.log('[STORE] deleteBudget', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
+    }
+
+    const budgetRes = await budgetService.getBudget(projectId);
+    if (budgetRes.success) {
+      set({ budgets: budgetRes.data || [] });
+    } else {
+      console.error('[STORE ERROR]', budgetRes.error);
     }
     return res;
   },
@@ -245,8 +391,18 @@ export const useERPStore = create<ERPState>((set, get) => ({
   addRevenue: async (projectId, wbsId, amount, status, description, date) => {
     if (get().isPeriodLocked(date)) return { success: false, error: 'Kỳ kế toán đã bị khóa cho ngày này' };
     const res = await revenueService.addRevenue(projectId, wbsId, amount, status, description, date);
-    if (res.success) {
-      set({ revenues: await revenueService.getRevenues(projectId) });
+    console.log('[STORE] addRevenue', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
+    }
+
+    const revenuesRes = await revenueService.getRevenues(projectId);
+    if (revenuesRes.success) {
+      set({ revenues: revenuesRes.data || [] });
+    } else {
+      console.error('[STORE ERROR]', revenuesRes.error);
     }
     return res;
   },
@@ -255,53 +411,111 @@ export const useERPStore = create<ERPState>((set, get) => ({
     if (get().userRole === 'staff') return { success: false, error: 'Nhân viên không có quyền xuất hóa đơn' };
     
     const res = await invoiceService.addInvoice(projectId, amount, issuedDate);
+    console.log('[STORE] addInvoice', res);
 
-    if (res.success && res.data) {
-      const invoice = res.data as InvoiceRecord;
-      await revenueService.addRevenue(
-        projectId,
-        wbsId,
-        amount,
-        'unpaid',
-        `Hóa đơn ${invoice.id.substring(0, 8)}`,
-        issuedDate,
-        invoice.id
-      );
-      
-      set({ 
-        invoices: await invoiceService.getInvoices(projectId),
-        revenues: await revenueService.getRevenues(projectId)
-      });
+    if (!res.success || !res.data) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
     }
+
+    const invoice = res.data;
+    const revenueRes = await revenueService.addRevenue(
+      projectId,
+      wbsId,
+      amount,
+      'unpaid',
+      `Hóa đơn ${invoice.id.substring(0, 8)}`,
+      issuedDate,
+      invoice.id
+    );
+    console.log('[STORE] addInvoice (add linked revenue)', revenueRes);
+    if (!revenueRes.success) console.error('[STORE ERROR]', revenueRes.error);
+    
+    const [invoicesRes, revenuesRes] = await Promise.all([
+      invoiceService.getInvoices(projectId),
+      revenueService.getRevenues(projectId)
+    ]);
+
+    const updates: Partial<ERPState> = {};
+    if (invoicesRes.success) updates.invoices = invoicesRes.data || [];
+    else console.error('[STORE ERROR]', invoicesRes.error);
+    
+    if (revenuesRes.success) updates.revenues = revenuesRes.data || [];
+    else console.error('[STORE ERROR]', revenuesRes.error);
+
+    set(updates);
+    
     return res;
   },
 
   updateRevenue: async (id, updates) => {
-    const res = await revenueService.updateRevenue(id, updates);
-    if (res.success) {
-      set({ revenues: await revenueService.getRevenues(get().currentProjectId) });
+    const projectId = get().currentProjectId;
+    const res = await revenueService.updateRevenue(projectId, id, updates);
+    console.log('[STORE] updateRevenue', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
+    }
+
+    const revenuesRes = await revenueService.getRevenues(projectId);
+    if (revenuesRes.success) {
+      set({ revenues: revenuesRes.data || [] });
+    } else {
+      console.error('[STORE ERROR]', revenuesRes.error);
     }
     return res;
   },
 
   updateInvoice: async (id, updates) => {
-    const res = await invoiceService.updateInvoice(id, updates);
-    if (res.success) {
-      set({ invoices: await invoiceService.getInvoices(get().currentProjectId) });
+    const projectId = get().currentProjectId;
+    const res = await invoiceService.updateInvoice(projectId, id, updates);
+    console.log('[STORE] updateInvoice', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
+    }
+
+    const invoicesRes = await invoiceService.getInvoices(projectId);
+    if (invoicesRes.success) {
+      set({ invoices: invoicesRes.data || [] });
+    } else {
+      console.error('[STORE ERROR]', invoicesRes.error);
     }
     return res;
   },
 
   deleteInvoice: async (id) => {
     if (get().userRole !== 'admin') return { success: false, error: 'Chỉ Admin mới có quyền xóa hóa đơn' };
-    const res = await invoiceService.deleteInvoice(id);
-    if (res.success) {
-      set({ 
-        invoices: await invoiceService.getInvoices(get().currentProjectId),
-        payments: await paymentService.getPayments(get().currentProjectId),
-        revenues: await revenueService.getRevenues(get().currentProjectId)
-      });
+    const projectId = get().currentProjectId;
+    const res = await invoiceService.deleteInvoice(projectId, id);
+    console.log('[STORE] deleteInvoice', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
     }
+
+    const pid = get().currentProjectId;
+    const [invoicesRes, paymentsRes, revenuesRes] = await Promise.all([
+      invoiceService.getInvoices(pid),
+      paymentService.getPayments(pid),
+      revenueService.getRevenues(pid)
+    ]);
+
+    const updates: Partial<ERPState> = {};
+    if (invoicesRes.success) updates.invoices = invoicesRes.data || [];
+    else console.error('[STORE ERROR]', invoicesRes.error);
+    
+    if (paymentsRes.success) updates.payments = paymentsRes.data || [];
+    else console.error('[STORE ERROR]', paymentsRes.error);
+    
+    if (revenuesRes.success) updates.revenues = revenuesRes.data || [];
+    else console.error('[STORE ERROR]', revenuesRes.error);
+
+    set(updates);
+    
     return res;
   },
 
@@ -311,9 +525,14 @@ export const useERPStore = create<ERPState>((set, get) => ({
     if (amount <= 0) return { success: false, error: 'Số tiền phải lớn hơn 0' };
 
     const res = await paymentService.addPayment(projectId, invoiceId, amount, date, description);
-    if (res.success) {
-      await get().recalculateInvoiceBalance(invoiceId);
+    console.log('[STORE] addPayment', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
     }
+
+    await get().recalculateInvoiceBalance(invoiceId);
     return res;
   },
 
@@ -322,23 +541,34 @@ export const useERPStore = create<ERPState>((set, get) => ({
     if (!payment) return { success: false, error: 'Thanh toán không tồn tại' };
     if (get().isPeriodLocked(payment.date)) return { success: false, error: 'Không thể sửa thanh toán trong kỳ đã khóa' };
 
-    const res = await paymentService.updatePayment(id, updates);
-    if (res.success) {
-      await get().recalculateInvoiceBalance(payment.invoice_id);
+    const projectId = get().currentProjectId;
+    const res = await paymentService.updatePayment(projectId, id, updates);
+    console.log('[STORE] updatePayment', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
     }
+
+    await get().recalculateInvoiceBalance(payment.invoice_id);
     return res;
   },
 
   deletePayment: async (id) => {
-    if (get().userRole !== 'admin') return { success: false, error: 'Chỉ Admin mới có quyền xóa thanh toán' };
+    if (get().userRole !== 'admin') return { success: false, error: 'Chỉ Admin mới có quyền xóa dữ liệu' };
     const payment = get().payments.find(p => p.id === id);
     if (!payment) return { success: false, error: 'Thanh toán không tồn tại' };
     if (get().isPeriodLocked(payment.date)) return { success: false, error: 'Không thể xóa thanh toán trong kỳ đã khóa' };
 
     const res = await paymentService.deletePayment(id);
-    if (res.success) {
-      await get().recalculateInvoiceBalance(payment.invoice_id);
+    console.log('[STORE] deletePayment', res);
+    
+    if (!res.success) {
+      console.error('[STORE ERROR]', res.error);
+      return res;
     }
+
+    await get().recalculateInvoiceBalance(payment.invoice_id);
     return res;
   },
 
@@ -347,20 +577,37 @@ export const useERPStore = create<ERPState>((set, get) => ({
     const invoice = get().invoices.find(inv => inv.id === invoiceId);
     if (!invoice) return;
 
-    const allPayments = (await paymentService.getPayments(projectId)).filter(p => p.invoice_id === invoiceId);
+    const paymentsRes = await paymentService.getPayments(projectId);
+    if (!paymentsRes.success) {
+      console.error('[STORE ERROR] recalculateInvoiceBalance: fetch payments failed', paymentsRes.error);
+      return;
+    }
+
+    const allPayments = (paymentsRes.data || []).filter(p => p.invoice_id === invoiceId);
     const totalPaid = allPayments.reduce((sum, p) => sum + p.amount, 0);
     const remaining = invoice.amount - totalPaid;
     
-    await invoiceService.updateInvoice(invoiceId, {
+    const updateRes = await invoiceService.updateInvoice(projectId, invoiceId, {
       paid_amount: totalPaid,
       remaining_amount: remaining,
       status: remaining <= 0 ? 'paid' : 'issued'
     });
+    console.log('[STORE] recalculateInvoiceBalance: update invoice', updateRes);
+    if (!updateRes.success) console.error('[STORE ERROR]', updateRes.error);
 
-    set({ 
-      payments: await paymentService.getPayments(projectId),
-      invoices: await invoiceService.getInvoices(projectId)
-    });
+    const [invoicesRes, latestPaymentsRes] = await Promise.all([
+      invoiceService.getInvoices(projectId),
+      paymentService.getPayments(projectId)
+    ]);
+
+    const updates: Partial<ERPState> = {};
+    if (latestPaymentsRes.success) updates.payments = latestPaymentsRes.data || [];
+    else console.error('[STORE ERROR]', latestPaymentsRes.error);
+    
+    if (invoicesRes.success) updates.invoices = invoicesRes.data || [];
+    else console.error('[STORE ERROR]', invoicesRes.error);
+
+    set(updates);
   },
 
   toggleLock: async (month) => {
@@ -412,8 +659,10 @@ export const useERPStore = create<ERPState>((set, get) => ({
       if (backup.snapshots) localStorage.setItem('accounting_snapshots', backup.snapshots);
       await get().init();
       return { success: true };
-    } catch (e) {
-      return { success: false, error: 'Dữ liệu backup không hợp lệ' };
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : 'Dữ liệu backup không hợp lệ';
+      console.error('[STORE ERROR] restoreBackup failed', msg);
+      return { success: false, error: msg };
     }
   },
 

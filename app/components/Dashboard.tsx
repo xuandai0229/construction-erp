@@ -25,19 +25,43 @@ export default function Dashboard() {
     init();
   }, [init]);
 
-  const data = isInitialized && projects.length > 0 ? getDashboardData() : null;
+  const data = getDashboardData();
   const [editingCost, setEditingCost] = useState<CostRecord | null>(null);
 
-  if (!data) {
+  console.log('[UI] Dashboard Render', { isInitialized, hasProjects: projects.length > 0 });
+
+  if (!isInitialized) {
     return (
       <div className="min-h-screen bg-[#020617] text-slate-100">
         <Sidebar activeItem="overview" />
         <main className="ml-[258px] grid min-h-screen place-items-center">
-          <div className="rounded-lg border border-slate-800 bg-slate-900 px-6 py-4 text-sm font-semibold text-slate-300">Đang tải dữ liệu dự án...</div>
+          <div className="flex flex-col items-center gap-4">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+            <div className="text-sm font-medium text-slate-400">Đang tải dữ liệu...</div>
+          </div>
         </main>
       </div>
     );
   }
+
+  if (projects.length === 0) {
+    return (
+      <div className="min-h-screen bg-[#020617] text-slate-100">
+        <Sidebar activeItem="overview" />
+        <main className="ml-[258px] grid min-h-screen place-items-center">
+          <div className="flex flex-col items-center gap-3">
+            <svg viewBox="0 0 24 24" className="h-16 w-16 text-slate-600" fill="none" stroke="currentColor" strokeWidth="1">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <h3 className="text-lg font-semibold text-slate-300">Chưa có dự án nào</h3>
+            <p className="text-sm text-slate-500">Vui lòng tạo dự án mới ở mục Dự án để xem báo cáo.</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+
 
   return (
     <div className="min-h-screen bg-[#020617] text-slate-100">

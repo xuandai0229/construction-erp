@@ -1,14 +1,12 @@
-// ============================================
-// COST SERVICE - SUPABASE DATA LAYER
-// ============================================
+"use server";
 
-import { CostRecord, CostResponse, CostType, CostStatus } from '@/app/types';
-import { supabase } from '@/app/utils/supabase';
+import { CostRecord, CostResponse, CostType, CostStatus, ServiceResponse } from '@/app/types';
+import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
 
 /**
  * Get all costs for a project from Supabase
  */
-export async function getCosts(projectId: string): Promise<CostRecord[]> {
+export async function getCosts(projectId: string): Promise<ServiceResponse<CostRecord[]>> {
   const { data, error } = await supabase
     .from('costs')
     .select('*')
@@ -16,10 +14,10 @@ export async function getCosts(projectId: string): Promise<CostRecord[]> {
     .order('date', { ascending: false });
 
   if (error) {
-    console.error('Error fetching costs:', error);
-    return [];
+    console.error('[SERVICE ERROR] getCosts:', error.message);
+    return { success: false, error: error.message };
   }
-  return data as CostRecord[];
+  return { success: true, data: data as CostRecord[] || [] };
 }
 
 /**
@@ -36,7 +34,7 @@ export async function addCost(
   note: string = '',
   date: string = new Date().toISOString().split('T')[0],
   status: CostStatus = 'unpaid'
-): Promise<CostResponse> {
+): Promise<ServiceResponse<CostRecord>> {
   const { data, error } = await supabase
     .from('costs')
     .insert([
@@ -57,6 +55,7 @@ export async function addCost(
     .single();
 
   if (error) {
+    console.error('[SERVICE ERROR] addCost:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -73,7 +72,7 @@ export async function updateCost(
   projectId: string,
   costId: string,
   updates: Partial<Omit<CostRecord, 'id' | 'project_id' | 'created_at'>>
-): Promise<CostResponse> {
+): Promise<ServiceResponse<CostRecord>> {
   const { data, error } = await supabase
     .from('costs')
     .update(updates)
@@ -83,6 +82,7 @@ export async function updateCost(
     .single();
 
   if (error) {
+    console.error('[SERVICE ERROR] updateCost:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -95,7 +95,7 @@ export async function updateCost(
 /**
  * Delete a cost record
  */
-export async function deleteCost(projectId: string, costId: string): Promise<CostResponse> {
+export async function deleteCost(projectId: string, costId: string): Promise<ServiceResponse<void>> {
   const { error } = await supabase
     .from('costs')
     .delete()
@@ -103,6 +103,7 @@ export async function deleteCost(projectId: string, costId: string): Promise<Cos
     .eq('project_id', projectId);
 
   if (error) {
+    console.error('[SERVICE ERROR] deleteCost:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -123,7 +124,7 @@ export async function createCost(costData: {
   note?: string;
   date?: string;
   status?: CostStatus;
-}): Promise<CostResponse> {
+}): Promise<ServiceResponse<CostRecord>> {
   return addCost(
     costData.projectId,
     costData.wbsId,

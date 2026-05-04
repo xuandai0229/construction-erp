@@ -1,14 +1,12 @@
-// ============================================
-// REVENUE SERVICE - SUPABASE DATA LAYER
-// ============================================
+"use server";
 
-import { RevenueRecord, RevenueResponse, RevenueStatus } from '@/app/types';
-import { supabase } from '@/app/utils/supabase';
+import { RevenueRecord, RevenueResponse, RevenueStatus, ServiceResponse } from '@/app/types';
+import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
 
 /**
  * Get all revenues for a project from Supabase
  */
-export async function getRevenues(projectId: string): Promise<RevenueRecord[]> {
+export async function getRevenues(projectId: string): Promise<ServiceResponse<RevenueRecord[]>> {
   const { data, error } = await supabase
     .from('revenues')
     .select('*')
@@ -16,10 +14,10 @@ export async function getRevenues(projectId: string): Promise<RevenueRecord[]> {
     .order('date', { ascending: false });
 
   if (error) {
-    console.error('Error fetching revenues:', error);
-    return [];
+    console.error('[SERVICE ERROR] getRevenues:', error.message);
+    return { success: false, error: error.message };
   }
-  return data as RevenueRecord[];
+  return { success: true, data: data as RevenueRecord[] || [] };
 }
 
 /**
@@ -33,7 +31,7 @@ export async function addRevenue(
   description: string,
   date: string,
   invoice_id?: string
-): Promise<RevenueResponse> {
+): Promise<ServiceResponse<RevenueRecord>> {
   const { data, error } = await supabase
     .from('revenues')
     .insert([
@@ -51,6 +49,7 @@ export async function addRevenue(
     .single();
 
   if (error) {
+    console.error('[SERVICE ERROR] addRevenue:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -64,17 +63,20 @@ export async function addRevenue(
  * Update an existing revenue record
  */
 export async function updateRevenue(
+  projectId: string,
   id: string,
   updates: Partial<Omit<RevenueRecord, 'id' | 'project_id' | 'created_at'>>
-): Promise<RevenueResponse> {
+): Promise<ServiceResponse<RevenueRecord>> {
   const { data, error } = await supabase
     .from('revenues')
     .update(updates)
     .eq('id', id)
+    .eq('project_id', projectId) // 🔒 Prevent cross-project updates
     .select()
     .single();
 
   if (error) {
+    console.error('[SERVICE ERROR] updateRevenue:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -87,13 +89,14 @@ export async function updateRevenue(
 /**
  * Delete a revenue record
  */
-export async function deleteRevenue(id: string): Promise<RevenueResponse> {
+export async function deleteRevenue(id: string): Promise<ServiceResponse<void>> {
   const { error } = await supabase
     .from('revenues')
     .delete()
     .eq('id', id);
 
   if (error) {
+    console.error('[SERVICE ERROR] deleteRevenue:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -111,7 +114,7 @@ export async function createRevenue(params: {
   description: string;
   date: string;
   invoice_id?: string;
-}): Promise<RevenueResponse> {
+}): Promise<ServiceResponse<RevenueRecord>> {
   return addRevenue(
     params.project_id,
     params.wbs_id,

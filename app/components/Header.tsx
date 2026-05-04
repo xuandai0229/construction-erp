@@ -96,7 +96,7 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
             </svg>
           </button>
           <div className="grid h-9 w-9 place-items-center rounded-full bg-blue-600 text-sm font-bold text-white uppercase">
-            {useERPStore.getState().userRole.substring(0, 2)}
+            {userRole.substring(0, 2)}
           </div>
           <div className="flex flex-col">
             <div className="text-sm font-semibold text-slate-100">User</div>
@@ -106,7 +106,7 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
           </div>
           <button 
             onClick={() => {
-              import('@/app/utils/supabase').then(({ supabase }) => {
+              import('@/lib/supabaseClient').then(({ supabase }) => {
                 supabase.auth.signOut().then(() => window.location.reload());
               });
             }}

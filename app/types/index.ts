@@ -189,6 +189,12 @@ export interface DebtSummary {
 // DATA LAYER RESPONSE TYPES
 // ============================================
 
+export type ServiceResponse<T> = {
+  success: boolean
+  data?: T
+  error?: string
+}
+
 export interface ProjectResponse {
   success: boolean;
   data?: Project;

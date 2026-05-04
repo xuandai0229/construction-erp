@@ -1,14 +1,12 @@
-// ============================================
-// PAYMENT SERVICE - SUPABASE DATA LAYER
-// ============================================
+"use server";
 
-import { PaymentRecord, PaymentResponse } from '@/app/types';
-import { supabase } from '@/app/utils/supabase';
+import { PaymentRecord, PaymentResponse, ServiceResponse } from '@/app/types';
+import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
 
 /**
  * Get all payments for a project from Supabase
  */
-export async function getPayments(projectId: string): Promise<PaymentRecord[]> {
+export async function getPayments(projectId: string): Promise<ServiceResponse<PaymentRecord[]>> {
   const { data, error } = await supabase
     .from('payments')
     .select('*')
@@ -16,10 +14,10 @@ export async function getPayments(projectId: string): Promise<PaymentRecord[]> {
     .order('date', { ascending: false });
 
   if (error) {
-    console.error('Error fetching payments:', error);
-    return [];
+    console.error('[SERVICE ERROR] getPayments:', error.message);
+    return { success: false, error: error.message };
   }
-  return data as PaymentRecord[];
+  return { success: true, data: data as PaymentRecord[] || [] };
 }
 
 /**
@@ -31,7 +29,7 @@ export async function addPayment(
   amount: number,
   date: string,
   description: string = ''
-): Promise<PaymentResponse> {
+): Promise<ServiceResponse<PaymentRecord>> {
   const { data, error } = await supabase
     .from('payments')
     .insert([
@@ -47,6 +45,7 @@ export async function addPayment(
     .single();
 
   if (error) {
+    console.error('[SERVICE ERROR] addPayment:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -60,17 +59,20 @@ export async function addPayment(
  * Update an existing payment record
  */
 export async function updatePayment(
+  projectId: string,
   id: string,
   updates: Partial<Omit<PaymentRecord, 'id' | 'created_at'>>
-): Promise<PaymentResponse> {
+): Promise<ServiceResponse<PaymentRecord>> {
   const { data, error } = await supabase
     .from('payments')
     .update(updates)
     .eq('id', id)
+    .eq('project_id', projectId) // 🔒 Prevent cross-project updates
     .select()
     .single();
 
   if (error) {
+    console.error('[SERVICE ERROR] updatePayment:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -83,13 +85,14 @@ export async function updatePayment(
 /**
  * Delete a payment record
  */
-export async function deletePayment(id: string): Promise<PaymentResponse> {
+export async function deletePayment(id: string): Promise<ServiceResponse<void>> {
   const { error } = await supabase
     .from('payments')
     .delete()
     .eq('id', id);
 
   if (error) {
+    console.error('[SERVICE ERROR] deletePayment:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -99,13 +102,14 @@ export async function deletePayment(id: string): Promise<PaymentResponse> {
 /**
  * Delete all payments for a specific invoice
  */
-export async function deletePaymentsByInvoice(invoiceId: string): Promise<PaymentResponse> {
+export async function deletePaymentsByInvoice(invoiceId: string): Promise<ServiceResponse<void>> {
   const { error } = await supabase
     .from('payments')
     .delete()
     .eq('invoice_id', invoiceId);
 
   if (error) {
+    console.error('[SERVICE ERROR] deletePaymentsByInvoice:', error.message);
     return { success: false, error: error.message };
   }
 

@@ -1,24 +1,22 @@
-// ============================================
-// BUDGET SERVICE - SUPABASE DATA LAYER
-// ============================================
+"use server";
 
-import { BudgetRecord, BudgetResponse, CostType } from '@/app/types';
-import { supabase } from '@/app/utils/supabase';
+import { BudgetRecord, BudgetResponse, CostType, ServiceResponse } from '@/app/types';
+import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
 
 /**
  * Get all budget records for a project
  */
-export async function getBudget(projectId: string): Promise<BudgetRecord[]> {
+export async function getBudget(projectId: string): Promise<ServiceResponse<BudgetRecord[]>> {
   const { data, error } = await supabase
     .from('budgets')
     .select('*')
     .eq('project_id', projectId);
 
   if (error) {
-    console.error('Error fetching budgets:', error);
-    return [];
+    console.error('[SERVICE ERROR] getBudget:', error.message);
+    return { success: false, error: error.message };
   }
-  return data as BudgetRecord[];
+  return { success: true, data: data as BudgetRecord[] || [] };
 }
 
 /**
@@ -29,7 +27,7 @@ export async function addBudget(
   wbsId: string,
   costType: CostType,
   estimatedAmount: number
-): Promise<BudgetResponse> {
+): Promise<ServiceResponse<BudgetRecord>> {
   const { data, error } = await supabase
     .from('budgets')
     .insert([
@@ -44,6 +42,7 @@ export async function addBudget(
     .single();
 
   if (error) {
+    console.error('[SERVICE ERROR] addBudget:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -60,7 +59,7 @@ export async function updateBudget(
   projectId: string,
   budgetId: string,
   updates: Partial<Omit<BudgetRecord, 'id' | 'project_id' | 'created_at'>>
-): Promise<BudgetResponse> {
+): Promise<ServiceResponse<BudgetRecord>> {
   const { data, error } = await supabase
     .from('budgets')
     .update(updates)
@@ -70,6 +69,7 @@ export async function updateBudget(
     .single();
 
   if (error) {
+    console.error('[SERVICE ERROR] updateBudget:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -82,7 +82,7 @@ export async function updateBudget(
 /**
  * Delete a budget record
  */
-export async function deleteBudget(projectId: string, budgetId: string): Promise<BudgetResponse> {
+export async function deleteBudget(projectId: string, budgetId: string): Promise<ServiceResponse<void>> {
   const { error } = await supabase
     .from('budgets')
     .delete()
@@ -90,6 +90,7 @@ export async function deleteBudget(projectId: string, budgetId: string): Promise
     .eq('project_id', projectId);
 
   if (error) {
+    console.error('[SERVICE ERROR] deleteBudget:', error.message);
     return { success: false, error: error.message };
   }
 
@@ -104,6 +105,6 @@ export async function createBudget(data: {
   wbsId: string;
   costType: CostType;
   estimatedAmount: number;
-}): Promise<BudgetResponse> {
+}): Promise<ServiceResponse<BudgetRecord>> {
   return addBudget(data.projectId, data.wbsId, data.costType, data.estimatedAmount);
 }

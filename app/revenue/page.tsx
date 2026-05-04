@@ -4,6 +4,7 @@ import Sidebar from '@/app/components/Sidebar';
 import Header from '@/app/components/Header';
 import { useERPStore } from '@/store/erpStore';
 import { formatVnd, formatDate } from '@/app/components/dashboard-data';
+import { RevenueStatus } from '@/app/types';
 
 export default function RevenueListPage() {
   const revenues = useERPStore(state => state.revenues);
@@ -12,9 +13,9 @@ export default function RevenueListPage() {
 
   const getWbsName = (id: string) => wbs.find(w => w.id === id)?.name || 'N/A';
 
-  const handleToggleStatus = (id: string, currentStatus: string) => {
-    const newStatus = currentStatus === 'paid' ? 'unpaid' : 'paid';
-    updateRevenue(id, { status: newStatus as any });
+  const handleToggleStatus = (id: string, currentStatus: RevenueStatus) => {
+    const newStatus: RevenueStatus = currentStatus === 'paid' ? 'unpaid' : 'paid';
+    updateRevenue(id, { status: newStatus });
   };
 
   return (

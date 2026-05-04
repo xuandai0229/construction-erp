@@ -96,7 +96,7 @@ export default function AddRevenueModal({ isOpen, onClose }: Props) {
               <label className="block text-xs font-semibold text-slate-400 mb-1.5">Trạng thái</label>
               <select
                 value={form.status}
-                onChange={e => setForm({...form, status: e.target.value as any})}
+                onChange={e => setForm({...form, status: e.target.value as 'paid' | 'unpaid'})}
                 className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm text-slate-200"
               >
                 <option value="unpaid">Chưa thu tiền</option>
