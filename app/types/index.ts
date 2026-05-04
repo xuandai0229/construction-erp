@@ -2,7 +2,8 @@
 // CONSTRUCTION ERP - TYPE DEFINITIONS
 // ============================================
 
-export type ProjectStatus = 'planning' | 'in_progress' | 'completed' | 'on_hold';
+import { ProjectStatus, TaskStatus } from "@prisma/client";
+export { ProjectStatus, TaskStatus };
 
 export interface Project {
   id: string;

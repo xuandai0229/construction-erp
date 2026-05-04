@@ -9,10 +9,10 @@ interface Props {
 }
 
 const STATUS_OPTS: { value: ProjectStatus; label: string }[] = [
-  { value: 'planning', label: 'Lập kế hoạch' },
-  { value: 'in_progress', label: 'Đang thi công' },
-  { value: 'completed', label: 'Hoàn thành' },
-  { value: 'on_hold', label: 'Tạm dừng' },
+  { value: 'PLANNED', label: 'Lập kế hoạch' },
+  { value: 'IN_PROGRESS', label: 'Đang thi công' },
+  { value: 'COMPLETED', label: 'Hoàn thành' },
+  { value: 'CANCELLED', label: 'Tạm dừng/Hủy' },
 ];
 
 export default function AddProjectModal({ isOpen, onClose, project }: Props) {
@@ -23,7 +23,7 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
     name: '',
     investor: '',
     total_value: '',
-    status: 'in_progress' as ProjectStatus,
+    status: 'IN_PROGRESS' as ProjectStatus,
     start_date: '',
     end_date: '',
   });
@@ -45,7 +45,7 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
         name: '',
         investor: '',
         total_value: '',
-        status: 'in_progress',
+        status: 'IN_PROGRESS',
         start_date: '',
         end_date: '',
       });

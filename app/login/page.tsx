@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
@@ -16,17 +15,11 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
+    // Mock login delay
+    setTimeout(() => {
       setLoading(false);
-    } else {
       router.push('/');
-    }
+    }, 1000);
   };
 
   return (

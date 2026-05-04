@@ -5,9 +5,9 @@ import { Project } from '@/app/types';
 
 export default function ProjectCardStats({ projects }: { projects: Project[] }) {
   const total = projects.length;
-  const inProgress = projects.filter(p => p.status === 'in_progress').length;
-  const completed = projects.filter(p => p.status === 'completed').length;
-  const onHold = projects.filter(p => p.status === 'on_hold').length;
+  const inProgress = projects.filter(p => p.status === 'IN_PROGRESS').length;
+  const completed = projects.filter(p => p.status === 'COMPLETED').length;
+  const onHold = projects.filter(p => p.status === 'CANCELLED').length;
   const totalValue = projects.reduce((sum, p) => sum + (p.total_value || 0), 0);
 
   return (

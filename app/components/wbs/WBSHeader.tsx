@@ -10,10 +10,10 @@ export default function WBSHeader() {
   const currentProject = projects.find(p => p.id === currentProjectId) || projects[0];
 
   const statusLabels: Record<string, string> = {
-    planning: 'Lập kế hoạch',
-    in_progress: 'Đang thi công',
-    completed: 'Hoàn thành',
-    on_hold: 'Tạm dừng',
+    PLANNED: 'Lập kế hoạch',
+    IN_PROGRESS: 'Đang thi công',
+    COMPLETED: 'Hoàn thành',
+    CANCELLED: 'Tạm dừng/Hủy',
   };
 
   return (
@@ -40,8 +40,8 @@ export default function WBSHeader() {
             </div>
             {currentProject && (
               <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-medium ${
-                currentProject.status === 'in_progress' ? 'border-green-500/30 bg-green-500/10 text-green-400' :
-                currentProject.status === 'completed' ? 'border-blue-500/30 bg-blue-500/10 text-blue-400' :
+                currentProject.status === 'IN_PROGRESS' ? 'border-green-500/30 bg-green-500/10 text-green-400' :
+                currentProject.status === 'COMPLETED' ? 'border-blue-500/30 bg-blue-500/10 text-blue-400' :
                 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400'
               }`}>
                 {statusLabels[currentProject.status] || currentProject.status}

@@ -4,10 +4,10 @@ import { Project } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
 
 const statusLabels: Record<string, { text: string; class: string }> = {
-  planning: { text: 'Lập kế hoạch', class: 'bg-slate-500/20 text-slate-400 border-slate-500/30' },
-  in_progress: { text: 'Đang thi công', class: 'bg-green-500/20 text-green-400 border-green-500/30' },
-  completed: { text: 'Hoàn thành', class: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
-  on_hold: { text: 'Tạm dừng', class: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' },
+  PLANNED: { text: 'Lập kế hoạch', class: 'bg-slate-500/20 text-slate-400 border-slate-500/30' },
+  IN_PROGRESS: { text: 'Đang thi công', class: 'bg-green-500/20 text-green-400 border-green-500/30' },
+  COMPLETED: { text: 'Hoàn thành', class: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
+  CANCELLED: { text: 'Tạm dừng', class: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' },
 };
 
 // Mock extending data for visual completeness to match the screenshot exactly
@@ -114,7 +114,7 @@ export default function ProjectTable({ projects, onEdit }: { projects: Project[]
                     <div className="text-[11px] font-bold text-slate-300">{p.progress}%</div>
                     <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
                       <div 
-                        className={`h-full rounded-full ${p.status === 'completed' ? 'bg-blue-500' : p.status === 'on_hold' ? 'bg-yellow-500' : 'bg-green-500'}`} 
+                        className={`h-full rounded-full ${p.status === 'COMPLETED' ? 'bg-blue-500' : p.status === 'CANCELLED' ? 'bg-yellow-500' : 'bg-green-500'}`} 
                         style={{ width: `${p.progress}%` }} 
                       />
                     </div>

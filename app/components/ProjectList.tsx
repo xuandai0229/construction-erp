@@ -9,18 +9,18 @@ interface ProjectListProps {
   onSelectProject?: (project: Project) => void;
 }
 
-const statusLabels: Record<ProjectStatus, string> = {
-  planning: 'Quy hoạch',
-  in_progress: 'Đang thi công',
-  completed: 'Hoàn thành',
-  on_hold: 'Tạm dừng',
+const statusLabels: Record<string, string> = {
+  PLANNED: 'Quy hoạch',
+  IN_PROGRESS: 'Đang thi công',
+  COMPLETED: 'Hoàn thành',
+  CANCELLED: 'Tạm dừng/Hủy',
 };
 
-const statusColors: Record<ProjectStatus, string> = {
-  planning: 'bg-yellow-600',
-  in_progress: 'bg-blue-600',
-  completed: 'bg-green-600',
-  on_hold: 'bg-red-600',
+const statusColors: Record<string, string> = {
+  PLANNED: 'bg-yellow-600',
+  IN_PROGRESS: 'bg-blue-600',
+  COMPLETED: 'bg-green-600',
+  CANCELLED: 'bg-red-600',
 };
 
 export default function ProjectList({ onSelectProject }: ProjectListProps) {
@@ -35,13 +35,13 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
   const [name, setName] = useState('');
   const [investor, setInvestor] = useState('');
   const [totalValue, setTotalValue] = useState('');
-  const [status, setStatus] = useState<ProjectStatus>('planning');
+  const [status, setStatus] = useState<ProjectStatus>('PLANNED');
 
   function resetForm() {
     setName('');
     setInvestor('');
     setTotalValue('');
-    setStatus('planning');
+    setStatus('PLANNED');
     setEditingId(null);
     setShowForm(false);
   }
@@ -143,10 +143,10 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
                   onChange={(e) => setStatus(e.target.value as ProjectStatus)}
                   className="w-full px-4 py-2 bg-slate-700 text-white border border-slate-600 rounded-lg"
                 >
-                  <option value="planning">Quy hoạch</option>
-                  <option value="in_progress">Đang thi công</option>
-                  <option value="completed">Hoàn thành</option>
-                  <option value="on_hold">Tạm dừng</option>
+                  <option value="PLANNED">Quy hoạch</option>
+                  <option value="IN_PROGRESS">Đang thi công</option>
+                  <option value="COMPLETED">Hoàn thành</option>
+                  <option value="CANCELLED">Tạm dừng/Hủy</option>
                 </select>
               </div>
             </div>
