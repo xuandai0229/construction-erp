@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
-import { ProjectService } from "@/services/project.service";
-import { createProjectSchema } from "@/lib/validations";
 import { handleApiError, successResponse } from "@/lib/api-error";
+import { ProjectService } from "@/services/project.service";
+import { createProjectSchema, updateProjectSchema } from "@/lib/validations";
+import { assertValidEntity } from "@/lib/assertion";
 import { ProjectStatus } from "@prisma/client";
 
 export async function GET(request: Request) {
@@ -15,7 +15,10 @@ export async function GET(request: Request) {
     const orderBy = (searchParams.get("orderBy") as any) || undefined;
     const orderDir = (searchParams.get("orderDir") as any) || undefined;
 
-    const { data, metadata } = await ProjectService.findMany({ page, limit, search, status, orderBy, orderDir });
+    const { data, metadata } = await ProjectService.findMany({ 
+      page, limit, search, status, orderBy, orderDir 
+    });
+    
     return successResponse(data, metadata);
   } catch (error) {
     return handleApiError(error);
@@ -26,6 +29,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const validatedData = createProjectSchema.parse(body);
+    assertValidEntity(validatedData, "CreateProjectDTO");
     
     const project = await ProjectService.create(validatedData);
     return successResponse(project, null, 201);

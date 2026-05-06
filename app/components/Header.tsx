@@ -10,11 +10,15 @@ import AddTaskModal from '@/app/components/modals/AddTaskModal';
 
 import { useERPStore } from '@/store/erpStore';
 
-const statusLabel: Record<string, string> = {
-  planning: 'Lập kế hoạch',
-  in_progress: 'Đang thi công',
-  completed: 'Hoàn thành',
-  on_hold: 'Tạm dừng',
+import { ProjectStatus } from '@prisma/client';
+
+const statusLabel: Record<ProjectStatus, string> = {
+  [ProjectStatus.PLANNED]: 'Lập kế hoạch',
+  [ProjectStatus.ACTIVE]: 'Đang thi công',
+  [ProjectStatus.IN_PROGRESS]: 'Đang thi công',
+  [ProjectStatus.COMPLETED]: 'Hoàn thành',
+  [ProjectStatus.CLOSED]: 'Đã đóng',
+  [ProjectStatus.CANCELLED]: 'Tạm dừng',
 };
 
 export default function Header({ data: propData }: { data?: DashboardData }) {
@@ -144,9 +148,9 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
             <span className="rounded-full bg-green-500/20 px-3 py-1 text-xs font-bold text-green-400">{statusLabel[data.project.status]}</span>
           </div>
           <div className="mt-8 grid grid-cols-3 gap-8">
-            <Info label="Chủ đầu tư" value={data.project.investor} />
-            <Info label="Tổng giá trị hợp đồng" value={`${formatVnd(data.project.total_value)} VND`} />
-            <Info label="Thời gian thực hiện" value={`${formatDate(data.project.start_date)} - ${formatDate(data.project.end_date)}`} />
+            <Info label="Chủ đầu tư" value={data.project.investor ?? 'N/A'} />
+            <Info label="Tổng giá trị hợp đồng" value={`${formatVnd(data.project.totalValue ?? 0)} VND`} />
+            <Info label="Thời gian thực hiện" value={`${formatDate(data.project.startDate)} - ${formatDate(data.project.endDate)}`} />
           </div>
         </div>
         <div className="border-l border-slate-800 px-5 py-9">
@@ -158,8 +162,8 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
             <div className="h-full rounded-full bg-green-500" style={{ width: `${data.progress}%` }} />
           </div>
           <div className="mt-4 grid grid-cols-2 text-xs text-slate-400">
-            <span>Ngày bắt đầu: {formatDate(data.project.start_date)}</span>
-            <span>Ngày kết thúc dự kiến: {formatDate(data.project.end_date)}</span>
+            <span>Ngày bắt đầu: {formatDate(data.project.startDate)}</span>
+            <span>Ngày kết thúc dự kiến: {formatDate(data.project.endDate)}</span>
           </div>
         </div>
       </div>
@@ -176,3 +180,4 @@ function Info({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+

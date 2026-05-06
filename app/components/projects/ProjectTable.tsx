@@ -6,7 +6,9 @@ import { useERPStore } from '@/store/erpStore';
 const statusLabels: Record<string, { text: string; class: string }> = {
   PLANNED: { text: 'Lập kế hoạch', class: 'bg-slate-500/20 text-slate-400 border-slate-500/30' },
   IN_PROGRESS: { text: 'Đang thi công', class: 'bg-green-500/20 text-green-400 border-green-500/30' },
+  ACTIVE: { text: 'Đang hoạt động', class: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
   COMPLETED: { text: 'Hoàn thành', class: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
+  CLOSED: { text: 'Đã đóng', class: 'bg-red-500/20 text-red-400 border-red-500/30' },
   CANCELLED: { text: 'Tạm dừng', class: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' },
 };
 
@@ -95,14 +97,14 @@ export default function ProjectTable({ projects, onEdit }: { projects: Project[]
                   </span>
                 </td>
                 <td className="px-5 py-3 text-right">
-                  <div className="text-[13px] font-bold text-slate-200">{(p.total_value || 0).toLocaleString()}</div>
+                  <div className="text-[13px] font-bold text-slate-200">{(p.totalValue ?? 0).toLocaleString()}</div>
                   <div className="text-[10px] text-slate-500">VND</div>
                 </td>
                 <td className="px-5 py-3 text-center text-[12px] text-slate-400">
-                  {p.start_date ? new Date(p.start_date).toLocaleDateString('vi-VN') : '-'}
+                  {p.startDate ? new Date(p.startDate).toLocaleDateString('vi-VN') : '-'}
                 </td>
                 <td className="px-5 py-3 text-center text-[12px] text-slate-400">
-                  {p.end_date ? new Date(p.end_date).toLocaleDateString('vi-VN') : '-'}
+                  {p.endDate ? new Date(p.endDate).toLocaleDateString('vi-VN') : '-'}
                 </td>
                 <td className="px-5 py-3 text-center">
                   <span className={`inline-flex items-center justify-center rounded border px-2.5 py-1 text-[11px] font-bold shadow-sm ${statusLabels[p.status].class}`}>
@@ -201,3 +203,4 @@ export default function ProjectTable({ projects, onEdit }: { projects: Project[]
     </div>
   );
 }
+

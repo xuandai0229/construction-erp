@@ -30,7 +30,7 @@ export default function AddPaymentModal({ isOpen, onClose, invoiceId }: Props) {
     e.preventDefault();
     const amount = parseFloat(form.amount);
     if (!form.amount || isNaN(amount) || amount <= 0) return setError('Số tiền phải là số dương');
-    if (invoice && amount > invoice.remaining_amount) return setError('Số tiền thanh toán không được vượt quá số dư còn lại');
+    if (invoice && amount > invoice.remainingAmount) return setError('Số tiền thanh toán không được vượt quá số dư còn lại');
 
     setLoading(true);
     const res = await addPayment(currentProjectId, invoiceId, amount, form.date, form.description);
@@ -60,7 +60,7 @@ export default function AddPaymentModal({ isOpen, onClose, invoiceId }: Props) {
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-400">Còn lại:</span>
-                <span className="font-bold text-emerald-400">{new Intl.NumberFormat('vi-VN').format(invoice.remaining_amount)} VND</span>
+                <span className="font-bold text-emerald-400">{new Intl.NumberFormat('vi-VN').format(invoice.remainingAmount)} VND</span>
               </div>
             </div>
           )}
@@ -104,3 +104,4 @@ export default function AddPaymentModal({ isOpen, onClose, invoiceId }: Props) {
     </div>
   );
 }
+

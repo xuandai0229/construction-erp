@@ -1,87 +1,159 @@
 import { prisma } from "@/lib/prisma";
 import { ApiError } from "@/lib/api-error";
-import { InvoiceStatus } from "@prisma/client";
+import { InvoiceStatus, PaymentStatus } from "@prisma/client";
+import { assertValidEntity } from "@/lib/assertion";
+import { round } from "@/lib/math";
+import { PostingEngine } from "@/lib/accounting/postingEngine";
+import { AuditService } from "./audit.service";
 
 export class RevenueService {
+  
   // ─── INVOICE ───────────────────────────────────────
   static async createInvoice(data: any) {
-    return prisma.invoice.create({
-      data: {
-        project_id: data.project_id,
-        wbs_id: data.wbs_id,
-        invoice_number: data.invoice_number,
-        amount: data.amount,
-        issued_date: data.issued_date ? new Date(data.issued_date) : new Date(),
-        due_date: data.due_date ? new Date(data.due_date) : null,
-        remaining_amount: data.amount,
-        status: "DRAFT",
-        note: data.note,
-        created_by_id: data.created_by_id
-      }
+    assertValidEntity(data, "CreateInvoiceDTO");
+
+    const project = await prisma.project.findUnique({ where: { id: data.projectId } });
+    if (!project) throw new ApiError(404, "Không tìm thấy dự án");
+
+    const wbs = await prisma.wBSItem.findUnique({ where: { id: data.wbsId } });
+    if (!wbs) throw new ApiError(404, "Không tìm thấy hạng mục WBS");
+    if (wbs.projectId !== data.projectId) throw new ApiError(400, "Hạng mục WBS không thuộc về dự án đã chọn");
+
+    const amount = round(data.amount);
+
+    return prisma.$transaction(async (tx) => {
+      const invoice = await tx.invoice.create({
+        data: {
+          projectId: data.projectId,
+          wbsId: data.wbsId,
+          invoiceNumber: data.invoiceNumber,
+          amount: amount,
+          issuedDate: data.issuedDate ? new Date(data.issuedDate) : new Date(),
+          dueDate: data.dueDate ? new Date(data.dueDate) : null,
+          remainingAmount: amount,
+          status: "DRAFT",
+          note: data.note,
+          createdById: data.createdById
+        }
+      });
+
+      // Posting to Ledger
+      await PostingEngine.postInvoice(tx, {
+        invoiceId: invoice.id,
+        projectId: invoice.projectId,
+        amount: amount,
+        description: `Hóa đơn ${invoice.invoiceNumber || invoice.id} cho ${project.name}`
+      });
+
+      // Audit Logging
+      await AuditService.log({
+        userId: data.createdById,
+        action: "CREATE",
+        entity: "Invoice",
+        entityId: invoice.id,
+        newData: invoice
+      });
+
+      return invoice;
     });
   }
 
   // ─── PAYMENT ───────────────────────────────────────
   static async createPayment(data: any) {
+    assertValidEntity(data, "CreatePaymentDTO");
+    
     if (data.amount <= 0) throw new ApiError(400, "Số tiền thanh toán phải lớn hơn 0");
+    const amount = round(data.amount);
 
     return prisma.$transaction(async (tx) => {
-      const invoice = await tx.invoice.findUnique({ where: { id: data.invoice_id } });
+      const invoice = await tx.invoice.findUnique({ where: { id: data.invoiceId } });
       if (!invoice) throw new ApiError(404, "Không tìm thấy hóa đơn");
 
-      if (data.amount > invoice.remaining_amount + 0.01) { 
-        throw new ApiError(400, `Số tiền thanh toán (${data.amount}) vượt quá số tiền còn lại (${invoice.remaining_amount})`);
+      if (amount > round(Number(invoice.remainingAmount)) + 0.01) { 
+        throw new ApiError(400, `Số tiền thanh toán (${amount}) vượt quá số tiền còn lại (${round(Number(invoice.remainingAmount))})`);
       }
-
-      const newPaidAmount = invoice.paid_amount + data.amount;
-      const newRemainingAmount = Math.max(0, invoice.amount - newPaidAmount);
+      
+      const newPaidAmount = round(Number(invoice.paidAmount) + amount);
+      const newRemainingAmount = Math.max(0, round(Number(invoice.amount) - newPaidAmount));
       
       let newStatus: InvoiceStatus = "PARTIAL";
       if (newRemainingAmount <= 0) newStatus = "PAID";
 
       const payment = await tx.payment.create({
         data: {
-          project_id: data.project_id,
-          invoice_id: data.invoice_id,
-          amount: data.amount,
+          projectId: invoice.projectId,
+          invoiceId: data.invoiceId,
+          amount: amount,
           date: data.date ? new Date(data.date) : new Date(),
           description: data.description,
         },
       });
 
       await tx.invoice.update({
-        where: { id: data.invoice_id },
+        where: { id: data.invoiceId },
         data: {
-          paid_amount: newPaidAmount,
-          remaining_amount: newRemainingAmount,
+          paidAmount: newPaidAmount,
+          remainingAmount: newRemainingAmount,
           status: newStatus,
         },
       });
 
+      // Create a revenue record for project tracking
       await tx.revenue.create({
         data: {
-          project_id: data.project_id,
-          wbs_id: invoice.wbs_id,
-          invoice_id: invoice.id,
-          amount: data.amount,
+          projectId: invoice.projectId,
+          wbsId: invoice.wbsId,
+          invoiceId: invoice.id,
+          amount: amount,
           date: new Date(),
-          status: "paid",
-          description: `Thanh toán cho hóa đơn ${invoice.invoice_number || invoice.id}`
+          status: "paid" as PaymentStatus,
+          description: `Thanh toán cho hóa đơn ${invoice.invoiceNumber || invoice.id}`
         }
+      });
+
+      // Posting to Ledger
+      await PostingEngine.postPayment(tx, {
+        paymentId: payment.id,
+        projectId: invoice.projectId,
+        amount: amount,
+        description: `Thanh toán hóa đơn ${invoice.invoiceNumber || invoice.id}`
+      });
+
+      // Audit Logging
+      await AuditService.log({
+        action: "CREATE",
+        entity: "Payment",
+        entityId: payment.id,
+        newData: payment
       });
 
       return payment;
     });
   }
 
-  static async findInvoicesByProject(project_id: string) {
+  static async findInvoicesByProject(projectId: string) {
     return prisma.invoice.findMany({
-      where: { project_id },
+      where: { projectId },
       include: {
         payments: true,
         wbs: { select: { name: true } }
       },
-      orderBy: { issued_date: "desc" }
+      orderBy: { issuedDate: "desc" }
+    });
+  }
+
+  static async deleteInvoice(id: string) {
+    const existing = await prisma.invoice.findUnique({ where: { id } });
+    if (!existing) throw new ApiError(404, "Không tìm thấy hóa đơn");
+
+    return prisma.$transaction(async (tx) => {
+      await AuditService.log({
+        action: "DELETE",
+        entity: "Invoice",
+        entityId: id,
+        oldData: existing
+      });
+      return tx.invoice.delete({ where: { id } });
     });
   }
 }

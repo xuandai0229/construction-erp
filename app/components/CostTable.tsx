@@ -1,6 +1,6 @@
 'use client';
 
-import { COST_TYPE_LABELS, CostRecord } from '@/app/types';
+import { costType_LABELS, CostRecord } from '@/app/types';
 import { WBSTreeNode } from '@/app/types';
 import { DashboardData, formatDate, formatVnd } from './dashboard-data';
 import { useERPStore } from '@/store/erpStore';
@@ -46,9 +46,9 @@ export default function CostTable({ data, onEdit }: { data: DashboardData, onEdi
             .map((cost) => (
               <tr key={cost.id} className="border-b border-slate-800/80 hover:bg-slate-800/40">
                 <td className="px-4 py-2.5 text-slate-100">{formatDate(cost.date)}</td>
-                <td className="truncate px-4 py-2.5 font-medium text-slate-100" title={cost.note}>{cost.note}</td>
-                <td className="truncate px-4 py-2.5 text-slate-300">{wbsNames.get(cost.wbs_id) ?? cost.wbs_id}</td>
-                <td className="px-4 py-2.5 text-slate-300">{COST_TYPE_LABELS[cost.cost_type]}</td>
+                <td className="truncate px-4 py-2.5 font-medium text-slate-100" title={cost.note ?? ''}>{cost.note ?? 'No description'}</td>
+                <td className="truncate px-4 py-2.5 text-slate-300">{wbsNames.get(cost.wbsId) ?? cost.wbsId}</td>
+                <td className="px-4 py-2.5 text-slate-300">{costType_LABELS[cost.costType]}</td>
                 <td className="truncate px-4 py-2.5 text-slate-300">{cost.supplier}</td>
                 <td className="px-4 py-2.5 text-right font-bold text-slate-100">{formatVnd(cost.amount)}</td>
                 <td className={`px-4 py-2.5 font-extrabold ${cost.status === 'paid' ? 'text-green-400' : 'text-yellow-400'}`}>
@@ -81,3 +81,4 @@ export default function CostTable({ data, onEdit }: { data: DashboardData, onEdi
     </section>
   );
 }
+

@@ -7,6 +7,11 @@ import {
 } from '@/app/types';
 
 import { DashboardData } from '@/app/components/dashboard-data';
+import { projectApi } from '@/services/api/project.api';
+import { wbsApi } from '@/services/api/wbs.api';
+import { costApi } from '@/services/api/cost.api';
+import { revenueApi } from '@/services/api/revenue.api';
+import { ProjectFinance } from '@/services/finance/projectFinance';
 
 interface ERPState {
   projects: Project[];
@@ -18,7 +23,7 @@ interface ERPState {
   invoices: InvoiceRecord[];
   payments: PaymentRecord[];
   locks: string[]; 
-  snapshots: Record<string, MonthlyReport & { locked_at: string }>;
+  snapshots: Record<string, MonthlyReport & { lockedAt: string }>;
   userRole: UserRole;
   currentProjectId: string;
   projectStats: any; // Financial summary
@@ -27,14 +32,14 @@ interface ERPState {
   init: () => Promise<void>;
   setCurrentProject: (projectId: string) => Promise<void>;
   
-  addProject: (name: string, investor: string, total_value: number, status: ProjectStatus, start_date?: string, end_date?: string) => Promise<{ success: boolean; data?: any; error?: string }>;
-  updateProject: (id: string, updates: Partial<any>) => Promise<{ success: boolean; error?: string }>;
+  addProject: (name: string, investor: string, totalValue: number, status: ProjectStatus, startDate?: string, endDate?: string) => Promise<{ success: boolean; data?: any; error?: string }>;
+  updateProject: (id: string, updates: Partial<Project>) => Promise<{ success: boolean; error?: string }>;
   deleteProject: (id: string) => Promise<{ success: boolean; error?: string }>;
 
   addTask: (projectId: string, title: string, description?: string, status?: TaskStatus) => Promise<{ success: boolean; data?: any; error?: string }>;
   
   addWBS: (projectId: string, name: string, parentId: string | null) => Promise<{ success: boolean; error?: string }>;
-  updateWBS: (projectId: string, wbsId: string, updates: Partial<Pick<WBSItem, 'name' | 'parent_id'>>) => Promise<{ success: boolean; error?: string }>;
+  updateWBS: (projectId: string, wbsId: string, updates: Partial<Pick<WBSItem, 'name' | 'parentId'>>) => Promise<{ success: boolean; error?: string }>;
   deleteWBS: (projectId: string, wbsId: string) => Promise<{ success: boolean; error?: string }>;
   
   addCost: (projectId: string, wbsId: string, costType: CostType, amount: number, quantity?: number, unitPrice?: number) => Promise<{ success: boolean; error?: string }>;
@@ -70,18 +75,6 @@ interface ERPState {
   _refreshProjectData: (projectId: string) => Promise<void>;
 }
 
-// Helper to map API WBS → local WBSItem
-function mapWBS(raw: any): WBSItem {
-  return {
-    id: raw.id,
-    project_id: raw.projectId,
-    name: raw.name,
-    parent_id: raw.parentId ?? null,
-    children: [],
-    created_at: raw.createdAt,
-  };
-}
-
 export const useERPStore = create<ERPState>((set, get) => ({
   projects: [],
   tasks: [],
@@ -93,28 +86,18 @@ export const useERPStore = create<ERPState>((set, get) => ({
   payments: [],
   locks: [],
   snapshots: {},
-  userRole: 'admin',
+  userRole: 'ADMIN',
   currentProjectId: '', 
   projectStats: null,
   initialized: false,
 
   init: async () => {
     try {
-      const res = await fetch('/api/projects');
-      const json = await res.json();
-      if (json.success) {
-        const mapped = json.data.map((p: any) => ({
-           id: p.id,
-           name: p.name,
-           investor: p.owner?.name || "No Investor",
-           total_value: 0,
-           contract_value: 0,
-           status: p.status,
-           created_at: p.createdAt,
-        }));
-        set({ projects: mapped, initialized: true });
-        if (mapped.length > 0) {
-           const projectId = get().currentProjectId || mapped[0].id;
+      const res = await projectApi.getAll();
+      if (res.success && res.data) {
+        set({ projects: res.data, initialized: true });
+        if (res.data.length > 0) {
+           const projectId = get().currentProjectId || res.data[0].id;
            set({ currentProjectId: projectId });
            await get()._refreshProjectData(projectId);
         }
@@ -127,123 +110,65 @@ export const useERPStore = create<ERPState>((set, get) => ({
     }
   },
 
-  _refreshProjectData: async (project_id: string) => {
-    if (!project_id) return;
+  _refreshProjectData: async (projectId: string) => {
+    if (!projectId) return;
     try {
       const [wbsRes, costsRes, budgetsRes, revenuesRes, invoicesRes, paymentsRes, statsRes] = await Promise.all([
-        fetch(`/api/wbs?projectId=${project_id}`).then(r => r.json()),
-        fetch(`/api/costs?projectId=${project_id}`).then(r => r.json()),
-        fetch(`/api/budgets?projectId=${project_id}`).then(r => r.json()),
-        fetch(`/api/revenues?projectId=${project_id}`).then(r => r.json()),
-        fetch(`/api/invoices?projectId=${project_id}`).then(r => r.json()),
-        fetch(`/api/payments?projectId=${project_id}`).then(r => r.json()),
-        fetch(`/api/dashboard/stats?projectId=${project_id}`).then(r => r.json()),
+        wbsApi.getByProject(projectId),
+        costApi.getCostsByProject(projectId),
+        costApi.getBudgetsByProject(projectId),
+        revenueApi.getRevenuesByProject(projectId),
+        revenueApi.getInvoicesByProject(projectId),
+        revenueApi.getPaymentsByProject(projectId),
+        projectApi.getStats(projectId),
       ]);
 
       set({
-        wbs: wbsRes.success ? wbsRes.data.flat : [],
-        costs: costsRes.success ? costsRes.data : [],
-        budgets: budgetsRes.success ? budgetsRes.data : [],
+        wbs: wbsRes.success && wbsRes.data ? wbsRes.data.flat : [],
+        costs: costsRes.success && costsRes.data ? costsRes.data : [],
+        budgets: budgetsRes.success && budgetsRes.data ? budgetsRes.data : [],
         projectStats: statsRes.success ? statsRes.data : null,
-        revenues: revenuesRes.success ? revenuesRes.data.map((r: any) => ({
-          id: r.id,
-          project_id: r.project_id,
-          wbs_id: r.wbs_id,
-          invoice_id: r.invoice_id,
-          amount: r.amount,
-          date: r.date,
-          status: r.status,
-          description: r.description || '',
-          created_at: r.created_at,
-        })) : [],
-        invoices: invoicesRes.success ? invoicesRes.data.map((inv: any) => ({
-          id: inv.id,
-          project_id: inv.project_id,
-          amount: inv.amount,
-          issued_date: inv.issued_date,
-          paid_amount: inv.paid_amount,
-          remaining_amount: inv.remaining_amount,
-          status: inv.status,
-          created_at: inv.created_at,
-        })) : [],
-        payments: paymentsRes.success ? paymentsRes.data.map((p: any) => ({
-          id: p.id,
-          invoice_id: p.invoice_id,
-          project_id: p.project_id,
-          amount: p.amount,
-          date: p.date,
-          description: p.description,
-          created_at: p.created_at,
-        })) : [],
+        revenues: revenuesRes.success && revenuesRes.data ? revenuesRes.data : [],
+        invoices: invoicesRes.success && invoicesRes.data ? invoicesRes.data : [],
+        payments: paymentsRes.success && paymentsRes.data ? paymentsRes.data : [],
       });
     } catch (e) {
       console.error('_refreshProjectData error:', e);
     }
   },
 
-  setCurrentProject: async (project_id: string) => {
-    set({ currentProjectId: project_id });
-    await get()._refreshProjectData(project_id);
+  setCurrentProject: async (projectId: string) => {
+    set({ currentProjectId: projectId });
+    await get()._refreshProjectData(projectId);
   },
 
-  addProject: async (name, investor, total_value, status, start_date, end_date) => {
-    try {
-      const body = { name, status };
-      const res = await fetch('/api/projects', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const json = await res.json();
-      if (json.success) {
-        await get().init();
-        return { success: true, data: json.data };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('addProject error:', e);
-      return { success: false, error: e.message };
+  addProject: async (name, investor, totalValue, status, startDate, endDate) => {
+    const res = await projectApi.create({ name, investor, totalValue, status, startDate, endDate });
+    if (res.success) {
+      await get().init();
     }
+    return res;
   },
 
   updateProject: async (id, updates) => {
-    try {
-      const body = { name: updates.name, status: updates.status };
-      const res = await fetch(`/api/projects/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const json = await res.json();
-      if (json.success) {
-        await get().init();
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('updateProject error:', e);
-      return { success: false, error: e.message };
+    const res = await projectApi.update(id, updates);
+    if (res.success) {
+      await get().init();
     }
+    return res as any;
   },
 
   deleteProject: async (id) => {
-    try {
-      const res = await fetch(`/api/projects/${id}`, { method: 'DELETE' });
-      const json = await res.json();
-      if (json.success) {
-        await get().init();
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('deleteProject error:', e);
-      return { success: false, error: e.message };
+    const res = await projectApi.delete(id);
+    if (res.success) {
+      await get().init();
     }
+    return res as any;
   },
 
-  addTask: async (project_id, title, description, status) => {
+  addTask: async (projectId, title, description, status) => {
     try {
-      const body = { projectId: project_id, title, description, status: status ?? 'TODO' };
+      const body = { projectId, title, description, status: status ?? 'TODO' };
       const res = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -251,7 +176,7 @@ export const useERPStore = create<ERPState>((set, get) => ({
       });
       const json = await res.json();
       if (json.success) {
-        const tasksRes = await fetch(`/api/tasks?projectId=${project_id}`);
+        const tasksRes = await fetch(`/api/tasks?projectId=${projectId}`);
         const tasksJson = await tasksRes.json();
         if (tasksJson.success) {
           set({ tasks: tasksJson.data });
@@ -265,227 +190,93 @@ export const useERPStore = create<ERPState>((set, get) => ({
     }
   },
 
-  addWBS: async (project_id, name, parent_id) => {
-    try {
-      const body = { project_id, name, parent_id: parent_id ?? null };
-      const res = await fetch('/api/wbs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const json = await res.json();
-      if (json.success) {
-        await get()._refreshProjectData(project_id);
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('addWBS error:', e);
-      return { success: false, error: e.message };
+  addWBS: async (projectId, name, parentId) => {
+    const res = await wbsApi.create({ projectId, name, parentId });
+    if (res.success) {
+      await get()._refreshProjectData(projectId);
     }
+    return res as any;
   },
 
-  updateWBS: async (project_id, wbs_id, updates) => {
-    try {
-      const body = {
-        name: updates.name,
-        parent_id: updates.parent_id ?? null,
-      };
-      const res = await fetch(`/api/wbs/${wbs_id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const json = await res.json();
-      if (json.success) {
-        await get()._refreshProjectData(project_id);
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('updateWBS error:', e);
-      return { success: false, error: e.message };
+  updateWBS: async (projectId, wbsId, updates) => {
+    const res = await wbsApi.update(wbsId, updates);
+    if (res.success) {
+      await get()._refreshProjectData(projectId);
     }
+    return res as any;
   },
 
-  deleteWBS: async (project_id, wbs_id) => {
-    try {
-      const res = await fetch(`/api/wbs/${wbs_id}`, { method: 'DELETE' });
-      const json = await res.json();
-      if (json.success) {
-        await get()._refreshProjectData(project_id);
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('deleteWBS error:', e);
-      return { success: false, error: e.message };
+  deleteWBS: async (projectId, wbsId) => {
+    const res = await wbsApi.delete(wbsId);
+    if (res.success) {
+      await get()._refreshProjectData(projectId);
     }
+    return res as any;
   },
 
-  addCost: async (project_id, wbs_id, cost_type, amount, quantity, unit_price) => {
-    try {
-      const body = { project_id, wbs_id, cost_type, amount, quantity, unit_price };
-      const res = await fetch('/api/costs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const json = await res.json();
-      if (json.success) {
-        await get()._refreshProjectData(project_id);
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('addCost error:', e);
-      return { success: false, error: e.message };
+  addCost: async (projectId, wbsId, costType, amount, quantity, unitPrice) => {
+    const res = await costApi.createCost({ projectId, wbsId, costType, amount, quantity, unitPrice });
+    if (res.success) {
+      await get()._refreshProjectData(projectId);
     }
+    return res as any;
   },
 
-  updateCost: async (project_id, cost_id, updates) => {
-    try {
-      const body = {
-        wbs_id: updates.wbs_id,
-        cost_type: updates.cost_type,
-        amount: updates.amount,
-        quantity: updates.quantity,
-        unit_price: updates.unit_price,
-        note: updates.note,
-        date: updates.date,
-        status: updates.status,
-      };
-      const res = await fetch(`/api/costs/${cost_id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const json = await res.json();
-      if (json.success) {
-        await get()._refreshProjectData(project_id);
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('updateCost error:', e);
-      return { success: false, error: e.message };
+  updateCost: async (projectId, costId, updates) => {
+    const res = await costApi.updateCost(costId, updates);
+    if (res.success) {
+      await get()._refreshProjectData(projectId);
     }
+    return res as any;
   },
 
-  deleteCost: async (project_id, cost_id) => {
-    try {
-      const res = await fetch(`/api/costs/${cost_id}`, { method: 'DELETE' });
-      const json = await res.json();
-      if (json.success) {
-        await get()._refreshProjectData(project_id);
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('deleteCost error:', e);
-      return { success: false, error: e.message };
+  deleteCost: async (projectId, costId) => {
+    const res = await costApi.deleteCost(costId);
+    if (res.success) {
+      await get()._refreshProjectData(projectId);
     }
+    return res as any;
   },
 
-  addBudget: async (project_id, wbs_id, cost_type, estimated_amount) => {
-    try {
-      const body = { project_id, wbs_id, cost_type, estimated_amount };
-      const res = await fetch('/api/budgets', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const json = await res.json();
-      if (json.success) {
-        await get()._refreshProjectData(project_id);
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('addBudget error:', e);
-      return { success: false, error: e.message };
+  addBudget: async (projectId, wbsId, costType, estimatedAmount) => {
+    const res = await costApi.createBudget({ projectId, wbsId, costType, estimatedAmount });
+    if (res.success) {
+      await get()._refreshProjectData(projectId);
     }
+    return res as any;
   },
 
-  deleteBudget: async (project_id, budget_id) => {
-    try {
-      const res = await fetch(`/api/budgets/${budget_id}`, { method: 'DELETE' });
-      const json = await res.json();
-      if (json.success) {
-        await get()._refreshProjectData(project_id);
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('deleteBudget error:', e);
-      return { success: false, error: e.message };
+  deleteBudget: async (projectId, budgetId) => {
+    const res = await costApi.deleteBudget(budgetId);
+    if (res.success) {
+      await get()._refreshProjectData(projectId);
     }
+    return res as any;
   },
 
-  addRevenue: async (project_id, wbs_id, amount, status, description, date) => {
-    try {
-      const body = { project_id, wbs_id, amount, status, description, date };
-      const res = await fetch('/api/revenues', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const json = await res.json();
-      if (json.success) {
-        await get()._refreshProjectData(project_id);
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('addRevenue error:', e);
-      return { success: false, error: e.message };
+  addRevenue: async (projectId, wbsId, amount, status, description, date) => {
+    const res = await revenueApi.createRevenue({ projectId, wbsId, amount, status, description, date });
+    if (res.success) {
+      await get()._refreshProjectData(projectId);
     }
+    return res as any;
   },
 
   updateRevenue: async (id, updates) => {
-    try {
-      const body = {
-        status: updates.status,
-        amount: updates.amount,
-        description: updates.description,
-        date: updates.date,
-      };
-      const res = await fetch(`/api/revenues/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const json = await res.json();
-      if (json.success) {
-        const { currentProjectId } = get();
-        if (currentProjectId) await get()._refreshProjectData(currentProjectId);
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('updateRevenue error:', e);
-      return { success: false, error: e.message };
+    const res = await revenueApi.updateRevenue(id, updates);
+    if (res.success) {
+      const { currentProjectId } = get();
+      if (currentProjectId) await get()._refreshProjectData(currentProjectId);
     }
+    return res as any;
   },
 
-  addInvoice: async (project_id, wbs_id, amount, issued_date) => {
-    try {
-      const body = { project_id, wbs_id, amount, issued_date };
-      const res = await fetch('/api/invoices', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const json = await res.json();
-      if (json.success) {
-        await get()._refreshProjectData(project_id);
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('addInvoice error:', e);
-      return { success: false, error: e.message };
+  addInvoice: async (projectId, wbsId, amount, issuedDate) => {
+    const res = await revenueApi.createInvoice({ projectId, wbsId, amount, issuedDate });
+    if (res.success) {
+      await get()._refreshProjectData(projectId);
     }
+    return res as any;
   },
 
   updateInvoice: async (id, updates) => {
@@ -493,39 +284,20 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   deleteInvoice: async (id) => {
-    try {
-      const res = await fetch(`/api/invoices/${id}`, { method: 'DELETE' });
-      const json = await res.json();
-      if (json.success) {
-        const { currentProjectId } = get();
-        if (currentProjectId) await get()._refreshProjectData(currentProjectId);
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('deleteInvoice error:', e);
-      return { success: false, error: e.message };
+    const res = await revenueApi.deleteInvoice(id);
+    if (res.success) {
+      const { currentProjectId } = get();
+      if (currentProjectId) await get()._refreshProjectData(currentProjectId);
     }
+    return res as any;
   },
 
-  addPayment: async (project_id, invoice_id, amount, date, description) => {
-    try {
-      const body = { project_id, invoice_id, amount, date, description };
-      const res = await fetch('/api/payments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const json = await res.json();
-      if (json.success) {
-        await get()._refreshProjectData(project_id);
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('addPayment error:', e);
-      return { success: false, error: e.message };
+  addPayment: async (projectId, invoiceId, amount, date, description) => {
+    const res = await revenueApi.createPayment({ projectId, invoiceId, amount, date, description });
+    if (res.success) {
+      await get()._refreshProjectData(projectId);
     }
+    return res as any;
   },
 
   updatePayment: async (id, updates) => {
@@ -533,19 +305,12 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   deletePayment: async (id) => {
-    try {
-      const res = await fetch(`/api/payments/${id}`, { method: 'DELETE' });
-      const json = await res.json();
-      if (json.success) {
-        const { currentProjectId } = get();
-        if (currentProjectId) await get()._refreshProjectData(currentProjectId);
-        return { success: true };
-      }
-      return { success: false, error: json.error };
-    } catch (e: any) {
-      console.error('deletePayment error:', e);
-      return { success: false, error: e.message };
+    const res = await revenueApi.deletePayment(id);
+    if (res.success) {
+      const { currentProjectId } = get();
+      if (currentProjectId) await get()._refreshProjectData(currentProjectId);
     }
+    return res as any;
   },
 
   toggleLock: async () => {},
@@ -556,59 +321,102 @@ export const useERPStore = create<ERPState>((set, get) => ({
   getCostSummary: () => ({ total: 0, byType: {} }),
   recalculateInvoiceBalance: async () => {},
 
-  getMonthlyReport: () => [],
-  getAgingReport: () => [],
+  getMonthlyReport: (projectId: string) => {
+    const { revenues, costs, payments } = get();
+    const months: Record<string, MonthlyReport> = {};
+
+    // Helper to get month key (YYYY-MM)
+    const getMonth = (dateStr: string) => dateStr.substring(0, 7);
+
+    // 1. Process Revenues (Income)
+    revenues.forEach(r => {
+      const m = getMonth(r.date);
+      if (!months[m]) months[m] = { month: m, cashIn: 0, cashOut: 0, revenue: 0, cost: 0, profit: 0, runningBalance: 0 };
+      months[m].revenue += Number(r.amount);
+    });
+
+    // 2. Process Costs (Expense)
+    costs.forEach(c => {
+      const m = getMonth(c.date);
+      if (!months[m]) months[m] = { month: m, cashIn: 0, cashOut: 0, revenue: 0, cost: 0, profit: 0, runningBalance: 0 };
+      months[m].cost += Number(c.amount);
+    });
+
+    // 3. Process Payments (Cash In)
+    payments.forEach(p => {
+      const m = getMonth(p.date);
+      if (!months[m]) months[m] = { month: m, cashIn: 0, cashOut: 0, revenue: 0, cost: 0, profit: 0, runningBalance: 0 };
+      months[m].cashIn += Number(p.amount);
+    });
+
+    // Sort months and calculate profit/balance
+    const sortedMonths = Object.keys(months).sort();
+    let balance = 0;
+    return sortedMonths.map(m => {
+      const row = months[m];
+      row.cashOut = row.cost; // Simplified: Cost = Cash Out for now
+      row.profit = row.revenue - row.cost;
+      balance += (row.cashIn - row.cashOut);
+      row.runningBalance = balance;
+      return row;
+    });
+  },
+
+  getAgingReport: (projectId: string) => {
+    const { invoices, costs } = get();
+    const now = new Date();
+    const categories = ['0-30', '31-60', '61-90', '90+'];
+
+    const getCategory = (dateStr: string) => {
+      const diff = Math.floor((now.getTime() - new Date(dateStr).getTime()) / (1000 * 60 * 60 * 24));
+      if (diff <= 30) return '0-30';
+      if (diff <= 60) return '31-60';
+      if (diff <= 90) return '61-90';
+      return '90+';
+    };
+
+    const report: AgingReportItem[] = [];
+
+    // Receivable (Invoices)
+    invoices.filter(i => i.remainingAmount > 0).forEach(i => {
+      report.push({
+        type: 'receivable',
+        category: getCategory(i.issuedDate),
+        amount: Number(i.remainingAmount),
+        refId: i.id,
+        partner: 'Khách hàng'
+      });
+    });
+
+    // Payable (Costs)
+    costs.filter(c => c.status === 'unpaid').forEach(c => {
+      report.push({
+        type: 'payable',
+        category: getCategory(c.date),
+        amount: Number(c.amount),
+        refId: c.id,
+        partner: c.supplier || 'Nhiều người bán'
+      });
+    });
+
+    return report;
+  },
 
   getWBSTreeWithCost: () => {
     const { wbs, costs, budgets, projectStats } = get();
     if (!projectStats) return { tree: [], stats: { totalItems: 0, totalBudget: 0, totalActual: 0, variance: 0, progress: 0 } };
 
-    const buildTree = (items: any[], parentId: string | null = null, level = 0): EnrichedWBSNode[] => {
-      return items
-        .filter(w => w.parent_id === parentId)
-        .map((w, idx) => {
-          const wbsBudget = budgets.filter(b => b.wbs_id === w.id).reduce((s, b) => s + b.estimated_amount, 0);
-          const wbsActual = costs.filter(c => c.wbs_id === w.id).reduce((s, c) => s + c.amount, 0);
-          const children = buildTree(items, w.id, level + 1);
-          
-          const childBudget = children.reduce((s, c) => s + c.budget, 0);
-          const childActual = children.reduce((s, c) => s + c.actual, 0);
-          
-          const totalBudget = wbsBudget + childBudget;
-          const totalActual = wbsActual + childActual;
-          const variance = totalBudget - totalActual;
-          const percentage = totalBudget > 0 ? (totalActual / totalBudget) * 100 : 0;
-          
-          return {
-            id: w.id,
-            project_id: w.project_id,
-            name: w.name,
-            parent_id: w.parent_id,
-            children,
-            created_at: w.created_at,
-            level,
-            isExpanded: level === 0,
-            code: w.code || `${idx + 1}`,
-            budget: totalBudget,
-            actual: totalActual,
-            revenue: 0,
-            profit: totalBudget - totalActual,
-            variance,
-            percentage,
-            status: percentage > 100 ? 'over' : 'ok',
-          };
-        });
-    };
+    const tree = ProjectFinance.calculateWBSTree(wbs, costs, budgets);
+    const stats = ProjectFinance.calculateStats(tree);
 
-    const tree = buildTree(wbs);
     return {
       tree,
       stats: {
         totalItems: wbs.length,
-        totalBudget: projectStats.total_budget,
-        totalActual: projectStats.total_cost,
-        variance: projectStats.cost_variance,
-        progress: projectStats.cost_overrun_pct,
+        totalBudget: stats.totalBudget,
+        totalActual: stats.totalActual,
+        variance: stats.variance,
+        progress: stats.progress,
       },
     };
   },
@@ -635,8 +443,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
       } as any;
     }
 
-    const costByTypeArr = Object.entries(projectStats.cost_by_type || {}).map(([type, value]) => ({
-      type,
+    const costByTypeArr = Object.entries(projectStats.costByType || {}).map(([type, value]) => ({
+      type: type as CostType,
       label: type.charAt(0).toUpperCase() + type.slice(1),
       value: value as number,
       color: type === 'material' ? '#3b82f6' : type === 'labor' ? '#10b981' : '#f59e0b'
@@ -645,28 +453,28 @@ export const useERPStore = create<ERPState>((set, get) => ({
     return {
       project: {
         ...project,
-        total_value: projectStats.total_revenue,
+        totalValue: projectStats.totalRevenue,
       },
       budget: budgets,
       costs,
       wbsTree: [],
-      revenue: projectStats.total_revenue,
+      revenue: projectStats.totalRevenue,
       receivable: {
-        total: projectStats.total_invoiced,
-        paid: projectStats.total_paid_invoice,
-        remaining: projectStats.total_remaining_invoice,
-        overdue: projectStats.overdue_invoices,
+        total: projectStats.totalInvoiced,
+        paid: projectStats.totalPaidInvoice,
+        remaining: projectStats.totalRemainingInvoice,
+        overdue: projectStats.overdueInvoices,
       },
       payable: {
-        total: projectStats.total_cost,
-        paid: projectStats.paid_cost,
-        remaining: projectStats.unpaid_cost,
+        total: projectStats.totalCost,
+        paid: projectStats.paidCost,
+        remaining: projectStats.unpaidCost,
         overdue: 0,
       },
       costByType: costByTypeArr,
       cashFlow: [],
       wbsRows: [],
-      progress: projectStats.task_progress,
+      progress: projectStats.taskProgress,
       daysElapsed: 0,
       durationDays: 0,
     } as any;

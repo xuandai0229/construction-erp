@@ -36,3 +36,4 @@ function DebtCard({ title, data, labels }: { title: string; data: DebtSummary; l
     </article>
   );
 }
+

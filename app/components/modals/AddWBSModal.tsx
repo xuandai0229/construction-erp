@@ -29,9 +29,9 @@ export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
   useEffect(() => {
     if (wbsItem) {
       setForm({
-        projectId: wbsItem.project_id,
+        projectId: wbsItem.projectId,
         name: wbsItem.name,
-        parentId: wbsItem.parent_id || '',
+        parentId: wbsItem.parentId || '',
       });
     } else {
       setForm({
@@ -53,7 +53,7 @@ export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
   };
 
   const parentOptions = wbsItems.filter(w =>
-    (form.projectId ? w.project_id === form.projectId : true) && (wbsItem ? w.id !== wbsItem.id : true)
+    (form.projectId ? w.projectId === form.projectId : true) && (wbsItem ? w.id !== wbsItem.id : true)
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,7 +66,7 @@ export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
     if (wbsItem) {
       res = await updateWBS(form.projectId, wbsItem.id, {
         name: form.name.trim(),
-        parent_id: form.parentId || null,
+        parentId: form.parentId || null,
       });
     } else {
       res = await addWBS(form.projectId, form.name.trim(), form.parentId || null);
@@ -187,3 +187,4 @@ export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
     </div>
   );
 }
+

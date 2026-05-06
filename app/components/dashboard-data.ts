@@ -62,7 +62,8 @@ export function formatShortVnd(value: number) {
   return formatVnd(value);
 }
 
-export function formatDate(value?: string) {
+export function formatDate(value?: string | null) {
   if (!value) return '--';
   return new Date(value).toLocaleDateString('vi-VN');
 }
+

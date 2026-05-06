@@ -26,7 +26,7 @@ export default function AddRevenueModal({ isOpen, onClose }: Props) {
   const [loading, setLoading] = useState(false);
 
   const filteredWbs = wbsItems.filter(w =>
-    form.projectId ? w.project_id === form.projectId : true
+    form.projectId ? w.projectId === form.projectId : true
   );
 
   if (!isOpen) return null;
@@ -123,3 +123,4 @@ export default function AddRevenueModal({ isOpen, onClose }: Props) {
     </div>
   );
 }
+

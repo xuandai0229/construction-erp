@@ -57,3 +57,4 @@ export default function ProjectsHeader({ onAdd }: { onAdd: () => void }) {
     </header>
   );
 }
+

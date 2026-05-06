@@ -2,172 +2,165 @@
 // CONSTRUCTION ERP - TYPE DEFINITIONS
 // ============================================
 
-import { ProjectStatus, TaskStatus } from "@prisma/client";
+import { 
+  ProjectStatus, TaskStatus, CostType as PrismaCostType, 
+  PaymentStatus as PrismaPaymentStatus, InvoiceStatus as PrismaInvoiceStatus,
+  UserRole as PrismaUserRole 
+} from "@prisma/client";
+
 export { ProjectStatus, TaskStatus };
+
+// ─────────────────────────────────────────────
+// CORE ENTITIES
+// ─────────────────────────────────────────────
 
 export interface Project {
   id: string;
   name: string;
-  investor: string;
-  total_value: number; // Contract value
-  contract_value: number; // Redundant but good for domain clarity
-  signed_date?: string;
+  description?: string | null;
   status: ProjectStatus;
-  start_date?: string;
-  end_date?: string;
-  progress_status?: 'on_track' | 'delayed' | 'critical';
-  created_at: string;
-  updated_at?: string;
+  ownerId?: string | null;
+  investor?: string | null;
+  contractValue: number;
+  totalBudget: number;
+  totalValue?: number;
+  startDate?: string | null;
+  endDate?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
 }
 
+export interface User {
+  id: string;
+  email: string;
+  name?: string | null;
+  role: PrismaUserRole;
+  createdAt: string;
+}
+
+export interface WBSItem {
+  id: string;
+  projectId: string;
+  name: string;
+  code?: string | null;
+  parentId: string | null;
+  level: number;
+  sortOrder: number;
+  budgetAmount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ─────────────────────────────────────────────
+// FINANCIAL ENTITIES
+// ─────────────────────────────────────────────
+
+export type CostType = PrismaCostType;
+export type PaymentStatus = PrismaPaymentStatus;
+export type RevenueStatus = PrismaPaymentStatus;
+export type InvoiceStatus = PrismaInvoiceStatus;
+
+export interface CostRecord {
+  id: string;
+  projectId: string;
+  wbsId: string;
+  costType: CostType;
+  amount: number;
+  quantity: number;
+  unitPrice: number;
+  supplier?: string | null;
+  note?: string | null;
+  date: string;
+  status: PaymentStatus;
+  createdById?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BudgetRecord {
+  id: string;
+  projectId: string;
+  wbsId: string;
+  costType: CostType;
+  estimatedAmount: number;
+  createdById?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RevenueRecord {
+  id: string;
+  projectId: string;
+  wbsId: string;
+  invoiceId?: string | null;
+  amount: number;
+  date: string;
+  status: PaymentStatus;
+  description?: string | null;
+  createdById?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InvoiceRecord {
+  id: string;
+  projectId: string;
+  wbsId: string;
+  invoiceNumber?: string | null;
+  amount: number;
+  issuedDate: string;
+  dueDate?: string | null;
+  paidAmount: number;
+  remainingAmount: number;
+  status: InvoiceStatus;
+  note?: string | null;
+  createdById?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PaymentRecord {
+  id: string;
+  invoiceId: string;
+  projectId: string;
+  amount: number;
+  date: string;
+  description?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ─────────────────────────────────────────────
+// ANALYTICS & UI TYPES
+// ─────────────────────────────────────────────
+
 export interface MonthlyReport {
-  month: string; // YYYY-MM
+  month: string;
   revenue: number;
   cost: number;
   profit: number;
-  cash_in: number;
-  cash_out: number;
-  running_balance: number;
+  cashIn: number;
+  cashOut: number;
+  runningBalance: number;
 }
 
 export interface AgingReportItem {
   id: string;
   type: 'receivable' | 'payable';
-  entity_name: string; // Supplier or Project name
+  entityName: string; 
   amount: number;
   date: string;
-  days_overdue: number;
+  daysOverdue: number;
   category: '0-30' | '31-60' | '61-90' | '90+';
 }
 
-export interface WBSItem {
-  id: string;
-  project_id: string;
-  name: string;
-  parent_id: string | null;
-  children: WBSItem[];
-  created_at: string;
-}
-
-// Helper type for tree building
 export interface WBSTreeNode extends WBSItem {
-  level: number;
   isExpanded: boolean;
-}
-
-// ============================================
-// COST MANAGEMENT TYPES
-// ============================================
-
-// Cost types for construction
-export type CostType = 'material' | 'labor' | 'machine' | 'subcontract' | 'overhead' | 'other';
-
-// Cost status
-export type CostStatus = 'paid' | 'unpaid';
-
-// Cost record interface
-export interface CostRecord {
-  id: string;
-  project_id: string;
-  wbs_id: string;
-  cost_type: CostType;
-  amount: number;
-  quantity: number;
-  unit_price: number;
-  supplier?: string;
-  note: string;
-  date: string;
-  status: CostStatus;
-  created_at: string;
-}
-
-// Budget record interface
-export interface BudgetRecord {
-  id: string;
-  project_id: string;
-  wbs_id: string;
-  cost_type: CostType;
-  estimated_amount: number;
-  created_at: string;
-}
-
-// Budget vs Actual comparison result
-export interface BudgetVariance {
-  wbs_id: string;
-  wbs_name: string;
-  cost_type: CostType;
-  planned: number;
-  actual: number;
-  variance: number;
-  percentage: number;
-}
-
-// Cost summary by type
-export interface CostSummaryByType {
-  cost_type: CostType;
-  total: number;
-  count: number;
-  paid: number;
-  unpaid: number;
-}
-
-// Cost summary by WBS
-export interface CostSummaryByWBS {
-  wbs_id: string;
-  wbs_name: string;
-  total: number;
-  count: number;
-}
-
-// ============================================
-// REVENUE & ACCOUNTING TYPES
-// ============================================
-
-export type RevenueStatus = 'paid' | 'unpaid';
-
-export interface RevenueRecord {
-  id: string;
-  project_id: string;
-  wbs_id: string;
-  invoice_id?: string; // Linked invoice
-  amount: number;
-  date: string;
-  status: RevenueStatus;
-  description: string;
-  created_at: string;
-}
-
-export interface InvoiceRecord {
-  id: string;
-  project_id: string;
-  amount: number;
-  issued_date: string;
-  paid_amount: number;
-  remaining_amount: number;
-  status: 'draft' | 'issued' | 'paid' | 'overdue';
-  created_at: string;
-}
-
-export interface PaymentRecord {
-  id: string;
-  invoice_id: string;
-  project_id: string;
-  amount: number;
-  date: string;
-  description?: string;
-  created_at: string;
-}
-
-export type UserRole = 'admin' | 'accountant' | 'staff';
-
-export interface AccountingLock {
-  month: string; // YYYY-MM
-  locked_at: string;
-  locked_by: string;
+  children: WBSTreeNode[];
 }
 
 export interface EnrichedWBSNode extends Omit<WBSTreeNode, 'children'> {
-  code: string;
   budget: number;
   actual: number;
   revenue: number;
@@ -175,74 +168,51 @@ export interface EnrichedWBSNode extends Omit<WBSTreeNode, 'children'> {
   variance: number;
   percentage: number;
   status: string;
-  isExpanded: boolean;
   children: EnrichedWBSNode[];
 }
 
-export interface DebtSummary {
-  receivable: number;
-  payable: number;
-  total_revenue: number;
-  overdue: number;
+export interface DashboardStats {
+  totalCost: number;
+  paidCost: number;
+  unpaidCost: number;
+  costByType: Record<string, number>;
+  totalBudget: number;
+  budgetByType: Record<string, number>;
+  costVariance: number;
+  costOverrunPct: number;
+  isCostOverrun: boolean;
+  totalRevenue: number;
+  paidRevenue: number;
+  unpaidRevenue: number;
+  totalInvoiced: number;
+  totalPaidInvoice: number;
+  totalRemainingInvoice: number;
+  overdueInvoices: number;
+  profit: number;
+  profitMargin: number;
+  taskProgress: number;
+  taskBreakdown: Record<string, number>;
+  wbsCount: number;
+  // ERP CORE
+  committedCost: number;
+  totalExposure: number;
+  budgetRemaining: number;
 }
 
-// ============================================
-// DATA LAYER RESPONSE TYPES
-// ============================================
-
-export type ServiceResponse<T> = {
-  success: boolean
-  data?: T
-  error?: string
-}
-
-export interface ProjectResponse {
+export interface ServiceResponse<T> {
   success: boolean;
-  data?: Project;
+  data?: T;
   error?: string;
+  metadata?: any;
 }
 
-export interface WBSResponse {
-  success: boolean;
-  data?: WBSItem | WBSItem[];
-  error?: string;
-}
-
-export interface CostResponse {
-  success: boolean;
-  data?: CostRecord | CostRecord[];
-  error?: string;
-}
-
-export interface BudgetResponse {
-  success: boolean;
-  data?: BudgetRecord | BudgetRecord[];
-  error?: string;
-}
-
-export interface RevenueResponse {
-  success: boolean;
-  data?: RevenueRecord | RevenueRecord[];
-  error?: string;
-}
-
-export interface InvoiceResponse {
-  success: boolean;
-  data?: InvoiceRecord | InvoiceRecord[];
-  error?: string;
-}
-
-export interface PaymentResponse {
-  success: boolean;
-  data?: PaymentRecord | PaymentRecord[];
-  error?: string;
-}
+export type UserRole = PrismaUserRole;
 
 // ============================================
 // LABELS & CONSTANTS
 // ============================================
 
-export const COST_TYPE_LABELS: Record<CostType, string> = {
+export const costType_LABELS: Record<PrismaCostType, string> = {
   material: 'Vật liệu',
   labor: 'Nhân công',
   machine: 'Máy móc',
@@ -251,7 +221,7 @@ export const COST_TYPE_LABELS: Record<CostType, string> = {
   other: 'Chi phí khác',
 };
 
-export const COST_STATUS_LABELS: Record<CostStatus, string> = {
+export const PAYMENT_STATUS_LABELS: Record<PrismaPaymentStatus, string> = {
   paid: 'Đã thanh toán',
   unpaid: 'Chưa thanh toán',
 };

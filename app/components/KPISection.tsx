@@ -11,17 +11,19 @@ const icons = {
 };
 
 export default function KPISection({ data }: { data: DashboardData }) {
-  const totalBudget = data.budget.reduce((sum, row) => sum + row.estimated_amount, 0);
+  const totalBudget = data.budget.reduce((sum, row) => sum + row.estimatedAmount, 0);
   const totalCost = data.costs.reduce((sum, row) => sum + row.amount, 0);
   const profit = data.revenue - totalCost;
   const budgetDelta = totalBudget > 0 ? ((totalBudget - totalCost) / totalBudget) * 100 : 0;
   const margin = data.revenue > 0 ? (profit / data.revenue) * 100 : 0;
+  const budgetVsContract = data.project.totalValue > 0 ? (totalBudget / data.project.totalValue) * 100 : 0;
+  const revenueVsContract = data.project.totalValue > 0 ? (data.revenue / data.project.totalValue) * 100 : 0;
 
   const cards = [
-    { title: 'Tổng giá trị hợp đồng', value: data.project.total_value, change: '0% so với kế hoạch', tone: 'blue', icon: icons.contract },
-    { title: 'Tổng dự toán', value: totalBudget, change: '+ 5.6% so với hợp đồng', tone: 'green', icon: icons.budget },
+    { title: 'Tổng giá trị hợp đồng', value: data.project.totalValue, change: 'Giá trị gốc dự án', tone: 'blue', icon: icons.contract },
+    { title: 'Tổng dự toán', value: totalBudget, change: `${budgetVsContract.toFixed(1)}% so với hợp đồng`, tone: 'green', icon: icons.budget },
     { title: 'Tổng chi phí thực tế', value: totalCost, change: `${budgetDelta >= 0 ? '-' : '+'} ${Math.abs(budgetDelta).toFixed(1)}% so với dự toán`, tone: budgetDelta >= 0 ? 'green' : 'red', icon: icons.cost },
-    { title: 'Tổng doanh thu', value: data.revenue, change: '+ 8.8% theo tiến độ nghiệm thu', tone: 'green', icon: icons.revenue },
+    { title: 'Tổng doanh thu', value: data.revenue, change: `${revenueVsContract.toFixed(1)}% tiến độ nghiệm thu`, tone: 'green', icon: icons.revenue },
     { title: 'Lãi / Lỗ dự án', value: profit, change: `${margin.toFixed(1)}% biên lợi nhuận`, tone: profit >= 0 ? 'green' : 'red', icon: icons.profit },
   ];
 
@@ -37,7 +39,7 @@ export default function KPISection({ data }: { data: DashboardData }) {
             </div>
             <div className="min-w-0 flex-1">
               <div className="text-[13px] font-bold text-slate-100">{card.title}</div>
-              <div className="mt-4 whitespace-nowrap text-[22px] font-extrabold tracking-tight text-white">{formatVnd(card.value)}</div>
+              <div className="mt-4 whitespace-nowrap text-[22px] font-extrabold tracking-tight text-white">{formatVnd(card.value ?? 0)}</div>
               <div className={`mt-3 text-xs font-bold ${card.tone === 'red' ? 'text-red-400' : 'text-green-400'}`}>{card.change}</div>
             </div>
           </div>
@@ -52,3 +54,4 @@ function iconTone(tone: string) {
   if (tone === 'green') return 'border-green-500/50 bg-green-500/10 text-green-400';
   return 'border-blue-500/50 bg-blue-500/10 text-blue-400';
 }
+

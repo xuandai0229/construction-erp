@@ -34,14 +34,14 @@ export async function PUT(
 
     return successResponse({
       id: item.id,
-      project_id: item.project_id,
-      wbs_id: item.wbs_id,
-      invoice_id: item.invoice_id,
+      projectId: item.projectId,
+      wbsId: item.wbsId,
+      invoiceId: item.invoiceId,
       amount: item.amount,
       date: item.date.toISOString(),
       status: item.status,
       description: item.description,
-      created_at: item.createdAt.toISOString(),
+      createdAt: item.createdAt.toISOString(),
     });
   } catch (error) {
     return handleApiError(error);

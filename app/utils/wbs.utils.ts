@@ -16,8 +16,8 @@ export function buildWBSTree(items: WBSItem[]): WBSTreeNode[] {
   
   items.forEach(item => {
     const node = itemMap.get(item.id)!;
-    if (item.parent_id && itemMap.has(item.parent_id)) {
-      const parent = itemMap.get(item.parent_id)!;
+    if (item.parentId && itemMap.has(item.parentId)) {
+      const parent = itemMap.get(item.parentId)!;
       parent.children.push(node);
     } else {
       // Root node
@@ -39,7 +39,7 @@ export function buildWBSTree(items: WBSItem[]): WBSTreeNode[] {
 
   // Sort by creation date
   const sortByDate = (nodes: WBSTreeNode[]): void => {
-    nodes.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+    nodes.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
     nodes.forEach(node => {
       if (node.children && node.children.length > 0) {
         sortByDate(node.children as WBSTreeNode[]);
@@ -51,3 +51,4 @@ export function buildWBSTree(items: WBSItem[]): WBSTreeNode[] {
 
   return tree;
 }
+

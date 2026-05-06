@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useERPStore } from '@/store/erpStore';
-import { CostType, COST_TYPE_LABELS, CostRecord } from '@/app/types';
+import { CostType, costType_LABELS, CostRecord } from '@/app/types';
 
 interface Props {
   isOpen: boolean;
@@ -33,11 +33,11 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
   useEffect(() => {
     if (costRecord) {
       setForm({
-        projectId: costRecord.project_id,
-        wbsId: costRecord.wbs_id,
-        costType: costRecord.cost_type,
+        projectId: costRecord.projectId,
+        wbsId: costRecord.wbsId,
+        costType: costRecord.costType,
         quantity: costRecord.quantity?.toString() || '',
-        unitPrice: costRecord.unit_price?.toString() || '',
+        unitPrice: costRecord.unitPrice?.toString() || '',
         note: costRecord.note || '',
         date: costRecord.date.split('T')[0],
       });
@@ -57,7 +57,7 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
   const amount = (parseFloat(form.quantity) || 0) * (parseFloat(form.unitPrice) || 0);
 
   const filteredWbs = wbsItems.filter(w =>
-    form.projectId ? w.project_id === form.projectId : true
+    form.projectId ? w.projectId === form.projectId : true
   );
 
   if (!isOpen) return null;
@@ -85,11 +85,11 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
     let res;
     if (costRecord) {
       res = await updateCost(form.projectId, costRecord.id, {
-        wbs_id: form.wbsId,
-        cost_type: form.costType,
+        wbsId: form.wbsId,
+        costType: form.costType,
         amount: amount,
         quantity: qty,
-        unit_price: price,
+        unitPrice: price,
         note: form.note,
         date: form.date,
       });
@@ -167,7 +167,7 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
           <div>
             <label className="block text-xs font-semibold text-slate-400 mb-1.5">Loại chi phí</label>
             <div className="grid grid-cols-3 gap-2">
-              {(Object.entries(COST_TYPE_LABELS) as [CostType, string][]).map(([val, label]) => (
+              {(Object.entries(costType_LABELS) as [CostType, string][]).map(([val, label]) => (
                 <button
                   key={val}
                   type="button"
@@ -271,3 +271,4 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
     </div>
   );
 }
+

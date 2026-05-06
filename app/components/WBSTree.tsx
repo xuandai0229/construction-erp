@@ -83,7 +83,7 @@ export default function WBSTree({ projectId }: WBSTreeProps) {
   function handleEdit(node: WBSItem) {
     setEditingId(node.id);
     setWbsName(node.name);
-    setParentIdForNew(node.parent_id);
+    setParentIdForNew(node.parentId);
     setShowForm(true);
   }
 
@@ -203,3 +203,4 @@ export default function WBSTree({ projectId }: WBSTreeProps) {
     </div>
   );
 }
+

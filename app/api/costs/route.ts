@@ -21,18 +21,18 @@ export async function GET(request: Request) {
     // Map to frontend shape (snake_case)
     const mapped = items.map((c) => ({
       id: c.id,
-      project_id: c.project_id,
-      wbs_id: c.wbs_id,
-      wbs_name: c.wbs.name,
-      cost_type: c.cost_type,
+      projectId: c.projectId,
+      wbsId: c.wbsId,
+      wbsName: c.wbs.name,
+      costType: c.costType,
       amount: c.amount,
       quantity: c.quantity,
-      unit_price: c.unit_price,
+      unitPrice: c.unitPrice,
       supplier: c.supplier,
       note: c.note,
       date: c.date.toISOString(),
       status: c.status,
-      created_at: c.createdAt.toISOString(),
+      createdAt: c.createdAt.toISOString(),
     }));
     return successResponse(mapped);
   } catch (error) {
@@ -49,19 +49,21 @@ export async function POST(request: Request) {
 
     return successResponse({
       id: item.id,
-      project_id: item.project_id,
-      wbs_id: item.wbs_id,
-      cost_type: item.cost_type,
+      projectId: item.projectId,
+      wbsId: item.wbsId,
+      costType: item.costType,
       amount: item.amount,
       quantity: item.quantity,
-      unit_price: item.unit_price,
+      unitPrice: item.unitPrice,
       supplier: item.supplier,
       note: item.note,
       date: item.date.toISOString(),
       status: item.status,
-      created_at: item.createdAt.toISOString(),
+      createdAt: item.createdAt.toISOString(),
     }, null, 201);
   } catch (error) {
     return handleApiError(error);
   }
 }
+
+

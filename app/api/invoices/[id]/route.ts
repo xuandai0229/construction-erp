@@ -11,7 +11,7 @@ export async function DELETE(
     if (!existing) throw new ApiError(404, "Invoice not found");
 
     // Delete payments first, then invoice
-    await prisma.payment.deleteMany({ where: { invoice_id: id } });
+    await prisma.payment.deleteMany({ where: { invoiceId: id } });
     await prisma.invoice.delete({ where: { id } });
     return successResponse({ deleted: true });
   } catch (error) {

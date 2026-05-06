@@ -14,15 +14,15 @@ export async function DELETE(
     await prisma.$transaction(async (tx) => {
       await tx.payment.delete({ where: { id } });
 
-      const invoice = await tx.invoice.findUnique({ where: { id: existing.invoice_id } });
+      const invoice = await tx.invoice.findUnique({ where: { id: existing.invoiceId } });
       if (invoice) {
-        const newPaidAmount = invoice.paid_amount - existing.amount;
-        const newRemainingAmount = invoice.amount - newPaidAmount;
+        const newPaidAmount = Number(invoice.paidAmount) - Number(existing.amount);
+        const newRemainingAmount = Number(invoice.amount) - newPaidAmount;
         await tx.invoice.update({
           where: { id: invoice.id },
           data: {
-            paid_amount: Math.max(0, newPaidAmount),
-            remaining_amount: newRemainingAmount,
+            paidAmount: Math.max(0, newPaidAmount),
+            remainingAmount: newRemainingAmount,
             status: newRemainingAmount <= 0 ? "PAID" : "PARTIAL",
           },
         });

@@ -22,10 +22,10 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
   const [form, setForm] = useState({
     name: '',
     investor: '',
-    total_value: '',
+    totalValue: '',
     status: 'IN_PROGRESS' as ProjectStatus,
-    start_date: '',
-    end_date: '',
+    startDate: '',
+    endDate: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -35,19 +35,19 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
       setForm({
         name: project.name,
         investor: project.investor || '',
-        total_value: project.total_value.toString(),
+        totalValue: (project.totalValue ?? 0).toString(),
         status: project.status,
-        start_date: project.start_date?.split('T')[0] || '',
-        end_date: project.end_date?.split('T')[0] || '',
+        startDate: project.startDate?.split('T')[0] || '',
+        endDate: project.endDate?.split('T')[0] || '',
       });
     } else {
       setForm({
         name: '',
         investor: '',
-        total_value: '',
+        totalValue: '',
         status: 'IN_PROGRESS',
-        start_date: '',
-        end_date: '',
+        startDate: '',
+        endDate: '',
       });
     }
   }, [project, isOpen]);
@@ -63,8 +63,8 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
     e.preventDefault();
     if (!form.name.trim()) return setError('Vui lòng nhập tên dự án');
     if (!form.investor.trim()) return setError('Vui lòng nhập chủ đầu tư');
-    const totalValue = parseFloat(form.total_value.replace(/,/g, ''));
-    if (!form.total_value || isNaN(totalValue) || totalValue < 0)
+    const totalValue = parseFloat(form.totalValue.replace(/,/g, ''));
+    if (!form.totalValue || isNaN(totalValue) || totalValue < 0)
       return setError('Vui lòng nhập giá trị hợp đồng hợp lệ');
 
     setLoading(true);
@@ -73,10 +73,10 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
       res = await updateProject(project.id, {
         name: form.name.trim(),
         investor: form.investor.trim(),
-        total_value: totalValue,
+        totalValue: totalValue,
         status: form.status,
-        start_date: form.start_date || undefined,
-        end_date: form.end_date || undefined,
+        startDate: form.startDate || undefined,
+        endDate: form.endDate || undefined,
       });
     } else {
       res = await addProject(
@@ -84,8 +84,8 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
         form.investor.trim(),
         totalValue,
         form.status,
-        form.start_date || undefined,
-        form.end_date || undefined
+        form.startDate || undefined,
+        form.endDate || undefined
       );
     }
     setLoading(false);
@@ -99,12 +99,8 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-
-      {/* Modal */}
       <div className="relative z-10 w-full max-w-lg mx-4 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl shadow-black/50">
-        {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600/20 text-blue-400 ring-1 ring-blue-500/30">
@@ -124,7 +120,6 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <div>
             <label className="block text-xs font-semibold text-slate-400 mb-1.5">Tên dự án <span className="text-red-400">*</span></label>
@@ -153,8 +148,8 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
             <label className="block text-xs font-semibold text-slate-400 mb-1.5">Giá trị hợp đồng (VND) <span className="text-red-400">*</span></label>
             <input
               type="text"
-              value={form.total_value}
-              onChange={e => handleChange('total_value', e.target.value)}
+              value={form.totalValue}
+              onChange={e => handleChange('totalValue', e.target.value)}
               placeholder="VD: 50000000000"
               className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800/50 px-3 text-sm text-slate-200 placeholder:text-slate-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
@@ -183,8 +178,8 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
               <label className="block text-xs font-semibold text-slate-400 mb-1.5">Ngày bắt đầu</label>
               <input
                 type="date"
-                value={form.start_date}
-                onChange={e => handleChange('start_date', e.target.value)}
+                value={form.startDate}
+                onChange={e => handleChange('startDate', e.target.value)}
                 className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800/50 px-3 text-sm text-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
@@ -192,8 +187,8 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
               <label className="block text-xs font-semibold text-slate-400 mb-1.5">Ngày kết thúc</label>
               <input
                 type="date"
-                value={form.end_date}
-                onChange={e => handleChange('end_date', e.target.value)}
+                value={form.endDate}
+                onChange={e => handleChange('endDate', e.target.value)}
                 className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800/50 px-3 text-sm text-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>

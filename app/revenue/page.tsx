@@ -45,7 +45,7 @@ export default function RevenueListPage() {
                 {revenues.map((rev) => (
                   <tr key={rev.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
                     <td className="px-5 py-4 text-slate-400">{formatDate(rev.date)}</td>
-                    <td className="px-5 py-4 font-medium text-slate-200">{getWbsName(rev.wbs_id)}</td>
+                    <td className="px-5 py-4 font-medium text-slate-200">{getWbsName(rev.wbsId)}</td>
                     <td className="px-5 py-4 text-slate-400">{rev.description}</td>
                     <td className="px-5 py-4 text-right font-bold text-emerald-400">{formatVnd(rev.amount)}</td>
                     <td className="px-5 py-4 text-center">
@@ -76,3 +76,4 @@ export default function RevenueListPage() {
     </div>
   );
 }
+

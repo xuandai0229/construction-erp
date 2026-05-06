@@ -11,3 +11,4 @@ export function exportToCsv(filename: string, rows: any[]) {
   a.click();
   window.URL.revokeObjectURL(url);
 }
+

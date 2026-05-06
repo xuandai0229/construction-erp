@@ -120,3 +120,4 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, totalBudget, t
     </div>
   );
 }
+

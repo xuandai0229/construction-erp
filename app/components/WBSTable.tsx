@@ -6,7 +6,7 @@ import { DashboardData, WBSBudgetRow, formatVnd } from './dashboard-data';
 export default function WBSTable({ data }: { data: DashboardData }) {
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set(data.wbsRows.map((row) => row.id)));
   const rows = useMemo(() => flattenRows(data.wbsRows, expanded), [data.wbsRows, expanded]);
-  const totalBudget = data.budget.reduce((sum, row) => sum + row.estimated_amount, 0);
+  const totalBudget = data.budget.reduce((sum, row) => sum + row.estimatedAmount, 0);
   const totalActual = data.costs.reduce((sum, row) => sum + row.amount, 0);
   const totalVariance = totalBudget - totalActual;
 
@@ -83,3 +83,4 @@ export default function WBSTable({ data }: { data: DashboardData }) {
 function flattenRows(rows: WBSBudgetRow[], expanded: Set<string>): WBSBudgetRow[] {
   return rows.flatMap((row) => [row, ...(expanded.has(row.id) ? flattenRows(row.children, expanded) : [])]);
 }
+

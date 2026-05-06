@@ -4,11 +4,11 @@ import { CostType, PaymentStatus } from "@prisma/client";
 import { z } from "zod";
 
 const updateCostSchema = z.object({
-  wbs_id: z.string().uuid().optional(),
-  cost_type: z.nativeEnum(CostType).optional(),
+  wbsId: z.string().uuid().optional(),
+  costType: z.nativeEnum(CostType).optional(),
   amount: z.number().positive().optional(),
   quantity: z.number().optional(),
-  unit_price: z.number().optional(),
+  unitPrice: z.number().optional(),
   supplier: z.string().optional(),
   note: z.string().optional(),
   date: z.string().optional(),
@@ -30,11 +30,11 @@ export async function PUT(
     const item = await prisma.costRecord.update({
       where: { id },
       data: {
-        ...(data.wbs_id !== undefined && { wbs_id: data.wbs_id }),
-        ...(data.cost_type !== undefined && { cost_type: data.cost_type }),
+        ...(data.wbsId !== undefined && { wbsId: data.wbsId }),
+        ...(data.costType !== undefined && { costType: data.costType }),
         ...(data.amount !== undefined && { amount: data.amount }),
         ...(data.quantity !== undefined && { quantity: data.quantity }),
-        ...(data.unit_price !== undefined && { unit_price: data.unit_price }),
+        ...(data.unitPrice !== undefined && { unitPrice: data.unitPrice }),
         ...(data.supplier !== undefined && { supplier: data.supplier }),
         ...(data.note !== undefined && { note: data.note }),
         ...(data.date !== undefined && { date: new Date(data.date) }),
@@ -44,17 +44,17 @@ export async function PUT(
 
     return successResponse({
       id: item.id,
-      project_id: item.project_id,
-      wbs_id: item.wbs_id,
-      cost_type: item.cost_type,
+      projectId: item.projectId,
+      wbsId: item.wbsId,
+      costType: item.costType,
       amount: item.amount,
       quantity: item.quantity,
-      unit_price: item.unit_price,
+      unitPrice: item.unitPrice,
       supplier: item.supplier,
       note: item.note,
       date: item.date.toISOString(),
       status: item.status,
-      created_at: item.createdAt.toISOString(),
+      createdAt: item.createdAt.toISOString(),
     });
   } catch (error) {
     return handleApiError(error);

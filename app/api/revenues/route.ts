@@ -16,23 +16,23 @@ const createRevenueSchema = z.object({
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const projectId = searchParams.get("projectId") || undefined;
+    const projectId = searchParams.get("projectId") || searchParams.get("project_id") || undefined;
 
     const items = await prisma.revenue.findMany({
-      where: { ...(projectId && { project_id: projectId }) },
+      where: { ...(projectId && { projectId }) },
       orderBy: { date: "desc" },
     });
 
     const mapped = items.map((r) => ({
       id: r.id,
-      project_id: r.project_id,
-      wbs_id: r.wbs_id,
-      invoice_id: r.invoice_id,
+      projectId: r.projectId,
+      wbsId: r.wbsId,
+      invoiceId: r.invoiceId,
       amount: r.amount,
       date: r.date.toISOString(),
       status: r.status,
       description: r.description,
-      created_at: r.createdAt.toISOString(),
+      createdAt: r.createdAt.toISOString(),
     }));
     return successResponse(mapped);
   } catch (error) {
@@ -47,9 +47,9 @@ export async function POST(request: Request) {
 
     const item = await prisma.revenue.create({
       data: {
-        project_id: data.projectId,
-        wbs_id: data.wbsId,
-        invoice_id: data.invoiceId ?? null,
+        projectId: data.projectId,
+        wbsId: data.wbsId,
+        invoiceId: data.invoiceId ?? null,
         amount: data.amount,
         date: data.date ? new Date(data.date) : new Date(),
         status: data.status ?? PaymentStatus.unpaid,
@@ -59,14 +59,14 @@ export async function POST(request: Request) {
 
     return successResponse({
       id: item.id,
-      project_id: item.project_id,
-      wbs_id: item.wbs_id,
-      invoice_id: item.invoice_id,
+      projectId: item.projectId,
+      wbsId: item.wbsId,
+      invoiceId: item.invoiceId,
       amount: item.amount,
       date: item.date.toISOString(),
       status: item.status,
       description: item.description,
-      created_at: item.createdAt.toISOString(),
+      createdAt: item.createdAt.toISOString(),
     }, null, 201);
   } catch (error) {
     return handleApiError(error);

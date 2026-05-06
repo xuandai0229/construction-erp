@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { TaskService } from "@/services/task.service";
 import { createTaskSchema } from "@/lib/validations";
+import { assertValidEntity } from "@/lib/assertion";
 import { handleApiError, successResponse } from "@/lib/api-error";
 import { TaskStatus } from "@prisma/client";
 
@@ -11,7 +12,7 @@ export async function GET(request: Request) {
     const page = searchParams.has("page") ? Number(searchParams.get("page") ?? 1) : undefined;
     const limit = searchParams.has("limit") ? Number(searchParams.get("limit") ?? 20) : undefined;
     const search = searchParams.get("search") || undefined;
-    const projectId = searchParams.get("projectId") || undefined;
+    const projectId = searchParams.get("projectId") || searchParams.get("project_id") || undefined;
     const assigneeId = searchParams.get("assigneeId") || undefined;
     const status = (searchParams.get("status") as TaskStatus) || undefined;
     const orderBy = (searchParams.get("orderBy") as any) || undefined;
@@ -37,3 +38,5 @@ export async function POST(request: Request) {
     return handleApiError(error);
   }
 }
+
+

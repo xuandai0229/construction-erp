@@ -24,7 +24,7 @@ export function useWBS(projectId: string | null) {
     return addWBSAction(projectId, name, parentId);
   };
 
-  const updateWBS = (wbsId: string, updates: Partial<Pick<import('@/app/types').WBSItem, 'name' | 'parent_id'>>) => {
+  const updateWBS = (wbsId: string, updates: Partial<Pick<import('@/app/types').WBSItem, 'name' | 'parentId'>>) => {
     if (!projectId) return { success: false, error: 'No project selected' };
     return updateWBSAction(projectId, wbsId, updates);
   };
@@ -44,3 +44,4 @@ export function useWBS(projectId: string | null) {
     isInitialized 
   };
 }
+

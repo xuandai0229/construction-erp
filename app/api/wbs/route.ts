@@ -6,10 +6,10 @@ import { WBSService } from "@/services/wbs.service";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const projectId = searchParams.get("projectId");
+    const projectId = searchParams.get("projectId") || searchParams.get("project_id");
 
     if (!projectId) {
-      return successResponse([]);
+      return successResponse({ tree: [], flat: [], stats: {} });
     }
 
     const result = await WBSService.findByProject(projectId);
@@ -22,7 +22,6 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    console.log("Submitting WBS:", body);
     const data = createWBSSchema.parse(body);
 
     const item = await WBSService.create(data);

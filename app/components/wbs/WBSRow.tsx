@@ -14,11 +14,14 @@ export default function WBSRow({ node, onToggleExpand, onEdit, index }: { node: 
     // Reconstruct WBSItem from EnrichedWBSNode
     const baseItem: WBSItem = {
       id: node.id,
-      project_id: node.project_id,
+      projectId: node.projectId,
       name: node.name,
-      parent_id: node.parent_id,
-      created_at: node.created_at,
-      children: []
+      parentId: node.parentId,
+      level: node.level,
+      sortOrder: node.sortOrder,
+      budgetAmount: node.budgetAmount,
+      createdAt: node.createdAt,
+      updatedAt: node.updatedAt,
     };
     onEdit(baseItem);
   };
@@ -124,3 +127,4 @@ export default function WBSRow({ node, onToggleExpand, onEdit, index }: { node: 
     </>
   );
 }
+

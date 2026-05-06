@@ -66,18 +66,18 @@ export default function DebtPage() {
                             {inv.id.substring(0, 8)}
                           </button>
                         </td>
-                        <td className="px-5 py-4 text-slate-400">{formatDate(inv.issued_date)}</td>
+                        <td className="px-5 py-4 text-slate-400">{formatDate(inv.issuedDate)}</td>
                         <td className="px-5 py-4 text-right font-bold">{formatVnd(inv.amount)}</td>
-                        <td className="px-5 py-4 text-right font-medium text-emerald-400">{formatVnd(inv.paid_amount)}</td>
-                        <td className="px-5 py-4 text-right font-extrabold text-rose-400">{formatVnd(inv.remaining_amount)}</td>
+                        <td className="px-5 py-4 text-right font-medium text-emerald-400">{formatVnd(inv.paidAmount)}</td>
+                        <td className="px-5 py-4 text-right font-extrabold text-rose-400">{formatVnd(inv.remainingAmount)}</td>
                         <td className="px-5 py-4 text-center">
-                          <span className={`inline-flex px-2 py-1 rounded-full text-[10px] font-bold uppercase ${inv.remaining_amount === 0 ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'}`}>
-                            {inv.remaining_amount === 0 ? 'Hoàn tất' : 'Còn nợ'}
+                          <span className={`inline-flex px-2 py-1 rounded-full text-[10px] font-bold uppercase ${inv.remainingAmount === 0 ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'}`}>
+                            {inv.remainingAmount === 0 ? 'Hoàn tất' : 'Còn nợ'}
                           </span>
                         </td>
                         <td className="px-5 py-4">
                           <div className="flex items-center justify-center gap-2">
-                            {inv.remaining_amount > 0 && (
+                            {inv.remainingAmount > 0 && (
                               <button 
                                 onClick={() => setSelectedInvoice(inv.id)}
                                 className="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold rounded"
@@ -132,7 +132,7 @@ export default function DebtPage() {
                     {costs.filter(c => c.status === 'unpaid').map((cost) => (
                       <tr key={cost.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
                         <td className="px-5 py-4 text-slate-400">{formatDate(cost.date)}</td>
-                        <td className="px-5 py-4 text-slate-300 uppercase text-xs font-bold">{cost.cost_type}</td>
+                        <td className="px-5 py-4 text-slate-300 uppercase text-xs font-bold">{cost.costType}</td>
                         <td className="px-5 py-4 text-right font-bold text-rose-400">{formatVnd(cost.amount)}</td>
                         <td className="px-5 py-4 text-center">
                           <span className="bg-rose-500/10 text-rose-500 px-2 py-1 rounded-full text-[10px] font-bold uppercase">Chưa trả</span>
@@ -173,3 +173,4 @@ export default function DebtPage() {
     </div>
   );
 }
+

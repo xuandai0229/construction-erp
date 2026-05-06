@@ -15,7 +15,7 @@ export default function PaymentHistoryModal({ isOpen, onClose, invoiceId }: Prop
 
   if (!isOpen || !invoiceId) return null;
 
-  const invoicePayments = payments.filter(p => p.invoice_id === invoiceId);
+  const invoicePayments = payments.filter(p => p.invoiceId === invoiceId);
 
   const handleDelete = (id: string) => {
     if (window.confirm('Bạn có chắc muốn xóa bản ghi thanh toán này? Số dư hóa đơn sẽ được tính toán lại.')) {
@@ -74,3 +74,4 @@ export default function PaymentHistoryModal({ isOpen, onClose, invoiceId }: Prop
     </div>
   );
 }
+

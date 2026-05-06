@@ -51,7 +51,7 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
     const value = totalValue ? parseFloat(totalValue.replace(/,/g, '')) : 0;
 
     if (editingId) {
-      await updateProject(editingId, { name, investor, total_value: value, status });
+      await updateProject(editingId, { name, investor, totalValue: value, status });
     } else {
       await addProject(name, investor, value, status);
     }
@@ -61,8 +61,8 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
 
   function handleEdit(project: Project) {
     setName(project.name);
-    setInvestor(project.investor);
-    setTotalValue(project.total_value.toString());
+    setInvestor(project.investor || '');
+    setTotalValue((project.totalValue ?? 0).toString());
     setStatus(project.status);
     setEditingId(project.id);
     setShowForm(true);
@@ -188,11 +188,11 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Giá trị:</span>
-                  <span className="text-green-400 font-medium">{formatCurrency(project.total_value)}</span>
+                  <span className="text-green-400 font-medium">{formatCurrency(project.totalValue ?? 0)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Ngày tạo:</span>
-                  <span className="text-white">{formatDate(project.created_at)}</span>
+                  <span className="text-white">{formatDate(project.createdAt)}</span>
                 </div>
               </div>
               <div className="flex gap-2 mt-4 pt-3 border-t border-slate-700">
@@ -218,3 +218,4 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
     </div>
   );
 }
+

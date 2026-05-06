@@ -106,8 +106,8 @@ function ProgressCard({ data }: { data: DashboardData }) {
         </div>
       </div>
       <div className="space-y-3 text-sm">
-        <Row label="Ngày bắt đầu" value={formatDate(data.project.start_date)} />
-        <Row label="Ngày kết thúc dự kiến" value={formatDate(data.project.end_date)} />
+        <Row label="Ngày bắt đầu" value={formatDate(data.project.startDate)} />
+        <Row label="Ngày kết thúc dự kiến" value={formatDate(data.project.endDate)} />
         <Row label="Số ngày đã qua" value={`${data.daysElapsed} / ${data.durationDays} ngày`} />
       </div>
     </Panel>
@@ -131,3 +131,4 @@ function Row({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+

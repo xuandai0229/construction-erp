@@ -72,7 +72,7 @@ export default function AddInvoiceModal({ isOpen, onClose }: Props) {
               className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm text-slate-200"
             >
               <option value="">-- Chọn hạng mục --</option>
-              {wbs.filter(i => i.project_id === form.projectId).map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
+              {wbs.filter(i => i.projectId === form.projectId).map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
             </select>
           </div>
           <div>
@@ -103,3 +103,4 @@ export default function AddInvoiceModal({ isOpen, onClose }: Props) {
     </div>
   );
 }
+

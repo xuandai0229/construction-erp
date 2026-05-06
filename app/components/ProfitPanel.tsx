@@ -55,3 +55,4 @@ function Legend({ color, label, value }: { color: string; label: string; value: 
     </div>
   );
 }
+

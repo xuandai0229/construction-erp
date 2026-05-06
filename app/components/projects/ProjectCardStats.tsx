@@ -8,7 +8,7 @@ export default function ProjectCardStats({ projects }: { projects: Project[] }) 
   const inProgress = projects.filter(p => p.status === 'IN_PROGRESS').length;
   const completed = projects.filter(p => p.status === 'COMPLETED').length;
   const onHold = projects.filter(p => p.status === 'CANCELLED').length;
-  const totalValue = projects.reduce((sum, p) => sum + (p.total_value || 0), 0);
+  const totalValue = projects.reduce((sum, p) => sum + (p.totalValue ?? 0), 0);
 
   return (
     <div className="grid grid-cols-5 gap-4">
@@ -108,3 +108,4 @@ function StatCard({ title, value, label, color, icon }: StatCardProps) {
     </div>
   );
 }
+

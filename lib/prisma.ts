@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/prisma-client";
 
 // Models that support soft-delete via deletedAt
 const SOFT_DELETE_MODELS = new Set(['user', 'category', 'project', 'task']);

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useERPStore } from '@/store/erpStore';
-import { CostType, COST_TYPE_LABELS } from '@/app/types';
+import { CostType, costType_LABELS } from '@/app/types';
 
 interface Props {
   isOpen: boolean;
@@ -26,7 +26,7 @@ export default function AddBudgetModal({ isOpen, onClose }: Props) {
   const [loading, setLoading] = useState(false);
 
   const filteredWbs = wbsItems.filter(w =>
-    form.projectId ? w.project_id === form.projectId : true
+    form.projectId ? w.projectId === form.projectId : true
   );
 
   if (!isOpen) return null;
@@ -119,7 +119,7 @@ export default function AddBudgetModal({ isOpen, onClose }: Props) {
           <div>
             <label className="block text-xs font-semibold text-slate-400 mb-1.5">Loại chi phí</label>
             <div className="grid grid-cols-3 gap-2">
-              {(Object.entries(COST_TYPE_LABELS) as [CostType, string][]).map(([val, label]) => (
+              {(Object.entries(costType_LABELS) as [CostType, string][]).map(([val, label]) => (
                 <button
                   key={val}
                   type="button"
@@ -185,3 +185,4 @@ export default function AddBudgetModal({ isOpen, onClose }: Props) {
     </div>
   );
 }
+

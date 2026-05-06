@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
+import { Prisma } from "@prisma/client";
 
 export class ApiError extends Error {
   statusCode: number;
@@ -20,9 +21,9 @@ export interface ApiResponse<T = any> {
 
 export function handleApiError(error: unknown) {
   if (error instanceof ZodError) {
-    const errorMessages = (error as any).errors.map((e: any) => e.message).join(", ");
+    const errorMessages = error.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join(", ");
     return NextResponse.json(
-      { success: false, error: `Validation Error: ${errorMessages}` },
+      { success: false, error: `Lỗi dữ liệu: ${errorMessages}` },
       { status: 400 }
     );
   }
@@ -32,6 +33,18 @@ export function handleApiError(error: unknown) {
       { success: false, error: error.message },
       { status: error.statusCode }
     );
+  }
+
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === 'P2002') {
+      return NextResponse.json({ success: false, error: 'Dữ liệu đã tồn tại (Duplicate entry)' }, { status: 400 });
+    }
+    if (error.code === 'P2003') {
+      return NextResponse.json({ success: false, error: 'Vi phạm ràng buộc dữ liệu (Foreign key violation)' }, { status: 400 });
+    }
+    if (error.code === 'P2025') {
+      return NextResponse.json({ success: false, error: 'Không tìm thấy dữ liệu liên quan' }, { status: 404 });
+    }
   }
 
   console.error("[Unhandled API Error]:", error);

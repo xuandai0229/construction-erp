@@ -110,3 +110,4 @@ function StatCard({ title, value, label, color, icon }: StatCardProps) {
     </div>
   );
 }
+

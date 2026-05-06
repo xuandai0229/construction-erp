@@ -9,7 +9,7 @@ export function useBudget(projectId: string | null) {
 
   const filteredBudgets = useMemo(() => {
     if (!projectId) return [];
-    return budgets.filter(b => b.project_id === projectId);
+    return budgets.filter(b => b.projectId === projectId);
   }, [budgets, projectId]);
 
   const addBudget = (wbsId: string, costType: CostType, estimatedAmount: number) => {
@@ -23,3 +23,4 @@ export function useBudget(projectId: string | null) {
     isInitialized 
   };
 }
+

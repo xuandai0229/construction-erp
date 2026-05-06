@@ -14,15 +14,15 @@ export async function GET(request: Request) {
 
     const mapped = items.map((inv) => ({
       id: inv.id,
-      project_id: inv.project_id,
-      wbs_id: inv.wbs_id,
+      projectId: inv.projectId,
+      wbsId: inv.wbsId,
       amount: inv.amount,
-      issued_date: inv.issued_date.toISOString(),
-      paid_amount: inv.paid_amount,
-      remaining_amount: inv.remaining_amount,
+      issuedDate: inv.issuedDate.toISOString(),
+      paidAmount: inv.paidAmount,
+      remainingAmount: inv.remainingAmount,
       status: inv.status,
-      wbs_name: inv.wbs.name,
-      created_at: inv.createdAt.toISOString(),
+      wbsName: inv.wbs.name,
+      createdAt: inv.createdAt.toISOString(),
     }));
     return successResponse(mapped);
   } catch (error) {
@@ -39,16 +39,18 @@ export async function POST(request: Request) {
 
     return successResponse({
       id: item.id,
-      project_id: item.project_id,
-      wbs_id: item.wbs_id,
+      projectId: item.projectId,
+      wbsId: item.wbsId,
       amount: item.amount,
-      issued_date: item.issued_date.toISOString(),
-      paid_amount: item.paid_amount,
-      remaining_amount: item.remaining_amount,
+      issuedDate: item.issuedDate.toISOString(),
+      paidAmount: item.paidAmount,
+      remainingAmount: item.remainingAmount,
       status: item.status,
-      created_at: item.createdAt.toISOString(),
+      createdAt: item.createdAt.toISOString(),
     }, null, 201);
   } catch (error) {
     return handleApiError(error);
   }
 }
+
+

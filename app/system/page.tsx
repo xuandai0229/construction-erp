@@ -57,7 +57,7 @@ export default function SystemPage() {
               <p className="text-xs text-slate-400">Thay đổi vai trò để kiểm tra phân quyền hệ thống</p>
               
               <div className="space-y-3 pt-4">
-                {(['admin', 'accountant', 'staff'] as UserRole[]).map((role) => (
+                {(['ADMIN', 'ACCOUNTANT', 'MANAGER', 'VIEWER'] as UserRole[]).map((role) => (
                   <button
                     key={role}
                     onClick={() => setUserRole(role)}
@@ -67,7 +67,7 @@ export default function SystemPage() {
                         : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700'
                     }`}
                   >
-                    <span className="text-sm font-bold capitalize">{role}</span>
+                    <span className="text-sm font-bold capitalize">{role.toLowerCase()}</span>
                     {userRole === role && <span className="h-2 w-2 rounded-full bg-blue-500" />}
                   </button>
                 ))}
@@ -128,3 +128,4 @@ export default function SystemPage() {
     </div>
   );
 }
+

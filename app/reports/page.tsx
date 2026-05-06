@@ -91,15 +91,15 @@ export default function ReportsPage() {
                             {row.month}
                           </div>
                         </td>
-                        <td className="px-5 py-4 text-right text-emerald-400 font-medium">{formatVnd(row.cash_in)}</td>
-                        <td className="px-5 py-4 text-right text-rose-400 font-medium">{formatVnd(row.cash_out)}</td>
+                        <td className="px-5 py-4 text-right text-emerald-400 font-medium">{formatVnd(row.cashIn)}</td>
+                        <td className="px-5 py-4 text-right text-rose-400 font-medium">{formatVnd(row.cashOut)}</td>
                         <td className="px-5 py-4 text-right text-slate-300">{formatVnd(row.revenue)}</td>
                         <td className="px-5 py-4 text-right text-slate-300">{formatVnd(row.cost)}</td>
                         <td className={`px-5 py-4 text-right font-bold ${row.profit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                           {formatVnd(row.profit)}
                         </td>
-                        <td className={`px-5 py-4 text-right font-extrabold ${row.running_balance >= 0 ? 'text-blue-400' : 'text-rose-500'}`}>
-                          {formatVnd(row.running_balance)}
+                        <td className={`px-5 py-4 text-right font-extrabold ${row.runningBalance >= 0 ? 'text-blue-400' : 'text-rose-500'}`}>
+                          {formatVnd(row.runningBalance)}
                         </td>
                         <td className="px-5 py-4 text-center">
                           <button 
@@ -171,3 +171,4 @@ export default function ReportsPage() {
     </div>
   );
 }
+

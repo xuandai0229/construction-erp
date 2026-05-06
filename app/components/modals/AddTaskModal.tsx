@@ -169,3 +169,4 @@ export default function AddTaskModal({ isOpen, onClose }: Props) {
     </div>
   );
 }
+
