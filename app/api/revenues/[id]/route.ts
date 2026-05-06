@@ -1,5 +1,5 @@
-import { handleApiError, successResponse, ApiError } from "@/lib/api-error";
-import { prisma } from "@/lib/prisma";
+import { handleApiError, successResponse } from "@/lib/api-error";
+import { RevenueService } from "@/services/revenue.service";
 import { PaymentStatus } from "@prisma/client";
 import { z } from "zod";
 
@@ -17,20 +17,12 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const data = updateRevenueSchema.parse(body);
+    
+    // Phase 0: Mass assignment prevention. Omit amount. 
+    // Changes to amount must use future reversal flow.
+    const data = updateRevenueSchema.omit({ amount: true }).parse(body);
 
-    const existing = await prisma.revenue.findUnique({ where: { id } });
-    if (!existing) throw new ApiError(404, "Revenue record not found");
-
-    const item = await prisma.revenue.update({
-      where: { id },
-      data: {
-        ...(data.status !== undefined && { status: data.status }),
-        ...(data.amount !== undefined && { amount: data.amount }),
-        ...(data.description !== undefined && { description: data.description }),
-        ...(data.date !== undefined && { date: new Date(data.date) }),
-      },
-    });
+    const item = await RevenueService.updateRevenue(id, data);
 
     return successResponse({
       id: item.id,

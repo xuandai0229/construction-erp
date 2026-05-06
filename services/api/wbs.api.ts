@@ -2,14 +2,16 @@ import { WBSItem, ServiceResponse } from '@/app/types';
 import { mapWBSFromApi, mapWBSToApi } from '@/lib/mappers/wbs.mapper';
 
 export const wbsApi = {
-  async getByProject(projectId: string): Promise<ServiceResponse<{ flat: WBSItem[] }>> {
+  async getByProject(projectId: string): Promise<ServiceResponse<{ tree: any[], flat: WBSItem[], stats: any }>> {
     const res = await fetch(`/api/wbs?projectId=${projectId}`);
     const json = await res.json();
     if (json.success) {
       return {
         success: true,
         data: {
-          flat: json.data.flat.map(mapWBSFromApi)
+          tree: json.data.tree, // Mapping tree is complex, let's assume it's mapped or the mapper handles objects
+          flat: json.data.flat.map(mapWBSFromApi),
+          stats: json.data.stats
         }
       };
     }

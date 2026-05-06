@@ -215,8 +215,9 @@ model WBSItem {
 
   budgetAmount Decimal @default(0) @db.Decimal(18, 2)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   project  Project   @relation(fields: [projectId], references: [id])
   parent   WBSItem?  @relation("WBSChildren", fields: [parentId], references: [id])
@@ -254,8 +255,9 @@ model CostRecord {
   purchaseOrderId String?
 
   createdById String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
   wbs           WBSItem        @relation(fields: [wbsId], references: [id])
   createdBy     User?          @relation("CostCreatedBy", fields: [createdById], references: [id])
@@ -278,8 +280,9 @@ model BudgetRecord {
   estimatedAmount Decimal  @db.Decimal(18, 2)
 
   createdById String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
   wbs       WBSItem @relation(fields: [wbsId], references: [id])
   createdBy User?   @relation("BudgetCreatedBy", fields: [createdById], references: [id])
@@ -303,8 +306,9 @@ model Revenue {
   description String?
 
   createdById String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
   wbs       WBSItem  @relation(fields: [wbsId], references: [id])
   invoice   Invoice? @relation(fields: [invoiceId], references: [id])
@@ -333,8 +337,10 @@ model Invoice {
   requestId       String?       @unique // Idempotency
 
   createdById String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  version     Int       @default(1)
 
   wbs       WBSItem   @relation(fields: [wbsId], references: [id])
   payments  Payment[]
@@ -354,15 +360,16 @@ model Invoice {
 // ─────────────────────────────────────────────
 
 model Payment {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   invoiceId   String
   projectId   String
-  amount      Decimal  @db.Decimal(18, 2)
-  date        DateTime @default(now())
+  amount      Decimal   @db.Decimal(18, 2)
+  date        DateTime  @default(now())
   description String?
-  requestId   String?  @unique // Idempotency
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  requestId   String?   @unique // Idempotency
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
   invoice Invoice @relation(fields: [invoiceId], references: [id])
 
@@ -383,6 +390,7 @@ model LedgerAccount {
   isActive    Boolean     @default(true)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+  deletedAt   DateTime?
 
   lines TransactionLine[]
 
@@ -391,17 +399,18 @@ model LedgerAccount {
 }
 
 model JournalEntry {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   projectId   String?
-  date        DateTime @default(now())
+  date        DateTime  @default(now())
   description String
   reference   String? // e.g. Invoice #123
   // Source tracking: which entity triggered this entry
   sourceType  String? // e.g. "PAYMENT", "COST", "INVOICE"
   sourceId    String? // FK to the source record
-  isPosted    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isPosted    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
   project Project?          @relation(fields: [projectId], references: [id])
   lines   TransactionLine[]
@@ -421,6 +430,7 @@ model TransactionLine {
 
   journalEntry JournalEntry  @relation(fields: [journalEntryId], references: [id])
   account      LedgerAccount @relation(fields: [accountId], references: [id])
+  deletedAt    DateTime?
 
   @@index([journalEntryId])
   @@index([accountId])
@@ -444,6 +454,7 @@ model PurchaseRequest {
   createdById String?
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
+  deletedAt   DateTime?
 
   createdBy      User?           @relation("PRCreatedBy", fields: [createdById], references: [id])
   purchaseOrders PurchaseOrder[]
@@ -466,6 +477,7 @@ model PurchaseOrder {
   createdById       String?
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
+  deletedAt         DateTime?
 
   project         Project             @relation(fields: [projectId], references: [id])
   purchaseRequest PurchaseRequest?    @relation(fields: [purchaseRequestId], references: [id])
@@ -479,16 +491,17 @@ model PurchaseOrder {
 }
 
 model PurchaseOrderItem {
-  id              String   @id @default(uuid())
+  id              String    @id @default(uuid())
   purchaseOrderId String
   wbsId           String?
   description     String
-  quantity        Decimal  @db.Decimal(18, 4)
-  unitPrice       Decimal  @db.Decimal(18, 2)
-  amount          Decimal  @db.Decimal(18, 2)
-  costType        CostType @default(material)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  quantity        Decimal   @db.Decimal(18, 4)
+  unitPrice       Decimal   @db.Decimal(18, 2)
+  amount          Decimal   @db.Decimal(18, 2)
+  costType        CostType  @default(material)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
 
   purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
   wbs           WBSItem?      @relation(fields: [wbsId], references: [id])
@@ -497,14 +510,15 @@ model PurchaseOrderItem {
 }
 
 model GoodsReceipt {
-  id              String   @id @default(uuid())
+  id              String    @id @default(uuid())
   purchaseOrderId String
   projectId       String
-  receivedDate    DateTime @default(now())
+  receivedDate    DateTime  @default(now())
   notes           String?
   receivedById    String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
 
   purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
 
@@ -532,6 +546,7 @@ model Contract {
   createdById    String?
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
+  deletedAt      DateTime?
 
   project   Project          @relation(fields: [projectId], references: [id])
   createdBy User?            @relation("ContractCreatedBy", fields: [createdById], references: [id])
@@ -553,6 +568,7 @@ model ContractChange {
   status       String    @default("PENDING") // PENDING, APPROVED, REJECTED
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
 
   contract Contract @relation(fields: [contractId], references: [id])
 

@@ -1,5 +1,5 @@
-import { handleApiError, successResponse, ApiError } from "@/lib/api-error";
-import { prisma } from "@/lib/prisma";
+import { handleApiError, successResponse } from "@/lib/api-error";
+import { RevenueService } from "@/services/revenue.service";
 
 export async function DELETE(
   _request: Request,
@@ -7,12 +7,10 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const existing = await prisma.invoice.findUnique({ where: { id } });
-    if (!existing) throw new ApiError(404, "Invoice not found");
-
-    // Delete payments first, then invoice
-    await prisma.payment.deleteMany({ where: { invoiceId: id } });
-    await prisma.invoice.delete({ where: { id } });
+    // Phase 0: Use RevenueService instead of direct Prisma delete
+    // Note: If invoice has payments, it will fail due to DB FK constraint, 
+    // which is the CORRECT accounting behavior. You should not delete an invoice that has payments.
+    await RevenueService.deleteInvoice(id);
     return successResponse({ deleted: true });
   } catch (error) {
     return handleApiError(error);

@@ -54,5 +54,15 @@ export const projectApi = {
       };
     }
     return json;
+  },
+
+  async getMonthlyReport(projectId: string): Promise<ServiceResponse<any[]>> {
+    const res = await fetch(`/api/projects/${projectId}/reports/monthly`);
+    return await res.json();
+  },
+
+  async getAgingReport(projectId: string): Promise<ServiceResponse<any[]>> {
+    const res = await fetch(`/api/projects/${projectId}/reports/aging`);
+    return await res.json();
   }
 };

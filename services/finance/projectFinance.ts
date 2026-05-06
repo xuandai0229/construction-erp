@@ -12,6 +12,68 @@ export class ProjectFinance {
   }
 
   /**
+   * High-performance WBS tree calculation using pre-aggregated maps.
+   * O(W) where W is number of WBS items. Independent of transaction count.
+   */
+  static calculateWBSTreeOptimized(
+    wbs: WBSItem[], 
+    costMap: Map<string, number>, 
+    budgetMap: Map<string, number>
+  ): EnrichedWBSNode[] {
+    const itemMap = new Map<string, EnrichedWBSNode>();
+    
+    // 1. Initialize nodes with direct totals from maps
+    wbs.forEach(w => {
+      const directBudget = budgetMap.get(w.id) || 0;
+      const directActual = costMap.get(w.id) || 0;
+
+      itemMap.set(w.id, {
+        ...w,
+        children: [],
+        level: 0,
+        isExpanded: false,
+        code: (w as any).code || "",
+        budget: directBudget,
+        actual: directActual,
+        revenue: 0,
+        profit: this.round(directBudget - directActual),
+        variance: this.round(directBudget - directActual),
+        percentage: directBudget > 0 ? this.round((directActual / directBudget) * 100) : 0,
+        status: 'ok',
+      });
+    });
+
+    // 2. Build tree and roll up totals recursively
+    const assemble = (parentId: string | null = null, level = 0): EnrichedWBSNode[] => {
+      const children: EnrichedWBSNode[] = [];
+      
+      for (const node of itemMap.values()) {
+        if (node.parentId === parentId) {
+          const assembledChildren = assemble(node.id, level + 1);
+          
+          // Roll-up children totals into this node
+          const childrenBudget = assembledChildren.reduce((s, c) => s + c.budget, 0);
+          const childrenActual = assembledChildren.reduce((s, c) => s + c.actual, 0);
+          
+          node.level = level;
+          node.children = assembledChildren;
+          node.isExpanded = level === 0;
+          node.budget = this.round(node.budget + childrenBudget);
+          node.actual = this.round(node.actual + childrenActual);
+          node.variance = this.round(node.budget - node.actual);
+          node.percentage = node.budget > 0 ? this.round((node.actual / node.budget) * 100) : 0;
+          node.status = node.percentage > 100 ? 'over' : 'ok';
+          
+          children.push(node);
+        }
+      }
+      return children.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+    };
+
+    return assemble(null);
+  }
+
+  /**
    * Optimized WBS tree calculation with rolled-up financial totals.
    * O(N) complexity using Map lookups.
    */

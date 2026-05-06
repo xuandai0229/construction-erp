@@ -1,10 +1,13 @@
-import { handleApiError, successResponse, ApiError } from "@/lib/api-error";
-import { prisma } from "@/lib/prisma";
+import { handleApiError, successResponse } from "@/lib/api-error";
+import { WBSService } from "@/services/wbs.service";
 import { z } from "zod";
 
+// PHASE 0: Aligned with WBSService field names (parentId, not parent_id)
 const updateWBSSchema = z.object({
   name: z.string().min(1).optional(),
-  parent_id: z.string().uuid().nullable().optional(),
+  parentId: z.string().uuid().nullable().optional(),
+  code: z.string().max(50).optional(),
+  sortOrder: z.number().int().optional(),
 });
 
 export async function PUT(
@@ -14,18 +17,13 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const data = updateWBSSchema.parse(body);
-
-    const existing = await prisma.wBSItem.findUnique({ where: { id } });
-    if (!existing) throw new ApiError(404, "WBS item not found");
-
-    const item = await prisma.wBSItem.update({
-      where: { id },
-      data: {
-        ...(data.name !== undefined && { name: data.name }),
-        ...(data.parent_id !== undefined && { parent_id: data.parent_id }),
-      },
-    });
+    // Support legacy snake_case field from older clients
+    const normalized = {
+      ...body,
+      parentId: body.parentId ?? body.parent_id,
+    };
+    const data = updateWBSSchema.parse(normalized);
+    const item = await WBSService.update(id, data);
     return successResponse(item);
   } catch (error) {
     return handleApiError(error);
@@ -38,10 +36,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const existing = await prisma.wBSItem.findUnique({ where: { id } });
-    if (!existing) throw new ApiError(404, "WBS item not found");
-
-    await prisma.wBSItem.delete({ where: { id } });
+    await WBSService.delete(id);
     return successResponse({ deleted: true });
   } catch (error) {
     return handleApiError(error);

@@ -22,11 +22,15 @@ interface ERPState {
   revenues: RevenueRecord[];
   invoices: InvoiceRecord[];
   payments: PaymentRecord[];
+  wbsTree: EnrichedWBSNode[];
+  wbsStats: any;
   locks: string[]; 
   snapshots: Record<string, MonthlyReport & { lockedAt: string }>;
   userRole: UserRole;
   currentProjectId: string;
-  projectStats: any; // Financial summary
+  projectStats: any; 
+  monthlyReport: MonthlyReport[];
+  agingReport: AgingReportItem[];
   initialized: boolean;
 
   init: () => Promise<void>;
@@ -84,6 +88,10 @@ export const useERPStore = create<ERPState>((set, get) => ({
   revenues: [],
   invoices: [],
   payments: [],
+  wbsTree: [],
+  wbsStats: null,
+  monthlyReport: [],
+  agingReport: [],
   locks: [],
   snapshots: {},
   userRole: 'ADMIN',
@@ -113,7 +121,17 @@ export const useERPStore = create<ERPState>((set, get) => ({
   _refreshProjectData: async (projectId: string) => {
     if (!projectId) return;
     try {
-      const [wbsRes, costsRes, budgetsRes, revenuesRes, invoicesRes, paymentsRes, statsRes] = await Promise.all([
+      const [
+        wbsRes, 
+        costsRes, 
+        budgetsRes, 
+        revenuesRes, 
+        invoicesRes, 
+        paymentsRes, 
+        statsRes,
+        monthlyRes,
+        agingRes
+      ] = await Promise.all([
         wbsApi.getByProject(projectId),
         costApi.getCostsByProject(projectId),
         costApi.getBudgetsByProject(projectId),
@@ -121,16 +139,22 @@ export const useERPStore = create<ERPState>((set, get) => ({
         revenueApi.getInvoicesByProject(projectId),
         revenueApi.getPaymentsByProject(projectId),
         projectApi.getStats(projectId),
+        projectApi.getMonthlyReport(projectId),
+        projectApi.getAgingReport(projectId),
       ]);
 
       set({
         wbs: wbsRes.success && wbsRes.data ? wbsRes.data.flat : [],
-        costs: costsRes.success && costsRes.data ? costsRes.data : [],
+        wbsTree: wbsRes.success && wbsRes.data ? wbsRes.data.tree : [],
+        wbsStats: wbsRes.success && wbsRes.data ? wbsRes.data.stats : null,
+        costs: costsRes.success && costsRes.data ? (Array.isArray(costsRes.data) ? costsRes.data : costsRes.data.items) : [],
         budgets: budgetsRes.success && budgetsRes.data ? budgetsRes.data : [],
         projectStats: statsRes.success ? statsRes.data : null,
         revenues: revenuesRes.success && revenuesRes.data ? revenuesRes.data : [],
-        invoices: invoicesRes.success && invoicesRes.data ? invoicesRes.data : [],
+        invoices: invoicesRes.success && invoicesRes.data ? (Array.isArray(invoicesRes.data) ? invoicesRes.data : invoicesRes.data.items) : [],
         payments: paymentsRes.success && paymentsRes.data ? paymentsRes.data : [],
+        monthlyReport: monthlyRes.success ? monthlyRes.data : [],
+        agingReport: agingRes.success ? agingRes.data : [],
       });
     } catch (e) {
       console.error('_refreshProjectData error:', e);
@@ -321,103 +345,14 @@ export const useERPStore = create<ERPState>((set, get) => ({
   getCostSummary: () => ({ total: 0, byType: {} }),
   recalculateInvoiceBalance: async () => {},
 
-  getMonthlyReport: (projectId: string) => {
-    const { revenues, costs, payments } = get();
-    const months: Record<string, MonthlyReport> = {};
-
-    // Helper to get month key (YYYY-MM)
-    const getMonth = (dateStr: string) => dateStr.substring(0, 7);
-
-    // 1. Process Revenues (Income)
-    revenues.forEach(r => {
-      const m = getMonth(r.date);
-      if (!months[m]) months[m] = { month: m, cashIn: 0, cashOut: 0, revenue: 0, cost: 0, profit: 0, runningBalance: 0 };
-      months[m].revenue += Number(r.amount);
-    });
-
-    // 2. Process Costs (Expense)
-    costs.forEach(c => {
-      const m = getMonth(c.date);
-      if (!months[m]) months[m] = { month: m, cashIn: 0, cashOut: 0, revenue: 0, cost: 0, profit: 0, runningBalance: 0 };
-      months[m].cost += Number(c.amount);
-    });
-
-    // 3. Process Payments (Cash In)
-    payments.forEach(p => {
-      const m = getMonth(p.date);
-      if (!months[m]) months[m] = { month: m, cashIn: 0, cashOut: 0, revenue: 0, cost: 0, profit: 0, runningBalance: 0 };
-      months[m].cashIn += Number(p.amount);
-    });
-
-    // Sort months and calculate profit/balance
-    const sortedMonths = Object.keys(months).sort();
-    let balance = 0;
-    return sortedMonths.map(m => {
-      const row = months[m];
-      row.cashOut = row.cost; // Simplified: Cost = Cash Out for now
-      row.profit = row.revenue - row.cost;
-      balance += (row.cashIn - row.cashOut);
-      row.runningBalance = balance;
-      return row;
-    });
-  },
-
-  getAgingReport: (projectId: string) => {
-    const { invoices, costs } = get();
-    const now = new Date();
-    const categories = ['0-30', '31-60', '61-90', '90+'];
-
-    const getCategory = (dateStr: string) => {
-      const diff = Math.floor((now.getTime() - new Date(dateStr).getTime()) / (1000 * 60 * 60 * 24));
-      if (diff <= 30) return '0-30';
-      if (diff <= 60) return '31-60';
-      if (diff <= 90) return '61-90';
-      return '90+';
-    };
-
-    const report: AgingReportItem[] = [];
-
-    // Receivable (Invoices)
-    invoices.filter(i => i.remainingAmount > 0).forEach(i => {
-      report.push({
-        type: 'receivable',
-        category: getCategory(i.issuedDate),
-        amount: Number(i.remainingAmount),
-        refId: i.id,
-        partner: 'Khách hàng'
-      });
-    });
-
-    // Payable (Costs)
-    costs.filter(c => c.status === 'unpaid').forEach(c => {
-      report.push({
-        type: 'payable',
-        category: getCategory(c.date),
-        amount: Number(c.amount),
-        refId: c.id,
-        partner: c.supplier || 'Nhiều người bán'
-      });
-    });
-
-    return report;
-  },
+  getMonthlyReport: () => get().monthlyReport,
+  getAgingReport: () => get().agingReport,
 
   getWBSTreeWithCost: () => {
-    const { wbs, costs, budgets, projectStats } = get();
-    if (!projectStats) return { tree: [], stats: { totalItems: 0, totalBudget: 0, totalActual: 0, variance: 0, progress: 0 } };
-
-    const tree = ProjectFinance.calculateWBSTree(wbs, costs, budgets);
-    const stats = ProjectFinance.calculateStats(tree);
-
+    const { wbsTree, wbsStats } = get();
     return {
-      tree,
-      stats: {
-        totalItems: wbs.length,
-        totalBudget: stats.totalBudget,
-        totalActual: stats.totalActual,
-        variance: stats.variance,
-        progress: stats.progress,
-      },
+      tree: wbsTree,
+      stats: wbsStats || { totalItems: 0, totalBudget: 0, totalActual: 0, variance: 0, progress: 0 }
     };
   },
 

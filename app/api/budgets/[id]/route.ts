@@ -1,5 +1,5 @@
-import { handleApiError, successResponse, ApiError } from "@/lib/api-error";
-import { prisma } from "@/lib/prisma";
+import { handleApiError, successResponse } from "@/lib/api-error";
+import { BudgetService } from "@/services/budget.service";
 
 export async function DELETE(
   _request: Request,
@@ -7,10 +7,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const existing = await prisma.budgetRecord.findUnique({ where: { id } });
-    if (!existing) throw new ApiError(404, "Budget record not found");
-
-    await prisma.budgetRecord.delete({ where: { id } });
+    await BudgetService.delete(id);
     return successResponse({ deleted: true });
   } catch (error) {
     return handleApiError(error);

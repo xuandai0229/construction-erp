@@ -93,6 +93,92 @@ export class PostingEngine {
     });
   }
 
+  /**
+   * Posts a Standalone Revenue Record to the Ledger.
+   * Logic:
+   * Debit: Cash (1010) if paid, else AR (1310)
+   * Credit: Revenue (5110)
+   */
+  static async postRevenue(tx: any, params: {
+    revenueId: string;
+    projectId: string;
+    amount: number;
+    description: string;
+    isPaid: boolean;
+  }) {
+    const debitCode = params.isPaid ? "1010" : "1310";
+    const revenueCode = "5110";
+
+    await this.createDoubleEntry(tx, {
+      projectId: params.projectId,
+      description: `Ghi nhận doanh thu: ${params.description}`,
+      reference: `REV-${params.revenueId}`,
+      sourceType: "REVENUE",
+      sourceId: params.revenueId,
+      lines: [
+        { accountCode: debitCode, amount: params.amount, type: TransactionType.DEBIT },
+        { accountCode: revenueCode, amount: params.amount, type: TransactionType.CREDIT },
+      ]
+    });
+  }
+
+  /**
+   * Reverses all journal entries related to a source record.
+   * Logic: Creates new entries with swapped Debit/Credit.
+   */
+  static async reverseEntries(tx: any, params: {
+    sourceId: string;
+    sourceType: string;
+    reason: string;
+  }) {
+    // 1. Find all original entries
+    const originalEntries = await tx.journalEntry.findMany({
+      where: {
+        sourceId: params.sourceId,
+        sourceType: params.sourceType,
+        deletedAt: null // Only reverse active ones
+      },
+      include: {
+        lines: true
+      }
+    });
+
+    if (originalEntries.length === 0) return;
+
+    for (const entry of originalEntries) {
+      // 2. Create Reversal Journal Entry
+      const reversalEntry = await tx.journalEntry.create({
+        data: {
+          projectId: entry.projectId,
+          description: `ĐẢO BÚT TOÁN: ${params.reason} (Gốc: ${entry.description})`,
+          reference: `REV-${entry.reference}`,
+          sourceType: entry.sourceType,
+          sourceId: entry.sourceId,
+          isPosted: true,
+        }
+      });
+
+      // 3. Create Swapped Transaction Lines
+      for (const line of entry.lines) {
+        await tx.transactionLine.create({
+          data: {
+            journalEntryId: reversalEntry.id,
+            accountId: line.accountId,
+            amount: line.amount,
+            type: line.type === TransactionType.DEBIT ? TransactionType.CREDIT : TransactionType.DEBIT,
+            description: `Đảo bút toán cho: ${line.description}`
+          }
+        });
+      }
+
+      // 4. Mark original entry as reversed (using deletedAt to filter out from future reports)
+      await tx.journalEntry.update({
+        where: { id: entry.id },
+        data: { deletedAt: new Date() }
+      });
+    }
+  }
+
   // ─── PRIVATE HELPERS ────────────────────────────────
 
   private static getExpenseCode(type: CostType): string {

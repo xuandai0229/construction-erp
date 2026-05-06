@@ -6,39 +6,44 @@ import { CostRecord, BudgetRecord, WBSItem } from "@/app/types";
 
 export class WBSService {
   static async findByProject(projectId: string) {
-    const [items, costs, budgets] = await Promise.all([
+    const [items, costGroups, budgetGroups] = await Promise.all([
       prisma.wBSItem.findMany({
         where: { projectId },
         orderBy: [{ level: "asc" }, { sortOrder: "asc" }],
       }),
-      prisma.costRecord.findMany({
-        where: { projectId },
+      prisma.costRecord.groupBy({
+        by: ['wbsId'],
+        where: { projectId, deletedAt: null },
+        _sum: { amount: true }
       }),
-      prisma.budgetRecord.findMany({
-        where: { projectId },
+      prisma.budgetRecord.groupBy({
+        by: ['wbsId'],
+        where: { projectId, deletedAt: null },
+        _sum: { estimatedAmount: true }
       }),
     ]);
 
+    // Map groups for O(1) lookup during tree build
+    const costMap = new Map(costGroups.map(g => [g.wbsId, Number(g._sum.amount || 0)]));
+    const budgetMap = new Map(budgetGroups.map(g => [g.wbsId, Number(g._sum.estimatedAmount || 0)]));
+
     // Use centralized ProjectFinance engine for tree and roll-ups
-    const tree = ProjectFinance.calculateWBSTree(
-      items as unknown as WBSItem[],
-      costs as unknown as CostRecord[],
-      budgets as unknown as BudgetRecord[]
+    // We pass summarized maps instead of raw arrays
+    const tree = ProjectFinance.calculateWBSTreeOptimized(
+      items as any,
+      costMap,
+      budgetMap
     );
 
-    const totalBudget = tree.reduce((s, n) => s + n.budget, 0);
-    const totalActual = tree.reduce((s, n) => s + n.actual, 0);
+    const stats = ProjectFinance.calculateStats(tree);
 
     return {
       tree,
       flat: items,
       stats: {
         totalItems: items.length,
-        totalBudget,
-        totalActual,
-        variance: totalBudget - totalActual,
-        progress: totalBudget > 0 ? Math.round((totalActual / totalBudget) * 100) : 0,
-        isCostOverrun: totalActual > totalBudget && totalBudget > 0,
+        ...stats,
+        isCostOverrun: stats.totalActual > stats.totalBudget && stats.totalBudget > 0,
       },
     };
   }

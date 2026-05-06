@@ -1,5 +1,5 @@
 import { handleApiError, successResponse } from "@/lib/api-error";
-import { prisma } from "@/lib/prisma";
+import { RevenueService } from "@/services/revenue.service";
 import { PaymentStatus } from "@prisma/client";
 import { z } from "zod";
 
@@ -18,11 +18,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("projectId") || searchParams.get("project_id") || undefined;
 
-    const items = await prisma.revenue.findMany({
-      where: { ...(projectId && { projectId }) },
-      orderBy: { date: "desc" },
-    });
-
+    const items = await RevenueService.findRevenuesByProject(projectId ?? "");
     const mapped = items.map((r) => ({
       id: r.id,
       projectId: r.projectId,
@@ -45,17 +41,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const data = createRevenueSchema.parse(body);
 
-    const item = await prisma.revenue.create({
-      data: {
-        projectId: data.projectId,
-        wbsId: data.wbsId,
-        invoiceId: data.invoiceId ?? null,
-        amount: data.amount,
-        date: data.date ? new Date(data.date) : new Date(),
-        status: data.status ?? PaymentStatus.unpaid,
-        description: data.description ?? "",
-      },
-    });
+    const item = await RevenueService.createRevenue(data);
 
     return successResponse({
       id: item.id,
@@ -72,3 +58,4 @@ export async function POST(request: Request) {
     return handleApiError(error);
   }
 }
+
