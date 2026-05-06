@@ -2,6 +2,7 @@ import { handleApiError, successResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
 import { createPaymentSchema } from "@/lib/validations";
 import { RevenueService } from "@/services/revenue.service";
+import { CloseManagementService } from "@/services/finance/close/closeManagement.service";
 
 export async function GET(request: Request) {
   try {
@@ -36,6 +37,9 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const data = createPaymentSchema.parse(body);
+
+    // ── Period Guard: reject postings to locked fiscal periods ──────────────
+    await CloseManagementService.assertPeriodOpen(data.date ? new Date(data.date) : new Date());
 
     const result = await RevenueService.createPayment(data);
 

@@ -1,6 +1,7 @@
 import { handleApiError, successResponse } from "@/lib/api-error";
 import { createCostSchema } from "@/lib/validations";
 import { CostService } from "@/services/cost.service";
+import { CloseManagementService } from "@/services/finance/close/closeManagement.service";
 
 export async function GET(request: Request) {
   try {
@@ -16,10 +17,10 @@ export async function GET(request: Request) {
       endDate: searchParams.get("endDate") || undefined,
     };
 
-    const items = await CostService.findByProject(projectId, filters);
+    const result = await CostService.findByProject(projectId, filters);
 
     // Map to frontend shape (snake_case)
-    const mapped = items.map((c) => ({
+    const mapped = result.items.map((c) => ({
       id: c.id,
       projectId: c.projectId,
       wbsId: c.wbsId,
@@ -34,7 +35,13 @@ export async function GET(request: Request) {
       status: c.status,
       createdAt: c.createdAt.toISOString(),
     }));
-    return successResponse(mapped);
+    return successResponse({
+      items: mapped,
+      total: result.total,
+      page: result.page,
+      limit: result.limit,
+      totalPages: result.totalPages
+    });
   } catch (error) {
     return handleApiError(error);
   }
@@ -44,6 +51,9 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const data = createCostSchema.parse(body);
+
+    // ── Period Guard: reject postings to locked fiscal periods ──────────────
+    await CloseManagementService.assertPeriodOpen(data.date ? new Date(data.date) : new Date());
 
     const item = await CostService.create(data);
 

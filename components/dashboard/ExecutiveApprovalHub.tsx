@@ -36,7 +36,7 @@ export const ExecutiveApprovalHub = () => {
         <div className="kpi-card" style={{ borderLeft: '4px solid var(--status-critical)' }}>
           <div className="text-muted">Bottleneck Rate</div>
           <div className="kpi-value" style={{ color: 'var(--status-critical)' }}>8.2%</div>
-          <div style={{ fontSize: '0.75rem' }}>4 Stalled > 72h</div>
+          <div style={{ fontSize: '0.75rem' }}>4 Stalled &gt; 72h</div>
         </div>
       </div>
 

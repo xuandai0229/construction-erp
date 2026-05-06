@@ -3,10 +3,11 @@ import { ReportService } from "@/services/report.service";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const data = await ReportService.getMonthlyReport(params.id);
+    const { id } = await params;
+    const data = await ReportService.getMonthlyReport(id);
     return successResponse(data);
   } catch (error) {
     return handleApiError(error);

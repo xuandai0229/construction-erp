@@ -2,6 +2,7 @@ import { handleApiError, successResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
 import { createInvoiceSchema } from "@/lib/validations";
 import { RevenueService } from "@/services/revenue.service";
+import { CloseManagementService } from "@/services/finance/close/closeManagement.service";
 
 export async function GET(request: Request) {
   try {
@@ -10,9 +11,9 @@ export async function GET(request: Request) {
 
     if (!projectId) return successResponse([]);
 
-    const items = await RevenueService.findInvoicesByProject(projectId);
+    const result = await RevenueService.findInvoicesByProject(projectId);
 
-    const mapped = items.map((inv) => ({
+    const mapped = result.items.map((inv) => ({
       id: inv.id,
       projectId: inv.projectId,
       wbsId: inv.wbsId,
@@ -24,7 +25,13 @@ export async function GET(request: Request) {
       wbsName: inv.wbs.name,
       createdAt: inv.createdAt.toISOString(),
     }));
-    return successResponse(mapped);
+    return successResponse({
+      items: mapped,
+      total: result.total,
+      page: result.page,
+      limit: result.limit,
+      totalPages: result.totalPages
+    });
   } catch (error) {
     return handleApiError(error);
   }
@@ -34,6 +41,9 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const data = createInvoiceSchema.parse(body);
+
+    // ── Period Guard: reject postings to locked fiscal periods ──────────────
+    await CloseManagementService.assertPeriodOpen(data.issuedDate ? new Date(data.issuedDate) : new Date());
 
     const item = await RevenueService.createInvoice(data);
 
