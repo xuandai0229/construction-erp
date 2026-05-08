@@ -187,9 +187,9 @@ export default function Sidebar({
             {!collapsed && (
               <div
                 style={{
-                  fontSize: '10px',
+                  fontSize: '11px',
                   fontWeight: 700,
-                  color: 'var(--text-muted)',
+                  color: '#94a3b8',
                   textTransform: 'uppercase',
                   letterSpacing: '0.08em',
                   padding: '10px 10px 4px',
@@ -215,28 +215,32 @@ export default function Sidebar({
                     gap: '10px',
                     padding: collapsed ? '9px' : '9px 10px',
                     justifyContent: collapsed ? 'center' : 'flex-start',
-                    borderRadius: '6px',
+                    borderRadius: '12px',
                     marginBottom: '1px',
                     fontSize: '13.5px',
                     fontWeight: active ? 600 : 400,
                     cursor: 'pointer',
-                    transition: 'all 0.12s ease',
+                    transition: 'background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease',
                     border: 'none',
                     textAlign: 'left',
-                    background: active ? 'var(--brand)' : 'transparent',
-                    color: active ? '#fff' : 'var(--text-secondary)',
-                    boxShadow: active ? '0 1px 3px rgba(37,99,235,0.25)' : 'none',
+                    background: active ? '#2563eb' : 'transparent',
+                    color: active ? '#fff' : '#64748b',
+                    boxShadow: active ? '0 6px 18px rgba(37,99,235,.18)' : 'none',
                   }}
                   onMouseEnter={(e) => {
                     if (!active) {
-                      (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-muted)';
-                      (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-primary)';
+                      const btn = e.currentTarget as HTMLButtonElement;
+                      btn.style.background = 'rgba(100, 116, 139, 0.06)';
+                      btn.style.color = '#475569';
+                      btn.style.transform = 'translateX(3px)';
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!active) {
-                      (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-                      (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)';
+                      const btn = e.currentTarget as HTMLButtonElement;
+                      btn.style.background = 'transparent';
+                      btn.style.color = '#64748b';
+                      btn.style.transform = 'translateX(0)';
                     }
                   }}
                 >
@@ -265,15 +269,15 @@ export default function Sidebar({
                 gap: '10px',
                 padding: collapsed ? '9px' : '9px 10px',
                 justifyContent: collapsed ? 'center' : 'flex-start',
-                borderRadius: '6px',
+                borderRadius: '12px',
                 marginBottom: '2px',
                 fontSize: '13.5px',
                 fontWeight: active ? 600 : 400,
                 cursor: 'pointer',
-                transition: 'all 0.12s ease',
+                transition: 'background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease',
                 border: 'none',
-                background: active ? 'var(--brand)' : 'transparent',
-                color: active ? '#fff' : 'var(--text-secondary)',
+                background: active ? '#2563eb' : 'transparent',
+                color: active ? '#fff' : '#64748b',
               }}
               onMouseEnter={(e) => {
                 if (!active) {

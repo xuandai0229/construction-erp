@@ -65,7 +65,7 @@ export default function Header({
       <AddInvoiceModal isOpen={showInvoice} onClose={() => setShowInvoice(false)} />
       <AddTaskModal    isOpen={showTask}    onClose={() => setShowTask(false)}     />
 
-      <header className="erp-topbar" style={{ height: '64px', borderBottom: '1px solid var(--border)', background: 'var(--bg-surface)' }}>
+      <header className="erp-topbar" style={{ height: '72px', borderBottom: '1px solid var(--border)', background: 'var(--bg-surface)' }}>
         {/* Left: Title + Project Selector */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '24px', minWidth: 0, flex: 1 }}>
           <h1
@@ -151,15 +151,28 @@ export default function Header({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                height: '34px',
-                padding: '0 12px',
-                borderRadius: '6px',
+                height: '40px',
+                padding: '0 16px',
+                borderRadius: '12px',
                 border: 'none',
-                background: 'var(--brand)',
+                background: '#2563eb',
                 color: 'white',
                 fontSize: '13px',
                 fontWeight: 600,
                 cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                const btn = e.currentTarget as HTMLButtonElement;
+                btn.style.background = '#1d4ed8';
+                btn.style.transform = 'translateY(-1px)';
+                btn.style.boxShadow = '0 4px 12px rgba(37, 99, 235, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                const btn = e.currentTarget as HTMLButtonElement;
+                btn.style.background = '#2563eb';
+                btn.style.transform = 'translateY(0)';
+                btn.style.boxShadow = 'none';
               }}
             >
               <svg viewBox="0 0 24 24" style={{ height: '14px', width: '14px' }} fill="none" stroke="currentColor" strokeWidth="2.5">

@@ -60,45 +60,45 @@ export default function ProjectTable({ projects, onEdit }: { projects: Project[]
   };
 
   return (
-    <div className="erp-card">
+    <div className="erp-card" style={{ borderRadius: '12px' }}>
       <div className="erp-table-wrap">
         <table className="erp-table zebra">
           <thead>
-            <tr>
-              <th style={{width: '5%'}}>#</th>
-              <th style={{width: '20%'}}>Dự án</th>
-              <th style={{width: '15%'}}>Chủ đầu tư</th>
-              <th style={{width: '12%'}}>Loại</th>
-              <th style={{width: '15%', textAlign: 'right'}}>Giá trị</th>
-              <th style={{width: '10%'}}>Bắt đầu</th>
-              <th style={{width: '10%'}}>Kết thúc</th>
-              <th style={{width: '10%'}}>Trạng thái</th>
-              <th style={{width: '8%'}}>Tiến độ</th>
-              <th style={{width: '5%'}}>Thao tác</th>
+            <tr style={{ height: '44px', background: '#F8FAFC' }}>
+              <th style={{width: '5%', fontSize: '12px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em'}}>#</th>
+              <th style={{width: '20%', fontSize: '12px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em'}}>Dự án</th>
+              <th style={{width: '15%', fontSize: '12px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em'}}>Chủ đầu tư</th>
+              <th style={{width: '12%', fontSize: '12px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em'}}>Loại</th>
+              <th style={{width: '15%', textAlign: 'right', fontSize: '12px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em'}}>Giá trị</th>
+              <th style={{width: '10%', fontSize: '12px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em'}}>Bắt đầu</th>
+              <th style={{width: '10%', fontSize: '12px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em'}}>Kết thúc</th>
+              <th style={{width: '10%', fontSize: '12px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em'}}>Trạng thái</th>
+              <th style={{width: '8%', fontSize: '12px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em'}}>Tiến độ</th>
+              <th style={{width: '5%', fontSize: '12px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em'}}>Thao tác</th>
             </tr>
           </thead>
           <tbody>
             {enrichedProjects.map((p, i) => (
-              <tr key={p.id}>
-                <td className="font-medium text-[var(--text-secondary)]">{i + 1}</td>
+              <tr key={p.id} style={{ height: '44px', transition: 'background-color 0.15s ease' }} onMouseEnter={(e) => (e.currentTarget.style.background = '#F8FAFC')} onMouseLeave={(e) => (e.currentTarget.style.background = '')}>
+                <td className="font-medium" style={{ fontSize: '12px', color: '#64748b' }}>{i + 1}</td>
                 <td>
                   <div className="flex items-center gap-3">
-                    <img src={p.thumbnail} alt={p.name} className="h-10 w-10 rounded-[var(--radius)] object-cover border border-[var(--border)]" />
+                    <img src={p.thumbnail} alt={p.name} className="h-10 w-10 rounded-[8px] object-cover border border-[var(--border)]" />
                     <div>
-                      <div className="text-[13px] font-bold text-[var(--text-primary)]">{p.name}</div>
-                      <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">{p.code}</div>
+                      <div className="text-[12px] font-bold text-[#111827]">{p.name}</div>
+                      <div className="text-[11px] text-[#64748b] mt-0.5">{p.code}</div>
                     </div>
                   </div>
                 </td>
-                <td className="text-[13px]">{p.investor || '—'}</td>
+                <td className="text-[12px]" style={{ color: '#111827' }}>{p.investor || '—'}</td>
                 <td className="text-center text-[12px]">
                   <span className="badge badge-info">{p.type}</span>
                 </td>
-                <td className="text-money text-[13px] font-bold">{(p.totalValue ?? 0).toLocaleString()}</td>
-                <td className="text-center text-[12px]">
+                <td className="text-money text-[12px] font-bold" style={{ color: '#111827', fontVariantNumeric: 'tabular-nums' }}>{(p.totalValue ?? 0).toLocaleString('vi-VN')}</td>
+                <td className="text-center text-[12px]" style={{ color: '#64748b' }}>
                   {p.startDate ? new Date(p.startDate).toLocaleDateString('vi-VN') : '—'}
                 </td>
-                <td className="text-center text-[12px]">
+                <td className="text-center text-[12px]" style={{ color: '#64748b' }}>
                   {p.endDate ? new Date(p.endDate).toLocaleDateString('vi-VN') : '—'}
                 </td>
                 <td className="text-center">
@@ -108,13 +108,13 @@ export default function ProjectTable({ projects, onEdit }: { projects: Project[]
                 </td>
                 <td>
                   <div className="flex flex-col gap-1">
-                    <div className="text-[11px] font-bold">{p.progress}%</div>
-                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--bg-muted)]">
+                    <div className="text-[11px] font-bold" style={{ color: '#111827' }}>{Number.isFinite(p.progress) ? p.progress : 0}%</div>
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#E5E7EB]">
                       <div
                         className="h-full rounded-full transition-all"
                         style={{
-                          width: `${p.progress}%`,
-                          backgroundColor: p.status === 'CANCELLED' ? 'var(--warning)' : 'var(--success)'
+                          width: `${Number.isFinite(p.progress) ? p.progress : 0}%`,
+                          backgroundColor: p.status === 'CANCELLED' ? '#F59E0B' : '#10B981'
                         }}
                       />
                     </div>
@@ -124,7 +124,7 @@ export default function ProjectTable({ projects, onEdit }: { projects: Project[]
                   <div className="flex items-center justify-center gap-1">
                     <button
                       onClick={() => onEdit(projects.find(proj => proj.id === p.id)!)}
-                      className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] hover:bg-[var(--bg-muted)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+                      className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] hover:bg-[var(--bg-muted)] text-[#64748b] hover:text-[#111827] transition-colors"
                       title="Chỉnh sửa"
                     >
                       <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
@@ -133,7 +133,7 @@ export default function ProjectTable({ projects, onEdit }: { projects: Project[]
                     </button>
                     <button
                       onClick={() => handleDelete(p.id, p.name)}
-                      className="flex h-7 w-7 items-center justify-center rounded border border-[var(--danger-light)] hover:bg-[var(--danger-light)]/50 text-[var(--danger)] hover:text-[var(--danger-hover)] transition-colors"
+                      className="flex h-7 w-7 items-center justify-center rounded border border-[#FCA5A5] hover:bg-[#FCA5A5]/20 text-[#EF4444] transition-colors"
                       title="Xóa"
                     >
                       <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
@@ -146,7 +146,7 @@ export default function ProjectTable({ projects, onEdit }: { projects: Project[]
             ))}
             {enrichedProjects.length === 0 && (
               <tr>
-                <td colSpan={10} className="py-8 text-center text-[var(--text-secondary)]">
+                <td colSpan={10} className="py-8 text-center" style={{ fontSize: '12px', color: '#9CA3AF' }}>
                   Không có dự án nào
                 </td>
               </tr>

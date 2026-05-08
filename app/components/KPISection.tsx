@@ -44,60 +44,123 @@ interface KPICardProps {
   trendUp?: boolean;
 }
 
-function KPICard({ label, value, sub, type, trendValue, trendUp }: KPICardProps) {
-  const iconColors = {
-    contract: 'var(--brand)',
+function KPICard({ label, value, sub, type }: KPICardProps) {
+  const iconColors: Record<string, string> = {
+    contract: '#2563eb',
     budget: '#9333EA',
     cost: '#EA580C',
-    profit: 'var(--success)',
-    receivable: 'var(--danger)',
-    payable: 'var(--info)',
+    profit: '#10B981',
+    receivable: '#EF4444',
+    payable: '#3B82F6',
   };
+
+  const iconBgColors: Record<string, string> = {
+    contract: 'rgba(37, 99, 235, 0.08)',
+    budget: 'rgba(147, 51, 234, 0.08)',
+    cost: 'rgba(234, 88, 12, 0.08)',
+    profit: 'rgba(16, 185, 129, 0.08)',
+    receivable: 'rgba(239, 68, 68, 0.08)',
+    payable: 'rgba(59, 130, 246, 0.08)',
+  };
+
+  const safeValue = Number.isFinite(value) ? value : 0;
 
   return (
     <article
       className="erp-card"
       style={{
-        padding: 'var(--sp-12) var(--sp-16)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--sp-12)',
-        minHeight: '94px',
+        padding: '12px 12px',
+        display: 'grid',
+        gridTemplateColumns: '40px 1fr',
+        columnGap: '10px',
+        minHeight: '78px',
         background: 'var(--bg-surface)',
-        border: '1px solid var(--border-mid)',
-        boxShadow: 'var(--shadow-sm)',
+        border: '1px solid var(--border)',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+        borderRadius: '12px',
+        cursor: 'default',
       }}
     >
-        <div style={{
+      <div
+        style={{
           width: '40px',
           height: '40px',
           borderRadius: '10px',
-          background: 'var(--bg-subtle)',
+          background: iconBgColors[type] ?? 'rgba(37, 99, 235, 0.08)',
           border: '1px solid var(--border)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          color: iconColors[type] ?? '#2563eb',
           flexShrink: 0,
-          color: (iconColors as any)[type] || 'var(--brand)'
-        }}>
+        }}
+      >
         <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
           {KPI_ICONS[type]}
         </svg>
       </div>
-      
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: '12px', fontWeight: 650, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>{label}</div>
-        <div style={{ fontSize: '40px', fontWeight: 900, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums', lineHeight: 1.0, letterSpacing: '-0.02em' }}>
-          {formatVnd(value)}
+
+      <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div
+          style={{
+            fontSize: '11px',
+            fontWeight: 700,
+            color: '#64748b',
+            textTransform: 'uppercase',
+            letterSpacing: '0.06em',
+            marginBottom: '4px',
+            lineHeight: 1.1,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+          title={label}
+        >
+          {label}
         </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px' }}>
-          {trendValue && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '10px', fontWeight: 700, color: trendUp ? 'var(--success)' : 'var(--danger)' }}>
-              <TrendIcon up={!!trendUp} />
-              {trendValue}
-            </div>
-          )}
-          <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{sub}</div>
+
+        <div
+          style={{
+            fontSize: '26px',
+            fontWeight: 900,
+            color: '#0F172A',
+            fontVariantNumeric: 'tabular-nums',
+            lineHeight: 1.05,
+            letterSpacing: '-0.02em',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+          title={formatVnd(safeValue)}
+        >
+          {formatVnd(safeValue)}
+        </div>
+
+        <div style={{ marginTop: '6px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+          <div
+            style={{
+              fontSize: '10px',
+              color: '#94a3b8',
+              fontWeight: 700,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+            title={sub}
+          >
+            {sub}
+          </div>
+          <div
+            style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '999px',
+              background: iconColors[type] ?? '#2563eb',
+              opacity: 0.9,
+              flexShrink: 0,
+            }}
+            aria-hidden="true"
+          />
         </div>
       </div>
     </article>
@@ -118,8 +181,7 @@ export default function KPISection({ data }: { data: DashboardData }) {
     };
   };
 
-  const costTrend = getTrend('cost');
-  const revTrend = getTrend('revenue');
+
 
   const totalBudget  = data.totalBudget;
   const totalCost    = data.totalActual;
@@ -127,54 +189,15 @@ export default function KPISection({ data }: { data: DashboardData }) {
   const contractVal  = data.project?.totalValue ?? 0;
   const margin       = contractVal > 0 ? (profit / contractVal) * 100 : 0;
 
+  // NOTE: trend blocks are intentionally suppressed in this KPI redesign to prevent overflow.
   return (
-    <section className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-6">
-      <KPICard
-        type="contract"
-        label="Tổng giá trị HĐ"
-        value={contractVal}
-        sub="0% so với kế hoạch"
-      />
-      <KPICard
-        type="budget"
-        label="Tổng dự toán"
-        value={totalBudget}
-        trendValue="5.6%"
-        trendUp={true}
-        sub="so với hợp đồng"
-      />
-      <KPICard
-        type="cost"
-        label="Tổng chi phí thực tế"
-        value={totalCost}
-        trendValue="12.5%"
-        trendUp={false} 
-        sub="so với dự toán"
-      />
-      <KPICard
-        type="profit"
-        label="Lợi nhuận (Lãi/Lỗ)"
-        value={profit}
-        trendValue="8.8%"
-        trendUp={true}
-        sub={`Biên: ${margin.toFixed(1)}%`}
-      />
-      <KPICard
-        type="receivable"
-        label="Công nợ phải thu"
-        value={data.receivable.total}
-        trendValue="3.2%"
-        trendUp={false}
-        sub="so với kỳ trước"
-      />
-      <KPICard
-        type="payable"
-        label="Công nợ phải trả"
-        value={data.payable.total}
-        trendValue="2.1%"
-        trendUp={true}
-        sub="so với kỳ trước"
-      />
+    <section className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
+      <KPICard type="contract"    label="Tổng giá trị HĐ"        value={contractVal}    sub="Kế hoạch: 0%" />
+      <KPICard type="budget"      label="Tổng dự toán"            value={totalBudget}  sub="So hợp đồng" trendValue="" trendUp={true} />
+      <KPICard type="cost"        label="Chi phí thực tế"        value={totalCost}    sub="So dự toán" trendValue="" trendUp={false} />
+      <KPICard type="profit"      label="Lợi nhuận"               value={profit}       sub={`Biên ${margin.toFixed(1)}%`} trendValue="" trendUp={true} />
+      <KPICard type="receivable"  label="Phải thu (AR)"          value={data.receivable.total} sub="Kỳ trước" trendValue="" trendUp={false} />
+      <KPICard type="payable"     label="Phải trả (AP)"         value={data.payable.total}    sub="Kỳ trước" trendValue="" trendUp={true} />
     </section>
   );
 }
