@@ -157,6 +157,35 @@ model AuthorityMatrix {
   updatedAt       DateTime @updatedAt
 }
 
+model TrainingRecord {
+  id          String    @id @default(uuid())
+  userId      String
+  title       String
+  module      String?
+  status      String    @default("ASSIGNED")
+  score       Decimal?  @db.Decimal(5, 2)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+}
+
+model UserMaturity {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  accuracy       Decimal  @default(100) @db.Decimal(5, 2)
+  maturityLevel  String   @default("BEGINNER")
+  lastAssessedAt DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
 model DelegationPolicy {
   id              String   @id @default(uuid())
   name            String

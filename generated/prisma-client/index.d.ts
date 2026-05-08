@@ -19,6 +19,31 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model AuthorityMatrix
+ * 
+ */
+export type AuthorityMatrix = $Result.DefaultSelection<Prisma.$AuthorityMatrixPayload>
+/**
+ * Model TrainingRecord
+ * 
+ */
+export type TrainingRecord = $Result.DefaultSelection<Prisma.$TrainingRecordPayload>
+/**
+ * Model UserMaturity
+ * 
+ */
+export type UserMaturity = $Result.DefaultSelection<Prisma.$UserMaturityPayload>
+/**
+ * Model DelegationPolicy
+ * 
+ */
+export type DelegationPolicy = $Result.DefaultSelection<Prisma.$DelegationPolicyPayload>
+/**
+ * Model DelegationWindow
+ * 
+ */
+export type DelegationWindow = $Result.DefaultSelection<Prisma.$DelegationWindowPayload>
+/**
  * Model Category
  * 
  */
@@ -521,6 +546,56 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs>;
+
+  /**
+   * `prisma.authorityMatrix`: Exposes CRUD operations for the **AuthorityMatrix** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AuthorityMatrices
+    * const authorityMatrices = await prisma.authorityMatrix.findMany()
+    * ```
+    */
+  get authorityMatrix(): Prisma.AuthorityMatrixDelegate<ExtArgs>;
+
+  /**
+   * `prisma.trainingRecord`: Exposes CRUD operations for the **TrainingRecord** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TrainingRecords
+    * const trainingRecords = await prisma.trainingRecord.findMany()
+    * ```
+    */
+  get trainingRecord(): Prisma.TrainingRecordDelegate<ExtArgs>;
+
+  /**
+   * `prisma.userMaturity`: Exposes CRUD operations for the **UserMaturity** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserMaturities
+    * const userMaturities = await prisma.userMaturity.findMany()
+    * ```
+    */
+  get userMaturity(): Prisma.UserMaturityDelegate<ExtArgs>;
+
+  /**
+   * `prisma.delegationPolicy`: Exposes CRUD operations for the **DelegationPolicy** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DelegationPolicies
+    * const delegationPolicies = await prisma.delegationPolicy.findMany()
+    * ```
+    */
+  get delegationPolicy(): Prisma.DelegationPolicyDelegate<ExtArgs>;
+
+  /**
+   * `prisma.delegationWindow`: Exposes CRUD operations for the **DelegationWindow** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DelegationWindows
+    * const delegationWindows = await prisma.delegationWindow.findMany()
+    * ```
+    */
+  get delegationWindow(): Prisma.DelegationWindowDelegate<ExtArgs>;
 
   /**
    * `prisma.category`: Exposes CRUD operations for the **Category** model.
@@ -1313,6 +1388,11 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    AuthorityMatrix: 'AuthorityMatrix',
+    TrainingRecord: 'TrainingRecord',
+    UserMaturity: 'UserMaturity',
+    DelegationPolicy: 'DelegationPolicy',
+    DelegationWindow: 'DelegationWindow',
     Category: 'Category',
     Project: 'Project',
     Task: 'Task',
@@ -1363,7 +1443,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "category" | "project" | "task" | "wBSItem" | "costRecord" | "budgetRecord" | "revenue" | "invoice" | "payment" | "ledgerAccount" | "journalEntry" | "transactionLine" | "purchaseRequest" | "purchaseOrder" | "purchaseOrderItem" | "goodsReceipt" | "contract" | "contractChange" | "subcontract" | "subcontractItem" | "subcontractProgress" | "subcontractInvoice" | "material" | "inventoryTransaction" | "siteConsumption" | "auditLog" | "approvalRequest" | "approvalStep" | "fiscalPeriod" | "document" | "activityFeed" | "comment" | "bOQItem" | "progressEntry" | "measurement"
+      modelProps: "user" | "authorityMatrix" | "trainingRecord" | "userMaturity" | "delegationPolicy" | "delegationWindow" | "category" | "project" | "task" | "wBSItem" | "costRecord" | "budgetRecord" | "revenue" | "invoice" | "payment" | "ledgerAccount" | "journalEntry" | "transactionLine" | "purchaseRequest" | "purchaseOrder" | "purchaseOrderItem" | "goodsReceipt" | "contract" | "contractChange" | "subcontract" | "subcontractItem" | "subcontractProgress" | "subcontractInvoice" | "material" | "inventoryTransaction" | "siteConsumption" | "auditLog" | "approvalRequest" | "approvalStep" | "fiscalPeriod" | "document" | "activityFeed" | "comment" | "bOQItem" | "progressEntry" | "measurement"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1434,6 +1514,356 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      AuthorityMatrix: {
+        payload: Prisma.$AuthorityMatrixPayload<ExtArgs>
+        fields: Prisma.AuthorityMatrixFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AuthorityMatrixFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthorityMatrixPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AuthorityMatrixFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthorityMatrixPayload>
+          }
+          findFirst: {
+            args: Prisma.AuthorityMatrixFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthorityMatrixPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AuthorityMatrixFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthorityMatrixPayload>
+          }
+          findMany: {
+            args: Prisma.AuthorityMatrixFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthorityMatrixPayload>[]
+          }
+          create: {
+            args: Prisma.AuthorityMatrixCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthorityMatrixPayload>
+          }
+          createMany: {
+            args: Prisma.AuthorityMatrixCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AuthorityMatrixCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthorityMatrixPayload>[]
+          }
+          delete: {
+            args: Prisma.AuthorityMatrixDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthorityMatrixPayload>
+          }
+          update: {
+            args: Prisma.AuthorityMatrixUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthorityMatrixPayload>
+          }
+          deleteMany: {
+            args: Prisma.AuthorityMatrixDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AuthorityMatrixUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.AuthorityMatrixUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuthorityMatrixPayload>
+          }
+          aggregate: {
+            args: Prisma.AuthorityMatrixAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAuthorityMatrix>
+          }
+          groupBy: {
+            args: Prisma.AuthorityMatrixGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AuthorityMatrixGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AuthorityMatrixCountArgs<ExtArgs>
+            result: $Utils.Optional<AuthorityMatrixCountAggregateOutputType> | number
+          }
+        }
+      }
+      TrainingRecord: {
+        payload: Prisma.$TrainingRecordPayload<ExtArgs>
+        fields: Prisma.TrainingRecordFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TrainingRecordFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrainingRecordPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TrainingRecordFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrainingRecordPayload>
+          }
+          findFirst: {
+            args: Prisma.TrainingRecordFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrainingRecordPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TrainingRecordFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrainingRecordPayload>
+          }
+          findMany: {
+            args: Prisma.TrainingRecordFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrainingRecordPayload>[]
+          }
+          create: {
+            args: Prisma.TrainingRecordCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrainingRecordPayload>
+          }
+          createMany: {
+            args: Prisma.TrainingRecordCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TrainingRecordCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrainingRecordPayload>[]
+          }
+          delete: {
+            args: Prisma.TrainingRecordDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrainingRecordPayload>
+          }
+          update: {
+            args: Prisma.TrainingRecordUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrainingRecordPayload>
+          }
+          deleteMany: {
+            args: Prisma.TrainingRecordDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TrainingRecordUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.TrainingRecordUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrainingRecordPayload>
+          }
+          aggregate: {
+            args: Prisma.TrainingRecordAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTrainingRecord>
+          }
+          groupBy: {
+            args: Prisma.TrainingRecordGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TrainingRecordGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TrainingRecordCountArgs<ExtArgs>
+            result: $Utils.Optional<TrainingRecordCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserMaturity: {
+        payload: Prisma.$UserMaturityPayload<ExtArgs>
+        fields: Prisma.UserMaturityFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserMaturityFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMaturityPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserMaturityFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMaturityPayload>
+          }
+          findFirst: {
+            args: Prisma.UserMaturityFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMaturityPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserMaturityFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMaturityPayload>
+          }
+          findMany: {
+            args: Prisma.UserMaturityFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMaturityPayload>[]
+          }
+          create: {
+            args: Prisma.UserMaturityCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMaturityPayload>
+          }
+          createMany: {
+            args: Prisma.UserMaturityCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserMaturityCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMaturityPayload>[]
+          }
+          delete: {
+            args: Prisma.UserMaturityDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMaturityPayload>
+          }
+          update: {
+            args: Prisma.UserMaturityUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMaturityPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserMaturityDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserMaturityUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.UserMaturityUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserMaturityPayload>
+          }
+          aggregate: {
+            args: Prisma.UserMaturityAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserMaturity>
+          }
+          groupBy: {
+            args: Prisma.UserMaturityGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserMaturityGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserMaturityCountArgs<ExtArgs>
+            result: $Utils.Optional<UserMaturityCountAggregateOutputType> | number
+          }
+        }
+      }
+      DelegationPolicy: {
+        payload: Prisma.$DelegationPolicyPayload<ExtArgs>
+        fields: Prisma.DelegationPolicyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DelegationPolicyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationPolicyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DelegationPolicyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationPolicyPayload>
+          }
+          findFirst: {
+            args: Prisma.DelegationPolicyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationPolicyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DelegationPolicyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationPolicyPayload>
+          }
+          findMany: {
+            args: Prisma.DelegationPolicyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationPolicyPayload>[]
+          }
+          create: {
+            args: Prisma.DelegationPolicyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationPolicyPayload>
+          }
+          createMany: {
+            args: Prisma.DelegationPolicyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DelegationPolicyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationPolicyPayload>[]
+          }
+          delete: {
+            args: Prisma.DelegationPolicyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationPolicyPayload>
+          }
+          update: {
+            args: Prisma.DelegationPolicyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationPolicyPayload>
+          }
+          deleteMany: {
+            args: Prisma.DelegationPolicyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DelegationPolicyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.DelegationPolicyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationPolicyPayload>
+          }
+          aggregate: {
+            args: Prisma.DelegationPolicyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDelegationPolicy>
+          }
+          groupBy: {
+            args: Prisma.DelegationPolicyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DelegationPolicyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DelegationPolicyCountArgs<ExtArgs>
+            result: $Utils.Optional<DelegationPolicyCountAggregateOutputType> | number
+          }
+        }
+      }
+      DelegationWindow: {
+        payload: Prisma.$DelegationWindowPayload<ExtArgs>
+        fields: Prisma.DelegationWindowFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DelegationWindowFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationWindowPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DelegationWindowFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationWindowPayload>
+          }
+          findFirst: {
+            args: Prisma.DelegationWindowFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationWindowPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DelegationWindowFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationWindowPayload>
+          }
+          findMany: {
+            args: Prisma.DelegationWindowFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationWindowPayload>[]
+          }
+          create: {
+            args: Prisma.DelegationWindowCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationWindowPayload>
+          }
+          createMany: {
+            args: Prisma.DelegationWindowCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DelegationWindowCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationWindowPayload>[]
+          }
+          delete: {
+            args: Prisma.DelegationWindowDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationWindowPayload>
+          }
+          update: {
+            args: Prisma.DelegationWindowUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationWindowPayload>
+          }
+          deleteMany: {
+            args: Prisma.DelegationWindowDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DelegationWindowUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.DelegationWindowUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DelegationWindowPayload>
+          }
+          aggregate: {
+            args: Prisma.DelegationWindowAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDelegationWindow>
+          }
+          groupBy: {
+            args: Prisma.DelegationWindowGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DelegationWindowGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DelegationWindowCountArgs<ExtArgs>
+            result: $Utils.Optional<DelegationWindowCountAggregateOutputType> | number
           }
         }
       }
@@ -4065,6 +4495,9 @@ export namespace Prisma {
     comments: number
     activityFeeds: number
     documentsUploaded: number
+    delegationsOwned: number
+    delegationsActive: number
+    trainingRecords: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4085,6 +4518,9 @@ export namespace Prisma {
     comments?: boolean | UserCountOutputTypeCountCommentsArgs
     activityFeeds?: boolean | UserCountOutputTypeCountActivityFeedsArgs
     documentsUploaded?: boolean | UserCountOutputTypeCountDocumentsUploadedArgs
+    delegationsOwned?: boolean | UserCountOutputTypeCountDelegationsOwnedArgs
+    delegationsActive?: boolean | UserCountOutputTypeCountDelegationsActiveArgs
+    trainingRecords?: boolean | UserCountOutputTypeCountTrainingRecordsArgs
   }
 
   // Custom InputTypes
@@ -4215,6 +4651,27 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountDocumentsUploadedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DocumentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDelegationsOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DelegationWindowWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDelegationsActiveArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DelegationWindowWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTrainingRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrainingRecordWhereInput
   }
 
 
@@ -5109,6 +5566,10 @@ export namespace Prisma {
     comments?: boolean | User$commentsArgs<ExtArgs>
     activityFeeds?: boolean | User$activityFeedsArgs<ExtArgs>
     documentsUploaded?: boolean | User$documentsUploadedArgs<ExtArgs>
+    delegationsOwned?: boolean | User$delegationsOwnedArgs<ExtArgs>
+    delegationsActive?: boolean | User$delegationsActiveArgs<ExtArgs>
+    trainingRecords?: boolean | User$trainingRecordsArgs<ExtArgs>
+    maturity?: boolean | User$maturityArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -5150,6 +5611,10 @@ export namespace Prisma {
     comments?: boolean | User$commentsArgs<ExtArgs>
     activityFeeds?: boolean | User$activityFeedsArgs<ExtArgs>
     documentsUploaded?: boolean | User$documentsUploadedArgs<ExtArgs>
+    delegationsOwned?: boolean | User$delegationsOwnedArgs<ExtArgs>
+    delegationsActive?: boolean | User$delegationsActiveArgs<ExtArgs>
+    trainingRecords?: boolean | User$trainingRecordsArgs<ExtArgs>
+    maturity?: boolean | User$maturityArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5174,6 +5639,10 @@ export namespace Prisma {
       comments: Prisma.$CommentPayload<ExtArgs>[]
       activityFeeds: Prisma.$ActivityFeedPayload<ExtArgs>[]
       documentsUploaded: Prisma.$DocumentPayload<ExtArgs>[]
+      delegationsOwned: Prisma.$DelegationWindowPayload<ExtArgs>[]
+      delegationsActive: Prisma.$DelegationWindowPayload<ExtArgs>[]
+      trainingRecords: Prisma.$TrainingRecordPayload<ExtArgs>[]
+      maturity: Prisma.$UserMaturityPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5564,6 +6033,10 @@ export namespace Prisma {
     comments<T extends User$commentsArgs<ExtArgs> = {}>(args?: Subset<T, User$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany"> | Null>
     activityFeeds<T extends User$activityFeedsArgs<ExtArgs> = {}>(args?: Subset<T, User$activityFeedsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findMany"> | Null>
     documentsUploaded<T extends User$documentsUploadedArgs<ExtArgs> = {}>(args?: Subset<T, User$documentsUploadedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany"> | Null>
+    delegationsOwned<T extends User$delegationsOwnedArgs<ExtArgs> = {}>(args?: Subset<T, User$delegationsOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DelegationWindowPayload<ExtArgs>, T, "findMany"> | Null>
+    delegationsActive<T extends User$delegationsActiveArgs<ExtArgs> = {}>(args?: Subset<T, User$delegationsActiveArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DelegationWindowPayload<ExtArgs>, T, "findMany"> | Null>
+    trainingRecords<T extends User$trainingRecordsArgs<ExtArgs> = {}>(args?: Subset<T, User$trainingRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrainingRecordPayload<ExtArgs>, T, "findMany"> | Null>
+    maturity<T extends User$maturityArgs<ExtArgs> = {}>(args?: Subset<T, User$maturityArgs<ExtArgs>>): Prisma__UserMaturityClient<$Result.GetResult<Prisma.$UserMaturityPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6254,6 +6727,81 @@ export namespace Prisma {
   }
 
   /**
+   * User.delegationsOwned
+   */
+  export type User$delegationsOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationWindow
+     */
+    select?: DelegationWindowSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DelegationWindowInclude<ExtArgs> | null
+    where?: DelegationWindowWhereInput
+    orderBy?: DelegationWindowOrderByWithRelationInput | DelegationWindowOrderByWithRelationInput[]
+    cursor?: DelegationWindowWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DelegationWindowScalarFieldEnum | DelegationWindowScalarFieldEnum[]
+  }
+
+  /**
+   * User.delegationsActive
+   */
+  export type User$delegationsActiveArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationWindow
+     */
+    select?: DelegationWindowSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DelegationWindowInclude<ExtArgs> | null
+    where?: DelegationWindowWhereInput
+    orderBy?: DelegationWindowOrderByWithRelationInput | DelegationWindowOrderByWithRelationInput[]
+    cursor?: DelegationWindowWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DelegationWindowScalarFieldEnum | DelegationWindowScalarFieldEnum[]
+  }
+
+  /**
+   * User.trainingRecords
+   */
+  export type User$trainingRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrainingRecord
+     */
+    select?: TrainingRecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrainingRecordInclude<ExtArgs> | null
+    where?: TrainingRecordWhereInput
+    orderBy?: TrainingRecordOrderByWithRelationInput | TrainingRecordOrderByWithRelationInput[]
+    cursor?: TrainingRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TrainingRecordScalarFieldEnum | TrainingRecordScalarFieldEnum[]
+  }
+
+  /**
+   * User.maturity
+   */
+  export type User$maturityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMaturity
+     */
+    select?: UserMaturitySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMaturityInclude<ExtArgs> | null
+    where?: UserMaturityWhereInput
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6265,6 +6813,4837 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AuthorityMatrix
+   */
+
+  export type AggregateAuthorityMatrix = {
+    _count: AuthorityMatrixCountAggregateOutputType | null
+    _avg: AuthorityMatrixAvgAggregateOutputType | null
+    _sum: AuthorityMatrixSumAggregateOutputType | null
+    _min: AuthorityMatrixMinAggregateOutputType | null
+    _max: AuthorityMatrixMaxAggregateOutputType | null
+  }
+
+  export type AuthorityMatrixAvgAggregateOutputType = {
+    maxAmount: Decimal | null
+    priority: number | null
+  }
+
+  export type AuthorityMatrixSumAggregateOutputType = {
+    maxAmount: Decimal | null
+    priority: number | null
+  }
+
+  export type AuthorityMatrixMinAggregateOutputType = {
+    id: string | null
+    role: $Enums.UserRole | null
+    maxAmount: Decimal | null
+    entityType: string | null
+    projectType: string | null
+    priority: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AuthorityMatrixMaxAggregateOutputType = {
+    id: string | null
+    role: $Enums.UserRole | null
+    maxAmount: Decimal | null
+    entityType: string | null
+    projectType: string | null
+    priority: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AuthorityMatrixCountAggregateOutputType = {
+    id: number
+    role: number
+    maxAmount: number
+    entityType: number
+    projectType: number
+    priority: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AuthorityMatrixAvgAggregateInputType = {
+    maxAmount?: true
+    priority?: true
+  }
+
+  export type AuthorityMatrixSumAggregateInputType = {
+    maxAmount?: true
+    priority?: true
+  }
+
+  export type AuthorityMatrixMinAggregateInputType = {
+    id?: true
+    role?: true
+    maxAmount?: true
+    entityType?: true
+    projectType?: true
+    priority?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AuthorityMatrixMaxAggregateInputType = {
+    id?: true
+    role?: true
+    maxAmount?: true
+    entityType?: true
+    projectType?: true
+    priority?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AuthorityMatrixCountAggregateInputType = {
+    id?: true
+    role?: true
+    maxAmount?: true
+    entityType?: true
+    projectType?: true
+    priority?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AuthorityMatrixAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AuthorityMatrix to aggregate.
+     */
+    where?: AuthorityMatrixWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthorityMatrices to fetch.
+     */
+    orderBy?: AuthorityMatrixOrderByWithRelationInput | AuthorityMatrixOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AuthorityMatrixWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthorityMatrices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthorityMatrices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AuthorityMatrices
+    **/
+    _count?: true | AuthorityMatrixCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AuthorityMatrixAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AuthorityMatrixSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AuthorityMatrixMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AuthorityMatrixMaxAggregateInputType
+  }
+
+  export type GetAuthorityMatrixAggregateType<T extends AuthorityMatrixAggregateArgs> = {
+        [P in keyof T & keyof AggregateAuthorityMatrix]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAuthorityMatrix[P]>
+      : GetScalarType<T[P], AggregateAuthorityMatrix[P]>
+  }
+
+
+
+
+  export type AuthorityMatrixGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AuthorityMatrixWhereInput
+    orderBy?: AuthorityMatrixOrderByWithAggregationInput | AuthorityMatrixOrderByWithAggregationInput[]
+    by: AuthorityMatrixScalarFieldEnum[] | AuthorityMatrixScalarFieldEnum
+    having?: AuthorityMatrixScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AuthorityMatrixCountAggregateInputType | true
+    _avg?: AuthorityMatrixAvgAggregateInputType
+    _sum?: AuthorityMatrixSumAggregateInputType
+    _min?: AuthorityMatrixMinAggregateInputType
+    _max?: AuthorityMatrixMaxAggregateInputType
+  }
+
+  export type AuthorityMatrixGroupByOutputType = {
+    id: string
+    role: $Enums.UserRole
+    maxAmount: Decimal
+    entityType: string
+    projectType: string | null
+    priority: number
+    createdAt: Date
+    updatedAt: Date
+    _count: AuthorityMatrixCountAggregateOutputType | null
+    _avg: AuthorityMatrixAvgAggregateOutputType | null
+    _sum: AuthorityMatrixSumAggregateOutputType | null
+    _min: AuthorityMatrixMinAggregateOutputType | null
+    _max: AuthorityMatrixMaxAggregateOutputType | null
+  }
+
+  type GetAuthorityMatrixGroupByPayload<T extends AuthorityMatrixGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AuthorityMatrixGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AuthorityMatrixGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AuthorityMatrixGroupByOutputType[P]>
+            : GetScalarType<T[P], AuthorityMatrixGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AuthorityMatrixSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    role?: boolean
+    maxAmount?: boolean
+    entityType?: boolean
+    projectType?: boolean
+    priority?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["authorityMatrix"]>
+
+  export type AuthorityMatrixSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    role?: boolean
+    maxAmount?: boolean
+    entityType?: boolean
+    projectType?: boolean
+    priority?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["authorityMatrix"]>
+
+  export type AuthorityMatrixSelectScalar = {
+    id?: boolean
+    role?: boolean
+    maxAmount?: boolean
+    entityType?: boolean
+    projectType?: boolean
+    priority?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $AuthorityMatrixPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AuthorityMatrix"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      role: $Enums.UserRole
+      maxAmount: Prisma.Decimal
+      entityType: string
+      projectType: string | null
+      priority: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["authorityMatrix"]>
+    composites: {}
+  }
+
+  type AuthorityMatrixGetPayload<S extends boolean | null | undefined | AuthorityMatrixDefaultArgs> = $Result.GetResult<Prisma.$AuthorityMatrixPayload, S>
+
+  type AuthorityMatrixCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<AuthorityMatrixFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: AuthorityMatrixCountAggregateInputType | true
+    }
+
+  export interface AuthorityMatrixDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AuthorityMatrix'], meta: { name: 'AuthorityMatrix' } }
+    /**
+     * Find zero or one AuthorityMatrix that matches the filter.
+     * @param {AuthorityMatrixFindUniqueArgs} args - Arguments to find a AuthorityMatrix
+     * @example
+     * // Get one AuthorityMatrix
+     * const authorityMatrix = await prisma.authorityMatrix.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AuthorityMatrixFindUniqueArgs>(args: SelectSubset<T, AuthorityMatrixFindUniqueArgs<ExtArgs>>): Prisma__AuthorityMatrixClient<$Result.GetResult<Prisma.$AuthorityMatrixPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one AuthorityMatrix that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {AuthorityMatrixFindUniqueOrThrowArgs} args - Arguments to find a AuthorityMatrix
+     * @example
+     * // Get one AuthorityMatrix
+     * const authorityMatrix = await prisma.authorityMatrix.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AuthorityMatrixFindUniqueOrThrowArgs>(args: SelectSubset<T, AuthorityMatrixFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AuthorityMatrixClient<$Result.GetResult<Prisma.$AuthorityMatrixPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first AuthorityMatrix that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthorityMatrixFindFirstArgs} args - Arguments to find a AuthorityMatrix
+     * @example
+     * // Get one AuthorityMatrix
+     * const authorityMatrix = await prisma.authorityMatrix.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AuthorityMatrixFindFirstArgs>(args?: SelectSubset<T, AuthorityMatrixFindFirstArgs<ExtArgs>>): Prisma__AuthorityMatrixClient<$Result.GetResult<Prisma.$AuthorityMatrixPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first AuthorityMatrix that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthorityMatrixFindFirstOrThrowArgs} args - Arguments to find a AuthorityMatrix
+     * @example
+     * // Get one AuthorityMatrix
+     * const authorityMatrix = await prisma.authorityMatrix.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AuthorityMatrixFindFirstOrThrowArgs>(args?: SelectSubset<T, AuthorityMatrixFindFirstOrThrowArgs<ExtArgs>>): Prisma__AuthorityMatrixClient<$Result.GetResult<Prisma.$AuthorityMatrixPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more AuthorityMatrices that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthorityMatrixFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AuthorityMatrices
+     * const authorityMatrices = await prisma.authorityMatrix.findMany()
+     * 
+     * // Get first 10 AuthorityMatrices
+     * const authorityMatrices = await prisma.authorityMatrix.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const authorityMatrixWithIdOnly = await prisma.authorityMatrix.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AuthorityMatrixFindManyArgs>(args?: SelectSubset<T, AuthorityMatrixFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuthorityMatrixPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a AuthorityMatrix.
+     * @param {AuthorityMatrixCreateArgs} args - Arguments to create a AuthorityMatrix.
+     * @example
+     * // Create one AuthorityMatrix
+     * const AuthorityMatrix = await prisma.authorityMatrix.create({
+     *   data: {
+     *     // ... data to create a AuthorityMatrix
+     *   }
+     * })
+     * 
+     */
+    create<T extends AuthorityMatrixCreateArgs>(args: SelectSubset<T, AuthorityMatrixCreateArgs<ExtArgs>>): Prisma__AuthorityMatrixClient<$Result.GetResult<Prisma.$AuthorityMatrixPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many AuthorityMatrices.
+     * @param {AuthorityMatrixCreateManyArgs} args - Arguments to create many AuthorityMatrices.
+     * @example
+     * // Create many AuthorityMatrices
+     * const authorityMatrix = await prisma.authorityMatrix.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AuthorityMatrixCreateManyArgs>(args?: SelectSubset<T, AuthorityMatrixCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AuthorityMatrices and returns the data saved in the database.
+     * @param {AuthorityMatrixCreateManyAndReturnArgs} args - Arguments to create many AuthorityMatrices.
+     * @example
+     * // Create many AuthorityMatrices
+     * const authorityMatrix = await prisma.authorityMatrix.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AuthorityMatrices and only return the `id`
+     * const authorityMatrixWithIdOnly = await prisma.authorityMatrix.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AuthorityMatrixCreateManyAndReturnArgs>(args?: SelectSubset<T, AuthorityMatrixCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuthorityMatrixPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a AuthorityMatrix.
+     * @param {AuthorityMatrixDeleteArgs} args - Arguments to delete one AuthorityMatrix.
+     * @example
+     * // Delete one AuthorityMatrix
+     * const AuthorityMatrix = await prisma.authorityMatrix.delete({
+     *   where: {
+     *     // ... filter to delete one AuthorityMatrix
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AuthorityMatrixDeleteArgs>(args: SelectSubset<T, AuthorityMatrixDeleteArgs<ExtArgs>>): Prisma__AuthorityMatrixClient<$Result.GetResult<Prisma.$AuthorityMatrixPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one AuthorityMatrix.
+     * @param {AuthorityMatrixUpdateArgs} args - Arguments to update one AuthorityMatrix.
+     * @example
+     * // Update one AuthorityMatrix
+     * const authorityMatrix = await prisma.authorityMatrix.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AuthorityMatrixUpdateArgs>(args: SelectSubset<T, AuthorityMatrixUpdateArgs<ExtArgs>>): Prisma__AuthorityMatrixClient<$Result.GetResult<Prisma.$AuthorityMatrixPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more AuthorityMatrices.
+     * @param {AuthorityMatrixDeleteManyArgs} args - Arguments to filter AuthorityMatrices to delete.
+     * @example
+     * // Delete a few AuthorityMatrices
+     * const { count } = await prisma.authorityMatrix.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AuthorityMatrixDeleteManyArgs>(args?: SelectSubset<T, AuthorityMatrixDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AuthorityMatrices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthorityMatrixUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AuthorityMatrices
+     * const authorityMatrix = await prisma.authorityMatrix.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AuthorityMatrixUpdateManyArgs>(args: SelectSubset<T, AuthorityMatrixUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one AuthorityMatrix.
+     * @param {AuthorityMatrixUpsertArgs} args - Arguments to update or create a AuthorityMatrix.
+     * @example
+     * // Update or create a AuthorityMatrix
+     * const authorityMatrix = await prisma.authorityMatrix.upsert({
+     *   create: {
+     *     // ... data to create a AuthorityMatrix
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AuthorityMatrix we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AuthorityMatrixUpsertArgs>(args: SelectSubset<T, AuthorityMatrixUpsertArgs<ExtArgs>>): Prisma__AuthorityMatrixClient<$Result.GetResult<Prisma.$AuthorityMatrixPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of AuthorityMatrices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthorityMatrixCountArgs} args - Arguments to filter AuthorityMatrices to count.
+     * @example
+     * // Count the number of AuthorityMatrices
+     * const count = await prisma.authorityMatrix.count({
+     *   where: {
+     *     // ... the filter for the AuthorityMatrices we want to count
+     *   }
+     * })
+    **/
+    count<T extends AuthorityMatrixCountArgs>(
+      args?: Subset<T, AuthorityMatrixCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AuthorityMatrixCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AuthorityMatrix.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthorityMatrixAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AuthorityMatrixAggregateArgs>(args: Subset<T, AuthorityMatrixAggregateArgs>): Prisma.PrismaPromise<GetAuthorityMatrixAggregateType<T>>
+
+    /**
+     * Group by AuthorityMatrix.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuthorityMatrixGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AuthorityMatrixGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AuthorityMatrixGroupByArgs['orderBy'] }
+        : { orderBy?: AuthorityMatrixGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AuthorityMatrixGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAuthorityMatrixGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AuthorityMatrix model
+   */
+  readonly fields: AuthorityMatrixFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AuthorityMatrix.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AuthorityMatrixClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AuthorityMatrix model
+   */ 
+  interface AuthorityMatrixFieldRefs {
+    readonly id: FieldRef<"AuthorityMatrix", 'String'>
+    readonly role: FieldRef<"AuthorityMatrix", 'UserRole'>
+    readonly maxAmount: FieldRef<"AuthorityMatrix", 'Decimal'>
+    readonly entityType: FieldRef<"AuthorityMatrix", 'String'>
+    readonly projectType: FieldRef<"AuthorityMatrix", 'String'>
+    readonly priority: FieldRef<"AuthorityMatrix", 'Int'>
+    readonly createdAt: FieldRef<"AuthorityMatrix", 'DateTime'>
+    readonly updatedAt: FieldRef<"AuthorityMatrix", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AuthorityMatrix findUnique
+   */
+  export type AuthorityMatrixFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthorityMatrix
+     */
+    select?: AuthorityMatrixSelect<ExtArgs> | null
+    /**
+     * Filter, which AuthorityMatrix to fetch.
+     */
+    where: AuthorityMatrixWhereUniqueInput
+  }
+
+  /**
+   * AuthorityMatrix findUniqueOrThrow
+   */
+  export type AuthorityMatrixFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthorityMatrix
+     */
+    select?: AuthorityMatrixSelect<ExtArgs> | null
+    /**
+     * Filter, which AuthorityMatrix to fetch.
+     */
+    where: AuthorityMatrixWhereUniqueInput
+  }
+
+  /**
+   * AuthorityMatrix findFirst
+   */
+  export type AuthorityMatrixFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthorityMatrix
+     */
+    select?: AuthorityMatrixSelect<ExtArgs> | null
+    /**
+     * Filter, which AuthorityMatrix to fetch.
+     */
+    where?: AuthorityMatrixWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthorityMatrices to fetch.
+     */
+    orderBy?: AuthorityMatrixOrderByWithRelationInput | AuthorityMatrixOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AuthorityMatrices.
+     */
+    cursor?: AuthorityMatrixWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthorityMatrices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthorityMatrices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AuthorityMatrices.
+     */
+    distinct?: AuthorityMatrixScalarFieldEnum | AuthorityMatrixScalarFieldEnum[]
+  }
+
+  /**
+   * AuthorityMatrix findFirstOrThrow
+   */
+  export type AuthorityMatrixFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthorityMatrix
+     */
+    select?: AuthorityMatrixSelect<ExtArgs> | null
+    /**
+     * Filter, which AuthorityMatrix to fetch.
+     */
+    where?: AuthorityMatrixWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthorityMatrices to fetch.
+     */
+    orderBy?: AuthorityMatrixOrderByWithRelationInput | AuthorityMatrixOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AuthorityMatrices.
+     */
+    cursor?: AuthorityMatrixWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthorityMatrices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthorityMatrices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AuthorityMatrices.
+     */
+    distinct?: AuthorityMatrixScalarFieldEnum | AuthorityMatrixScalarFieldEnum[]
+  }
+
+  /**
+   * AuthorityMatrix findMany
+   */
+  export type AuthorityMatrixFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthorityMatrix
+     */
+    select?: AuthorityMatrixSelect<ExtArgs> | null
+    /**
+     * Filter, which AuthorityMatrices to fetch.
+     */
+    where?: AuthorityMatrixWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuthorityMatrices to fetch.
+     */
+    orderBy?: AuthorityMatrixOrderByWithRelationInput | AuthorityMatrixOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AuthorityMatrices.
+     */
+    cursor?: AuthorityMatrixWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuthorityMatrices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuthorityMatrices.
+     */
+    skip?: number
+    distinct?: AuthorityMatrixScalarFieldEnum | AuthorityMatrixScalarFieldEnum[]
+  }
+
+  /**
+   * AuthorityMatrix create
+   */
+  export type AuthorityMatrixCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthorityMatrix
+     */
+    select?: AuthorityMatrixSelect<ExtArgs> | null
+    /**
+     * The data needed to create a AuthorityMatrix.
+     */
+    data: XOR<AuthorityMatrixCreateInput, AuthorityMatrixUncheckedCreateInput>
+  }
+
+  /**
+   * AuthorityMatrix createMany
+   */
+  export type AuthorityMatrixCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AuthorityMatrices.
+     */
+    data: AuthorityMatrixCreateManyInput | AuthorityMatrixCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AuthorityMatrix createManyAndReturn
+   */
+  export type AuthorityMatrixCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthorityMatrix
+     */
+    select?: AuthorityMatrixSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many AuthorityMatrices.
+     */
+    data: AuthorityMatrixCreateManyInput | AuthorityMatrixCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AuthorityMatrix update
+   */
+  export type AuthorityMatrixUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthorityMatrix
+     */
+    select?: AuthorityMatrixSelect<ExtArgs> | null
+    /**
+     * The data needed to update a AuthorityMatrix.
+     */
+    data: XOR<AuthorityMatrixUpdateInput, AuthorityMatrixUncheckedUpdateInput>
+    /**
+     * Choose, which AuthorityMatrix to update.
+     */
+    where: AuthorityMatrixWhereUniqueInput
+  }
+
+  /**
+   * AuthorityMatrix updateMany
+   */
+  export type AuthorityMatrixUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AuthorityMatrices.
+     */
+    data: XOR<AuthorityMatrixUpdateManyMutationInput, AuthorityMatrixUncheckedUpdateManyInput>
+    /**
+     * Filter which AuthorityMatrices to update
+     */
+    where?: AuthorityMatrixWhereInput
+  }
+
+  /**
+   * AuthorityMatrix upsert
+   */
+  export type AuthorityMatrixUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthorityMatrix
+     */
+    select?: AuthorityMatrixSelect<ExtArgs> | null
+    /**
+     * The filter to search for the AuthorityMatrix to update in case it exists.
+     */
+    where: AuthorityMatrixWhereUniqueInput
+    /**
+     * In case the AuthorityMatrix found by the `where` argument doesn't exist, create a new AuthorityMatrix with this data.
+     */
+    create: XOR<AuthorityMatrixCreateInput, AuthorityMatrixUncheckedCreateInput>
+    /**
+     * In case the AuthorityMatrix was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AuthorityMatrixUpdateInput, AuthorityMatrixUncheckedUpdateInput>
+  }
+
+  /**
+   * AuthorityMatrix delete
+   */
+  export type AuthorityMatrixDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthorityMatrix
+     */
+    select?: AuthorityMatrixSelect<ExtArgs> | null
+    /**
+     * Filter which AuthorityMatrix to delete.
+     */
+    where: AuthorityMatrixWhereUniqueInput
+  }
+
+  /**
+   * AuthorityMatrix deleteMany
+   */
+  export type AuthorityMatrixDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AuthorityMatrices to delete
+     */
+    where?: AuthorityMatrixWhereInput
+  }
+
+  /**
+   * AuthorityMatrix without action
+   */
+  export type AuthorityMatrixDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuthorityMatrix
+     */
+    select?: AuthorityMatrixSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TrainingRecord
+   */
+
+  export type AggregateTrainingRecord = {
+    _count: TrainingRecordCountAggregateOutputType | null
+    _avg: TrainingRecordAvgAggregateOutputType | null
+    _sum: TrainingRecordSumAggregateOutputType | null
+    _min: TrainingRecordMinAggregateOutputType | null
+    _max: TrainingRecordMaxAggregateOutputType | null
+  }
+
+  export type TrainingRecordAvgAggregateOutputType = {
+    score: Decimal | null
+  }
+
+  export type TrainingRecordSumAggregateOutputType = {
+    score: Decimal | null
+  }
+
+  export type TrainingRecordMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    title: string | null
+    module: string | null
+    status: string | null
+    score: Decimal | null
+    completedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TrainingRecordMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    title: string | null
+    module: string | null
+    status: string | null
+    score: Decimal | null
+    completedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TrainingRecordCountAggregateOutputType = {
+    id: number
+    userId: number
+    title: number
+    module: number
+    status: number
+    score: number
+    completedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TrainingRecordAvgAggregateInputType = {
+    score?: true
+  }
+
+  export type TrainingRecordSumAggregateInputType = {
+    score?: true
+  }
+
+  export type TrainingRecordMinAggregateInputType = {
+    id?: true
+    userId?: true
+    title?: true
+    module?: true
+    status?: true
+    score?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TrainingRecordMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    title?: true
+    module?: true
+    status?: true
+    score?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TrainingRecordCountAggregateInputType = {
+    id?: true
+    userId?: true
+    title?: true
+    module?: true
+    status?: true
+    score?: true
+    completedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TrainingRecordAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TrainingRecord to aggregate.
+     */
+    where?: TrainingRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrainingRecords to fetch.
+     */
+    orderBy?: TrainingRecordOrderByWithRelationInput | TrainingRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TrainingRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrainingRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrainingRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TrainingRecords
+    **/
+    _count?: true | TrainingRecordCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TrainingRecordAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TrainingRecordSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TrainingRecordMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TrainingRecordMaxAggregateInputType
+  }
+
+  export type GetTrainingRecordAggregateType<T extends TrainingRecordAggregateArgs> = {
+        [P in keyof T & keyof AggregateTrainingRecord]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTrainingRecord[P]>
+      : GetScalarType<T[P], AggregateTrainingRecord[P]>
+  }
+
+
+
+
+  export type TrainingRecordGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrainingRecordWhereInput
+    orderBy?: TrainingRecordOrderByWithAggregationInput | TrainingRecordOrderByWithAggregationInput[]
+    by: TrainingRecordScalarFieldEnum[] | TrainingRecordScalarFieldEnum
+    having?: TrainingRecordScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TrainingRecordCountAggregateInputType | true
+    _avg?: TrainingRecordAvgAggregateInputType
+    _sum?: TrainingRecordSumAggregateInputType
+    _min?: TrainingRecordMinAggregateInputType
+    _max?: TrainingRecordMaxAggregateInputType
+  }
+
+  export type TrainingRecordGroupByOutputType = {
+    id: string
+    userId: string
+    title: string
+    module: string | null
+    status: string
+    score: Decimal | null
+    completedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TrainingRecordCountAggregateOutputType | null
+    _avg: TrainingRecordAvgAggregateOutputType | null
+    _sum: TrainingRecordSumAggregateOutputType | null
+    _min: TrainingRecordMinAggregateOutputType | null
+    _max: TrainingRecordMaxAggregateOutputType | null
+  }
+
+  type GetTrainingRecordGroupByPayload<T extends TrainingRecordGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TrainingRecordGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TrainingRecordGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TrainingRecordGroupByOutputType[P]>
+            : GetScalarType<T[P], TrainingRecordGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TrainingRecordSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    title?: boolean
+    module?: boolean
+    status?: boolean
+    score?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["trainingRecord"]>
+
+  export type TrainingRecordSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    title?: boolean
+    module?: boolean
+    status?: boolean
+    score?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["trainingRecord"]>
+
+  export type TrainingRecordSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    title?: boolean
+    module?: boolean
+    status?: boolean
+    score?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TrainingRecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TrainingRecordIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $TrainingRecordPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TrainingRecord"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      title: string
+      module: string | null
+      status: string
+      score: Prisma.Decimal | null
+      completedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["trainingRecord"]>
+    composites: {}
+  }
+
+  type TrainingRecordGetPayload<S extends boolean | null | undefined | TrainingRecordDefaultArgs> = $Result.GetResult<Prisma.$TrainingRecordPayload, S>
+
+  type TrainingRecordCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<TrainingRecordFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: TrainingRecordCountAggregateInputType | true
+    }
+
+  export interface TrainingRecordDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TrainingRecord'], meta: { name: 'TrainingRecord' } }
+    /**
+     * Find zero or one TrainingRecord that matches the filter.
+     * @param {TrainingRecordFindUniqueArgs} args - Arguments to find a TrainingRecord
+     * @example
+     * // Get one TrainingRecord
+     * const trainingRecord = await prisma.trainingRecord.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TrainingRecordFindUniqueArgs>(args: SelectSubset<T, TrainingRecordFindUniqueArgs<ExtArgs>>): Prisma__TrainingRecordClient<$Result.GetResult<Prisma.$TrainingRecordPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one TrainingRecord that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {TrainingRecordFindUniqueOrThrowArgs} args - Arguments to find a TrainingRecord
+     * @example
+     * // Get one TrainingRecord
+     * const trainingRecord = await prisma.trainingRecord.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TrainingRecordFindUniqueOrThrowArgs>(args: SelectSubset<T, TrainingRecordFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TrainingRecordClient<$Result.GetResult<Prisma.$TrainingRecordPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first TrainingRecord that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrainingRecordFindFirstArgs} args - Arguments to find a TrainingRecord
+     * @example
+     * // Get one TrainingRecord
+     * const trainingRecord = await prisma.trainingRecord.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TrainingRecordFindFirstArgs>(args?: SelectSubset<T, TrainingRecordFindFirstArgs<ExtArgs>>): Prisma__TrainingRecordClient<$Result.GetResult<Prisma.$TrainingRecordPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first TrainingRecord that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrainingRecordFindFirstOrThrowArgs} args - Arguments to find a TrainingRecord
+     * @example
+     * // Get one TrainingRecord
+     * const trainingRecord = await prisma.trainingRecord.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TrainingRecordFindFirstOrThrowArgs>(args?: SelectSubset<T, TrainingRecordFindFirstOrThrowArgs<ExtArgs>>): Prisma__TrainingRecordClient<$Result.GetResult<Prisma.$TrainingRecordPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more TrainingRecords that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrainingRecordFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TrainingRecords
+     * const trainingRecords = await prisma.trainingRecord.findMany()
+     * 
+     * // Get first 10 TrainingRecords
+     * const trainingRecords = await prisma.trainingRecord.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const trainingRecordWithIdOnly = await prisma.trainingRecord.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TrainingRecordFindManyArgs>(args?: SelectSubset<T, TrainingRecordFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrainingRecordPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a TrainingRecord.
+     * @param {TrainingRecordCreateArgs} args - Arguments to create a TrainingRecord.
+     * @example
+     * // Create one TrainingRecord
+     * const TrainingRecord = await prisma.trainingRecord.create({
+     *   data: {
+     *     // ... data to create a TrainingRecord
+     *   }
+     * })
+     * 
+     */
+    create<T extends TrainingRecordCreateArgs>(args: SelectSubset<T, TrainingRecordCreateArgs<ExtArgs>>): Prisma__TrainingRecordClient<$Result.GetResult<Prisma.$TrainingRecordPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many TrainingRecords.
+     * @param {TrainingRecordCreateManyArgs} args - Arguments to create many TrainingRecords.
+     * @example
+     * // Create many TrainingRecords
+     * const trainingRecord = await prisma.trainingRecord.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TrainingRecordCreateManyArgs>(args?: SelectSubset<T, TrainingRecordCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TrainingRecords and returns the data saved in the database.
+     * @param {TrainingRecordCreateManyAndReturnArgs} args - Arguments to create many TrainingRecords.
+     * @example
+     * // Create many TrainingRecords
+     * const trainingRecord = await prisma.trainingRecord.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TrainingRecords and only return the `id`
+     * const trainingRecordWithIdOnly = await prisma.trainingRecord.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TrainingRecordCreateManyAndReturnArgs>(args?: SelectSubset<T, TrainingRecordCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrainingRecordPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a TrainingRecord.
+     * @param {TrainingRecordDeleteArgs} args - Arguments to delete one TrainingRecord.
+     * @example
+     * // Delete one TrainingRecord
+     * const TrainingRecord = await prisma.trainingRecord.delete({
+     *   where: {
+     *     // ... filter to delete one TrainingRecord
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TrainingRecordDeleteArgs>(args: SelectSubset<T, TrainingRecordDeleteArgs<ExtArgs>>): Prisma__TrainingRecordClient<$Result.GetResult<Prisma.$TrainingRecordPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one TrainingRecord.
+     * @param {TrainingRecordUpdateArgs} args - Arguments to update one TrainingRecord.
+     * @example
+     * // Update one TrainingRecord
+     * const trainingRecord = await prisma.trainingRecord.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TrainingRecordUpdateArgs>(args: SelectSubset<T, TrainingRecordUpdateArgs<ExtArgs>>): Prisma__TrainingRecordClient<$Result.GetResult<Prisma.$TrainingRecordPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more TrainingRecords.
+     * @param {TrainingRecordDeleteManyArgs} args - Arguments to filter TrainingRecords to delete.
+     * @example
+     * // Delete a few TrainingRecords
+     * const { count } = await prisma.trainingRecord.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TrainingRecordDeleteManyArgs>(args?: SelectSubset<T, TrainingRecordDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TrainingRecords.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrainingRecordUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TrainingRecords
+     * const trainingRecord = await prisma.trainingRecord.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TrainingRecordUpdateManyArgs>(args: SelectSubset<T, TrainingRecordUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one TrainingRecord.
+     * @param {TrainingRecordUpsertArgs} args - Arguments to update or create a TrainingRecord.
+     * @example
+     * // Update or create a TrainingRecord
+     * const trainingRecord = await prisma.trainingRecord.upsert({
+     *   create: {
+     *     // ... data to create a TrainingRecord
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TrainingRecord we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TrainingRecordUpsertArgs>(args: SelectSubset<T, TrainingRecordUpsertArgs<ExtArgs>>): Prisma__TrainingRecordClient<$Result.GetResult<Prisma.$TrainingRecordPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of TrainingRecords.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrainingRecordCountArgs} args - Arguments to filter TrainingRecords to count.
+     * @example
+     * // Count the number of TrainingRecords
+     * const count = await prisma.trainingRecord.count({
+     *   where: {
+     *     // ... the filter for the TrainingRecords we want to count
+     *   }
+     * })
+    **/
+    count<T extends TrainingRecordCountArgs>(
+      args?: Subset<T, TrainingRecordCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TrainingRecordCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TrainingRecord.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrainingRecordAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TrainingRecordAggregateArgs>(args: Subset<T, TrainingRecordAggregateArgs>): Prisma.PrismaPromise<GetTrainingRecordAggregateType<T>>
+
+    /**
+     * Group by TrainingRecord.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrainingRecordGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TrainingRecordGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TrainingRecordGroupByArgs['orderBy'] }
+        : { orderBy?: TrainingRecordGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TrainingRecordGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTrainingRecordGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TrainingRecord model
+   */
+  readonly fields: TrainingRecordFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TrainingRecord.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TrainingRecordClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TrainingRecord model
+   */ 
+  interface TrainingRecordFieldRefs {
+    readonly id: FieldRef<"TrainingRecord", 'String'>
+    readonly userId: FieldRef<"TrainingRecord", 'String'>
+    readonly title: FieldRef<"TrainingRecord", 'String'>
+    readonly module: FieldRef<"TrainingRecord", 'String'>
+    readonly status: FieldRef<"TrainingRecord", 'String'>
+    readonly score: FieldRef<"TrainingRecord", 'Decimal'>
+    readonly completedAt: FieldRef<"TrainingRecord", 'DateTime'>
+    readonly createdAt: FieldRef<"TrainingRecord", 'DateTime'>
+    readonly updatedAt: FieldRef<"TrainingRecord", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TrainingRecord findUnique
+   */
+  export type TrainingRecordFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrainingRecord
+     */
+    select?: TrainingRecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrainingRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which TrainingRecord to fetch.
+     */
+    where: TrainingRecordWhereUniqueInput
+  }
+
+  /**
+   * TrainingRecord findUniqueOrThrow
+   */
+  export type TrainingRecordFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrainingRecord
+     */
+    select?: TrainingRecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrainingRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which TrainingRecord to fetch.
+     */
+    where: TrainingRecordWhereUniqueInput
+  }
+
+  /**
+   * TrainingRecord findFirst
+   */
+  export type TrainingRecordFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrainingRecord
+     */
+    select?: TrainingRecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrainingRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which TrainingRecord to fetch.
+     */
+    where?: TrainingRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrainingRecords to fetch.
+     */
+    orderBy?: TrainingRecordOrderByWithRelationInput | TrainingRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TrainingRecords.
+     */
+    cursor?: TrainingRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrainingRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrainingRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrainingRecords.
+     */
+    distinct?: TrainingRecordScalarFieldEnum | TrainingRecordScalarFieldEnum[]
+  }
+
+  /**
+   * TrainingRecord findFirstOrThrow
+   */
+  export type TrainingRecordFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrainingRecord
+     */
+    select?: TrainingRecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrainingRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which TrainingRecord to fetch.
+     */
+    where?: TrainingRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrainingRecords to fetch.
+     */
+    orderBy?: TrainingRecordOrderByWithRelationInput | TrainingRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TrainingRecords.
+     */
+    cursor?: TrainingRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrainingRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrainingRecords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrainingRecords.
+     */
+    distinct?: TrainingRecordScalarFieldEnum | TrainingRecordScalarFieldEnum[]
+  }
+
+  /**
+   * TrainingRecord findMany
+   */
+  export type TrainingRecordFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrainingRecord
+     */
+    select?: TrainingRecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrainingRecordInclude<ExtArgs> | null
+    /**
+     * Filter, which TrainingRecords to fetch.
+     */
+    where?: TrainingRecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrainingRecords to fetch.
+     */
+    orderBy?: TrainingRecordOrderByWithRelationInput | TrainingRecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TrainingRecords.
+     */
+    cursor?: TrainingRecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrainingRecords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrainingRecords.
+     */
+    skip?: number
+    distinct?: TrainingRecordScalarFieldEnum | TrainingRecordScalarFieldEnum[]
+  }
+
+  /**
+   * TrainingRecord create
+   */
+  export type TrainingRecordCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrainingRecord
+     */
+    select?: TrainingRecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrainingRecordInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TrainingRecord.
+     */
+    data: XOR<TrainingRecordCreateInput, TrainingRecordUncheckedCreateInput>
+  }
+
+  /**
+   * TrainingRecord createMany
+   */
+  export type TrainingRecordCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TrainingRecords.
+     */
+    data: TrainingRecordCreateManyInput | TrainingRecordCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TrainingRecord createManyAndReturn
+   */
+  export type TrainingRecordCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrainingRecord
+     */
+    select?: TrainingRecordSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many TrainingRecords.
+     */
+    data: TrainingRecordCreateManyInput | TrainingRecordCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrainingRecordIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TrainingRecord update
+   */
+  export type TrainingRecordUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrainingRecord
+     */
+    select?: TrainingRecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrainingRecordInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TrainingRecord.
+     */
+    data: XOR<TrainingRecordUpdateInput, TrainingRecordUncheckedUpdateInput>
+    /**
+     * Choose, which TrainingRecord to update.
+     */
+    where: TrainingRecordWhereUniqueInput
+  }
+
+  /**
+   * TrainingRecord updateMany
+   */
+  export type TrainingRecordUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TrainingRecords.
+     */
+    data: XOR<TrainingRecordUpdateManyMutationInput, TrainingRecordUncheckedUpdateManyInput>
+    /**
+     * Filter which TrainingRecords to update
+     */
+    where?: TrainingRecordWhereInput
+  }
+
+  /**
+   * TrainingRecord upsert
+   */
+  export type TrainingRecordUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrainingRecord
+     */
+    select?: TrainingRecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrainingRecordInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TrainingRecord to update in case it exists.
+     */
+    where: TrainingRecordWhereUniqueInput
+    /**
+     * In case the TrainingRecord found by the `where` argument doesn't exist, create a new TrainingRecord with this data.
+     */
+    create: XOR<TrainingRecordCreateInput, TrainingRecordUncheckedCreateInput>
+    /**
+     * In case the TrainingRecord was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TrainingRecordUpdateInput, TrainingRecordUncheckedUpdateInput>
+  }
+
+  /**
+   * TrainingRecord delete
+   */
+  export type TrainingRecordDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrainingRecord
+     */
+    select?: TrainingRecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrainingRecordInclude<ExtArgs> | null
+    /**
+     * Filter which TrainingRecord to delete.
+     */
+    where: TrainingRecordWhereUniqueInput
+  }
+
+  /**
+   * TrainingRecord deleteMany
+   */
+  export type TrainingRecordDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TrainingRecords to delete
+     */
+    where?: TrainingRecordWhereInput
+  }
+
+  /**
+   * TrainingRecord without action
+   */
+  export type TrainingRecordDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrainingRecord
+     */
+    select?: TrainingRecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrainingRecordInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserMaturity
+   */
+
+  export type AggregateUserMaturity = {
+    _count: UserMaturityCountAggregateOutputType | null
+    _avg: UserMaturityAvgAggregateOutputType | null
+    _sum: UserMaturitySumAggregateOutputType | null
+    _min: UserMaturityMinAggregateOutputType | null
+    _max: UserMaturityMaxAggregateOutputType | null
+  }
+
+  export type UserMaturityAvgAggregateOutputType = {
+    accuracy: Decimal | null
+  }
+
+  export type UserMaturitySumAggregateOutputType = {
+    accuracy: Decimal | null
+  }
+
+  export type UserMaturityMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    accuracy: Decimal | null
+    maturityLevel: string | null
+    lastAssessedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserMaturityMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    accuracy: Decimal | null
+    maturityLevel: string | null
+    lastAssessedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserMaturityCountAggregateOutputType = {
+    id: number
+    userId: number
+    accuracy: number
+    maturityLevel: number
+    lastAssessedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserMaturityAvgAggregateInputType = {
+    accuracy?: true
+  }
+
+  export type UserMaturitySumAggregateInputType = {
+    accuracy?: true
+  }
+
+  export type UserMaturityMinAggregateInputType = {
+    id?: true
+    userId?: true
+    accuracy?: true
+    maturityLevel?: true
+    lastAssessedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserMaturityMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    accuracy?: true
+    maturityLevel?: true
+    lastAssessedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserMaturityCountAggregateInputType = {
+    id?: true
+    userId?: true
+    accuracy?: true
+    maturityLevel?: true
+    lastAssessedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserMaturityAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserMaturity to aggregate.
+     */
+    where?: UserMaturityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserMaturities to fetch.
+     */
+    orderBy?: UserMaturityOrderByWithRelationInput | UserMaturityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserMaturityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserMaturities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserMaturities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserMaturities
+    **/
+    _count?: true | UserMaturityCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserMaturityAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserMaturitySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserMaturityMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserMaturityMaxAggregateInputType
+  }
+
+  export type GetUserMaturityAggregateType<T extends UserMaturityAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserMaturity]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserMaturity[P]>
+      : GetScalarType<T[P], AggregateUserMaturity[P]>
+  }
+
+
+
+
+  export type UserMaturityGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserMaturityWhereInput
+    orderBy?: UserMaturityOrderByWithAggregationInput | UserMaturityOrderByWithAggregationInput[]
+    by: UserMaturityScalarFieldEnum[] | UserMaturityScalarFieldEnum
+    having?: UserMaturityScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserMaturityCountAggregateInputType | true
+    _avg?: UserMaturityAvgAggregateInputType
+    _sum?: UserMaturitySumAggregateInputType
+    _min?: UserMaturityMinAggregateInputType
+    _max?: UserMaturityMaxAggregateInputType
+  }
+
+  export type UserMaturityGroupByOutputType = {
+    id: string
+    userId: string
+    accuracy: Decimal
+    maturityLevel: string
+    lastAssessedAt: Date
+    createdAt: Date
+    updatedAt: Date
+    _count: UserMaturityCountAggregateOutputType | null
+    _avg: UserMaturityAvgAggregateOutputType | null
+    _sum: UserMaturitySumAggregateOutputType | null
+    _min: UserMaturityMinAggregateOutputType | null
+    _max: UserMaturityMaxAggregateOutputType | null
+  }
+
+  type GetUserMaturityGroupByPayload<T extends UserMaturityGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserMaturityGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserMaturityGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserMaturityGroupByOutputType[P]>
+            : GetScalarType<T[P], UserMaturityGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserMaturitySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    accuracy?: boolean
+    maturityLevel?: boolean
+    lastAssessedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userMaturity"]>
+
+  export type UserMaturitySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    accuracy?: boolean
+    maturityLevel?: boolean
+    lastAssessedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userMaturity"]>
+
+  export type UserMaturitySelectScalar = {
+    id?: boolean
+    userId?: boolean
+    accuracy?: boolean
+    maturityLevel?: boolean
+    lastAssessedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserMaturityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserMaturityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserMaturityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserMaturity"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      accuracy: Prisma.Decimal
+      maturityLevel: string
+      lastAssessedAt: Date
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userMaturity"]>
+    composites: {}
+  }
+
+  type UserMaturityGetPayload<S extends boolean | null | undefined | UserMaturityDefaultArgs> = $Result.GetResult<Prisma.$UserMaturityPayload, S>
+
+  type UserMaturityCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<UserMaturityFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: UserMaturityCountAggregateInputType | true
+    }
+
+  export interface UserMaturityDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserMaturity'], meta: { name: 'UserMaturity' } }
+    /**
+     * Find zero or one UserMaturity that matches the filter.
+     * @param {UserMaturityFindUniqueArgs} args - Arguments to find a UserMaturity
+     * @example
+     * // Get one UserMaturity
+     * const userMaturity = await prisma.userMaturity.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserMaturityFindUniqueArgs>(args: SelectSubset<T, UserMaturityFindUniqueArgs<ExtArgs>>): Prisma__UserMaturityClient<$Result.GetResult<Prisma.$UserMaturityPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one UserMaturity that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {UserMaturityFindUniqueOrThrowArgs} args - Arguments to find a UserMaturity
+     * @example
+     * // Get one UserMaturity
+     * const userMaturity = await prisma.userMaturity.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserMaturityFindUniqueOrThrowArgs>(args: SelectSubset<T, UserMaturityFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserMaturityClient<$Result.GetResult<Prisma.$UserMaturityPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first UserMaturity that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMaturityFindFirstArgs} args - Arguments to find a UserMaturity
+     * @example
+     * // Get one UserMaturity
+     * const userMaturity = await prisma.userMaturity.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserMaturityFindFirstArgs>(args?: SelectSubset<T, UserMaturityFindFirstArgs<ExtArgs>>): Prisma__UserMaturityClient<$Result.GetResult<Prisma.$UserMaturityPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first UserMaturity that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMaturityFindFirstOrThrowArgs} args - Arguments to find a UserMaturity
+     * @example
+     * // Get one UserMaturity
+     * const userMaturity = await prisma.userMaturity.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserMaturityFindFirstOrThrowArgs>(args?: SelectSubset<T, UserMaturityFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserMaturityClient<$Result.GetResult<Prisma.$UserMaturityPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more UserMaturities that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMaturityFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserMaturities
+     * const userMaturities = await prisma.userMaturity.findMany()
+     * 
+     * // Get first 10 UserMaturities
+     * const userMaturities = await prisma.userMaturity.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userMaturityWithIdOnly = await prisma.userMaturity.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserMaturityFindManyArgs>(args?: SelectSubset<T, UserMaturityFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserMaturityPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a UserMaturity.
+     * @param {UserMaturityCreateArgs} args - Arguments to create a UserMaturity.
+     * @example
+     * // Create one UserMaturity
+     * const UserMaturity = await prisma.userMaturity.create({
+     *   data: {
+     *     // ... data to create a UserMaturity
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserMaturityCreateArgs>(args: SelectSubset<T, UserMaturityCreateArgs<ExtArgs>>): Prisma__UserMaturityClient<$Result.GetResult<Prisma.$UserMaturityPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many UserMaturities.
+     * @param {UserMaturityCreateManyArgs} args - Arguments to create many UserMaturities.
+     * @example
+     * // Create many UserMaturities
+     * const userMaturity = await prisma.userMaturity.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserMaturityCreateManyArgs>(args?: SelectSubset<T, UserMaturityCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserMaturities and returns the data saved in the database.
+     * @param {UserMaturityCreateManyAndReturnArgs} args - Arguments to create many UserMaturities.
+     * @example
+     * // Create many UserMaturities
+     * const userMaturity = await prisma.userMaturity.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserMaturities and only return the `id`
+     * const userMaturityWithIdOnly = await prisma.userMaturity.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserMaturityCreateManyAndReturnArgs>(args?: SelectSubset<T, UserMaturityCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserMaturityPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a UserMaturity.
+     * @param {UserMaturityDeleteArgs} args - Arguments to delete one UserMaturity.
+     * @example
+     * // Delete one UserMaturity
+     * const UserMaturity = await prisma.userMaturity.delete({
+     *   where: {
+     *     // ... filter to delete one UserMaturity
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserMaturityDeleteArgs>(args: SelectSubset<T, UserMaturityDeleteArgs<ExtArgs>>): Prisma__UserMaturityClient<$Result.GetResult<Prisma.$UserMaturityPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one UserMaturity.
+     * @param {UserMaturityUpdateArgs} args - Arguments to update one UserMaturity.
+     * @example
+     * // Update one UserMaturity
+     * const userMaturity = await prisma.userMaturity.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserMaturityUpdateArgs>(args: SelectSubset<T, UserMaturityUpdateArgs<ExtArgs>>): Prisma__UserMaturityClient<$Result.GetResult<Prisma.$UserMaturityPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more UserMaturities.
+     * @param {UserMaturityDeleteManyArgs} args - Arguments to filter UserMaturities to delete.
+     * @example
+     * // Delete a few UserMaturities
+     * const { count } = await prisma.userMaturity.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserMaturityDeleteManyArgs>(args?: SelectSubset<T, UserMaturityDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserMaturities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMaturityUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserMaturities
+     * const userMaturity = await prisma.userMaturity.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserMaturityUpdateManyArgs>(args: SelectSubset<T, UserMaturityUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one UserMaturity.
+     * @param {UserMaturityUpsertArgs} args - Arguments to update or create a UserMaturity.
+     * @example
+     * // Update or create a UserMaturity
+     * const userMaturity = await prisma.userMaturity.upsert({
+     *   create: {
+     *     // ... data to create a UserMaturity
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserMaturity we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserMaturityUpsertArgs>(args: SelectSubset<T, UserMaturityUpsertArgs<ExtArgs>>): Prisma__UserMaturityClient<$Result.GetResult<Prisma.$UserMaturityPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of UserMaturities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMaturityCountArgs} args - Arguments to filter UserMaturities to count.
+     * @example
+     * // Count the number of UserMaturities
+     * const count = await prisma.userMaturity.count({
+     *   where: {
+     *     // ... the filter for the UserMaturities we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserMaturityCountArgs>(
+      args?: Subset<T, UserMaturityCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserMaturityCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserMaturity.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMaturityAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserMaturityAggregateArgs>(args: Subset<T, UserMaturityAggregateArgs>): Prisma.PrismaPromise<GetUserMaturityAggregateType<T>>
+
+    /**
+     * Group by UserMaturity.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserMaturityGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserMaturityGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserMaturityGroupByArgs['orderBy'] }
+        : { orderBy?: UserMaturityGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserMaturityGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserMaturityGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserMaturity model
+   */
+  readonly fields: UserMaturityFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserMaturity.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserMaturityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserMaturity model
+   */ 
+  interface UserMaturityFieldRefs {
+    readonly id: FieldRef<"UserMaturity", 'String'>
+    readonly userId: FieldRef<"UserMaturity", 'String'>
+    readonly accuracy: FieldRef<"UserMaturity", 'Decimal'>
+    readonly maturityLevel: FieldRef<"UserMaturity", 'String'>
+    readonly lastAssessedAt: FieldRef<"UserMaturity", 'DateTime'>
+    readonly createdAt: FieldRef<"UserMaturity", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserMaturity", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserMaturity findUnique
+   */
+  export type UserMaturityFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMaturity
+     */
+    select?: UserMaturitySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMaturityInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMaturity to fetch.
+     */
+    where: UserMaturityWhereUniqueInput
+  }
+
+  /**
+   * UserMaturity findUniqueOrThrow
+   */
+  export type UserMaturityFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMaturity
+     */
+    select?: UserMaturitySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMaturityInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMaturity to fetch.
+     */
+    where: UserMaturityWhereUniqueInput
+  }
+
+  /**
+   * UserMaturity findFirst
+   */
+  export type UserMaturityFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMaturity
+     */
+    select?: UserMaturitySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMaturityInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMaturity to fetch.
+     */
+    where?: UserMaturityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserMaturities to fetch.
+     */
+    orderBy?: UserMaturityOrderByWithRelationInput | UserMaturityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserMaturities.
+     */
+    cursor?: UserMaturityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserMaturities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserMaturities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserMaturities.
+     */
+    distinct?: UserMaturityScalarFieldEnum | UserMaturityScalarFieldEnum[]
+  }
+
+  /**
+   * UserMaturity findFirstOrThrow
+   */
+  export type UserMaturityFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMaturity
+     */
+    select?: UserMaturitySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMaturityInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMaturity to fetch.
+     */
+    where?: UserMaturityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserMaturities to fetch.
+     */
+    orderBy?: UserMaturityOrderByWithRelationInput | UserMaturityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserMaturities.
+     */
+    cursor?: UserMaturityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserMaturities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserMaturities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserMaturities.
+     */
+    distinct?: UserMaturityScalarFieldEnum | UserMaturityScalarFieldEnum[]
+  }
+
+  /**
+   * UserMaturity findMany
+   */
+  export type UserMaturityFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMaturity
+     */
+    select?: UserMaturitySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMaturityInclude<ExtArgs> | null
+    /**
+     * Filter, which UserMaturities to fetch.
+     */
+    where?: UserMaturityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserMaturities to fetch.
+     */
+    orderBy?: UserMaturityOrderByWithRelationInput | UserMaturityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserMaturities.
+     */
+    cursor?: UserMaturityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserMaturities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserMaturities.
+     */
+    skip?: number
+    distinct?: UserMaturityScalarFieldEnum | UserMaturityScalarFieldEnum[]
+  }
+
+  /**
+   * UserMaturity create
+   */
+  export type UserMaturityCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMaturity
+     */
+    select?: UserMaturitySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMaturityInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserMaturity.
+     */
+    data: XOR<UserMaturityCreateInput, UserMaturityUncheckedCreateInput>
+  }
+
+  /**
+   * UserMaturity createMany
+   */
+  export type UserMaturityCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserMaturities.
+     */
+    data: UserMaturityCreateManyInput | UserMaturityCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserMaturity createManyAndReturn
+   */
+  export type UserMaturityCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMaturity
+     */
+    select?: UserMaturitySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many UserMaturities.
+     */
+    data: UserMaturityCreateManyInput | UserMaturityCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMaturityIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserMaturity update
+   */
+  export type UserMaturityUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMaturity
+     */
+    select?: UserMaturitySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMaturityInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserMaturity.
+     */
+    data: XOR<UserMaturityUpdateInput, UserMaturityUncheckedUpdateInput>
+    /**
+     * Choose, which UserMaturity to update.
+     */
+    where: UserMaturityWhereUniqueInput
+  }
+
+  /**
+   * UserMaturity updateMany
+   */
+  export type UserMaturityUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserMaturities.
+     */
+    data: XOR<UserMaturityUpdateManyMutationInput, UserMaturityUncheckedUpdateManyInput>
+    /**
+     * Filter which UserMaturities to update
+     */
+    where?: UserMaturityWhereInput
+  }
+
+  /**
+   * UserMaturity upsert
+   */
+  export type UserMaturityUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMaturity
+     */
+    select?: UserMaturitySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMaturityInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserMaturity to update in case it exists.
+     */
+    where: UserMaturityWhereUniqueInput
+    /**
+     * In case the UserMaturity found by the `where` argument doesn't exist, create a new UserMaturity with this data.
+     */
+    create: XOR<UserMaturityCreateInput, UserMaturityUncheckedCreateInput>
+    /**
+     * In case the UserMaturity was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserMaturityUpdateInput, UserMaturityUncheckedUpdateInput>
+  }
+
+  /**
+   * UserMaturity delete
+   */
+  export type UserMaturityDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMaturity
+     */
+    select?: UserMaturitySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMaturityInclude<ExtArgs> | null
+    /**
+     * Filter which UserMaturity to delete.
+     */
+    where: UserMaturityWhereUniqueInput
+  }
+
+  /**
+   * UserMaturity deleteMany
+   */
+  export type UserMaturityDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserMaturities to delete
+     */
+    where?: UserMaturityWhereInput
+  }
+
+  /**
+   * UserMaturity without action
+   */
+  export type UserMaturityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserMaturity
+     */
+    select?: UserMaturitySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserMaturityInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DelegationPolicy
+   */
+
+  export type AggregateDelegationPolicy = {
+    _count: DelegationPolicyCountAggregateOutputType | null
+    _min: DelegationPolicyMinAggregateOutputType | null
+    _max: DelegationPolicyMaxAggregateOutputType | null
+  }
+
+  export type DelegationPolicyMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DelegationPolicyMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DelegationPolicyCountAggregateOutputType = {
+    id: number
+    name: number
+    rules: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DelegationPolicyMinAggregateInputType = {
+    id?: true
+    name?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DelegationPolicyMaxAggregateInputType = {
+    id?: true
+    name?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DelegationPolicyCountAggregateInputType = {
+    id?: true
+    name?: true
+    rules?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DelegationPolicyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DelegationPolicy to aggregate.
+     */
+    where?: DelegationPolicyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DelegationPolicies to fetch.
+     */
+    orderBy?: DelegationPolicyOrderByWithRelationInput | DelegationPolicyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DelegationPolicyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DelegationPolicies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DelegationPolicies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DelegationPolicies
+    **/
+    _count?: true | DelegationPolicyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DelegationPolicyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DelegationPolicyMaxAggregateInputType
+  }
+
+  export type GetDelegationPolicyAggregateType<T extends DelegationPolicyAggregateArgs> = {
+        [P in keyof T & keyof AggregateDelegationPolicy]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDelegationPolicy[P]>
+      : GetScalarType<T[P], AggregateDelegationPolicy[P]>
+  }
+
+
+
+
+  export type DelegationPolicyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DelegationPolicyWhereInput
+    orderBy?: DelegationPolicyOrderByWithAggregationInput | DelegationPolicyOrderByWithAggregationInput[]
+    by: DelegationPolicyScalarFieldEnum[] | DelegationPolicyScalarFieldEnum
+    having?: DelegationPolicyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DelegationPolicyCountAggregateInputType | true
+    _min?: DelegationPolicyMinAggregateInputType
+    _max?: DelegationPolicyMaxAggregateInputType
+  }
+
+  export type DelegationPolicyGroupByOutputType = {
+    id: string
+    name: string
+    rules: JsonValue
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: DelegationPolicyCountAggregateOutputType | null
+    _min: DelegationPolicyMinAggregateOutputType | null
+    _max: DelegationPolicyMaxAggregateOutputType | null
+  }
+
+  type GetDelegationPolicyGroupByPayload<T extends DelegationPolicyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DelegationPolicyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DelegationPolicyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DelegationPolicyGroupByOutputType[P]>
+            : GetScalarType<T[P], DelegationPolicyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DelegationPolicySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    rules?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["delegationPolicy"]>
+
+  export type DelegationPolicySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    rules?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["delegationPolicy"]>
+
+  export type DelegationPolicySelectScalar = {
+    id?: boolean
+    name?: boolean
+    rules?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $DelegationPolicyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DelegationPolicy"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      rules: Prisma.JsonValue
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["delegationPolicy"]>
+    composites: {}
+  }
+
+  type DelegationPolicyGetPayload<S extends boolean | null | undefined | DelegationPolicyDefaultArgs> = $Result.GetResult<Prisma.$DelegationPolicyPayload, S>
+
+  type DelegationPolicyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<DelegationPolicyFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: DelegationPolicyCountAggregateInputType | true
+    }
+
+  export interface DelegationPolicyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DelegationPolicy'], meta: { name: 'DelegationPolicy' } }
+    /**
+     * Find zero or one DelegationPolicy that matches the filter.
+     * @param {DelegationPolicyFindUniqueArgs} args - Arguments to find a DelegationPolicy
+     * @example
+     * // Get one DelegationPolicy
+     * const delegationPolicy = await prisma.delegationPolicy.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DelegationPolicyFindUniqueArgs>(args: SelectSubset<T, DelegationPolicyFindUniqueArgs<ExtArgs>>): Prisma__DelegationPolicyClient<$Result.GetResult<Prisma.$DelegationPolicyPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one DelegationPolicy that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {DelegationPolicyFindUniqueOrThrowArgs} args - Arguments to find a DelegationPolicy
+     * @example
+     * // Get one DelegationPolicy
+     * const delegationPolicy = await prisma.delegationPolicy.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DelegationPolicyFindUniqueOrThrowArgs>(args: SelectSubset<T, DelegationPolicyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DelegationPolicyClient<$Result.GetResult<Prisma.$DelegationPolicyPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first DelegationPolicy that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationPolicyFindFirstArgs} args - Arguments to find a DelegationPolicy
+     * @example
+     * // Get one DelegationPolicy
+     * const delegationPolicy = await prisma.delegationPolicy.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DelegationPolicyFindFirstArgs>(args?: SelectSubset<T, DelegationPolicyFindFirstArgs<ExtArgs>>): Prisma__DelegationPolicyClient<$Result.GetResult<Prisma.$DelegationPolicyPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first DelegationPolicy that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationPolicyFindFirstOrThrowArgs} args - Arguments to find a DelegationPolicy
+     * @example
+     * // Get one DelegationPolicy
+     * const delegationPolicy = await prisma.delegationPolicy.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DelegationPolicyFindFirstOrThrowArgs>(args?: SelectSubset<T, DelegationPolicyFindFirstOrThrowArgs<ExtArgs>>): Prisma__DelegationPolicyClient<$Result.GetResult<Prisma.$DelegationPolicyPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more DelegationPolicies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationPolicyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DelegationPolicies
+     * const delegationPolicies = await prisma.delegationPolicy.findMany()
+     * 
+     * // Get first 10 DelegationPolicies
+     * const delegationPolicies = await prisma.delegationPolicy.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const delegationPolicyWithIdOnly = await prisma.delegationPolicy.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DelegationPolicyFindManyArgs>(args?: SelectSubset<T, DelegationPolicyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DelegationPolicyPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a DelegationPolicy.
+     * @param {DelegationPolicyCreateArgs} args - Arguments to create a DelegationPolicy.
+     * @example
+     * // Create one DelegationPolicy
+     * const DelegationPolicy = await prisma.delegationPolicy.create({
+     *   data: {
+     *     // ... data to create a DelegationPolicy
+     *   }
+     * })
+     * 
+     */
+    create<T extends DelegationPolicyCreateArgs>(args: SelectSubset<T, DelegationPolicyCreateArgs<ExtArgs>>): Prisma__DelegationPolicyClient<$Result.GetResult<Prisma.$DelegationPolicyPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many DelegationPolicies.
+     * @param {DelegationPolicyCreateManyArgs} args - Arguments to create many DelegationPolicies.
+     * @example
+     * // Create many DelegationPolicies
+     * const delegationPolicy = await prisma.delegationPolicy.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DelegationPolicyCreateManyArgs>(args?: SelectSubset<T, DelegationPolicyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DelegationPolicies and returns the data saved in the database.
+     * @param {DelegationPolicyCreateManyAndReturnArgs} args - Arguments to create many DelegationPolicies.
+     * @example
+     * // Create many DelegationPolicies
+     * const delegationPolicy = await prisma.delegationPolicy.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DelegationPolicies and only return the `id`
+     * const delegationPolicyWithIdOnly = await prisma.delegationPolicy.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DelegationPolicyCreateManyAndReturnArgs>(args?: SelectSubset<T, DelegationPolicyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DelegationPolicyPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a DelegationPolicy.
+     * @param {DelegationPolicyDeleteArgs} args - Arguments to delete one DelegationPolicy.
+     * @example
+     * // Delete one DelegationPolicy
+     * const DelegationPolicy = await prisma.delegationPolicy.delete({
+     *   where: {
+     *     // ... filter to delete one DelegationPolicy
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DelegationPolicyDeleteArgs>(args: SelectSubset<T, DelegationPolicyDeleteArgs<ExtArgs>>): Prisma__DelegationPolicyClient<$Result.GetResult<Prisma.$DelegationPolicyPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one DelegationPolicy.
+     * @param {DelegationPolicyUpdateArgs} args - Arguments to update one DelegationPolicy.
+     * @example
+     * // Update one DelegationPolicy
+     * const delegationPolicy = await prisma.delegationPolicy.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DelegationPolicyUpdateArgs>(args: SelectSubset<T, DelegationPolicyUpdateArgs<ExtArgs>>): Prisma__DelegationPolicyClient<$Result.GetResult<Prisma.$DelegationPolicyPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more DelegationPolicies.
+     * @param {DelegationPolicyDeleteManyArgs} args - Arguments to filter DelegationPolicies to delete.
+     * @example
+     * // Delete a few DelegationPolicies
+     * const { count } = await prisma.delegationPolicy.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DelegationPolicyDeleteManyArgs>(args?: SelectSubset<T, DelegationPolicyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DelegationPolicies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationPolicyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DelegationPolicies
+     * const delegationPolicy = await prisma.delegationPolicy.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DelegationPolicyUpdateManyArgs>(args: SelectSubset<T, DelegationPolicyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one DelegationPolicy.
+     * @param {DelegationPolicyUpsertArgs} args - Arguments to update or create a DelegationPolicy.
+     * @example
+     * // Update or create a DelegationPolicy
+     * const delegationPolicy = await prisma.delegationPolicy.upsert({
+     *   create: {
+     *     // ... data to create a DelegationPolicy
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DelegationPolicy we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DelegationPolicyUpsertArgs>(args: SelectSubset<T, DelegationPolicyUpsertArgs<ExtArgs>>): Prisma__DelegationPolicyClient<$Result.GetResult<Prisma.$DelegationPolicyPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of DelegationPolicies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationPolicyCountArgs} args - Arguments to filter DelegationPolicies to count.
+     * @example
+     * // Count the number of DelegationPolicies
+     * const count = await prisma.delegationPolicy.count({
+     *   where: {
+     *     // ... the filter for the DelegationPolicies we want to count
+     *   }
+     * })
+    **/
+    count<T extends DelegationPolicyCountArgs>(
+      args?: Subset<T, DelegationPolicyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DelegationPolicyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DelegationPolicy.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationPolicyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DelegationPolicyAggregateArgs>(args: Subset<T, DelegationPolicyAggregateArgs>): Prisma.PrismaPromise<GetDelegationPolicyAggregateType<T>>
+
+    /**
+     * Group by DelegationPolicy.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationPolicyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DelegationPolicyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DelegationPolicyGroupByArgs['orderBy'] }
+        : { orderBy?: DelegationPolicyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DelegationPolicyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDelegationPolicyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DelegationPolicy model
+   */
+  readonly fields: DelegationPolicyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DelegationPolicy.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DelegationPolicyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DelegationPolicy model
+   */ 
+  interface DelegationPolicyFieldRefs {
+    readonly id: FieldRef<"DelegationPolicy", 'String'>
+    readonly name: FieldRef<"DelegationPolicy", 'String'>
+    readonly rules: FieldRef<"DelegationPolicy", 'Json'>
+    readonly isActive: FieldRef<"DelegationPolicy", 'Boolean'>
+    readonly createdAt: FieldRef<"DelegationPolicy", 'DateTime'>
+    readonly updatedAt: FieldRef<"DelegationPolicy", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DelegationPolicy findUnique
+   */
+  export type DelegationPolicyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationPolicy
+     */
+    select?: DelegationPolicySelect<ExtArgs> | null
+    /**
+     * Filter, which DelegationPolicy to fetch.
+     */
+    where: DelegationPolicyWhereUniqueInput
+  }
+
+  /**
+   * DelegationPolicy findUniqueOrThrow
+   */
+  export type DelegationPolicyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationPolicy
+     */
+    select?: DelegationPolicySelect<ExtArgs> | null
+    /**
+     * Filter, which DelegationPolicy to fetch.
+     */
+    where: DelegationPolicyWhereUniqueInput
+  }
+
+  /**
+   * DelegationPolicy findFirst
+   */
+  export type DelegationPolicyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationPolicy
+     */
+    select?: DelegationPolicySelect<ExtArgs> | null
+    /**
+     * Filter, which DelegationPolicy to fetch.
+     */
+    where?: DelegationPolicyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DelegationPolicies to fetch.
+     */
+    orderBy?: DelegationPolicyOrderByWithRelationInput | DelegationPolicyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DelegationPolicies.
+     */
+    cursor?: DelegationPolicyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DelegationPolicies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DelegationPolicies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DelegationPolicies.
+     */
+    distinct?: DelegationPolicyScalarFieldEnum | DelegationPolicyScalarFieldEnum[]
+  }
+
+  /**
+   * DelegationPolicy findFirstOrThrow
+   */
+  export type DelegationPolicyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationPolicy
+     */
+    select?: DelegationPolicySelect<ExtArgs> | null
+    /**
+     * Filter, which DelegationPolicy to fetch.
+     */
+    where?: DelegationPolicyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DelegationPolicies to fetch.
+     */
+    orderBy?: DelegationPolicyOrderByWithRelationInput | DelegationPolicyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DelegationPolicies.
+     */
+    cursor?: DelegationPolicyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DelegationPolicies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DelegationPolicies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DelegationPolicies.
+     */
+    distinct?: DelegationPolicyScalarFieldEnum | DelegationPolicyScalarFieldEnum[]
+  }
+
+  /**
+   * DelegationPolicy findMany
+   */
+  export type DelegationPolicyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationPolicy
+     */
+    select?: DelegationPolicySelect<ExtArgs> | null
+    /**
+     * Filter, which DelegationPolicies to fetch.
+     */
+    where?: DelegationPolicyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DelegationPolicies to fetch.
+     */
+    orderBy?: DelegationPolicyOrderByWithRelationInput | DelegationPolicyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DelegationPolicies.
+     */
+    cursor?: DelegationPolicyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DelegationPolicies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DelegationPolicies.
+     */
+    skip?: number
+    distinct?: DelegationPolicyScalarFieldEnum | DelegationPolicyScalarFieldEnum[]
+  }
+
+  /**
+   * DelegationPolicy create
+   */
+  export type DelegationPolicyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationPolicy
+     */
+    select?: DelegationPolicySelect<ExtArgs> | null
+    /**
+     * The data needed to create a DelegationPolicy.
+     */
+    data: XOR<DelegationPolicyCreateInput, DelegationPolicyUncheckedCreateInput>
+  }
+
+  /**
+   * DelegationPolicy createMany
+   */
+  export type DelegationPolicyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DelegationPolicies.
+     */
+    data: DelegationPolicyCreateManyInput | DelegationPolicyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DelegationPolicy createManyAndReturn
+   */
+  export type DelegationPolicyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationPolicy
+     */
+    select?: DelegationPolicySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many DelegationPolicies.
+     */
+    data: DelegationPolicyCreateManyInput | DelegationPolicyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DelegationPolicy update
+   */
+  export type DelegationPolicyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationPolicy
+     */
+    select?: DelegationPolicySelect<ExtArgs> | null
+    /**
+     * The data needed to update a DelegationPolicy.
+     */
+    data: XOR<DelegationPolicyUpdateInput, DelegationPolicyUncheckedUpdateInput>
+    /**
+     * Choose, which DelegationPolicy to update.
+     */
+    where: DelegationPolicyWhereUniqueInput
+  }
+
+  /**
+   * DelegationPolicy updateMany
+   */
+  export type DelegationPolicyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DelegationPolicies.
+     */
+    data: XOR<DelegationPolicyUpdateManyMutationInput, DelegationPolicyUncheckedUpdateManyInput>
+    /**
+     * Filter which DelegationPolicies to update
+     */
+    where?: DelegationPolicyWhereInput
+  }
+
+  /**
+   * DelegationPolicy upsert
+   */
+  export type DelegationPolicyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationPolicy
+     */
+    select?: DelegationPolicySelect<ExtArgs> | null
+    /**
+     * The filter to search for the DelegationPolicy to update in case it exists.
+     */
+    where: DelegationPolicyWhereUniqueInput
+    /**
+     * In case the DelegationPolicy found by the `where` argument doesn't exist, create a new DelegationPolicy with this data.
+     */
+    create: XOR<DelegationPolicyCreateInput, DelegationPolicyUncheckedCreateInput>
+    /**
+     * In case the DelegationPolicy was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DelegationPolicyUpdateInput, DelegationPolicyUncheckedUpdateInput>
+  }
+
+  /**
+   * DelegationPolicy delete
+   */
+  export type DelegationPolicyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationPolicy
+     */
+    select?: DelegationPolicySelect<ExtArgs> | null
+    /**
+     * Filter which DelegationPolicy to delete.
+     */
+    where: DelegationPolicyWhereUniqueInput
+  }
+
+  /**
+   * DelegationPolicy deleteMany
+   */
+  export type DelegationPolicyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DelegationPolicies to delete
+     */
+    where?: DelegationPolicyWhereInput
+  }
+
+  /**
+   * DelegationPolicy without action
+   */
+  export type DelegationPolicyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationPolicy
+     */
+    select?: DelegationPolicySelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DelegationWindow
+   */
+
+  export type AggregateDelegationWindow = {
+    _count: DelegationWindowCountAggregateOutputType | null
+    _min: DelegationWindowMinAggregateOutputType | null
+    _max: DelegationWindowMaxAggregateOutputType | null
+  }
+
+  export type DelegationWindowMinAggregateOutputType = {
+    id: string | null
+    ownerId: string | null
+    delegateId: string | null
+    startDate: Date | null
+    endDate: Date | null
+    reason: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DelegationWindowMaxAggregateOutputType = {
+    id: string | null
+    ownerId: string | null
+    delegateId: string | null
+    startDate: Date | null
+    endDate: Date | null
+    reason: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DelegationWindowCountAggregateOutputType = {
+    id: number
+    ownerId: number
+    delegateId: number
+    startDate: number
+    endDate: number
+    reason: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DelegationWindowMinAggregateInputType = {
+    id?: true
+    ownerId?: true
+    delegateId?: true
+    startDate?: true
+    endDate?: true
+    reason?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DelegationWindowMaxAggregateInputType = {
+    id?: true
+    ownerId?: true
+    delegateId?: true
+    startDate?: true
+    endDate?: true
+    reason?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DelegationWindowCountAggregateInputType = {
+    id?: true
+    ownerId?: true
+    delegateId?: true
+    startDate?: true
+    endDate?: true
+    reason?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DelegationWindowAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DelegationWindow to aggregate.
+     */
+    where?: DelegationWindowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DelegationWindows to fetch.
+     */
+    orderBy?: DelegationWindowOrderByWithRelationInput | DelegationWindowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DelegationWindowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DelegationWindows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DelegationWindows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DelegationWindows
+    **/
+    _count?: true | DelegationWindowCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DelegationWindowMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DelegationWindowMaxAggregateInputType
+  }
+
+  export type GetDelegationWindowAggregateType<T extends DelegationWindowAggregateArgs> = {
+        [P in keyof T & keyof AggregateDelegationWindow]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDelegationWindow[P]>
+      : GetScalarType<T[P], AggregateDelegationWindow[P]>
+  }
+
+
+
+
+  export type DelegationWindowGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DelegationWindowWhereInput
+    orderBy?: DelegationWindowOrderByWithAggregationInput | DelegationWindowOrderByWithAggregationInput[]
+    by: DelegationWindowScalarFieldEnum[] | DelegationWindowScalarFieldEnum
+    having?: DelegationWindowScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DelegationWindowCountAggregateInputType | true
+    _min?: DelegationWindowMinAggregateInputType
+    _max?: DelegationWindowMaxAggregateInputType
+  }
+
+  export type DelegationWindowGroupByOutputType = {
+    id: string
+    ownerId: string
+    delegateId: string
+    startDate: Date
+    endDate: Date
+    reason: string | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: DelegationWindowCountAggregateOutputType | null
+    _min: DelegationWindowMinAggregateOutputType | null
+    _max: DelegationWindowMaxAggregateOutputType | null
+  }
+
+  type GetDelegationWindowGroupByPayload<T extends DelegationWindowGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DelegationWindowGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DelegationWindowGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DelegationWindowGroupByOutputType[P]>
+            : GetScalarType<T[P], DelegationWindowGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DelegationWindowSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    delegateId?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    reason?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    delegate?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["delegationWindow"]>
+
+  export type DelegationWindowSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    delegateId?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    reason?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    delegate?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["delegationWindow"]>
+
+  export type DelegationWindowSelectScalar = {
+    id?: boolean
+    ownerId?: boolean
+    delegateId?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    reason?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DelegationWindowInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    delegate?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DelegationWindowIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    delegate?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $DelegationWindowPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DelegationWindow"
+    objects: {
+      owner: Prisma.$UserPayload<ExtArgs>
+      delegate: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      ownerId: string
+      delegateId: string
+      startDate: Date
+      endDate: Date
+      reason: string | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["delegationWindow"]>
+    composites: {}
+  }
+
+  type DelegationWindowGetPayload<S extends boolean | null | undefined | DelegationWindowDefaultArgs> = $Result.GetResult<Prisma.$DelegationWindowPayload, S>
+
+  type DelegationWindowCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<DelegationWindowFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: DelegationWindowCountAggregateInputType | true
+    }
+
+  export interface DelegationWindowDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DelegationWindow'], meta: { name: 'DelegationWindow' } }
+    /**
+     * Find zero or one DelegationWindow that matches the filter.
+     * @param {DelegationWindowFindUniqueArgs} args - Arguments to find a DelegationWindow
+     * @example
+     * // Get one DelegationWindow
+     * const delegationWindow = await prisma.delegationWindow.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DelegationWindowFindUniqueArgs>(args: SelectSubset<T, DelegationWindowFindUniqueArgs<ExtArgs>>): Prisma__DelegationWindowClient<$Result.GetResult<Prisma.$DelegationWindowPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one DelegationWindow that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {DelegationWindowFindUniqueOrThrowArgs} args - Arguments to find a DelegationWindow
+     * @example
+     * // Get one DelegationWindow
+     * const delegationWindow = await prisma.delegationWindow.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DelegationWindowFindUniqueOrThrowArgs>(args: SelectSubset<T, DelegationWindowFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DelegationWindowClient<$Result.GetResult<Prisma.$DelegationWindowPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first DelegationWindow that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationWindowFindFirstArgs} args - Arguments to find a DelegationWindow
+     * @example
+     * // Get one DelegationWindow
+     * const delegationWindow = await prisma.delegationWindow.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DelegationWindowFindFirstArgs>(args?: SelectSubset<T, DelegationWindowFindFirstArgs<ExtArgs>>): Prisma__DelegationWindowClient<$Result.GetResult<Prisma.$DelegationWindowPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first DelegationWindow that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationWindowFindFirstOrThrowArgs} args - Arguments to find a DelegationWindow
+     * @example
+     * // Get one DelegationWindow
+     * const delegationWindow = await prisma.delegationWindow.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DelegationWindowFindFirstOrThrowArgs>(args?: SelectSubset<T, DelegationWindowFindFirstOrThrowArgs<ExtArgs>>): Prisma__DelegationWindowClient<$Result.GetResult<Prisma.$DelegationWindowPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more DelegationWindows that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationWindowFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DelegationWindows
+     * const delegationWindows = await prisma.delegationWindow.findMany()
+     * 
+     * // Get first 10 DelegationWindows
+     * const delegationWindows = await prisma.delegationWindow.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const delegationWindowWithIdOnly = await prisma.delegationWindow.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DelegationWindowFindManyArgs>(args?: SelectSubset<T, DelegationWindowFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DelegationWindowPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a DelegationWindow.
+     * @param {DelegationWindowCreateArgs} args - Arguments to create a DelegationWindow.
+     * @example
+     * // Create one DelegationWindow
+     * const DelegationWindow = await prisma.delegationWindow.create({
+     *   data: {
+     *     // ... data to create a DelegationWindow
+     *   }
+     * })
+     * 
+     */
+    create<T extends DelegationWindowCreateArgs>(args: SelectSubset<T, DelegationWindowCreateArgs<ExtArgs>>): Prisma__DelegationWindowClient<$Result.GetResult<Prisma.$DelegationWindowPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many DelegationWindows.
+     * @param {DelegationWindowCreateManyArgs} args - Arguments to create many DelegationWindows.
+     * @example
+     * // Create many DelegationWindows
+     * const delegationWindow = await prisma.delegationWindow.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DelegationWindowCreateManyArgs>(args?: SelectSubset<T, DelegationWindowCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DelegationWindows and returns the data saved in the database.
+     * @param {DelegationWindowCreateManyAndReturnArgs} args - Arguments to create many DelegationWindows.
+     * @example
+     * // Create many DelegationWindows
+     * const delegationWindow = await prisma.delegationWindow.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DelegationWindows and only return the `id`
+     * const delegationWindowWithIdOnly = await prisma.delegationWindow.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DelegationWindowCreateManyAndReturnArgs>(args?: SelectSubset<T, DelegationWindowCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DelegationWindowPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a DelegationWindow.
+     * @param {DelegationWindowDeleteArgs} args - Arguments to delete one DelegationWindow.
+     * @example
+     * // Delete one DelegationWindow
+     * const DelegationWindow = await prisma.delegationWindow.delete({
+     *   where: {
+     *     // ... filter to delete one DelegationWindow
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DelegationWindowDeleteArgs>(args: SelectSubset<T, DelegationWindowDeleteArgs<ExtArgs>>): Prisma__DelegationWindowClient<$Result.GetResult<Prisma.$DelegationWindowPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one DelegationWindow.
+     * @param {DelegationWindowUpdateArgs} args - Arguments to update one DelegationWindow.
+     * @example
+     * // Update one DelegationWindow
+     * const delegationWindow = await prisma.delegationWindow.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DelegationWindowUpdateArgs>(args: SelectSubset<T, DelegationWindowUpdateArgs<ExtArgs>>): Prisma__DelegationWindowClient<$Result.GetResult<Prisma.$DelegationWindowPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more DelegationWindows.
+     * @param {DelegationWindowDeleteManyArgs} args - Arguments to filter DelegationWindows to delete.
+     * @example
+     * // Delete a few DelegationWindows
+     * const { count } = await prisma.delegationWindow.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DelegationWindowDeleteManyArgs>(args?: SelectSubset<T, DelegationWindowDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DelegationWindows.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationWindowUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DelegationWindows
+     * const delegationWindow = await prisma.delegationWindow.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DelegationWindowUpdateManyArgs>(args: SelectSubset<T, DelegationWindowUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one DelegationWindow.
+     * @param {DelegationWindowUpsertArgs} args - Arguments to update or create a DelegationWindow.
+     * @example
+     * // Update or create a DelegationWindow
+     * const delegationWindow = await prisma.delegationWindow.upsert({
+     *   create: {
+     *     // ... data to create a DelegationWindow
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DelegationWindow we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DelegationWindowUpsertArgs>(args: SelectSubset<T, DelegationWindowUpsertArgs<ExtArgs>>): Prisma__DelegationWindowClient<$Result.GetResult<Prisma.$DelegationWindowPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of DelegationWindows.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationWindowCountArgs} args - Arguments to filter DelegationWindows to count.
+     * @example
+     * // Count the number of DelegationWindows
+     * const count = await prisma.delegationWindow.count({
+     *   where: {
+     *     // ... the filter for the DelegationWindows we want to count
+     *   }
+     * })
+    **/
+    count<T extends DelegationWindowCountArgs>(
+      args?: Subset<T, DelegationWindowCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DelegationWindowCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DelegationWindow.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationWindowAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DelegationWindowAggregateArgs>(args: Subset<T, DelegationWindowAggregateArgs>): Prisma.PrismaPromise<GetDelegationWindowAggregateType<T>>
+
+    /**
+     * Group by DelegationWindow.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationWindowGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DelegationWindowGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DelegationWindowGroupByArgs['orderBy'] }
+        : { orderBy?: DelegationWindowGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DelegationWindowGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDelegationWindowGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DelegationWindow model
+   */
+  readonly fields: DelegationWindowFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DelegationWindow.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DelegationWindowClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    owner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    delegate<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DelegationWindow model
+   */ 
+  interface DelegationWindowFieldRefs {
+    readonly id: FieldRef<"DelegationWindow", 'String'>
+    readonly ownerId: FieldRef<"DelegationWindow", 'String'>
+    readonly delegateId: FieldRef<"DelegationWindow", 'String'>
+    readonly startDate: FieldRef<"DelegationWindow", 'DateTime'>
+    readonly endDate: FieldRef<"DelegationWindow", 'DateTime'>
+    readonly reason: FieldRef<"DelegationWindow", 'String'>
+    readonly isActive: FieldRef<"DelegationWindow", 'Boolean'>
+    readonly createdAt: FieldRef<"DelegationWindow", 'DateTime'>
+    readonly updatedAt: FieldRef<"DelegationWindow", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DelegationWindow findUnique
+   */
+  export type DelegationWindowFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationWindow
+     */
+    select?: DelegationWindowSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DelegationWindowInclude<ExtArgs> | null
+    /**
+     * Filter, which DelegationWindow to fetch.
+     */
+    where: DelegationWindowWhereUniqueInput
+  }
+
+  /**
+   * DelegationWindow findUniqueOrThrow
+   */
+  export type DelegationWindowFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationWindow
+     */
+    select?: DelegationWindowSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DelegationWindowInclude<ExtArgs> | null
+    /**
+     * Filter, which DelegationWindow to fetch.
+     */
+    where: DelegationWindowWhereUniqueInput
+  }
+
+  /**
+   * DelegationWindow findFirst
+   */
+  export type DelegationWindowFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationWindow
+     */
+    select?: DelegationWindowSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DelegationWindowInclude<ExtArgs> | null
+    /**
+     * Filter, which DelegationWindow to fetch.
+     */
+    where?: DelegationWindowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DelegationWindows to fetch.
+     */
+    orderBy?: DelegationWindowOrderByWithRelationInput | DelegationWindowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DelegationWindows.
+     */
+    cursor?: DelegationWindowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DelegationWindows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DelegationWindows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DelegationWindows.
+     */
+    distinct?: DelegationWindowScalarFieldEnum | DelegationWindowScalarFieldEnum[]
+  }
+
+  /**
+   * DelegationWindow findFirstOrThrow
+   */
+  export type DelegationWindowFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationWindow
+     */
+    select?: DelegationWindowSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DelegationWindowInclude<ExtArgs> | null
+    /**
+     * Filter, which DelegationWindow to fetch.
+     */
+    where?: DelegationWindowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DelegationWindows to fetch.
+     */
+    orderBy?: DelegationWindowOrderByWithRelationInput | DelegationWindowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DelegationWindows.
+     */
+    cursor?: DelegationWindowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DelegationWindows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DelegationWindows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DelegationWindows.
+     */
+    distinct?: DelegationWindowScalarFieldEnum | DelegationWindowScalarFieldEnum[]
+  }
+
+  /**
+   * DelegationWindow findMany
+   */
+  export type DelegationWindowFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationWindow
+     */
+    select?: DelegationWindowSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DelegationWindowInclude<ExtArgs> | null
+    /**
+     * Filter, which DelegationWindows to fetch.
+     */
+    where?: DelegationWindowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DelegationWindows to fetch.
+     */
+    orderBy?: DelegationWindowOrderByWithRelationInput | DelegationWindowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DelegationWindows.
+     */
+    cursor?: DelegationWindowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DelegationWindows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DelegationWindows.
+     */
+    skip?: number
+    distinct?: DelegationWindowScalarFieldEnum | DelegationWindowScalarFieldEnum[]
+  }
+
+  /**
+   * DelegationWindow create
+   */
+  export type DelegationWindowCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationWindow
+     */
+    select?: DelegationWindowSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DelegationWindowInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DelegationWindow.
+     */
+    data: XOR<DelegationWindowCreateInput, DelegationWindowUncheckedCreateInput>
+  }
+
+  /**
+   * DelegationWindow createMany
+   */
+  export type DelegationWindowCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DelegationWindows.
+     */
+    data: DelegationWindowCreateManyInput | DelegationWindowCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DelegationWindow createManyAndReturn
+   */
+  export type DelegationWindowCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationWindow
+     */
+    select?: DelegationWindowSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many DelegationWindows.
+     */
+    data: DelegationWindowCreateManyInput | DelegationWindowCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DelegationWindowIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DelegationWindow update
+   */
+  export type DelegationWindowUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationWindow
+     */
+    select?: DelegationWindowSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DelegationWindowInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DelegationWindow.
+     */
+    data: XOR<DelegationWindowUpdateInput, DelegationWindowUncheckedUpdateInput>
+    /**
+     * Choose, which DelegationWindow to update.
+     */
+    where: DelegationWindowWhereUniqueInput
+  }
+
+  /**
+   * DelegationWindow updateMany
+   */
+  export type DelegationWindowUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DelegationWindows.
+     */
+    data: XOR<DelegationWindowUpdateManyMutationInput, DelegationWindowUncheckedUpdateManyInput>
+    /**
+     * Filter which DelegationWindows to update
+     */
+    where?: DelegationWindowWhereInput
+  }
+
+  /**
+   * DelegationWindow upsert
+   */
+  export type DelegationWindowUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationWindow
+     */
+    select?: DelegationWindowSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DelegationWindowInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DelegationWindow to update in case it exists.
+     */
+    where: DelegationWindowWhereUniqueInput
+    /**
+     * In case the DelegationWindow found by the `where` argument doesn't exist, create a new DelegationWindow with this data.
+     */
+    create: XOR<DelegationWindowCreateInput, DelegationWindowUncheckedCreateInput>
+    /**
+     * In case the DelegationWindow was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DelegationWindowUpdateInput, DelegationWindowUncheckedUpdateInput>
+  }
+
+  /**
+   * DelegationWindow delete
+   */
+  export type DelegationWindowDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationWindow
+     */
+    select?: DelegationWindowSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DelegationWindowInclude<ExtArgs> | null
+    /**
+     * Filter which DelegationWindow to delete.
+     */
+    where: DelegationWindowWhereUniqueInput
+  }
+
+  /**
+   * DelegationWindow deleteMany
+   */
+  export type DelegationWindowDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DelegationWindows to delete
+     */
+    where?: DelegationWindowWhereInput
+  }
+
+  /**
+   * DelegationWindow without action
+   */
+  export type DelegationWindowDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DelegationWindow
+     */
+    select?: DelegationWindowSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DelegationWindowInclude<ExtArgs> | null
   }
 
 
@@ -43686,6 +49065,75 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const AuthorityMatrixScalarFieldEnum: {
+    id: 'id',
+    role: 'role',
+    maxAmount: 'maxAmount',
+    entityType: 'entityType',
+    projectType: 'projectType',
+    priority: 'priority',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AuthorityMatrixScalarFieldEnum = (typeof AuthorityMatrixScalarFieldEnum)[keyof typeof AuthorityMatrixScalarFieldEnum]
+
+
+  export const TrainingRecordScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    title: 'title',
+    module: 'module',
+    status: 'status',
+    score: 'score',
+    completedAt: 'completedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TrainingRecordScalarFieldEnum = (typeof TrainingRecordScalarFieldEnum)[keyof typeof TrainingRecordScalarFieldEnum]
+
+
+  export const UserMaturityScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    accuracy: 'accuracy',
+    maturityLevel: 'maturityLevel',
+    lastAssessedAt: 'lastAssessedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserMaturityScalarFieldEnum = (typeof UserMaturityScalarFieldEnum)[keyof typeof UserMaturityScalarFieldEnum]
+
+
+  export const DelegationPolicyScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    rules: 'rules',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DelegationPolicyScalarFieldEnum = (typeof DelegationPolicyScalarFieldEnum)[keyof typeof DelegationPolicyScalarFieldEnum]
+
+
+  export const DelegationWindowScalarFieldEnum: {
+    id: 'id',
+    ownerId: 'ownerId',
+    delegateId: 'delegateId',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    reason: 'reason',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DelegationWindowScalarFieldEnum = (typeof DelegationWindowScalarFieldEnum)[keyof typeof DelegationWindowScalarFieldEnum]
+
+
   export const CategoryScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -44276,6 +49724,13 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
   export const NullableJsonNullValueInput: {
     DbNull: typeof DbNull,
     JsonNull: typeof JsonNull
@@ -44357,20 +49812,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'ProjectStatus'
-   */
-  export type EnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'ProjectStatus[]'
-   */
-  export type ListEnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Decimal'
    */
   export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -44385,20 +49826,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'TaskStatus'
-   */
-  export type EnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'TaskStatus[]'
-   */
-  export type ListEnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -44409,6 +49836,48 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProjectStatus'
+   */
+  export type EnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProjectStatus[]'
+   */
+  export type ListEnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'TaskStatus'
+   */
+  export type EnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'TaskStatus[]'
+   */
+  export type ListEnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus[]'>
     
 
 
@@ -44465,13 +49934,6 @@ export namespace Prisma {
    * Reference to a field of type 'AccountType[]'
    */
   export type ListEnumAccountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccountType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -44546,13 +50008,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
    * Reference to a field of type 'ApprovalStatus'
    */
   export type EnumApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalStatus'>
@@ -44611,6 +50066,10 @@ export namespace Prisma {
     comments?: CommentListRelationFilter
     activityFeeds?: ActivityFeedListRelationFilter
     documentsUploaded?: DocumentListRelationFilter
+    delegationsOwned?: DelegationWindowListRelationFilter
+    delegationsActive?: DelegationWindowListRelationFilter
+    trainingRecords?: TrainingRecordListRelationFilter
+    maturity?: XOR<UserMaturityNullableRelationFilter, UserMaturityWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -44638,6 +50097,10 @@ export namespace Prisma {
     comments?: CommentOrderByRelationAggregateInput
     activityFeeds?: ActivityFeedOrderByRelationAggregateInput
     documentsUploaded?: DocumentOrderByRelationAggregateInput
+    delegationsOwned?: DelegationWindowOrderByRelationAggregateInput
+    delegationsActive?: DelegationWindowOrderByRelationAggregateInput
+    trainingRecords?: TrainingRecordOrderByRelationAggregateInput
+    maturity?: UserMaturityOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -44668,6 +50131,10 @@ export namespace Prisma {
     comments?: CommentListRelationFilter
     activityFeeds?: ActivityFeedListRelationFilter
     documentsUploaded?: DocumentListRelationFilter
+    delegationsOwned?: DelegationWindowListRelationFilter
+    delegationsActive?: DelegationWindowListRelationFilter
+    trainingRecords?: TrainingRecordListRelationFilter
+    maturity?: XOR<UserMaturityNullableRelationFilter, UserMaturityWhereInput> | null
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -44694,6 +50161,354 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  }
+
+  export type AuthorityMatrixWhereInput = {
+    AND?: AuthorityMatrixWhereInput | AuthorityMatrixWhereInput[]
+    OR?: AuthorityMatrixWhereInput[]
+    NOT?: AuthorityMatrixWhereInput | AuthorityMatrixWhereInput[]
+    id?: StringFilter<"AuthorityMatrix"> | string
+    role?: EnumUserRoleFilter<"AuthorityMatrix"> | $Enums.UserRole
+    maxAmount?: DecimalFilter<"AuthorityMatrix"> | Decimal | DecimalJsLike | number | string
+    entityType?: StringFilter<"AuthorityMatrix"> | string
+    projectType?: StringNullableFilter<"AuthorityMatrix"> | string | null
+    priority?: IntFilter<"AuthorityMatrix"> | number
+    createdAt?: DateTimeFilter<"AuthorityMatrix"> | Date | string
+    updatedAt?: DateTimeFilter<"AuthorityMatrix"> | Date | string
+  }
+
+  export type AuthorityMatrixOrderByWithRelationInput = {
+    id?: SortOrder
+    role?: SortOrder
+    maxAmount?: SortOrder
+    entityType?: SortOrder
+    projectType?: SortOrderInput | SortOrder
+    priority?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AuthorityMatrixWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AuthorityMatrixWhereInput | AuthorityMatrixWhereInput[]
+    OR?: AuthorityMatrixWhereInput[]
+    NOT?: AuthorityMatrixWhereInput | AuthorityMatrixWhereInput[]
+    role?: EnumUserRoleFilter<"AuthorityMatrix"> | $Enums.UserRole
+    maxAmount?: DecimalFilter<"AuthorityMatrix"> | Decimal | DecimalJsLike | number | string
+    entityType?: StringFilter<"AuthorityMatrix"> | string
+    projectType?: StringNullableFilter<"AuthorityMatrix"> | string | null
+    priority?: IntFilter<"AuthorityMatrix"> | number
+    createdAt?: DateTimeFilter<"AuthorityMatrix"> | Date | string
+    updatedAt?: DateTimeFilter<"AuthorityMatrix"> | Date | string
+  }, "id">
+
+  export type AuthorityMatrixOrderByWithAggregationInput = {
+    id?: SortOrder
+    role?: SortOrder
+    maxAmount?: SortOrder
+    entityType?: SortOrder
+    projectType?: SortOrderInput | SortOrder
+    priority?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AuthorityMatrixCountOrderByAggregateInput
+    _avg?: AuthorityMatrixAvgOrderByAggregateInput
+    _max?: AuthorityMatrixMaxOrderByAggregateInput
+    _min?: AuthorityMatrixMinOrderByAggregateInput
+    _sum?: AuthorityMatrixSumOrderByAggregateInput
+  }
+
+  export type AuthorityMatrixScalarWhereWithAggregatesInput = {
+    AND?: AuthorityMatrixScalarWhereWithAggregatesInput | AuthorityMatrixScalarWhereWithAggregatesInput[]
+    OR?: AuthorityMatrixScalarWhereWithAggregatesInput[]
+    NOT?: AuthorityMatrixScalarWhereWithAggregatesInput | AuthorityMatrixScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AuthorityMatrix"> | string
+    role?: EnumUserRoleWithAggregatesFilter<"AuthorityMatrix"> | $Enums.UserRole
+    maxAmount?: DecimalWithAggregatesFilter<"AuthorityMatrix"> | Decimal | DecimalJsLike | number | string
+    entityType?: StringWithAggregatesFilter<"AuthorityMatrix"> | string
+    projectType?: StringNullableWithAggregatesFilter<"AuthorityMatrix"> | string | null
+    priority?: IntWithAggregatesFilter<"AuthorityMatrix"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"AuthorityMatrix"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AuthorityMatrix"> | Date | string
+  }
+
+  export type TrainingRecordWhereInput = {
+    AND?: TrainingRecordWhereInput | TrainingRecordWhereInput[]
+    OR?: TrainingRecordWhereInput[]
+    NOT?: TrainingRecordWhereInput | TrainingRecordWhereInput[]
+    id?: StringFilter<"TrainingRecord"> | string
+    userId?: StringFilter<"TrainingRecord"> | string
+    title?: StringFilter<"TrainingRecord"> | string
+    module?: StringNullableFilter<"TrainingRecord"> | string | null
+    status?: StringFilter<"TrainingRecord"> | string
+    score?: DecimalNullableFilter<"TrainingRecord"> | Decimal | DecimalJsLike | number | string | null
+    completedAt?: DateTimeNullableFilter<"TrainingRecord"> | Date | string | null
+    createdAt?: DateTimeFilter<"TrainingRecord"> | Date | string
+    updatedAt?: DateTimeFilter<"TrainingRecord"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type TrainingRecordOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    title?: SortOrder
+    module?: SortOrderInput | SortOrder
+    status?: SortOrder
+    score?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type TrainingRecordWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: TrainingRecordWhereInput | TrainingRecordWhereInput[]
+    OR?: TrainingRecordWhereInput[]
+    NOT?: TrainingRecordWhereInput | TrainingRecordWhereInput[]
+    userId?: StringFilter<"TrainingRecord"> | string
+    title?: StringFilter<"TrainingRecord"> | string
+    module?: StringNullableFilter<"TrainingRecord"> | string | null
+    status?: StringFilter<"TrainingRecord"> | string
+    score?: DecimalNullableFilter<"TrainingRecord"> | Decimal | DecimalJsLike | number | string | null
+    completedAt?: DateTimeNullableFilter<"TrainingRecord"> | Date | string | null
+    createdAt?: DateTimeFilter<"TrainingRecord"> | Date | string
+    updatedAt?: DateTimeFilter<"TrainingRecord"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type TrainingRecordOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    title?: SortOrder
+    module?: SortOrderInput | SortOrder
+    status?: SortOrder
+    score?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TrainingRecordCountOrderByAggregateInput
+    _avg?: TrainingRecordAvgOrderByAggregateInput
+    _max?: TrainingRecordMaxOrderByAggregateInput
+    _min?: TrainingRecordMinOrderByAggregateInput
+    _sum?: TrainingRecordSumOrderByAggregateInput
+  }
+
+  export type TrainingRecordScalarWhereWithAggregatesInput = {
+    AND?: TrainingRecordScalarWhereWithAggregatesInput | TrainingRecordScalarWhereWithAggregatesInput[]
+    OR?: TrainingRecordScalarWhereWithAggregatesInput[]
+    NOT?: TrainingRecordScalarWhereWithAggregatesInput | TrainingRecordScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TrainingRecord"> | string
+    userId?: StringWithAggregatesFilter<"TrainingRecord"> | string
+    title?: StringWithAggregatesFilter<"TrainingRecord"> | string
+    module?: StringNullableWithAggregatesFilter<"TrainingRecord"> | string | null
+    status?: StringWithAggregatesFilter<"TrainingRecord"> | string
+    score?: DecimalNullableWithAggregatesFilter<"TrainingRecord"> | Decimal | DecimalJsLike | number | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"TrainingRecord"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"TrainingRecord"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TrainingRecord"> | Date | string
+  }
+
+  export type UserMaturityWhereInput = {
+    AND?: UserMaturityWhereInput | UserMaturityWhereInput[]
+    OR?: UserMaturityWhereInput[]
+    NOT?: UserMaturityWhereInput | UserMaturityWhereInput[]
+    id?: StringFilter<"UserMaturity"> | string
+    userId?: StringFilter<"UserMaturity"> | string
+    accuracy?: DecimalFilter<"UserMaturity"> | Decimal | DecimalJsLike | number | string
+    maturityLevel?: StringFilter<"UserMaturity"> | string
+    lastAssessedAt?: DateTimeFilter<"UserMaturity"> | Date | string
+    createdAt?: DateTimeFilter<"UserMaturity"> | Date | string
+    updatedAt?: DateTimeFilter<"UserMaturity"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type UserMaturityOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accuracy?: SortOrder
+    maturityLevel?: SortOrder
+    lastAssessedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserMaturityWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: UserMaturityWhereInput | UserMaturityWhereInput[]
+    OR?: UserMaturityWhereInput[]
+    NOT?: UserMaturityWhereInput | UserMaturityWhereInput[]
+    accuracy?: DecimalFilter<"UserMaturity"> | Decimal | DecimalJsLike | number | string
+    maturityLevel?: StringFilter<"UserMaturity"> | string
+    lastAssessedAt?: DateTimeFilter<"UserMaturity"> | Date | string
+    createdAt?: DateTimeFilter<"UserMaturity"> | Date | string
+    updatedAt?: DateTimeFilter<"UserMaturity"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type UserMaturityOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accuracy?: SortOrder
+    maturityLevel?: SortOrder
+    lastAssessedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserMaturityCountOrderByAggregateInput
+    _avg?: UserMaturityAvgOrderByAggregateInput
+    _max?: UserMaturityMaxOrderByAggregateInput
+    _min?: UserMaturityMinOrderByAggregateInput
+    _sum?: UserMaturitySumOrderByAggregateInput
+  }
+
+  export type UserMaturityScalarWhereWithAggregatesInput = {
+    AND?: UserMaturityScalarWhereWithAggregatesInput | UserMaturityScalarWhereWithAggregatesInput[]
+    OR?: UserMaturityScalarWhereWithAggregatesInput[]
+    NOT?: UserMaturityScalarWhereWithAggregatesInput | UserMaturityScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserMaturity"> | string
+    userId?: StringWithAggregatesFilter<"UserMaturity"> | string
+    accuracy?: DecimalWithAggregatesFilter<"UserMaturity"> | Decimal | DecimalJsLike | number | string
+    maturityLevel?: StringWithAggregatesFilter<"UserMaturity"> | string
+    lastAssessedAt?: DateTimeWithAggregatesFilter<"UserMaturity"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"UserMaturity"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserMaturity"> | Date | string
+  }
+
+  export type DelegationPolicyWhereInput = {
+    AND?: DelegationPolicyWhereInput | DelegationPolicyWhereInput[]
+    OR?: DelegationPolicyWhereInput[]
+    NOT?: DelegationPolicyWhereInput | DelegationPolicyWhereInput[]
+    id?: StringFilter<"DelegationPolicy"> | string
+    name?: StringFilter<"DelegationPolicy"> | string
+    rules?: JsonFilter<"DelegationPolicy">
+    isActive?: BoolFilter<"DelegationPolicy"> | boolean
+    createdAt?: DateTimeFilter<"DelegationPolicy"> | Date | string
+    updatedAt?: DateTimeFilter<"DelegationPolicy"> | Date | string
+  }
+
+  export type DelegationPolicyOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    rules?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DelegationPolicyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DelegationPolicyWhereInput | DelegationPolicyWhereInput[]
+    OR?: DelegationPolicyWhereInput[]
+    NOT?: DelegationPolicyWhereInput | DelegationPolicyWhereInput[]
+    name?: StringFilter<"DelegationPolicy"> | string
+    rules?: JsonFilter<"DelegationPolicy">
+    isActive?: BoolFilter<"DelegationPolicy"> | boolean
+    createdAt?: DateTimeFilter<"DelegationPolicy"> | Date | string
+    updatedAt?: DateTimeFilter<"DelegationPolicy"> | Date | string
+  }, "id">
+
+  export type DelegationPolicyOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    rules?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DelegationPolicyCountOrderByAggregateInput
+    _max?: DelegationPolicyMaxOrderByAggregateInput
+    _min?: DelegationPolicyMinOrderByAggregateInput
+  }
+
+  export type DelegationPolicyScalarWhereWithAggregatesInput = {
+    AND?: DelegationPolicyScalarWhereWithAggregatesInput | DelegationPolicyScalarWhereWithAggregatesInput[]
+    OR?: DelegationPolicyScalarWhereWithAggregatesInput[]
+    NOT?: DelegationPolicyScalarWhereWithAggregatesInput | DelegationPolicyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DelegationPolicy"> | string
+    name?: StringWithAggregatesFilter<"DelegationPolicy"> | string
+    rules?: JsonWithAggregatesFilter<"DelegationPolicy">
+    isActive?: BoolWithAggregatesFilter<"DelegationPolicy"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"DelegationPolicy"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DelegationPolicy"> | Date | string
+  }
+
+  export type DelegationWindowWhereInput = {
+    AND?: DelegationWindowWhereInput | DelegationWindowWhereInput[]
+    OR?: DelegationWindowWhereInput[]
+    NOT?: DelegationWindowWhereInput | DelegationWindowWhereInput[]
+    id?: StringFilter<"DelegationWindow"> | string
+    ownerId?: StringFilter<"DelegationWindow"> | string
+    delegateId?: StringFilter<"DelegationWindow"> | string
+    startDate?: DateTimeFilter<"DelegationWindow"> | Date | string
+    endDate?: DateTimeFilter<"DelegationWindow"> | Date | string
+    reason?: StringNullableFilter<"DelegationWindow"> | string | null
+    isActive?: BoolFilter<"DelegationWindow"> | boolean
+    createdAt?: DateTimeFilter<"DelegationWindow"> | Date | string
+    updatedAt?: DateTimeFilter<"DelegationWindow"> | Date | string
+    owner?: XOR<UserRelationFilter, UserWhereInput>
+    delegate?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type DelegationWindowOrderByWithRelationInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    delegateId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    owner?: UserOrderByWithRelationInput
+    delegate?: UserOrderByWithRelationInput
+  }
+
+  export type DelegationWindowWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DelegationWindowWhereInput | DelegationWindowWhereInput[]
+    OR?: DelegationWindowWhereInput[]
+    NOT?: DelegationWindowWhereInput | DelegationWindowWhereInput[]
+    ownerId?: StringFilter<"DelegationWindow"> | string
+    delegateId?: StringFilter<"DelegationWindow"> | string
+    startDate?: DateTimeFilter<"DelegationWindow"> | Date | string
+    endDate?: DateTimeFilter<"DelegationWindow"> | Date | string
+    reason?: StringNullableFilter<"DelegationWindow"> | string | null
+    isActive?: BoolFilter<"DelegationWindow"> | boolean
+    createdAt?: DateTimeFilter<"DelegationWindow"> | Date | string
+    updatedAt?: DateTimeFilter<"DelegationWindow"> | Date | string
+    owner?: XOR<UserRelationFilter, UserWhereInput>
+    delegate?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type DelegationWindowOrderByWithAggregationInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    delegateId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DelegationWindowCountOrderByAggregateInput
+    _max?: DelegationWindowMaxOrderByAggregateInput
+    _min?: DelegationWindowMinOrderByAggregateInput
+  }
+
+  export type DelegationWindowScalarWhereWithAggregatesInput = {
+    AND?: DelegationWindowScalarWhereWithAggregatesInput | DelegationWindowScalarWhereWithAggregatesInput[]
+    OR?: DelegationWindowScalarWhereWithAggregatesInput[]
+    NOT?: DelegationWindowScalarWhereWithAggregatesInput | DelegationWindowScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DelegationWindow"> | string
+    ownerId?: StringWithAggregatesFilter<"DelegationWindow"> | string
+    delegateId?: StringWithAggregatesFilter<"DelegationWindow"> | string
+    startDate?: DateTimeWithAggregatesFilter<"DelegationWindow"> | Date | string
+    endDate?: DateTimeWithAggregatesFilter<"DelegationWindow"> | Date | string
+    reason?: StringNullableWithAggregatesFilter<"DelegationWindow"> | string | null
+    isActive?: BoolWithAggregatesFilter<"DelegationWindow"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"DelegationWindow"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DelegationWindow"> | Date | string
   }
 
   export type CategoryWhereInput = {
@@ -47869,6 +53684,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -47896,6 +53715,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -47923,6 +53746,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -47950,6 +53777,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -47980,6 +53811,380 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AuthorityMatrixCreateInput = {
+    id?: string
+    role: $Enums.UserRole
+    maxAmount: Decimal | DecimalJsLike | number | string
+    entityType: string
+    projectType?: string | null
+    priority?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AuthorityMatrixUncheckedCreateInput = {
+    id?: string
+    role: $Enums.UserRole
+    maxAmount: Decimal | DecimalJsLike | number | string
+    entityType: string
+    projectType?: string | null
+    priority?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AuthorityMatrixUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    maxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuthorityMatrixUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    maxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuthorityMatrixCreateManyInput = {
+    id?: string
+    role: $Enums.UserRole
+    maxAmount: Decimal | DecimalJsLike | number | string
+    entityType: string
+    projectType?: string | null
+    priority?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AuthorityMatrixUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    maxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuthorityMatrixUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    maxAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrainingRecordCreateInput = {
+    id?: string
+    title: string
+    module?: string | null
+    status?: string
+    score?: Decimal | DecimalJsLike | number | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTrainingRecordsInput
+  }
+
+  export type TrainingRecordUncheckedCreateInput = {
+    id?: string
+    userId: string
+    title: string
+    module?: string | null
+    status?: string
+    score?: Decimal | DecimalJsLike | number | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TrainingRecordUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    module?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTrainingRecordsNestedInput
+  }
+
+  export type TrainingRecordUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    module?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrainingRecordCreateManyInput = {
+    id?: string
+    userId: string
+    title: string
+    module?: string | null
+    status?: string
+    score?: Decimal | DecimalJsLike | number | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TrainingRecordUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    module?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrainingRecordUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    module?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMaturityCreateInput = {
+    id?: string
+    accuracy?: Decimal | DecimalJsLike | number | string
+    maturityLevel?: string
+    lastAssessedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutMaturityInput
+  }
+
+  export type UserMaturityUncheckedCreateInput = {
+    id?: string
+    userId: string
+    accuracy?: Decimal | DecimalJsLike | number | string
+    maturityLevel?: string
+    lastAssessedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserMaturityUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accuracy?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maturityLevel?: StringFieldUpdateOperationsInput | string
+    lastAssessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutMaturityNestedInput
+  }
+
+  export type UserMaturityUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    accuracy?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maturityLevel?: StringFieldUpdateOperationsInput | string
+    lastAssessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMaturityCreateManyInput = {
+    id?: string
+    userId: string
+    accuracy?: Decimal | DecimalJsLike | number | string
+    maturityLevel?: string
+    lastAssessedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserMaturityUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accuracy?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maturityLevel?: StringFieldUpdateOperationsInput | string
+    lastAssessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMaturityUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    accuracy?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maturityLevel?: StringFieldUpdateOperationsInput | string
+    lastAssessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DelegationPolicyCreateInput = {
+    id?: string
+    name: string
+    rules: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DelegationPolicyUncheckedCreateInput = {
+    id?: string
+    name: string
+    rules: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DelegationPolicyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rules?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DelegationPolicyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rules?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DelegationPolicyCreateManyInput = {
+    id?: string
+    name: string
+    rules: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DelegationPolicyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rules?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DelegationPolicyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    rules?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DelegationWindowCreateInput = {
+    id?: string
+    startDate: Date | string
+    endDate: Date | string
+    reason?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutDelegationsOwnedInput
+    delegate: UserCreateNestedOneWithoutDelegationsActiveInput
+  }
+
+  export type DelegationWindowUncheckedCreateInput = {
+    id?: string
+    ownerId: string
+    delegateId: string
+    startDate: Date | string
+    endDate: Date | string
+    reason?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DelegationWindowUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutDelegationsOwnedNestedInput
+    delegate?: UserUpdateOneRequiredWithoutDelegationsActiveNestedInput
+  }
+
+  export type DelegationWindowUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    delegateId?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DelegationWindowCreateManyInput = {
+    id?: string
+    ownerId: string
+    delegateId: string
+    startDate: Date | string
+    endDate: Date | string
+    reason?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DelegationWindowUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DelegationWindowUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    delegateId?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CategoryCreateInput = {
@@ -51585,6 +57790,23 @@ export namespace Prisma {
     none?: DocumentWhereInput
   }
 
+  export type DelegationWindowListRelationFilter = {
+    every?: DelegationWindowWhereInput
+    some?: DelegationWindowWhereInput
+    none?: DelegationWindowWhereInput
+  }
+
+  export type TrainingRecordListRelationFilter = {
+    every?: TrainingRecordWhereInput
+    some?: TrainingRecordWhereInput
+    none?: TrainingRecordWhereInput
+  }
+
+  export type UserMaturityNullableRelationFilter = {
+    is?: UserMaturityWhereInput | null
+    isNot?: UserMaturityWhereInput | null
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -51655,6 +57877,14 @@ export namespace Prisma {
   }
 
   export type DocumentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DelegationWindowOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TrainingRecordOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -51762,6 +57992,338 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type DecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type AuthorityMatrixCountOrderByAggregateInput = {
+    id?: SortOrder
+    role?: SortOrder
+    maxAmount?: SortOrder
+    entityType?: SortOrder
+    projectType?: SortOrder
+    priority?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AuthorityMatrixAvgOrderByAggregateInput = {
+    maxAmount?: SortOrder
+    priority?: SortOrder
+  }
+
+  export type AuthorityMatrixMaxOrderByAggregateInput = {
+    id?: SortOrder
+    role?: SortOrder
+    maxAmount?: SortOrder
+    entityType?: SortOrder
+    projectType?: SortOrder
+    priority?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AuthorityMatrixMinOrderByAggregateInput = {
+    id?: SortOrder
+    role?: SortOrder
+    maxAmount?: SortOrder
+    entityType?: SortOrder
+    projectType?: SortOrder
+    priority?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AuthorityMatrixSumOrderByAggregateInput = {
+    maxAmount?: SortOrder
+    priority?: SortOrder
+  }
+
+  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type UserRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type TrainingRecordCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    title?: SortOrder
+    module?: SortOrder
+    status?: SortOrder
+    score?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TrainingRecordAvgOrderByAggregateInput = {
+    score?: SortOrder
+  }
+
+  export type TrainingRecordMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    title?: SortOrder
+    module?: SortOrder
+    status?: SortOrder
+    score?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TrainingRecordMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    title?: SortOrder
+    module?: SortOrder
+    status?: SortOrder
+    score?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TrainingRecordSumOrderByAggregateInput = {
+    score?: SortOrder
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type UserMaturityCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accuracy?: SortOrder
+    maturityLevel?: SortOrder
+    lastAssessedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserMaturityAvgOrderByAggregateInput = {
+    accuracy?: SortOrder
+  }
+
+  export type UserMaturityMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accuracy?: SortOrder
+    maturityLevel?: SortOrder
+    lastAssessedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserMaturityMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accuracy?: SortOrder
+    maturityLevel?: SortOrder
+    lastAssessedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserMaturitySumOrderByAggregateInput = {
+    accuracy?: SortOrder
+  }
+  export type JsonFilter<$PrismaModel = never> = 
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type DelegationPolicyCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    rules?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DelegationPolicyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DelegationPolicyMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> = 
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type DelegationWindowCountOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    delegateId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    reason?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DelegationWindowMaxOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    delegateId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    reason?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DelegationWindowMinOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    delegateId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    reason?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type CategoryCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -51791,17 +58353,6 @@ export namespace Prisma {
     in?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumProjectStatusFilter<$PrismaModel> | $Enums.ProjectStatus
-  }
-
-  export type DecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
   export type UserNullableRelationFilter = {
@@ -51934,38 +58485,11 @@ export namespace Prisma {
     _max?: NestedEnumProjectStatusFilter<$PrismaModel>
   }
 
-  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedDecimalFilter<$PrismaModel>
-    _sum?: NestedDecimalFilter<$PrismaModel>
-    _min?: NestedDecimalFilter<$PrismaModel>
-    _max?: NestedDecimalFilter<$PrismaModel>
-  }
-
   export type EnumTaskStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
     in?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type ProjectRelationFilter = {
@@ -52039,22 +58563,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTaskStatusFilter<$PrismaModel>
     _max?: NestedEnumTaskStatusFilter<$PrismaModel>
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type WBSItemNullableRelationFilter = {
@@ -52532,11 +59040,6 @@ export namespace Prisma {
     not?: NestedEnumAccountTypeFilter<$PrismaModel> | $Enums.AccountType
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type TransactionLineListRelationFilter = {
     every?: TransactionLineWhereInput
     some?: TransactionLineWhereInput
@@ -52591,14 +59094,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAccountTypeFilter<$PrismaModel>
     _max?: NestedEnumAccountTypeFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type ProjectNullableRelationFilter = {
@@ -53385,17 +59880,6 @@ export namespace Prisma {
     not?: NestedEnumInventoryTransactionTypeFilter<$PrismaModel> | $Enums.InventoryTransactionType
   }
 
-  export type DecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type MaterialRelationFilter = {
     is?: MaterialWhereInput
     isNot?: MaterialWhereInput
@@ -53455,22 +59939,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumInventoryTransactionTypeFilter<$PrismaModel>
     _max?: NestedEnumInventoryTransactionTypeFilter<$PrismaModel>
-  }
-
-  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type SiteConsumptionCountOrderByAggregateInput = {
@@ -53610,11 +60078,6 @@ export namespace Prisma {
     in?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumApprovalStatusFilter<$PrismaModel> | $Enums.ApprovalStatus
-  }
-
-  export type UserRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
   }
 
   export type ApprovalRequestCountOrderByAggregateInput = {
@@ -54200,6 +60663,33 @@ export namespace Prisma {
     connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
   }
 
+  export type DelegationWindowCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<DelegationWindowCreateWithoutOwnerInput, DelegationWindowUncheckedCreateWithoutOwnerInput> | DelegationWindowCreateWithoutOwnerInput[] | DelegationWindowUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: DelegationWindowCreateOrConnectWithoutOwnerInput | DelegationWindowCreateOrConnectWithoutOwnerInput[]
+    createMany?: DelegationWindowCreateManyOwnerInputEnvelope
+    connect?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+  }
+
+  export type DelegationWindowCreateNestedManyWithoutDelegateInput = {
+    create?: XOR<DelegationWindowCreateWithoutDelegateInput, DelegationWindowUncheckedCreateWithoutDelegateInput> | DelegationWindowCreateWithoutDelegateInput[] | DelegationWindowUncheckedCreateWithoutDelegateInput[]
+    connectOrCreate?: DelegationWindowCreateOrConnectWithoutDelegateInput | DelegationWindowCreateOrConnectWithoutDelegateInput[]
+    createMany?: DelegationWindowCreateManyDelegateInputEnvelope
+    connect?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+  }
+
+  export type TrainingRecordCreateNestedManyWithoutUserInput = {
+    create?: XOR<TrainingRecordCreateWithoutUserInput, TrainingRecordUncheckedCreateWithoutUserInput> | TrainingRecordCreateWithoutUserInput[] | TrainingRecordUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TrainingRecordCreateOrConnectWithoutUserInput | TrainingRecordCreateOrConnectWithoutUserInput[]
+    createMany?: TrainingRecordCreateManyUserInputEnvelope
+    connect?: TrainingRecordWhereUniqueInput | TrainingRecordWhereUniqueInput[]
+  }
+
+  export type UserMaturityCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserMaturityCreateWithoutUserInput, UserMaturityUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserMaturityCreateOrConnectWithoutUserInput
+    connect?: UserMaturityWhereUniqueInput
+  }
+
   export type ProjectUncheckedCreateNestedManyWithoutOwnerInput = {
     create?: XOR<ProjectCreateWithoutOwnerInput, ProjectUncheckedCreateWithoutOwnerInput> | ProjectCreateWithoutOwnerInput[] | ProjectUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutOwnerInput | ProjectCreateOrConnectWithoutOwnerInput[]
@@ -54317,6 +60807,33 @@ export namespace Prisma {
     connectOrCreate?: DocumentCreateOrConnectWithoutUploadedByInput | DocumentCreateOrConnectWithoutUploadedByInput[]
     createMany?: DocumentCreateManyUploadedByInputEnvelope
     connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+  }
+
+  export type DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<DelegationWindowCreateWithoutOwnerInput, DelegationWindowUncheckedCreateWithoutOwnerInput> | DelegationWindowCreateWithoutOwnerInput[] | DelegationWindowUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: DelegationWindowCreateOrConnectWithoutOwnerInput | DelegationWindowCreateOrConnectWithoutOwnerInput[]
+    createMany?: DelegationWindowCreateManyOwnerInputEnvelope
+    connect?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+  }
+
+  export type DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput = {
+    create?: XOR<DelegationWindowCreateWithoutDelegateInput, DelegationWindowUncheckedCreateWithoutDelegateInput> | DelegationWindowCreateWithoutDelegateInput[] | DelegationWindowUncheckedCreateWithoutDelegateInput[]
+    connectOrCreate?: DelegationWindowCreateOrConnectWithoutDelegateInput | DelegationWindowCreateOrConnectWithoutDelegateInput[]
+    createMany?: DelegationWindowCreateManyDelegateInputEnvelope
+    connect?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+  }
+
+  export type TrainingRecordUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TrainingRecordCreateWithoutUserInput, TrainingRecordUncheckedCreateWithoutUserInput> | TrainingRecordCreateWithoutUserInput[] | TrainingRecordUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TrainingRecordCreateOrConnectWithoutUserInput | TrainingRecordCreateOrConnectWithoutUserInput[]
+    createMany?: TrainingRecordCreateManyUserInputEnvelope
+    connect?: TrainingRecordWhereUniqueInput | TrainingRecordWhereUniqueInput[]
+  }
+
+  export type UserMaturityUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserMaturityCreateWithoutUserInput, UserMaturityUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserMaturityCreateOrConnectWithoutUserInput
+    connect?: UserMaturityWhereUniqueInput
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -54577,6 +61094,58 @@ export namespace Prisma {
     deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
   }
 
+  export type DelegationWindowUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<DelegationWindowCreateWithoutOwnerInput, DelegationWindowUncheckedCreateWithoutOwnerInput> | DelegationWindowCreateWithoutOwnerInput[] | DelegationWindowUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: DelegationWindowCreateOrConnectWithoutOwnerInput | DelegationWindowCreateOrConnectWithoutOwnerInput[]
+    upsert?: DelegationWindowUpsertWithWhereUniqueWithoutOwnerInput | DelegationWindowUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: DelegationWindowCreateManyOwnerInputEnvelope
+    set?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    disconnect?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    delete?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    connect?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    update?: DelegationWindowUpdateWithWhereUniqueWithoutOwnerInput | DelegationWindowUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: DelegationWindowUpdateManyWithWhereWithoutOwnerInput | DelegationWindowUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: DelegationWindowScalarWhereInput | DelegationWindowScalarWhereInput[]
+  }
+
+  export type DelegationWindowUpdateManyWithoutDelegateNestedInput = {
+    create?: XOR<DelegationWindowCreateWithoutDelegateInput, DelegationWindowUncheckedCreateWithoutDelegateInput> | DelegationWindowCreateWithoutDelegateInput[] | DelegationWindowUncheckedCreateWithoutDelegateInput[]
+    connectOrCreate?: DelegationWindowCreateOrConnectWithoutDelegateInput | DelegationWindowCreateOrConnectWithoutDelegateInput[]
+    upsert?: DelegationWindowUpsertWithWhereUniqueWithoutDelegateInput | DelegationWindowUpsertWithWhereUniqueWithoutDelegateInput[]
+    createMany?: DelegationWindowCreateManyDelegateInputEnvelope
+    set?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    disconnect?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    delete?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    connect?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    update?: DelegationWindowUpdateWithWhereUniqueWithoutDelegateInput | DelegationWindowUpdateWithWhereUniqueWithoutDelegateInput[]
+    updateMany?: DelegationWindowUpdateManyWithWhereWithoutDelegateInput | DelegationWindowUpdateManyWithWhereWithoutDelegateInput[]
+    deleteMany?: DelegationWindowScalarWhereInput | DelegationWindowScalarWhereInput[]
+  }
+
+  export type TrainingRecordUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TrainingRecordCreateWithoutUserInput, TrainingRecordUncheckedCreateWithoutUserInput> | TrainingRecordCreateWithoutUserInput[] | TrainingRecordUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TrainingRecordCreateOrConnectWithoutUserInput | TrainingRecordCreateOrConnectWithoutUserInput[]
+    upsert?: TrainingRecordUpsertWithWhereUniqueWithoutUserInput | TrainingRecordUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TrainingRecordCreateManyUserInputEnvelope
+    set?: TrainingRecordWhereUniqueInput | TrainingRecordWhereUniqueInput[]
+    disconnect?: TrainingRecordWhereUniqueInput | TrainingRecordWhereUniqueInput[]
+    delete?: TrainingRecordWhereUniqueInput | TrainingRecordWhereUniqueInput[]
+    connect?: TrainingRecordWhereUniqueInput | TrainingRecordWhereUniqueInput[]
+    update?: TrainingRecordUpdateWithWhereUniqueWithoutUserInput | TrainingRecordUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TrainingRecordUpdateManyWithWhereWithoutUserInput | TrainingRecordUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TrainingRecordScalarWhereInput | TrainingRecordScalarWhereInput[]
+  }
+
+  export type UserMaturityUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserMaturityCreateWithoutUserInput, UserMaturityUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserMaturityCreateOrConnectWithoutUserInput
+    upsert?: UserMaturityUpsertWithoutUserInput
+    disconnect?: UserMaturityWhereInput | boolean
+    delete?: UserMaturityWhereInput | boolean
+    connect?: UserMaturityWhereUniqueInput
+    update?: XOR<XOR<UserMaturityUpdateToOneWithWhereWithoutUserInput, UserMaturityUpdateWithoutUserInput>, UserMaturityUncheckedUpdateWithoutUserInput>
+  }
+
   export type ProjectUncheckedUpdateManyWithoutOwnerNestedInput = {
     create?: XOR<ProjectCreateWithoutOwnerInput, ProjectUncheckedCreateWithoutOwnerInput> | ProjectCreateWithoutOwnerInput[] | ProjectUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutOwnerInput | ProjectCreateOrConnectWithoutOwnerInput[]
@@ -54815,6 +61384,142 @@ export namespace Prisma {
     deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
   }
 
+  export type DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<DelegationWindowCreateWithoutOwnerInput, DelegationWindowUncheckedCreateWithoutOwnerInput> | DelegationWindowCreateWithoutOwnerInput[] | DelegationWindowUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: DelegationWindowCreateOrConnectWithoutOwnerInput | DelegationWindowCreateOrConnectWithoutOwnerInput[]
+    upsert?: DelegationWindowUpsertWithWhereUniqueWithoutOwnerInput | DelegationWindowUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: DelegationWindowCreateManyOwnerInputEnvelope
+    set?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    disconnect?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    delete?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    connect?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    update?: DelegationWindowUpdateWithWhereUniqueWithoutOwnerInput | DelegationWindowUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: DelegationWindowUpdateManyWithWhereWithoutOwnerInput | DelegationWindowUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: DelegationWindowScalarWhereInput | DelegationWindowScalarWhereInput[]
+  }
+
+  export type DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput = {
+    create?: XOR<DelegationWindowCreateWithoutDelegateInput, DelegationWindowUncheckedCreateWithoutDelegateInput> | DelegationWindowCreateWithoutDelegateInput[] | DelegationWindowUncheckedCreateWithoutDelegateInput[]
+    connectOrCreate?: DelegationWindowCreateOrConnectWithoutDelegateInput | DelegationWindowCreateOrConnectWithoutDelegateInput[]
+    upsert?: DelegationWindowUpsertWithWhereUniqueWithoutDelegateInput | DelegationWindowUpsertWithWhereUniqueWithoutDelegateInput[]
+    createMany?: DelegationWindowCreateManyDelegateInputEnvelope
+    set?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    disconnect?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    delete?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    connect?: DelegationWindowWhereUniqueInput | DelegationWindowWhereUniqueInput[]
+    update?: DelegationWindowUpdateWithWhereUniqueWithoutDelegateInput | DelegationWindowUpdateWithWhereUniqueWithoutDelegateInput[]
+    updateMany?: DelegationWindowUpdateManyWithWhereWithoutDelegateInput | DelegationWindowUpdateManyWithWhereWithoutDelegateInput[]
+    deleteMany?: DelegationWindowScalarWhereInput | DelegationWindowScalarWhereInput[]
+  }
+
+  export type TrainingRecordUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TrainingRecordCreateWithoutUserInput, TrainingRecordUncheckedCreateWithoutUserInput> | TrainingRecordCreateWithoutUserInput[] | TrainingRecordUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TrainingRecordCreateOrConnectWithoutUserInput | TrainingRecordCreateOrConnectWithoutUserInput[]
+    upsert?: TrainingRecordUpsertWithWhereUniqueWithoutUserInput | TrainingRecordUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TrainingRecordCreateManyUserInputEnvelope
+    set?: TrainingRecordWhereUniqueInput | TrainingRecordWhereUniqueInput[]
+    disconnect?: TrainingRecordWhereUniqueInput | TrainingRecordWhereUniqueInput[]
+    delete?: TrainingRecordWhereUniqueInput | TrainingRecordWhereUniqueInput[]
+    connect?: TrainingRecordWhereUniqueInput | TrainingRecordWhereUniqueInput[]
+    update?: TrainingRecordUpdateWithWhereUniqueWithoutUserInput | TrainingRecordUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TrainingRecordUpdateManyWithWhereWithoutUserInput | TrainingRecordUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TrainingRecordScalarWhereInput | TrainingRecordScalarWhereInput[]
+  }
+
+  export type UserMaturityUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserMaturityCreateWithoutUserInput, UserMaturityUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserMaturityCreateOrConnectWithoutUserInput
+    upsert?: UserMaturityUpsertWithoutUserInput
+    disconnect?: UserMaturityWhereInput | boolean
+    delete?: UserMaturityWhereInput | boolean
+    connect?: UserMaturityWhereUniqueInput
+    update?: XOR<XOR<UserMaturityUpdateToOneWithWhereWithoutUserInput, UserMaturityUpdateWithoutUserInput>, UserMaturityUncheckedUpdateWithoutUserInput>
+  }
+
+  export type DecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserCreateNestedOneWithoutTrainingRecordsInput = {
+    create?: XOR<UserCreateWithoutTrainingRecordsInput, UserUncheckedCreateWithoutTrainingRecordsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTrainingRecordsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type UserUpdateOneRequiredWithoutTrainingRecordsNestedInput = {
+    create?: XOR<UserCreateWithoutTrainingRecordsInput, UserUncheckedCreateWithoutTrainingRecordsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTrainingRecordsInput
+    upsert?: UserUpsertWithoutTrainingRecordsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTrainingRecordsInput, UserUpdateWithoutTrainingRecordsInput>, UserUncheckedUpdateWithoutTrainingRecordsInput>
+  }
+
+  export type UserCreateNestedOneWithoutMaturityInput = {
+    create?: XOR<UserCreateWithoutMaturityInput, UserUncheckedCreateWithoutMaturityInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMaturityInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutMaturityNestedInput = {
+    create?: XOR<UserCreateWithoutMaturityInput, UserUncheckedCreateWithoutMaturityInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMaturityInput
+    upsert?: UserUpsertWithoutMaturityInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMaturityInput, UserUpdateWithoutMaturityInput>, UserUncheckedUpdateWithoutMaturityInput>
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type UserCreateNestedOneWithoutDelegationsOwnedInput = {
+    create?: XOR<UserCreateWithoutDelegationsOwnedInput, UserUncheckedCreateWithoutDelegationsOwnedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDelegationsOwnedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutDelegationsActiveInput = {
+    create?: XOR<UserCreateWithoutDelegationsActiveInput, UserUncheckedCreateWithoutDelegationsActiveInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDelegationsActiveInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutDelegationsOwnedNestedInput = {
+    create?: XOR<UserCreateWithoutDelegationsOwnedInput, UserUncheckedCreateWithoutDelegationsOwnedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDelegationsOwnedInput
+    upsert?: UserUpsertWithoutDelegationsOwnedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDelegationsOwnedInput, UserUpdateWithoutDelegationsOwnedInput>, UserUncheckedUpdateWithoutDelegationsOwnedInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutDelegationsActiveNestedInput = {
+    create?: XOR<UserCreateWithoutDelegationsActiveInput, UserUncheckedCreateWithoutDelegationsActiveInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDelegationsActiveInput
+    upsert?: UserUpsertWithoutDelegationsActiveInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDelegationsActiveInput, UserUpdateWithoutDelegationsActiveInput>, UserUncheckedUpdateWithoutDelegationsActiveInput>
+  }
+
   export type TaskCreateNestedManyWithoutCategoryInput = {
     create?: XOR<TaskCreateWithoutCategoryInput, TaskUncheckedCreateWithoutCategoryInput> | TaskCreateWithoutCategoryInput[] | TaskUncheckedCreateWithoutCategoryInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutCategoryInput | TaskCreateOrConnectWithoutCategoryInput[]
@@ -55033,14 +61738,6 @@ export namespace Prisma {
 
   export type EnumProjectStatusFieldUpdateOperationsInput = {
     set?: $Enums.ProjectStatus
-  }
-
-  export type DecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
   }
 
   export type UserUpdateOneWithoutProjectsOwnedNestedInput = {
@@ -55409,14 +62106,6 @@ export namespace Prisma {
 
   export type EnumTaskStatusFieldUpdateOperationsInput = {
     set?: $Enums.TaskStatus
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type ProjectUpdateOneRequiredWithoutTasksNestedInput = {
@@ -56149,10 +62838,6 @@ export namespace Prisma {
 
   export type EnumAccountTypeFieldUpdateOperationsInput = {
     set?: $Enums.AccountType
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type TransactionLineUpdateManyWithoutAccountNestedInput = {
@@ -56983,14 +63668,6 @@ export namespace Prisma {
     set?: $Enums.InventoryTransactionType
   }
 
-  export type NullableDecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string | null
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
-  }
-
   export type ProjectUpdateOneRequiredWithoutInventoryTransactionsNestedInput = {
     create?: XOR<ProjectCreateWithoutInventoryTransactionsInput, ProjectUncheckedCreateWithoutInventoryTransactionsInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutInventoryTransactionsInput
@@ -57566,13 +64243,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type NestedEnumProjectStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumProjectStatusFilter<$PrismaModel> | $Enums.ProjectStatus
-  }
-
   export type NestedDecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -57582,16 +64252,6 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
-  export type NestedEnumProjectStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumProjectStatusWithAggregatesFilter<$PrismaModel> | $Enums.ProjectStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumProjectStatusFilter<$PrismaModel>
-    _max?: NestedEnumProjectStatusFilter<$PrismaModel>
   }
 
   export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -57608,23 +64268,6 @@ export namespace Prisma {
     _sum?: NestedDecimalFilter<$PrismaModel>
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
-  }
-
-  export type NestedEnumTaskStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
-  }
-
-  export type NestedEnumTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumTaskStatusWithAggregatesFilter<$PrismaModel> | $Enums.TaskStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumTaskStatusFilter<$PrismaModel>
-    _max?: NestedEnumTaskStatusFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -57652,6 +64295,102 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+  export type NestedJsonFilter<$PrismaModel = never> = 
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedEnumProjectStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProjectStatusFilter<$PrismaModel> | $Enums.ProjectStatus
+  }
+
+  export type NestedEnumProjectStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProjectStatusWithAggregatesFilter<$PrismaModel> | $Enums.ProjectStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProjectStatusFilter<$PrismaModel>
+    _max?: NestedEnumProjectStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTaskStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
+  }
+
+  export type NestedEnumTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTaskStatusWithAggregatesFilter<$PrismaModel> | $Enums.TaskStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTaskStatusFilter<$PrismaModel>
+    _max?: NestedEnumTaskStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumCostTypeFilter<$PrismaModel = never> = {
@@ -57712,11 +64451,6 @@ export namespace Prisma {
     not?: NestedEnumAccountTypeFilter<$PrismaModel> | $Enums.AccountType
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NestedEnumAccountTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.AccountType | EnumAccountTypeFieldRefInput<$PrismaModel>
     in?: $Enums.AccountType[] | ListEnumAccountTypeFieldRefInput<$PrismaModel>
@@ -57725,14 +64459,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAccountTypeFilter<$PrismaModel>
     _max?: NestedEnumAccountTypeFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumTransactionTypeFilter<$PrismaModel = never> = {
@@ -57810,17 +64536,6 @@ export namespace Prisma {
     not?: NestedEnumInventoryTransactionTypeFilter<$PrismaModel> | $Enums.InventoryTransactionType
   }
 
-  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type NestedEnumInventoryTransactionTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.InventoryTransactionType | EnumInventoryTransactionTypeFieldRefInput<$PrismaModel>
     in?: $Enums.InventoryTransactionType[] | ListEnumInventoryTransactionTypeFieldRefInput<$PrismaModel>
@@ -57829,22 +64544,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumInventoryTransactionTypeFilter<$PrismaModel>
     _max?: NestedEnumInventoryTransactionTypeFilter<$PrismaModel>
-  }
-
-  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -58611,6 +65310,125 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DelegationWindowCreateWithoutOwnerInput = {
+    id?: string
+    startDate: Date | string
+    endDate: Date | string
+    reason?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    delegate: UserCreateNestedOneWithoutDelegationsActiveInput
+  }
+
+  export type DelegationWindowUncheckedCreateWithoutOwnerInput = {
+    id?: string
+    delegateId: string
+    startDate: Date | string
+    endDate: Date | string
+    reason?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DelegationWindowCreateOrConnectWithoutOwnerInput = {
+    where: DelegationWindowWhereUniqueInput
+    create: XOR<DelegationWindowCreateWithoutOwnerInput, DelegationWindowUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type DelegationWindowCreateManyOwnerInputEnvelope = {
+    data: DelegationWindowCreateManyOwnerInput | DelegationWindowCreateManyOwnerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DelegationWindowCreateWithoutDelegateInput = {
+    id?: string
+    startDate: Date | string
+    endDate: Date | string
+    reason?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutDelegationsOwnedInput
+  }
+
+  export type DelegationWindowUncheckedCreateWithoutDelegateInput = {
+    id?: string
+    ownerId: string
+    startDate: Date | string
+    endDate: Date | string
+    reason?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DelegationWindowCreateOrConnectWithoutDelegateInput = {
+    where: DelegationWindowWhereUniqueInput
+    create: XOR<DelegationWindowCreateWithoutDelegateInput, DelegationWindowUncheckedCreateWithoutDelegateInput>
+  }
+
+  export type DelegationWindowCreateManyDelegateInputEnvelope = {
+    data: DelegationWindowCreateManyDelegateInput | DelegationWindowCreateManyDelegateInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TrainingRecordCreateWithoutUserInput = {
+    id?: string
+    title: string
+    module?: string | null
+    status?: string
+    score?: Decimal | DecimalJsLike | number | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TrainingRecordUncheckedCreateWithoutUserInput = {
+    id?: string
+    title: string
+    module?: string | null
+    status?: string
+    score?: Decimal | DecimalJsLike | number | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TrainingRecordCreateOrConnectWithoutUserInput = {
+    where: TrainingRecordWhereUniqueInput
+    create: XOR<TrainingRecordCreateWithoutUserInput, TrainingRecordUncheckedCreateWithoutUserInput>
+  }
+
+  export type TrainingRecordCreateManyUserInputEnvelope = {
+    data: TrainingRecordCreateManyUserInput | TrainingRecordCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserMaturityCreateWithoutUserInput = {
+    id?: string
+    accuracy?: Decimal | DecimalJsLike | number | string
+    maturityLevel?: string
+    lastAssessedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserMaturityUncheckedCreateWithoutUserInput = {
+    id?: string
+    accuracy?: Decimal | DecimalJsLike | number | string
+    maturityLevel?: string
+    lastAssessedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserMaturityCreateOrConnectWithoutUserInput = {
+    where: UserMaturityWhereUniqueInput
+    create: XOR<UserMaturityCreateWithoutUserInput, UserMaturityUncheckedCreateWithoutUserInput>
+  }
+
   export type ProjectUpsertWithWhereUniqueWithoutOwnerInput = {
     where: ProjectWhereUniqueInput
     update: XOR<ProjectUpdateWithoutOwnerInput, ProjectUncheckedUpdateWithoutOwnerInput>
@@ -59193,6 +66011,657 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Document"> | Date | string | null
   }
 
+  export type DelegationWindowUpsertWithWhereUniqueWithoutOwnerInput = {
+    where: DelegationWindowWhereUniqueInput
+    update: XOR<DelegationWindowUpdateWithoutOwnerInput, DelegationWindowUncheckedUpdateWithoutOwnerInput>
+    create: XOR<DelegationWindowCreateWithoutOwnerInput, DelegationWindowUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type DelegationWindowUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: DelegationWindowWhereUniqueInput
+    data: XOR<DelegationWindowUpdateWithoutOwnerInput, DelegationWindowUncheckedUpdateWithoutOwnerInput>
+  }
+
+  export type DelegationWindowUpdateManyWithWhereWithoutOwnerInput = {
+    where: DelegationWindowScalarWhereInput
+    data: XOR<DelegationWindowUpdateManyMutationInput, DelegationWindowUncheckedUpdateManyWithoutOwnerInput>
+  }
+
+  export type DelegationWindowScalarWhereInput = {
+    AND?: DelegationWindowScalarWhereInput | DelegationWindowScalarWhereInput[]
+    OR?: DelegationWindowScalarWhereInput[]
+    NOT?: DelegationWindowScalarWhereInput | DelegationWindowScalarWhereInput[]
+    id?: StringFilter<"DelegationWindow"> | string
+    ownerId?: StringFilter<"DelegationWindow"> | string
+    delegateId?: StringFilter<"DelegationWindow"> | string
+    startDate?: DateTimeFilter<"DelegationWindow"> | Date | string
+    endDate?: DateTimeFilter<"DelegationWindow"> | Date | string
+    reason?: StringNullableFilter<"DelegationWindow"> | string | null
+    isActive?: BoolFilter<"DelegationWindow"> | boolean
+    createdAt?: DateTimeFilter<"DelegationWindow"> | Date | string
+    updatedAt?: DateTimeFilter<"DelegationWindow"> | Date | string
+  }
+
+  export type DelegationWindowUpsertWithWhereUniqueWithoutDelegateInput = {
+    where: DelegationWindowWhereUniqueInput
+    update: XOR<DelegationWindowUpdateWithoutDelegateInput, DelegationWindowUncheckedUpdateWithoutDelegateInput>
+    create: XOR<DelegationWindowCreateWithoutDelegateInput, DelegationWindowUncheckedCreateWithoutDelegateInput>
+  }
+
+  export type DelegationWindowUpdateWithWhereUniqueWithoutDelegateInput = {
+    where: DelegationWindowWhereUniqueInput
+    data: XOR<DelegationWindowUpdateWithoutDelegateInput, DelegationWindowUncheckedUpdateWithoutDelegateInput>
+  }
+
+  export type DelegationWindowUpdateManyWithWhereWithoutDelegateInput = {
+    where: DelegationWindowScalarWhereInput
+    data: XOR<DelegationWindowUpdateManyMutationInput, DelegationWindowUncheckedUpdateManyWithoutDelegateInput>
+  }
+
+  export type TrainingRecordUpsertWithWhereUniqueWithoutUserInput = {
+    where: TrainingRecordWhereUniqueInput
+    update: XOR<TrainingRecordUpdateWithoutUserInput, TrainingRecordUncheckedUpdateWithoutUserInput>
+    create: XOR<TrainingRecordCreateWithoutUserInput, TrainingRecordUncheckedCreateWithoutUserInput>
+  }
+
+  export type TrainingRecordUpdateWithWhereUniqueWithoutUserInput = {
+    where: TrainingRecordWhereUniqueInput
+    data: XOR<TrainingRecordUpdateWithoutUserInput, TrainingRecordUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TrainingRecordUpdateManyWithWhereWithoutUserInput = {
+    where: TrainingRecordScalarWhereInput
+    data: XOR<TrainingRecordUpdateManyMutationInput, TrainingRecordUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TrainingRecordScalarWhereInput = {
+    AND?: TrainingRecordScalarWhereInput | TrainingRecordScalarWhereInput[]
+    OR?: TrainingRecordScalarWhereInput[]
+    NOT?: TrainingRecordScalarWhereInput | TrainingRecordScalarWhereInput[]
+    id?: StringFilter<"TrainingRecord"> | string
+    userId?: StringFilter<"TrainingRecord"> | string
+    title?: StringFilter<"TrainingRecord"> | string
+    module?: StringNullableFilter<"TrainingRecord"> | string | null
+    status?: StringFilter<"TrainingRecord"> | string
+    score?: DecimalNullableFilter<"TrainingRecord"> | Decimal | DecimalJsLike | number | string | null
+    completedAt?: DateTimeNullableFilter<"TrainingRecord"> | Date | string | null
+    createdAt?: DateTimeFilter<"TrainingRecord"> | Date | string
+    updatedAt?: DateTimeFilter<"TrainingRecord"> | Date | string
+  }
+
+  export type UserMaturityUpsertWithoutUserInput = {
+    update: XOR<UserMaturityUpdateWithoutUserInput, UserMaturityUncheckedUpdateWithoutUserInput>
+    create: XOR<UserMaturityCreateWithoutUserInput, UserMaturityUncheckedCreateWithoutUserInput>
+    where?: UserMaturityWhereInput
+  }
+
+  export type UserMaturityUpdateToOneWithWhereWithoutUserInput = {
+    where?: UserMaturityWhereInput
+    data: XOR<UserMaturityUpdateWithoutUserInput, UserMaturityUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserMaturityUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accuracy?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maturityLevel?: StringFieldUpdateOperationsInput | string
+    lastAssessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserMaturityUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accuracy?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maturityLevel?: StringFieldUpdateOperationsInput | string
+    lastAssessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateWithoutTrainingRecordsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    projectsOwned?: ProjectCreateNestedManyWithoutOwnerInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    costsCreated?: CostRecordCreateNestedManyWithoutCreatedByInput
+    budgetsCreated?: BudgetRecordCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueCreateNestedManyWithoutCreatedByInput
+    invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    purchaseRequestsCreated?: PurchaseRequestCreateNestedManyWithoutCreatedByInput
+    purchaseOrdersCreated?: PurchaseOrderCreateNestedManyWithoutCreatedByInput
+    contractsCreated?: ContractCreateNestedManyWithoutCreatedByInput
+    approvalRequests?: ApprovalRequestCreateNestedManyWithoutRequesterInput
+    approvalSteps?: ApprovalStepCreateNestedManyWithoutApproverInput
+    lockedPeriods?: FiscalPeriodCreateNestedManyWithoutLockedByInput
+    progressCreated?: ProgressEntryCreateNestedManyWithoutCreatedByInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTrainingRecordsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    projectsOwned?: ProjectUncheckedCreateNestedManyWithoutOwnerInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    costsCreated?: CostRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    budgetsCreated?: BudgetRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueUncheckedCreateNestedManyWithoutCreatedByInput
+    invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+    contractsCreated?: ContractUncheckedCreateNestedManyWithoutCreatedByInput
+    approvalRequests?: ApprovalRequestUncheckedCreateNestedManyWithoutRequesterInput
+    approvalSteps?: ApprovalStepUncheckedCreateNestedManyWithoutApproverInput
+    lockedPeriods?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
+    progressCreated?: ProgressEntryUncheckedCreateNestedManyWithoutCreatedByInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTrainingRecordsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTrainingRecordsInput, UserUncheckedCreateWithoutTrainingRecordsInput>
+  }
+
+  export type UserUpsertWithoutTrainingRecordsInput = {
+    update: XOR<UserUpdateWithoutTrainingRecordsInput, UserUncheckedUpdateWithoutTrainingRecordsInput>
+    create: XOR<UserCreateWithoutTrainingRecordsInput, UserUncheckedCreateWithoutTrainingRecordsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTrainingRecordsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTrainingRecordsInput, UserUncheckedUpdateWithoutTrainingRecordsInput>
+  }
+
+  export type UserUpdateWithoutTrainingRecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    projectsOwned?: ProjectUpdateManyWithoutOwnerNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    costsCreated?: CostRecordUpdateManyWithoutCreatedByNestedInput
+    budgetsCreated?: BudgetRecordUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUpdateManyWithoutCreatedByNestedInput
+    invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+    contractsCreated?: ContractUpdateManyWithoutCreatedByNestedInput
+    approvalRequests?: ApprovalRequestUpdateManyWithoutRequesterNestedInput
+    approvalSteps?: ApprovalStepUpdateManyWithoutApproverNestedInput
+    lockedPeriods?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
+    progressCreated?: ProgressEntryUpdateManyWithoutCreatedByNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTrainingRecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    projectsOwned?: ProjectUncheckedUpdateManyWithoutOwnerNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    costsCreated?: CostRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    budgetsCreated?: BudgetRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+    invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+    contractsCreated?: ContractUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvalRequests?: ApprovalRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    approvalSteps?: ApprovalStepUncheckedUpdateManyWithoutApproverNestedInput
+    lockedPeriods?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+    progressCreated?: ProgressEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutMaturityInput = {
+    id?: string
+    email: string
+    name?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    projectsOwned?: ProjectCreateNestedManyWithoutOwnerInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    costsCreated?: CostRecordCreateNestedManyWithoutCreatedByInput
+    budgetsCreated?: BudgetRecordCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueCreateNestedManyWithoutCreatedByInput
+    invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    purchaseRequestsCreated?: PurchaseRequestCreateNestedManyWithoutCreatedByInput
+    purchaseOrdersCreated?: PurchaseOrderCreateNestedManyWithoutCreatedByInput
+    contractsCreated?: ContractCreateNestedManyWithoutCreatedByInput
+    approvalRequests?: ApprovalRequestCreateNestedManyWithoutRequesterInput
+    approvalSteps?: ApprovalStepCreateNestedManyWithoutApproverInput
+    lockedPeriods?: FiscalPeriodCreateNestedManyWithoutLockedByInput
+    progressCreated?: ProgressEntryCreateNestedManyWithoutCreatedByInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutMaturityInput = {
+    id?: string
+    email: string
+    name?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    projectsOwned?: ProjectUncheckedCreateNestedManyWithoutOwnerInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    costsCreated?: CostRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    budgetsCreated?: BudgetRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueUncheckedCreateNestedManyWithoutCreatedByInput
+    invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+    contractsCreated?: ContractUncheckedCreateNestedManyWithoutCreatedByInput
+    approvalRequests?: ApprovalRequestUncheckedCreateNestedManyWithoutRequesterInput
+    approvalSteps?: ApprovalStepUncheckedCreateNestedManyWithoutApproverInput
+    lockedPeriods?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
+    progressCreated?: ProgressEntryUncheckedCreateNestedManyWithoutCreatedByInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutMaturityInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMaturityInput, UserUncheckedCreateWithoutMaturityInput>
+  }
+
+  export type UserUpsertWithoutMaturityInput = {
+    update: XOR<UserUpdateWithoutMaturityInput, UserUncheckedUpdateWithoutMaturityInput>
+    create: XOR<UserCreateWithoutMaturityInput, UserUncheckedCreateWithoutMaturityInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMaturityInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMaturityInput, UserUncheckedUpdateWithoutMaturityInput>
+  }
+
+  export type UserUpdateWithoutMaturityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    projectsOwned?: ProjectUpdateManyWithoutOwnerNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    costsCreated?: CostRecordUpdateManyWithoutCreatedByNestedInput
+    budgetsCreated?: BudgetRecordUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUpdateManyWithoutCreatedByNestedInput
+    invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+    contractsCreated?: ContractUpdateManyWithoutCreatedByNestedInput
+    approvalRequests?: ApprovalRequestUpdateManyWithoutRequesterNestedInput
+    approvalSteps?: ApprovalStepUpdateManyWithoutApproverNestedInput
+    lockedPeriods?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
+    progressCreated?: ProgressEntryUpdateManyWithoutCreatedByNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMaturityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    projectsOwned?: ProjectUncheckedUpdateManyWithoutOwnerNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    costsCreated?: CostRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    budgetsCreated?: BudgetRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+    invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+    contractsCreated?: ContractUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvalRequests?: ApprovalRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    approvalSteps?: ApprovalStepUncheckedUpdateManyWithoutApproverNestedInput
+    lockedPeriods?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+    progressCreated?: ProgressEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutDelegationsOwnedInput = {
+    id?: string
+    email: string
+    name?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    projectsOwned?: ProjectCreateNestedManyWithoutOwnerInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    costsCreated?: CostRecordCreateNestedManyWithoutCreatedByInput
+    budgetsCreated?: BudgetRecordCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueCreateNestedManyWithoutCreatedByInput
+    invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    purchaseRequestsCreated?: PurchaseRequestCreateNestedManyWithoutCreatedByInput
+    purchaseOrdersCreated?: PurchaseOrderCreateNestedManyWithoutCreatedByInput
+    contractsCreated?: ContractCreateNestedManyWithoutCreatedByInput
+    approvalRequests?: ApprovalRequestCreateNestedManyWithoutRequesterInput
+    approvalSteps?: ApprovalStepCreateNestedManyWithoutApproverInput
+    lockedPeriods?: FiscalPeriodCreateNestedManyWithoutLockedByInput
+    progressCreated?: ProgressEntryCreateNestedManyWithoutCreatedByInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutDelegationsOwnedInput = {
+    id?: string
+    email: string
+    name?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    projectsOwned?: ProjectUncheckedCreateNestedManyWithoutOwnerInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    costsCreated?: CostRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    budgetsCreated?: BudgetRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueUncheckedCreateNestedManyWithoutCreatedByInput
+    invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+    contractsCreated?: ContractUncheckedCreateNestedManyWithoutCreatedByInput
+    approvalRequests?: ApprovalRequestUncheckedCreateNestedManyWithoutRequesterInput
+    approvalSteps?: ApprovalStepUncheckedCreateNestedManyWithoutApproverInput
+    lockedPeriods?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
+    progressCreated?: ProgressEntryUncheckedCreateNestedManyWithoutCreatedByInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutDelegationsOwnedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDelegationsOwnedInput, UserUncheckedCreateWithoutDelegationsOwnedInput>
+  }
+
+  export type UserCreateWithoutDelegationsActiveInput = {
+    id?: string
+    email: string
+    name?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    projectsOwned?: ProjectCreateNestedManyWithoutOwnerInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    costsCreated?: CostRecordCreateNestedManyWithoutCreatedByInput
+    budgetsCreated?: BudgetRecordCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueCreateNestedManyWithoutCreatedByInput
+    invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    purchaseRequestsCreated?: PurchaseRequestCreateNestedManyWithoutCreatedByInput
+    purchaseOrdersCreated?: PurchaseOrderCreateNestedManyWithoutCreatedByInput
+    contractsCreated?: ContractCreateNestedManyWithoutCreatedByInput
+    approvalRequests?: ApprovalRequestCreateNestedManyWithoutRequesterInput
+    approvalSteps?: ApprovalStepCreateNestedManyWithoutApproverInput
+    lockedPeriods?: FiscalPeriodCreateNestedManyWithoutLockedByInput
+    progressCreated?: ProgressEntryCreateNestedManyWithoutCreatedByInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutDelegationsActiveInput = {
+    id?: string
+    email: string
+    name?: string | null
+    role?: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    projectsOwned?: ProjectUncheckedCreateNestedManyWithoutOwnerInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    costsCreated?: CostRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    budgetsCreated?: BudgetRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueUncheckedCreateNestedManyWithoutCreatedByInput
+    invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+    contractsCreated?: ContractUncheckedCreateNestedManyWithoutCreatedByInput
+    approvalRequests?: ApprovalRequestUncheckedCreateNestedManyWithoutRequesterInput
+    approvalSteps?: ApprovalStepUncheckedCreateNestedManyWithoutApproverInput
+    lockedPeriods?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
+    progressCreated?: ProgressEntryUncheckedCreateNestedManyWithoutCreatedByInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutDelegationsActiveInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDelegationsActiveInput, UserUncheckedCreateWithoutDelegationsActiveInput>
+  }
+
+  export type UserUpsertWithoutDelegationsOwnedInput = {
+    update: XOR<UserUpdateWithoutDelegationsOwnedInput, UserUncheckedUpdateWithoutDelegationsOwnedInput>
+    create: XOR<UserCreateWithoutDelegationsOwnedInput, UserUncheckedCreateWithoutDelegationsOwnedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDelegationsOwnedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDelegationsOwnedInput, UserUncheckedUpdateWithoutDelegationsOwnedInput>
+  }
+
+  export type UserUpdateWithoutDelegationsOwnedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    projectsOwned?: ProjectUpdateManyWithoutOwnerNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    costsCreated?: CostRecordUpdateManyWithoutCreatedByNestedInput
+    budgetsCreated?: BudgetRecordUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUpdateManyWithoutCreatedByNestedInput
+    invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+    contractsCreated?: ContractUpdateManyWithoutCreatedByNestedInput
+    approvalRequests?: ApprovalRequestUpdateManyWithoutRequesterNestedInput
+    approvalSteps?: ApprovalStepUpdateManyWithoutApproverNestedInput
+    lockedPeriods?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
+    progressCreated?: ProgressEntryUpdateManyWithoutCreatedByNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDelegationsOwnedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    projectsOwned?: ProjectUncheckedUpdateManyWithoutOwnerNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    costsCreated?: CostRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    budgetsCreated?: BudgetRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+    invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+    contractsCreated?: ContractUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvalRequests?: ApprovalRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    approvalSteps?: ApprovalStepUncheckedUpdateManyWithoutApproverNestedInput
+    lockedPeriods?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+    progressCreated?: ProgressEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithoutDelegationsActiveInput = {
+    update: XOR<UserUpdateWithoutDelegationsActiveInput, UserUncheckedUpdateWithoutDelegationsActiveInput>
+    create: XOR<UserCreateWithoutDelegationsActiveInput, UserUncheckedCreateWithoutDelegationsActiveInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDelegationsActiveInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDelegationsActiveInput, UserUncheckedUpdateWithoutDelegationsActiveInput>
+  }
+
+  export type UserUpdateWithoutDelegationsActiveInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    projectsOwned?: ProjectUpdateManyWithoutOwnerNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    costsCreated?: CostRecordUpdateManyWithoutCreatedByNestedInput
+    budgetsCreated?: BudgetRecordUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUpdateManyWithoutCreatedByNestedInput
+    invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+    contractsCreated?: ContractUpdateManyWithoutCreatedByNestedInput
+    approvalRequests?: ApprovalRequestUpdateManyWithoutRequesterNestedInput
+    approvalSteps?: ApprovalStepUpdateManyWithoutApproverNestedInput
+    lockedPeriods?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
+    progressCreated?: ProgressEntryUpdateManyWithoutCreatedByNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDelegationsActiveInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    projectsOwned?: ProjectUncheckedUpdateManyWithoutOwnerNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    costsCreated?: CostRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    budgetsCreated?: BudgetRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+    invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+    contractsCreated?: ContractUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvalRequests?: ApprovalRequestUncheckedUpdateManyWithoutRequesterNestedInput
+    approvalSteps?: ApprovalStepUncheckedUpdateManyWithoutApproverNestedInput
+    lockedPeriods?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+    progressCreated?: ProgressEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+  }
+
   export type TaskCreateWithoutCategoryInput = {
     id?: string
     title: string
@@ -59271,6 +66740,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectsOwnedInput = {
@@ -59297,6 +66770,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectsOwnedInput = {
@@ -59817,6 +67294,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsOwnedInput = {
@@ -59843,6 +67324,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type TaskUpsertWithWhereUniqueWithoutProjectInput = {
@@ -60237,6 +67722,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTasksAssignedInput = {
@@ -60263,6 +67752,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTasksAssignedInput = {
@@ -60395,6 +67888,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksAssignedInput = {
@@ -60421,6 +67918,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ProjectCreateWithoutWbsItemsInput = {
@@ -61259,6 +68760,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCostsCreatedInput = {
@@ -61285,6 +68790,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCostsCreatedInput = {
@@ -61425,6 +68934,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCostsCreatedInput = {
@@ -61451,6 +68964,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type PurchaseOrderUpsertWithoutCostRecordsInput = {
@@ -61575,6 +69092,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBudgetsCreatedInput = {
@@ -61601,6 +69122,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBudgetsCreatedInput = {
@@ -61698,6 +69223,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBudgetsCreatedInput = {
@@ -61724,6 +69253,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type WBSItemCreateWithoutRevenuesInput = {
@@ -61852,6 +69385,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRevenuesCreatedInput = {
@@ -61878,6 +69415,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRevenuesCreatedInput = {
@@ -62034,6 +69575,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRevenuesCreatedInput = {
@@ -62060,6 +69605,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type WBSItemCreateWithoutInvoicesInput = {
@@ -62207,6 +69756,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInvoicesCreatedInput = {
@@ -62233,6 +69786,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInvoicesCreatedInput = {
@@ -62423,6 +69980,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvoicesCreatedInput = {
@@ -62449,6 +70010,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ContractUpsertWithoutInvoicesInput = {
@@ -62995,6 +70560,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPurchaseRequestsCreatedInput = {
@@ -63021,6 +70590,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPurchaseRequestsCreatedInput = {
@@ -63111,6 +70684,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPurchaseRequestsCreatedInput = {
@@ -63137,6 +70714,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type PurchaseOrderUpsertWithWhereUniqueWithoutPurchaseRequestInput = {
@@ -63275,6 +70856,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPurchaseOrdersCreatedInput = {
@@ -63301,6 +70886,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPurchaseOrdersCreatedInput = {
@@ -63567,6 +71156,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPurchaseOrdersCreatedInput = {
@@ -63593,6 +71186,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type PurchaseOrderItemUpsertWithWhereUniqueWithoutPurchaseOrderInput = {
@@ -64027,6 +71624,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutContractsCreatedInput = {
@@ -64053,6 +71654,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutContractsCreatedInput = {
@@ -64252,6 +71857,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContractsCreatedInput = {
@@ -64278,6 +71887,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ContractChangeUpsertWithWhereUniqueWithoutContractInput = {
@@ -65628,6 +73241,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -65654,6 +73271,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -65696,6 +73317,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -65722,6 +73347,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ProjectCreateWithoutApprovalRequestsInput = {
@@ -65805,6 +73434,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutApprovalRequestsInput = {
@@ -65831,6 +73464,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutApprovalRequestsInput = {
@@ -65968,6 +73605,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovalRequestsInput = {
@@ -65994,6 +73635,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ApprovalStepUpsertWithWhereUniqueWithoutRequestInput = {
@@ -66067,6 +73712,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutApprovalStepsInput = {
@@ -66093,6 +73742,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutApprovalStepsInput = {
@@ -66172,6 +73825,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovalStepsInput = {
@@ -66198,6 +73855,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutLockedPeriodsInput = {
@@ -66224,6 +73885,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutLockedPeriodsInput = {
@@ -66250,6 +73915,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLockedPeriodsInput = {
@@ -66292,6 +73961,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLockedPeriodsInput = {
@@ -66318,6 +73991,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ProjectCreateWithoutDocumentsInput = {
@@ -66401,6 +74078,10 @@ export namespace Prisma {
     progressCreated?: ProgressEntryCreateNestedManyWithoutCreatedByInput
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDocumentsUploadedInput = {
@@ -66427,6 +74108,10 @@ export namespace Prisma {
     progressCreated?: ProgressEntryUncheckedCreateNestedManyWithoutCreatedByInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDocumentsUploadedInput = {
@@ -66532,6 +74217,10 @@ export namespace Prisma {
     progressCreated?: ProgressEntryUpdateManyWithoutCreatedByNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentsUploadedInput = {
@@ -66558,6 +74247,10 @@ export namespace Prisma {
     progressCreated?: ProgressEntryUncheckedUpdateManyWithoutCreatedByNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ProjectCreateWithoutActivityFeedsInput = {
@@ -66641,6 +74334,10 @@ export namespace Prisma {
     progressCreated?: ProgressEntryCreateNestedManyWithoutCreatedByInput
     comments?: CommentCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutActivityFeedsInput = {
@@ -66667,6 +74364,10 @@ export namespace Prisma {
     progressCreated?: ProgressEntryUncheckedCreateNestedManyWithoutCreatedByInput
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutActivityFeedsInput = {
@@ -66772,6 +74473,10 @@ export namespace Prisma {
     progressCreated?: ProgressEntryUpdateManyWithoutCreatedByNestedInput
     comments?: CommentUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActivityFeedsInput = {
@@ -66798,6 +74503,10 @@ export namespace Prisma {
     progressCreated?: ProgressEntryUncheckedUpdateManyWithoutCreatedByNestedInput
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutCommentsInput = {
@@ -66824,6 +74533,10 @@ export namespace Prisma {
     progressCreated?: ProgressEntryCreateNestedManyWithoutCreatedByInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCommentsInput = {
@@ -66850,6 +74563,10 @@ export namespace Prisma {
     progressCreated?: ProgressEntryUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCommentsInput = {
@@ -66892,6 +74609,10 @@ export namespace Prisma {
     progressCreated?: ProgressEntryUpdateManyWithoutCreatedByNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -66918,6 +74639,10 @@ export namespace Prisma {
     progressCreated?: ProgressEntryUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ProjectCreateWithoutBoqItemsInput = {
@@ -67283,6 +75008,10 @@ export namespace Prisma {
     comments?: CommentCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProgressCreatedInput = {
@@ -67309,6 +75038,10 @@ export namespace Prisma {
     comments?: CommentUncheckedCreateNestedManyWithoutUserInput
     activityFeeds?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    delegationsOwned?: DelegationWindowUncheckedCreateNestedManyWithoutOwnerInput
+    delegationsActive?: DelegationWindowUncheckedCreateNestedManyWithoutDelegateInput
+    trainingRecords?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    maturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProgressCreatedInput = {
@@ -67420,6 +75153,10 @@ export namespace Prisma {
     comments?: CommentUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProgressCreatedInput = {
@@ -67446,6 +75183,10 @@ export namespace Prisma {
     comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
     activityFeeds?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    delegationsOwned?: DelegationWindowUncheckedUpdateManyWithoutOwnerNestedInput
+    delegationsActive?: DelegationWindowUncheckedUpdateManyWithoutDelegateNestedInput
+    trainingRecords?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    maturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ProgressEntryCreateWithoutMeasurementsInput = {
@@ -67756,6 +75497,39 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+  }
+
+  export type DelegationWindowCreateManyOwnerInput = {
+    id?: string
+    delegateId: string
+    startDate: Date | string
+    endDate: Date | string
+    reason?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DelegationWindowCreateManyDelegateInput = {
+    id?: string
+    ownerId: string
+    startDate: Date | string
+    endDate: Date | string
+    reason?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TrainingRecordCreateManyUserInput = {
+    id?: string
+    title: string
+    module?: string | null
+    status?: string
+    score?: Decimal | DecimalJsLike | number | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ProjectUpdateWithoutOwnerInput = {
@@ -68526,6 +76300,105 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DelegationWindowUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    delegate?: UserUpdateOneRequiredWithoutDelegationsActiveNestedInput
+  }
+
+  export type DelegationWindowUncheckedUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    delegateId?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DelegationWindowUncheckedUpdateManyWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    delegateId?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DelegationWindowUpdateWithoutDelegateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutDelegationsOwnedNestedInput
+  }
+
+  export type DelegationWindowUncheckedUpdateWithoutDelegateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DelegationWindowUncheckedUpdateManyWithoutDelegateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrainingRecordUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    module?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrainingRecordUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    module?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrainingRecordUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    module?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskCreateManyCategoryInput = {
@@ -70759,6 +78632,26 @@ export namespace Prisma {
      * @deprecated Use UserDefaultArgs instead
      */
     export type UserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use AuthorityMatrixDefaultArgs instead
+     */
+    export type AuthorityMatrixArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = AuthorityMatrixDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use TrainingRecordDefaultArgs instead
+     */
+    export type TrainingRecordArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TrainingRecordDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use UserMaturityDefaultArgs instead
+     */
+    export type UserMaturityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserMaturityDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use DelegationPolicyDefaultArgs instead
+     */
+    export type DelegationPolicyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = DelegationPolicyDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use DelegationWindowDefaultArgs instead
+     */
+    export type DelegationWindowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = DelegationWindowDefaultArgs<ExtArgs>
     /**
      * @deprecated Use CategoryDefaultArgs instead
      */

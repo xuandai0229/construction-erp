@@ -132,6 +132,60 @@ exports.Prisma.UserScalarFieldEnum = {
   deletedAt: 'deletedAt'
 };
 
+exports.Prisma.AuthorityMatrixScalarFieldEnum = {
+  id: 'id',
+  role: 'role',
+  maxAmount: 'maxAmount',
+  entityType: 'entityType',
+  projectType: 'projectType',
+  priority: 'priority',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TrainingRecordScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  module: 'module',
+  status: 'status',
+  score: 'score',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserMaturityScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  accuracy: 'accuracy',
+  maturityLevel: 'maturityLevel',
+  lastAssessedAt: 'lastAssessedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DelegationPolicyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  rules: 'rules',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DelegationWindowScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  delegateId: 'delegateId',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  reason: 'reason',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -614,6 +668,10 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.NullableJsonNullValueInput = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
@@ -735,6 +793,11 @@ exports.ApprovalStatus = exports.$Enums.ApprovalStatus = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  AuthorityMatrix: 'AuthorityMatrix',
+  TrainingRecord: 'TrainingRecord',
+  UserMaturity: 'UserMaturity',
+  DelegationPolicy: 'DelegationPolicy',
+  DelegationWindow: 'DelegationWindow',
   Category: 'Category',
   Project: 'Project',
   Task: 'Task',
