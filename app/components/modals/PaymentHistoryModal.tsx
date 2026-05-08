@@ -24,34 +24,38 @@ export default function PaymentHistoryModal({ isOpen, onClose, invoiceId }: Prop
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-2xl mx-4 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
-          <h2 className="text-[15px] font-bold text-slate-100">Lịch sử thanh toán HĐ: {invoiceId.substring(0, 8)}</h2>
-          <button onClick={onClose} className="text-slate-500 hover:text-white">✕</button>
+    <div className="erp-modal-overlay" onClick={onClose}>
+      <div className="erp-modal lg" onClick={e => e.stopPropagation()}>
+        <div className="erp-modal-header">
+          <h2 className="t-section-title">Lịch sử thanh toán</h2>
+          <button onClick={onClose} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
-        <div className="px-6 py-5">
-          <div className="rounded-lg border border-slate-800 bg-slate-950 overflow-hidden">
-            <table className="w-full text-xs">
+
+        <div className="erp-modal-body">
+          <div className="erp-table-wrap">
+            <table className="erp-table">
               <thead>
-                <tr className="bg-slate-900 text-slate-400 font-bold border-b border-slate-800">
-                  <th className="px-4 py-3 text-left">Ngày</th>
-                  <th className="px-4 py-3 text-right">Số tiền</th>
-                  <th className="px-4 py-3 text-left">Diễn giải</th>
-                  <th className="px-4 py-3 text-center">Thao tác</th>
+                <tr>
+                  <th style={{width: '15%'}}>Ngày</th>
+                  <th style={{width: '25%'}}>Số tiền</th>
+                  <th style={{width: '40%'}}>Diễn giải</th>
+                  <th style={{width: '20%'}}>Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 {invoicePayments.map((p) => (
-                  <tr key={p.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
-                    <td className="px-4 py-3 text-slate-300">{formatDate(p.date)}</td>
-                    <td className="px-4 py-3 text-right font-bold text-emerald-400">{formatVnd(p.amount)}</td>
-                    <td className="px-4 py-3 text-slate-400">{p.description || '--'}</td>
-                    <td className="px-4 py-3 text-center">
-                      <button 
+                  <tr key={p.id}>
+                    <td>{formatDate(p.date)}</td>
+                    <td className="text-money text-[var(--success)] font-bold">{formatVnd(p.amount)}</td>
+                    <td>{p.description || '—'}</td>
+                    <td>
+                      <button
                         onClick={() => handleDelete(p.id)}
-                        className="text-rose-500 hover:text-rose-400 font-bold underline"
+                        className="text-[var(--danger)] hover:text-[var(--danger-hover)] font-semibold text-sm underline"
                       >
                         Xóa
                       </button>
@@ -60,15 +64,20 @@ export default function PaymentHistoryModal({ isOpen, onClose, invoiceId }: Prop
                 ))}
                 {invoicePayments.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="px-4 py-8 text-center text-slate-500">Chưa có lịch sử thanh toán</td>
+                    <td colSpan={4} className="text-center text-[var(--text-muted)] py-8">
+                      Chưa có lịch sử thanh toán
+                    </td>
                   </tr>
                 )}
               </tbody>
             </table>
           </div>
         </div>
-        <div className="flex justify-end px-6 py-4 border-t border-slate-800">
-          <button onClick={onClose} className="h-9 px-4 bg-slate-800 rounded-lg text-sm text-white">Đóng</button>
+
+        <div className="erp-modal-footer">
+          <button onClick={onClose} className="btn btn-secondary">
+            Đóng
+          </button>
         </div>
       </div>
     </div>

@@ -2,77 +2,339 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 
-const menuItems = [
-  { id: 'overview', label: 'Tổng quan', href: '/', icon: 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
-  { id: 'projects', label: 'Dự án', href: '/projects', icon: 'M4 7h16M7 7V5h10v2M6 10h12v10H6z' },
-  { id: 'wbs', label: 'Hạng mục công trình (WBS)', href: '/wbs', icon: 'M12 3v5m-6 4h12M6 12v5m12-5v5M4 17h4v4H4zm8 0h4v4h-4zm8 0h-4v4h4z' },
-  { id: 'budget', label: 'Dự toán', href: '/budget', icon: 'M7 3h10v18H7zM10 7h4M10 11h4M10 15h2' },
-  { id: 'costs', label: 'Chi phí', href: '/costs', icon: 'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
-  { id: 'revenue', label: 'Doanh thu', href: '/revenue', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.407 2.63 1m-2.63-1c-.74 0-1.4.194-1.92.512m3.4 1.32a2.444 2.444 0 0 0-1.127-.043m-4.478 2.48c.56 1.05 1.76 1.75 3.208 1.75 1.11 0 2.08-.407 2.63-1m-2.63 1c-.74 0-1.4-.194-1.92-.512m3.4 1.32a2.444 2.444 0 0 0-1.127-.043' },
-  { id: 'debt', label: 'Công nợ', href: '/debt', icon: 'M7 4h10a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V6a2 2 0 0 1 2-2zM10 9h4M10 13h4' },
-  { id: 'reports', label: 'Báo cáo', href: '/reports', icon: 'M5 19V5m0 14h14M9 16V9m4 7V7m4 9v-5' },
-  { id: 'system', label: 'Hệ thống', href: '/system', icon: 'M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83' },
+const NAV_GROUPS = [
+  {
+    group: 'TỔNG QUAN',
+    items: [
+      {
+        id: 'overview',
+        label: 'Bảng điều khiển',
+        href: '/',
+        icon: (
+          <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+        ),
+      },
+    ],
+  },
+  {
+    group: 'DỰ ÁN',
+    items: [
+      {
+        id: 'projects',
+        label: 'Quản lý Dự án',
+        href: '/projects',
+        icon: (
+          <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+        ),
+      },
+      {
+        id: 'wbs',
+        label: 'Hạng mục (WBS)',
+        href: '/wbs',
+        icon: (
+          <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 7h4m0 0V5m0 2v2M7 7h2a2 2 0 012 2v1m0 0h2m-2 0v2m2-2h2a2 2 0 012 2v1M3 15h4m4-6h2m0 0V7m0 2v2m0 2h2" />
+            <path d="M4 12h16M4 17h16" strokeLinecap="round" />
+          </svg>
+        ),
+      },
+    ],
+  },
+  {
+    group: 'TÀI CHÍNH',
+    items: [
+      {
+        id: 'budget',
+        label: 'Dự toán',
+        href: '/budget',
+        icon: (
+          <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        ),
+      },
+      {
+        id: 'costs',
+        label: 'Chi phí',
+        href: '/costs',
+        icon: (
+          <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        ),
+      },
+      {
+        id: 'revenue',
+        label: 'Doanh thu',
+        href: '/revenue',
+        icon: (
+          <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+          </svg>
+        ),
+      },
+      {
+        id: 'debt',
+        label: 'Công nợ (AR/AP)',
+        href: '/debt',
+        icon: (
+          <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          </svg>
+        ),
+      },
+    ],
+  },
+  {
+    group: 'PHÂN TÍCH',
+    items: [
+      {
+        id: 'reports',
+        label: 'Báo cáo',
+        href: '/reports',
+        icon: (
+          <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        ),
+      },
+    ],
+  },
 ];
 
-function IconPath({ path }: { path: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d={path} />
-    </svg>
-  );
-}
+const BOTTOM_ITEMS = [
+  {
+    id: 'system',
+    label: 'Cài đặt hệ thống',
+    href: '/system',
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+    ),
+  },
+];
 
-export default function Sidebar({ activeItem }: { activeItem?: string }) {
+export default function Sidebar({
+  collapsed,
+  onToggle,
+}: {
+  collapsed: boolean;
+  onToggle: () => void;
+}) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const isActive = (item: typeof menuItems[0]) => {
-    if (activeItem) return activeItem === item.id;
-    if (item.href === '/') return pathname === '/';
-    return pathname.startsWith(item.href);
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname.startsWith(href);
   };
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 flex w-[258px] flex-col border-r border-slate-800 bg-[#020617] shadow-2xl shadow-black/30">
-      <div className="flex h-[74px] items-center gap-3 border-b border-slate-800 px-6">
-        <div className="grid h-10 w-10 place-items-center rounded-md border border-blue-500/40 bg-blue-600/20 text-blue-300">
-          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.7">
-            <path d="M4 21V8l5-3 5 3v13" />
-            <path d="M14 21V11l6 3v7M7 11h2M7 15h2M11 11h2M11 15h2M17 16h1" />
+    <aside className={`erp-sidebar ${collapsed ? 'collapsed' : ''}`}>
+      {/* Logo */}
+      <div
+        style={{
+          height: '64px',
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 16px',
+          borderBottom: '1px solid var(--border)',
+          gap: '10px',
+          flexShrink: 0,
+        }}
+      >
+        <div
+          style={{
+            height: '34px',
+            width: '34px',
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '8px',
+            background: 'var(--brand)',
+            color: 'white',
+          }}
+        >
+          <svg viewBox="0 0 24 24" style={{ height: '18px', width: '18px' }} fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
         </div>
-        <div>
-          <div className="text-[15px] font-bold text-slate-100">Construction ERP</div>
-          <div className="text-xs text-slate-400">Quản lý dự án xây dựng</div>
-        </div>
+        {!collapsed && (
+          <div style={{ overflow: 'hidden' }}>
+            <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>
+              Construction ERP
+            </div>
+            <div style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              Nền tảng Doanh nghiệp
+            </div>
+          </div>
+        )}
       </div>
 
-      <nav className="flex-1 px-3 py-5">
-        <div className="space-y-1.5">
-          {menuItems.map((item) => (
+      {/* Navigation */}
+      <nav style={{ flex: 1, overflowY: 'auto', padding: '8px 8px 0', display: 'flex', flexDirection: 'column', gap: '0' }}>
+        {NAV_GROUPS.map((group) => (
+          <div key={group.group} style={{ marginBottom: '4px' }}>
+            {/* Group Label */}
+            {!collapsed && (
+              <div
+                style={{
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  color: 'var(--text-muted)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  padding: '10px 10px 4px',
+                }}
+              >
+                {group.group}
+              </div>
+            )}
+            {collapsed && <div style={{ height: '8px' }} />}
+
+            {/* Items */}
+            {group.items.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => router.push(item.href)}
+                  title={collapsed ? item.label : undefined}
+                  style={{
+                    display: 'flex',
+                    width: '100%',
+                    alignItems: 'center',
+                    gap: '10px',
+                    padding: collapsed ? '9px' : '9px 10px',
+                    justifyContent: collapsed ? 'center' : 'flex-start',
+                    borderRadius: '6px',
+                    marginBottom: '1px',
+                    fontSize: '13.5px',
+                    fontWeight: active ? 600 : 400,
+                    cursor: 'pointer',
+                    transition: 'all 0.12s ease',
+                    border: 'none',
+                    textAlign: 'left',
+                    background: active ? 'var(--brand)' : 'transparent',
+                    color: active ? '#fff' : 'var(--text-secondary)',
+                    boxShadow: active ? '0 1px 3px rgba(37,99,235,0.25)' : 'none',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!active) {
+                      (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-muted)';
+                      (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-primary)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) {
+                      (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+                      (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)';
+                    }
+                  }}
+                >
+                  <span style={{ flexShrink: 0, opacity: active ? 1 : 0.7 }}>{item.icon}</span>
+                  {!collapsed && <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.label}</span>}
+                </button>
+              );
+            })}
+          </div>
+        ))}
+      </nav>
+
+      {/* Bottom Section */}
+      <div style={{ borderTop: '1px solid var(--border)', padding: '8px' }}>
+        {BOTTOM_ITEMS.map((item) => {
+          const active = isActive(item.href);
+          return (
             <button
               key={item.id}
               onClick={() => router.push(item.href)}
-              className={`flex h-11 w-full items-center gap-3 rounded-md px-4 text-left text-[13px] font-medium transition-colors ${
-                isActive(item)
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-950/40'
-                  : 'text-slate-300 hover:bg-slate-900 hover:text-white'
-              }`}
+              title={collapsed ? item.label : undefined}
+              style={{
+                display: 'flex',
+                width: '100%',
+                alignItems: 'center',
+                gap: '10px',
+                padding: collapsed ? '9px' : '9px 10px',
+                justifyContent: collapsed ? 'center' : 'flex-start',
+                borderRadius: '6px',
+                marginBottom: '2px',
+                fontSize: '13.5px',
+                fontWeight: active ? 600 : 400,
+                cursor: 'pointer',
+                transition: 'all 0.12s ease',
+                border: 'none',
+                background: active ? 'var(--brand)' : 'transparent',
+                color: active ? '#fff' : 'var(--text-secondary)',
+              }}
+              onMouseEnter={(e) => {
+                if (!active) {
+                  (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-muted)';
+                  (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-primary)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!active) {
+                  (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+                  (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)';
+                }
+              }}
             >
-              <IconPath path={item.icon} />
-              <span className="truncate">{item.label}</span>
+              <span style={{ flexShrink: 0, opacity: 0.7 }}>{item.icon}</span>
+              {!collapsed && <span>{item.label}</span>}
             </button>
-          ))}
-        </div>
-      </nav>
+          );
+        })}
 
-      <button className="mx-3 mb-5 flex h-10 items-center gap-3 rounded-md px-4 text-sm text-slate-400 hover:bg-slate-900 hover:text-white">
-        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="m15 18-6-6 6-6M21 18l-6-6 6-6" />
-        </svg>
-        Thu gọn
-      </button>
+        {/* Collapse Toggle */}
+        <button
+          onClick={onToggle}
+          title={collapsed ? 'Mở rộng' : 'Thu gọn'}
+          style={{
+            display: 'flex',
+            width: '100%',
+            alignItems: 'center',
+            gap: '10px',
+            padding: collapsed ? '9px' : '9px 10px',
+            justifyContent: collapsed ? 'center' : 'flex-start',
+            borderRadius: '6px',
+            fontSize: '13px',
+            cursor: 'pointer',
+            transition: 'all 0.12s ease',
+            border: '1px solid var(--border)',
+            background: 'transparent',
+            color: 'var(--text-muted)',
+            marginTop: '4px',
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-muted)';
+            (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)';
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+            (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-muted)';
+          }}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            style={{ height: '16px', width: '16px', flexShrink: 0, transform: collapsed ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+          </svg>
+          {!collapsed && <span style={{ fontSize: '13px', fontWeight: 500 }}>Thu gọn</span>}
+        </button>
+      </div>
     </aside>
   );
 }
-

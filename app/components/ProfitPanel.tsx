@@ -1,58 +1,70 @@
 'use client';
 
-import { DashboardData, formatVnd } from './dashboard-data';
+import { DashboardData, formatShortVnd, formatVnd } from './dashboard-data';
 
 export default function ProfitPanel({ data }: { data: DashboardData }) {
-  const cost = data.costs.reduce((sum, row) => sum + row.amount, 0);
-  const profit = data.revenue - cost;
-  const profitRate = data.revenue > 0 ? (profit / data.revenue) * 100 : 0;
-  const total = Math.max(1, data.revenue + cost);
-  const profitSlice = Math.max(0, profit) / total * 100;
-  const costSlice = cost / total * 100;
-
+  const cost    = data.totalActual;
+  const revenue = data.project?.totalValue ?? 0;
+  const profit  = revenue - cost;
+  const margin  = revenue > 0 ? (profit / revenue) * 100 : 0;
+  
   return (
-    <section className="rounded-lg border border-slate-800 bg-slate-900/70 p-5">
-      <h3 className="mb-5 text-[15px] font-extrabold text-slate-50">LÃI LỖ DỰ ÁN</h3>
-      <div className="grid grid-cols-[1fr_180px] gap-4">
-        <div className="space-y-4 text-sm">
-          <Metric label="Tổng doanh thu" value={data.revenue} />
-          <Metric label="Tổng chi phí" value={cost} />
-          <Metric label="Lợi nhuận" value={profit} accent={profit >= 0 ? 'text-green-400' : 'text-red-400'} />
-          <Metric label="% lợi nhuận" raw={`${profitRate.toFixed(1)}%`} accent={profitRate >= 0 ? 'text-green-400' : 'text-red-400'} />
+    <div className="erp-card flex flex-col h-full" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
+      <div style={{ height: '44px', padding: '0 var(--sp-12)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center' }}>
+        <h3 style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>LÃI LỖ DỰ ÁN</h3>
+      </div>
+      <div style={{ padding: 'var(--sp-12)', display: 'flex', flexDirection: 'column', gap: 'var(--sp-12)', flex: 1 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <MetricRow label="Doanh thu" value={revenue} />
+          <MetricRow label="Tổng chi phí" value={cost} />
+          <MetricRow label="Lợi nhuận" value={profit} color="var(--success)" bold />
+          <MetricRow label="Tỷ lệ lợi nhuận" value={`${margin.toFixed(1)}%`} isValueString color="var(--success)" bold />
         </div>
-        <div className="grid place-items-center">
-          <div className="relative h-[140px] w-[140px]">
-            <svg viewBox="0 0 42 42" className="-rotate-90">
-              <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#2563eb" strokeWidth="8" strokeDasharray={`${costSlice} ${100 - costSlice}`} />
-              <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#22c55e" strokeWidth="8" strokeDasharray={`${profitSlice} ${100 - profitSlice}`} strokeDashoffset={-costSlice} />
-            </svg>
-            <div className="absolute inset-0 grid place-items-center text-lg font-extrabold text-green-400">{profitRate.toFixed(1)}%</div>
+
+        <div style={{ marginTop: 'auto', borderTop: '1px solid var(--bg-muted)', paddingTop: '12px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ position: 'relative', width: '60px', height: '60px', flexShrink: 0 }}>
+             <svg viewBox="0 0 64 64" style={{ width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--bg-muted)" strokeWidth="6" />
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--brand)" strokeWidth="6" strokeDasharray={`${2 * Math.PI * 28 * Math.max(0, margin) / 100} 200`} strokeLinecap="round" />
+             </svg>
+             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800, color: 'var(--brand)' }}>
+                {margin.toFixed(0)}%
+             </div>
           </div>
-          <div className="mt-2 w-full space-y-3 text-xs">
-            <Legend color="bg-green-500" label="Lợi nhuận" value={`${formatVnd(Math.max(0, profit))} (${profitRate.toFixed(1)}%)`} />
-            <Legend color="bg-blue-500" label="Chi phí" value={`${formatVnd(cost)} (${((cost / total) * 100).toFixed(1)}%)`} />
+
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                   <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--brand)' }} />
+                   <span style={{ color: 'var(--text-secondary)' }}>Lợi nhuận</span>
+                </div>
+                <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>{formatShortVnd(profit)}</span>
+             </div>
+             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                   <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--bg-muted)' }} />
+                   <span style={{ color: 'var(--text-secondary)' }}>Chi phí</span>
+                </div>
+                <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>{formatShortVnd(cost)}</span>
+             </div>
           </div>
         </div>
       </div>
-    </section>
-  );
-}
-
-function Metric({ label, value, raw, accent = 'text-slate-100' }: { label: string; value?: number; raw?: string; accent?: string }) {
-  return (
-    <div className="flex items-center justify-between gap-4">
-      <span className="text-slate-300">{label}</span>
-      <span className={`font-extrabold ${accent}`}>{raw ?? formatVnd(value ?? 0)}</span>
     </div>
   );
 }
 
-function Legend({ color, label, value }: { color: string; label: string; value: string }) {
+function MetricRow({ label, value, color, bold, isValueString }: { label: string; value: any; color?: string; bold?: boolean; isValueString?: boolean }) {
   return (
-    <div className="flex items-center justify-between gap-3 text-slate-300">
-      <span className="flex items-center gap-2"><i className={`h-3 w-3 rounded-full ${color}`} />{label}</span>
-      <span className="font-semibold text-slate-100">{value}</span>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px' }}>
+      <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>{label}</span>
+      <span style={{ 
+        fontWeight: bold ? 700 : 600, 
+        color: color || 'var(--text-primary)', 
+        fontVariantNumeric: 'tabular-nums'
+      }}>
+        {isValueString ? value : formatVnd(value)}
+      </span>
     </div>
   );
 }
-

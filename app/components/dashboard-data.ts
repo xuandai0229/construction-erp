@@ -19,7 +19,7 @@ export type DebtSummary = {
   total: number;
   paid: number;
   remaining: number;
-  overdue: number;
+  overdueCount: number;
 };
 
 export type WBSBudgetRow = {
@@ -34,6 +34,8 @@ export type WBSBudgetRow = {
 
 export type DashboardData = {
   project: Project;
+  totalBudget: number;
+  totalActual: number;
   budget: BudgetRecord[];
   costs: CostRecord[];
   wbsTree: WBSTreeNode[];
@@ -41,11 +43,13 @@ export type DashboardData = {
   receivable: DebtSummary;
   payable: DebtSummary;
   costByType: CostTypeRow[];
-  cashFlow: CashFlowPoint[];
+  monthlyTrends: { month: string; revenue: number; cost: number }[];
   wbsRows: WBSBudgetRow[];
+  wbs: WBSItem[];
   progress: number;
-  daysElapsed: number;
-  durationDays: number;
+  daysRemaining: number;
+  healthStatus: 'OK' | 'WARNING' | 'CRITICAL';
+  healthScore: number;
 };
 
 export function ensureDashboardData() {
@@ -57,8 +61,8 @@ export function formatVnd(value: number) {
 }
 
 export function formatShortVnd(value: number) {
-  if (value >= 1000000000) return `${formatVnd(value / 1000000000)}B`;
-  if (value >= 1000000) return `${formatVnd(value / 1000000)}M`;
+  if (value >= 1000000000) return `${(value / 1000000000).toFixed(1)}T`;
+  if (value >= 1000000) return `${(value / 1000000).toFixed(0)}Tr`;
   return formatVnd(value);
 }
 

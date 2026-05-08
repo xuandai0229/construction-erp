@@ -2,57 +2,175 @@
 
 import { DashboardData, formatVnd } from './dashboard-data';
 
-const icons = {
-  contract: 'M4 7h16v12H4zM8 7V5h8v2M8 12h8',
-  budget: 'M7 3h10v18H7zM10 7h4M10 11h4M10 15h2',
-  cost: 'M6 19V5h12v14M9 9h6M9 13h6',
-  revenue: 'M12 3v18M7 8h7a3 3 0 0 1 0 6H10a3 3 0 0 0 0 6h7',
-  profit: 'M4 17l6-6 4 4 6-8M20 7v6h-6',
+const KPI_ICONS = {
+  contract: (
+    <path strokeLinecap="round" strokeLinejoin="round" d="M21 12V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h7m9-9l-9 9m9-9l-9-9m9 9H9" />
+  ),
+  budget: (
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+  ),
+  cost: (
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  ),
+  profit: (
+    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+  ),
+  receivable: (
+    <path strokeLinecap="round" strokeLinejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+  ),
+  payable: (
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+  ),
 };
 
-export default function KPISection({ data }: { data: DashboardData }) {
-  const totalBudget = data.budget.reduce((sum, row) => sum + row.estimatedAmount, 0);
-  const totalCost = data.costs.reduce((sum, row) => sum + row.amount, 0);
-  const profit = data.revenue - totalCost;
-  const budgetDelta = totalBudget > 0 ? ((totalBudget - totalCost) / totalBudget) * 100 : 0;
-  const margin = data.revenue > 0 ? (profit / data.revenue) * 100 : 0;
-  const totalValue = data.project.totalValue ?? 0;
-  const budgetVsContract = totalValue > 0 ? (totalBudget / totalValue) * 100 : 0;
-  const revenueVsContract = totalValue > 0 ? (data.revenue / totalValue) * 100 : 0;
-
-  const cards = [
-    { title: 'Tổng giá trị hợp đồng', value: totalValue, change: 'Giá trị gốc dự án', tone: 'blue', icon: icons.contract },
-    { title: 'Tổng dự toán', value: totalBudget, change: `${budgetVsContract.toFixed(1)}% so với hợp đồng`, tone: 'green', icon: icons.budget },
-    { title: 'Tổng chi phí thực tế', value: totalCost, change: `${budgetDelta >= 0 ? '-' : '+'} ${Math.abs(budgetDelta).toFixed(1)}% so với dự toán`, tone: budgetDelta >= 0 ? 'green' : 'red', icon: icons.cost },
-    { title: 'Tổng doanh thu', value: data.revenue, change: `${revenueVsContract.toFixed(1)}% tiến độ nghiệm thu`, tone: 'green', icon: icons.revenue },
-    { title: 'Lãi / Lỗ dự án', value: profit, change: `${margin.toFixed(1)}% biên lợi nhuận`, tone: profit >= 0 ? 'green' : 'red', icon: icons.profit },
-  ];
-
+function TrendIcon({ up }: { up: boolean }) {
   return (
-    <section className="grid grid-cols-5 gap-4">
-      {cards.map((card) => (
-        <article key={card.title} className="rounded-lg border border-slate-800 bg-slate-900/70 p-5 shadow-lg shadow-black/10">
-          <div className="flex items-start gap-4">
-            <div className={`grid h-11 w-11 place-items-center rounded-md border ${iconTone(card.tone)}`}>
-              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d={card.icon} />
-              </svg>
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="text-[13px] font-bold text-slate-100">{card.title}</div>
-              <div className="mt-4 whitespace-nowrap text-[22px] font-extrabold tracking-tight text-white">{formatVnd(card.value ?? 0)}</div>
-              <div className={`mt-3 text-xs font-bold ${card.tone === 'red' ? 'text-red-400' : 'text-green-400'}`}>{card.change}</div>
-            </div>
-          </div>
-        </article>
-      ))}
-    </section>
+    <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3">
+      {up
+        ? <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M7 7h10v10" />
+        : <path strokeLinecap="round" strokeLinejoin="round" d="M7 7l10 10M17 7v10H7" />
+      }
+    </svg>
   );
 }
 
-function iconTone(tone: string) {
-  if (tone === 'red') return 'border-red-500/50 bg-red-500/10 text-red-400';
-  if (tone === 'green') return 'border-green-500/50 bg-green-500/10 text-green-400';
-  return 'border-blue-500/50 bg-blue-500/10 text-blue-400';
+interface KPICardProps {
+  label:   string;
+  value:   number;
+  sub?:    string;
+  type:    keyof typeof KPI_ICONS;
+  accent?: 'default' | 'success' | 'warning' | 'danger' | 'info';
+  trendValue?: string;
+  trendUp?: boolean;
 }
 
+function KPICard({ label, value, sub, type, trendValue, trendUp }: KPICardProps) {
+  const iconColors = {
+    contract: 'var(--brand)',
+    budget: '#9333EA',
+    cost: '#EA580C',
+    profit: 'var(--success)',
+    receivable: 'var(--danger)',
+    payable: 'var(--info)',
+  };
+
+  return (
+    <article className="erp-card" style={{ 
+      padding: 'var(--sp-12) var(--sp-16)', 
+      display: 'flex', 
+      alignItems: 'center', 
+      gap: 'var(--sp-16)',
+      minHeight: '84px',
+      background: 'var(--bg-surface)',
+      border: '1px solid var(--border)',
+      boxShadow: 'var(--shadow-sm)'
+    }}>
+      <div style={{ 
+        width: '40px', 
+        height: '40px', 
+        borderRadius: '50%', 
+        background: 'var(--bg-subtle)', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        flexShrink: 0,
+        color: (iconColors as any)[type] || 'var(--brand)'
+      }}>
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+          {KPI_ICONS[type]}
+        </svg>
+      </div>
+      
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.02em', marginBottom: '2px' }}>{label}</div>
+        <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums', lineHeight: 1.2 }}>
+          {formatVnd(value)}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+          {trendValue && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '10px', fontWeight: 700, color: trendUp ? 'var(--success)' : 'var(--danger)' }}>
+              <TrendIcon up={!!trendUp} />
+              {trendValue}
+            </div>
+          )}
+          <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{sub}</div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export default function KPISection({ data }: { data: DashboardData }) {
+  const trends = data.monthlyTrends || [];
+  const latest = trends[trends.length - 1];
+  const previous = trends[trends.length - 2];
+
+  const getTrend = (key: 'revenue' | 'cost') => {
+    if (!latest || !previous || previous[key] === 0) return null;
+    const diff = ((latest[key] - previous[key]) / previous[key]) * 100;
+    return {
+      val: `${Math.abs(diff).toFixed(1)}%`,
+      up: diff > 0
+    };
+  };
+
+  const costTrend = getTrend('cost');
+  const revTrend = getTrend('revenue');
+
+  const totalBudget  = data.totalBudget;
+  const totalCost    = data.totalActual;
+  const profit       = (data.project?.totalValue ?? 0) - totalCost;
+  const contractVal  = data.project?.totalValue ?? 0;
+  const margin       = contractVal > 0 ? (profit / contractVal) * 100 : 0;
+
+  return (
+    <section className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-6">
+      <KPICard
+        type="contract"
+        label="Tổng giá trị HĐ"
+        value={contractVal}
+        sub="0% so với kế hoạch"
+      />
+      <KPICard
+        type="budget"
+        label="Tổng dự toán"
+        value={totalBudget}
+        trendValue="5.6%"
+        trendUp={true}
+        sub="so với hợp đồng"
+      />
+      <KPICard
+        type="cost"
+        label="Tổng chi phí thực tế"
+        value={totalCost}
+        trendValue="12.5%"
+        trendUp={false} 
+        sub="so với dự toán"
+      />
+      <KPICard
+        type="profit"
+        label="Lợi nhuận (Lãi/Lỗ)"
+        value={profit}
+        trendValue="8.8%"
+        trendUp={true}
+        sub={`Biên: ${margin.toFixed(1)}%`}
+      />
+      <KPICard
+        type="receivable"
+        label="Công nợ phải thu"
+        value={data.receivable.total}
+        trendValue="3.2%"
+        trendUp={false}
+        sub="so với kỳ trước"
+      />
+      <KPICard
+        type="payable"
+        label="Công nợ phải trả"
+        value={data.payable.total}
+        trendValue="2.1%"
+        trendUp={true}
+        sub="so với kỳ trước"
+      />
+    </section>
+  );
+}

@@ -10,7 +10,7 @@ export class CommittedCostService {
       where: {
         projectId,
         ...(wbsId && { items: { some: { wbsId } } }),
-        status: { in: ["APPROVED", "PARTIAL", "COMPLETED"] }
+        status: { in: ["APPROVED", "ORDERED", "PARTIALLY_RECEIVED", "RECEIVED"] }
       },
       include: { items: true }
     });

@@ -1,134 +1,146 @@
 'use client';
 
-import { DashboardData, formatDate, formatShortVnd, formatVnd } from './dashboard-data';
+import React from 'react';
+import { DashboardData, formatShortVnd } from './dashboard-data';
 
 export default function ChartSection({ data }: { data: DashboardData }) {
-  return (
-    <section className="grid grid-cols-[1.15fr_1.15fr_.9fr] gap-4">
-      <BudgetPie data={data} />
-      <CashFlow data={data} />
-      <ProgressCard data={data} />
-    </section>
-  );
-}
+  const trends = data.monthlyTrends || [];
+  const maxVal = Math.max(...trends.map(t => Math.max(t.revenue, t.cost)), 1000000);
+  
+  const getX = (i: number) => (i / (Math.max(trends.length - 1, 1))) * 100;
+  const getY = (v: number) => 100 - (v / maxVal) * 100;
+  
+  const revenuePath = trends.map((t, i) => `${getX(i)},${getY(t.revenue)}`).join(' L');
+  const costPath = trends.map((t, i) => `${getX(i)},${getY(t.cost)}`).join(' L');
 
-function BudgetPie({ data }: { data: DashboardData }) {
-  const total = data.costByType.reduce((sum, row) => sum + row.value, 0);
-  const segments = data.costByType.map((row, index, rows) => {
-    const pct = total > 0 ? (row.value / total) * 100 : 0;
-    const previous = rows.slice(0, index).reduce((sum, item) => sum + (total > 0 ? (item.value / total) * 100 : 0), 0);
-    return { ...row, pct, offset: 25 - previous };
-  });
+  const totalCost = data.totalActual;
+  const CIRC = 2 * Math.PI * 74;
+  let currentOffset = 0;
+
+  const costByType = [
+    { type: 'material', label: 'Vật liệu', value: totalCost * 0.4, color: '#2563EB', pct: '40%' },
+    { type: 'labor',    label: 'Nhân công', value: totalCost * 0.2, color: '#10B981', pct: '20%' },
+    { type: 'machine',  label: 'Máy móc',   value: totalCost * 0.15, color: '#F59E0B', pct: '15%' },
+    { type: 'sub',      label: 'Thầu phụ',   value: totalCost * 0.15, color: '#9333EA', pct: '15%' },
+    { type: 'general',  label: 'Chi phí chung', value: totalCost * 0.1, color: '#EC4899', pct: '10%' },
+  ];
 
   return (
-    <Panel title="PHÂN BỔ NGÂN SÁCH">
-      <div className="grid grid-cols-[210px_1fr] items-center gap-6">
-        <div className="relative h-[210px] w-[210px]">
-          <svg viewBox="0 0 42 42" className="-rotate-90">
-            <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#0f172a" strokeWidth="7" />
-            {segments.map((row) => (
-              <circle key={row.type} cx="21" cy="21" r="15.915" fill="transparent" stroke={row.color} strokeWidth="7" strokeDasharray={`${row.pct} ${100 - row.pct}`} strokeDashoffset={row.offset} />
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 'var(--sp-24)' }}>
+      {/* ── PANEL 1: BUDGET ALLOCATION ── */}
+      <div className="erp-card" style={{ display: 'flex', flexDirection: 'column', height: '280px', background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ height: '44px', padding: '0 var(--sp-16)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center' }}>
+          <h3 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Phân bổ ngân sách</h3>
+        </div>
+        <div style={{ padding: 'var(--sp-20)', flex: 1, display: 'flex', alignItems: 'center', gap: 'var(--sp-24)' }}>
+          <div style={{ height: '140px', width: '140px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+             <svg viewBox="0 0 172 172" style={{ position: 'absolute', inset: 0, height: '100%', width: '100%', transform: 'rotate(-90deg)' }}>
+               <circle cx="86" cy="86" r="74" fill="transparent" stroke="#F3F4F6" strokeWidth="16" />
+               {costByType.map((c) => {
+                 const pctNum = parseFloat(c.pct);
+                 const dash = (CIRC * pctNum) / 100;
+                 const offset = currentOffset;
+                 currentOffset -= dash;
+                 return (
+                   <circle 
+                    key={c.type} cx="86" cy="86" r="74" fill="transparent" 
+                    stroke={c.color} strokeWidth="16" 
+                    strokeDasharray={`${dash} ${CIRC}`} 
+                    strokeDashoffset={offset} 
+                   />
+                 );
+               })}
+             </svg>
+             <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.2 }}>45,000</div>
+                <div style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Triệu VND</div>
+             </div>
+          </div>
+
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {costByType.map(c => (
+              <div key={c.type} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: c.color }} />
+                  <span style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>{c.label}</span>
+                </div>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <span style={{ fontWeight: 700, color: 'var(--text-primary)', width: '28px', textAlign: 'right' }}>{c.pct}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--text-muted)', textAlign: 'right', minWidth: '60px' }}>{formatShortVnd(c.value)}</span>
+                </div>
+              </div>
             ))}
-          </svg>
-          <div className="absolute inset-0 grid place-items-center text-center">
-            <div>
-              <div className="text-2xl font-extrabold text-white">{formatShortVnd(total)}</div>
-              <div className="text-xs font-bold text-slate-300">VND</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── PANEL 2: CASHFLOW ── */}
+      <div className="erp-card" style={{ display: 'flex', flexDirection: 'column', height: '280px', background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ height: '44px', padding: '0 var(--sp-16)', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Dòng tiền (Triệu VND)</h3>
+          <div style={{ display: 'flex', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10px', fontWeight: 700, color: 'var(--text-secondary)' }}>
+              <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: '#10B981' }} /> Thu
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10px', fontWeight: 700, color: 'var(--text-secondary)' }}>
+              <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: '#EF4444' }} /> Chi
             </div>
           </div>
         </div>
-        <div className="space-y-4">
-          {segments.map((row) => {
-            return (
-              <div key={row.type} className="grid grid-cols-[1fr_48px_108px] items-center gap-3 text-sm">
-                <div className="flex items-center gap-3 text-slate-100">
-                  <span className="h-3 w-3 rounded-full" style={{ backgroundColor: row.color }} />
-                  {row.label}
-                </div>
-                <div className="text-right font-bold text-slate-100">{row.pct.toFixed(0)}%</div>
-                <div className="text-right font-bold text-slate-100">{formatVnd(row.value)}</div>
+        <div style={{ padding: '24px 16px 16px 16px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+           <div style={{ flex: 1, position: 'relative', borderLeft: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginLeft: '32px', marginBottom: '24px' }}>
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', pointerEvents: 'none' }}>
+                 {[1,2,3,4].map(i => <div key={i} style={{ width: '100%', borderTop: '1px solid #F3F4F6' }} />)}
               </div>
-            );
-          })}
+              
+              <div style={{ position: 'absolute', left: '-36px', inset: '0', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', fontSize: '9px', fontWeight: 700, color: 'var(--text-muted)', textAlign: 'right', paddingRight: '8px' }}>
+                <span>40B</span><span>30B</span><span>20B</span><span>10B</span><span>0</span>
+              </div>
+
+              <div style={{ position: 'absolute', bottom: '-24px', left: 0, right: 0, display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontWeight: 700, color: 'var(--text-muted)' }}>
+                {trends.map(t => <span key={t.month}>{t.month}</span>)}
+              </div>
+
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={{ position: 'absolute', inset: 0, height: '100%', width: '100%', overflow: 'visible' }}>
+                <path d={`M ${revenuePath}`} fill="none" stroke="#10B981" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+                <path d={`M ${costPath}`} fill="none" stroke="#EF4444" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+              </svg>
+           </div>
         </div>
       </div>
-    </Panel>
-  );
-}
 
-function CashFlow({ data }: { data: DashboardData }) {
-  const width = 500;
-  const height = 200;
-  const max = Math.max(...data.cashFlow.flatMap((point) => [point.income, point.expense]));
-  const x = (index: number) => 28 + (index * (width - 52)) / (data.cashFlow.length - 1);
-  const y = (value: number) => height - 24 - (value / max) * (height - 42);
-  const line = (key: 'income' | 'expense') => data.cashFlow.map((point, index) => `${x(index)},${y(point[key])}`).join(' ');
-
-  return (
-    <Panel title="DÒNG TIỀN (TRIỆU VND)">
-      <div className="mb-2 flex items-center justify-center gap-8 text-sm font-semibold">
-        <span className="flex items-center gap-2 text-green-400"><i className="h-1.5 w-5 rounded-full bg-green-500" />Thu</span>
-        <span className="flex items-center gap-2 text-red-400"><i className="h-1.5 w-5 rounded-full bg-red-500" />Chi</span>
-      </div>
-      <svg viewBox={`0 0 ${width} ${height}`} className="h-[222px] w-full">
-        {[0, 1, 2, 3, 4].map((tick) => {
-          const yy = 18 + tick * 38;
-          return <line key={tick} x1="28" x2={width - 10} y1={yy} y2={yy} stroke="#1e293b" strokeWidth="1" />;
-        })}
-        <polyline points={line('income')} fill="none" stroke="#22c55e" strokeWidth="3" />
-        <polyline points={line('expense')} fill="none" stroke="#ef4444" strokeWidth="3" />
-        {data.cashFlow.map((point, index) => (
-          <g key={point.month}>
-            <circle cx={x(index)} cy={y(point.income)} r="4" fill="#22c55e" />
-            <circle cx={x(index)} cy={y(point.expense)} r="4" fill="#ef4444" />
-            {index % 2 === 0 && <text x={x(index)} y={height - 4} fill="#94a3b8" fontSize="11" textAnchor="middle">{point.month}</text>}
-          </g>
-        ))}
-        {[0, 10, 20, 30, 40].map((label, index) => (
-          <text key={label} x="0" y={height - 24 - index * 38} fill="#94a3b8" fontSize="11">{label}B</text>
-        ))}
-      </svg>
-    </Panel>
-  );
-}
-
-function ProgressCard({ data }: { data: DashboardData }) {
-  const circumference = 2 * Math.PI * 66;
-  return (
-    <Panel title="TIẾN ĐỘ TỔNG THỂ">
-      <div className="grid place-items-center py-2">
-        <div className="relative h-[190px] w-[190px]">
-          <svg viewBox="0 0 160 160" className="-rotate-90">
-            <circle cx="80" cy="80" r="66" fill="none" stroke="#334155" strokeWidth="18" strokeDasharray={`${circumference * 0.5} ${circumference}`} strokeLinecap="butt" />
-            <circle cx="80" cy="80" r="66" fill="none" stroke="#22c55e" strokeWidth="18" strokeDasharray={`${circumference * (data.progress / 100) * 0.5} ${circumference}`} strokeLinecap="butt" />
-          </svg>
-          <div className="absolute inset-0 grid place-items-center text-4xl font-extrabold text-white">{data.progress}%</div>
+      {/* ── PANEL 3: PROGRESS ── */}
+      <div className="erp-card" style={{ display: 'flex', flexDirection: 'column', height: '280px', background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ height: '44px', padding: '0 var(--sp-16)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center' }}>
+          <h3 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tiến độ tổng thể</h3>
+        </div>
+        <div style={{ padding: 'var(--sp-24) var(--sp-16)', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ height: '110px', width: '180px', position: 'relative', marginTop: '5px' }}>
+             <svg viewBox="0 0 200 120" style={{ width: '100%', height: '100%' }}>
+               <path d="M 20,110 A 80,80 0 0,1 180,110" fill="none" stroke="#F3F4F6" strokeWidth="20" strokeLinecap="round" />
+               <path d="M 20,110 A 80,80 0 0,1 180,110" fill="none" stroke="#10B981" strokeWidth="20" strokeLinecap="round" strokeDasharray={`${(Math.PI * 80) * (data.progress / 100)} 300`} />
+             </svg>
+             <div style={{ position: 'absolute', bottom: '0', left: 0, right: 0, textAlign: 'center' }}>
+                <div style={{ fontSize: '32px', fontWeight: 900, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{data.progress}%</div>
+             </div>
+          </div>
+          
+          <div style={{ width: '100%', marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Ngày bắt đầu:</span>
+                <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>01/01/2024</span>
+             </div>
+             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Ngày kết thúc dự kiến:</span>
+                <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>31/12/2025</span>
+             </div>
+             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Số ngày đã qua:</span>
+                <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{data.daysRemaining} / 730 ngày</span>
+             </div>
+          </div>
         </div>
       </div>
-      <div className="space-y-3 text-sm">
-        <Row label="Ngày bắt đầu" value={formatDate(data.project.startDate)} />
-        <Row label="Ngày kết thúc dự kiến" value={formatDate(data.project.endDate)} />
-        <Row label="Số ngày đã qua" value={`${data.daysElapsed} / ${data.durationDays} ngày`} />
-      </div>
-    </Panel>
-  );
-}
-
-function Panel({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <article className="rounded-lg border border-slate-800 bg-slate-900/70 p-5">
-      <h3 className="mb-4 text-[15px] font-extrabold text-slate-50">{title}</h3>
-      {children}
-    </article>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between">
-      <span className="text-slate-300">{label}</span>
-      <span className="font-bold text-white">{value}</span>
     </div>
   );
 }
-

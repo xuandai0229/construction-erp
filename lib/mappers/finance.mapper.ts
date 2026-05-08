@@ -28,5 +28,10 @@ export function mapStatsFromApi(s: any): DashboardStats | null {
     committedCost: s.committedCost ?? s.committed_cost ?? 0,
     totalExposure: s.totalExposure ?? s.total_exposure ?? 0,
     budgetRemaining: s.budgetRemaining ?? s.budget_remaining ?? 0,
+    // NEW FIELDS
+    healthStatus: s.healthStatus ?? s.health_status ?? 'OK',
+    healthScore: s.healthScore ?? s.health_score ?? 100,
+    daysRemaining: s.daysRemaining ?? s.days_remaining ?? 0,
+    monthlyTrends: s.monthlyTrends ?? s.monthly_trends ?? [],
   };
 }

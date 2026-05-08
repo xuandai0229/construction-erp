@@ -147,11 +147,11 @@ export const useERPStore = create<ERPState>((set, get) => ({
         wbs: wbsRes.success && wbsRes.data ? wbsRes.data.flat : [],
         wbsTree: wbsRes.success && wbsRes.data ? wbsRes.data.tree : [],
         wbsStats: wbsRes.success && wbsRes.data ? wbsRes.data.stats : null,
-        costs: costsRes.success && costsRes.data ? (Array.isArray(costsRes.data) ? costsRes.data : costsRes.data.items) : [],
+        costs: costsRes.success && costsRes.data ? costsRes.data : [],
         budgets: budgetsRes.success && budgetsRes.data ? budgetsRes.data : [],
         projectStats: statsRes.success ? statsRes.data : null,
         revenues: revenuesRes.success && revenuesRes.data ? revenuesRes.data : [],
-        invoices: invoicesRes.success && invoicesRes.data ? (Array.isArray(invoicesRes.data) ? invoicesRes.data : invoicesRes.data.items) : [],
+        invoices: invoicesRes.success && invoicesRes.data ? invoicesRes.data : [],
         payments: paymentsRes.success && paymentsRes.data ? paymentsRes.data : [],
         monthlyReport: monthlyRes.success ? monthlyRes.data : [],
         agingReport: agingRes.success ? agingRes.data : [],
@@ -372,24 +372,35 @@ export const useERPStore = create<ERPState>((set, get) => ({
         costByType: [],
         cashFlow: [],
         wbsRows: [],
+        wbs,
         progress: 0,
         daysElapsed: 0,
         durationDays: 0,
       } as any;
     }
 
+    const costTypeMap: Record<string, { label: string; color: string }> = {
+      'material': { label: 'Vật liệu',  color: 'var(--brand)'   },
+      'labor':    { label: 'Nhân công', color: 'var(--success)' },
+      'machine':  { label: 'Máy móc',   color: 'var(--warning)' },
+      'subcon':   { label: 'Thầu phụ',  color: 'var(--danger)'  },
+      'other':    { label: 'Khác',      color: 'var(--info)'    },
+    };
+
     const costByTypeArr = Object.entries(projectStats.costByType || {}).map(([type, value]) => ({
       type: type as CostType,
-      label: type.charAt(0).toUpperCase() + type.slice(1),
+      label: costTypeMap[type]?.label || type,
       value: value as number,
-      color: type === 'material' ? '#3b82f6' : type === 'labor' ? '#10b981' : '#f59e0b'
+      color: costTypeMap[type]?.color || '#94a3b8'
     }));
 
     return {
       project: {
         ...project,
-        totalValue: projectStats.totalRevenue,
+        contractValue: projectStats.totalRevenue, // Should use contractValue from project entity actually
       },
+      totalBudget: projectStats.totalBudget,
+      totalActual: projectStats.totalCost,
       budget: budgets,
       costs,
       wbsTree: [],
@@ -398,20 +409,23 @@ export const useERPStore = create<ERPState>((set, get) => ({
         total: projectStats.totalInvoiced,
         paid: projectStats.totalPaidInvoice,
         remaining: projectStats.totalRemainingInvoice,
-        overdue: projectStats.overdueInvoices,
+        overdueCount: projectStats.overdueInvoices,
       },
       payable: {
         total: projectStats.totalCost,
         paid: projectStats.paidCost,
         remaining: projectStats.unpaidCost,
-        overdue: 0,
+        overdueCount: 0,
       },
       costByType: costByTypeArr,
       cashFlow: [],
       wbsRows: [],
+      wbs,
       progress: projectStats.taskProgress,
-      daysElapsed: 0,
-      durationDays: 0,
+      daysRemaining: projectStats.daysRemaining,
+      healthStatus: projectStats.healthStatus,
+      healthScore: projectStats.healthScore,
+      monthlyTrends: projectStats.monthlyTrends || [],
     } as any;
   }
 }));

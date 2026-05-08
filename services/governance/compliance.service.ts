@@ -69,11 +69,17 @@ export class ComplianceService {
     });
 
     const staleThreshold = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days
-    const staleResults = [];
+    const staleResults: { projectId: string; name: string; lastActivityAt: Date }[] = [];
 
     for (const project of projects) {
       const recentActivity = await prisma.auditLog.count({
-        where: { projectId: project.id, createdAt: { gte: staleThreshold } }
+        where: {
+          timestamp: { gte: staleThreshold },
+          OR: [
+            { entity: "Project", entityId: project.id },
+            { correlationId: project.id },
+          ],
+        },
       });
 
       if (recentActivity === 0) {

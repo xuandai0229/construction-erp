@@ -51,7 +51,13 @@ export class AIRiskEngineService {
   private static async detectAnomalies(projectId: string) {
     // Queries audit logs for specific anomaly patterns
     return prisma.auditLog.findMany({
-      where: { projectId, severity: 'WARNING' }
+      where: {
+        severity: 'WARNING',
+        OR: [
+          { entity: 'Project', entityId: projectId },
+          { correlationId: projectId },
+        ],
+      },
     });
   }
 }

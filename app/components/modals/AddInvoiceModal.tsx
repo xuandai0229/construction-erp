@@ -45,58 +45,91 @@ export default function AddInvoiceModal({ isOpen, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-lg mx-4 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
-          <h2 className="text-[15px] font-bold text-slate-100">Xuất hóa đơn (Invoice)</h2>
-          <button onClick={onClose} className="text-slate-500 hover:text-white">✕</button>
+    <div className="erp-modal-overlay" onClick={onClose}>
+      <div className="erp-modal lg" onClick={e => e.stopPropagation()}>
+        <div className="erp-modal-header">
+          <h2 className="t-section-title">Xuất hóa đơn</h2>
+          <button onClick={onClose} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Dự án</label>
-            <select
-              value={form.projectId}
-              onChange={e => setForm({...form, projectId: e.target.value})}
-              className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm text-slate-200"
-            >
-              <option value="">-- Chọn dự án --</option>
-              {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-            </select>
+
+        <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
+          <div className="erp-modal-body space-y-4">
+            <div className="erp-form-group">
+              <label className="t-label">Dự án</label>
+              <select
+                required
+                value={form.projectId}
+                onChange={e => setForm({...form, projectId: e.target.value})}
+                className="erp-select"
+              >
+                <option value="">Chọn dự án...</option>
+                {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+            </div>
+
+            <div className="erp-form-group">
+              <label className="t-label">Hạng mục công trình (WBS)</label>
+              <select
+                required
+                value={form.wbsId}
+                onChange={e => setForm({...form, wbsId: e.target.value})}
+                className="erp-select"
+              >
+                <option value="">Chọn hạng mục...</option>
+                {wbs.filter(i => i.projectId === form.projectId).map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
+              </select>
+            </div>
+
+            <div className="erp-form-group">
+              <label className="t-label">Giá trị hóa đơn (VND)</label>
+              <input
+                type="number"
+                required
+                min="0"
+                step="any"
+                value={form.amount}
+                onChange={e => setForm({...form, amount: e.target.value})}
+                className="erp-input"
+              />
+            </div>
+
+            <div className="erp-form-group">
+              <label className="t-label">Ngày xuất hóa đơn</label>
+              <input
+                type="date"
+                required
+                value={form.issuedDate}
+                onChange={e => setForm({...form, issuedDate: e.target.value})}
+                className="erp-input"
+              />
+            </div>
+
+            {error && (
+              <div className="flex items-center gap-2 rounded-[var(--radius)] border border-[var(--danger-light)] bg-[var(--danger-light)]/50 px-3 py-2 text-sm text-[var(--danger)]">
+                <svg viewBox="0 0 24 24" className="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" />
+                </svg>
+                {error}
+              </div>
+            )}
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Hạng mục công trình (WBS)</label>
-            <select
-              value={form.wbsId}
-              onChange={e => setForm({...form, wbsId: e.target.value})}
-              className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm text-slate-200"
-            >
-              <option value="">-- Chọn hạng mục --</option>
-              {wbs.filter(i => i.projectId === form.projectId).map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Giá trị hóa đơn (VND)</label>
-            <input
-              type="number"
-              value={form.amount}
-              onChange={e => setForm({...form, amount: e.target.value})}
-              className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm text-slate-200"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Ngày xuất hóa đơn</label>
-            <input
-              type="date"
-              value={form.issuedDate}
-              onChange={e => setForm({...form, issuedDate: e.target.value})}
-              className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm text-slate-200"
-            />
-          </div>
-          {error && <div className="text-red-400 text-xs">{error}</div>}
-          <div className="flex justify-end gap-3 pt-2">
-            <button type="button" onClick={onClose} className="h-9 px-4 text-sm text-slate-300">Hủy</button>
-            <button type="submit" disabled={loading} className="h-9 px-4 bg-blue-600 rounded-lg text-sm text-white">Xuất hóa đơn</button>
+
+          <div className="erp-modal-footer">
+            <button type="button" onClick={onClose} className="btn btn-secondary">
+              Hủy
+            </button>
+            <button type="submit" disabled={loading} className="btn btn-primary">
+              {loading && (
+                <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                </svg>
+              )}
+              Xuất hóa đơn
+            </button>
           </div>
         </form>
       </div>

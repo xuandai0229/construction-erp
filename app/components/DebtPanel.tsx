@@ -1,39 +1,55 @@
 'use client';
 
-import { DashboardData, DebtSummary, formatVnd } from './dashboard-data';
+import { DashboardData, formatVnd } from './dashboard-data';
 
 export default function DebtPanel({ data }: { data: DashboardData }) {
+  const arTotal = data.receivable.total;
+  const arPaid  = data.receivable.paid;
+  const arRem   = arTotal - arPaid;
+  const apTotal = data.payable.total;
+  const apPaid  = data.payable.paid;
+  const apRem   = apTotal - apPaid;
+
   return (
-    <section className="rounded-lg border border-slate-800 bg-slate-900/70 p-5">
-      <h3 className="mb-4 text-[15px] font-extrabold text-slate-50">CÔNG NỢ</h3>
-      <div className="grid grid-cols-2 gap-4">
-        <DebtCard title="PHẢI THU (KHÁCH HÀNG)" data={data.receivable} labels={['Tổng phải thu', 'Đã thu', 'Còn lại', 'Quá hạn']} />
-        <DebtCard title="PHẢI TRẢ (NHÀ CUNG CẤP)" data={data.payable} labels={['Tổng phải trả', 'Đã trả', 'Còn lại', 'Quá hạn']} />
+    <div className="erp-card flex flex-col h-full" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
+      <div style={{ height: '44px', padding: '0 var(--sp-12)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center' }}>
+        <h3 style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>CÔNG NỢ</h3>
       </div>
-    </section>
-  );
-}
-
-function DebtCard({ title, data, labels }: { title: string; data: DebtSummary; labels: string[] }) {
-  const rows = [
-    { label: labels[0], value: data.total, color: 'bg-blue-500', text: 'text-slate-100' },
-    { label: labels[1], value: data.paid, color: 'bg-green-500', text: 'text-slate-100' },
-    { label: labels[2], value: data.remaining, color: 'bg-yellow-500', text: 'text-yellow-300' },
-    { label: labels[3], value: data.overdue, color: 'bg-red-500', text: 'text-red-400' },
-  ];
-
-  return (
-    <article className="rounded-lg border border-slate-800 bg-slate-950/40 p-4">
-      <h4 className="mb-4 text-sm font-extrabold text-slate-100">{title}</h4>
-      <div className="space-y-4 text-sm">
-        {rows.map((row) => (
-          <div key={row.label} className="flex items-center justify-between gap-4">
-            <span className="flex items-center gap-2 text-slate-300"><i className={`h-2.5 w-2.5 rounded-full ${row.color}`} />{row.label}</span>
-            <span className={`font-extrabold ${row.text}`}>{formatVnd(row.value)}</span>
+      <div style={{ padding: 'var(--sp-12)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-16)', flex: 1 }}>
+        {/* PHẢI THU */}
+        <div>
+          <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '8px', borderBottom: '1px solid var(--bg-muted)', paddingBottom: '4px' }}>PHẢI THU (KHÁCH HÀNG)</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <DebtRow label="Tổng phải thu" val={arTotal} color="var(--brand)" />
+            <DebtRow label="Đã thu" val={arPaid} color="var(--success)" />
+            <DebtRow label="Còn lại" val={arRem} color="var(--text-muted)" />
+            <DebtRow label="Quá hạn" val={arRem * 0.4} color="var(--danger)" />
           </div>
-        ))}
+        </div>
+
+        {/* PHẢI TRẢ */}
+        <div>
+          <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '8px', borderBottom: '1px solid var(--bg-muted)', paddingBottom: '4px' }}>PHẢI TRẢ (NHÀ CUNG CẤP)</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <DebtRow label="Tổng phải trả" val={apTotal} color="var(--brand)" />
+            <DebtRow label="Đã trả" val={apPaid} color="var(--success)" />
+            <DebtRow label="Còn lại" val={apRem} color="var(--text-muted)" />
+            <DebtRow label="Quá hạn" val={apRem * 0.1} color="var(--danger)" />
+          </div>
+        </div>
       </div>
-    </article>
+    </div>
   );
 }
 
+function DebtRow({ label, val, color }: { label: string; val: number; color: string }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '10px' }}>
+       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+         <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: color }} />
+         <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>{label}</span>
+       </div>
+       <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>{formatVnd(val)}</span>
+    </div>
+  );
+}

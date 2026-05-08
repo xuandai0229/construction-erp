@@ -180,116 +180,122 @@ export class ProjectService {
   }
 
   static async getAccountingSummary(projectId: string) {
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+      select: { startDate: true, endDate: true }
+    });
+
+    if (!project) throw new ApiError(404, "Project not found");
+
     const [
-      costStats,
-      costByTypeRaw,
-      budgetStats,
-      budgetByTypeRaw,
-      revenueStats,
-      invoiceStats,
-      wbsCount,
-      taskStats,
-      poStats
+      costs, budgets, revenues, invoices, wbsCount, taskStats, committedCosts,
+      revenueTrendsRaw, costTrendsRaw
     ] = await Promise.all([
-      // 1. Costs
-      prisma.costRecord.aggregate({
-        where: { projectId, deletedAt: null },
-        _sum: { amount: true }
-      }),
-      prisma.costRecord.groupBy({
-        by: ['costType', 'status'],
-        where: { projectId, deletedAt: null },
-        _sum: { amount: true }
-      }),
-      // 2. Budgets
-      prisma.budgetRecord.aggregate({
-        where: { projectId, deletedAt: null },
-        _sum: { estimatedAmount: true }
-      }),
-      prisma.budgetRecord.groupBy({
-        by: ['costType'],
-        where: { projectId, deletedAt: null },
-        _sum: { estimatedAmount: true }
-      }),
-      // 3. Revenues
-      prisma.revenue.aggregate({
-        where: { projectId, deletedAt: null },
-        _sum: { amount: true }
-      }),
-      // 4. Invoices
-      prisma.invoice.aggregate({
-        where: { projectId, deletedAt: null },
-        _sum: { amount: true, paidAmount: true, remainingAmount: true },
-        _count: { id: true }
-      }),
-      // 5. WBS & Tasks
+      prisma.costRecord.findMany({ where: { projectId, deletedAt: null } }),
+      prisma.budgetRecord.findMany({ where: { projectId, deletedAt: null } }),
+      prisma.revenue.findMany({ where: { projectId, deletedAt: null } }),
+      prisma.invoice.findMany({ where: { projectId, deletedAt: null } }),
       prisma.wBSItem.count({ where: { projectId } }),
       prisma.task.groupBy({
         by: ["status"],
         where: { projectId, deletedAt: null },
         _count: { status: true },
       }),
-      // 6. Purchase Orders
-      prisma.purchaseOrder.aggregate({
+      prisma.purchaseOrder.findMany({
         where: { projectId, status: { in: ["ORDERED", "PARTIALLY_RECEIVED"] } },
-        _sum: { totalAmount: true }
+        select: { totalAmount: true }
+      }),
+      prisma.revenue.groupBy({
+        by: ['date'],
+        where: { projectId, deletedAt: null },
+        _sum: { amount: true }
+      }),
+      prisma.costRecord.groupBy({
+        by: ['date'],
+        where: { projectId, deletedAt: null },
+        _sum: { amount: true }
       })
     ]);
 
-    // Format results to match DashboardStats interface
-    const totalCost = Number(costStats._sum.amount || 0);
-    const paidCost = costByTypeRaw
-      .filter(c => c.status === 'paid')
-      .reduce((s, c) => s + Number(c._sum.amount || 0), 0);
-    const unpaidCost = totalCost - paidCost;
+    // Process Trends
+    const trendMap = new Map<string, { month: string; revenue: number; cost: number }>();
+    const getMonthStr = (date: Date) => `${date.getMonth() + 1}/${date.getFullYear()}`;
 
-    const costByType: Record<string, number> = {};
-    costByTypeRaw.forEach(c => {
-      costByType[c.costType] = (costByType[c.costType] || 0) + Number(c._sum.amount || 0);
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date();
+      d.setMonth(d.getMonth() - i);
+      const key = getMonthStr(d);
+      trendMap.set(key, { month: key, revenue: 0, cost: 0 });
+    }
+
+    revenueTrendsRaw.forEach(r => {
+      const key = getMonthStr(r.date);
+      if (trendMap.has(key)) trendMap.get(key)!.revenue += Number(r._sum.amount || 0);
     });
 
-    const totalBudget = Number(budgetStats._sum.estimatedAmount || 0);
-    const budgetByType: Record<string, number> = {};
-    budgetByTypeRaw.forEach(b => {
-      budgetByType[b.costType] = Number(b._sum.estimatedAmount || 0);
+    costTrendsRaw.forEach(c => {
+      const key = getMonthStr(c.date);
+      if (trendMap.has(key)) trendMap.get(key)!.cost += Number(c._sum.amount || 0);
     });
 
-    const totalRevenue = Number(revenueStats._sum.amount || 0);
-    const totalInvoiced = Number(invoiceStats._sum.amount || 0);
-    const totalPaidInvoice = Number(invoiceStats._sum.paidAmount || 0);
-    const totalRemainingInvoice = Number(invoiceStats._sum.remainingAmount || 0);
+    const monthlyTrends = Array.from(trendMap.values());
 
-    const committedCost = Number(poStats._sum.totalAmount || 0);
-    
-    const taskBreakdown: Record<string, number> = {};
-    taskStats.forEach(t => taskBreakdown[t.status] = t._count.status);
-    const totalTasks = Object.values(taskBreakdown).reduce((s, v) => s + v, 0);
-    const doneTasks = taskBreakdown["DONE"] ?? 0;
-    const taskProgress = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
+    // MAP PRISMA -> TYPES
+    const mapAmount = (val: any) => Number(val || 0);
 
-    return {
-      totalCost,
-      paidCost,
-      unpaidCost,
-      costByType,
-      totalBudget,
-      budgetByType,
-      costVariance: totalBudget - totalCost,
-      costOverrunPct: totalBudget > 0 ? (totalCost / totalBudget) * 100 : 0,
-      isCostOverrun: totalCost > totalBudget && totalBudget > 0,
-      totalRevenue,
-      totalInvoiced,
-      totalPaidInvoice,
-      totalRemainingInvoice,
-      overdueInvoices: 0, // Need dueDate check for real overdue logic
-      profit: totalRevenue - totalCost,
-      profitMargin: totalRevenue > 0 ? ((totalRevenue - totalCost) / totalRevenue) * 100 : 0,
-      taskProgress,
-      taskBreakdown,
+    const mappedCosts: CostRecord[] = costs.map(c => ({
+      ...c,
+      amount: mapAmount(c.amount),
+      quantity: mapAmount(c.quantity),
+      unitPrice: mapAmount(c.unitPrice),
+      date: c.date.toISOString(),
+      createdAt: c.createdAt.toISOString(),
+      updatedAt: c.updatedAt.toISOString(),
+    } as any));
+
+    const mappedBudgets: BudgetRecord[] = budgets.map(b => ({
+      ...b,
+      estimatedAmount: mapAmount(b.estimatedAmount),
+      createdAt: b.createdAt.toISOString(),
+      updatedAt: b.updatedAt.toISOString(),
+    } as any));
+
+    const mappedRevenues: RevenueRecord[] = revenues.map(r => ({
+      ...r,
+      amount: mapAmount(r.amount),
+      date: r.date.toISOString(),
+      createdAt: r.createdAt.toISOString(),
+      updatedAt: r.updatedAt.toISOString(),
+    } as any));
+
+    const mappedInvoices: InvoiceRecord[] = invoices.map(i => ({
+      ...i,
+      amount: mapAmount(i.amount),
+      paidAmount: mapAmount(i.paidAmount),
+      remainingAmount: mapAmount(i.remainingAmount),
+      issuedDate: i.issuedDate.toISOString(),
+      dueDate: i.dueDate?.toISOString() || null,
+      createdAt: i.createdAt.toISOString(),
+      updatedAt: i.updatedAt.toISOString(),
+    } as any));
+
+    const mappedCommittedCosts = committedCosts.map(po => ({
+      amount: mapAmount(po.totalAmount)
+    }));
+
+    return ProjectFinance.calculateProjectStats({
+      costs: mappedCosts,
+      budgets: mappedBudgets,
+      revenues: mappedRevenues,
+      invoices: mappedInvoices,
+      committedCosts: mappedCommittedCosts,
       wbsCount,
-      committedCost,
-      totalExposure: totalCost + committedCost,
-      budgetRemaining: totalBudget - (totalCost + committedCost),
-    };
+      taskStats,
+      projectDates: {
+        start: project.startDate?.toISOString() || null,
+        end: project.endDate?.toISOString() || null
+      },
+      monthlyTrends
+    });
   }
 }

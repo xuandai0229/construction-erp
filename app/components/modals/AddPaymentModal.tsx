@@ -44,60 +44,91 @@ export default function AddPaymentModal({ isOpen, onClose, invoiceId }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-md mx-4 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
-          <h2 className="text-[15px] font-bold text-slate-100">Ghi nhận thanh toán</h2>
-          <button onClick={onClose} className="text-slate-500 hover:text-white">✕</button>
+    <div className="erp-modal-overlay" onClick={onClose}>
+      <div className="erp-modal md" onClick={e => e.stopPropagation()}>
+        <div className="erp-modal-header">
+          <h2 className="t-section-title">Ghi nhận thanh toán</h2>
+          <button onClick={onClose} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
-          {invoice && (
-            <div className="p-3 rounded-lg bg-blue-500/5 border border-blue-500/20 text-xs">
-              <div className="flex justify-between mb-1">
-                <span className="text-slate-400">Hóa đơn:</span>
-                <span className="font-bold text-slate-200">{invoice.id.substring(0, 8)}</span>
+
+        <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
+          <div className="erp-modal-body space-y-4">
+            {invoice && (
+              <div className="p-3 rounded-[var(--radius)] border border-[var(--info-light)] bg-[var(--info-light)]/20 text-xs">
+                <div className="flex justify-between mb-1">
+                  <span className="text-[var(--text-secondary)]">Hóa đơn:</span>
+                  <span className="font-bold text-[var(--text-primary)]">{invoice.id.substring(0, 8)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[var(--text-secondary)]">Còn lại:</span>
+                  <span className="font-bold text-[var(--success)]">{new Intl.NumberFormat('vi-VN').format(invoice.remainingAmount)} VND</span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Còn lại:</span>
-                <span className="font-bold text-emerald-400">{new Intl.NumberFormat('vi-VN').format(invoice.remainingAmount)} VND</span>
-              </div>
+            )}
+
+            <div className="erp-form-group">
+              <label className="t-label">Số tiền thanh toán (VND)</label>
+              <input
+                type="number"
+                required
+                min="0"
+                step="any"
+                value={form.amount}
+                onChange={e => setForm({...form, amount: e.target.value})}
+                placeholder="Nhập số tiền..."
+                className="erp-input"
+                autoFocus
+              />
             </div>
-          )}
-          <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Số tiền thanh toán (VND)</label>
-            <input
-              type="number"
-              value={form.amount}
-              onChange={e => setForm({...form, amount: e.target.value})}
-              placeholder="Nhập số tiền..."
-              className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm text-slate-200"
-              autoFocus
-            />
+
+            <div className="erp-form-group">
+              <label className="t-label">Ngày thanh toán</label>
+              <input
+                type="date"
+                required
+                value={form.date}
+                onChange={e => setForm({...form, date: e.target.value})}
+                className="erp-input"
+              />
+            </div>
+
+            <div className="erp-form-group">
+              <label className="t-label">Ghi chú</label>
+              <input
+                type="text"
+                value={form.description}
+                onChange={e => setForm({...form, description: e.target.value})}
+                placeholder="VD: Chuyển khoản ngân hàng..."
+                className="erp-input"
+              />
+            </div>
+
+            {error && (
+              <div className="flex items-center gap-2 rounded-[var(--radius)] border border-[var(--danger-light)] bg-[var(--danger-light)]/50 px-3 py-2 text-sm text-[var(--danger)]">
+                <svg viewBox="0 0 24 24" className="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" />
+                </svg>
+                {error}
+              </div>
+            )}
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Ngày thanh toán</label>
-            <input
-              type="date"
-              value={form.date}
-              onChange={e => setForm({...form, date: e.target.value})}
-              className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm text-slate-200"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Ghi chú</label>
-            <input
-              type="text"
-              value={form.description}
-              onChange={e => setForm({...form, description: e.target.value})}
-              placeholder="VD: Chuyển khoản ngân hàng..."
-              className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm text-slate-200"
-            />
-          </div>
-          {error && <div className="text-red-400 text-xs">{error}</div>}
-          <div className="flex justify-end gap-3 pt-2">
-            <button type="button" onClick={onClose} className="h-9 px-4 text-sm text-slate-300">Hủy</button>
-            <button type="submit" disabled={loading} className="h-9 px-4 bg-emerald-600 rounded-lg text-sm text-white font-bold">Xác nhận</button>
+
+          <div className="erp-modal-footer">
+            <button type="button" onClick={onClose} className="btn btn-secondary">
+              Hủy
+            </button>
+            <button type="submit" disabled={loading} className="btn btn-primary">
+              {loading && (
+                <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                </svg>
+              )}
+              Xác nhận
+            </button>
           </div>
         </form>
       </div>

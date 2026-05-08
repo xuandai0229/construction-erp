@@ -197,6 +197,11 @@ export interface DashboardStats {
   committedCost: number;
   totalExposure: number;
   budgetRemaining: number;
+  // Health
+  healthStatus: 'OK' | 'WARNING' | 'CRITICAL';
+  healthScore: number;
+  daysRemaining: number;
+  monthlyTrends: { month: string; revenue: number; cost: number }[];
 }
 
 export interface ServiceResponse<T> {
