@@ -1,12 +1,17 @@
 import { CostRecord, BudgetRecord, ServiceResponse } from '@/app/types';
 import { mapCostFromApi, mapBudgetFromApi, mapCostToApi } from '@/lib/mappers/cost.mapper';
 
+function unwrapItems<T>(data: T[] | { items?: T[] } | undefined): T[] {
+  if (Array.isArray(data)) return data;
+  return Array.isArray(data?.items) ? data.items : [];
+}
+
 export const costApi = {
   async getCostsByProject(projectId: string): Promise<ServiceResponse<CostRecord[]>> {
     const res = await fetch(`/api/costs?projectId=${projectId}`);
     const json = await res.json();
     if (json.success) {
-      return { success: true, data: json.data.map(mapCostFromApi) };
+      return { success: true, data: unwrapItems(json.data).map(mapCostFromApi) };
     }
     return { success: false, error: json.error };
   },
@@ -15,7 +20,7 @@ export const costApi = {
     const res = await fetch(`/api/budgets?projectId=${projectId}`);
     const json = await res.json();
     if (json.success) {
-      return { success: true, data: json.data.map(mapBudgetFromApi) };
+      return { success: true, data: unwrapItems(json.data).map(mapBudgetFromApi) };
     }
     return { success: false, error: json.error };
   },

@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 
-export type AuditAction = "CREATE" | "UPDATE" | "DELETE" | "REVERSE";
+export type AuditAction = "CREATE" | "UPDATE" | "DELETE" | "REVERSE" | "REMINDER";
 export type AuditSeverity = "INFO" | "WARNING" | "CRITICAL";
 
 export class AuditService {

@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { ApiError } from "@/lib/api-error";
 import { Logger } from "@/lib/observability/logger";
 
 export class MigrationService {
@@ -16,22 +15,34 @@ export class MigrationService {
     return prisma.$transaction(async (tx) => {
       Logger.info("Starting legacy data migration", { projectId: data.projectId });
 
-      // 1. Process Vendor Opening Balances (as unpaid Invoices)
+      const openingWbs = await tx.wBSItem.upsert({
+        where: { id: `opening-${data.projectId}` },
+        update: {},
+        create: {
+          id: `opening-${data.projectId}`,
+          projectId: data.projectId,
+          name: "Opening Balances",
+          code: "OPENING",
+          level: 0,
+          sortOrder: 0,
+        },
+      });
+
       for (const vb of data.vendorBalances) {
         await tx.invoice.create({
           data: {
             projectId: data.projectId,
+            wbsId: openingWbs.id,
             amount: vb.amount,
+            remainingAmount: vb.amount,
             status: "SENT",
             invoiceNumber: `OPENING-${vb.vendorName}`,
-            description: `Dư nợ đầu kỳ: ${vb.vendorName}`,
+            note: `Opening balance: ${vb.vendorName}`,
             createdById: data.userId,
-            // Link to a generic WBS for opening balances
-          }
+          },
         });
       }
 
-      // 2. Process Inventory Opening Balances (as RECEIPT transactions)
       for (const ib of data.inventoryBalances) {
         const material = await tx.material.findUnique({ where: { code: ib.materialCode } });
         if (!material) continue;
@@ -43,8 +54,8 @@ export class MigrationService {
             type: "RECEIPT",
             quantity: ib.quantity,
             unitPrice: ib.unitPrice,
-            note: "Tồn kho đầu kỳ từ hệ thống cũ"
-          }
+            note: "Opening inventory balance",
+          },
         });
       }
 
@@ -60,7 +71,7 @@ export class MigrationService {
   static async reconcileParallelRun(projectId: string, legacyTotalCost: number, legacyTotalRevenue: number) {
     const [erpCosts, erpRevenues] = await Promise.all([
       prisma.costRecord.aggregate({ where: { projectId }, _sum: { amount: true } }),
-      prisma.revenue.aggregate({ where: { projectId }, _sum: { amount: true } })
+      prisma.revenue.aggregate({ where: { projectId }, _sum: { amount: true } }),
     ]);
 
     const costDiff = Math.abs(Number(erpCosts._sum.amount || 0) - legacyTotalCost);
@@ -70,7 +81,7 @@ export class MigrationService {
       projectId,
       isBalanced: costDiff === 0 && revDiff === 0,
       discrepancy: { costDiff, revDiff },
-      status: costDiff < 100 && revDiff < 100 ? "ACCEPTABLE" : "ACTION_REQUIRED"
+      status: costDiff < 100 && revDiff < 100 ? "ACCEPTABLE" : "ACTION_REQUIRED",
     };
   }
 }

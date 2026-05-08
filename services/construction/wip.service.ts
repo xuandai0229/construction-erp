@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { ProjectFinance } from "../finance/projectFinance";
 
 export class WIPService {
   /**
@@ -7,7 +6,20 @@ export class WIPService {
    */
   static async getProjectFinancials(projectId: string) {
     // 1. Get Basic Stats (Budget, Cost, Revenue)
-    const stats = await ProjectFinance.getProjectStats(projectId);
+    const [costSummary, budgetSummary] = await Promise.all([
+      prisma.costRecord.aggregate({
+        where: { projectId, deletedAt: null },
+        _sum: { amount: true },
+      }),
+      prisma.budgetRecord.aggregate({
+        where: { projectId, deletedAt: null },
+        _sum: { estimatedAmount: true },
+      }),
+    ]);
+    const stats = {
+      totalCost: Number(costSummary._sum.amount || 0),
+      totalBudget: Number(budgetSummary._sum.estimatedAmount || 0),
+    };
 
     // 2. Get Earned Value (Verified Progress)
     const progress = await prisma.progressEntry.aggregate({

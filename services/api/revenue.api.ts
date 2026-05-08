@@ -1,12 +1,17 @@
 import { RevenueRecord, InvoiceRecord, PaymentRecord, ServiceResponse } from '@/app/types';
 import { mapRevenueFromApi, mapInvoiceFromApi, mapPaymentFromApi } from '@/lib/mappers/revenue.mapper';
 
+function unwrapItems<T>(data: T[] | { items?: T[] } | undefined): T[] {
+  if (Array.isArray(data)) return data;
+  return Array.isArray(data?.items) ? data.items : [];
+}
+
 export const revenueApi = {
   async getRevenuesByProject(projectId: string): Promise<ServiceResponse<RevenueRecord[]>> {
     const res = await fetch(`/api/revenues?projectId=${projectId}`);
     const json = await res.json();
     if (json.success) {
-      return { success: true, data: json.data.map(mapRevenueFromApi) };
+      return { success: true, data: unwrapItems(json.data).map(mapRevenueFromApi) };
     }
     return { success: false, error: json.error };
   },
@@ -15,7 +20,7 @@ export const revenueApi = {
     const res = await fetch(`/api/invoices?projectId=${projectId}`);
     const json = await res.json();
     if (json.success) {
-      return { success: true, data: json.data.map(mapInvoiceFromApi) };
+      return { success: true, data: unwrapItems(json.data).map(mapInvoiceFromApi) };
     }
     return { success: false, error: json.error };
   },
@@ -24,7 +29,7 @@ export const revenueApi = {
     const res = await fetch(`/api/payments?projectId=${projectId}`);
     const json = await res.json();
     if (json.success) {
-      return { success: true, data: json.data.map(mapPaymentFromApi) };
+      return { success: true, data: unwrapItems(json.data).map(mapPaymentFromApi) };
     }
     return { success: false, error: json.error };
   },

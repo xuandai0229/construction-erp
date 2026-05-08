@@ -13,8 +13,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" className="dark">
-      <body className="min-h-screen bg-[#020617] text-slate-100 antialiased">
+    <html lang="vi">
+      <body className="antialiased">
         <AuthProvider>
           {children}
         </AuthProvider>
