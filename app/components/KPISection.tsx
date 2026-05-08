@@ -55,47 +55,63 @@ function KPICard({ label, value, sub, type, trendValue, trendUp }: KPICardProps)
   };
 
   const iconBgColors = {
-    contract: 'rgba(37, 99, 235, 0.08)',
-    budget: 'rgba(147, 51, 234, 0.08)',
-    cost: 'rgba(234, 88, 12, 0.08)',
-    profit: 'rgba(16, 185, 129, 0.08)',
-    receivable: 'rgba(239, 68, 68, 0.08)',
-    payable: 'rgba(59, 130, 246, 0.08)',
+    contract: 'linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%)',
+    budget: 'linear-gradient(135deg, #f5f3ff 0%, #faf5ff 100%)',
+    cost: 'linear-gradient(135deg, #fff7ed 0%, #fef3c7 100%)',
+    profit: 'linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%)',
+    receivable: 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)',
+    payable: 'linear-gradient(135deg, #dbeafe 0%, #f0f9ff 100%)',
+  };
+
+  const borderColors = {
+    contract: '#bfdbfe',
+    budget: '#e9d5ff',
+    cost: '#fed7aa',
+    profit: '#86efac',
+    receivable: '#fca5a5',
+    payable: '#93c5fd',
+  };
+
+  const sanitizeValue = (val: any) => {
+    if (val === null || val === undefined || val !== val || typeof val === 'string') return '—';
+    return val;
   };
 
   return (
     <article
       className="erp-card"
       style={{
-        padding: '20px 22px',
+        padding: '18px 20px',
         display: 'flex',
         alignItems: 'center',
-        gap: '16px',
-        minHeight: '110px',
-        background: 'var(--bg-surface)',
-        border: '1px solid var(--border)',
-        boxShadow: '0 4px 14px rgba(15, 23, 42, 0.04)',
-        borderRadius: '16px',
+        gap: '14px',
+        minHeight: 'auto',
+        background: 'linear-gradient(135deg, #ffffff 0%, #fafbfc 100%)',
+        border: `1px solid ${(borderColors as any)[type] || '#e5e7eb'}`,
+        boxShadow: '0 2px 8px rgba(15, 23, 42, 0.06)',
+        borderRadius: '12px',
         cursor: 'pointer',
         transition: 'all 0.2s ease',
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget as HTMLElement;
         el.style.transform = 'translateY(-2px)';
-        el.style.boxShadow = '0 10px 28px rgba(15, 23, 42, 0.08)';
+        el.style.boxShadow = '0 4px 16px rgba(37, 99, 235, 0.12)';
+        el.style.borderColor = (iconColors as any)[type] || '#2563eb';
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget as HTMLElement;
         el.style.transform = 'translateY(0)';
-        el.style.boxShadow = '0 4px 14px rgba(15, 23, 42, 0.04)';
+        el.style.boxShadow = '0 2px 8px rgba(15, 23, 42, 0.06)';
+        el.style.borderColor = (borderColors as any)[type] || '#e5e7eb';
       }}
     >
         <div style={{
           width: '48px',
           height: '48px',
-          borderRadius: '12px',
-          background: (iconBgColors as any)[type] || 'rgba(37, 99, 235, 0.08)',
-          border: '1px solid var(--border)',
+          borderRadius: '10px',
+          background: (iconBgColors as any)[type] || 'linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%)',
+          border: `1px solid ${(borderColors as any)[type] || '#bfdbfe'}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -108,11 +124,11 @@ function KPICard({ label, value, sub, type, trendValue, trendUp }: KPICardProps)
       </div>
       
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>{label}</div>
-        <div style={{ fontSize: '40px', fontWeight: 800, color: '#111827', fontVariantNumeric: 'tabular-nums', lineHeight: 1, letterSpacing: '-0.02em' }}>
-          {formatVnd(value)}
+        <div style={{ fontSize: '11px', fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '4px' }}>{label}</div>
+        <div style={{ fontSize: '28px', fontWeight: 800, color: '#111827', fontVariantNumeric: 'tabular-nums', lineHeight: 1, letterSpacing: '-0.02em' }}>
+          {formatVnd(sanitizeValue(value))}
         </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px' }}>
           {trendValue && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '10px', fontWeight: 700, color: trendUp ? '#10B981' : '#EF4444' }}>
               <TrendIcon up={!!trendUp} />
@@ -150,7 +166,7 @@ export default function KPISection({ data }: { data: DashboardData }) {
   const margin       = contractVal > 0 ? (profit / contractVal) * 100 : 0;
 
   return (
-    <section className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-6">
+    <section className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4" style={{ gap: '12px' }}>
       <KPICard
         type="contract"
         label="Tổng giá trị HĐ"
