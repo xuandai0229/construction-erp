@@ -28,14 +28,14 @@ export default function ChartSection({ data }: { data: DashboardData }) {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 'var(--sp-24)' }}>
       {/* ── PANEL 1: BUDGET ALLOCATION ── */}
-      <div className="erp-card" style={{ display: 'flex', flexDirection: 'column', height: '280px', background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
-        <div style={{ height: '44px', padding: '0 var(--sp-16)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center' }}>
-          <h3 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Phân bổ ngân sách</h3>
+      <div className="erp-card" style={{ display: 'flex', flexDirection: 'column', height: '280px', background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)', borderRadius: '12px' }}>
+        <div style={{ height: '44px', padding: '0 var(--sp-16)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', background: '#F8FAFC' }}>
+          <h3 style={{ fontSize: '12px', fontWeight: 700, color: '#111827', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Phân bổ ngân sách</h3>
         </div>
-        <div style={{ padding: 'var(--sp-20)', flex: 1, display: 'flex', alignItems: 'center', gap: 'var(--sp-24)' }}>
+        <div style={{ padding: '20px', flex: 1, display: 'flex', alignItems: 'center', gap: '24px' }}>
           <div style={{ height: '140px', width: '140px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
              <svg viewBox="0 0 172 172" style={{ position: 'absolute', inset: 0, height: '100%', width: '100%', transform: 'rotate(-90deg)' }}>
-               <circle cx="86" cy="86" r="74" fill="transparent" stroke="#F3F4F6" strokeWidth="16" />
+               <circle cx="86" cy="86" r="74" fill="transparent" stroke="#E5E7EB" strokeWidth="16" />
                {costByType.map((c) => {
                  const pctNum = parseFloat(c.pct);
                  const dash = (CIRC * pctNum) / 100;
@@ -52,8 +52,8 @@ export default function ChartSection({ data }: { data: DashboardData }) {
                })}
              </svg>
              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.2 }}>45,000</div>
-                <div style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Triệu VND</div>
+                <div style={{ fontSize: '20px', fontWeight: 800, color: '#111827', lineHeight: 1.2 }}>45,000</div>
+                <div style={{ fontSize: '9px', color: '#9CA3AF', textTransform: 'uppercase', fontWeight: 700 }}>Triệu VND</div>
              </div>
           </div>
 
@@ -62,11 +62,11 @@ export default function ChartSection({ data }: { data: DashboardData }) {
               <div key={c.type} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: c.color }} />
-                  <span style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>{c.label}</span>
+                  <span style={{ fontWeight: 500, color: '#64748b' }}>{c.label}</span>
                 </div>
                 <div style={{ display: 'flex', gap: '12px' }}>
-                  <span style={{ fontWeight: 700, color: 'var(--text-primary)', width: '28px', textAlign: 'right' }}>{c.pct}</span>
-                  <span style={{ fontWeight: 600, color: 'var(--text-muted)', textAlign: 'right', minWidth: '60px' }}>{formatShortVnd(c.value)}</span>
+                  <span style={{ fontWeight: 700, color: '#111827', width: '28px', textAlign: 'right' }}>{c.pct}</span>
+                  <span style={{ fontWeight: 600, color: '#9CA3AF', textAlign: 'right', minWidth: '60px' }}>{formatShortVnd(c.value)}</span>
                 </div>
               </div>
             ))}
@@ -75,14 +75,14 @@ export default function ChartSection({ data }: { data: DashboardData }) {
       </div>
 
       {/* ── PANEL 2: CASHFLOW ── */}
-      <div className="erp-card" style={{ display: 'flex', flexDirection: 'column', height: '280px', background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
-        <div style={{ height: '44px', padding: '0 var(--sp-16)', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Dòng tiền (Triệu VND)</h3>
+      <div className="erp-card" style={{ display: 'flex', flexDirection: 'column', height: '280px', background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)', borderRadius: '12px' }}>
+        <div style={{ height: '44px', padding: '0 var(--sp-16)', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#F8FAFC' }}>
+          <h3 style={{ fontSize: '12px', fontWeight: 700, color: '#111827', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Dòng tiền (Triệu VND)</h3>
           <div style={{ display: 'flex', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10px', fontWeight: 700, color: 'var(--text-secondary)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10px', fontWeight: 700, color: '#64748b' }}>
               <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: '#10B981' }} /> Thu
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10px', fontWeight: 700, color: 'var(--text-secondary)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10px', fontWeight: 700, color: '#64748b' }}>
               <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: '#EF4444' }} /> Chi
             </div>
           </div>
@@ -93,7 +93,7 @@ export default function ChartSection({ data }: { data: DashboardData }) {
                  {[1,2,3,4].map(i => <div key={i} style={{ width: '100%', borderTop: '1px solid #F3F4F6' }} />)}
               </div>
               
-              <div style={{ position: 'absolute', left: '-36px', inset: '0', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', fontSize: '9px', fontWeight: 700, color: 'var(--text-muted)', textAlign: 'right', paddingRight: '8px' }}>
+              <div style={{ position: 'absolute', left: '-36px', inset: '0', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', fontSize: '9px', fontWeight: 700, color: '#9CA3AF', textAlign: 'right', paddingRight: '8px' }}>
                 <span>40B</span><span>30B</span><span>20B</span><span>10B</span><span>0</span>
               </div>
 
@@ -110,33 +110,33 @@ export default function ChartSection({ data }: { data: DashboardData }) {
       </div>
 
       {/* ── PANEL 3: PROGRESS ── */}
-      <div className="erp-card" style={{ display: 'flex', flexDirection: 'column', height: '280px', background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
-        <div style={{ height: '44px', padding: '0 var(--sp-16)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center' }}>
-          <h3 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tiến độ tổng thể</h3>
+      <div className="erp-card" style={{ display: 'flex', flexDirection: 'column', height: '280px', background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)', borderRadius: '12px' }}>
+        <div style={{ height: '44px', padding: '0 var(--sp-16)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', background: '#F8FAFC' }}>
+          <h3 style={{ fontSize: '12px', fontWeight: 700, color: '#111827', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tiến độ tổng thể</h3>
         </div>
-        <div style={{ padding: 'var(--sp-24) var(--sp-16)', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ padding: '24px 16px', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <div style={{ height: '110px', width: '180px', position: 'relative', marginTop: '5px' }}>
              <svg viewBox="0 0 200 120" style={{ width: '100%', height: '100%' }}>
-               <path d="M 20,110 A 80,80 0 0,1 180,110" fill="none" stroke="#F3F4F6" strokeWidth="20" strokeLinecap="round" />
-               <path d="M 20,110 A 80,80 0 0,1 180,110" fill="none" stroke="#10B981" strokeWidth="20" strokeLinecap="round" strokeDasharray={`${(Math.PI * 80) * (data.progress / 100)} 300`} />
+               <path d="M 20,110 A 80,80 0 0,1 180,110" fill="none" stroke="#E5E7EB" strokeWidth="20" strokeLinecap="round" />
+               <path d="M 20,110 A 80,80 0 0,1 180,110" fill="none" stroke="#10B981" strokeWidth="20" strokeLinecap="round" strokeDasharray={`${(Math.PI * 80) * (Math.min(data.progress, 100) / 100)} 300`} />
              </svg>
              <div style={{ position: 'absolute', bottom: '0', left: 0, right: 0, textAlign: 'center' }}>
-                <div style={{ fontSize: '32px', fontWeight: 900, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{data.progress}%</div>
+                <div style={{ fontSize: '32px', fontWeight: 900, color: '#111827', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{Number.isFinite(data.progress) ? data.progress : 0}%</div>
              </div>
           </div>
           
           <div style={{ width: '100%', marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Ngày bắt đầu:</span>
-                <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>01/01/2024</span>
+                <span style={{ color: '#64748b' }}>Ngày bắt đầu:</span>
+                <span style={{ fontWeight: 700, color: '#111827' }}>01/01/2024</span>
              </div>
              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Ngày kết thúc dự kiến:</span>
-                <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>31/12/2025</span>
+                <span style={{ color: '#64748b' }}>Ngày kết thúc dự kiến:</span>
+                <span style={{ fontWeight: 700, color: '#111827' }}>31/12/2025</span>
              </div>
              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Số ngày đã qua:</span>
-                <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{data.daysRemaining} / 730 ngày</span>
+                <span style={{ color: '#64748b' }}>Số ngày đã qua:</span>
+                <span style={{ fontWeight: 700, color: '#111827' }}>{data.daysRemaining} / 730 ngày</span>
              </div>
           </div>
         </div>

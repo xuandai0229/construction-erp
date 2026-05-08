@@ -46,58 +46,80 @@ interface KPICardProps {
 
 function KPICard({ label, value, sub, type, trendValue, trendUp }: KPICardProps) {
   const iconColors = {
-    contract: 'var(--brand)',
+    contract: '#2563eb',
     budget: '#9333EA',
     cost: '#EA580C',
-    profit: 'var(--success)',
-    receivable: 'var(--danger)',
-    payable: 'var(--info)',
+    profit: '#10B981',
+    receivable: '#EF4444',
+    payable: '#3B82F6',
+  };
+
+  const iconBgColors = {
+    contract: 'rgba(37, 99, 235, 0.08)',
+    budget: 'rgba(147, 51, 234, 0.08)',
+    cost: 'rgba(234, 88, 12, 0.08)',
+    profit: 'rgba(16, 185, 129, 0.08)',
+    receivable: 'rgba(239, 68, 68, 0.08)',
+    payable: 'rgba(59, 130, 246, 0.08)',
   };
 
   return (
     <article
       className="erp-card"
       style={{
-        padding: 'var(--sp-12) var(--sp-16)',
+        padding: '20px 22px',
         display: 'flex',
         alignItems: 'center',
-        gap: 'var(--sp-12)',
-        minHeight: '94px',
+        gap: '16px',
+        minHeight: '110px',
         background: 'var(--bg-surface)',
-        border: '1px solid var(--border-mid)',
-        boxShadow: 'var(--shadow-sm)',
+        border: '1px solid var(--border)',
+        boxShadow: '0 4px 14px rgba(15, 23, 42, 0.04)',
+        borderRadius: '16px',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+      }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget as HTMLElement;
+        el.style.transform = 'translateY(-2px)';
+        el.style.boxShadow = '0 10px 28px rgba(15, 23, 42, 0.08)';
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget as HTMLElement;
+        el.style.transform = 'translateY(0)';
+        el.style.boxShadow = '0 4px 14px rgba(15, 23, 42, 0.04)';
       }}
     >
         <div style={{
-          width: '40px',
-          height: '40px',
-          borderRadius: '10px',
-          background: 'var(--bg-subtle)',
+          width: '48px',
+          height: '48px',
+          borderRadius: '12px',
+          background: (iconBgColors as any)[type] || 'rgba(37, 99, 235, 0.08)',
           border: '1px solid var(--border)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           flexShrink: 0,
-          color: (iconColors as any)[type] || 'var(--brand)'
+          color: (iconColors as any)[type] || '#2563eb'
         }}>
-        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2">
           {KPI_ICONS[type]}
         </svg>
       </div>
       
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: '12px', fontWeight: 650, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>{label}</div>
-        <div style={{ fontSize: '40px', fontWeight: 900, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums', lineHeight: 1.0, letterSpacing: '-0.02em' }}>
+        <div style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>{label}</div>
+        <div style={{ fontSize: '40px', fontWeight: 800, color: '#111827', fontVariantNumeric: 'tabular-nums', lineHeight: 1, letterSpacing: '-0.02em' }}>
           {formatVnd(value)}
         </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
           {trendValue && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '10px', fontWeight: 700, color: trendUp ? 'var(--success)' : 'var(--danger)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '10px', fontWeight: 700, color: trendUp ? '#10B981' : '#EF4444' }}>
               <TrendIcon up={!!trendUp} />
               {trendValue}
             </div>
           )}
-          <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{sub}</div>
+          <div style={{ fontSize: '10px', color: '#9CA3AF' }}>{sub}</div>
         </div>
       </div>
     </article>
