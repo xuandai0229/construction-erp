@@ -45,70 +45,85 @@ interface KPICardProps {
 }
 
 function KPICard({ label, value, sub, type }: KPICardProps) {
-  const iconColors: Record<string, string> = {
-    contract: '#2563eb',
-    budget: '#9333EA',
-    cost: '#EA580C',
-    profit: '#10B981',
-    receivable: '#EF4444',
-    payable: '#3B82F6',
+  const accent: Record<string, string> = {
+    contract: '#2563eb',      // blue
+    budget: '#6D28D9',        // indigo/purple
+    cost: '#EA580C',          // amber/orange-red
+    profit: '#16A34A',        // green
+    receivable: '#F59E0B',   // amber
+    payable: '#3B82F6',      // blue
   };
 
-  const iconBgColors: Record<string, string> = {
-    contract: 'rgba(37, 99, 235, 0.08)',
-    budget: 'rgba(147, 51, 234, 0.08)',
-    cost: 'rgba(234, 88, 12, 0.08)',
-    profit: 'rgba(16, 185, 129, 0.08)',
-    receivable: 'rgba(239, 68, 68, 0.08)',
-    payable: 'rgba(59, 130, 246, 0.08)',
+  const iconBg: Record<string, string> = {
+    contract: 'rgba(37, 99, 235, 0.10)',
+    budget: 'rgba(109, 40, 217, 0.10)',
+    cost: 'rgba(234, 88, 12, 0.10)',
+    profit: 'rgba(22, 163, 74, 0.10)',
+    receivable: 'rgba(245, 158, 11, 0.10)',
+    payable: 'rgba(59, 130, 246, 0.10)',
   };
 
   const safeValue = Number.isFinite(value) ? value : 0;
+  const a = accent[type] ?? '#2563eb';
+
+  const accentKey = type === 'profit'
+    ? 'success'
+    : type === 'cost' || type === 'receivable'
+      ? 'warning'
+      : type === 'contract' || type === 'payable'
+        ? 'info'
+        : 'info';
 
   return (
     <article
-      className="erp-card"
+      className="erp-card erp-card-exec-top erp-card-exec-gradient"
+      data-accent={accentKey}
       style={{
-        padding: '12px 12px',
+        padding: '12px 14px',
         display: 'grid',
-        gridTemplateColumns: '40px 1fr',
-        columnGap: '10px',
-        minHeight: '78px',
+        gridTemplateColumns: '44px 1fr',
+        columnGap: '12px',
+        minHeight: '84px',
         background: 'var(--bg-surface)',
-        border: '1px solid var(--border)',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+        border: `1px solid rgba(229, 231, 235, 0.9)`,
+        boxShadow: 'var(--shadow-kpi)',
         borderRadius: '12px',
         cursor: 'default',
+        position: 'relative',
       }}
     >
+      {/* Stronger, premium icon container */}
       <div
         style={{
-          width: '40px',
-          height: '40px',
-          borderRadius: '10px',
-          background: iconBgColors[type] ?? 'rgba(37, 99, 235, 0.08)',
-          border: '1px solid var(--border)',
+          width: '44px',
+          height: '44px',
+          borderRadius: '12px',
+          background: iconBg[type] ?? 'rgba(37, 99, 235, 0.10)',
+          border: '1px solid rgba(148, 163, 184, 0.35)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: iconColors[type] ?? '#2563eb',
+          color: a,
           flexShrink: 0,
+          boxShadow: '0 8px 18px rgba(15, 23, 42, 0.04)',
+          transform: 'translateZ(0)',
         }}
       >
-        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2">
           {KPI_ICONS[type]}
         </svg>
       </div>
 
       <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        {/* label: quieter */}
         <div
           style={{
-            fontSize: '11px',
-            fontWeight: 700,
+            fontSize: '10px',
+            fontWeight: 800,
             color: '#64748b',
             textTransform: 'uppercase',
-            letterSpacing: '0.06em',
-            marginBottom: '4px',
+            letterSpacing: '0.09em',
+            marginBottom: '3px',
             lineHeight: 1.1,
             whiteSpace: 'nowrap',
             overflow: 'hidden',
@@ -119,11 +134,12 @@ function KPICard({ label, value, sub, type }: KPICardProps) {
           {label}
         </div>
 
+        {/* value: dominate */}
         <div
           style={{
-            fontSize: '26px',
-            fontWeight: 900,
-            color: '#0F172A',
+            fontSize: '24px',
+            fontWeight: 950,
+            color: '#0B1220',
             fontVariantNumeric: 'tabular-nums',
             lineHeight: 1.05,
             letterSpacing: '-0.02em',
@@ -136,7 +152,27 @@ function KPICard({ label, value, sub, type }: KPICardProps) {
           {formatVnd(safeValue)}
         </div>
 
-        <div style={{ marginTop: '6px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+        {/* meta: quieter + aligned */}
+        <div
+          style={{
+            marginTop: '6px',
+            display: 'grid',
+            gridTemplateColumns: 'auto 1fr',
+            alignItems: 'center',
+            columnGap: '10px',
+          }}
+        >
+          <div
+            style={{
+              width: '10px',
+              height: '10px',
+              borderRadius: '4px',
+              background: a,
+              opacity: 0.95,
+              boxShadow: '0 6px 16px rgba(15, 23, 42, 0.06)',
+            }}
+            aria-hidden="true"
+          />
           <div
             style={{
               fontSize: '10px',
@@ -145,27 +181,31 @@ function KPICard({ label, value, sub, type }: KPICardProps) {
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
+              lineHeight: 1.2,
+              textTransform: 'none',
             }}
             title={sub}
           >
             {sub}
           </div>
-          <div
-            style={{
-              width: '8px',
-              height: '8px',
-              borderRadius: '999px',
-              background: iconColors[type] ?? '#2563eb',
-              opacity: 0.9,
-              flexShrink: 0,
-            }}
-            aria-hidden="true"
-          />
         </div>
       </div>
+
+      {/* subtle internal top highlight for executive depth */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          borderRadius: '12px',
+          boxShadow: `inset 0 1px 0 rgba(255,255,255,0.65)`,
+        }}
+      />
     </article>
   );
 }
+
 
 export default function KPISection({ data }: { data: DashboardData }) {
   const trends = data.monthlyTrends || [];
@@ -189,15 +229,59 @@ export default function KPISection({ data }: { data: DashboardData }) {
   const contractVal  = data.project?.totalValue ?? 0;
   const margin       = contractVal > 0 ? (profit / contractVal) * 100 : 0;
 
-  // NOTE: trend blocks are intentionally suppressed in this KPI redesign to prevent overflow.
+  // Executive KPI composition (weighted dominance, still ERP-grid discipline).
+  // Primary: Contract Value + Profit
+  // Medium: Project Progress
+  // Compact: Budget, Cost, AR/AP
+  const progressValue = typeof data.progress === 'number' ? data.progress : 0;
+
   return (
-    <section className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
-      <KPICard type="contract"    label="Tổng giá trị HĐ"        value={contractVal}    sub="Kế hoạch: 0%" />
-      <KPICard type="budget"      label="Tổng dự toán"            value={totalBudget}  sub="So hợp đồng" trendValue="" trendUp={true} />
-      <KPICard type="cost"        label="Chi phí thực tế"        value={totalCost}    sub="So dự toán" trendValue="" trendUp={false} />
-      <KPICard type="profit"      label="Lợi nhuận"               value={profit}       sub={`Biên ${margin.toFixed(1)}%`} trendValue="" trendUp={true} />
-      <KPICard type="receivable"  label="Phải thu (AR)"          value={data.receivable.total} sub="Kỳ trước" trendValue="" trendUp={false} />
-      <KPICard type="payable"     label="Phải trả (AP)"         value={data.payable.total}    sub="Kỳ trước" trendValue="" trendUp={true} />
+    <section
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
+        gap: 'var(--sp-12)',
+      }}
+    >
+      {/* Row 1 (dominant): Contract Value + Profit */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.15fr 0.85fr', gap: 'var(--sp-12)' }}>
+        <div style={{ transform: 'translateY(-1px)' }}>
+          <KPICard
+            type="contract"
+            label="Contract Value"
+            value={contractVal}
+            sub="Planned / Award"
+          />
+        </div>
+        <div>
+          <KPICard
+            type="profit"
+            label="Profit"
+            value={profit}
+            sub={`Margin ${margin.toFixed(1)}%`}
+          />
+        </div>
+      </div>
+
+      {/* Row 2 (medium): Project progress dominates the grid breathing */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-12)' }}>
+        <div style={{ gridColumn: 'span 1' }}>
+          <KPICard
+            type="budget"
+            label="Project Progress"
+            value={progressValue}
+            sub="% Complete"
+          />
+        </div>
+
+        {/* Compact supporting metrics (keep operational density) */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-12)' }}>
+          <KPICard type="budget" label="Budget" value={totalBudget} sub="Total Forecast" />
+          <KPICard type="cost" label="Actual Cost" value={totalCost} sub="Total Actual" />
+          <KPICard type="receivable" label="AR" value={data.receivable.total} sub="Outstanding" />
+          <KPICard type="payable" label="AP" value={data.payable.total} sub="Payables" />
+        </div>
+      </div>
     </section>
   );
 }

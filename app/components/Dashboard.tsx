@@ -81,19 +81,19 @@ export default function Dashboard() {
           background: 'var(--bg-main)', 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: 'var(--sp-24)',
+          gap: 'var(--sp-16)',
           minHeight: 'calc(100vh - var(--header-height))'
         }}>
-          {/* ── ROW 1: PROJECT HERO ── */}
-          <section className="erp-card" style={{ 
+          {/* ── EXECUTIVE HERO (dominant anchor) ── */}
+          <section className="erp-card erp-card-exec-top" data-accent="info" style={{ 
             padding: 'var(--sp-20)', 
             display: 'flex', 
             justifyContent: 'space-between',
             alignItems: 'center',
-            height: '110px',
+            height: '104px',
             background: 'var(--bg-surface)',
             border: '1px solid var(--border)',
-            boxShadow: 'var(--shadow-sm)'
+            boxShadow: 'var(--shadow-md)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-24)' }}>
               <div style={{ width: '100px', height: '70px', borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--border)', flexShrink: 0 }}>
@@ -138,11 +138,26 @@ export default function Dashboard() {
             </div>
           </section>
 
-          {/* ── ROW 2: KPI GRID (6 Cards) ── */}
-          <KPISection data={data} />
+          {/* ── ROW 2: KPI (weighted, non-symmetric executive layout) ── */}
+          <section style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.15fr) minmax(0, 0.85fr)', gap: 'var(--sp-16)' }}>
+            {/* Left dominates: Contract Value + Profit */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-12)' }}>
+              <div style={{ transform: 'translateY(-1px)' }}>
+                <KPISection data={data} />
+              </div>
+            </div>
 
-          {/* ── ROW 3: ANALYTICS (Budget, Cashflow, Progress Circle) ── */}
-          <ChartSection data={data} />
+            {/* Right: charts become support (secondary attention) */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-12)' }}>
+              <div style={{ height: 0 }} />
+            </div>
+          </section>
+
+          {/* ── ROW 3: ANALYTICS SUPPORT ── */}
+          <div style={{ marginTop: 0 }}>
+            <ChartSection data={data} />
+          </div>
+
 
           {/* ── ROW 4: OPERATIONAL GRID ── */}
           <div style={{ 

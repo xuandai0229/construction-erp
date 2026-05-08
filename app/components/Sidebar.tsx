@@ -203,50 +203,94 @@ export default function Sidebar({
             {/* Items */}
             {group.items.map((item) => {
               const active = isActive(item.href);
+              const railColor = '#2563eb';
               return (
-                <button
+                <div
                   key={item.id}
-                  onClick={() => router.push(item.href)}
-                  title={collapsed ? item.label : undefined}
                   style={{
-                    display: 'flex',
                     width: '100%',
+                    display: 'flex',
                     alignItems: 'center',
-                    gap: '10px',
-                    padding: collapsed ? '9px' : '9px 10px',
-                    justifyContent: collapsed ? 'center' : 'flex-start',
-                    borderRadius: '12px',
-                    marginBottom: '1px',
-                    fontSize: '13.5px',
-                    fontWeight: active ? 600 : 400,
-                    cursor: 'pointer',
-                    transition: 'background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease',
-                    border: 'none',
-                    textAlign: 'left',
-                    background: active ? '#2563eb' : 'transparent',
-                    color: active ? '#fff' : '#64748b',
-                    boxShadow: active ? '0 6px 18px rgba(37,99,235,.18)' : 'none',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!active) {
-                      const btn = e.currentTarget as HTMLButtonElement;
-                      btn.style.background = 'rgba(100, 116, 139, 0.06)';
-                      btn.style.color = '#475569';
-                      btn.style.transform = 'translateX(3px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!active) {
-                      const btn = e.currentTarget as HTMLButtonElement;
-                      btn.style.background = 'transparent';
-                      btn.style.color = '#64748b';
-                      btn.style.transform = 'translateX(0)';
-                    }
+                    gap: 0,
+                    position: 'relative',
                   }}
                 >
-                  <span style={{ flexShrink: 0, opacity: active ? 1 : 0.7 }}>{item.icon}</span>
-                  {!collapsed && <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.label}</span>}
-                </button>
+                  {/* Active rail */}
+                  {!collapsed && (
+                    <div
+                      aria-hidden="true"
+                      style={{
+                        width: active ? 4 : 3,
+                        height: 38,
+                        borderRadius: 999,
+                        marginLeft: 6,
+                        background: active ? railColor : 'transparent',
+                        boxShadow: active ? 'var(--shadow-rail)' : 'none',
+                        transition: 'all 0.18s ease',
+                      }}
+                    />
+                  )}
+
+                  <button
+                    key={item.id}
+                    onClick={() => router.push(item.href)}
+                    title={collapsed ? item.label : undefined}
+                    style={{
+                      display: 'flex',
+                      width: '100%',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: collapsed ? '9px' : '9px 10px',
+                      justifyContent: collapsed ? 'center' : 'flex-start',
+                      borderRadius: '10px',
+                      marginBottom: '1px',
+                      fontSize: '13.5px',
+                      fontWeight: active ? 800 : 500,
+                      cursor: 'pointer',
+                      transition: 'background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease, border-color .18s ease',
+                      border: `1px solid ${active ? 'rgba(37,99,235,0.35)' : 'transparent'}`,
+                      textAlign: 'left',
+                      background: active ? 'rgba(37, 99, 235, 0.10)' : 'transparent',
+                      color: active ? '#0B1220' : '#64748b',
+                      boxShadow: active ? '0 10px 28px rgba(37,99,235,0.10)' : 'none',
+                      transform: active ? 'translateX(2px)' : 'translateX(0)',
+                      position: 'relative',
+                      overflow: 'hidden',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!active) {
+                        const btn = e.currentTarget as HTMLButtonElement;
+                        btn.style.background = 'rgba(100, 116, 139, 0.06)';
+                        btn.style.color = '#0B1220';
+                        btn.style.transform = collapsed ? 'translateY(-1px)' : 'translateX(2px)';
+                        btn.style.borderColor = 'rgba(148,163,184,0.4)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) {
+                        const btn = e.currentTarget as HTMLButtonElement;
+                        btn.style.background = 'transparent';
+                        btn.style.color = '#64748b';
+                        btn.style.transform = 'translateX(0)';
+                        btn.style.borderColor = 'transparent';
+                      }
+                    }}
+                  >
+                    <span
+                      style={{
+                        flexShrink: 0,
+                        opacity: active ? 1 : 0.75,
+                        color: active ? railColor : 'inherit',
+                        transition: 'opacity 0.18s ease, color 0.18s ease',
+                      }}
+                    >
+                      {item.icon}
+                    </span>
+                    {!collapsed && (
+                      <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.label}</span>
+                    )}
+                  </button>
+                </div>
               );
             })}
           </div>
