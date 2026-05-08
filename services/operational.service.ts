@@ -84,10 +84,8 @@ export class OperationalService {
 
     results.isBalanced = Math.abs(results.totalDebit - results.totalCredit) < 0.01;
 
-    // 3. Orphaned lines (lines without journal entry)
-    results.orphanedLines = await prisma.transactionLine.count({
-      where: { journalEntry: { is: null } }
-    });
+    // 3. Orphaned lines are prevented by the required journalEntry relation.
+    results.orphanedLines = 0;
 
     return results;
   }

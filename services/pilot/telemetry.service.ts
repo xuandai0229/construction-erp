@@ -6,8 +6,14 @@ export class TelemetryService {
    */
   static async getWorkflowFrictionAnalysis(projectId: string) {
     const logs = await prisma.auditLog.findMany({
-      where: { projectId, timestamp: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } },
-      orderBy: { timestamp: 'asc' }
+      where: {
+        timestamp: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
+        OR: [
+          { entity: "Project", entityId: projectId },
+          { correlationId: projectId },
+        ],
+      },
+      orderBy: { timestamp: "asc" },
     });
 
     const metrics = {
@@ -15,45 +21,39 @@ export class TelemetryService {
       repetitiveEdits: 0,
       potentialBypasses: 0,
       slowestWorkflow: "",
-      avgMBEntryTime: 0, // Minutes
+      avgMBEntryTime: 0,
       offlineSyncFailureRate: 0,
-      clickCountPerMB: 0
+      clickCountPerMB: 0,
     };
 
-    // 1. Analyze Approval Speed (Realtime Latency)
     const approvalRequests = await prisma.approvalRequest.findMany({
       where: { projectId, status: "APPROVED" },
-      include: { steps: true }
+      include: { steps: true },
     });
-    
+
     if (approvalRequests.length > 0) {
-      const totalLat = approvalRequests.reduce((acc, req) => {
+      const totalLatency = approvalRequests.reduce((acc, req) => {
         return acc + (req.updatedAt.getTime() - req.createdAt.getTime());
       }, 0);
-      metrics.avgApprovalTime = totalLat / approvalRequests.length / (1000 * 60 * 60); // Hours
+      metrics.avgApprovalTime = totalLatency / approvalRequests.length / (1000 * 60 * 60);
     }
 
-    // 2. Repetitive Edits (Indicates confusion or poor UI)
     const editCounts: Record<string, number> = {};
-    logs.filter(l => l.action === "UPDATE").forEach(l => {
-        const key = `${l.entity}:${l.entityId}`;
-        editCounts[key] = (editCounts[key] || 0) + 1;
+    logs.filter((log) => log.action === "UPDATE").forEach((log) => {
+      const key = `${log.entity}:${log.entityId}`;
+      editCounts[key] = (editCounts[key] || 0) + 1;
     });
-    metrics.repetitiveEdits = Object.values(editCounts).filter(c => c > 3).length;
+    metrics.repetitiveEdits = Object.values(editCounts).filter((count) => count > 3).length;
 
-    // 3. MB Entry Performance (Target < 5 min)
-    // In a real system, we'd have dedicated Telemetry events.
-    // For this pilot, we estimate from ProgressEntry creation timestamps.
-    
     return {
       projectId,
       metrics,
       frictionPoints: [
         { workflow: "MB Entry", friction: "High", reason: "Average 12 clicks, 22 mins per record" },
         { workflow: "Approval", friction: "High", reason: "Director bottleneck (avg 48h latency)" },
-        { workflow: "Offline Sync", friction: "Medium", reason: "15% failure rate in basement areas" }
+        { workflow: "Offline Sync", friction: "Medium", reason: "15% failure rate in basement areas" },
       ],
-      uxScore: 68 // Out of 100
+      uxScore: 68,
     };
   }
 
@@ -66,38 +66,43 @@ export class TelemetryService {
     event: string;
     workflow: string;
     durationMs?: number;
-    metadata?: any;
+    metadata?: Record<string, unknown>;
   }) {
-    // In production, this might go to a specialized TSDB or AuditLog with specific types.
     await prisma.auditLog.create({
       data: {
-        projectId: data.projectId,
         userId: data.userId,
         action: "TELEMETRY",
         entity: "WorkflowEvent",
         entityId: data.workflow,
-        newData: { 
-          event: data.event, 
+        correlationId: data.projectId,
+        newData: {
+          event: data.event,
           duration: data.durationMs,
-          ...data.metadata 
+          ...data.metadata,
         },
-        severity: "INFO"
-      }
+        severity: "INFO",
+      },
+    });
+  }
+
   /**
-   * Enterprise Telemetry Pipeline
-   * Aggregates operational health across the entire portfolio.
+   * Enterprise Telemetry Pipeline.
    */
   static async getEnterpriseMetrics() {
     const allLogs = await prisma.auditLog.findMany({
-      where: { timestamp: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } }
+      where: { timestamp: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } },
     });
 
+    const activeProjectIds = allLogs
+      .map((log) => log.correlationId)
+      .filter((id): id is string => Boolean(id));
+
     return {
-      activeProjectsCount: new Set(allLogs.map(l => l.projectId)).size,
+      activeProjectsCount: new Set(activeProjectIds).size,
       totalInteractions: allLogs.length,
-      criticalIncidentRate: allLogs.filter(l => l.severity === "CRITICAL").length / allLogs.length,
-      adoptionVelocity: 0.12, // +12% WoW
-      dataConsistencyScore: 0.94
+      criticalIncidentRate: allLogs.length > 0 ? allLogs.filter((log) => log.severity === "CRITICAL").length / allLogs.length : 0,
+      adoptionVelocity: 0.12,
+      dataConsistencyScore: 0.94,
     };
   }
 }
