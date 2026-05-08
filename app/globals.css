@@ -16,13 +16,16 @@
   --bg-surface:    #FFFFFF;
   --bg-subtle:     #F9FAFB;
   --bg-muted:      #F3F4F6;
+  --bg-sidebar:    #F8FAFC;
   
   --border:        #E5E7EB; /* Standard gray border */
   --border-mid:    #D1D5DB;
+  --border-subtle: #F1F5F9;
   
   --text-primary:   #111827;
   --text-secondary: #4B5563;
   --text-muted:     #9CA3AF;
+  --text-tertiary:  #64748B;
   
   --success:       #10B981;
   --success-light: #ECFDF5;
@@ -32,11 +35,27 @@
   --danger-light:  #FEF2F2;
   --info:          #3B82F6;
   --info-light:    #EFF6FF;
+  
+  --status-healthy: #10B981;
+  --status-critical: #EF4444;
+  --status-warning: #F59E0B;
+  --status-info: #3B82F6;
+  
+  --bg-input: #FFFFFF;
+  --finance-budget: #10B981;
+  --finance-committed: #3B82F6;
+  --finance-actual: #F59E0B;
+  --finance-forecast: #8B5CF6;
+  --brand-primary: #2563EB;
+  --brand-secondary: #8B5CF6;
+  --erp-card: #FFFFFF;
+  --erp-border: #E5E7EB;
 
   /* Layout Constants */
-  --sidebar-width:       240px;
+  --sidebar-width:       260px;
+  --sidebar-width-sm:    72px;
   --sidebar-collapsed:   72px;
-  --header-height:       56px;
+  --header-height:       72px;
   --content-max-width:   1600px;
 
   /* Spacing System (Compact ERP Grid) */
@@ -47,6 +66,9 @@
   --sp-20: 20px;
   --sp-24: 24px;
   --sp-32: 32px;
+  --space-md: 16px;
+  --space-lg: 20px;
+  --space-xl: 24px;
 
   /* Border Radius */
   --radius-sm: 4px;
@@ -55,6 +77,9 @@
   /* Shadows - Minimalist ERP Style */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-kpi: 0 4px 14px rgba(15, 23, 42, 0.04);
+  --shadow-active: 0 6px 18px rgba(37, 99, 235, 0.18);
+  --shadow-hover: 0 10px 28px rgba(15, 23, 42, 0.08);
 
   /* Row Heights */
   --row-height: 40px;
@@ -82,7 +107,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ── 3. ENTERPRISE LAYOUT SHELL ────────────────────────────────── */
+/* ── 3. ENTERPRISE LAYOUT SHELL ────────────────────────────────– */
 .erp-shell {
   display: flex;
   min-height: 100vh;
@@ -95,12 +120,13 @@ body {
   left: 0;
   z-index: 40;
   width: var(--sidebar-width);
-  background-color: var(--bg-surface);
-  border-right: 1px solid var(--border);
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  border-right: 1px solid #e2e8f0;
   display: flex;
   flex-direction: column;
   transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  box-shadow: 2px 0 8px rgba(15, 23, 42, 0.04);
 }
 
 .erp-sidebar.collapsed {
@@ -207,9 +233,10 @@ body {
 .erp-card {
   background-color: var(--bg-surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 12px;
   box-shadow: var(--shadow-sm);
   overflow: hidden;
+  transition: all 0.2s ease;
 }
 
 .erp-panel-header {
@@ -226,18 +253,46 @@ body {
 }
 
 .kpi-card {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--sp-12) var(--sp-16);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e0e7ff;
+  border-radius: 12px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  min-height: 100px;
-  border-left: 4px solid var(--brand);
+  justify-content: flex-start;
+  min-height: auto;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  transition: all 0.2s ease;
+  gap: 8px;
 }
 
-/* ── 6. TABLE SYSTEM (ERP STANDARD) ─────────────────────────────── */
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.12);
+  border-color: #2563EB;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.kpi-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.1;
+}
+
+.kpi-trend {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* ── 6. TABLE SYSTEM (ERP STANDARD) ─────────────────────────────– */
 .erp-table-wrap {
   width: 100%;
   overflow-x: auto;
@@ -255,37 +310,40 @@ body {
 .erp-table thead th {
   height: 40px;
   padding: 0 var(--sp-16);
-  background-color: var(--bg-subtle);
-  border-bottom: 1px solid var(--border);
-  color: var(--text-secondary);
+  background: linear-gradient(180deg, #f3f4f6 0%, #f0f1f5 100%);
+  border-bottom: 2px solid #d1d5db;
+  color: #6b7280;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   text-align: left;
   white-space: nowrap;
   position: sticky;
   top: 0;
   z-index: 10;
+  letter-spacing: 0.08em;
 }
 
 .erp-table tbody td {
-  height: var(--row-height);
+  height: 40px;
   padding: 0 var(--sp-16);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid #f0f0f0;
   color: var(--text-primary);
   vertical-align: middle;
+  font-size: 13px;
 }
 
 .erp-table tbody tr:hover td {
-  background-color: var(--bg-muted);
+  background-color: #f9fafb;
+  transition: background-color 0.15s ease;
 }
 
 .erp-table.zebra tbody tr:nth-child(even) td {
-  background-color: #F9FAFB;
+  background-color: #fafbfc;
 }
 
-.erp-table-dense thead th { height: 32px; font-size: 10px; }
-.erp-table-dense tbody td { height: 36px; font-size: 12px; }
+.erp-table-dense thead th { height: 36px; font-size: 10px; padding: 0 var(--sp-12); }
+.erp-table-dense tbody td { height: 36px; font-size: 12px; padding: 0 var(--sp-12); }
 
 /* WBS Specific Table */
 .wbs-row-parent {
@@ -347,8 +405,13 @@ body {
 .btn-primary {
   background-color: var(--brand);
   color: white;
+  transition: all 0.2s ease;
 }
-.btn-primary:hover { background-color: var(--brand-hover); }
+.btn-primary:hover { 
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
 
 .btn-secondary {
   background-color: var(--bg-surface);
@@ -356,6 +419,17 @@ body {
   color: var(--text-secondary);
 }
 .btn-secondary:hover { background-color: var(--bg-subtle); color: var(--text-primary); }
+
+.btn-ghost {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+}
+.btn-ghost:hover { 
+  background-color: var(--bg-subtle); 
+  color: var(--text-primary);
+}
 
 .btn-sm {
   height: 32px;
@@ -459,3 +533,58 @@ body {
 ::-webkit-scrollbar-track { background: var(--bg-base); }
 ::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ── 13. DASHBOARD IMPROVEMENTS ─────────────────────────────── */
+.text-muted {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.indicator {
+  height: 6px;
+  background-color: #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.indicator-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.project-command-center {
+  padding: 20px 0;
+}
+
+.project-command-center h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.project-command-center h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 16px;
+  margin-top: 24px;
+  letter-spacing: 0.5px;
+}
+
+.erp-table-container {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.erp-table-container h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}

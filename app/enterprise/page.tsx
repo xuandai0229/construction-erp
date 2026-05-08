@@ -37,73 +37,75 @@ export default function EnterpriseERPPage() {
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'space-between',
-        padding: '12px', 
+        padding: '10px 12px', 
         borderRadius: '8px', 
         cursor: 'pointer',
-        background: activeTab === id ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
-        color: activeTab === id ? 'var(--brand-primary)' : 'var(--erp-text-muted)',
-        fontWeight: activeTab === id ? 700 : 400,
-        transition: 'all 0.2s',
-        marginBottom: '4px'
+        background: activeTab === id ? 'linear-gradient(90deg, #dbeafe 0%, #f0f9ff 100%)' : 'transparent',
+        color: activeTab === id ? '#1e40af' : '#6b7280',
+        fontWeight: activeTab === id ? 700 : 500,
+        transition: 'all 0.2s ease',
+        marginBottom: '4px',
+        borderLeft: activeTab === id ? '3px solid #2563eb' : '3px solid transparent',
+        paddingLeft: activeTab === id ? '10px' : '12px'
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <span style={{ fontSize: '1.25rem' }}>{icon}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px' }}>
+        <span style={{ fontSize: '1.125rem' }}>{icon}</span>
         <span>{label}</span>
       </div>
-      {badge && <span style={{ background: 'var(--status-critical)', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '10px' }}>{badge}</span>}
+      {badge && <span style={{ background: '#ef4444', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '10px', fontWeight: 700 }}>{badge}</span>}
     </div>
   );
 
   return (
     <div className="erp-layout">
       {/* Sidebar */}
-      <aside className="erp-sidebar">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-          <div style={{ width: '40px', height: '40px', background: 'var(--brand-primary)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '1.5rem' }}>G</div>
+      <aside className="erp-sidebar" style={{ padding: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+          <div style={{ width: '40px', height: '40px', background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '1.5rem', color: 'white', boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)' }}>G</div>
           <div style={{ lineHeight: 1 }}>
-            <div style={{ fontWeight: 800, fontSize: '1.125rem', letterSpacing: '-0.02em' }}>ANTIGRAVITY</div>
-            <div className="text-muted" style={{ fontSize: '0.65rem', fontWeight: 700 }}>CONSTRUCTION ERP</div>
+            <div style={{ fontWeight: 800, fontSize: '1.125rem', letterSpacing: '-0.02em', color: '#1f2937' }}>ANTIGRAVITY</div>
+            <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#9ca3af', letterSpacing: '0.5px' }}>CONSTRUCTION ERP</div>
           </div>
         </div>
 
-        <nav style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingRight: '4px' }}>
-          <div className="text-muted" style={{ fontSize: '0.65rem', fontWeight: 700, padding: '12px', letterSpacing: '0.1em' }}>VALIDATION</div>
+        <nav style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingRight: '4px', flex: 1 }}>
+          <div style={{ fontSize: '0.65rem', fontWeight: 700, padding: '12px 0', color: '#9ca3af', letterSpacing: '0.1em' }}>VALIDATION</div>
           <NavItem id="pilot" icon="🚧" label="Pilot Dashboard" badge={2} />
           <NavItem id="rollout" icon="🚀" label="Deployment Hub" />
           <NavItem id="audit-trail" icon="🛡️" label="Operational Audit" />
           
-          <div className="text-muted" style={{ fontSize: '0.65rem', fontWeight: 700, padding: '12px', letterSpacing: '0.1em', marginTop: '16px' }}>PROJECT COMMAND</div>
+          <div style={{ fontSize: '0.65rem', fontWeight: 700, padding: '12px 0', marginTop: '12px', color: '#9ca3af', letterSpacing: '0.1em' }}>PROJECT COMMAND</div>
           <NavItem id="project-360" icon="🎯" label="Project 360" />
           <NavItem id="executive" icon="📈" label="Portfolio BI" />
           
-          <div className="text-muted" style={{ fontSize: '0.65rem', fontWeight: 700, padding: '12px', letterSpacing: '0.1em', marginTop: '16px' }}>FIELD & OPS</div>
+          <div style={{ fontSize: '0.65rem', fontWeight: 700, padding: '12px 0', marginTop: '12px', color: '#9ca3af', letterSpacing: '0.1em' }}>FIELD & OPS</div>
           <NavItem id="field-hub" icon="📱" label="Field Hub" />
           <NavItem id="wbs-workspace" icon="🌳" label="WBS / BOQ" />
           <NavItem id="documents" icon="📂" label="DMS (Files)" />
         </nav>
 
-        <div style={{ marginTop: 'auto', padding: '16px', background: 'rgba(0,0,0,0.2)', borderRadius: '12px' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 600 }}>Pilot Readiness</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
-            <div style={{ width: '32px', height: '32px', borderRadius: '50%', border: '2px solid var(--status-healthy)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}>78%</div>
+        <div style={{ marginTop: '16px', padding: '12px', background: 'linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%)', borderRadius: '8px', border: '1px solid #bfdbfe', color: '#1e40af' }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 700, marginBottom: '8px' }}>PILOT READINESS</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', border: '2px solid #10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#10b981' }}>78%</div>
             <div>
-              <div style={{ fontSize: '0.875rem', fontWeight: 700 }}>Maturity: High</div>
-              <div style={{ fontSize: '0.65rem', color: 'var(--status-healthy)' }}>Ready to Scale</div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#1f2937' }}>High Maturity</div>
+              <div style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 600 }}>Ready to Scale</div>
             </div>
           </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="erp-main" style={{ display: 'grid', gridTemplateColumns: activeTab === 'documents' || activeTab === 'wbs-workspace' || activeTab === 'audit-trail' || activeTab === 'rollout' || activeTab === 'pilot' ? '1fr' : '1fr 320px', gap: 'var(--space-xl)' }}>
+      <main className="erp-main" style={{ display: 'grid', gridTemplateColumns: activeTab === 'documents' || activeTab === 'wbs-workspace' || activeTab === 'audit-trail' || activeTab === 'rollout' || activeTab === 'pilot' ? '1fr' : '1fr 320px', gap: '16px', padding: '20px 24px' }}>
         <div style={{ overflowY: 'auto' }}>
           {/* Top Header */}
-          <header style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '24px', marginBottom: 'var(--space-lg)' }}>
-             <input type="text" placeholder="Global Search (Ctrl+K)..." style={{ flex: 1, maxWidth: '400px', background: 'var(--erp-card)', border: '1px solid var(--erp-border)', borderRadius: '8px', padding: '8px 16px', color: 'white' }} />
-             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <button className="btn btn-primary" style={{ padding: '6px 12px', fontSize: '0.7rem' }}>BÁO CÁO NHANH</button>
-                <span style={{ fontSize: '1.25rem', cursor: 'pointer' }}>🔔</span>
+          <header style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '20px', marginBottom: '18px', marginTop: '-4px' }}>
+             <input type="text" placeholder="Global Search (Ctrl+K)..." style={{ flex: 1, maxWidth: '400px', background: 'white', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '8px 14px', color: '#111827', fontSize: '13px' }} />
+             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <button className="btn btn-primary" style={{ padding: '6px 14px', fontSize: '12px' }}>BÁO CÁO NHANH</button>
+                <span style={{ fontSize: '1.25rem', cursor: 'pointer', opacity: 0.8, transition: 'opacity 0.2s' }}>🔔</span>
              </div>
           </header>
 
@@ -114,7 +116,7 @@ export default function EnterpriseERPPage() {
 
         {/* Collaboration Sidebar */}
         {activeTab !== 'documents' && activeTab !== 'wbs-workspace' && activeTab !== 'audit-trail' && activeTab !== 'rollout' && activeTab !== 'pilot' && (
-          <aside style={{ borderLeft: '1px solid var(--erp-border)', paddingLeft: 'var(--space-xl)', overflowY: 'auto' }}>
+          <aside style={{ borderLeft: '1px solid #e5e7eb', paddingLeft: '16px', overflowY: 'auto' }}>
             <ActivityFeed />
           </aside>
         )}
