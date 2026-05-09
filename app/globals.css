@@ -140,14 +140,41 @@ select {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
 }
 
-.sticky-footer {
+.erp-table th.sticky-left,
+.erp-table td.sticky-left {
   position: sticky;
-  bottom: 0;
-  z-index: 10;
-  background-color: #0f172a;
-  border-top: 1px solid #1e293b;
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  left: 0;
+  z-index: 20;
+  background-color: inherit;
 }
+
+.erp-table th.sticky-right,
+.erp-table td.sticky-right {
+  position: sticky;
+  right: 0;
+  z-index: 20;
+  background-color: inherit;
+}
+
+.erp-table th.sticky-left::after,
+.erp-table td.sticky-left::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: #1e293b;
+}
+
+.erp-table th.sticky-right::before,
+.erp-table td.sticky-right::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: #1e293b;
+}
+
