@@ -86,6 +86,8 @@ model Project {
   purchaseOrders       PurchaseOrder[]
   SiteConsumption      SiteConsumption[]
   Subcontract          Subcontract[]
+  VariationOrder       VariationOrder[]
+  SiteLog              SiteLog[]
   tasks                Task[]
   wbsItems             WBSItem[]
 
@@ -140,6 +142,7 @@ model WBSItem {
   revenues           Revenue[]
   SiteConsumption    SiteConsumption[]
   SubcontractItem    SubcontractItem[]
+  VariationOrder     VariationOrder[]
   parent             WBSItem?            @relation("WBSChildren", fields: [parentId], references: [id])
   children           WBSItem[]           @relation("WBSChildren")
   project            Project             @relation(fields: [projectId], references: [id])
@@ -169,6 +172,11 @@ model CostRecord {
   deletedAt       DateTime?
   deletedById     String?
   approvalStatus  ApprovalStatus @default(DRAFT)
+  vatRate         Decimal        @default(10) @db.Decimal(5, 2)
+  vatAmount       Decimal        @default(0) @db.Decimal(18, 2)
+  retentionRate   Decimal        @default(0) @db.Decimal(5, 2)
+  retentionAmount Decimal        @default(0) @db.Decimal(18, 2)
+  netAmount       Decimal        @default(0) @db.Decimal(18, 2)
   deletedBy       User?          @relation("CostDeletedBy", fields: [deletedById], references: [id])
   createdBy       User?          @relation("CostCreatedBy", fields: [createdById], references: [id])
   purchaseOrder   PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
@@ -240,7 +248,11 @@ model Invoice {
   deletedBy         User?          @relation("InvoiceDeletedBy", fields: [deletedById], references: [id])
   version           Int           @default(1)
   certifiedProgress Decimal       @default(0) @db.Decimal(18, 2)
+  vatRate           Decimal       @default(10) @db.Decimal(5, 2)
+  vatAmount         Decimal       @default(0) @db.Decimal(18, 2)
+  retentionRate     Decimal       @default(0) @db.Decimal(5, 2)
   retentionAmount   Decimal       @default(0) @db.Decimal(18, 2)
+  netAmount         Decimal       @default(0) @db.Decimal(18, 2)
   contract          Contract?     @relation(fields: [contractId], references: [id])
   createdBy         User?         @relation("InvoiceCreatedBy", fields: [createdById], references: [id])
   wbs               WBSItem       @relation(fields: [wbsId], references: [id])
@@ -339,6 +351,7 @@ model PurchaseRequest {
   updatedAt      DateTime          @updatedAt
   deletedAt      DateTime?
   purchaseOrders PurchaseOrder[]
+  quotations     Quotation[]
   createdBy      User?             @relation("PRCreatedBy", fields: [createdById], references: [id])
 
   @@index([projectId])
@@ -940,4 +953,58 @@ enum SubcontractStatus {
   SUSPENDED
   COMPLETED
   TERMINATED
+}
+model VariationOrder {
+  id              String         @id @default(uuid())
+  projectId       String
+  boqItemId       String?
+  wbsId           String?
+  title           String
+  description     String?
+  amount          Decimal        @db.Decimal(18, 2)
+  status          ApprovalStatus @default(DRAFT)
+  type            String         @default("ADDITION") // ADDITION, OMISSION, SUBSTITUTION
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  createdById     String?
+  project         Project        @relation(fields: [projectId], references: [id])
+  wbs             WBSItem?       @relation(fields: [wbsId], references: [id])
+
+  @@index([projectId])
+  @@index([status])
+}
+
+model SiteLog {
+  id          String   @id @default(uuid())
+  projectId   String
+  date        DateTime @default(now())
+  weather     String?  // Sunny, Rainy, Stormy
+  temperature Float?
+  manpower    Int      @default(0)
+  equipment   String?
+  progress    String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdById String?
+  project     Project  @relation(fields: [projectId], references: [id])
+
+  @@index([projectId])
+  @@index([date])
+}
+
+model Quotation {
+  id                String         @id @default(uuid())
+  purchaseRequestId String?
+  vendor            String
+  totalAmount       Decimal        @db.Decimal(18, 2)
+  leadTimeDays      Int?
+  validUntil        DateTime?
+  status            String         @default("PENDING") // PENDING, SELECTED, REJECTED
+  notes             String?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  purchaseRequest   PurchaseRequest? @relation(fields: [purchaseRequestId], references: [id])
+
+  @@index([purchaseRequestId])
 }

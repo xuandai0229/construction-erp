@@ -278,4 +278,26 @@ export class RevenueService {
 
     return item;
   }
+
+  static async bulkUpdateInvoiceApproval(ids: string[], status: "APPROVED" | "REJECTED", userId?: string) {
+    return prisma.$transaction(async (tx) => {
+      const results = [];
+      for (const id of ids) {
+        const inv = await tx.invoice.update({
+          where: { id },
+          data: { approvalStatus: status }
+        });
+        
+        await AuditService.log({
+          userId,
+          action: status === "APPROVED" ? "APPROVE" : "REJECT",
+          entity: "Invoice",
+          entityId: inv.id,
+          newData: inv
+        });
+        results.push(inv);
+      }
+      return results;
+    });
+  }
 }

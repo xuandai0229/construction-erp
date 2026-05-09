@@ -165,4 +165,26 @@ export class CostService {
 
     return item;
   }
+
+  static async bulkUpdateApproval(ids: string[], status: "APPROVED" | "REJECTED", userId?: string) {
+    return prisma.$transaction(async (tx) => {
+      const results = [];
+      for (const id of ids) {
+        const cost = await tx.costRecord.update({
+          where: { id },
+          data: { approvalStatus: status }
+        });
+        
+        await AuditService.log({
+          userId,
+          action: status === "APPROVED" ? "APPROVE" : "REJECT",
+          entity: "CostRecord",
+          entityId: cost.id,
+          newData: cost
+        });
+        results.push(cost);
+      }
+      return results;
+    });
+  }
 }

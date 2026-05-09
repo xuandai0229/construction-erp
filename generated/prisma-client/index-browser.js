@@ -207,7 +207,12 @@ exports.Prisma.CostRecordScalarFieldEnum = {
   requestId: 'requestId',
   deletedAt: 'deletedAt',
   deletedById: 'deletedById',
-  approvalStatus: 'approvalStatus'
+  approvalStatus: 'approvalStatus',
+  vatRate: 'vatRate',
+  vatAmount: 'vatAmount',
+  retentionRate: 'retentionRate',
+  retentionAmount: 'retentionAmount',
+  netAmount: 'netAmount'
 };
 
 exports.Prisma.BudgetRecordScalarFieldEnum = {
@@ -259,7 +264,11 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   approvalStatus: 'approvalStatus',
   version: 'version',
   certifiedProgress: 'certifiedProgress',
-  retentionAmount: 'retentionAmount'
+  vatRate: 'vatRate',
+  vatAmount: 'vatAmount',
+  retentionRate: 'retentionRate',
+  retentionAmount: 'retentionAmount',
+  netAmount: 'netAmount'
 };
 
 exports.Prisma.PaymentScalarFieldEnum = {
@@ -704,6 +713,49 @@ exports.Prisma.UserMaturityScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.VariationOrderScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  boqItemId: 'boqItemId',
+  wbsId: 'wbsId',
+  title: 'title',
+  description: 'description',
+  amount: 'amount',
+  status: 'status',
+  type: 'type',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  createdById: 'createdById'
+};
+
+exports.Prisma.SiteLogScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  date: 'date',
+  weather: 'weather',
+  temperature: 'temperature',
+  manpower: 'manpower',
+  equipment: 'equipment',
+  progress: 'progress',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  createdById: 'createdById'
+};
+
+exports.Prisma.QuotationScalarFieldEnum = {
+  id: 'id',
+  purchaseRequestId: 'purchaseRequestId',
+  vendor: 'vendor',
+  totalAmount: 'totalAmount',
+  leadTimeDays: 'leadTimeDays',
+  validUntil: 'validUntil',
+  status: 'status',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -876,7 +928,10 @@ exports.Prisma.ModelName = {
   SubcontractItem: 'SubcontractItem',
   SubcontractProgress: 'SubcontractProgress',
   TrainingRecord: 'TrainingRecord',
-  UserMaturity: 'UserMaturity'
+  UserMaturity: 'UserMaturity',
+  VariationOrder: 'VariationOrder',
+  SiteLog: 'SiteLog',
+  Quotation: 'Quotation'
 };
 
 /**

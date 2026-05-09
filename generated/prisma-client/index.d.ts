@@ -228,6 +228,21 @@ export type TrainingRecord = $Result.DefaultSelection<Prisma.$TrainingRecordPayl
  * 
  */
 export type UserMaturity = $Result.DefaultSelection<Prisma.$UserMaturityPayload>
+/**
+ * Model VariationOrder
+ * 
+ */
+export type VariationOrder = $Result.DefaultSelection<Prisma.$VariationOrderPayload>
+/**
+ * Model SiteLog
+ * 
+ */
+export type SiteLog = $Result.DefaultSelection<Prisma.$SiteLogPayload>
+/**
+ * Model Quotation
+ * 
+ */
+export type Quotation = $Result.DefaultSelection<Prisma.$QuotationPayload>
 
 /**
  * Enums
@@ -977,6 +992,36 @@ export class PrismaClient<
     * ```
     */
   get userMaturity(): Prisma.UserMaturityDelegate<ExtArgs>;
+
+  /**
+   * `prisma.variationOrder`: Exposes CRUD operations for the **VariationOrder** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more VariationOrders
+    * const variationOrders = await prisma.variationOrder.findMany()
+    * ```
+    */
+  get variationOrder(): Prisma.VariationOrderDelegate<ExtArgs>;
+
+  /**
+   * `prisma.siteLog`: Exposes CRUD operations for the **SiteLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SiteLogs
+    * const siteLogs = await prisma.siteLog.findMany()
+    * ```
+    */
+  get siteLog(): Prisma.SiteLogDelegate<ExtArgs>;
+
+  /**
+   * `prisma.quotation`: Exposes CRUD operations for the **Quotation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Quotations
+    * const quotations = await prisma.quotation.findMany()
+    * ```
+    */
+  get quotation(): Prisma.QuotationDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -1460,7 +1505,10 @@ export namespace Prisma {
     SubcontractItem: 'SubcontractItem',
     SubcontractProgress: 'SubcontractProgress',
     TrainingRecord: 'TrainingRecord',
-    UserMaturity: 'UserMaturity'
+    UserMaturity: 'UserMaturity',
+    VariationOrder: 'VariationOrder',
+    SiteLog: 'SiteLog',
+    Quotation: 'Quotation'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1476,7 +1524,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "category" | "project" | "task" | "wBSItem" | "costRecord" | "budgetRecord" | "revenue" | "invoice" | "payment" | "ledgerAccount" | "journalEntry" | "transactionLine" | "purchaseRequest" | "purchaseOrder" | "purchaseOrderItem" | "goodsReceipt" | "contract" | "contractChange" | "auditLog" | "activityFeed" | "approvalRequest" | "approvalStep" | "authorityMatrix" | "bOQItem" | "budgetVersion" | "comment" | "delegationPolicy" | "delegationWindow" | "document" | "fiscalPeriod" | "job" | "inventoryTransaction" | "material" | "measurement" | "progressEntry" | "siteConsumption" | "subcontract" | "subcontractInvoice" | "subcontractItem" | "subcontractProgress" | "trainingRecord" | "userMaturity"
+      modelProps: "user" | "category" | "project" | "task" | "wBSItem" | "costRecord" | "budgetRecord" | "revenue" | "invoice" | "payment" | "ledgerAccount" | "journalEntry" | "transactionLine" | "purchaseRequest" | "purchaseOrder" | "purchaseOrderItem" | "goodsReceipt" | "contract" | "contractChange" | "auditLog" | "activityFeed" | "approvalRequest" | "approvalStep" | "authorityMatrix" | "bOQItem" | "budgetVersion" | "comment" | "delegationPolicy" | "delegationWindow" | "document" | "fiscalPeriod" | "job" | "inventoryTransaction" | "material" | "measurement" | "progressEntry" | "siteConsumption" | "subcontract" | "subcontractInvoice" | "subcontractItem" | "subcontractProgress" | "trainingRecord" | "userMaturity" | "variationOrder" | "siteLog" | "quotation"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4490,6 +4538,216 @@ export namespace Prisma {
           }
         }
       }
+      VariationOrder: {
+        payload: Prisma.$VariationOrderPayload<ExtArgs>
+        fields: Prisma.VariationOrderFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.VariationOrderFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VariationOrderPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.VariationOrderFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VariationOrderPayload>
+          }
+          findFirst: {
+            args: Prisma.VariationOrderFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VariationOrderPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.VariationOrderFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VariationOrderPayload>
+          }
+          findMany: {
+            args: Prisma.VariationOrderFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VariationOrderPayload>[]
+          }
+          create: {
+            args: Prisma.VariationOrderCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VariationOrderPayload>
+          }
+          createMany: {
+            args: Prisma.VariationOrderCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.VariationOrderCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VariationOrderPayload>[]
+          }
+          delete: {
+            args: Prisma.VariationOrderDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VariationOrderPayload>
+          }
+          update: {
+            args: Prisma.VariationOrderUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VariationOrderPayload>
+          }
+          deleteMany: {
+            args: Prisma.VariationOrderDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.VariationOrderUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.VariationOrderUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VariationOrderPayload>
+          }
+          aggregate: {
+            args: Prisma.VariationOrderAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVariationOrder>
+          }
+          groupBy: {
+            args: Prisma.VariationOrderGroupByArgs<ExtArgs>
+            result: $Utils.Optional<VariationOrderGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.VariationOrderCountArgs<ExtArgs>
+            result: $Utils.Optional<VariationOrderCountAggregateOutputType> | number
+          }
+        }
+      }
+      SiteLog: {
+        payload: Prisma.$SiteLogPayload<ExtArgs>
+        fields: Prisma.SiteLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SiteLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SiteLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteLogPayload>
+          }
+          findFirst: {
+            args: Prisma.SiteLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SiteLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteLogPayload>
+          }
+          findMany: {
+            args: Prisma.SiteLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteLogPayload>[]
+          }
+          create: {
+            args: Prisma.SiteLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteLogPayload>
+          }
+          createMany: {
+            args: Prisma.SiteLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SiteLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteLogPayload>[]
+          }
+          delete: {
+            args: Prisma.SiteLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteLogPayload>
+          }
+          update: {
+            args: Prisma.SiteLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.SiteLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SiteLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SiteLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteLogPayload>
+          }
+          aggregate: {
+            args: Prisma.SiteLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSiteLog>
+          }
+          groupBy: {
+            args: Prisma.SiteLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SiteLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SiteLogCountArgs<ExtArgs>
+            result: $Utils.Optional<SiteLogCountAggregateOutputType> | number
+          }
+        }
+      }
+      Quotation: {
+        payload: Prisma.$QuotationPayload<ExtArgs>
+        fields: Prisma.QuotationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.QuotationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuotationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.QuotationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuotationPayload>
+          }
+          findFirst: {
+            args: Prisma.QuotationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuotationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.QuotationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuotationPayload>
+          }
+          findMany: {
+            args: Prisma.QuotationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuotationPayload>[]
+          }
+          create: {
+            args: Prisma.QuotationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuotationPayload>
+          }
+          createMany: {
+            args: Prisma.QuotationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.QuotationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuotationPayload>[]
+          }
+          delete: {
+            args: Prisma.QuotationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuotationPayload>
+          }
+          update: {
+            args: Prisma.QuotationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuotationPayload>
+          }
+          deleteMany: {
+            args: Prisma.QuotationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.QuotationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.QuotationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuotationPayload>
+          }
+          aggregate: {
+            args: Prisma.QuotationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateQuotation>
+          }
+          groupBy: {
+            args: Prisma.QuotationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<QuotationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.QuotationCountArgs<ExtArgs>
+            result: $Utils.Optional<QuotationCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4940,6 +5198,8 @@ export namespace Prisma {
     purchaseOrders: number
     SiteConsumption: number
     Subcontract: number
+    VariationOrder: number
+    SiteLog: number
     tasks: number
     wbsItems: number
   }
@@ -4956,6 +5216,8 @@ export namespace Prisma {
     purchaseOrders?: boolean | ProjectCountOutputTypeCountPurchaseOrdersArgs
     SiteConsumption?: boolean | ProjectCountOutputTypeCountSiteConsumptionArgs
     Subcontract?: boolean | ProjectCountOutputTypeCountSubcontractArgs
+    VariationOrder?: boolean | ProjectCountOutputTypeCountVariationOrderArgs
+    SiteLog?: boolean | ProjectCountOutputTypeCountSiteLogArgs
     tasks?: boolean | ProjectCountOutputTypeCountTasksArgs
     wbsItems?: boolean | ProjectCountOutputTypeCountWbsItemsArgs
   }
@@ -5051,6 +5313,20 @@ export namespace Prisma {
   /**
    * ProjectCountOutputType without action
    */
+  export type ProjectCountOutputTypeCountVariationOrderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VariationOrderWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountSiteLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SiteLogWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
   export type ProjectCountOutputTypeCountTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TaskWhereInput
   }
@@ -5076,6 +5352,7 @@ export namespace Prisma {
     revenues: number
     SiteConsumption: number
     SubcontractItem: number
+    VariationOrder: number
     children: number
   }
 
@@ -5088,6 +5365,7 @@ export namespace Prisma {
     revenues?: boolean | WBSItemCountOutputTypeCountRevenuesArgs
     SiteConsumption?: boolean | WBSItemCountOutputTypeCountSiteConsumptionArgs
     SubcontractItem?: boolean | WBSItemCountOutputTypeCountSubcontractItemArgs
+    VariationOrder?: boolean | WBSItemCountOutputTypeCountVariationOrderArgs
     children?: boolean | WBSItemCountOutputTypeCountChildrenArgs
   }
 
@@ -5156,6 +5434,13 @@ export namespace Prisma {
    */
   export type WBSItemCountOutputTypeCountSubcontractItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SubcontractItemWhereInput
+  }
+
+  /**
+   * WBSItemCountOutputType without action
+   */
+  export type WBSItemCountOutputTypeCountVariationOrderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VariationOrderWhereInput
   }
 
   /**
@@ -5274,10 +5559,12 @@ export namespace Prisma {
 
   export type PurchaseRequestCountOutputType = {
     purchaseOrders: number
+    quotations: number
   }
 
   export type PurchaseRequestCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchaseOrders?: boolean | PurchaseRequestCountOutputTypeCountPurchaseOrdersArgs
+    quotations?: boolean | PurchaseRequestCountOutputTypeCountQuotationsArgs
   }
 
   // Custom InputTypes
@@ -5296,6 +5583,13 @@ export namespace Prisma {
    */
   export type PurchaseRequestCountOutputTypeCountPurchaseOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PurchaseOrderWhereInput
+  }
+
+  /**
+   * PurchaseRequestCountOutputType without action
+   */
+  export type PurchaseRequestCountOutputTypeCountQuotationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuotationWhereInput
   }
 
 
@@ -8402,6 +8696,8 @@ export namespace Prisma {
     purchaseOrders?: boolean | Project$purchaseOrdersArgs<ExtArgs>
     SiteConsumption?: boolean | Project$SiteConsumptionArgs<ExtArgs>
     Subcontract?: boolean | Project$SubcontractArgs<ExtArgs>
+    VariationOrder?: boolean | Project$VariationOrderArgs<ExtArgs>
+    SiteLog?: boolean | Project$SiteLogArgs<ExtArgs>
     tasks?: boolean | Project$tasksArgs<ExtArgs>
     wbsItems?: boolean | Project$wbsItemsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
@@ -8457,6 +8753,8 @@ export namespace Prisma {
     purchaseOrders?: boolean | Project$purchaseOrdersArgs<ExtArgs>
     SiteConsumption?: boolean | Project$SiteConsumptionArgs<ExtArgs>
     Subcontract?: boolean | Project$SubcontractArgs<ExtArgs>
+    VariationOrder?: boolean | Project$VariationOrderArgs<ExtArgs>
+    SiteLog?: boolean | Project$SiteLogArgs<ExtArgs>
     tasks?: boolean | Project$tasksArgs<ExtArgs>
     wbsItems?: boolean | Project$wbsItemsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
@@ -8482,6 +8780,8 @@ export namespace Prisma {
       purchaseOrders: Prisma.$PurchaseOrderPayload<ExtArgs>[]
       SiteConsumption: Prisma.$SiteConsumptionPayload<ExtArgs>[]
       Subcontract: Prisma.$SubcontractPayload<ExtArgs>[]
+      VariationOrder: Prisma.$VariationOrderPayload<ExtArgs>[]
+      SiteLog: Prisma.$SiteLogPayload<ExtArgs>[]
       tasks: Prisma.$TaskPayload<ExtArgs>[]
       wbsItems: Prisma.$WBSItemPayload<ExtArgs>[]
     }
@@ -8877,6 +9177,8 @@ export namespace Prisma {
     purchaseOrders<T extends Project$purchaseOrdersArgs<ExtArgs> = {}>(args?: Subset<T, Project$purchaseOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findMany"> | Null>
     SiteConsumption<T extends Project$SiteConsumptionArgs<ExtArgs> = {}>(args?: Subset<T, Project$SiteConsumptionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SiteConsumptionPayload<ExtArgs>, T, "findMany"> | Null>
     Subcontract<T extends Project$SubcontractArgs<ExtArgs> = {}>(args?: Subset<T, Project$SubcontractArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubcontractPayload<ExtArgs>, T, "findMany"> | Null>
+    VariationOrder<T extends Project$VariationOrderArgs<ExtArgs> = {}>(args?: Subset<T, Project$VariationOrderArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VariationOrderPayload<ExtArgs>, T, "findMany"> | Null>
+    SiteLog<T extends Project$SiteLogArgs<ExtArgs> = {}>(args?: Subset<T, Project$SiteLogArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SiteLogPayload<ExtArgs>, T, "findMany"> | Null>
     tasks<T extends Project$tasksArgs<ExtArgs> = {}>(args?: Subset<T, Project$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany"> | Null>
     wbsItems<T extends Project$wbsItemsArgs<ExtArgs> = {}>(args?: Subset<T, Project$wbsItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WBSItemPayload<ExtArgs>, T, "findMany"> | Null>
     /**
@@ -9487,6 +9789,46 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SubcontractScalarFieldEnum | SubcontractScalarFieldEnum[]
+  }
+
+  /**
+   * Project.VariationOrder
+   */
+  export type Project$VariationOrderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VariationOrder
+     */
+    select?: VariationOrderSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VariationOrderInclude<ExtArgs> | null
+    where?: VariationOrderWhereInput
+    orderBy?: VariationOrderOrderByWithRelationInput | VariationOrderOrderByWithRelationInput[]
+    cursor?: VariationOrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VariationOrderScalarFieldEnum | VariationOrderScalarFieldEnum[]
+  }
+
+  /**
+   * Project.SiteLog
+   */
+  export type Project$SiteLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteLog
+     */
+    select?: SiteLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SiteLogInclude<ExtArgs> | null
+    where?: SiteLogWhereInput
+    orderBy?: SiteLogOrderByWithRelationInput | SiteLogOrderByWithRelationInput[]
+    cursor?: SiteLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SiteLogScalarFieldEnum | SiteLogScalarFieldEnum[]
   }
 
   /**
@@ -10908,6 +11250,7 @@ export namespace Prisma {
     revenues?: boolean | WBSItem$revenuesArgs<ExtArgs>
     SiteConsumption?: boolean | WBSItem$SiteConsumptionArgs<ExtArgs>
     SubcontractItem?: boolean | WBSItem$SubcontractItemArgs<ExtArgs>
+    VariationOrder?: boolean | WBSItem$VariationOrderArgs<ExtArgs>
     parent?: boolean | WBSItem$parentArgs<ExtArgs>
     children?: boolean | WBSItem$childrenArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -10957,6 +11300,7 @@ export namespace Prisma {
     revenues?: boolean | WBSItem$revenuesArgs<ExtArgs>
     SiteConsumption?: boolean | WBSItem$SiteConsumptionArgs<ExtArgs>
     SubcontractItem?: boolean | WBSItem$SubcontractItemArgs<ExtArgs>
+    VariationOrder?: boolean | WBSItem$VariationOrderArgs<ExtArgs>
     parent?: boolean | WBSItem$parentArgs<ExtArgs>
     children?: boolean | WBSItem$childrenArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -10980,6 +11324,7 @@ export namespace Prisma {
       revenues: Prisma.$RevenuePayload<ExtArgs>[]
       SiteConsumption: Prisma.$SiteConsumptionPayload<ExtArgs>[]
       SubcontractItem: Prisma.$SubcontractItemPayload<ExtArgs>[]
+      VariationOrder: Prisma.$VariationOrderPayload<ExtArgs>[]
       parent: Prisma.$WBSItemPayload<ExtArgs> | null
       children: Prisma.$WBSItemPayload<ExtArgs>[]
       project: Prisma.$ProjectPayload<ExtArgs>
@@ -11370,6 +11715,7 @@ export namespace Prisma {
     revenues<T extends WBSItem$revenuesArgs<ExtArgs> = {}>(args?: Subset<T, WBSItem$revenuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RevenuePayload<ExtArgs>, T, "findMany"> | Null>
     SiteConsumption<T extends WBSItem$SiteConsumptionArgs<ExtArgs> = {}>(args?: Subset<T, WBSItem$SiteConsumptionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SiteConsumptionPayload<ExtArgs>, T, "findMany"> | Null>
     SubcontractItem<T extends WBSItem$SubcontractItemArgs<ExtArgs> = {}>(args?: Subset<T, WBSItem$SubcontractItemArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubcontractItemPayload<ExtArgs>, T, "findMany"> | Null>
+    VariationOrder<T extends WBSItem$VariationOrderArgs<ExtArgs> = {}>(args?: Subset<T, WBSItem$VariationOrderArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VariationOrderPayload<ExtArgs>, T, "findMany"> | Null>
     parent<T extends WBSItem$parentArgs<ExtArgs> = {}>(args?: Subset<T, WBSItem$parentArgs<ExtArgs>>): Prisma__WBSItemClient<$Result.GetResult<Prisma.$WBSItemPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     children<T extends WBSItem$childrenArgs<ExtArgs> = {}>(args?: Subset<T, WBSItem$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WBSItemPayload<ExtArgs>, T, "findMany"> | Null>
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
@@ -11907,6 +12253,26 @@ export namespace Prisma {
   }
 
   /**
+   * WBSItem.VariationOrder
+   */
+  export type WBSItem$VariationOrderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VariationOrder
+     */
+    select?: VariationOrderSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VariationOrderInclude<ExtArgs> | null
+    where?: VariationOrderWhereInput
+    orderBy?: VariationOrderOrderByWithRelationInput | VariationOrderOrderByWithRelationInput[]
+    cursor?: VariationOrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VariationOrderScalarFieldEnum | VariationOrderScalarFieldEnum[]
+  }
+
+  /**
    * WBSItem.parent
    */
   export type WBSItem$parentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11973,6 +12339,11 @@ export namespace Prisma {
     quantity: Decimal | null
     unitPrice: Decimal | null
     version: number | null
+    vatRate: Decimal | null
+    vatAmount: Decimal | null
+    retentionRate: Decimal | null
+    retentionAmount: Decimal | null
+    netAmount: Decimal | null
   }
 
   export type CostRecordSumAggregateOutputType = {
@@ -11980,6 +12351,11 @@ export namespace Prisma {
     quantity: Decimal | null
     unitPrice: Decimal | null
     version: number | null
+    vatRate: Decimal | null
+    vatAmount: Decimal | null
+    retentionRate: Decimal | null
+    retentionAmount: Decimal | null
+    netAmount: Decimal | null
   }
 
   export type CostRecordMinAggregateOutputType = {
@@ -12003,6 +12379,11 @@ export namespace Prisma {
     deletedAt: Date | null
     deletedById: string | null
     approvalStatus: $Enums.ApprovalStatus | null
+    vatRate: Decimal | null
+    vatAmount: Decimal | null
+    retentionRate: Decimal | null
+    retentionAmount: Decimal | null
+    netAmount: Decimal | null
   }
 
   export type CostRecordMaxAggregateOutputType = {
@@ -12026,6 +12407,11 @@ export namespace Prisma {
     deletedAt: Date | null
     deletedById: string | null
     approvalStatus: $Enums.ApprovalStatus | null
+    vatRate: Decimal | null
+    vatAmount: Decimal | null
+    retentionRate: Decimal | null
+    retentionAmount: Decimal | null
+    netAmount: Decimal | null
   }
 
   export type CostRecordCountAggregateOutputType = {
@@ -12049,6 +12435,11 @@ export namespace Prisma {
     deletedAt: number
     deletedById: number
     approvalStatus: number
+    vatRate: number
+    vatAmount: number
+    retentionRate: number
+    retentionAmount: number
+    netAmount: number
     _all: number
   }
 
@@ -12058,6 +12449,11 @@ export namespace Prisma {
     quantity?: true
     unitPrice?: true
     version?: true
+    vatRate?: true
+    vatAmount?: true
+    retentionRate?: true
+    retentionAmount?: true
+    netAmount?: true
   }
 
   export type CostRecordSumAggregateInputType = {
@@ -12065,6 +12461,11 @@ export namespace Prisma {
     quantity?: true
     unitPrice?: true
     version?: true
+    vatRate?: true
+    vatAmount?: true
+    retentionRate?: true
+    retentionAmount?: true
+    netAmount?: true
   }
 
   export type CostRecordMinAggregateInputType = {
@@ -12088,6 +12489,11 @@ export namespace Prisma {
     deletedAt?: true
     deletedById?: true
     approvalStatus?: true
+    vatRate?: true
+    vatAmount?: true
+    retentionRate?: true
+    retentionAmount?: true
+    netAmount?: true
   }
 
   export type CostRecordMaxAggregateInputType = {
@@ -12111,6 +12517,11 @@ export namespace Prisma {
     deletedAt?: true
     deletedById?: true
     approvalStatus?: true
+    vatRate?: true
+    vatAmount?: true
+    retentionRate?: true
+    retentionAmount?: true
+    netAmount?: true
   }
 
   export type CostRecordCountAggregateInputType = {
@@ -12134,6 +12545,11 @@ export namespace Prisma {
     deletedAt?: true
     deletedById?: true
     approvalStatus?: true
+    vatRate?: true
+    vatAmount?: true
+    retentionRate?: true
+    retentionAmount?: true
+    netAmount?: true
     _all?: true
   }
 
@@ -12244,6 +12660,11 @@ export namespace Prisma {
     deletedAt: Date | null
     deletedById: string | null
     approvalStatus: $Enums.ApprovalStatus
+    vatRate: Decimal
+    vatAmount: Decimal
+    retentionRate: Decimal
+    retentionAmount: Decimal
+    netAmount: Decimal
     _count: CostRecordCountAggregateOutputType | null
     _avg: CostRecordAvgAggregateOutputType | null
     _sum: CostRecordSumAggregateOutputType | null
@@ -12286,6 +12707,11 @@ export namespace Prisma {
     deletedAt?: boolean
     deletedById?: boolean
     approvalStatus?: boolean
+    vatRate?: boolean
+    vatAmount?: boolean
+    retentionRate?: boolean
+    retentionAmount?: boolean
+    netAmount?: boolean
     deletedBy?: boolean | CostRecord$deletedByArgs<ExtArgs>
     createdBy?: boolean | CostRecord$createdByArgs<ExtArgs>
     purchaseOrder?: boolean | CostRecord$purchaseOrderArgs<ExtArgs>
@@ -12313,6 +12739,11 @@ export namespace Prisma {
     deletedAt?: boolean
     deletedById?: boolean
     approvalStatus?: boolean
+    vatRate?: boolean
+    vatAmount?: boolean
+    retentionRate?: boolean
+    retentionAmount?: boolean
+    netAmount?: boolean
     deletedBy?: boolean | CostRecord$deletedByArgs<ExtArgs>
     createdBy?: boolean | CostRecord$createdByArgs<ExtArgs>
     purchaseOrder?: boolean | CostRecord$purchaseOrderArgs<ExtArgs>
@@ -12340,6 +12771,11 @@ export namespace Prisma {
     deletedAt?: boolean
     deletedById?: boolean
     approvalStatus?: boolean
+    vatRate?: boolean
+    vatAmount?: boolean
+    retentionRate?: boolean
+    retentionAmount?: boolean
+    netAmount?: boolean
   }
 
   export type CostRecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12384,6 +12820,11 @@ export namespace Prisma {
       deletedAt: Date | null
       deletedById: string | null
       approvalStatus: $Enums.ApprovalStatus
+      vatRate: Prisma.Decimal
+      vatAmount: Prisma.Decimal
+      retentionRate: Prisma.Decimal
+      retentionAmount: Prisma.Decimal
+      netAmount: Prisma.Decimal
     }, ExtArgs["result"]["costRecord"]>
     composites: {}
   }
@@ -12801,6 +13242,11 @@ export namespace Prisma {
     readonly deletedAt: FieldRef<"CostRecord", 'DateTime'>
     readonly deletedById: FieldRef<"CostRecord", 'String'>
     readonly approvalStatus: FieldRef<"CostRecord", 'ApprovalStatus'>
+    readonly vatRate: FieldRef<"CostRecord", 'Decimal'>
+    readonly vatAmount: FieldRef<"CostRecord", 'Decimal'>
+    readonly retentionRate: FieldRef<"CostRecord", 'Decimal'>
+    readonly retentionAmount: FieldRef<"CostRecord", 'Decimal'>
+    readonly netAmount: FieldRef<"CostRecord", 'Decimal'>
   }
     
 
@@ -15325,7 +15771,11 @@ export namespace Prisma {
     remainingAmount: Decimal | null
     version: number | null
     certifiedProgress: Decimal | null
+    vatRate: Decimal | null
+    vatAmount: Decimal | null
+    retentionRate: Decimal | null
     retentionAmount: Decimal | null
+    netAmount: Decimal | null
   }
 
   export type InvoiceSumAggregateOutputType = {
@@ -15334,7 +15784,11 @@ export namespace Prisma {
     remainingAmount: Decimal | null
     version: number | null
     certifiedProgress: Decimal | null
+    vatRate: Decimal | null
+    vatAmount: Decimal | null
+    retentionRate: Decimal | null
     retentionAmount: Decimal | null
+    netAmount: Decimal | null
   }
 
   export type InvoiceMinAggregateOutputType = {
@@ -15359,7 +15813,11 @@ export namespace Prisma {
     approvalStatus: $Enums.ApprovalStatus | null
     version: number | null
     certifiedProgress: Decimal | null
+    vatRate: Decimal | null
+    vatAmount: Decimal | null
+    retentionRate: Decimal | null
     retentionAmount: Decimal | null
+    netAmount: Decimal | null
   }
 
   export type InvoiceMaxAggregateOutputType = {
@@ -15384,7 +15842,11 @@ export namespace Prisma {
     approvalStatus: $Enums.ApprovalStatus | null
     version: number | null
     certifiedProgress: Decimal | null
+    vatRate: Decimal | null
+    vatAmount: Decimal | null
+    retentionRate: Decimal | null
     retentionAmount: Decimal | null
+    netAmount: Decimal | null
   }
 
   export type InvoiceCountAggregateOutputType = {
@@ -15409,7 +15871,11 @@ export namespace Prisma {
     approvalStatus: number
     version: number
     certifiedProgress: number
+    vatRate: number
+    vatAmount: number
+    retentionRate: number
     retentionAmount: number
+    netAmount: number
     _all: number
   }
 
@@ -15420,7 +15886,11 @@ export namespace Prisma {
     remainingAmount?: true
     version?: true
     certifiedProgress?: true
+    vatRate?: true
+    vatAmount?: true
+    retentionRate?: true
     retentionAmount?: true
+    netAmount?: true
   }
 
   export type InvoiceSumAggregateInputType = {
@@ -15429,7 +15899,11 @@ export namespace Prisma {
     remainingAmount?: true
     version?: true
     certifiedProgress?: true
+    vatRate?: true
+    vatAmount?: true
+    retentionRate?: true
     retentionAmount?: true
+    netAmount?: true
   }
 
   export type InvoiceMinAggregateInputType = {
@@ -15454,7 +15928,11 @@ export namespace Prisma {
     approvalStatus?: true
     version?: true
     certifiedProgress?: true
+    vatRate?: true
+    vatAmount?: true
+    retentionRate?: true
     retentionAmount?: true
+    netAmount?: true
   }
 
   export type InvoiceMaxAggregateInputType = {
@@ -15479,7 +15957,11 @@ export namespace Prisma {
     approvalStatus?: true
     version?: true
     certifiedProgress?: true
+    vatRate?: true
+    vatAmount?: true
+    retentionRate?: true
     retentionAmount?: true
+    netAmount?: true
   }
 
   export type InvoiceCountAggregateInputType = {
@@ -15504,7 +15986,11 @@ export namespace Prisma {
     approvalStatus?: true
     version?: true
     certifiedProgress?: true
+    vatRate?: true
+    vatAmount?: true
+    retentionRate?: true
     retentionAmount?: true
+    netAmount?: true
     _all?: true
   }
 
@@ -15616,7 +16102,11 @@ export namespace Prisma {
     approvalStatus: $Enums.ApprovalStatus
     version: number
     certifiedProgress: Decimal
+    vatRate: Decimal
+    vatAmount: Decimal
+    retentionRate: Decimal
     retentionAmount: Decimal
+    netAmount: Decimal
     _count: InvoiceCountAggregateOutputType | null
     _avg: InvoiceAvgAggregateOutputType | null
     _sum: InvoiceSumAggregateOutputType | null
@@ -15660,7 +16150,11 @@ export namespace Prisma {
     approvalStatus?: boolean
     version?: boolean
     certifiedProgress?: boolean
+    vatRate?: boolean
+    vatAmount?: boolean
+    retentionRate?: boolean
     retentionAmount?: boolean
+    netAmount?: boolean
     deletedBy?: boolean | Invoice$deletedByArgs<ExtArgs>
     contract?: boolean | Invoice$contractArgs<ExtArgs>
     createdBy?: boolean | Invoice$createdByArgs<ExtArgs>
@@ -15692,7 +16186,11 @@ export namespace Prisma {
     approvalStatus?: boolean
     version?: boolean
     certifiedProgress?: boolean
+    vatRate?: boolean
+    vatAmount?: boolean
+    retentionRate?: boolean
     retentionAmount?: boolean
+    netAmount?: boolean
     deletedBy?: boolean | Invoice$deletedByArgs<ExtArgs>
     contract?: boolean | Invoice$contractArgs<ExtArgs>
     createdBy?: boolean | Invoice$createdByArgs<ExtArgs>
@@ -15721,7 +16219,11 @@ export namespace Prisma {
     approvalStatus?: boolean
     version?: boolean
     certifiedProgress?: boolean
+    vatRate?: boolean
+    vatAmount?: boolean
+    retentionRate?: boolean
     retentionAmount?: boolean
+    netAmount?: boolean
   }
 
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15772,7 +16274,11 @@ export namespace Prisma {
       approvalStatus: $Enums.ApprovalStatus
       version: number
       certifiedProgress: Prisma.Decimal
+      vatRate: Prisma.Decimal
+      vatAmount: Prisma.Decimal
+      retentionRate: Prisma.Decimal
       retentionAmount: Prisma.Decimal
+      netAmount: Prisma.Decimal
     }, ExtArgs["result"]["invoice"]>
     composites: {}
   }
@@ -16193,7 +16699,11 @@ export namespace Prisma {
     readonly approvalStatus: FieldRef<"Invoice", 'ApprovalStatus'>
     readonly version: FieldRef<"Invoice", 'Int'>
     readonly certifiedProgress: FieldRef<"Invoice", 'Decimal'>
+    readonly vatRate: FieldRef<"Invoice", 'Decimal'>
+    readonly vatAmount: FieldRef<"Invoice", 'Decimal'>
+    readonly retentionRate: FieldRef<"Invoice", 'Decimal'>
     readonly retentionAmount: FieldRef<"Invoice", 'Decimal'>
+    readonly netAmount: FieldRef<"Invoice", 'Decimal'>
   }
     
 
@@ -21009,6 +21519,7 @@ export namespace Prisma {
     updatedAt?: boolean
     deletedAt?: boolean
     purchaseOrders?: boolean | PurchaseRequest$purchaseOrdersArgs<ExtArgs>
+    quotations?: boolean | PurchaseRequest$quotationsArgs<ExtArgs>
     createdBy?: boolean | PurchaseRequest$createdByArgs<ExtArgs>
     _count?: boolean | PurchaseRequestCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["purchaseRequest"]>
@@ -21050,6 +21561,7 @@ export namespace Prisma {
 
   export type PurchaseRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchaseOrders?: boolean | PurchaseRequest$purchaseOrdersArgs<ExtArgs>
+    quotations?: boolean | PurchaseRequest$quotationsArgs<ExtArgs>
     createdBy?: boolean | PurchaseRequest$createdByArgs<ExtArgs>
     _count?: boolean | PurchaseRequestCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -21061,6 +21573,7 @@ export namespace Prisma {
     name: "PurchaseRequest"
     objects: {
       purchaseOrders: Prisma.$PurchaseOrderPayload<ExtArgs>[]
+      quotations: Prisma.$QuotationPayload<ExtArgs>[]
       createdBy: Prisma.$UserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -21443,6 +21956,7 @@ export namespace Prisma {
   export interface Prisma__PurchaseRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     purchaseOrders<T extends PurchaseRequest$purchaseOrdersArgs<ExtArgs> = {}>(args?: Subset<T, PurchaseRequest$purchaseOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findMany"> | Null>
+    quotations<T extends PurchaseRequest$quotationsArgs<ExtArgs> = {}>(args?: Subset<T, PurchaseRequest$quotationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuotationPayload<ExtArgs>, T, "findMany"> | Null>
     createdBy<T extends PurchaseRequest$createdByArgs<ExtArgs> = {}>(args?: Subset<T, PurchaseRequest$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -21822,6 +22336,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PurchaseOrderScalarFieldEnum | PurchaseOrderScalarFieldEnum[]
+  }
+
+  /**
+   * PurchaseRequest.quotations
+   */
+  export type PurchaseRequest$quotationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quotation
+     */
+    select?: QuotationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuotationInclude<ExtArgs> | null
+    where?: QuotationWhereInput
+    orderBy?: QuotationOrderByWithRelationInput | QuotationOrderByWithRelationInput[]
+    cursor?: QuotationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: QuotationScalarFieldEnum | QuotationScalarFieldEnum[]
   }
 
   /**
@@ -51706,6 +52240,3179 @@ export namespace Prisma {
 
 
   /**
+   * Model VariationOrder
+   */
+
+  export type AggregateVariationOrder = {
+    _count: VariationOrderCountAggregateOutputType | null
+    _avg: VariationOrderAvgAggregateOutputType | null
+    _sum: VariationOrderSumAggregateOutputType | null
+    _min: VariationOrderMinAggregateOutputType | null
+    _max: VariationOrderMaxAggregateOutputType | null
+  }
+
+  export type VariationOrderAvgAggregateOutputType = {
+    amount: Decimal | null
+  }
+
+  export type VariationOrderSumAggregateOutputType = {
+    amount: Decimal | null
+  }
+
+  export type VariationOrderMinAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    boqItemId: string | null
+    wbsId: string | null
+    title: string | null
+    description: string | null
+    amount: Decimal | null
+    status: $Enums.ApprovalStatus | null
+    type: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdById: string | null
+  }
+
+  export type VariationOrderMaxAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    boqItemId: string | null
+    wbsId: string | null
+    title: string | null
+    description: string | null
+    amount: Decimal | null
+    status: $Enums.ApprovalStatus | null
+    type: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdById: string | null
+  }
+
+  export type VariationOrderCountAggregateOutputType = {
+    id: number
+    projectId: number
+    boqItemId: number
+    wbsId: number
+    title: number
+    description: number
+    amount: number
+    status: number
+    type: number
+    createdAt: number
+    updatedAt: number
+    createdById: number
+    _all: number
+  }
+
+
+  export type VariationOrderAvgAggregateInputType = {
+    amount?: true
+  }
+
+  export type VariationOrderSumAggregateInputType = {
+    amount?: true
+  }
+
+  export type VariationOrderMinAggregateInputType = {
+    id?: true
+    projectId?: true
+    boqItemId?: true
+    wbsId?: true
+    title?: true
+    description?: true
+    amount?: true
+    status?: true
+    type?: true
+    createdAt?: true
+    updatedAt?: true
+    createdById?: true
+  }
+
+  export type VariationOrderMaxAggregateInputType = {
+    id?: true
+    projectId?: true
+    boqItemId?: true
+    wbsId?: true
+    title?: true
+    description?: true
+    amount?: true
+    status?: true
+    type?: true
+    createdAt?: true
+    updatedAt?: true
+    createdById?: true
+  }
+
+  export type VariationOrderCountAggregateInputType = {
+    id?: true
+    projectId?: true
+    boqItemId?: true
+    wbsId?: true
+    title?: true
+    description?: true
+    amount?: true
+    status?: true
+    type?: true
+    createdAt?: true
+    updatedAt?: true
+    createdById?: true
+    _all?: true
+  }
+
+  export type VariationOrderAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VariationOrder to aggregate.
+     */
+    where?: VariationOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VariationOrders to fetch.
+     */
+    orderBy?: VariationOrderOrderByWithRelationInput | VariationOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: VariationOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VariationOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VariationOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned VariationOrders
+    **/
+    _count?: true | VariationOrderCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: VariationOrderAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: VariationOrderSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: VariationOrderMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: VariationOrderMaxAggregateInputType
+  }
+
+  export type GetVariationOrderAggregateType<T extends VariationOrderAggregateArgs> = {
+        [P in keyof T & keyof AggregateVariationOrder]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVariationOrder[P]>
+      : GetScalarType<T[P], AggregateVariationOrder[P]>
+  }
+
+
+
+
+  export type VariationOrderGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VariationOrderWhereInput
+    orderBy?: VariationOrderOrderByWithAggregationInput | VariationOrderOrderByWithAggregationInput[]
+    by: VariationOrderScalarFieldEnum[] | VariationOrderScalarFieldEnum
+    having?: VariationOrderScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: VariationOrderCountAggregateInputType | true
+    _avg?: VariationOrderAvgAggregateInputType
+    _sum?: VariationOrderSumAggregateInputType
+    _min?: VariationOrderMinAggregateInputType
+    _max?: VariationOrderMaxAggregateInputType
+  }
+
+  export type VariationOrderGroupByOutputType = {
+    id: string
+    projectId: string
+    boqItemId: string | null
+    wbsId: string | null
+    title: string
+    description: string | null
+    amount: Decimal
+    status: $Enums.ApprovalStatus
+    type: string
+    createdAt: Date
+    updatedAt: Date
+    createdById: string | null
+    _count: VariationOrderCountAggregateOutputType | null
+    _avg: VariationOrderAvgAggregateOutputType | null
+    _sum: VariationOrderSumAggregateOutputType | null
+    _min: VariationOrderMinAggregateOutputType | null
+    _max: VariationOrderMaxAggregateOutputType | null
+  }
+
+  type GetVariationOrderGroupByPayload<T extends VariationOrderGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<VariationOrderGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof VariationOrderGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], VariationOrderGroupByOutputType[P]>
+            : GetScalarType<T[P], VariationOrderGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type VariationOrderSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    boqItemId?: boolean
+    wbsId?: boolean
+    title?: boolean
+    description?: boolean
+    amount?: boolean
+    status?: boolean
+    type?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdById?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    wbs?: boolean | VariationOrder$wbsArgs<ExtArgs>
+  }, ExtArgs["result"]["variationOrder"]>
+
+  export type VariationOrderSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    boqItemId?: boolean
+    wbsId?: boolean
+    title?: boolean
+    description?: boolean
+    amount?: boolean
+    status?: boolean
+    type?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdById?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    wbs?: boolean | VariationOrder$wbsArgs<ExtArgs>
+  }, ExtArgs["result"]["variationOrder"]>
+
+  export type VariationOrderSelectScalar = {
+    id?: boolean
+    projectId?: boolean
+    boqItemId?: boolean
+    wbsId?: boolean
+    title?: boolean
+    description?: boolean
+    amount?: boolean
+    status?: boolean
+    type?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdById?: boolean
+  }
+
+  export type VariationOrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    wbs?: boolean | VariationOrder$wbsArgs<ExtArgs>
+  }
+  export type VariationOrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    wbs?: boolean | VariationOrder$wbsArgs<ExtArgs>
+  }
+
+  export type $VariationOrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "VariationOrder"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+      wbs: Prisma.$WBSItemPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      projectId: string
+      boqItemId: string | null
+      wbsId: string | null
+      title: string
+      description: string | null
+      amount: Prisma.Decimal
+      status: $Enums.ApprovalStatus
+      type: string
+      createdAt: Date
+      updatedAt: Date
+      createdById: string | null
+    }, ExtArgs["result"]["variationOrder"]>
+    composites: {}
+  }
+
+  type VariationOrderGetPayload<S extends boolean | null | undefined | VariationOrderDefaultArgs> = $Result.GetResult<Prisma.$VariationOrderPayload, S>
+
+  type VariationOrderCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<VariationOrderFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: VariationOrderCountAggregateInputType | true
+    }
+
+  export interface VariationOrderDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['VariationOrder'], meta: { name: 'VariationOrder' } }
+    /**
+     * Find zero or one VariationOrder that matches the filter.
+     * @param {VariationOrderFindUniqueArgs} args - Arguments to find a VariationOrder
+     * @example
+     * // Get one VariationOrder
+     * const variationOrder = await prisma.variationOrder.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends VariationOrderFindUniqueArgs>(args: SelectSubset<T, VariationOrderFindUniqueArgs<ExtArgs>>): Prisma__VariationOrderClient<$Result.GetResult<Prisma.$VariationOrderPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one VariationOrder that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {VariationOrderFindUniqueOrThrowArgs} args - Arguments to find a VariationOrder
+     * @example
+     * // Get one VariationOrder
+     * const variationOrder = await prisma.variationOrder.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends VariationOrderFindUniqueOrThrowArgs>(args: SelectSubset<T, VariationOrderFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VariationOrderClient<$Result.GetResult<Prisma.$VariationOrderPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first VariationOrder that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VariationOrderFindFirstArgs} args - Arguments to find a VariationOrder
+     * @example
+     * // Get one VariationOrder
+     * const variationOrder = await prisma.variationOrder.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends VariationOrderFindFirstArgs>(args?: SelectSubset<T, VariationOrderFindFirstArgs<ExtArgs>>): Prisma__VariationOrderClient<$Result.GetResult<Prisma.$VariationOrderPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first VariationOrder that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VariationOrderFindFirstOrThrowArgs} args - Arguments to find a VariationOrder
+     * @example
+     * // Get one VariationOrder
+     * const variationOrder = await prisma.variationOrder.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends VariationOrderFindFirstOrThrowArgs>(args?: SelectSubset<T, VariationOrderFindFirstOrThrowArgs<ExtArgs>>): Prisma__VariationOrderClient<$Result.GetResult<Prisma.$VariationOrderPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more VariationOrders that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VariationOrderFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all VariationOrders
+     * const variationOrders = await prisma.variationOrder.findMany()
+     * 
+     * // Get first 10 VariationOrders
+     * const variationOrders = await prisma.variationOrder.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const variationOrderWithIdOnly = await prisma.variationOrder.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends VariationOrderFindManyArgs>(args?: SelectSubset<T, VariationOrderFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VariationOrderPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a VariationOrder.
+     * @param {VariationOrderCreateArgs} args - Arguments to create a VariationOrder.
+     * @example
+     * // Create one VariationOrder
+     * const VariationOrder = await prisma.variationOrder.create({
+     *   data: {
+     *     // ... data to create a VariationOrder
+     *   }
+     * })
+     * 
+     */
+    create<T extends VariationOrderCreateArgs>(args: SelectSubset<T, VariationOrderCreateArgs<ExtArgs>>): Prisma__VariationOrderClient<$Result.GetResult<Prisma.$VariationOrderPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many VariationOrders.
+     * @param {VariationOrderCreateManyArgs} args - Arguments to create many VariationOrders.
+     * @example
+     * // Create many VariationOrders
+     * const variationOrder = await prisma.variationOrder.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends VariationOrderCreateManyArgs>(args?: SelectSubset<T, VariationOrderCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many VariationOrders and returns the data saved in the database.
+     * @param {VariationOrderCreateManyAndReturnArgs} args - Arguments to create many VariationOrders.
+     * @example
+     * // Create many VariationOrders
+     * const variationOrder = await prisma.variationOrder.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many VariationOrders and only return the `id`
+     * const variationOrderWithIdOnly = await prisma.variationOrder.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends VariationOrderCreateManyAndReturnArgs>(args?: SelectSubset<T, VariationOrderCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VariationOrderPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a VariationOrder.
+     * @param {VariationOrderDeleteArgs} args - Arguments to delete one VariationOrder.
+     * @example
+     * // Delete one VariationOrder
+     * const VariationOrder = await prisma.variationOrder.delete({
+     *   where: {
+     *     // ... filter to delete one VariationOrder
+     *   }
+     * })
+     * 
+     */
+    delete<T extends VariationOrderDeleteArgs>(args: SelectSubset<T, VariationOrderDeleteArgs<ExtArgs>>): Prisma__VariationOrderClient<$Result.GetResult<Prisma.$VariationOrderPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one VariationOrder.
+     * @param {VariationOrderUpdateArgs} args - Arguments to update one VariationOrder.
+     * @example
+     * // Update one VariationOrder
+     * const variationOrder = await prisma.variationOrder.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends VariationOrderUpdateArgs>(args: SelectSubset<T, VariationOrderUpdateArgs<ExtArgs>>): Prisma__VariationOrderClient<$Result.GetResult<Prisma.$VariationOrderPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more VariationOrders.
+     * @param {VariationOrderDeleteManyArgs} args - Arguments to filter VariationOrders to delete.
+     * @example
+     * // Delete a few VariationOrders
+     * const { count } = await prisma.variationOrder.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends VariationOrderDeleteManyArgs>(args?: SelectSubset<T, VariationOrderDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VariationOrders.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VariationOrderUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many VariationOrders
+     * const variationOrder = await prisma.variationOrder.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends VariationOrderUpdateManyArgs>(args: SelectSubset<T, VariationOrderUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one VariationOrder.
+     * @param {VariationOrderUpsertArgs} args - Arguments to update or create a VariationOrder.
+     * @example
+     * // Update or create a VariationOrder
+     * const variationOrder = await prisma.variationOrder.upsert({
+     *   create: {
+     *     // ... data to create a VariationOrder
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the VariationOrder we want to update
+     *   }
+     * })
+     */
+    upsert<T extends VariationOrderUpsertArgs>(args: SelectSubset<T, VariationOrderUpsertArgs<ExtArgs>>): Prisma__VariationOrderClient<$Result.GetResult<Prisma.$VariationOrderPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of VariationOrders.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VariationOrderCountArgs} args - Arguments to filter VariationOrders to count.
+     * @example
+     * // Count the number of VariationOrders
+     * const count = await prisma.variationOrder.count({
+     *   where: {
+     *     // ... the filter for the VariationOrders we want to count
+     *   }
+     * })
+    **/
+    count<T extends VariationOrderCountArgs>(
+      args?: Subset<T, VariationOrderCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], VariationOrderCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a VariationOrder.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VariationOrderAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends VariationOrderAggregateArgs>(args: Subset<T, VariationOrderAggregateArgs>): Prisma.PrismaPromise<GetVariationOrderAggregateType<T>>
+
+    /**
+     * Group by VariationOrder.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VariationOrderGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends VariationOrderGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: VariationOrderGroupByArgs['orderBy'] }
+        : { orderBy?: VariationOrderGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, VariationOrderGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVariationOrderGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the VariationOrder model
+   */
+  readonly fields: VariationOrderFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for VariationOrder.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__VariationOrderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    wbs<T extends VariationOrder$wbsArgs<ExtArgs> = {}>(args?: Subset<T, VariationOrder$wbsArgs<ExtArgs>>): Prisma__WBSItemClient<$Result.GetResult<Prisma.$WBSItemPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the VariationOrder model
+   */ 
+  interface VariationOrderFieldRefs {
+    readonly id: FieldRef<"VariationOrder", 'String'>
+    readonly projectId: FieldRef<"VariationOrder", 'String'>
+    readonly boqItemId: FieldRef<"VariationOrder", 'String'>
+    readonly wbsId: FieldRef<"VariationOrder", 'String'>
+    readonly title: FieldRef<"VariationOrder", 'String'>
+    readonly description: FieldRef<"VariationOrder", 'String'>
+    readonly amount: FieldRef<"VariationOrder", 'Decimal'>
+    readonly status: FieldRef<"VariationOrder", 'ApprovalStatus'>
+    readonly type: FieldRef<"VariationOrder", 'String'>
+    readonly createdAt: FieldRef<"VariationOrder", 'DateTime'>
+    readonly updatedAt: FieldRef<"VariationOrder", 'DateTime'>
+    readonly createdById: FieldRef<"VariationOrder", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * VariationOrder findUnique
+   */
+  export type VariationOrderFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VariationOrder
+     */
+    select?: VariationOrderSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VariationOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which VariationOrder to fetch.
+     */
+    where: VariationOrderWhereUniqueInput
+  }
+
+  /**
+   * VariationOrder findUniqueOrThrow
+   */
+  export type VariationOrderFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VariationOrder
+     */
+    select?: VariationOrderSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VariationOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which VariationOrder to fetch.
+     */
+    where: VariationOrderWhereUniqueInput
+  }
+
+  /**
+   * VariationOrder findFirst
+   */
+  export type VariationOrderFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VariationOrder
+     */
+    select?: VariationOrderSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VariationOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which VariationOrder to fetch.
+     */
+    where?: VariationOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VariationOrders to fetch.
+     */
+    orderBy?: VariationOrderOrderByWithRelationInput | VariationOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VariationOrders.
+     */
+    cursor?: VariationOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VariationOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VariationOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VariationOrders.
+     */
+    distinct?: VariationOrderScalarFieldEnum | VariationOrderScalarFieldEnum[]
+  }
+
+  /**
+   * VariationOrder findFirstOrThrow
+   */
+  export type VariationOrderFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VariationOrder
+     */
+    select?: VariationOrderSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VariationOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which VariationOrder to fetch.
+     */
+    where?: VariationOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VariationOrders to fetch.
+     */
+    orderBy?: VariationOrderOrderByWithRelationInput | VariationOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VariationOrders.
+     */
+    cursor?: VariationOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VariationOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VariationOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VariationOrders.
+     */
+    distinct?: VariationOrderScalarFieldEnum | VariationOrderScalarFieldEnum[]
+  }
+
+  /**
+   * VariationOrder findMany
+   */
+  export type VariationOrderFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VariationOrder
+     */
+    select?: VariationOrderSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VariationOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which VariationOrders to fetch.
+     */
+    where?: VariationOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VariationOrders to fetch.
+     */
+    orderBy?: VariationOrderOrderByWithRelationInput | VariationOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing VariationOrders.
+     */
+    cursor?: VariationOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VariationOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VariationOrders.
+     */
+    skip?: number
+    distinct?: VariationOrderScalarFieldEnum | VariationOrderScalarFieldEnum[]
+  }
+
+  /**
+   * VariationOrder create
+   */
+  export type VariationOrderCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VariationOrder
+     */
+    select?: VariationOrderSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VariationOrderInclude<ExtArgs> | null
+    /**
+     * The data needed to create a VariationOrder.
+     */
+    data: XOR<VariationOrderCreateInput, VariationOrderUncheckedCreateInput>
+  }
+
+  /**
+   * VariationOrder createMany
+   */
+  export type VariationOrderCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many VariationOrders.
+     */
+    data: VariationOrderCreateManyInput | VariationOrderCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * VariationOrder createManyAndReturn
+   */
+  export type VariationOrderCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VariationOrder
+     */
+    select?: VariationOrderSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many VariationOrders.
+     */
+    data: VariationOrderCreateManyInput | VariationOrderCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VariationOrderIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VariationOrder update
+   */
+  export type VariationOrderUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VariationOrder
+     */
+    select?: VariationOrderSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VariationOrderInclude<ExtArgs> | null
+    /**
+     * The data needed to update a VariationOrder.
+     */
+    data: XOR<VariationOrderUpdateInput, VariationOrderUncheckedUpdateInput>
+    /**
+     * Choose, which VariationOrder to update.
+     */
+    where: VariationOrderWhereUniqueInput
+  }
+
+  /**
+   * VariationOrder updateMany
+   */
+  export type VariationOrderUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update VariationOrders.
+     */
+    data: XOR<VariationOrderUpdateManyMutationInput, VariationOrderUncheckedUpdateManyInput>
+    /**
+     * Filter which VariationOrders to update
+     */
+    where?: VariationOrderWhereInput
+  }
+
+  /**
+   * VariationOrder upsert
+   */
+  export type VariationOrderUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VariationOrder
+     */
+    select?: VariationOrderSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VariationOrderInclude<ExtArgs> | null
+    /**
+     * The filter to search for the VariationOrder to update in case it exists.
+     */
+    where: VariationOrderWhereUniqueInput
+    /**
+     * In case the VariationOrder found by the `where` argument doesn't exist, create a new VariationOrder with this data.
+     */
+    create: XOR<VariationOrderCreateInput, VariationOrderUncheckedCreateInput>
+    /**
+     * In case the VariationOrder was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<VariationOrderUpdateInput, VariationOrderUncheckedUpdateInput>
+  }
+
+  /**
+   * VariationOrder delete
+   */
+  export type VariationOrderDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VariationOrder
+     */
+    select?: VariationOrderSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VariationOrderInclude<ExtArgs> | null
+    /**
+     * Filter which VariationOrder to delete.
+     */
+    where: VariationOrderWhereUniqueInput
+  }
+
+  /**
+   * VariationOrder deleteMany
+   */
+  export type VariationOrderDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VariationOrders to delete
+     */
+    where?: VariationOrderWhereInput
+  }
+
+  /**
+   * VariationOrder.wbs
+   */
+  export type VariationOrder$wbsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WBSItem
+     */
+    select?: WBSItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WBSItemInclude<ExtArgs> | null
+    where?: WBSItemWhereInput
+  }
+
+  /**
+   * VariationOrder without action
+   */
+  export type VariationOrderDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VariationOrder
+     */
+    select?: VariationOrderSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VariationOrderInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SiteLog
+   */
+
+  export type AggregateSiteLog = {
+    _count: SiteLogCountAggregateOutputType | null
+    _avg: SiteLogAvgAggregateOutputType | null
+    _sum: SiteLogSumAggregateOutputType | null
+    _min: SiteLogMinAggregateOutputType | null
+    _max: SiteLogMaxAggregateOutputType | null
+  }
+
+  export type SiteLogAvgAggregateOutputType = {
+    temperature: number | null
+    manpower: number | null
+  }
+
+  export type SiteLogSumAggregateOutputType = {
+    temperature: number | null
+    manpower: number | null
+  }
+
+  export type SiteLogMinAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    date: Date | null
+    weather: string | null
+    temperature: number | null
+    manpower: number | null
+    equipment: string | null
+    progress: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdById: string | null
+  }
+
+  export type SiteLogMaxAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    date: Date | null
+    weather: string | null
+    temperature: number | null
+    manpower: number | null
+    equipment: string | null
+    progress: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdById: string | null
+  }
+
+  export type SiteLogCountAggregateOutputType = {
+    id: number
+    projectId: number
+    date: number
+    weather: number
+    temperature: number
+    manpower: number
+    equipment: number
+    progress: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    createdById: number
+    _all: number
+  }
+
+
+  export type SiteLogAvgAggregateInputType = {
+    temperature?: true
+    manpower?: true
+  }
+
+  export type SiteLogSumAggregateInputType = {
+    temperature?: true
+    manpower?: true
+  }
+
+  export type SiteLogMinAggregateInputType = {
+    id?: true
+    projectId?: true
+    date?: true
+    weather?: true
+    temperature?: true
+    manpower?: true
+    equipment?: true
+    progress?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    createdById?: true
+  }
+
+  export type SiteLogMaxAggregateInputType = {
+    id?: true
+    projectId?: true
+    date?: true
+    weather?: true
+    temperature?: true
+    manpower?: true
+    equipment?: true
+    progress?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    createdById?: true
+  }
+
+  export type SiteLogCountAggregateInputType = {
+    id?: true
+    projectId?: true
+    date?: true
+    weather?: true
+    temperature?: true
+    manpower?: true
+    equipment?: true
+    progress?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    createdById?: true
+    _all?: true
+  }
+
+  export type SiteLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SiteLog to aggregate.
+     */
+    where?: SiteLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SiteLogs to fetch.
+     */
+    orderBy?: SiteLogOrderByWithRelationInput | SiteLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SiteLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SiteLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SiteLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SiteLogs
+    **/
+    _count?: true | SiteLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SiteLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SiteLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SiteLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SiteLogMaxAggregateInputType
+  }
+
+  export type GetSiteLogAggregateType<T extends SiteLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateSiteLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSiteLog[P]>
+      : GetScalarType<T[P], AggregateSiteLog[P]>
+  }
+
+
+
+
+  export type SiteLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SiteLogWhereInput
+    orderBy?: SiteLogOrderByWithAggregationInput | SiteLogOrderByWithAggregationInput[]
+    by: SiteLogScalarFieldEnum[] | SiteLogScalarFieldEnum
+    having?: SiteLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SiteLogCountAggregateInputType | true
+    _avg?: SiteLogAvgAggregateInputType
+    _sum?: SiteLogSumAggregateInputType
+    _min?: SiteLogMinAggregateInputType
+    _max?: SiteLogMaxAggregateInputType
+  }
+
+  export type SiteLogGroupByOutputType = {
+    id: string
+    projectId: string
+    date: Date
+    weather: string | null
+    temperature: number | null
+    manpower: number
+    equipment: string | null
+    progress: string | null
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    createdById: string | null
+    _count: SiteLogCountAggregateOutputType | null
+    _avg: SiteLogAvgAggregateOutputType | null
+    _sum: SiteLogSumAggregateOutputType | null
+    _min: SiteLogMinAggregateOutputType | null
+    _max: SiteLogMaxAggregateOutputType | null
+  }
+
+  type GetSiteLogGroupByPayload<T extends SiteLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SiteLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SiteLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SiteLogGroupByOutputType[P]>
+            : GetScalarType<T[P], SiteLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SiteLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    date?: boolean
+    weather?: boolean
+    temperature?: boolean
+    manpower?: boolean
+    equipment?: boolean
+    progress?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdById?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["siteLog"]>
+
+  export type SiteLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    date?: boolean
+    weather?: boolean
+    temperature?: boolean
+    manpower?: boolean
+    equipment?: boolean
+    progress?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdById?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["siteLog"]>
+
+  export type SiteLogSelectScalar = {
+    id?: boolean
+    projectId?: boolean
+    date?: boolean
+    weather?: boolean
+    temperature?: boolean
+    manpower?: boolean
+    equipment?: boolean
+    progress?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdById?: boolean
+  }
+
+  export type SiteLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }
+  export type SiteLogIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }
+
+  export type $SiteLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SiteLog"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      projectId: string
+      date: Date
+      weather: string | null
+      temperature: number | null
+      manpower: number
+      equipment: string | null
+      progress: string | null
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+      createdById: string | null
+    }, ExtArgs["result"]["siteLog"]>
+    composites: {}
+  }
+
+  type SiteLogGetPayload<S extends boolean | null | undefined | SiteLogDefaultArgs> = $Result.GetResult<Prisma.$SiteLogPayload, S>
+
+  type SiteLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<SiteLogFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: SiteLogCountAggregateInputType | true
+    }
+
+  export interface SiteLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SiteLog'], meta: { name: 'SiteLog' } }
+    /**
+     * Find zero or one SiteLog that matches the filter.
+     * @param {SiteLogFindUniqueArgs} args - Arguments to find a SiteLog
+     * @example
+     * // Get one SiteLog
+     * const siteLog = await prisma.siteLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SiteLogFindUniqueArgs>(args: SelectSubset<T, SiteLogFindUniqueArgs<ExtArgs>>): Prisma__SiteLogClient<$Result.GetResult<Prisma.$SiteLogPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one SiteLog that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {SiteLogFindUniqueOrThrowArgs} args - Arguments to find a SiteLog
+     * @example
+     * // Get one SiteLog
+     * const siteLog = await prisma.siteLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SiteLogFindUniqueOrThrowArgs>(args: SelectSubset<T, SiteLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SiteLogClient<$Result.GetResult<Prisma.$SiteLogPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first SiteLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteLogFindFirstArgs} args - Arguments to find a SiteLog
+     * @example
+     * // Get one SiteLog
+     * const siteLog = await prisma.siteLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SiteLogFindFirstArgs>(args?: SelectSubset<T, SiteLogFindFirstArgs<ExtArgs>>): Prisma__SiteLogClient<$Result.GetResult<Prisma.$SiteLogPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first SiteLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteLogFindFirstOrThrowArgs} args - Arguments to find a SiteLog
+     * @example
+     * // Get one SiteLog
+     * const siteLog = await prisma.siteLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SiteLogFindFirstOrThrowArgs>(args?: SelectSubset<T, SiteLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__SiteLogClient<$Result.GetResult<Prisma.$SiteLogPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more SiteLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SiteLogs
+     * const siteLogs = await prisma.siteLog.findMany()
+     * 
+     * // Get first 10 SiteLogs
+     * const siteLogs = await prisma.siteLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const siteLogWithIdOnly = await prisma.siteLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SiteLogFindManyArgs>(args?: SelectSubset<T, SiteLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SiteLogPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a SiteLog.
+     * @param {SiteLogCreateArgs} args - Arguments to create a SiteLog.
+     * @example
+     * // Create one SiteLog
+     * const SiteLog = await prisma.siteLog.create({
+     *   data: {
+     *     // ... data to create a SiteLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends SiteLogCreateArgs>(args: SelectSubset<T, SiteLogCreateArgs<ExtArgs>>): Prisma__SiteLogClient<$Result.GetResult<Prisma.$SiteLogPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many SiteLogs.
+     * @param {SiteLogCreateManyArgs} args - Arguments to create many SiteLogs.
+     * @example
+     * // Create many SiteLogs
+     * const siteLog = await prisma.siteLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SiteLogCreateManyArgs>(args?: SelectSubset<T, SiteLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SiteLogs and returns the data saved in the database.
+     * @param {SiteLogCreateManyAndReturnArgs} args - Arguments to create many SiteLogs.
+     * @example
+     * // Create many SiteLogs
+     * const siteLog = await prisma.siteLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SiteLogs and only return the `id`
+     * const siteLogWithIdOnly = await prisma.siteLog.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SiteLogCreateManyAndReturnArgs>(args?: SelectSubset<T, SiteLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SiteLogPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a SiteLog.
+     * @param {SiteLogDeleteArgs} args - Arguments to delete one SiteLog.
+     * @example
+     * // Delete one SiteLog
+     * const SiteLog = await prisma.siteLog.delete({
+     *   where: {
+     *     // ... filter to delete one SiteLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SiteLogDeleteArgs>(args: SelectSubset<T, SiteLogDeleteArgs<ExtArgs>>): Prisma__SiteLogClient<$Result.GetResult<Prisma.$SiteLogPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one SiteLog.
+     * @param {SiteLogUpdateArgs} args - Arguments to update one SiteLog.
+     * @example
+     * // Update one SiteLog
+     * const siteLog = await prisma.siteLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SiteLogUpdateArgs>(args: SelectSubset<T, SiteLogUpdateArgs<ExtArgs>>): Prisma__SiteLogClient<$Result.GetResult<Prisma.$SiteLogPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more SiteLogs.
+     * @param {SiteLogDeleteManyArgs} args - Arguments to filter SiteLogs to delete.
+     * @example
+     * // Delete a few SiteLogs
+     * const { count } = await prisma.siteLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SiteLogDeleteManyArgs>(args?: SelectSubset<T, SiteLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SiteLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SiteLogs
+     * const siteLog = await prisma.siteLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SiteLogUpdateManyArgs>(args: SelectSubset<T, SiteLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SiteLog.
+     * @param {SiteLogUpsertArgs} args - Arguments to update or create a SiteLog.
+     * @example
+     * // Update or create a SiteLog
+     * const siteLog = await prisma.siteLog.upsert({
+     *   create: {
+     *     // ... data to create a SiteLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SiteLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SiteLogUpsertArgs>(args: SelectSubset<T, SiteLogUpsertArgs<ExtArgs>>): Prisma__SiteLogClient<$Result.GetResult<Prisma.$SiteLogPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of SiteLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteLogCountArgs} args - Arguments to filter SiteLogs to count.
+     * @example
+     * // Count the number of SiteLogs
+     * const count = await prisma.siteLog.count({
+     *   where: {
+     *     // ... the filter for the SiteLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends SiteLogCountArgs>(
+      args?: Subset<T, SiteLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SiteLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SiteLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SiteLogAggregateArgs>(args: Subset<T, SiteLogAggregateArgs>): Prisma.PrismaPromise<GetSiteLogAggregateType<T>>
+
+    /**
+     * Group by SiteLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SiteLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SiteLogGroupByArgs['orderBy'] }
+        : { orderBy?: SiteLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SiteLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSiteLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SiteLog model
+   */
+  readonly fields: SiteLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SiteLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SiteLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SiteLog model
+   */ 
+  interface SiteLogFieldRefs {
+    readonly id: FieldRef<"SiteLog", 'String'>
+    readonly projectId: FieldRef<"SiteLog", 'String'>
+    readonly date: FieldRef<"SiteLog", 'DateTime'>
+    readonly weather: FieldRef<"SiteLog", 'String'>
+    readonly temperature: FieldRef<"SiteLog", 'Float'>
+    readonly manpower: FieldRef<"SiteLog", 'Int'>
+    readonly equipment: FieldRef<"SiteLog", 'String'>
+    readonly progress: FieldRef<"SiteLog", 'String'>
+    readonly notes: FieldRef<"SiteLog", 'String'>
+    readonly createdAt: FieldRef<"SiteLog", 'DateTime'>
+    readonly updatedAt: FieldRef<"SiteLog", 'DateTime'>
+    readonly createdById: FieldRef<"SiteLog", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SiteLog findUnique
+   */
+  export type SiteLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteLog
+     */
+    select?: SiteLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SiteLogInclude<ExtArgs> | null
+    /**
+     * Filter, which SiteLog to fetch.
+     */
+    where: SiteLogWhereUniqueInput
+  }
+
+  /**
+   * SiteLog findUniqueOrThrow
+   */
+  export type SiteLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteLog
+     */
+    select?: SiteLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SiteLogInclude<ExtArgs> | null
+    /**
+     * Filter, which SiteLog to fetch.
+     */
+    where: SiteLogWhereUniqueInput
+  }
+
+  /**
+   * SiteLog findFirst
+   */
+  export type SiteLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteLog
+     */
+    select?: SiteLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SiteLogInclude<ExtArgs> | null
+    /**
+     * Filter, which SiteLog to fetch.
+     */
+    where?: SiteLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SiteLogs to fetch.
+     */
+    orderBy?: SiteLogOrderByWithRelationInput | SiteLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SiteLogs.
+     */
+    cursor?: SiteLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SiteLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SiteLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SiteLogs.
+     */
+    distinct?: SiteLogScalarFieldEnum | SiteLogScalarFieldEnum[]
+  }
+
+  /**
+   * SiteLog findFirstOrThrow
+   */
+  export type SiteLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteLog
+     */
+    select?: SiteLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SiteLogInclude<ExtArgs> | null
+    /**
+     * Filter, which SiteLog to fetch.
+     */
+    where?: SiteLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SiteLogs to fetch.
+     */
+    orderBy?: SiteLogOrderByWithRelationInput | SiteLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SiteLogs.
+     */
+    cursor?: SiteLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SiteLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SiteLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SiteLogs.
+     */
+    distinct?: SiteLogScalarFieldEnum | SiteLogScalarFieldEnum[]
+  }
+
+  /**
+   * SiteLog findMany
+   */
+  export type SiteLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteLog
+     */
+    select?: SiteLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SiteLogInclude<ExtArgs> | null
+    /**
+     * Filter, which SiteLogs to fetch.
+     */
+    where?: SiteLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SiteLogs to fetch.
+     */
+    orderBy?: SiteLogOrderByWithRelationInput | SiteLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SiteLogs.
+     */
+    cursor?: SiteLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SiteLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SiteLogs.
+     */
+    skip?: number
+    distinct?: SiteLogScalarFieldEnum | SiteLogScalarFieldEnum[]
+  }
+
+  /**
+   * SiteLog create
+   */
+  export type SiteLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteLog
+     */
+    select?: SiteLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SiteLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SiteLog.
+     */
+    data: XOR<SiteLogCreateInput, SiteLogUncheckedCreateInput>
+  }
+
+  /**
+   * SiteLog createMany
+   */
+  export type SiteLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SiteLogs.
+     */
+    data: SiteLogCreateManyInput | SiteLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SiteLog createManyAndReturn
+   */
+  export type SiteLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteLog
+     */
+    select?: SiteLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many SiteLogs.
+     */
+    data: SiteLogCreateManyInput | SiteLogCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SiteLogIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SiteLog update
+   */
+  export type SiteLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteLog
+     */
+    select?: SiteLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SiteLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SiteLog.
+     */
+    data: XOR<SiteLogUpdateInput, SiteLogUncheckedUpdateInput>
+    /**
+     * Choose, which SiteLog to update.
+     */
+    where: SiteLogWhereUniqueInput
+  }
+
+  /**
+   * SiteLog updateMany
+   */
+  export type SiteLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SiteLogs.
+     */
+    data: XOR<SiteLogUpdateManyMutationInput, SiteLogUncheckedUpdateManyInput>
+    /**
+     * Filter which SiteLogs to update
+     */
+    where?: SiteLogWhereInput
+  }
+
+  /**
+   * SiteLog upsert
+   */
+  export type SiteLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteLog
+     */
+    select?: SiteLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SiteLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SiteLog to update in case it exists.
+     */
+    where: SiteLogWhereUniqueInput
+    /**
+     * In case the SiteLog found by the `where` argument doesn't exist, create a new SiteLog with this data.
+     */
+    create: XOR<SiteLogCreateInput, SiteLogUncheckedCreateInput>
+    /**
+     * In case the SiteLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SiteLogUpdateInput, SiteLogUncheckedUpdateInput>
+  }
+
+  /**
+   * SiteLog delete
+   */
+  export type SiteLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteLog
+     */
+    select?: SiteLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SiteLogInclude<ExtArgs> | null
+    /**
+     * Filter which SiteLog to delete.
+     */
+    where: SiteLogWhereUniqueInput
+  }
+
+  /**
+   * SiteLog deleteMany
+   */
+  export type SiteLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SiteLogs to delete
+     */
+    where?: SiteLogWhereInput
+  }
+
+  /**
+   * SiteLog without action
+   */
+  export type SiteLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteLog
+     */
+    select?: SiteLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SiteLogInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Quotation
+   */
+
+  export type AggregateQuotation = {
+    _count: QuotationCountAggregateOutputType | null
+    _avg: QuotationAvgAggregateOutputType | null
+    _sum: QuotationSumAggregateOutputType | null
+    _min: QuotationMinAggregateOutputType | null
+    _max: QuotationMaxAggregateOutputType | null
+  }
+
+  export type QuotationAvgAggregateOutputType = {
+    totalAmount: Decimal | null
+    leadTimeDays: number | null
+  }
+
+  export type QuotationSumAggregateOutputType = {
+    totalAmount: Decimal | null
+    leadTimeDays: number | null
+  }
+
+  export type QuotationMinAggregateOutputType = {
+    id: string | null
+    purchaseRequestId: string | null
+    vendor: string | null
+    totalAmount: Decimal | null
+    leadTimeDays: number | null
+    validUntil: Date | null
+    status: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type QuotationMaxAggregateOutputType = {
+    id: string | null
+    purchaseRequestId: string | null
+    vendor: string | null
+    totalAmount: Decimal | null
+    leadTimeDays: number | null
+    validUntil: Date | null
+    status: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type QuotationCountAggregateOutputType = {
+    id: number
+    purchaseRequestId: number
+    vendor: number
+    totalAmount: number
+    leadTimeDays: number
+    validUntil: number
+    status: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type QuotationAvgAggregateInputType = {
+    totalAmount?: true
+    leadTimeDays?: true
+  }
+
+  export type QuotationSumAggregateInputType = {
+    totalAmount?: true
+    leadTimeDays?: true
+  }
+
+  export type QuotationMinAggregateInputType = {
+    id?: true
+    purchaseRequestId?: true
+    vendor?: true
+    totalAmount?: true
+    leadTimeDays?: true
+    validUntil?: true
+    status?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type QuotationMaxAggregateInputType = {
+    id?: true
+    purchaseRequestId?: true
+    vendor?: true
+    totalAmount?: true
+    leadTimeDays?: true
+    validUntil?: true
+    status?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type QuotationCountAggregateInputType = {
+    id?: true
+    purchaseRequestId?: true
+    vendor?: true
+    totalAmount?: true
+    leadTimeDays?: true
+    validUntil?: true
+    status?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type QuotationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Quotation to aggregate.
+     */
+    where?: QuotationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Quotations to fetch.
+     */
+    orderBy?: QuotationOrderByWithRelationInput | QuotationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: QuotationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Quotations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Quotations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Quotations
+    **/
+    _count?: true | QuotationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: QuotationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: QuotationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: QuotationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: QuotationMaxAggregateInputType
+  }
+
+  export type GetQuotationAggregateType<T extends QuotationAggregateArgs> = {
+        [P in keyof T & keyof AggregateQuotation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateQuotation[P]>
+      : GetScalarType<T[P], AggregateQuotation[P]>
+  }
+
+
+
+
+  export type QuotationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuotationWhereInput
+    orderBy?: QuotationOrderByWithAggregationInput | QuotationOrderByWithAggregationInput[]
+    by: QuotationScalarFieldEnum[] | QuotationScalarFieldEnum
+    having?: QuotationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: QuotationCountAggregateInputType | true
+    _avg?: QuotationAvgAggregateInputType
+    _sum?: QuotationSumAggregateInputType
+    _min?: QuotationMinAggregateInputType
+    _max?: QuotationMaxAggregateInputType
+  }
+
+  export type QuotationGroupByOutputType = {
+    id: string
+    purchaseRequestId: string | null
+    vendor: string
+    totalAmount: Decimal
+    leadTimeDays: number | null
+    validUntil: Date | null
+    status: string
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: QuotationCountAggregateOutputType | null
+    _avg: QuotationAvgAggregateOutputType | null
+    _sum: QuotationSumAggregateOutputType | null
+    _min: QuotationMinAggregateOutputType | null
+    _max: QuotationMaxAggregateOutputType | null
+  }
+
+  type GetQuotationGroupByPayload<T extends QuotationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<QuotationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof QuotationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], QuotationGroupByOutputType[P]>
+            : GetScalarType<T[P], QuotationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type QuotationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    purchaseRequestId?: boolean
+    vendor?: boolean
+    totalAmount?: boolean
+    leadTimeDays?: boolean
+    validUntil?: boolean
+    status?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    purchaseRequest?: boolean | Quotation$purchaseRequestArgs<ExtArgs>
+  }, ExtArgs["result"]["quotation"]>
+
+  export type QuotationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    purchaseRequestId?: boolean
+    vendor?: boolean
+    totalAmount?: boolean
+    leadTimeDays?: boolean
+    validUntil?: boolean
+    status?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    purchaseRequest?: boolean | Quotation$purchaseRequestArgs<ExtArgs>
+  }, ExtArgs["result"]["quotation"]>
+
+  export type QuotationSelectScalar = {
+    id?: boolean
+    purchaseRequestId?: boolean
+    vendor?: boolean
+    totalAmount?: boolean
+    leadTimeDays?: boolean
+    validUntil?: boolean
+    status?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type QuotationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    purchaseRequest?: boolean | Quotation$purchaseRequestArgs<ExtArgs>
+  }
+  export type QuotationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    purchaseRequest?: boolean | Quotation$purchaseRequestArgs<ExtArgs>
+  }
+
+  export type $QuotationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Quotation"
+    objects: {
+      purchaseRequest: Prisma.$PurchaseRequestPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      purchaseRequestId: string | null
+      vendor: string
+      totalAmount: Prisma.Decimal
+      leadTimeDays: number | null
+      validUntil: Date | null
+      status: string
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["quotation"]>
+    composites: {}
+  }
+
+  type QuotationGetPayload<S extends boolean | null | undefined | QuotationDefaultArgs> = $Result.GetResult<Prisma.$QuotationPayload, S>
+
+  type QuotationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<QuotationFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: QuotationCountAggregateInputType | true
+    }
+
+  export interface QuotationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Quotation'], meta: { name: 'Quotation' } }
+    /**
+     * Find zero or one Quotation that matches the filter.
+     * @param {QuotationFindUniqueArgs} args - Arguments to find a Quotation
+     * @example
+     * // Get one Quotation
+     * const quotation = await prisma.quotation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends QuotationFindUniqueArgs>(args: SelectSubset<T, QuotationFindUniqueArgs<ExtArgs>>): Prisma__QuotationClient<$Result.GetResult<Prisma.$QuotationPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Quotation that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {QuotationFindUniqueOrThrowArgs} args - Arguments to find a Quotation
+     * @example
+     * // Get one Quotation
+     * const quotation = await prisma.quotation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends QuotationFindUniqueOrThrowArgs>(args: SelectSubset<T, QuotationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__QuotationClient<$Result.GetResult<Prisma.$QuotationPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Quotation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuotationFindFirstArgs} args - Arguments to find a Quotation
+     * @example
+     * // Get one Quotation
+     * const quotation = await prisma.quotation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends QuotationFindFirstArgs>(args?: SelectSubset<T, QuotationFindFirstArgs<ExtArgs>>): Prisma__QuotationClient<$Result.GetResult<Prisma.$QuotationPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Quotation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuotationFindFirstOrThrowArgs} args - Arguments to find a Quotation
+     * @example
+     * // Get one Quotation
+     * const quotation = await prisma.quotation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends QuotationFindFirstOrThrowArgs>(args?: SelectSubset<T, QuotationFindFirstOrThrowArgs<ExtArgs>>): Prisma__QuotationClient<$Result.GetResult<Prisma.$QuotationPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Quotations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuotationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Quotations
+     * const quotations = await prisma.quotation.findMany()
+     * 
+     * // Get first 10 Quotations
+     * const quotations = await prisma.quotation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const quotationWithIdOnly = await prisma.quotation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends QuotationFindManyArgs>(args?: SelectSubset<T, QuotationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuotationPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Quotation.
+     * @param {QuotationCreateArgs} args - Arguments to create a Quotation.
+     * @example
+     * // Create one Quotation
+     * const Quotation = await prisma.quotation.create({
+     *   data: {
+     *     // ... data to create a Quotation
+     *   }
+     * })
+     * 
+     */
+    create<T extends QuotationCreateArgs>(args: SelectSubset<T, QuotationCreateArgs<ExtArgs>>): Prisma__QuotationClient<$Result.GetResult<Prisma.$QuotationPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Quotations.
+     * @param {QuotationCreateManyArgs} args - Arguments to create many Quotations.
+     * @example
+     * // Create many Quotations
+     * const quotation = await prisma.quotation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends QuotationCreateManyArgs>(args?: SelectSubset<T, QuotationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Quotations and returns the data saved in the database.
+     * @param {QuotationCreateManyAndReturnArgs} args - Arguments to create many Quotations.
+     * @example
+     * // Create many Quotations
+     * const quotation = await prisma.quotation.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Quotations and only return the `id`
+     * const quotationWithIdOnly = await prisma.quotation.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends QuotationCreateManyAndReturnArgs>(args?: SelectSubset<T, QuotationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuotationPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Quotation.
+     * @param {QuotationDeleteArgs} args - Arguments to delete one Quotation.
+     * @example
+     * // Delete one Quotation
+     * const Quotation = await prisma.quotation.delete({
+     *   where: {
+     *     // ... filter to delete one Quotation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends QuotationDeleteArgs>(args: SelectSubset<T, QuotationDeleteArgs<ExtArgs>>): Prisma__QuotationClient<$Result.GetResult<Prisma.$QuotationPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Quotation.
+     * @param {QuotationUpdateArgs} args - Arguments to update one Quotation.
+     * @example
+     * // Update one Quotation
+     * const quotation = await prisma.quotation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends QuotationUpdateArgs>(args: SelectSubset<T, QuotationUpdateArgs<ExtArgs>>): Prisma__QuotationClient<$Result.GetResult<Prisma.$QuotationPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Quotations.
+     * @param {QuotationDeleteManyArgs} args - Arguments to filter Quotations to delete.
+     * @example
+     * // Delete a few Quotations
+     * const { count } = await prisma.quotation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends QuotationDeleteManyArgs>(args?: SelectSubset<T, QuotationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Quotations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuotationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Quotations
+     * const quotation = await prisma.quotation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends QuotationUpdateManyArgs>(args: SelectSubset<T, QuotationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Quotation.
+     * @param {QuotationUpsertArgs} args - Arguments to update or create a Quotation.
+     * @example
+     * // Update or create a Quotation
+     * const quotation = await prisma.quotation.upsert({
+     *   create: {
+     *     // ... data to create a Quotation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Quotation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends QuotationUpsertArgs>(args: SelectSubset<T, QuotationUpsertArgs<ExtArgs>>): Prisma__QuotationClient<$Result.GetResult<Prisma.$QuotationPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Quotations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuotationCountArgs} args - Arguments to filter Quotations to count.
+     * @example
+     * // Count the number of Quotations
+     * const count = await prisma.quotation.count({
+     *   where: {
+     *     // ... the filter for the Quotations we want to count
+     *   }
+     * })
+    **/
+    count<T extends QuotationCountArgs>(
+      args?: Subset<T, QuotationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], QuotationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Quotation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuotationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends QuotationAggregateArgs>(args: Subset<T, QuotationAggregateArgs>): Prisma.PrismaPromise<GetQuotationAggregateType<T>>
+
+    /**
+     * Group by Quotation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuotationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends QuotationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: QuotationGroupByArgs['orderBy'] }
+        : { orderBy?: QuotationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, QuotationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetQuotationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Quotation model
+   */
+  readonly fields: QuotationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Quotation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__QuotationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    purchaseRequest<T extends Quotation$purchaseRequestArgs<ExtArgs> = {}>(args?: Subset<T, Quotation$purchaseRequestArgs<ExtArgs>>): Prisma__PurchaseRequestClient<$Result.GetResult<Prisma.$PurchaseRequestPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Quotation model
+   */ 
+  interface QuotationFieldRefs {
+    readonly id: FieldRef<"Quotation", 'String'>
+    readonly purchaseRequestId: FieldRef<"Quotation", 'String'>
+    readonly vendor: FieldRef<"Quotation", 'String'>
+    readonly totalAmount: FieldRef<"Quotation", 'Decimal'>
+    readonly leadTimeDays: FieldRef<"Quotation", 'Int'>
+    readonly validUntil: FieldRef<"Quotation", 'DateTime'>
+    readonly status: FieldRef<"Quotation", 'String'>
+    readonly notes: FieldRef<"Quotation", 'String'>
+    readonly createdAt: FieldRef<"Quotation", 'DateTime'>
+    readonly updatedAt: FieldRef<"Quotation", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Quotation findUnique
+   */
+  export type QuotationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quotation
+     */
+    select?: QuotationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuotationInclude<ExtArgs> | null
+    /**
+     * Filter, which Quotation to fetch.
+     */
+    where: QuotationWhereUniqueInput
+  }
+
+  /**
+   * Quotation findUniqueOrThrow
+   */
+  export type QuotationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quotation
+     */
+    select?: QuotationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuotationInclude<ExtArgs> | null
+    /**
+     * Filter, which Quotation to fetch.
+     */
+    where: QuotationWhereUniqueInput
+  }
+
+  /**
+   * Quotation findFirst
+   */
+  export type QuotationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quotation
+     */
+    select?: QuotationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuotationInclude<ExtArgs> | null
+    /**
+     * Filter, which Quotation to fetch.
+     */
+    where?: QuotationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Quotations to fetch.
+     */
+    orderBy?: QuotationOrderByWithRelationInput | QuotationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Quotations.
+     */
+    cursor?: QuotationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Quotations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Quotations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Quotations.
+     */
+    distinct?: QuotationScalarFieldEnum | QuotationScalarFieldEnum[]
+  }
+
+  /**
+   * Quotation findFirstOrThrow
+   */
+  export type QuotationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quotation
+     */
+    select?: QuotationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuotationInclude<ExtArgs> | null
+    /**
+     * Filter, which Quotation to fetch.
+     */
+    where?: QuotationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Quotations to fetch.
+     */
+    orderBy?: QuotationOrderByWithRelationInput | QuotationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Quotations.
+     */
+    cursor?: QuotationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Quotations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Quotations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Quotations.
+     */
+    distinct?: QuotationScalarFieldEnum | QuotationScalarFieldEnum[]
+  }
+
+  /**
+   * Quotation findMany
+   */
+  export type QuotationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quotation
+     */
+    select?: QuotationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuotationInclude<ExtArgs> | null
+    /**
+     * Filter, which Quotations to fetch.
+     */
+    where?: QuotationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Quotations to fetch.
+     */
+    orderBy?: QuotationOrderByWithRelationInput | QuotationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Quotations.
+     */
+    cursor?: QuotationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Quotations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Quotations.
+     */
+    skip?: number
+    distinct?: QuotationScalarFieldEnum | QuotationScalarFieldEnum[]
+  }
+
+  /**
+   * Quotation create
+   */
+  export type QuotationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quotation
+     */
+    select?: QuotationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuotationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Quotation.
+     */
+    data: XOR<QuotationCreateInput, QuotationUncheckedCreateInput>
+  }
+
+  /**
+   * Quotation createMany
+   */
+  export type QuotationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Quotations.
+     */
+    data: QuotationCreateManyInput | QuotationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Quotation createManyAndReturn
+   */
+  export type QuotationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quotation
+     */
+    select?: QuotationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Quotations.
+     */
+    data: QuotationCreateManyInput | QuotationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuotationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Quotation update
+   */
+  export type QuotationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quotation
+     */
+    select?: QuotationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuotationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Quotation.
+     */
+    data: XOR<QuotationUpdateInput, QuotationUncheckedUpdateInput>
+    /**
+     * Choose, which Quotation to update.
+     */
+    where: QuotationWhereUniqueInput
+  }
+
+  /**
+   * Quotation updateMany
+   */
+  export type QuotationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Quotations.
+     */
+    data: XOR<QuotationUpdateManyMutationInput, QuotationUncheckedUpdateManyInput>
+    /**
+     * Filter which Quotations to update
+     */
+    where?: QuotationWhereInput
+  }
+
+  /**
+   * Quotation upsert
+   */
+  export type QuotationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quotation
+     */
+    select?: QuotationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuotationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Quotation to update in case it exists.
+     */
+    where: QuotationWhereUniqueInput
+    /**
+     * In case the Quotation found by the `where` argument doesn't exist, create a new Quotation with this data.
+     */
+    create: XOR<QuotationCreateInput, QuotationUncheckedCreateInput>
+    /**
+     * In case the Quotation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<QuotationUpdateInput, QuotationUncheckedUpdateInput>
+  }
+
+  /**
+   * Quotation delete
+   */
+  export type QuotationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quotation
+     */
+    select?: QuotationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuotationInclude<ExtArgs> | null
+    /**
+     * Filter which Quotation to delete.
+     */
+    where: QuotationWhereUniqueInput
+  }
+
+  /**
+   * Quotation deleteMany
+   */
+  export type QuotationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Quotations to delete
+     */
+    where?: QuotationWhereInput
+  }
+
+  /**
+   * Quotation.purchaseRequest
+   */
+  export type Quotation$purchaseRequestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PurchaseRequest
+     */
+    select?: PurchaseRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PurchaseRequestInclude<ExtArgs> | null
+    where?: PurchaseRequestWhereInput
+  }
+
+  /**
+   * Quotation without action
+   */
+  export type QuotationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quotation
+     */
+    select?: QuotationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuotationInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -51819,7 +55526,12 @@ export namespace Prisma {
     requestId: 'requestId',
     deletedAt: 'deletedAt',
     deletedById: 'deletedById',
-    approvalStatus: 'approvalStatus'
+    approvalStatus: 'approvalStatus',
+    vatRate: 'vatRate',
+    vatAmount: 'vatAmount',
+    retentionRate: 'retentionRate',
+    retentionAmount: 'retentionAmount',
+    netAmount: 'netAmount'
   };
 
   export type CostRecordScalarFieldEnum = (typeof CostRecordScalarFieldEnum)[keyof typeof CostRecordScalarFieldEnum]
@@ -51880,7 +55592,11 @@ export namespace Prisma {
     approvalStatus: 'approvalStatus',
     version: 'version',
     certifiedProgress: 'certifiedProgress',
-    retentionAmount: 'retentionAmount'
+    vatRate: 'vatRate',
+    vatAmount: 'vatAmount',
+    retentionRate: 'retentionRate',
+    retentionAmount: 'retentionAmount',
+    netAmount: 'netAmount'
   };
 
   export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
@@ -52428,6 +56144,58 @@ export namespace Prisma {
   };
 
   export type UserMaturityScalarFieldEnum = (typeof UserMaturityScalarFieldEnum)[keyof typeof UserMaturityScalarFieldEnum]
+
+
+  export const VariationOrderScalarFieldEnum: {
+    id: 'id',
+    projectId: 'projectId',
+    boqItemId: 'boqItemId',
+    wbsId: 'wbsId',
+    title: 'title',
+    description: 'description',
+    amount: 'amount',
+    status: 'status',
+    type: 'type',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    createdById: 'createdById'
+  };
+
+  export type VariationOrderScalarFieldEnum = (typeof VariationOrderScalarFieldEnum)[keyof typeof VariationOrderScalarFieldEnum]
+
+
+  export const SiteLogScalarFieldEnum: {
+    id: 'id',
+    projectId: 'projectId',
+    date: 'date',
+    weather: 'weather',
+    temperature: 'temperature',
+    manpower: 'manpower',
+    equipment: 'equipment',
+    progress: 'progress',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    createdById: 'createdById'
+  };
+
+  export type SiteLogScalarFieldEnum = (typeof SiteLogScalarFieldEnum)[keyof typeof SiteLogScalarFieldEnum]
+
+
+  export const QuotationScalarFieldEnum: {
+    id: 'id',
+    purchaseRequestId: 'purchaseRequestId',
+    vendor: 'vendor',
+    totalAmount: 'totalAmount',
+    leadTimeDays: 'leadTimeDays',
+    validUntil: 'validUntil',
+    status: 'status',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type QuotationScalarFieldEnum = (typeof QuotationScalarFieldEnum)[keyof typeof QuotationScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -52978,6 +56746,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderListRelationFilter
     SiteConsumption?: SiteConsumptionListRelationFilter
     Subcontract?: SubcontractListRelationFilter
+    VariationOrder?: VariationOrderListRelationFilter
+    SiteLog?: SiteLogListRelationFilter
     tasks?: TaskListRelationFilter
     wbsItems?: WBSItemListRelationFilter
   }
@@ -53010,6 +56780,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderOrderByRelationAggregateInput
     SiteConsumption?: SiteConsumptionOrderByRelationAggregateInput
     Subcontract?: SubcontractOrderByRelationAggregateInput
+    VariationOrder?: VariationOrderOrderByRelationAggregateInput
+    SiteLog?: SiteLogOrderByRelationAggregateInput
     tasks?: TaskOrderByRelationAggregateInput
     wbsItems?: WBSItemOrderByRelationAggregateInput
   }
@@ -53045,6 +56817,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderListRelationFilter
     SiteConsumption?: SiteConsumptionListRelationFilter
     Subcontract?: SubcontractListRelationFilter
+    VariationOrder?: VariationOrderListRelationFilter
+    SiteLog?: SiteLogListRelationFilter
     tasks?: TaskListRelationFilter
     wbsItems?: WBSItemListRelationFilter
   }, "id">
@@ -53214,6 +56988,7 @@ export namespace Prisma {
     revenues?: RevenueListRelationFilter
     SiteConsumption?: SiteConsumptionListRelationFilter
     SubcontractItem?: SubcontractItemListRelationFilter
+    VariationOrder?: VariationOrderListRelationFilter
     parent?: XOR<WBSItemNullableRelationFilter, WBSItemWhereInput> | null
     children?: WBSItemListRelationFilter
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
@@ -53241,6 +57016,7 @@ export namespace Prisma {
     revenues?: RevenueOrderByRelationAggregateInput
     SiteConsumption?: SiteConsumptionOrderByRelationAggregateInput
     SubcontractItem?: SubcontractItemOrderByRelationAggregateInput
+    VariationOrder?: VariationOrderOrderByRelationAggregateInput
     parent?: WBSItemOrderByWithRelationInput
     children?: WBSItemOrderByRelationAggregateInput
     project?: ProjectOrderByWithRelationInput
@@ -53271,6 +57047,7 @@ export namespace Prisma {
     revenues?: RevenueListRelationFilter
     SiteConsumption?: SiteConsumptionListRelationFilter
     SubcontractItem?: SubcontractItemListRelationFilter
+    VariationOrder?: VariationOrderListRelationFilter
     parent?: XOR<WBSItemNullableRelationFilter, WBSItemWhereInput> | null
     children?: WBSItemListRelationFilter
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
@@ -53338,6 +57115,11 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"CostRecord"> | Date | string | null
     deletedById?: StringNullableFilter<"CostRecord"> | string | null
     approvalStatus?: EnumApprovalStatusFilter<"CostRecord"> | $Enums.ApprovalStatus
+    vatRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     purchaseOrder?: XOR<PurchaseOrderNullableRelationFilter, PurchaseOrderWhereInput> | null
@@ -53365,6 +57147,11 @@ export namespace Prisma {
     deletedAt?: SortOrderInput | SortOrder
     deletedById?: SortOrderInput | SortOrder
     approvalStatus?: SortOrder
+    vatRate?: SortOrder
+    vatAmount?: SortOrder
+    retentionRate?: SortOrder
+    retentionAmount?: SortOrder
+    netAmount?: SortOrder
     deletedBy?: UserOrderByWithRelationInput
     createdBy?: UserOrderByWithRelationInput
     purchaseOrder?: PurchaseOrderOrderByWithRelationInput
@@ -53395,6 +57182,11 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"CostRecord"> | Date | string | null
     deletedById?: StringNullableFilter<"CostRecord"> | string | null
     approvalStatus?: EnumApprovalStatusFilter<"CostRecord"> | $Enums.ApprovalStatus
+    vatRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     purchaseOrder?: XOR<PurchaseOrderNullableRelationFilter, PurchaseOrderWhereInput> | null
@@ -53422,6 +57214,11 @@ export namespace Prisma {
     deletedAt?: SortOrderInput | SortOrder
     deletedById?: SortOrderInput | SortOrder
     approvalStatus?: SortOrder
+    vatRate?: SortOrder
+    vatAmount?: SortOrder
+    retentionRate?: SortOrder
+    retentionAmount?: SortOrder
+    netAmount?: SortOrder
     _count?: CostRecordCountOrderByAggregateInput
     _avg?: CostRecordAvgOrderByAggregateInput
     _max?: CostRecordMaxOrderByAggregateInput
@@ -53453,6 +57250,11 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableWithAggregatesFilter<"CostRecord"> | Date | string | null
     deletedById?: StringNullableWithAggregatesFilter<"CostRecord"> | string | null
     approvalStatus?: EnumApprovalStatusWithAggregatesFilter<"CostRecord"> | $Enums.ApprovalStatus
+    vatRate?: DecimalWithAggregatesFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalWithAggregatesFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalWithAggregatesFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalWithAggregatesFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalWithAggregatesFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
   }
 
   export type BudgetRecordWhereInput = {
@@ -53658,7 +57460,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFilter<"Invoice"> | $Enums.ApprovalStatus
     version?: IntFilter<"Invoice"> | number
     certifiedProgress?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     contract?: XOR<ContractNullableRelationFilter, ContractWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
@@ -53689,7 +57495,11 @@ export namespace Prisma {
     approvalStatus?: SortOrder
     version?: SortOrder
     certifiedProgress?: SortOrder
+    vatRate?: SortOrder
+    vatAmount?: SortOrder
+    retentionRate?: SortOrder
     retentionAmount?: SortOrder
+    netAmount?: SortOrder
     deletedBy?: UserOrderByWithRelationInput
     contract?: ContractOrderByWithRelationInput
     createdBy?: UserOrderByWithRelationInput
@@ -53723,7 +57533,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFilter<"Invoice"> | $Enums.ApprovalStatus
     version?: IntFilter<"Invoice"> | number
     certifiedProgress?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     contract?: XOR<ContractNullableRelationFilter, ContractWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
@@ -53754,7 +57568,11 @@ export namespace Prisma {
     approvalStatus?: SortOrder
     version?: SortOrder
     certifiedProgress?: SortOrder
+    vatRate?: SortOrder
+    vatAmount?: SortOrder
+    retentionRate?: SortOrder
     retentionAmount?: SortOrder
+    netAmount?: SortOrder
     _count?: InvoiceCountOrderByAggregateInput
     _avg?: InvoiceAvgOrderByAggregateInput
     _max?: InvoiceMaxOrderByAggregateInput
@@ -53787,7 +57605,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusWithAggregatesFilter<"Invoice"> | $Enums.ApprovalStatus
     version?: IntWithAggregatesFilter<"Invoice"> | number
     certifiedProgress?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
   }
 
   export type PaymentWhereInput = {
@@ -54142,6 +57964,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"PurchaseRequest"> | Date | string
     deletedAt?: DateTimeNullableFilter<"PurchaseRequest"> | Date | string | null
     purchaseOrders?: PurchaseOrderListRelationFilter
+    quotations?: QuotationListRelationFilter
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }
 
@@ -54161,6 +57984,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     purchaseOrders?: PurchaseOrderOrderByRelationAggregateInput
+    quotations?: QuotationOrderByRelationAggregateInput
     createdBy?: UserOrderByWithRelationInput
   }
 
@@ -54183,6 +58007,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"PurchaseRequest"> | Date | string
     deletedAt?: DateTimeNullableFilter<"PurchaseRequest"> | Date | string | null
     purchaseOrders?: PurchaseOrderListRelationFilter
+    quotations?: QuotationListRelationFilter
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }, "id">
 
@@ -56642,6 +60467,275 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"UserMaturity"> | Date | string
   }
 
+  export type VariationOrderWhereInput = {
+    AND?: VariationOrderWhereInput | VariationOrderWhereInput[]
+    OR?: VariationOrderWhereInput[]
+    NOT?: VariationOrderWhereInput | VariationOrderWhereInput[]
+    id?: StringFilter<"VariationOrder"> | string
+    projectId?: StringFilter<"VariationOrder"> | string
+    boqItemId?: StringNullableFilter<"VariationOrder"> | string | null
+    wbsId?: StringNullableFilter<"VariationOrder"> | string | null
+    title?: StringFilter<"VariationOrder"> | string
+    description?: StringNullableFilter<"VariationOrder"> | string | null
+    amount?: DecimalFilter<"VariationOrder"> | Decimal | DecimalJsLike | number | string
+    status?: EnumApprovalStatusFilter<"VariationOrder"> | $Enums.ApprovalStatus
+    type?: StringFilter<"VariationOrder"> | string
+    createdAt?: DateTimeFilter<"VariationOrder"> | Date | string
+    updatedAt?: DateTimeFilter<"VariationOrder"> | Date | string
+    createdById?: StringNullableFilter<"VariationOrder"> | string | null
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    wbs?: XOR<WBSItemNullableRelationFilter, WBSItemWhereInput> | null
+  }
+
+  export type VariationOrderOrderByWithRelationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    boqItemId?: SortOrderInput | SortOrder
+    wbsId?: SortOrderInput | SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    project?: ProjectOrderByWithRelationInput
+    wbs?: WBSItemOrderByWithRelationInput
+  }
+
+  export type VariationOrderWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: VariationOrderWhereInput | VariationOrderWhereInput[]
+    OR?: VariationOrderWhereInput[]
+    NOT?: VariationOrderWhereInput | VariationOrderWhereInput[]
+    projectId?: StringFilter<"VariationOrder"> | string
+    boqItemId?: StringNullableFilter<"VariationOrder"> | string | null
+    wbsId?: StringNullableFilter<"VariationOrder"> | string | null
+    title?: StringFilter<"VariationOrder"> | string
+    description?: StringNullableFilter<"VariationOrder"> | string | null
+    amount?: DecimalFilter<"VariationOrder"> | Decimal | DecimalJsLike | number | string
+    status?: EnumApprovalStatusFilter<"VariationOrder"> | $Enums.ApprovalStatus
+    type?: StringFilter<"VariationOrder"> | string
+    createdAt?: DateTimeFilter<"VariationOrder"> | Date | string
+    updatedAt?: DateTimeFilter<"VariationOrder"> | Date | string
+    createdById?: StringNullableFilter<"VariationOrder"> | string | null
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    wbs?: XOR<WBSItemNullableRelationFilter, WBSItemWhereInput> | null
+  }, "id">
+
+  export type VariationOrderOrderByWithAggregationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    boqItemId?: SortOrderInput | SortOrder
+    wbsId?: SortOrderInput | SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    _count?: VariationOrderCountOrderByAggregateInput
+    _avg?: VariationOrderAvgOrderByAggregateInput
+    _max?: VariationOrderMaxOrderByAggregateInput
+    _min?: VariationOrderMinOrderByAggregateInput
+    _sum?: VariationOrderSumOrderByAggregateInput
+  }
+
+  export type VariationOrderScalarWhereWithAggregatesInput = {
+    AND?: VariationOrderScalarWhereWithAggregatesInput | VariationOrderScalarWhereWithAggregatesInput[]
+    OR?: VariationOrderScalarWhereWithAggregatesInput[]
+    NOT?: VariationOrderScalarWhereWithAggregatesInput | VariationOrderScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"VariationOrder"> | string
+    projectId?: StringWithAggregatesFilter<"VariationOrder"> | string
+    boqItemId?: StringNullableWithAggregatesFilter<"VariationOrder"> | string | null
+    wbsId?: StringNullableWithAggregatesFilter<"VariationOrder"> | string | null
+    title?: StringWithAggregatesFilter<"VariationOrder"> | string
+    description?: StringNullableWithAggregatesFilter<"VariationOrder"> | string | null
+    amount?: DecimalWithAggregatesFilter<"VariationOrder"> | Decimal | DecimalJsLike | number | string
+    status?: EnumApprovalStatusWithAggregatesFilter<"VariationOrder"> | $Enums.ApprovalStatus
+    type?: StringWithAggregatesFilter<"VariationOrder"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"VariationOrder"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"VariationOrder"> | Date | string
+    createdById?: StringNullableWithAggregatesFilter<"VariationOrder"> | string | null
+  }
+
+  export type SiteLogWhereInput = {
+    AND?: SiteLogWhereInput | SiteLogWhereInput[]
+    OR?: SiteLogWhereInput[]
+    NOT?: SiteLogWhereInput | SiteLogWhereInput[]
+    id?: StringFilter<"SiteLog"> | string
+    projectId?: StringFilter<"SiteLog"> | string
+    date?: DateTimeFilter<"SiteLog"> | Date | string
+    weather?: StringNullableFilter<"SiteLog"> | string | null
+    temperature?: FloatNullableFilter<"SiteLog"> | number | null
+    manpower?: IntFilter<"SiteLog"> | number
+    equipment?: StringNullableFilter<"SiteLog"> | string | null
+    progress?: StringNullableFilter<"SiteLog"> | string | null
+    notes?: StringNullableFilter<"SiteLog"> | string | null
+    createdAt?: DateTimeFilter<"SiteLog"> | Date | string
+    updatedAt?: DateTimeFilter<"SiteLog"> | Date | string
+    createdById?: StringNullableFilter<"SiteLog"> | string | null
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+  }
+
+  export type SiteLogOrderByWithRelationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    date?: SortOrder
+    weather?: SortOrderInput | SortOrder
+    temperature?: SortOrderInput | SortOrder
+    manpower?: SortOrder
+    equipment?: SortOrderInput | SortOrder
+    progress?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    project?: ProjectOrderByWithRelationInput
+  }
+
+  export type SiteLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SiteLogWhereInput | SiteLogWhereInput[]
+    OR?: SiteLogWhereInput[]
+    NOT?: SiteLogWhereInput | SiteLogWhereInput[]
+    projectId?: StringFilter<"SiteLog"> | string
+    date?: DateTimeFilter<"SiteLog"> | Date | string
+    weather?: StringNullableFilter<"SiteLog"> | string | null
+    temperature?: FloatNullableFilter<"SiteLog"> | number | null
+    manpower?: IntFilter<"SiteLog"> | number
+    equipment?: StringNullableFilter<"SiteLog"> | string | null
+    progress?: StringNullableFilter<"SiteLog"> | string | null
+    notes?: StringNullableFilter<"SiteLog"> | string | null
+    createdAt?: DateTimeFilter<"SiteLog"> | Date | string
+    updatedAt?: DateTimeFilter<"SiteLog"> | Date | string
+    createdById?: StringNullableFilter<"SiteLog"> | string | null
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+  }, "id">
+
+  export type SiteLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    date?: SortOrder
+    weather?: SortOrderInput | SortOrder
+    temperature?: SortOrderInput | SortOrder
+    manpower?: SortOrder
+    equipment?: SortOrderInput | SortOrder
+    progress?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    _count?: SiteLogCountOrderByAggregateInput
+    _avg?: SiteLogAvgOrderByAggregateInput
+    _max?: SiteLogMaxOrderByAggregateInput
+    _min?: SiteLogMinOrderByAggregateInput
+    _sum?: SiteLogSumOrderByAggregateInput
+  }
+
+  export type SiteLogScalarWhereWithAggregatesInput = {
+    AND?: SiteLogScalarWhereWithAggregatesInput | SiteLogScalarWhereWithAggregatesInput[]
+    OR?: SiteLogScalarWhereWithAggregatesInput[]
+    NOT?: SiteLogScalarWhereWithAggregatesInput | SiteLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SiteLog"> | string
+    projectId?: StringWithAggregatesFilter<"SiteLog"> | string
+    date?: DateTimeWithAggregatesFilter<"SiteLog"> | Date | string
+    weather?: StringNullableWithAggregatesFilter<"SiteLog"> | string | null
+    temperature?: FloatNullableWithAggregatesFilter<"SiteLog"> | number | null
+    manpower?: IntWithAggregatesFilter<"SiteLog"> | number
+    equipment?: StringNullableWithAggregatesFilter<"SiteLog"> | string | null
+    progress?: StringNullableWithAggregatesFilter<"SiteLog"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"SiteLog"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"SiteLog"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SiteLog"> | Date | string
+    createdById?: StringNullableWithAggregatesFilter<"SiteLog"> | string | null
+  }
+
+  export type QuotationWhereInput = {
+    AND?: QuotationWhereInput | QuotationWhereInput[]
+    OR?: QuotationWhereInput[]
+    NOT?: QuotationWhereInput | QuotationWhereInput[]
+    id?: StringFilter<"Quotation"> | string
+    purchaseRequestId?: StringNullableFilter<"Quotation"> | string | null
+    vendor?: StringFilter<"Quotation"> | string
+    totalAmount?: DecimalFilter<"Quotation"> | Decimal | DecimalJsLike | number | string
+    leadTimeDays?: IntNullableFilter<"Quotation"> | number | null
+    validUntil?: DateTimeNullableFilter<"Quotation"> | Date | string | null
+    status?: StringFilter<"Quotation"> | string
+    notes?: StringNullableFilter<"Quotation"> | string | null
+    createdAt?: DateTimeFilter<"Quotation"> | Date | string
+    updatedAt?: DateTimeFilter<"Quotation"> | Date | string
+    purchaseRequest?: XOR<PurchaseRequestNullableRelationFilter, PurchaseRequestWhereInput> | null
+  }
+
+  export type QuotationOrderByWithRelationInput = {
+    id?: SortOrder
+    purchaseRequestId?: SortOrderInput | SortOrder
+    vendor?: SortOrder
+    totalAmount?: SortOrder
+    leadTimeDays?: SortOrderInput | SortOrder
+    validUntil?: SortOrderInput | SortOrder
+    status?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    purchaseRequest?: PurchaseRequestOrderByWithRelationInput
+  }
+
+  export type QuotationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: QuotationWhereInput | QuotationWhereInput[]
+    OR?: QuotationWhereInput[]
+    NOT?: QuotationWhereInput | QuotationWhereInput[]
+    purchaseRequestId?: StringNullableFilter<"Quotation"> | string | null
+    vendor?: StringFilter<"Quotation"> | string
+    totalAmount?: DecimalFilter<"Quotation"> | Decimal | DecimalJsLike | number | string
+    leadTimeDays?: IntNullableFilter<"Quotation"> | number | null
+    validUntil?: DateTimeNullableFilter<"Quotation"> | Date | string | null
+    status?: StringFilter<"Quotation"> | string
+    notes?: StringNullableFilter<"Quotation"> | string | null
+    createdAt?: DateTimeFilter<"Quotation"> | Date | string
+    updatedAt?: DateTimeFilter<"Quotation"> | Date | string
+    purchaseRequest?: XOR<PurchaseRequestNullableRelationFilter, PurchaseRequestWhereInput> | null
+  }, "id">
+
+  export type QuotationOrderByWithAggregationInput = {
+    id?: SortOrder
+    purchaseRequestId?: SortOrderInput | SortOrder
+    vendor?: SortOrder
+    totalAmount?: SortOrder
+    leadTimeDays?: SortOrderInput | SortOrder
+    validUntil?: SortOrderInput | SortOrder
+    status?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: QuotationCountOrderByAggregateInput
+    _avg?: QuotationAvgOrderByAggregateInput
+    _max?: QuotationMaxOrderByAggregateInput
+    _min?: QuotationMinOrderByAggregateInput
+    _sum?: QuotationSumOrderByAggregateInput
+  }
+
+  export type QuotationScalarWhereWithAggregatesInput = {
+    AND?: QuotationScalarWhereWithAggregatesInput | QuotationScalarWhereWithAggregatesInput[]
+    OR?: QuotationScalarWhereWithAggregatesInput[]
+    NOT?: QuotationScalarWhereWithAggregatesInput | QuotationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Quotation"> | string
+    purchaseRequestId?: StringNullableWithAggregatesFilter<"Quotation"> | string | null
+    vendor?: StringWithAggregatesFilter<"Quotation"> | string
+    totalAmount?: DecimalWithAggregatesFilter<"Quotation"> | Decimal | DecimalJsLike | number | string
+    leadTimeDays?: IntNullableWithAggregatesFilter<"Quotation"> | number | null
+    validUntil?: DateTimeNullableWithAggregatesFilter<"Quotation"> | Date | string | null
+    status?: StringWithAggregatesFilter<"Quotation"> | string
+    notes?: StringNullableWithAggregatesFilter<"Quotation"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Quotation"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Quotation"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -56902,6 +60996,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
@@ -56932,6 +61028,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -56962,6 +61060,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
@@ -56992,6 +61092,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -57166,6 +61268,7 @@ export namespace Prisma {
     revenues?: RevenueCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutWbsInput
     parent?: WBSItemCreateNestedOneWithoutChildrenInput
     children?: WBSItemCreateNestedManyWithoutParentInput
     project: ProjectCreateNestedOneWithoutWbsItemsInput
@@ -57192,6 +61295,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemUncheckedCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutWbsInput
     children?: WBSItemUncheckedCreateNestedManyWithoutParentInput
   }
 
@@ -57214,6 +61318,7 @@ export namespace Prisma {
     revenues?: RevenueUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutWbsNestedInput
     parent?: WBSItemUpdateOneWithoutChildrenNestedInput
     children?: WBSItemUpdateManyWithoutParentNestedInput
     project?: ProjectUpdateOneRequiredWithoutWbsItemsNestedInput
@@ -57240,6 +61345,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutWbsNestedInput
     children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
   }
 
@@ -57302,6 +61408,11 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     deletedBy?: UserCreateNestedOneWithoutCostsDeletedInput
     createdBy?: UserCreateNestedOneWithoutCostsCreatedInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutCostRecordsInput
@@ -57329,6 +61440,11 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type CostRecordUpdateInput = {
@@ -57348,6 +61464,11 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deletedBy?: UserUpdateOneWithoutCostsDeletedNestedInput
     createdBy?: UserUpdateOneWithoutCostsCreatedNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutCostRecordsNestedInput
@@ -57375,6 +61496,11 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type CostRecordCreateManyInput = {
@@ -57398,6 +61524,11 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type CostRecordUpdateManyMutationInput = {
@@ -57417,6 +61548,11 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type CostRecordUncheckedUpdateManyInput = {
@@ -57440,6 +61576,11 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type BudgetRecordCreateInput = {
@@ -57644,7 +61785,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     deletedBy?: UserCreateNestedOneWithoutInvoicesDeletedInput
     contract?: ContractCreateNestedOneWithoutInvoicesInput
     createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
@@ -57675,7 +61820,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
   }
@@ -57698,7 +61847,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deletedBy?: UserUpdateOneWithoutInvoicesDeletedNestedInput
     contract?: ContractUpdateOneWithoutInvoicesNestedInput
     createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
@@ -57729,7 +61882,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
   }
@@ -57756,7 +61913,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceUpdateManyMutationInput = {
@@ -57777,7 +61938,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceUncheckedUpdateManyInput = {
@@ -57802,7 +61967,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type PaymentCreateInput = {
@@ -58187,6 +62356,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutPurchaseRequestInput
+    quotations?: QuotationCreateNestedManyWithoutPurchaseRequestInput
     createdBy?: UserCreateNestedOneWithoutPurchaseRequestsCreatedInput
   }
 
@@ -58206,6 +62376,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutPurchaseRequestInput
+    quotations?: QuotationUncheckedCreateNestedManyWithoutPurchaseRequestInput
   }
 
   export type PurchaseRequestUpdateInput = {
@@ -58223,6 +62394,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     purchaseOrders?: PurchaseOrderUpdateManyWithoutPurchaseRequestNestedInput
+    quotations?: QuotationUpdateManyWithoutPurchaseRequestNestedInput
     createdBy?: UserUpdateOneWithoutPurchaseRequestsCreatedNestedInput
   }
 
@@ -58242,6 +62414,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutPurchaseRequestNestedInput
+    quotations?: QuotationUncheckedUpdateManyWithoutPurchaseRequestNestedInput
   }
 
   export type PurchaseRequestCreateManyInput = {
@@ -60917,6 +65090,303 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type VariationOrderCreateInput = {
+    id?: string
+    boqItemId?: string | null
+    title: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ApprovalStatus
+    type?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+    project: ProjectCreateNestedOneWithoutVariationOrderInput
+    wbs?: WBSItemCreateNestedOneWithoutVariationOrderInput
+  }
+
+  export type VariationOrderUncheckedCreateInput = {
+    id?: string
+    projectId: string
+    boqItemId?: string | null
+    wbsId?: string | null
+    title: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ApprovalStatus
+    type?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type VariationOrderUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    boqItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    project?: ProjectUpdateOneRequiredWithoutVariationOrderNestedInput
+    wbs?: WBSItemUpdateOneWithoutVariationOrderNestedInput
+  }
+
+  export type VariationOrderUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    boqItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    wbsId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VariationOrderCreateManyInput = {
+    id?: string
+    projectId: string
+    boqItemId?: string | null
+    wbsId?: string | null
+    title: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ApprovalStatus
+    type?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type VariationOrderUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    boqItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VariationOrderUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    boqItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    wbsId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SiteLogCreateInput = {
+    id?: string
+    date?: Date | string
+    weather?: string | null
+    temperature?: number | null
+    manpower?: number
+    equipment?: string | null
+    progress?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+    project: ProjectCreateNestedOneWithoutSiteLogInput
+  }
+
+  export type SiteLogUncheckedCreateInput = {
+    id?: string
+    projectId: string
+    date?: Date | string
+    weather?: string | null
+    temperature?: number | null
+    manpower?: number
+    equipment?: string | null
+    progress?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type SiteLogUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    weather?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    manpower?: IntFieldUpdateOperationsInput | number
+    equipment?: NullableStringFieldUpdateOperationsInput | string | null
+    progress?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    project?: ProjectUpdateOneRequiredWithoutSiteLogNestedInput
+  }
+
+  export type SiteLogUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    weather?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    manpower?: IntFieldUpdateOperationsInput | number
+    equipment?: NullableStringFieldUpdateOperationsInput | string | null
+    progress?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SiteLogCreateManyInput = {
+    id?: string
+    projectId: string
+    date?: Date | string
+    weather?: string | null
+    temperature?: number | null
+    manpower?: number
+    equipment?: string | null
+    progress?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type SiteLogUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    weather?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    manpower?: IntFieldUpdateOperationsInput | number
+    equipment?: NullableStringFieldUpdateOperationsInput | string | null
+    progress?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SiteLogUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    weather?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    manpower?: IntFieldUpdateOperationsInput | number
+    equipment?: NullableStringFieldUpdateOperationsInput | string | null
+    progress?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type QuotationCreateInput = {
+    id?: string
+    vendor: string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    leadTimeDays?: number | null
+    validUntil?: Date | string | null
+    status?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    purchaseRequest?: PurchaseRequestCreateNestedOneWithoutQuotationsInput
+  }
+
+  export type QuotationUncheckedCreateInput = {
+    id?: string
+    purchaseRequestId?: string | null
+    vendor: string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    leadTimeDays?: number | null
+    validUntil?: Date | string | null
+    status?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuotationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vendor?: StringFieldUpdateOperationsInput | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    leadTimeDays?: NullableIntFieldUpdateOperationsInput | number | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    purchaseRequest?: PurchaseRequestUpdateOneWithoutQuotationsNestedInput
+  }
+
+  export type QuotationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    purchaseRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    vendor?: StringFieldUpdateOperationsInput | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    leadTimeDays?: NullableIntFieldUpdateOperationsInput | number | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuotationCreateManyInput = {
+    id?: string
+    purchaseRequestId?: string | null
+    vendor: string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    leadTimeDays?: number | null
+    validUntil?: Date | string | null
+    status?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuotationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vendor?: StringFieldUpdateOperationsInput | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    leadTimeDays?: NullableIntFieldUpdateOperationsInput | number | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuotationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    purchaseRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    vendor?: StringFieldUpdateOperationsInput | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    leadTimeDays?: NullableIntFieldUpdateOperationsInput | number | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -61394,6 +65864,18 @@ export namespace Prisma {
     none?: SubcontractWhereInput
   }
 
+  export type VariationOrderListRelationFilter = {
+    every?: VariationOrderWhereInput
+    some?: VariationOrderWhereInput
+    none?: VariationOrderWhereInput
+  }
+
+  export type SiteLogListRelationFilter = {
+    every?: SiteLogWhereInput
+    some?: SiteLogWhereInput
+    none?: SiteLogWhereInput
+  }
+
   export type BOQItemOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -61415,6 +65897,14 @@ export namespace Prisma {
   }
 
   export type SubcontractOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VariationOrderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SiteLogOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -61737,6 +66227,11 @@ export namespace Prisma {
     deletedAt?: SortOrder
     deletedById?: SortOrder
     approvalStatus?: SortOrder
+    vatRate?: SortOrder
+    vatAmount?: SortOrder
+    retentionRate?: SortOrder
+    retentionAmount?: SortOrder
+    netAmount?: SortOrder
   }
 
   export type CostRecordAvgOrderByAggregateInput = {
@@ -61744,6 +66239,11 @@ export namespace Prisma {
     quantity?: SortOrder
     unitPrice?: SortOrder
     version?: SortOrder
+    vatRate?: SortOrder
+    vatAmount?: SortOrder
+    retentionRate?: SortOrder
+    retentionAmount?: SortOrder
+    netAmount?: SortOrder
   }
 
   export type CostRecordMaxOrderByAggregateInput = {
@@ -61767,6 +66267,11 @@ export namespace Prisma {
     deletedAt?: SortOrder
     deletedById?: SortOrder
     approvalStatus?: SortOrder
+    vatRate?: SortOrder
+    vatAmount?: SortOrder
+    retentionRate?: SortOrder
+    retentionAmount?: SortOrder
+    netAmount?: SortOrder
   }
 
   export type CostRecordMinOrderByAggregateInput = {
@@ -61790,6 +66295,11 @@ export namespace Prisma {
     deletedAt?: SortOrder
     deletedById?: SortOrder
     approvalStatus?: SortOrder
+    vatRate?: SortOrder
+    vatAmount?: SortOrder
+    retentionRate?: SortOrder
+    retentionAmount?: SortOrder
+    netAmount?: SortOrder
   }
 
   export type CostRecordSumOrderByAggregateInput = {
@@ -61797,6 +66307,11 @@ export namespace Prisma {
     quantity?: SortOrder
     unitPrice?: SortOrder
     version?: SortOrder
+    vatRate?: SortOrder
+    vatAmount?: SortOrder
+    retentionRate?: SortOrder
+    retentionAmount?: SortOrder
+    netAmount?: SortOrder
   }
 
   export type EnumCostTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -61965,7 +66480,11 @@ export namespace Prisma {
     approvalStatus?: SortOrder
     version?: SortOrder
     certifiedProgress?: SortOrder
+    vatRate?: SortOrder
+    vatAmount?: SortOrder
+    retentionRate?: SortOrder
     retentionAmount?: SortOrder
+    netAmount?: SortOrder
   }
 
   export type InvoiceAvgOrderByAggregateInput = {
@@ -61974,7 +66493,11 @@ export namespace Prisma {
     remainingAmount?: SortOrder
     version?: SortOrder
     certifiedProgress?: SortOrder
+    vatRate?: SortOrder
+    vatAmount?: SortOrder
+    retentionRate?: SortOrder
     retentionAmount?: SortOrder
+    netAmount?: SortOrder
   }
 
   export type InvoiceMaxOrderByAggregateInput = {
@@ -61999,7 +66522,11 @@ export namespace Prisma {
     approvalStatus?: SortOrder
     version?: SortOrder
     certifiedProgress?: SortOrder
+    vatRate?: SortOrder
+    vatAmount?: SortOrder
+    retentionRate?: SortOrder
     retentionAmount?: SortOrder
+    netAmount?: SortOrder
   }
 
   export type InvoiceMinOrderByAggregateInput = {
@@ -62024,7 +66551,11 @@ export namespace Prisma {
     approvalStatus?: SortOrder
     version?: SortOrder
     certifiedProgress?: SortOrder
+    vatRate?: SortOrder
+    vatAmount?: SortOrder
+    retentionRate?: SortOrder
     retentionAmount?: SortOrder
+    netAmount?: SortOrder
   }
 
   export type InvoiceSumOrderByAggregateInput = {
@@ -62033,7 +66564,11 @@ export namespace Prisma {
     remainingAmount?: SortOrder
     version?: SortOrder
     certifiedProgress?: SortOrder
+    vatRate?: SortOrder
+    vatAmount?: SortOrder
+    retentionRate?: SortOrder
     retentionAmount?: SortOrder
+    netAmount?: SortOrder
   }
 
   export type EnumInvoiceStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -62302,6 +66837,16 @@ export namespace Prisma {
     in?: $Enums.ProcurementStatus[] | ListEnumProcurementStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.ProcurementStatus[] | ListEnumProcurementStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumProcurementStatusFilter<$PrismaModel> | $Enums.ProcurementStatus
+  }
+
+  export type QuotationListRelationFilter = {
+    every?: QuotationWhereInput
+    some?: QuotationWhereInput
+    none?: QuotationWhereInput
+  }
+
+  export type QuotationOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type PurchaseRequestCountOrderByAggregateInput = {
@@ -63987,6 +68532,190 @@ export namespace Prisma {
     accuracy?: SortOrder
   }
 
+  export type VariationOrderCountOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    boqItemId?: SortOrder
+    wbsId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type VariationOrderAvgOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type VariationOrderMaxOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    boqItemId?: SortOrder
+    wbsId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type VariationOrderMinOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    boqItemId?: SortOrder
+    wbsId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type VariationOrderSumOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type SiteLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    date?: SortOrder
+    weather?: SortOrder
+    temperature?: SortOrder
+    manpower?: SortOrder
+    equipment?: SortOrder
+    progress?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type SiteLogAvgOrderByAggregateInput = {
+    temperature?: SortOrder
+    manpower?: SortOrder
+  }
+
+  export type SiteLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    date?: SortOrder
+    weather?: SortOrder
+    temperature?: SortOrder
+    manpower?: SortOrder
+    equipment?: SortOrder
+    progress?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type SiteLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    date?: SortOrder
+    weather?: SortOrder
+    temperature?: SortOrder
+    manpower?: SortOrder
+    equipment?: SortOrder
+    progress?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type SiteLogSumOrderByAggregateInput = {
+    temperature?: SortOrder
+    manpower?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type QuotationCountOrderByAggregateInput = {
+    id?: SortOrder
+    purchaseRequestId?: SortOrder
+    vendor?: SortOrder
+    totalAmount?: SortOrder
+    leadTimeDays?: SortOrder
+    validUntil?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type QuotationAvgOrderByAggregateInput = {
+    totalAmount?: SortOrder
+    leadTimeDays?: SortOrder
+  }
+
+  export type QuotationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    purchaseRequestId?: SortOrder
+    vendor?: SortOrder
+    totalAmount?: SortOrder
+    leadTimeDays?: SortOrder
+    validUntil?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type QuotationMinOrderByAggregateInput = {
+    id?: SortOrder
+    purchaseRequestId?: SortOrder
+    vendor?: SortOrder
+    totalAmount?: SortOrder
+    leadTimeDays?: SortOrder
+    validUntil?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type QuotationSumOrderByAggregateInput = {
+    totalAmount?: SortOrder
+    leadTimeDays?: SortOrder
+  }
+
   export type ActivityFeedCreateNestedManyWithoutUserInput = {
     create?: XOR<ActivityFeedCreateWithoutUserInput, ActivityFeedUncheckedCreateWithoutUserInput> | ActivityFeedCreateWithoutUserInput[] | ActivityFeedUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ActivityFeedCreateOrConnectWithoutUserInput | ActivityFeedCreateOrConnectWithoutUserInput[]
@@ -65220,6 +69949,20 @@ export namespace Prisma {
     connect?: SubcontractWhereUniqueInput | SubcontractWhereUniqueInput[]
   }
 
+  export type VariationOrderCreateNestedManyWithoutProjectInput = {
+    create?: XOR<VariationOrderCreateWithoutProjectInput, VariationOrderUncheckedCreateWithoutProjectInput> | VariationOrderCreateWithoutProjectInput[] | VariationOrderUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: VariationOrderCreateOrConnectWithoutProjectInput | VariationOrderCreateOrConnectWithoutProjectInput[]
+    createMany?: VariationOrderCreateManyProjectInputEnvelope
+    connect?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+  }
+
+  export type SiteLogCreateNestedManyWithoutProjectInput = {
+    create?: XOR<SiteLogCreateWithoutProjectInput, SiteLogUncheckedCreateWithoutProjectInput> | SiteLogCreateWithoutProjectInput[] | SiteLogUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: SiteLogCreateOrConnectWithoutProjectInput | SiteLogCreateOrConnectWithoutProjectInput[]
+    createMany?: SiteLogCreateManyProjectInputEnvelope
+    connect?: SiteLogWhereUniqueInput | SiteLogWhereUniqueInput[]
+  }
+
   export type TaskCreateNestedManyWithoutProjectInput = {
     create?: XOR<TaskCreateWithoutProjectInput, TaskUncheckedCreateWithoutProjectInput> | TaskCreateWithoutProjectInput[] | TaskUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutProjectInput | TaskCreateOrConnectWithoutProjectInput[]
@@ -65309,6 +70052,20 @@ export namespace Prisma {
     connectOrCreate?: SubcontractCreateOrConnectWithoutProjectInput | SubcontractCreateOrConnectWithoutProjectInput[]
     createMany?: SubcontractCreateManyProjectInputEnvelope
     connect?: SubcontractWhereUniqueInput | SubcontractWhereUniqueInput[]
+  }
+
+  export type VariationOrderUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<VariationOrderCreateWithoutProjectInput, VariationOrderUncheckedCreateWithoutProjectInput> | VariationOrderCreateWithoutProjectInput[] | VariationOrderUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: VariationOrderCreateOrConnectWithoutProjectInput | VariationOrderCreateOrConnectWithoutProjectInput[]
+    createMany?: VariationOrderCreateManyProjectInputEnvelope
+    connect?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+  }
+
+  export type SiteLogUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<SiteLogCreateWithoutProjectInput, SiteLogUncheckedCreateWithoutProjectInput> | SiteLogCreateWithoutProjectInput[] | SiteLogUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: SiteLogCreateOrConnectWithoutProjectInput | SiteLogCreateOrConnectWithoutProjectInput[]
+    createMany?: SiteLogCreateManyProjectInputEnvelope
+    connect?: SiteLogWhereUniqueInput | SiteLogWhereUniqueInput[]
   }
 
   export type TaskUncheckedCreateNestedManyWithoutProjectInput = {
@@ -65519,6 +70276,34 @@ export namespace Prisma {
     deleteMany?: SubcontractScalarWhereInput | SubcontractScalarWhereInput[]
   }
 
+  export type VariationOrderUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<VariationOrderCreateWithoutProjectInput, VariationOrderUncheckedCreateWithoutProjectInput> | VariationOrderCreateWithoutProjectInput[] | VariationOrderUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: VariationOrderCreateOrConnectWithoutProjectInput | VariationOrderCreateOrConnectWithoutProjectInput[]
+    upsert?: VariationOrderUpsertWithWhereUniqueWithoutProjectInput | VariationOrderUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: VariationOrderCreateManyProjectInputEnvelope
+    set?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    disconnect?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    delete?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    connect?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    update?: VariationOrderUpdateWithWhereUniqueWithoutProjectInput | VariationOrderUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: VariationOrderUpdateManyWithWhereWithoutProjectInput | VariationOrderUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: VariationOrderScalarWhereInput | VariationOrderScalarWhereInput[]
+  }
+
+  export type SiteLogUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<SiteLogCreateWithoutProjectInput, SiteLogUncheckedCreateWithoutProjectInput> | SiteLogCreateWithoutProjectInput[] | SiteLogUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: SiteLogCreateOrConnectWithoutProjectInput | SiteLogCreateOrConnectWithoutProjectInput[]
+    upsert?: SiteLogUpsertWithWhereUniqueWithoutProjectInput | SiteLogUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: SiteLogCreateManyProjectInputEnvelope
+    set?: SiteLogWhereUniqueInput | SiteLogWhereUniqueInput[]
+    disconnect?: SiteLogWhereUniqueInput | SiteLogWhereUniqueInput[]
+    delete?: SiteLogWhereUniqueInput | SiteLogWhereUniqueInput[]
+    connect?: SiteLogWhereUniqueInput | SiteLogWhereUniqueInput[]
+    update?: SiteLogUpdateWithWhereUniqueWithoutProjectInput | SiteLogUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: SiteLogUpdateManyWithWhereWithoutProjectInput | SiteLogUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: SiteLogScalarWhereInput | SiteLogScalarWhereInput[]
+  }
+
   export type TaskUpdateManyWithoutProjectNestedInput = {
     create?: XOR<TaskCreateWithoutProjectInput, TaskUncheckedCreateWithoutProjectInput> | TaskCreateWithoutProjectInput[] | TaskUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutProjectInput | TaskCreateOrConnectWithoutProjectInput[]
@@ -65701,6 +70486,34 @@ export namespace Prisma {
     deleteMany?: SubcontractScalarWhereInput | SubcontractScalarWhereInput[]
   }
 
+  export type VariationOrderUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<VariationOrderCreateWithoutProjectInput, VariationOrderUncheckedCreateWithoutProjectInput> | VariationOrderCreateWithoutProjectInput[] | VariationOrderUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: VariationOrderCreateOrConnectWithoutProjectInput | VariationOrderCreateOrConnectWithoutProjectInput[]
+    upsert?: VariationOrderUpsertWithWhereUniqueWithoutProjectInput | VariationOrderUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: VariationOrderCreateManyProjectInputEnvelope
+    set?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    disconnect?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    delete?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    connect?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    update?: VariationOrderUpdateWithWhereUniqueWithoutProjectInput | VariationOrderUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: VariationOrderUpdateManyWithWhereWithoutProjectInput | VariationOrderUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: VariationOrderScalarWhereInput | VariationOrderScalarWhereInput[]
+  }
+
+  export type SiteLogUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<SiteLogCreateWithoutProjectInput, SiteLogUncheckedCreateWithoutProjectInput> | SiteLogCreateWithoutProjectInput[] | SiteLogUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: SiteLogCreateOrConnectWithoutProjectInput | SiteLogCreateOrConnectWithoutProjectInput[]
+    upsert?: SiteLogUpsertWithWhereUniqueWithoutProjectInput | SiteLogUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: SiteLogCreateManyProjectInputEnvelope
+    set?: SiteLogWhereUniqueInput | SiteLogWhereUniqueInput[]
+    disconnect?: SiteLogWhereUniqueInput | SiteLogWhereUniqueInput[]
+    delete?: SiteLogWhereUniqueInput | SiteLogWhereUniqueInput[]
+    connect?: SiteLogWhereUniqueInput | SiteLogWhereUniqueInput[]
+    update?: SiteLogUpdateWithWhereUniqueWithoutProjectInput | SiteLogUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: SiteLogUpdateManyWithWhereWithoutProjectInput | SiteLogUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: SiteLogScalarWhereInput | SiteLogScalarWhereInput[]
+  }
+
   export type TaskUncheckedUpdateManyWithoutProjectNestedInput = {
     create?: XOR<TaskCreateWithoutProjectInput, TaskUncheckedCreateWithoutProjectInput> | TaskCreateWithoutProjectInput[] | TaskUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutProjectInput | TaskCreateOrConnectWithoutProjectInput[]
@@ -65841,6 +70654,13 @@ export namespace Prisma {
     connect?: SubcontractItemWhereUniqueInput | SubcontractItemWhereUniqueInput[]
   }
 
+  export type VariationOrderCreateNestedManyWithoutWbsInput = {
+    create?: XOR<VariationOrderCreateWithoutWbsInput, VariationOrderUncheckedCreateWithoutWbsInput> | VariationOrderCreateWithoutWbsInput[] | VariationOrderUncheckedCreateWithoutWbsInput[]
+    connectOrCreate?: VariationOrderCreateOrConnectWithoutWbsInput | VariationOrderCreateOrConnectWithoutWbsInput[]
+    createMany?: VariationOrderCreateManyWbsInputEnvelope
+    connect?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+  }
+
   export type WBSItemCreateNestedOneWithoutChildrenInput = {
     create?: XOR<WBSItemCreateWithoutChildrenInput, WBSItemUncheckedCreateWithoutChildrenInput>
     connectOrCreate?: WBSItemCreateOrConnectWithoutChildrenInput
@@ -65914,6 +70734,13 @@ export namespace Prisma {
     connectOrCreate?: SubcontractItemCreateOrConnectWithoutWBSItemInput | SubcontractItemCreateOrConnectWithoutWBSItemInput[]
     createMany?: SubcontractItemCreateManyWBSItemInputEnvelope
     connect?: SubcontractItemWhereUniqueInput | SubcontractItemWhereUniqueInput[]
+  }
+
+  export type VariationOrderUncheckedCreateNestedManyWithoutWbsInput = {
+    create?: XOR<VariationOrderCreateWithoutWbsInput, VariationOrderUncheckedCreateWithoutWbsInput> | VariationOrderCreateWithoutWbsInput[] | VariationOrderUncheckedCreateWithoutWbsInput[]
+    connectOrCreate?: VariationOrderCreateOrConnectWithoutWbsInput | VariationOrderCreateOrConnectWithoutWbsInput[]
+    createMany?: VariationOrderCreateManyWbsInputEnvelope
+    connect?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
   }
 
   export type WBSItemUncheckedCreateNestedManyWithoutParentInput = {
@@ -66043,6 +70870,20 @@ export namespace Prisma {
     update?: SubcontractItemUpdateWithWhereUniqueWithoutWBSItemInput | SubcontractItemUpdateWithWhereUniqueWithoutWBSItemInput[]
     updateMany?: SubcontractItemUpdateManyWithWhereWithoutWBSItemInput | SubcontractItemUpdateManyWithWhereWithoutWBSItemInput[]
     deleteMany?: SubcontractItemScalarWhereInput | SubcontractItemScalarWhereInput[]
+  }
+
+  export type VariationOrderUpdateManyWithoutWbsNestedInput = {
+    create?: XOR<VariationOrderCreateWithoutWbsInput, VariationOrderUncheckedCreateWithoutWbsInput> | VariationOrderCreateWithoutWbsInput[] | VariationOrderUncheckedCreateWithoutWbsInput[]
+    connectOrCreate?: VariationOrderCreateOrConnectWithoutWbsInput | VariationOrderCreateOrConnectWithoutWbsInput[]
+    upsert?: VariationOrderUpsertWithWhereUniqueWithoutWbsInput | VariationOrderUpsertWithWhereUniqueWithoutWbsInput[]
+    createMany?: VariationOrderCreateManyWbsInputEnvelope
+    set?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    disconnect?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    delete?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    connect?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    update?: VariationOrderUpdateWithWhereUniqueWithoutWbsInput | VariationOrderUpdateWithWhereUniqueWithoutWbsInput[]
+    updateMany?: VariationOrderUpdateManyWithWhereWithoutWbsInput | VariationOrderUpdateManyWithWhereWithoutWbsInput[]
+    deleteMany?: VariationOrderScalarWhereInput | VariationOrderScalarWhereInput[]
   }
 
   export type WBSItemUpdateOneWithoutChildrenNestedInput = {
@@ -66187,6 +71028,20 @@ export namespace Prisma {
     update?: SubcontractItemUpdateWithWhereUniqueWithoutWBSItemInput | SubcontractItemUpdateWithWhereUniqueWithoutWBSItemInput[]
     updateMany?: SubcontractItemUpdateManyWithWhereWithoutWBSItemInput | SubcontractItemUpdateManyWithWhereWithoutWBSItemInput[]
     deleteMany?: SubcontractItemScalarWhereInput | SubcontractItemScalarWhereInput[]
+  }
+
+  export type VariationOrderUncheckedUpdateManyWithoutWbsNestedInput = {
+    create?: XOR<VariationOrderCreateWithoutWbsInput, VariationOrderUncheckedCreateWithoutWbsInput> | VariationOrderCreateWithoutWbsInput[] | VariationOrderUncheckedCreateWithoutWbsInput[]
+    connectOrCreate?: VariationOrderCreateOrConnectWithoutWbsInput | VariationOrderCreateOrConnectWithoutWbsInput[]
+    upsert?: VariationOrderUpsertWithWhereUniqueWithoutWbsInput | VariationOrderUpsertWithWhereUniqueWithoutWbsInput[]
+    createMany?: VariationOrderCreateManyWbsInputEnvelope
+    set?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    disconnect?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    delete?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    connect?: VariationOrderWhereUniqueInput | VariationOrderWhereUniqueInput[]
+    update?: VariationOrderUpdateWithWhereUniqueWithoutWbsInput | VariationOrderUpdateWithWhereUniqueWithoutWbsInput[]
+    updateMany?: VariationOrderUpdateManyWithWhereWithoutWbsInput | VariationOrderUpdateManyWithWhereWithoutWbsInput[]
+    deleteMany?: VariationOrderScalarWhereInput | VariationOrderScalarWhereInput[]
   }
 
   export type WBSItemUncheckedUpdateManyWithoutParentNestedInput = {
@@ -66680,6 +71535,13 @@ export namespace Prisma {
     connect?: PurchaseOrderWhereUniqueInput | PurchaseOrderWhereUniqueInput[]
   }
 
+  export type QuotationCreateNestedManyWithoutPurchaseRequestInput = {
+    create?: XOR<QuotationCreateWithoutPurchaseRequestInput, QuotationUncheckedCreateWithoutPurchaseRequestInput> | QuotationCreateWithoutPurchaseRequestInput[] | QuotationUncheckedCreateWithoutPurchaseRequestInput[]
+    connectOrCreate?: QuotationCreateOrConnectWithoutPurchaseRequestInput | QuotationCreateOrConnectWithoutPurchaseRequestInput[]
+    createMany?: QuotationCreateManyPurchaseRequestInputEnvelope
+    connect?: QuotationWhereUniqueInput | QuotationWhereUniqueInput[]
+  }
+
   export type UserCreateNestedOneWithoutPurchaseRequestsCreatedInput = {
     create?: XOR<UserCreateWithoutPurchaseRequestsCreatedInput, UserUncheckedCreateWithoutPurchaseRequestsCreatedInput>
     connectOrCreate?: UserCreateOrConnectWithoutPurchaseRequestsCreatedInput
@@ -66691,6 +71553,13 @@ export namespace Prisma {
     connectOrCreate?: PurchaseOrderCreateOrConnectWithoutPurchaseRequestInput | PurchaseOrderCreateOrConnectWithoutPurchaseRequestInput[]
     createMany?: PurchaseOrderCreateManyPurchaseRequestInputEnvelope
     connect?: PurchaseOrderWhereUniqueInput | PurchaseOrderWhereUniqueInput[]
+  }
+
+  export type QuotationUncheckedCreateNestedManyWithoutPurchaseRequestInput = {
+    create?: XOR<QuotationCreateWithoutPurchaseRequestInput, QuotationUncheckedCreateWithoutPurchaseRequestInput> | QuotationCreateWithoutPurchaseRequestInput[] | QuotationUncheckedCreateWithoutPurchaseRequestInput[]
+    connectOrCreate?: QuotationCreateOrConnectWithoutPurchaseRequestInput | QuotationCreateOrConnectWithoutPurchaseRequestInput[]
+    createMany?: QuotationCreateManyPurchaseRequestInputEnvelope
+    connect?: QuotationWhereUniqueInput | QuotationWhereUniqueInput[]
   }
 
   export type EnumProcurementStatusFieldUpdateOperationsInput = {
@@ -66709,6 +71578,20 @@ export namespace Prisma {
     update?: PurchaseOrderUpdateWithWhereUniqueWithoutPurchaseRequestInput | PurchaseOrderUpdateWithWhereUniqueWithoutPurchaseRequestInput[]
     updateMany?: PurchaseOrderUpdateManyWithWhereWithoutPurchaseRequestInput | PurchaseOrderUpdateManyWithWhereWithoutPurchaseRequestInput[]
     deleteMany?: PurchaseOrderScalarWhereInput | PurchaseOrderScalarWhereInput[]
+  }
+
+  export type QuotationUpdateManyWithoutPurchaseRequestNestedInput = {
+    create?: XOR<QuotationCreateWithoutPurchaseRequestInput, QuotationUncheckedCreateWithoutPurchaseRequestInput> | QuotationCreateWithoutPurchaseRequestInput[] | QuotationUncheckedCreateWithoutPurchaseRequestInput[]
+    connectOrCreate?: QuotationCreateOrConnectWithoutPurchaseRequestInput | QuotationCreateOrConnectWithoutPurchaseRequestInput[]
+    upsert?: QuotationUpsertWithWhereUniqueWithoutPurchaseRequestInput | QuotationUpsertWithWhereUniqueWithoutPurchaseRequestInput[]
+    createMany?: QuotationCreateManyPurchaseRequestInputEnvelope
+    set?: QuotationWhereUniqueInput | QuotationWhereUniqueInput[]
+    disconnect?: QuotationWhereUniqueInput | QuotationWhereUniqueInput[]
+    delete?: QuotationWhereUniqueInput | QuotationWhereUniqueInput[]
+    connect?: QuotationWhereUniqueInput | QuotationWhereUniqueInput[]
+    update?: QuotationUpdateWithWhereUniqueWithoutPurchaseRequestInput | QuotationUpdateWithWhereUniqueWithoutPurchaseRequestInput[]
+    updateMany?: QuotationUpdateManyWithWhereWithoutPurchaseRequestInput | QuotationUpdateManyWithWhereWithoutPurchaseRequestInput[]
+    deleteMany?: QuotationScalarWhereInput | QuotationScalarWhereInput[]
   }
 
   export type UserUpdateOneWithoutPurchaseRequestsCreatedNestedInput = {
@@ -66733,6 +71616,20 @@ export namespace Prisma {
     update?: PurchaseOrderUpdateWithWhereUniqueWithoutPurchaseRequestInput | PurchaseOrderUpdateWithWhereUniqueWithoutPurchaseRequestInput[]
     updateMany?: PurchaseOrderUpdateManyWithWhereWithoutPurchaseRequestInput | PurchaseOrderUpdateManyWithWhereWithoutPurchaseRequestInput[]
     deleteMany?: PurchaseOrderScalarWhereInput | PurchaseOrderScalarWhereInput[]
+  }
+
+  export type QuotationUncheckedUpdateManyWithoutPurchaseRequestNestedInput = {
+    create?: XOR<QuotationCreateWithoutPurchaseRequestInput, QuotationUncheckedCreateWithoutPurchaseRequestInput> | QuotationCreateWithoutPurchaseRequestInput[] | QuotationUncheckedCreateWithoutPurchaseRequestInput[]
+    connectOrCreate?: QuotationCreateOrConnectWithoutPurchaseRequestInput | QuotationCreateOrConnectWithoutPurchaseRequestInput[]
+    upsert?: QuotationUpsertWithWhereUniqueWithoutPurchaseRequestInput | QuotationUpsertWithWhereUniqueWithoutPurchaseRequestInput[]
+    createMany?: QuotationCreateManyPurchaseRequestInputEnvelope
+    set?: QuotationWhereUniqueInput | QuotationWhereUniqueInput[]
+    disconnect?: QuotationWhereUniqueInput | QuotationWhereUniqueInput[]
+    delete?: QuotationWhereUniqueInput | QuotationWhereUniqueInput[]
+    connect?: QuotationWhereUniqueInput | QuotationWhereUniqueInput[]
+    update?: QuotationUpdateWithWhereUniqueWithoutPurchaseRequestInput | QuotationUpdateWithWhereUniqueWithoutPurchaseRequestInput[]
+    updateMany?: QuotationUpdateManyWithWhereWithoutPurchaseRequestInput | QuotationUpdateManyWithWhereWithoutPurchaseRequestInput[]
+    deleteMany?: QuotationScalarWhereInput | QuotationScalarWhereInput[]
   }
 
   export type CostRecordCreateNestedManyWithoutPurchaseOrderInput = {
@@ -67881,6 +72778,74 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserMaturityInput, UserUpdateWithoutUserMaturityInput>, UserUncheckedUpdateWithoutUserMaturityInput>
   }
 
+  export type ProjectCreateNestedOneWithoutVariationOrderInput = {
+    create?: XOR<ProjectCreateWithoutVariationOrderInput, ProjectUncheckedCreateWithoutVariationOrderInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutVariationOrderInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type WBSItemCreateNestedOneWithoutVariationOrderInput = {
+    create?: XOR<WBSItemCreateWithoutVariationOrderInput, WBSItemUncheckedCreateWithoutVariationOrderInput>
+    connectOrCreate?: WBSItemCreateOrConnectWithoutVariationOrderInput
+    connect?: WBSItemWhereUniqueInput
+  }
+
+  export type ProjectUpdateOneRequiredWithoutVariationOrderNestedInput = {
+    create?: XOR<ProjectCreateWithoutVariationOrderInput, ProjectUncheckedCreateWithoutVariationOrderInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutVariationOrderInput
+    upsert?: ProjectUpsertWithoutVariationOrderInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutVariationOrderInput, ProjectUpdateWithoutVariationOrderInput>, ProjectUncheckedUpdateWithoutVariationOrderInput>
+  }
+
+  export type WBSItemUpdateOneWithoutVariationOrderNestedInput = {
+    create?: XOR<WBSItemCreateWithoutVariationOrderInput, WBSItemUncheckedCreateWithoutVariationOrderInput>
+    connectOrCreate?: WBSItemCreateOrConnectWithoutVariationOrderInput
+    upsert?: WBSItemUpsertWithoutVariationOrderInput
+    disconnect?: WBSItemWhereInput | boolean
+    delete?: WBSItemWhereInput | boolean
+    connect?: WBSItemWhereUniqueInput
+    update?: XOR<XOR<WBSItemUpdateToOneWithWhereWithoutVariationOrderInput, WBSItemUpdateWithoutVariationOrderInput>, WBSItemUncheckedUpdateWithoutVariationOrderInput>
+  }
+
+  export type ProjectCreateNestedOneWithoutSiteLogInput = {
+    create?: XOR<ProjectCreateWithoutSiteLogInput, ProjectUncheckedCreateWithoutSiteLogInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutSiteLogInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type ProjectUpdateOneRequiredWithoutSiteLogNestedInput = {
+    create?: XOR<ProjectCreateWithoutSiteLogInput, ProjectUncheckedCreateWithoutSiteLogInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutSiteLogInput
+    upsert?: ProjectUpsertWithoutSiteLogInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutSiteLogInput, ProjectUpdateWithoutSiteLogInput>, ProjectUncheckedUpdateWithoutSiteLogInput>
+  }
+
+  export type PurchaseRequestCreateNestedOneWithoutQuotationsInput = {
+    create?: XOR<PurchaseRequestCreateWithoutQuotationsInput, PurchaseRequestUncheckedCreateWithoutQuotationsInput>
+    connectOrCreate?: PurchaseRequestCreateOrConnectWithoutQuotationsInput
+    connect?: PurchaseRequestWhereUniqueInput
+  }
+
+  export type PurchaseRequestUpdateOneWithoutQuotationsNestedInput = {
+    create?: XOR<PurchaseRequestCreateWithoutQuotationsInput, PurchaseRequestUncheckedCreateWithoutQuotationsInput>
+    connectOrCreate?: PurchaseRequestCreateOrConnectWithoutQuotationsInput
+    upsert?: PurchaseRequestUpsertWithoutQuotationsInput
+    disconnect?: PurchaseRequestWhereInput | boolean
+    delete?: PurchaseRequestWhereInput | boolean
+    connect?: PurchaseRequestWhereUniqueInput
+    update?: XOR<XOR<PurchaseRequestUpdateToOneWithWhereWithoutQuotationsInput, PurchaseRequestUpdateWithoutQuotationsInput>, PurchaseRequestUncheckedUpdateWithoutQuotationsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -68401,6 +73366,22 @@ export namespace Prisma {
     _max?: NestedEnumSubcontractStatusFilter<$PrismaModel>
   }
 
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type ActivityFeedCreateWithoutUserInput = {
     id: string
     action: string
@@ -68672,6 +73653,11 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     deletedBy?: UserCreateNestedOneWithoutCostsDeletedInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutCostRecordsInput
     wbs: WBSItemCreateNestedOneWithoutCostsInput
@@ -68697,6 +73683,11 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type CostRecordCreateOrConnectWithoutCreatedByInput = {
@@ -68863,7 +73854,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     deletedBy?: UserCreateNestedOneWithoutInvoicesDeletedInput
     contract?: ContractCreateNestedOneWithoutInvoicesInput
     wbs: WBSItemCreateNestedOneWithoutInvoicesInput
@@ -68892,7 +73887,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
   }
@@ -68968,6 +73967,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
@@ -68997,6 +73998,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -69074,6 +74077,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutPurchaseRequestInput
+    quotations?: QuotationCreateNestedManyWithoutPurchaseRequestInput
   }
 
   export type PurchaseRequestUncheckedCreateWithoutCreatedByInput = {
@@ -69091,6 +74095,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutPurchaseRequestInput
+    quotations?: QuotationUncheckedCreateNestedManyWithoutPurchaseRequestInput
   }
 
   export type PurchaseRequestCreateOrConnectWithoutCreatedByInput = {
@@ -69259,6 +74264,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
@@ -69288,6 +74295,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -69320,6 +74329,7 @@ export namespace Prisma {
     revenues?: RevenueCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutWbsInput
     parent?: WBSItemCreateNestedOneWithoutChildrenInput
     children?: WBSItemCreateNestedManyWithoutParentInput
     project: ProjectCreateNestedOneWithoutWbsItemsInput
@@ -69345,6 +74355,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemUncheckedCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutWbsInput
     children?: WBSItemUncheckedCreateNestedManyWithoutParentInput
   }
 
@@ -69375,6 +74386,11 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     createdBy?: UserCreateNestedOneWithoutCostsCreatedInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutCostRecordsInput
     wbs: WBSItemCreateNestedOneWithoutCostsInput
@@ -69400,6 +74416,11 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type CostRecordCreateOrConnectWithoutDeletedByInput = {
@@ -69430,7 +74451,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     contract?: ContractCreateNestedOneWithoutInvoicesInput
     createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
     wbs: WBSItemCreateNestedOneWithoutInvoicesInput
@@ -69459,7 +74484,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
   }
@@ -69783,6 +74812,11 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"CostRecord"> | Date | string | null
     deletedById?: StringNullableFilter<"CostRecord"> | string | null
     approvalStatus?: EnumApprovalStatusFilter<"CostRecord"> | $Enums.ApprovalStatus
+    vatRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
   }
 
   export type DelegationWindowUpsertWithWhereUniqueWithoutUser_DelegationWindow_delegateIdToUserInput = {
@@ -69939,7 +74973,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFilter<"Invoice"> | $Enums.ApprovalStatus
     version?: IntFilter<"Invoice"> | number
     certifiedProgress?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
   }
 
   export type ProgressEntryUpsertWithWhereUniqueWithoutUserInput = {
@@ -70951,6 +75989,82 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type VariationOrderCreateWithoutProjectInput = {
+    id?: string
+    boqItemId?: string | null
+    title: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ApprovalStatus
+    type?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+    wbs?: WBSItemCreateNestedOneWithoutVariationOrderInput
+  }
+
+  export type VariationOrderUncheckedCreateWithoutProjectInput = {
+    id?: string
+    boqItemId?: string | null
+    wbsId?: string | null
+    title: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ApprovalStatus
+    type?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type VariationOrderCreateOrConnectWithoutProjectInput = {
+    where: VariationOrderWhereUniqueInput
+    create: XOR<VariationOrderCreateWithoutProjectInput, VariationOrderUncheckedCreateWithoutProjectInput>
+  }
+
+  export type VariationOrderCreateManyProjectInputEnvelope = {
+    data: VariationOrderCreateManyProjectInput | VariationOrderCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SiteLogCreateWithoutProjectInput = {
+    id?: string
+    date?: Date | string
+    weather?: string | null
+    temperature?: number | null
+    manpower?: number
+    equipment?: string | null
+    progress?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type SiteLogUncheckedCreateWithoutProjectInput = {
+    id?: string
+    date?: Date | string
+    weather?: string | null
+    temperature?: number | null
+    manpower?: number
+    equipment?: string | null
+    progress?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type SiteLogCreateOrConnectWithoutProjectInput = {
+    where: SiteLogWhereUniqueInput
+    create: XOR<SiteLogCreateWithoutProjectInput, SiteLogUncheckedCreateWithoutProjectInput>
+  }
+
+  export type SiteLogCreateManyProjectInputEnvelope = {
+    data: SiteLogCreateManyProjectInput | SiteLogCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TaskCreateWithoutProjectInput = {
     id?: string
     title: string
@@ -71008,6 +76122,7 @@ export namespace Prisma {
     revenues?: RevenueCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutWbsInput
     parent?: WBSItemCreateNestedOneWithoutChildrenInput
     children?: WBSItemCreateNestedManyWithoutParentInput
   }
@@ -71032,6 +76147,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemUncheckedCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutWbsInput
     children?: WBSItemUncheckedCreateNestedManyWithoutParentInput
   }
 
@@ -71480,6 +76596,74 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Subcontract"> | Date | string | null
   }
 
+  export type VariationOrderUpsertWithWhereUniqueWithoutProjectInput = {
+    where: VariationOrderWhereUniqueInput
+    update: XOR<VariationOrderUpdateWithoutProjectInput, VariationOrderUncheckedUpdateWithoutProjectInput>
+    create: XOR<VariationOrderCreateWithoutProjectInput, VariationOrderUncheckedCreateWithoutProjectInput>
+  }
+
+  export type VariationOrderUpdateWithWhereUniqueWithoutProjectInput = {
+    where: VariationOrderWhereUniqueInput
+    data: XOR<VariationOrderUpdateWithoutProjectInput, VariationOrderUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type VariationOrderUpdateManyWithWhereWithoutProjectInput = {
+    where: VariationOrderScalarWhereInput
+    data: XOR<VariationOrderUpdateManyMutationInput, VariationOrderUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type VariationOrderScalarWhereInput = {
+    AND?: VariationOrderScalarWhereInput | VariationOrderScalarWhereInput[]
+    OR?: VariationOrderScalarWhereInput[]
+    NOT?: VariationOrderScalarWhereInput | VariationOrderScalarWhereInput[]
+    id?: StringFilter<"VariationOrder"> | string
+    projectId?: StringFilter<"VariationOrder"> | string
+    boqItemId?: StringNullableFilter<"VariationOrder"> | string | null
+    wbsId?: StringNullableFilter<"VariationOrder"> | string | null
+    title?: StringFilter<"VariationOrder"> | string
+    description?: StringNullableFilter<"VariationOrder"> | string | null
+    amount?: DecimalFilter<"VariationOrder"> | Decimal | DecimalJsLike | number | string
+    status?: EnumApprovalStatusFilter<"VariationOrder"> | $Enums.ApprovalStatus
+    type?: StringFilter<"VariationOrder"> | string
+    createdAt?: DateTimeFilter<"VariationOrder"> | Date | string
+    updatedAt?: DateTimeFilter<"VariationOrder"> | Date | string
+    createdById?: StringNullableFilter<"VariationOrder"> | string | null
+  }
+
+  export type SiteLogUpsertWithWhereUniqueWithoutProjectInput = {
+    where: SiteLogWhereUniqueInput
+    update: XOR<SiteLogUpdateWithoutProjectInput, SiteLogUncheckedUpdateWithoutProjectInput>
+    create: XOR<SiteLogCreateWithoutProjectInput, SiteLogUncheckedCreateWithoutProjectInput>
+  }
+
+  export type SiteLogUpdateWithWhereUniqueWithoutProjectInput = {
+    where: SiteLogWhereUniqueInput
+    data: XOR<SiteLogUpdateWithoutProjectInput, SiteLogUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type SiteLogUpdateManyWithWhereWithoutProjectInput = {
+    where: SiteLogScalarWhereInput
+    data: XOR<SiteLogUpdateManyMutationInput, SiteLogUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type SiteLogScalarWhereInput = {
+    AND?: SiteLogScalarWhereInput | SiteLogScalarWhereInput[]
+    OR?: SiteLogScalarWhereInput[]
+    NOT?: SiteLogScalarWhereInput | SiteLogScalarWhereInput[]
+    id?: StringFilter<"SiteLog"> | string
+    projectId?: StringFilter<"SiteLog"> | string
+    date?: DateTimeFilter<"SiteLog"> | Date | string
+    weather?: StringNullableFilter<"SiteLog"> | string | null
+    temperature?: FloatNullableFilter<"SiteLog"> | number | null
+    manpower?: IntFilter<"SiteLog"> | number
+    equipment?: StringNullableFilter<"SiteLog"> | string | null
+    progress?: StringNullableFilter<"SiteLog"> | string | null
+    notes?: StringNullableFilter<"SiteLog"> | string | null
+    createdAt?: DateTimeFilter<"SiteLog"> | Date | string
+    updatedAt?: DateTimeFilter<"SiteLog"> | Date | string
+    createdById?: StringNullableFilter<"SiteLog"> | string | null
+  }
+
   export type TaskUpsertWithWhereUniqueWithoutProjectInput = {
     where: TaskWhereUniqueInput
     update: XOR<TaskUpdateWithoutProjectInput, TaskUncheckedUpdateWithoutProjectInput>
@@ -71634,6 +76818,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
 
@@ -71663,6 +76849,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
 
@@ -71816,6 +77004,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
 
@@ -71845,6 +77035,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
 
@@ -72014,6 +77206,11 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     deletedBy?: UserCreateNestedOneWithoutCostsDeletedInput
     createdBy?: UserCreateNestedOneWithoutCostsCreatedInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutCostRecordsInput
@@ -72039,6 +77236,11 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type CostRecordCreateOrConnectWithoutWbsInput = {
@@ -72069,7 +77271,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     deletedBy?: UserCreateNestedOneWithoutInvoicesDeletedInput
     contract?: ContractCreateNestedOneWithoutInvoicesInput
     createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
@@ -72098,7 +77304,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
   }
@@ -72247,6 +77457,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type VariationOrderCreateWithoutWbsInput = {
+    id?: string
+    boqItemId?: string | null
+    title: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ApprovalStatus
+    type?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+    project: ProjectCreateNestedOneWithoutVariationOrderInput
+  }
+
+  export type VariationOrderUncheckedCreateWithoutWbsInput = {
+    id?: string
+    projectId: string
+    boqItemId?: string | null
+    title: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ApprovalStatus
+    type?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type VariationOrderCreateOrConnectWithoutWbsInput = {
+    where: VariationOrderWhereUniqueInput
+    create: XOR<VariationOrderCreateWithoutWbsInput, VariationOrderUncheckedCreateWithoutWbsInput>
+  }
+
+  export type VariationOrderCreateManyWbsInputEnvelope = {
+    data: VariationOrderCreateManyWbsInput | VariationOrderCreateManyWbsInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WBSItemCreateWithoutChildrenInput = {
     id?: string
     name: string
@@ -72266,6 +77514,7 @@ export namespace Prisma {
     revenues?: RevenueCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutWbsInput
     parent?: WBSItemCreateNestedOneWithoutChildrenInput
     project: ProjectCreateNestedOneWithoutWbsItemsInput
   }
@@ -72291,6 +77540,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemUncheckedCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutWbsInput
   }
 
   export type WBSItemCreateOrConnectWithoutChildrenInput = {
@@ -72317,6 +77567,7 @@ export namespace Prisma {
     revenues?: RevenueCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutWbsInput
     children?: WBSItemCreateNestedManyWithoutParentInput
     project: ProjectCreateNestedOneWithoutWbsItemsInput
   }
@@ -72341,6 +77592,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemUncheckedCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutWbsInput
     children?: WBSItemUncheckedCreateNestedManyWithoutParentInput
   }
 
@@ -72380,6 +77632,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
   }
 
@@ -72409,6 +77663,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
   }
 
@@ -72657,6 +77913,22 @@ export namespace Prisma {
     totalAmount?: DecimalFilter<"SubcontractItem"> | Decimal | DecimalJsLike | number | string
   }
 
+  export type VariationOrderUpsertWithWhereUniqueWithoutWbsInput = {
+    where: VariationOrderWhereUniqueInput
+    update: XOR<VariationOrderUpdateWithoutWbsInput, VariationOrderUncheckedUpdateWithoutWbsInput>
+    create: XOR<VariationOrderCreateWithoutWbsInput, VariationOrderUncheckedCreateWithoutWbsInput>
+  }
+
+  export type VariationOrderUpdateWithWhereUniqueWithoutWbsInput = {
+    where: VariationOrderWhereUniqueInput
+    data: XOR<VariationOrderUpdateWithoutWbsInput, VariationOrderUncheckedUpdateWithoutWbsInput>
+  }
+
+  export type VariationOrderUpdateManyWithWhereWithoutWbsInput = {
+    where: VariationOrderScalarWhereInput
+    data: XOR<VariationOrderUpdateManyMutationInput, VariationOrderUncheckedUpdateManyWithoutWbsInput>
+  }
+
   export type WBSItemUpsertWithoutChildrenInput = {
     update: XOR<WBSItemUpdateWithoutChildrenInput, WBSItemUncheckedUpdateWithoutChildrenInput>
     create: XOR<WBSItemCreateWithoutChildrenInput, WBSItemUncheckedCreateWithoutChildrenInput>
@@ -72687,6 +77959,7 @@ export namespace Prisma {
     revenues?: RevenueUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutWbsNestedInput
     parent?: WBSItemUpdateOneWithoutChildrenNestedInput
     project?: ProjectUpdateOneRequiredWithoutWbsItemsNestedInput
   }
@@ -72712,6 +77985,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutWbsNestedInput
   }
 
   export type WBSItemUpsertWithWhereUniqueWithoutParentInput = {
@@ -72767,6 +78041,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
   }
 
@@ -72796,6 +78072,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
   }
 
@@ -73010,6 +78288,7 @@ export namespace Prisma {
     revenues?: RevenueCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutWbsInput
     parent?: WBSItemCreateNestedOneWithoutChildrenInput
     children?: WBSItemCreateNestedManyWithoutParentInput
     project: ProjectCreateNestedOneWithoutWbsItemsInput
@@ -73035,6 +78314,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemUncheckedCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutWbsInput
     children?: WBSItemUncheckedCreateNestedManyWithoutParentInput
   }
 
@@ -73283,6 +78563,7 @@ export namespace Prisma {
     revenues?: RevenueUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutWbsNestedInput
     parent?: WBSItemUpdateOneWithoutChildrenNestedInput
     children?: WBSItemUpdateManyWithoutParentNestedInput
     project?: ProjectUpdateOneRequiredWithoutWbsItemsNestedInput
@@ -73308,6 +78589,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutWbsNestedInput
     children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
   }
 
@@ -73404,6 +78686,7 @@ export namespace Prisma {
     revenues?: RevenueCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutWbsInput
     parent?: WBSItemCreateNestedOneWithoutChildrenInput
     children?: WBSItemCreateNestedManyWithoutParentInput
     project: ProjectCreateNestedOneWithoutWbsItemsInput
@@ -73429,6 +78712,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemUncheckedCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutWbsInput
     children?: WBSItemUncheckedCreateNestedManyWithoutParentInput
   }
 
@@ -73547,6 +78831,7 @@ export namespace Prisma {
     revenues?: RevenueUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutWbsNestedInput
     parent?: WBSItemUpdateOneWithoutChildrenNestedInput
     children?: WBSItemUpdateManyWithoutParentNestedInput
     project?: ProjectUpdateOneRequiredWithoutWbsItemsNestedInput
@@ -73572,6 +78857,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutWbsNestedInput
     children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
   }
 
@@ -73668,7 +78954,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     deletedBy?: UserCreateNestedOneWithoutInvoicesDeletedInput
     contract?: ContractCreateNestedOneWithoutInvoicesInput
     createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
@@ -73698,7 +78988,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
@@ -73725,6 +79019,7 @@ export namespace Prisma {
     purchaseOrderItems?: PurchaseOrderItemCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutWbsInput
     parent?: WBSItemCreateNestedOneWithoutChildrenInput
     children?: WBSItemCreateNestedManyWithoutParentInput
     project: ProjectCreateNestedOneWithoutWbsItemsInput
@@ -73750,6 +79045,7 @@ export namespace Prisma {
     purchaseOrderItems?: PurchaseOrderItemUncheckedCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemUncheckedCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutWbsInput
     children?: WBSItemUncheckedCreateNestedManyWithoutParentInput
   }
 
@@ -73868,7 +79164,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deletedBy?: UserUpdateOneWithoutInvoicesDeletedNestedInput
     contract?: ContractUpdateOneWithoutInvoicesNestedInput
     createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
@@ -73898,7 +79198,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
@@ -73931,6 +79235,7 @@ export namespace Prisma {
     purchaseOrderItems?: PurchaseOrderItemUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutWbsNestedInput
     parent?: WBSItemUpdateOneWithoutChildrenNestedInput
     children?: WBSItemUpdateManyWithoutParentNestedInput
     project?: ProjectUpdateOneRequiredWithoutWbsItemsNestedInput
@@ -73956,6 +79261,7 @@ export namespace Prisma {
     purchaseOrderItems?: PurchaseOrderItemUncheckedUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutWbsNestedInput
     children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
   }
 
@@ -74172,6 +79478,7 @@ export namespace Prisma {
     revenues?: RevenueCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutWbsInput
     parent?: WBSItemCreateNestedOneWithoutChildrenInput
     children?: WBSItemCreateNestedManyWithoutParentInput
     project: ProjectCreateNestedOneWithoutWbsItemsInput
@@ -74197,6 +79504,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemUncheckedCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutWbsInput
     children?: WBSItemUncheckedCreateNestedManyWithoutParentInput
   }
 
@@ -74525,6 +79833,7 @@ export namespace Prisma {
     revenues?: RevenueUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutWbsNestedInput
     parent?: WBSItemUpdateOneWithoutChildrenNestedInput
     children?: WBSItemUpdateManyWithoutParentNestedInput
     project?: ProjectUpdateOneRequiredWithoutWbsItemsNestedInput
@@ -74550,6 +79859,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutWbsNestedInput
     children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
   }
 
@@ -74678,7 +79988,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     deletedBy?: UserCreateNestedOneWithoutInvoicesDeletedInput
     contract?: ContractCreateNestedOneWithoutInvoicesInput
     createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
@@ -74708,7 +80022,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
@@ -74827,7 +80145,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deletedBy?: UserUpdateOneWithoutInvoicesDeletedNestedInput
     contract?: ContractUpdateOneWithoutInvoicesNestedInput
     createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
@@ -74857,7 +80179,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
@@ -74943,6 +80269,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
@@ -74972,6 +80300,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -75045,6 +80375,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
@@ -75074,6 +80406,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -75278,6 +80612,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type QuotationCreateWithoutPurchaseRequestInput = {
+    id?: string
+    vendor: string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    leadTimeDays?: number | null
+    validUntil?: Date | string | null
+    status?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuotationUncheckedCreateWithoutPurchaseRequestInput = {
+    id?: string
+    vendor: string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    leadTimeDays?: number | null
+    validUntil?: Date | string | null
+    status?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuotationCreateOrConnectWithoutPurchaseRequestInput = {
+    where: QuotationWhereUniqueInput
+    create: XOR<QuotationCreateWithoutPurchaseRequestInput, QuotationUncheckedCreateWithoutPurchaseRequestInput>
+  }
+
+  export type QuotationCreateManyPurchaseRequestInputEnvelope = {
+    data: QuotationCreateManyPurchaseRequestInput | QuotationCreateManyPurchaseRequestInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserCreateWithoutPurchaseRequestsCreatedInput = {
     id?: string
     email: string
@@ -75367,6 +80735,38 @@ export namespace Prisma {
   export type PurchaseOrderUpdateManyWithWhereWithoutPurchaseRequestInput = {
     where: PurchaseOrderScalarWhereInput
     data: XOR<PurchaseOrderUpdateManyMutationInput, PurchaseOrderUncheckedUpdateManyWithoutPurchaseRequestInput>
+  }
+
+  export type QuotationUpsertWithWhereUniqueWithoutPurchaseRequestInput = {
+    where: QuotationWhereUniqueInput
+    update: XOR<QuotationUpdateWithoutPurchaseRequestInput, QuotationUncheckedUpdateWithoutPurchaseRequestInput>
+    create: XOR<QuotationCreateWithoutPurchaseRequestInput, QuotationUncheckedCreateWithoutPurchaseRequestInput>
+  }
+
+  export type QuotationUpdateWithWhereUniqueWithoutPurchaseRequestInput = {
+    where: QuotationWhereUniqueInput
+    data: XOR<QuotationUpdateWithoutPurchaseRequestInput, QuotationUncheckedUpdateWithoutPurchaseRequestInput>
+  }
+
+  export type QuotationUpdateManyWithWhereWithoutPurchaseRequestInput = {
+    where: QuotationScalarWhereInput
+    data: XOR<QuotationUpdateManyMutationInput, QuotationUncheckedUpdateManyWithoutPurchaseRequestInput>
+  }
+
+  export type QuotationScalarWhereInput = {
+    AND?: QuotationScalarWhereInput | QuotationScalarWhereInput[]
+    OR?: QuotationScalarWhereInput[]
+    NOT?: QuotationScalarWhereInput | QuotationScalarWhereInput[]
+    id?: StringFilter<"Quotation"> | string
+    purchaseRequestId?: StringNullableFilter<"Quotation"> | string | null
+    vendor?: StringFilter<"Quotation"> | string
+    totalAmount?: DecimalFilter<"Quotation"> | Decimal | DecimalJsLike | number | string
+    leadTimeDays?: IntNullableFilter<"Quotation"> | number | null
+    validUntil?: DateTimeNullableFilter<"Quotation"> | Date | string | null
+    status?: StringFilter<"Quotation"> | string
+    notes?: StringNullableFilter<"Quotation"> | string | null
+    createdAt?: DateTimeFilter<"Quotation"> | Date | string
+    updatedAt?: DateTimeFilter<"Quotation"> | Date | string
   }
 
   export type UserUpsertWithoutPurchaseRequestsCreatedInput = {
@@ -75467,6 +80867,11 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     deletedBy?: UserCreateNestedOneWithoutCostsDeletedInput
     createdBy?: UserCreateNestedOneWithoutCostsCreatedInput
     wbs: WBSItemCreateNestedOneWithoutCostsInput
@@ -75492,6 +80897,11 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type CostRecordCreateOrConnectWithoutPurchaseOrderInput = {
@@ -75636,6 +81046,8 @@ export namespace Prisma {
     owner?: UserCreateNestedOneWithoutProjectsOwnedInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
@@ -75665,6 +81077,8 @@ export namespace Prisma {
     journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -75688,6 +81102,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    quotations?: QuotationCreateNestedManyWithoutPurchaseRequestInput
     createdBy?: UserCreateNestedOneWithoutPurchaseRequestsCreatedInput
   }
 
@@ -75706,6 +81121,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    quotations?: QuotationUncheckedCreateNestedManyWithoutPurchaseRequestInput
   }
 
   export type PurchaseRequestCreateOrConnectWithoutPurchaseOrdersInput = {
@@ -75913,6 +81329,8 @@ export namespace Prisma {
     owner?: UserUpdateOneWithoutProjectsOwnedNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
@@ -75942,6 +81360,8 @@ export namespace Prisma {
     journalEntries?: JournalEntryUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -75971,6 +81391,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    quotations?: QuotationUpdateManyWithoutPurchaseRequestNestedInput
     createdBy?: UserUpdateOneWithoutPurchaseRequestsCreatedNestedInput
   }
 
@@ -75989,6 +81410,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    quotations?: QuotationUncheckedUpdateManyWithoutPurchaseRequestNestedInput
   }
 
   export type PurchaseOrderItemUpsertWithWhereUniqueWithoutPurchaseOrderInput = {
@@ -76068,6 +81490,7 @@ export namespace Prisma {
     revenues?: RevenueCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutWbsInput
     parent?: WBSItemCreateNestedOneWithoutChildrenInput
     children?: WBSItemCreateNestedManyWithoutParentInput
     project: ProjectCreateNestedOneWithoutWbsItemsInput
@@ -76093,6 +81516,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemUncheckedCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutWbsInput
     children?: WBSItemUncheckedCreateNestedManyWithoutParentInput
   }
 
@@ -76179,6 +81603,7 @@ export namespace Prisma {
     revenues?: RevenueUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutWbsNestedInput
     parent?: WBSItemUpdateOneWithoutChildrenNestedInput
     children?: WBSItemUpdateManyWithoutParentNestedInput
     project?: ProjectUpdateOneRequiredWithoutWbsItemsNestedInput
@@ -76204,6 +81629,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutWbsNestedInput
     children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
   }
 
@@ -76399,6 +81825,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
@@ -76428,6 +81856,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -76491,7 +81921,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     deletedBy?: UserCreateNestedOneWithoutInvoicesDeletedInput
     createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
     wbs: WBSItemCreateNestedOneWithoutInvoicesInput
@@ -76520,7 +81954,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
     payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
   }
@@ -76652,6 +82090,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
@@ -76681,6 +82121,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -77011,6 +82453,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
@@ -77040,6 +82484,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -77160,6 +82606,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
@@ -77189,6 +82637,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -77299,6 +82749,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
@@ -77328,6 +82780,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -77480,6 +82934,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
@@ -77509,6 +82965,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -77859,6 +83317,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
@@ -77888,6 +83348,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -77915,6 +83377,7 @@ export namespace Prisma {
     revenues?: RevenueCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutWbsInput
     parent?: WBSItemCreateNestedOneWithoutChildrenInput
     children?: WBSItemCreateNestedManyWithoutParentInput
     project: ProjectCreateNestedOneWithoutWbsItemsInput
@@ -77940,6 +83403,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutWBSItemInput
     SubcontractItem?: SubcontractItemUncheckedCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutWbsInput
     children?: WBSItemUncheckedCreateNestedManyWithoutParentInput
   }
 
@@ -78020,6 +83484,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
@@ -78049,6 +83515,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -78082,6 +83550,7 @@ export namespace Prisma {
     revenues?: RevenueUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutWbsNestedInput
     parent?: WBSItemUpdateOneWithoutChildrenNestedInput
     children?: WBSItemUpdateManyWithoutParentNestedInput
     project?: ProjectUpdateOneRequiredWithoutWbsItemsNestedInput
@@ -78107,6 +83576,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutWbsNestedInput
     children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
   }
 
@@ -78151,6 +83621,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
@@ -78180,6 +83652,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -78225,6 +83699,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
@@ -78254,6 +83730,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -78751,6 +84229,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
@@ -78780,6 +84260,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -78900,6 +84382,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
@@ -78929,6 +84413,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -79222,6 +84708,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
@@ -79251,6 +84739,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -79329,6 +84819,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
@@ -79358,6 +84850,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -79870,6 +85364,8 @@ export namespace Prisma {
     owner?: UserCreateNestedOneWithoutProjectsOwnedInput
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
@@ -79899,6 +85395,8 @@ export namespace Prisma {
     journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutProjectInput
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -79926,6 +85424,7 @@ export namespace Prisma {
     purchaseOrderItems?: PurchaseOrderItemCreateNestedManyWithoutWbsInput
     revenues?: RevenueCreateNestedManyWithoutWbsInput
     SubcontractItem?: SubcontractItemCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutWbsInput
     parent?: WBSItemCreateNestedOneWithoutChildrenInput
     children?: WBSItemCreateNestedManyWithoutParentInput
     project: ProjectCreateNestedOneWithoutWbsItemsInput
@@ -79951,6 +85450,7 @@ export namespace Prisma {
     purchaseOrderItems?: PurchaseOrderItemUncheckedCreateNestedManyWithoutWbsInput
     revenues?: RevenueUncheckedCreateNestedManyWithoutWbsInput
     SubcontractItem?: SubcontractItemUncheckedCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutWbsInput
     children?: WBSItemUncheckedCreateNestedManyWithoutParentInput
   }
 
@@ -80028,6 +85528,8 @@ export namespace Prisma {
     owner?: UserUpdateOneWithoutProjectsOwnedNestedInput
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
@@ -80057,6 +85559,8 @@ export namespace Prisma {
     journalEntries?: JournalEntryUncheckedUpdateManyWithoutProjectNestedInput
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -80090,6 +85594,7 @@ export namespace Prisma {
     purchaseOrderItems?: PurchaseOrderItemUpdateManyWithoutWbsNestedInput
     revenues?: RevenueUpdateManyWithoutWbsNestedInput
     SubcontractItem?: SubcontractItemUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutWbsNestedInput
     parent?: WBSItemUpdateOneWithoutChildrenNestedInput
     children?: WBSItemUpdateManyWithoutParentNestedInput
     project?: ProjectUpdateOneRequiredWithoutWbsItemsNestedInput
@@ -80115,6 +85620,7 @@ export namespace Prisma {
     purchaseOrderItems?: PurchaseOrderItemUncheckedUpdateManyWithoutWbsNestedInput
     revenues?: RevenueUncheckedUpdateManyWithoutWbsNestedInput
     SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutWbsNestedInput
     children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
   }
 
@@ -80143,6 +85649,8 @@ export namespace Prisma {
     owner?: UserCreateNestedOneWithoutProjectsOwnedInput
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
   }
@@ -80172,6 +85680,8 @@ export namespace Prisma {
     journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutProjectInput
     purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -80281,6 +85791,8 @@ export namespace Prisma {
     owner?: UserUpdateOneWithoutProjectsOwnedNestedInput
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
@@ -80310,6 +85822,8 @@ export namespace Prisma {
     journalEntries?: JournalEntryUncheckedUpdateManyWithoutProjectNestedInput
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -80502,6 +86016,7 @@ export namespace Prisma {
     purchaseOrderItems?: PurchaseOrderItemCreateNestedManyWithoutWbsInput
     revenues?: RevenueCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutWbsInput
     parent?: WBSItemCreateNestedOneWithoutChildrenInput
     children?: WBSItemCreateNestedManyWithoutParentInput
     project: ProjectCreateNestedOneWithoutWbsItemsInput
@@ -80527,6 +86042,7 @@ export namespace Prisma {
     purchaseOrderItems?: PurchaseOrderItemUncheckedCreateNestedManyWithoutWbsInput
     revenues?: RevenueUncheckedCreateNestedManyWithoutWbsInput
     SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutWBSItemInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutWbsInput
     children?: WBSItemUncheckedCreateNestedManyWithoutParentInput
   }
 
@@ -80639,6 +86155,7 @@ export namespace Prisma {
     purchaseOrderItems?: PurchaseOrderItemUpdateManyWithoutWbsNestedInput
     revenues?: RevenueUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutWbsNestedInput
     parent?: WBSItemUpdateOneWithoutChildrenNestedInput
     children?: WBSItemUpdateManyWithoutParentNestedInput
     project?: ProjectUpdateOneRequiredWithoutWbsItemsNestedInput
@@ -80664,6 +86181,7 @@ export namespace Prisma {
     purchaseOrderItems?: PurchaseOrderItemUncheckedUpdateManyWithoutWbsNestedInput
     revenues?: RevenueUncheckedUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutWbsNestedInput
     children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
   }
 
@@ -81069,6 +86587,486 @@ export namespace Prisma {
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
+  export type ProjectCreateWithoutVariationOrderInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
+    ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
+    BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
+    contracts?: ContractCreateNestedManyWithoutProjectInput
+    Document?: DocumentCreateNestedManyWithoutProjectInput
+    InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
+    journalEntries?: JournalEntryCreateNestedManyWithoutProjectInput
+    owner?: UserCreateNestedOneWithoutProjectsOwnedInput
+    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
+    SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
+    Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutVariationOrderInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    description?: string | null
+    ownerId?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
+    ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
+    BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
+    contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
+    Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
+    journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutProjectInput
+    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
+    Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutVariationOrderInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutVariationOrderInput, ProjectUncheckedCreateWithoutVariationOrderInput>
+  }
+
+  export type WBSItemCreateWithoutVariationOrderInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    budgetAmount?: Decimal | DecimalJsLike | number | string
+    code?: string | null
+    level?: number
+    sortOrder?: number
+    deletedAt?: Date | string | null
+    deletedBy?: UserCreateNestedOneWithoutWbsDeletedInput
+    BOQItem?: BOQItemCreateNestedManyWithoutWBSItemInput
+    budgets?: BudgetRecordCreateNestedManyWithoutWbsInput
+    costs?: CostRecordCreateNestedManyWithoutWbsInput
+    invoices?: InvoiceCreateNestedManyWithoutWbsInput
+    purchaseOrderItems?: PurchaseOrderItemCreateNestedManyWithoutWbsInput
+    revenues?: RevenueCreateNestedManyWithoutWbsInput
+    SiteConsumption?: SiteConsumptionCreateNestedManyWithoutWBSItemInput
+    SubcontractItem?: SubcontractItemCreateNestedManyWithoutWBSItemInput
+    parent?: WBSItemCreateNestedOneWithoutChildrenInput
+    children?: WBSItemCreateNestedManyWithoutParentInput
+    project: ProjectCreateNestedOneWithoutWbsItemsInput
+  }
+
+  export type WBSItemUncheckedCreateWithoutVariationOrderInput = {
+    id?: string
+    projectId: string
+    name: string
+    parentId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    budgetAmount?: Decimal | DecimalJsLike | number | string
+    code?: string | null
+    level?: number
+    sortOrder?: number
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    BOQItem?: BOQItemUncheckedCreateNestedManyWithoutWBSItemInput
+    budgets?: BudgetRecordUncheckedCreateNestedManyWithoutWbsInput
+    costs?: CostRecordUncheckedCreateNestedManyWithoutWbsInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutWbsInput
+    purchaseOrderItems?: PurchaseOrderItemUncheckedCreateNestedManyWithoutWbsInput
+    revenues?: RevenueUncheckedCreateNestedManyWithoutWbsInput
+    SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutWBSItemInput
+    SubcontractItem?: SubcontractItemUncheckedCreateNestedManyWithoutWBSItemInput
+    children?: WBSItemUncheckedCreateNestedManyWithoutParentInput
+  }
+
+  export type WBSItemCreateOrConnectWithoutVariationOrderInput = {
+    where: WBSItemWhereUniqueInput
+    create: XOR<WBSItemCreateWithoutVariationOrderInput, WBSItemUncheckedCreateWithoutVariationOrderInput>
+  }
+
+  export type ProjectUpsertWithoutVariationOrderInput = {
+    update: XOR<ProjectUpdateWithoutVariationOrderInput, ProjectUncheckedUpdateWithoutVariationOrderInput>
+    create: XOR<ProjectCreateWithoutVariationOrderInput, ProjectUncheckedCreateWithoutVariationOrderInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutVariationOrderInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutVariationOrderInput, ProjectUncheckedUpdateWithoutVariationOrderInput>
+  }
+
+  export type ProjectUpdateWithoutVariationOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
+    ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
+    BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
+    contracts?: ContractUpdateManyWithoutProjectNestedInput
+    Document?: DocumentUpdateManyWithoutProjectNestedInput
+    InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
+    journalEntries?: JournalEntryUpdateManyWithoutProjectNestedInput
+    owner?: UserUpdateOneWithoutProjectsOwnedNestedInput
+    purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
+    SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
+    Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutVariationOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
+    ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
+    BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
+    contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
+    Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
+    journalEntries?: JournalEntryUncheckedUpdateManyWithoutProjectNestedInput
+    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
+    Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type WBSItemUpsertWithoutVariationOrderInput = {
+    update: XOR<WBSItemUpdateWithoutVariationOrderInput, WBSItemUncheckedUpdateWithoutVariationOrderInput>
+    create: XOR<WBSItemCreateWithoutVariationOrderInput, WBSItemUncheckedCreateWithoutVariationOrderInput>
+    where?: WBSItemWhereInput
+  }
+
+  export type WBSItemUpdateToOneWithWhereWithoutVariationOrderInput = {
+    where?: WBSItemWhereInput
+    data: XOR<WBSItemUpdateWithoutVariationOrderInput, WBSItemUncheckedUpdateWithoutVariationOrderInput>
+  }
+
+  export type WBSItemUpdateWithoutVariationOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    budgetAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: UserUpdateOneWithoutWbsDeletedNestedInput
+    BOQItem?: BOQItemUpdateManyWithoutWBSItemNestedInput
+    budgets?: BudgetRecordUpdateManyWithoutWbsNestedInput
+    costs?: CostRecordUpdateManyWithoutWbsNestedInput
+    invoices?: InvoiceUpdateManyWithoutWbsNestedInput
+    purchaseOrderItems?: PurchaseOrderItemUpdateManyWithoutWbsNestedInput
+    revenues?: RevenueUpdateManyWithoutWbsNestedInput
+    SiteConsumption?: SiteConsumptionUpdateManyWithoutWBSItemNestedInput
+    SubcontractItem?: SubcontractItemUpdateManyWithoutWBSItemNestedInput
+    parent?: WBSItemUpdateOneWithoutChildrenNestedInput
+    children?: WBSItemUpdateManyWithoutParentNestedInput
+    project?: ProjectUpdateOneRequiredWithoutWbsItemsNestedInput
+  }
+
+  export type WBSItemUncheckedUpdateWithoutVariationOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    budgetAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    BOQItem?: BOQItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    budgets?: BudgetRecordUncheckedUpdateManyWithoutWbsNestedInput
+    costs?: CostRecordUncheckedUpdateManyWithoutWbsNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutWbsNestedInput
+    purchaseOrderItems?: PurchaseOrderItemUncheckedUpdateManyWithoutWbsNestedInput
+    revenues?: RevenueUncheckedUpdateManyWithoutWbsNestedInput
+    SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
+    SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
+  }
+
+  export type ProjectCreateWithoutSiteLogInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
+    ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
+    BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
+    contracts?: ContractCreateNestedManyWithoutProjectInput
+    Document?: DocumentCreateNestedManyWithoutProjectInput
+    InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
+    journalEntries?: JournalEntryCreateNestedManyWithoutProjectInput
+    owner?: UserCreateNestedOneWithoutProjectsOwnedInput
+    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
+    SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
+    Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutSiteLogInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    description?: string | null
+    ownerId?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
+    ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
+    BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
+    contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
+    Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
+    journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutProjectInput
+    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
+    Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutSiteLogInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutSiteLogInput, ProjectUncheckedCreateWithoutSiteLogInput>
+  }
+
+  export type ProjectUpsertWithoutSiteLogInput = {
+    update: XOR<ProjectUpdateWithoutSiteLogInput, ProjectUncheckedUpdateWithoutSiteLogInput>
+    create: XOR<ProjectCreateWithoutSiteLogInput, ProjectUncheckedCreateWithoutSiteLogInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutSiteLogInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutSiteLogInput, ProjectUncheckedUpdateWithoutSiteLogInput>
+  }
+
+  export type ProjectUpdateWithoutSiteLogInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
+    ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
+    BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
+    contracts?: ContractUpdateManyWithoutProjectNestedInput
+    Document?: DocumentUpdateManyWithoutProjectNestedInput
+    InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
+    journalEntries?: JournalEntryUpdateManyWithoutProjectNestedInput
+    owner?: UserUpdateOneWithoutProjectsOwnedNestedInput
+    purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
+    SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
+    Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutSiteLogInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
+    ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
+    BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
+    contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
+    Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
+    journalEntries?: JournalEntryUncheckedUpdateManyWithoutProjectNestedInput
+    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
+    Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type PurchaseRequestCreateWithoutQuotationsInput = {
+    id?: string
+    projectId: string
+    wbsId?: string | null
+    title: string
+    description?: string | null
+    requestedBy?: string | null
+    status?: $Enums.ProcurementStatus
+    totalAmount?: Decimal | DecimalJsLike | number | string
+    requestDate?: Date | string
+    neededBy?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutPurchaseRequestInput
+    createdBy?: UserCreateNestedOneWithoutPurchaseRequestsCreatedInput
+  }
+
+  export type PurchaseRequestUncheckedCreateWithoutQuotationsInput = {
+    id?: string
+    projectId: string
+    wbsId?: string | null
+    title: string
+    description?: string | null
+    requestedBy?: string | null
+    status?: $Enums.ProcurementStatus
+    totalAmount?: Decimal | DecimalJsLike | number | string
+    requestDate?: Date | string
+    neededBy?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutPurchaseRequestInput
+  }
+
+  export type PurchaseRequestCreateOrConnectWithoutQuotationsInput = {
+    where: PurchaseRequestWhereUniqueInput
+    create: XOR<PurchaseRequestCreateWithoutQuotationsInput, PurchaseRequestUncheckedCreateWithoutQuotationsInput>
+  }
+
+  export type PurchaseRequestUpsertWithoutQuotationsInput = {
+    update: XOR<PurchaseRequestUpdateWithoutQuotationsInput, PurchaseRequestUncheckedUpdateWithoutQuotationsInput>
+    create: XOR<PurchaseRequestCreateWithoutQuotationsInput, PurchaseRequestUncheckedCreateWithoutQuotationsInput>
+    where?: PurchaseRequestWhereInput
+  }
+
+  export type PurchaseRequestUpdateToOneWithWhereWithoutQuotationsInput = {
+    where?: PurchaseRequestWhereInput
+    data: XOR<PurchaseRequestUpdateWithoutQuotationsInput, PurchaseRequestUncheckedUpdateWithoutQuotationsInput>
+  }
+
+  export type PurchaseRequestUpdateWithoutQuotationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    wbsId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProcurementStatusFieldUpdateOperationsInput | $Enums.ProcurementStatus
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    requestDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    neededBy?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    purchaseOrders?: PurchaseOrderUpdateManyWithoutPurchaseRequestNestedInput
+    createdBy?: UserUpdateOneWithoutPurchaseRequestsCreatedNestedInput
+  }
+
+  export type PurchaseRequestUncheckedUpdateWithoutQuotationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    wbsId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProcurementStatusFieldUpdateOperationsInput | $Enums.ProcurementStatus
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    requestDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    neededBy?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutPurchaseRequestNestedInput
+  }
+
   export type ActivityFeedCreateManyUserInput = {
     id: string
     projectId: string
@@ -81178,6 +87176,11 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type DelegationWindowCreateManyUser_DelegationWindow_delegateIdToUserInput = {
@@ -81249,7 +87252,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type ProgressEntryCreateManyUserInput = {
@@ -81401,6 +87408,11 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceCreateManyDeletedByInput = {
@@ -81424,7 +87436,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type PaymentCreateManyDeletedByInput = {
@@ -81732,6 +87748,11 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deletedBy?: UserUpdateOneWithoutCostsDeletedNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutCostRecordsNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutCostsNestedInput
@@ -81757,6 +87778,11 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type CostRecordUncheckedUpdateManyWithoutCreatedByInput = {
@@ -81779,6 +87805,11 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type DelegationWindowUpdateWithoutUser_DelegationWindow_delegateIdToUserInput = {
@@ -81943,7 +87974,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deletedBy?: UserUpdateOneWithoutInvoicesDeletedNestedInput
     contract?: ContractUpdateOneWithoutInvoicesNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
@@ -81972,7 +88007,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
   }
@@ -81998,7 +88037,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type ProgressEntryUpdateWithoutUserInput = {
@@ -82064,6 +88107,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
@@ -82093,6 +88138,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -82182,6 +88229,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     purchaseOrders?: PurchaseOrderUpdateManyWithoutPurchaseRequestNestedInput
+    quotations?: QuotationUpdateManyWithoutPurchaseRequestNestedInput
   }
 
   export type PurchaseRequestUncheckedUpdateWithoutCreatedByInput = {
@@ -82199,6 +88247,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutPurchaseRequestNestedInput
+    quotations?: QuotationUncheckedUpdateManyWithoutPurchaseRequestNestedInput
   }
 
   export type PurchaseRequestUncheckedUpdateManyWithoutCreatedByInput = {
@@ -82359,6 +88408,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
   }
@@ -82388,6 +88439,8 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -82426,6 +88479,7 @@ export namespace Prisma {
     revenues?: RevenueUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutWbsNestedInput
     parent?: WBSItemUpdateOneWithoutChildrenNestedInput
     children?: WBSItemUpdateManyWithoutParentNestedInput
     project?: ProjectUpdateOneRequiredWithoutWbsItemsNestedInput
@@ -82451,6 +88505,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutWbsNestedInput
     children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
   }
 
@@ -82485,6 +88540,11 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdBy?: UserUpdateOneWithoutCostsCreatedNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutCostRecordsNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutCostsNestedInput
@@ -82510,6 +88570,11 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type CostRecordUncheckedUpdateManyWithoutDeletedByInput = {
@@ -82532,6 +88597,11 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceUpdateWithoutDeletedByInput = {
@@ -82552,7 +88622,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     contract?: ContractUpdateOneWithoutInvoicesNestedInput
     createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
@@ -82581,7 +88655,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
   }
@@ -82607,7 +88685,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type PaymentUpdateWithoutDeletedByInput = {
@@ -82854,6 +88936,34 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     deletedAt?: Date | string | null
+  }
+
+  export type VariationOrderCreateManyProjectInput = {
+    id?: string
+    boqItemId?: string | null
+    wbsId?: string | null
+    title: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ApprovalStatus
+    type?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type SiteLogCreateManyProjectInput = {
+    id?: string
+    date?: Date | string
+    weather?: string | null
+    temperature?: number | null
+    manpower?: number
+    equipment?: string | null
+    progress?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
   }
 
   export type TaskCreateManyProjectInput = {
@@ -83339,6 +89449,90 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type VariationOrderUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    boqItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    wbs?: WBSItemUpdateOneWithoutVariationOrderNestedInput
+  }
+
+  export type VariationOrderUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    boqItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    wbsId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VariationOrderUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    boqItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    wbsId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SiteLogUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    weather?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    manpower?: IntFieldUpdateOperationsInput | number
+    equipment?: NullableStringFieldUpdateOperationsInput | string | null
+    progress?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SiteLogUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    weather?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    manpower?: IntFieldUpdateOperationsInput | number
+    equipment?: NullableStringFieldUpdateOperationsInput | string | null
+    progress?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SiteLogUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    weather?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    manpower?: IntFieldUpdateOperationsInput | number
+    equipment?: NullableStringFieldUpdateOperationsInput | string | null
+    progress?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type TaskUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -83400,6 +89594,7 @@ export namespace Prisma {
     revenues?: RevenueUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutWbsNestedInput
     parent?: WBSItemUpdateOneWithoutChildrenNestedInput
     children?: WBSItemUpdateManyWithoutParentNestedInput
   }
@@ -83424,6 +89619,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutWbsNestedInput
     children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
   }
 
@@ -83487,6 +89683,11 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceCreateManyWbsInput = {
@@ -83510,7 +89711,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type PurchaseOrderItemCreateManyWbsInput = {
@@ -83557,6 +89762,20 @@ export namespace Prisma {
     quantity: Decimal | DecimalJsLike | number | string
     unitRate: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+  }
+
+  export type VariationOrderCreateManyWbsInput = {
+    id?: string
+    projectId: string
+    boqItemId?: string | null
+    title: string
+    description?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ApprovalStatus
+    type?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
   }
 
   export type WBSItemCreateManyParentInput = {
@@ -83670,6 +89889,11 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deletedBy?: UserUpdateOneWithoutCostsDeletedNestedInput
     createdBy?: UserUpdateOneWithoutCostsCreatedNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutCostRecordsNestedInput
@@ -83695,6 +89919,11 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type CostRecordUncheckedUpdateManyWithoutWbsInput = {
@@ -83717,6 +89946,11 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceUpdateWithoutWbsInput = {
@@ -83737,7 +89971,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deletedBy?: UserUpdateOneWithoutInvoicesDeletedNestedInput
     contract?: ContractUpdateOneWithoutInvoicesNestedInput
     createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
@@ -83766,7 +90004,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
   }
@@ -83792,7 +90034,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type PurchaseOrderItemUpdateWithoutWbsInput = {
@@ -83935,6 +90181,48 @@ export namespace Prisma {
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
+  export type VariationOrderUpdateWithoutWbsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    boqItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    project?: ProjectUpdateOneRequiredWithoutVariationOrderNestedInput
+  }
+
+  export type VariationOrderUncheckedUpdateWithoutWbsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    boqItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VariationOrderUncheckedUpdateManyWithoutWbsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    boqItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    type?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type WBSItemUpdateWithoutParentInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -83954,6 +90242,7 @@ export namespace Prisma {
     revenues?: RevenueUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutWbsNestedInput
     children?: WBSItemUpdateManyWithoutParentNestedInput
     project?: ProjectUpdateOneRequiredWithoutWbsItemsNestedInput
   }
@@ -83978,6 +90267,7 @@ export namespace Prisma {
     revenues?: RevenueUncheckedUpdateManyWithoutWbsNestedInput
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutWbsNestedInput
     children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
   }
 
@@ -84199,6 +90489,18 @@ export namespace Prisma {
     deletedAt?: Date | string | null
   }
 
+  export type QuotationCreateManyPurchaseRequestInput = {
+    id?: string
+    vendor: string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    leadTimeDays?: number | null
+    validUntil?: Date | string | null
+    status?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type PurchaseOrderUpdateWithoutPurchaseRequestInput = {
     id?: StringFieldUpdateOperationsInput | string
     poNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84253,6 +90555,42 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type QuotationUpdateWithoutPurchaseRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vendor?: StringFieldUpdateOperationsInput | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    leadTimeDays?: NullableIntFieldUpdateOperationsInput | number | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuotationUncheckedUpdateWithoutPurchaseRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vendor?: StringFieldUpdateOperationsInput | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    leadTimeDays?: NullableIntFieldUpdateOperationsInput | number | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuotationUncheckedUpdateManyWithoutPurchaseRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vendor?: StringFieldUpdateOperationsInput | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    leadTimeDays?: NullableIntFieldUpdateOperationsInput | number | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CostRecordCreateManyPurchaseOrderInput = {
     id?: string
     projectId: string
@@ -84273,6 +90611,11 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type GoodsReceiptCreateManyPurchaseOrderInput = {
@@ -84316,6 +90659,11 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deletedBy?: UserUpdateOneWithoutCostsDeletedNestedInput
     createdBy?: UserUpdateOneWithoutCostsCreatedNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutCostsNestedInput
@@ -84341,6 +90689,11 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type CostRecordUncheckedUpdateManyWithoutPurchaseOrderInput = {
@@ -84363,6 +90716,11 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type GoodsReceiptUpdateWithoutPurchaseOrderInput = {
@@ -84471,7 +90829,11 @@ export namespace Prisma {
     approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
   }
 
   export type ContractChangeUpdateWithoutContractInput = {
@@ -84531,7 +90893,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     deletedBy?: UserUpdateOneWithoutInvoicesDeletedNestedInput
     createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
@@ -84560,7 +90926,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
   }
@@ -84586,7 +90956,11 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type ApprovalStepCreateManyApprovalRequestInput = {
@@ -85170,6 +91544,18 @@ export namespace Prisma {
      * @deprecated Use UserMaturityDefaultArgs instead
      */
     export type UserMaturityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserMaturityDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use VariationOrderDefaultArgs instead
+     */
+    export type VariationOrderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = VariationOrderDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use SiteLogDefaultArgs instead
+     */
+    export type SiteLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SiteLogDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use QuotationDefaultArgs instead
+     */
+    export type QuotationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = QuotationDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany
