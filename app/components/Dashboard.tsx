@@ -9,6 +9,7 @@ import WBSTable from './WBSTable';
 import CostTable from './CostTable';
 import DebtPanel from './DebtPanel';
 import ProfitPanel from './ProfitPanel';
+import AIChatBox from './AIChatBox';
 import { useERPStore } from '@/store/erpStore';
 import AddCostModal from './modals/AddCostModal';
 import { CostRecord } from '../types';
@@ -27,8 +28,6 @@ export default function Dashboard() {
 
   const data = useMemo(() => getDashboardData(), [getDashboardData, projects, costs, budgets]);
   const [editingCost, setEditingCost] = useState<CostRecord | null>(null);
-
-  console.log('[UI] Dashboard Render', { isInitialized, hasProjects: projects.length > 0 });
 
   if (!isInitialized) {
     return (
@@ -61,8 +60,6 @@ export default function Dashboard() {
     );
   }
 
-
-
   return (
     <div className="min-h-screen bg-[#020617] text-slate-100">
       <Sidebar activeItem="overview" />
@@ -85,6 +82,8 @@ export default function Dashboard() {
         </div>
       </main>
 
+      <AIChatBox />
+
       <AddCostModal 
         isOpen={!!editingCost} 
         onClose={() => setEditingCost(null)} 
@@ -93,4 +92,3 @@ export default function Dashboard() {
     </div>
   );
 }
-

@@ -43,6 +43,8 @@ model User {
   costsDeleted    CostRecord[] @relation("CostDeletedBy")
   invoicesDeleted Invoice[]    @relation("InvoiceDeletedBy")
   paymentsDeleted Payment[]    @relation("PaymentDeletedBy")
+  companyId       String?
+  company         Company?     @relation(fields: [companyId], references: [id])
 
   @@index([createdAt])
 }
@@ -90,6 +92,10 @@ model Project {
   SiteLog              SiteLog[]
   tasks                Task[]
   wbsItems             WBSItem[]
+  companyId            String?
+  branchId             String?
+  company              Company?               @relation(fields: [companyId], references: [id])
+  branch               Branch?                @relation(fields: [branchId], references: [id])
 
   @@index([status])
   @@index([createdAt])
@@ -181,6 +187,10 @@ model CostRecord {
   createdBy       User?          @relation("CostCreatedBy", fields: [createdById], references: [id])
   purchaseOrder   PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
   wbs             WBSItem        @relation(fields: [wbsId], references: [id])
+  companyId       String?
+  branchId        String?
+  company         Company?       @relation(fields: [companyId], references: [id])
+  branch          Branch?        @relation(fields: [branchId], references: [id])
 
   @@index([projectId])
   @@index([wbsId])
@@ -258,6 +268,10 @@ model Invoice {
   wbs               WBSItem        @relation(fields: [wbsId], references: [id])
   payments          Payment[]
   revenues          Revenue[]
+  companyId         String?
+  branchId          String?
+  company           Company?       @relation(fields: [companyId], references: [id])
+  branch            Branch?        @relation(fields: [branchId], references: [id])
 
   @@index([projectId])
   @@index([wbsId])
@@ -857,9 +871,14 @@ model UserMaturity {
 
 enum UserRole {
   ADMIN
+  SUPER_ADMIN
+  GROUP_DIRECTOR
+  CFO
+  BRANCH_DIRECTOR
   MANAGER
   ACCOUNTANT
   VIEWER
+  AUDITOR
 }
 
 enum ProjectStatus {
@@ -1008,4 +1027,33 @@ model Quotation {
   purchaseRequest   PurchaseRequest? @relation(fields: [purchaseRequestId], references: [id])
 
   @@index([purchaseRequestId])
+}
+
+model Company {
+  id        String       @id @default(uuid())
+  name      String
+  code      String       @unique
+  taxCode   String?
+  address   String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  projects  Project[]
+  users     User[]
+  costs     CostRecord[]
+  invoices  Invoice[]
+  branches  Branch[]
+}
+
+model Branch {
+  id        String       @id @default(uuid())
+  companyId String
+  name      String
+  code      String       @unique
+  address   String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  company   Company      @relation(fields: [companyId], references: [id])
+  projects  Project[]
+  costs     CostRecord[]
+  invoices  Invoice[]
 }

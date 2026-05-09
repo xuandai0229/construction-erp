@@ -83,4 +83,3 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
     </aside>
   );
 }
-

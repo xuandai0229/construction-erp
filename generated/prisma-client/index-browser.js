@@ -129,7 +129,8 @@ exports.Prisma.UserScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
-  role: 'role'
+  role: 'role',
+  companyId: 'companyId'
 };
 
 exports.Prisma.CategoryScalarFieldEnum = {
@@ -154,7 +155,9 @@ exports.Prisma.ProjectScalarFieldEnum = {
   contractValue: 'contractValue',
   endDate: 'endDate',
   startDate: 'startDate',
-  totalBudget: 'totalBudget'
+  totalBudget: 'totalBudget',
+  companyId: 'companyId',
+  branchId: 'branchId'
 };
 
 exports.Prisma.TaskScalarFieldEnum = {
@@ -212,7 +215,9 @@ exports.Prisma.CostRecordScalarFieldEnum = {
   vatAmount: 'vatAmount',
   retentionRate: 'retentionRate',
   retentionAmount: 'retentionAmount',
-  netAmount: 'netAmount'
+  netAmount: 'netAmount',
+  companyId: 'companyId',
+  branchId: 'branchId'
 };
 
 exports.Prisma.BudgetRecordScalarFieldEnum = {
@@ -268,7 +273,9 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   vatAmount: 'vatAmount',
   retentionRate: 'retentionRate',
   retentionAmount: 'retentionAmount',
-  netAmount: 'netAmount'
+  netAmount: 'netAmount',
+  companyId: 'companyId',
+  branchId: 'branchId'
 };
 
 exports.Prisma.PaymentScalarFieldEnum = {
@@ -756,6 +763,26 @@ exports.Prisma.QuotationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CompanyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  taxCode: 'taxCode',
+  address: 'address',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BranchScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  name: 'name',
+  code: 'code',
+  address: 'address',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -787,9 +814,14 @@ exports.Prisma.JsonNullValueFilter = {
 };
 exports.UserRole = exports.$Enums.UserRole = {
   ADMIN: 'ADMIN',
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  GROUP_DIRECTOR: 'GROUP_DIRECTOR',
+  CFO: 'CFO',
+  BRANCH_DIRECTOR: 'BRANCH_DIRECTOR',
   MANAGER: 'MANAGER',
   ACCOUNTANT: 'ACCOUNTANT',
-  VIEWER: 'VIEWER'
+  VIEWER: 'VIEWER',
+  AUDITOR: 'AUDITOR'
 };
 
 exports.ProjectStatus = exports.$Enums.ProjectStatus = {
@@ -931,7 +963,9 @@ exports.Prisma.ModelName = {
   UserMaturity: 'UserMaturity',
   VariationOrder: 'VariationOrder',
   SiteLog: 'SiteLog',
-  Quotation: 'Quotation'
+  Quotation: 'Quotation',
+  Company: 'Company',
+  Branch: 'Branch'
 };
 
 /**

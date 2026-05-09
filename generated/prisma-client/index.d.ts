@@ -243,6 +243,16 @@ export type SiteLog = $Result.DefaultSelection<Prisma.$SiteLogPayload>
  * 
  */
 export type Quotation = $Result.DefaultSelection<Prisma.$QuotationPayload>
+/**
+ * Model Company
+ * 
+ */
+export type Company = $Result.DefaultSelection<Prisma.$CompanyPayload>
+/**
+ * Model Branch
+ * 
+ */
+export type Branch = $Result.DefaultSelection<Prisma.$BranchPayload>
 
 /**
  * Enums
@@ -250,9 +260,14 @@ export type Quotation = $Result.DefaultSelection<Prisma.$QuotationPayload>
 export namespace $Enums {
   export const UserRole: {
   ADMIN: 'ADMIN',
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  GROUP_DIRECTOR: 'GROUP_DIRECTOR',
+  CFO: 'CFO',
+  BRANCH_DIRECTOR: 'BRANCH_DIRECTOR',
   MANAGER: 'MANAGER',
   ACCOUNTANT: 'ACCOUNTANT',
-  VIEWER: 'VIEWER'
+  VIEWER: 'VIEWER',
+  AUDITOR: 'AUDITOR'
 };
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
@@ -1022,6 +1037,26 @@ export class PrismaClient<
     * ```
     */
   get quotation(): Prisma.QuotationDelegate<ExtArgs>;
+
+  /**
+   * `prisma.company`: Exposes CRUD operations for the **Company** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Companies
+    * const companies = await prisma.company.findMany()
+    * ```
+    */
+  get company(): Prisma.CompanyDelegate<ExtArgs>;
+
+  /**
+   * `prisma.branch`: Exposes CRUD operations for the **Branch** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Branches
+    * const branches = await prisma.branch.findMany()
+    * ```
+    */
+  get branch(): Prisma.BranchDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -1508,7 +1543,9 @@ export namespace Prisma {
     UserMaturity: 'UserMaturity',
     VariationOrder: 'VariationOrder',
     SiteLog: 'SiteLog',
-    Quotation: 'Quotation'
+    Quotation: 'Quotation',
+    Company: 'Company',
+    Branch: 'Branch'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1524,7 +1561,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "category" | "project" | "task" | "wBSItem" | "costRecord" | "budgetRecord" | "revenue" | "invoice" | "payment" | "ledgerAccount" | "journalEntry" | "transactionLine" | "purchaseRequest" | "purchaseOrder" | "purchaseOrderItem" | "goodsReceipt" | "contract" | "contractChange" | "auditLog" | "activityFeed" | "approvalRequest" | "approvalStep" | "authorityMatrix" | "bOQItem" | "budgetVersion" | "comment" | "delegationPolicy" | "delegationWindow" | "document" | "fiscalPeriod" | "job" | "inventoryTransaction" | "material" | "measurement" | "progressEntry" | "siteConsumption" | "subcontract" | "subcontractInvoice" | "subcontractItem" | "subcontractProgress" | "trainingRecord" | "userMaturity" | "variationOrder" | "siteLog" | "quotation"
+      modelProps: "user" | "category" | "project" | "task" | "wBSItem" | "costRecord" | "budgetRecord" | "revenue" | "invoice" | "payment" | "ledgerAccount" | "journalEntry" | "transactionLine" | "purchaseRequest" | "purchaseOrder" | "purchaseOrderItem" | "goodsReceipt" | "contract" | "contractChange" | "auditLog" | "activityFeed" | "approvalRequest" | "approvalStep" | "authorityMatrix" | "bOQItem" | "budgetVersion" | "comment" | "delegationPolicy" | "delegationWindow" | "document" | "fiscalPeriod" | "job" | "inventoryTransaction" | "material" | "measurement" | "progressEntry" | "siteConsumption" | "subcontract" | "subcontractInvoice" | "subcontractItem" | "subcontractProgress" | "trainingRecord" | "userMaturity" | "variationOrder" | "siteLog" | "quotation" | "company" | "branch"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4748,6 +4785,146 @@ export namespace Prisma {
           }
         }
       }
+      Company: {
+        payload: Prisma.$CompanyPayload<ExtArgs>
+        fields: Prisma.CompanyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CompanyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CompanyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
+          }
+          findFirst: {
+            args: Prisma.CompanyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CompanyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
+          }
+          findMany: {
+            args: Prisma.CompanyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>[]
+          }
+          create: {
+            args: Prisma.CompanyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
+          }
+          createMany: {
+            args: Prisma.CompanyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CompanyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>[]
+          }
+          delete: {
+            args: Prisma.CompanyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
+          }
+          update: {
+            args: Prisma.CompanyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
+          }
+          deleteMany: {
+            args: Prisma.CompanyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CompanyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.CompanyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
+          }
+          aggregate: {
+            args: Prisma.CompanyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCompany>
+          }
+          groupBy: {
+            args: Prisma.CompanyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CompanyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CompanyCountArgs<ExtArgs>
+            result: $Utils.Optional<CompanyCountAggregateOutputType> | number
+          }
+        }
+      }
+      Branch: {
+        payload: Prisma.$BranchPayload<ExtArgs>
+        fields: Prisma.BranchFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BranchFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BranchFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>
+          }
+          findFirst: {
+            args: Prisma.BranchFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BranchFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>
+          }
+          findMany: {
+            args: Prisma.BranchFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>[]
+          }
+          create: {
+            args: Prisma.BranchCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>
+          }
+          createMany: {
+            args: Prisma.BranchCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BranchCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>[]
+          }
+          delete: {
+            args: Prisma.BranchDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>
+          }
+          update: {
+            args: Prisma.BranchUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>
+          }
+          deleteMany: {
+            args: Prisma.BranchDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BranchUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.BranchUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BranchPayload>
+          }
+          aggregate: {
+            args: Prisma.BranchAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBranch>
+          }
+          groupBy: {
+            args: Prisma.BranchGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BranchGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BranchCountArgs<ExtArgs>
+            result: $Utils.Optional<BranchCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -5887,6 +6064,122 @@ export namespace Prisma {
 
 
   /**
+   * Count Type CompanyCountOutputType
+   */
+
+  export type CompanyCountOutputType = {
+    projects: number
+    users: number
+    costs: number
+    invoices: number
+    branches: number
+  }
+
+  export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    projects?: boolean | CompanyCountOutputTypeCountProjectsArgs
+    users?: boolean | CompanyCountOutputTypeCountUsersArgs
+    costs?: boolean | CompanyCountOutputTypeCountCostsArgs
+    invoices?: boolean | CompanyCountOutputTypeCountInvoicesArgs
+    branches?: boolean | CompanyCountOutputTypeCountBranchesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyCountOutputType
+     */
+    select?: CompanyCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountCostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CostRecordWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountInvoicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InvoiceWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountBranchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BranchWhereInput
+  }
+
+
+  /**
+   * Count Type BranchCountOutputType
+   */
+
+  export type BranchCountOutputType = {
+    projects: number
+    costs: number
+    invoices: number
+  }
+
+  export type BranchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    projects?: boolean | BranchCountOutputTypeCountProjectsArgs
+    costs?: boolean | BranchCountOutputTypeCountCostsArgs
+    invoices?: boolean | BranchCountOutputTypeCountInvoicesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchCountOutputType
+     */
+    select?: BranchCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeCountProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWhereInput
+  }
+
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeCountCostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CostRecordWhereInput
+  }
+
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeCountInvoicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InvoiceWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -5908,6 +6201,7 @@ export namespace Prisma {
     updatedAt: Date | null
     deletedAt: Date | null
     role: $Enums.UserRole | null
+    companyId: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -5918,6 +6212,7 @@ export namespace Prisma {
     updatedAt: Date | null
     deletedAt: Date | null
     role: $Enums.UserRole | null
+    companyId: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -5928,6 +6223,7 @@ export namespace Prisma {
     updatedAt: number
     deletedAt: number
     role: number
+    companyId: number
     _all: number
   }
 
@@ -5940,6 +6236,7 @@ export namespace Prisma {
     updatedAt?: true
     deletedAt?: true
     role?: true
+    companyId?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -5950,6 +6247,7 @@ export namespace Prisma {
     updatedAt?: true
     deletedAt?: true
     role?: true
+    companyId?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -5960,6 +6258,7 @@ export namespace Prisma {
     updatedAt?: true
     deletedAt?: true
     role?: true
+    companyId?: true
     _all?: true
   }
 
@@ -6043,6 +6342,7 @@ export namespace Prisma {
     updatedAt: Date
     deletedAt: Date | null
     role: $Enums.UserRole
+    companyId: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -6070,6 +6370,7 @@ export namespace Prisma {
     updatedAt?: boolean
     deletedAt?: boolean
     role?: boolean
+    companyId?: boolean
     ActivityFeed?: boolean | User$ActivityFeedArgs<ExtArgs>
     ApprovalRequest?: boolean | User$ApprovalRequestArgs<ExtArgs>
     ApprovalStep?: boolean | User$ApprovalStepArgs<ExtArgs>
@@ -6096,6 +6397,7 @@ export namespace Prisma {
     costsDeleted?: boolean | User$costsDeletedArgs<ExtArgs>
     invoicesDeleted?: boolean | User$invoicesDeletedArgs<ExtArgs>
     paymentsDeleted?: boolean | User$paymentsDeletedArgs<ExtArgs>
+    company?: boolean | User$companyArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -6107,6 +6409,8 @@ export namespace Prisma {
     updatedAt?: boolean
     deletedAt?: boolean
     role?: boolean
+    companyId?: boolean
+    company?: boolean | User$companyArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -6117,6 +6421,7 @@ export namespace Prisma {
     updatedAt?: boolean
     deletedAt?: boolean
     role?: boolean
+    companyId?: boolean
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6146,9 +6451,12 @@ export namespace Prisma {
     costsDeleted?: boolean | User$costsDeletedArgs<ExtArgs>
     invoicesDeleted?: boolean | User$invoicesDeletedArgs<ExtArgs>
     paymentsDeleted?: boolean | User$paymentsDeletedArgs<ExtArgs>
+    company?: boolean | User$companyArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | User$companyArgs<ExtArgs>
+  }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
@@ -6179,6 +6487,7 @@ export namespace Prisma {
       costsDeleted: Prisma.$CostRecordPayload<ExtArgs>[]
       invoicesDeleted: Prisma.$InvoicePayload<ExtArgs>[]
       paymentsDeleted: Prisma.$PaymentPayload<ExtArgs>[]
+      company: Prisma.$CompanyPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6188,6 +6497,7 @@ export namespace Prisma {
       updatedAt: Date
       deletedAt: Date | null
       role: $Enums.UserRole
+      companyId: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -6578,6 +6888,7 @@ export namespace Prisma {
     costsDeleted<T extends User$costsDeletedArgs<ExtArgs> = {}>(args?: Subset<T, User$costsDeletedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CostRecordPayload<ExtArgs>, T, "findMany"> | Null>
     invoicesDeleted<T extends User$invoicesDeletedArgs<ExtArgs> = {}>(args?: Subset<T, User$invoicesDeletedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany"> | Null>
     paymentsDeleted<T extends User$paymentsDeletedArgs<ExtArgs> = {}>(args?: Subset<T, User$paymentsDeletedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany"> | Null>
+    company<T extends User$companyArgs<ExtArgs> = {}>(args?: Subset<T, User$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6614,6 +6925,7 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"User", 'DateTime'>
     readonly deletedAt: FieldRef<"User", 'DateTime'>
     readonly role: FieldRef<"User", 'UserRole'>
+    readonly companyId: FieldRef<"User", 'String'>
   }
     
 
@@ -6835,6 +7147,10 @@ export namespace Prisma {
      */
     data: UserCreateManyInput | UserCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -7440,6 +7756,21 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
+  }
+
+  /**
+   * User.company
+   */
+  export type User$companyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    where?: CompanyWhereInput
   }
 
   /**
@@ -8444,6 +8775,8 @@ export namespace Prisma {
     endDate: Date | null
     startDate: Date | null
     totalBudget: Decimal | null
+    companyId: string | null
+    branchId: string | null
   }
 
   export type ProjectMaxAggregateOutputType = {
@@ -8461,6 +8794,8 @@ export namespace Prisma {
     endDate: Date | null
     startDate: Date | null
     totalBudget: Decimal | null
+    companyId: string | null
+    branchId: string | null
   }
 
   export type ProjectCountAggregateOutputType = {
@@ -8478,6 +8813,8 @@ export namespace Prisma {
     endDate: number
     startDate: number
     totalBudget: number
+    companyId: number
+    branchId: number
     _all: number
   }
 
@@ -8509,6 +8846,8 @@ export namespace Prisma {
     endDate?: true
     startDate?: true
     totalBudget?: true
+    companyId?: true
+    branchId?: true
   }
 
   export type ProjectMaxAggregateInputType = {
@@ -8526,6 +8865,8 @@ export namespace Prisma {
     endDate?: true
     startDate?: true
     totalBudget?: true
+    companyId?: true
+    branchId?: true
   }
 
   export type ProjectCountAggregateInputType = {
@@ -8543,6 +8884,8 @@ export namespace Prisma {
     endDate?: true
     startDate?: true
     totalBudget?: true
+    companyId?: true
+    branchId?: true
     _all?: true
   }
 
@@ -8647,6 +8990,8 @@ export namespace Prisma {
     endDate: Date | null
     startDate: Date | null
     totalBudget: Decimal
+    companyId: string | null
+    branchId: string | null
     _count: ProjectCountAggregateOutputType | null
     _avg: ProjectAvgAggregateOutputType | null
     _sum: ProjectSumAggregateOutputType | null
@@ -8683,6 +9028,8 @@ export namespace Prisma {
     endDate?: boolean
     startDate?: boolean
     totalBudget?: boolean
+    companyId?: boolean
+    branchId?: boolean
     deletedBy?: boolean | Project$deletedByArgs<ExtArgs>
     ActivityFeed?: boolean | Project$ActivityFeedArgs<ExtArgs>
     ApprovalRequest?: boolean | Project$ApprovalRequestArgs<ExtArgs>
@@ -8700,6 +9047,8 @@ export namespace Prisma {
     SiteLog?: boolean | Project$SiteLogArgs<ExtArgs>
     tasks?: boolean | Project$tasksArgs<ExtArgs>
     wbsItems?: boolean | Project$wbsItemsArgs<ExtArgs>
+    company?: boolean | Project$companyArgs<ExtArgs>
+    branch?: boolean | Project$branchArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -8718,8 +9067,12 @@ export namespace Prisma {
     endDate?: boolean
     startDate?: boolean
     totalBudget?: boolean
+    companyId?: boolean
+    branchId?: boolean
     deletedBy?: boolean | Project$deletedByArgs<ExtArgs>
     owner?: boolean | Project$ownerArgs<ExtArgs>
+    company?: boolean | Project$companyArgs<ExtArgs>
+    branch?: boolean | Project$branchArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
   export type ProjectSelectScalar = {
@@ -8737,6 +9090,8 @@ export namespace Prisma {
     endDate?: boolean
     startDate?: boolean
     totalBudget?: boolean
+    companyId?: boolean
+    branchId?: boolean
   }
 
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8757,11 +9112,15 @@ export namespace Prisma {
     SiteLog?: boolean | Project$SiteLogArgs<ExtArgs>
     tasks?: boolean | Project$tasksArgs<ExtArgs>
     wbsItems?: boolean | Project$wbsItemsArgs<ExtArgs>
+    company?: boolean | Project$companyArgs<ExtArgs>
+    branch?: boolean | Project$branchArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     deletedBy?: boolean | Project$deletedByArgs<ExtArgs>
     owner?: boolean | Project$ownerArgs<ExtArgs>
+    company?: boolean | Project$companyArgs<ExtArgs>
+    branch?: boolean | Project$branchArgs<ExtArgs>
   }
 
   export type $ProjectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8784,6 +9143,8 @@ export namespace Prisma {
       SiteLog: Prisma.$SiteLogPayload<ExtArgs>[]
       tasks: Prisma.$TaskPayload<ExtArgs>[]
       wbsItems: Prisma.$WBSItemPayload<ExtArgs>[]
+      company: Prisma.$CompanyPayload<ExtArgs> | null
+      branch: Prisma.$BranchPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8800,6 +9161,8 @@ export namespace Prisma {
       endDate: Date | null
       startDate: Date | null
       totalBudget: Prisma.Decimal
+      companyId: string | null
+      branchId: string | null
     }, ExtArgs["result"]["project"]>
     composites: {}
   }
@@ -9181,6 +9544,8 @@ export namespace Prisma {
     SiteLog<T extends Project$SiteLogArgs<ExtArgs> = {}>(args?: Subset<T, Project$SiteLogArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SiteLogPayload<ExtArgs>, T, "findMany"> | Null>
     tasks<T extends Project$tasksArgs<ExtArgs> = {}>(args?: Subset<T, Project$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany"> | Null>
     wbsItems<T extends Project$wbsItemsArgs<ExtArgs> = {}>(args?: Subset<T, Project$wbsItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WBSItemPayload<ExtArgs>, T, "findMany"> | Null>
+    company<T extends Project$companyArgs<ExtArgs> = {}>(args?: Subset<T, Project$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    branch<T extends Project$branchArgs<ExtArgs> = {}>(args?: Subset<T, Project$branchArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9224,6 +9589,8 @@ export namespace Prisma {
     readonly endDate: FieldRef<"Project", 'DateTime'>
     readonly startDate: FieldRef<"Project", 'DateTime'>
     readonly totalBudget: FieldRef<"Project", 'Decimal'>
+    readonly companyId: FieldRef<"Project", 'String'>
+    readonly branchId: FieldRef<"Project", 'String'>
   }
     
 
@@ -9869,6 +10236,36 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WBSItemScalarFieldEnum | WBSItemScalarFieldEnum[]
+  }
+
+  /**
+   * Project.company
+   */
+  export type Project$companyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    where?: CompanyWhereInput
+  }
+
+  /**
+   * Project.branch
+   */
+  export type Project$branchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    where?: BranchWhereInput
   }
 
   /**
@@ -12384,6 +12781,8 @@ export namespace Prisma {
     retentionRate: Decimal | null
     retentionAmount: Decimal | null
     netAmount: Decimal | null
+    companyId: string | null
+    branchId: string | null
   }
 
   export type CostRecordMaxAggregateOutputType = {
@@ -12412,6 +12811,8 @@ export namespace Prisma {
     retentionRate: Decimal | null
     retentionAmount: Decimal | null
     netAmount: Decimal | null
+    companyId: string | null
+    branchId: string | null
   }
 
   export type CostRecordCountAggregateOutputType = {
@@ -12440,6 +12841,8 @@ export namespace Prisma {
     retentionRate: number
     retentionAmount: number
     netAmount: number
+    companyId: number
+    branchId: number
     _all: number
   }
 
@@ -12494,6 +12897,8 @@ export namespace Prisma {
     retentionRate?: true
     retentionAmount?: true
     netAmount?: true
+    companyId?: true
+    branchId?: true
   }
 
   export type CostRecordMaxAggregateInputType = {
@@ -12522,6 +12927,8 @@ export namespace Prisma {
     retentionRate?: true
     retentionAmount?: true
     netAmount?: true
+    companyId?: true
+    branchId?: true
   }
 
   export type CostRecordCountAggregateInputType = {
@@ -12550,6 +12957,8 @@ export namespace Prisma {
     retentionRate?: true
     retentionAmount?: true
     netAmount?: true
+    companyId?: true
+    branchId?: true
     _all?: true
   }
 
@@ -12665,6 +13074,8 @@ export namespace Prisma {
     retentionRate: Decimal
     retentionAmount: Decimal
     netAmount: Decimal
+    companyId: string | null
+    branchId: string | null
     _count: CostRecordCountAggregateOutputType | null
     _avg: CostRecordAvgAggregateOutputType | null
     _sum: CostRecordSumAggregateOutputType | null
@@ -12712,10 +13123,14 @@ export namespace Prisma {
     retentionRate?: boolean
     retentionAmount?: boolean
     netAmount?: boolean
+    companyId?: boolean
+    branchId?: boolean
     deletedBy?: boolean | CostRecord$deletedByArgs<ExtArgs>
     createdBy?: boolean | CostRecord$createdByArgs<ExtArgs>
     purchaseOrder?: boolean | CostRecord$purchaseOrderArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
+    company?: boolean | CostRecord$companyArgs<ExtArgs>
+    branch?: boolean | CostRecord$branchArgs<ExtArgs>
   }, ExtArgs["result"]["costRecord"]>
 
   export type CostRecordSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -12744,10 +13159,14 @@ export namespace Prisma {
     retentionRate?: boolean
     retentionAmount?: boolean
     netAmount?: boolean
+    companyId?: boolean
+    branchId?: boolean
     deletedBy?: boolean | CostRecord$deletedByArgs<ExtArgs>
     createdBy?: boolean | CostRecord$createdByArgs<ExtArgs>
     purchaseOrder?: boolean | CostRecord$purchaseOrderArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
+    company?: boolean | CostRecord$companyArgs<ExtArgs>
+    branch?: boolean | CostRecord$branchArgs<ExtArgs>
   }, ExtArgs["result"]["costRecord"]>
 
   export type CostRecordSelectScalar = {
@@ -12776,6 +13195,8 @@ export namespace Prisma {
     retentionRate?: boolean
     retentionAmount?: boolean
     netAmount?: boolean
+    companyId?: boolean
+    branchId?: boolean
   }
 
   export type CostRecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12783,12 +13204,16 @@ export namespace Prisma {
     createdBy?: boolean | CostRecord$createdByArgs<ExtArgs>
     purchaseOrder?: boolean | CostRecord$purchaseOrderArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
+    company?: boolean | CostRecord$companyArgs<ExtArgs>
+    branch?: boolean | CostRecord$branchArgs<ExtArgs>
   }
   export type CostRecordIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     deletedBy?: boolean | CostRecord$deletedByArgs<ExtArgs>
     createdBy?: boolean | CostRecord$createdByArgs<ExtArgs>
     purchaseOrder?: boolean | CostRecord$purchaseOrderArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
+    company?: boolean | CostRecord$companyArgs<ExtArgs>
+    branch?: boolean | CostRecord$branchArgs<ExtArgs>
   }
 
   export type $CostRecordPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12798,6 +13223,8 @@ export namespace Prisma {
       createdBy: Prisma.$UserPayload<ExtArgs> | null
       purchaseOrder: Prisma.$PurchaseOrderPayload<ExtArgs> | null
       wbs: Prisma.$WBSItemPayload<ExtArgs>
+      company: Prisma.$CompanyPayload<ExtArgs> | null
+      branch: Prisma.$BranchPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -12825,6 +13252,8 @@ export namespace Prisma {
       retentionRate: Prisma.Decimal
       retentionAmount: Prisma.Decimal
       netAmount: Prisma.Decimal
+      companyId: string | null
+      branchId: string | null
     }, ExtArgs["result"]["costRecord"]>
     composites: {}
   }
@@ -13193,6 +13622,8 @@ export namespace Prisma {
     createdBy<T extends CostRecord$createdByArgs<ExtArgs> = {}>(args?: Subset<T, CostRecord$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     purchaseOrder<T extends CostRecord$purchaseOrderArgs<ExtArgs> = {}>(args?: Subset<T, CostRecord$purchaseOrderArgs<ExtArgs>>): Prisma__PurchaseOrderClient<$Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     wbs<T extends WBSItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WBSItemDefaultArgs<ExtArgs>>): Prisma__WBSItemClient<$Result.GetResult<Prisma.$WBSItemPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    company<T extends CostRecord$companyArgs<ExtArgs> = {}>(args?: Subset<T, CostRecord$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    branch<T extends CostRecord$branchArgs<ExtArgs> = {}>(args?: Subset<T, CostRecord$branchArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13247,6 +13678,8 @@ export namespace Prisma {
     readonly retentionRate: FieldRef<"CostRecord", 'Decimal'>
     readonly retentionAmount: FieldRef<"CostRecord", 'Decimal'>
     readonly netAmount: FieldRef<"CostRecord", 'Decimal'>
+    readonly companyId: FieldRef<"CostRecord", 'String'>
+    readonly branchId: FieldRef<"CostRecord", 'String'>
   }
     
 
@@ -13607,6 +14040,36 @@ export namespace Prisma {
      */
     include?: PurchaseOrderInclude<ExtArgs> | null
     where?: PurchaseOrderWhereInput
+  }
+
+  /**
+   * CostRecord.company
+   */
+  export type CostRecord$companyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    where?: CompanyWhereInput
+  }
+
+  /**
+   * CostRecord.branch
+   */
+  export type CostRecord$branchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    where?: BranchWhereInput
   }
 
   /**
@@ -15818,6 +16281,8 @@ export namespace Prisma {
     retentionRate: Decimal | null
     retentionAmount: Decimal | null
     netAmount: Decimal | null
+    companyId: string | null
+    branchId: string | null
   }
 
   export type InvoiceMaxAggregateOutputType = {
@@ -15847,6 +16312,8 @@ export namespace Prisma {
     retentionRate: Decimal | null
     retentionAmount: Decimal | null
     netAmount: Decimal | null
+    companyId: string | null
+    branchId: string | null
   }
 
   export type InvoiceCountAggregateOutputType = {
@@ -15876,6 +16343,8 @@ export namespace Prisma {
     retentionRate: number
     retentionAmount: number
     netAmount: number
+    companyId: number
+    branchId: number
     _all: number
   }
 
@@ -15933,6 +16402,8 @@ export namespace Prisma {
     retentionRate?: true
     retentionAmount?: true
     netAmount?: true
+    companyId?: true
+    branchId?: true
   }
 
   export type InvoiceMaxAggregateInputType = {
@@ -15962,6 +16433,8 @@ export namespace Prisma {
     retentionRate?: true
     retentionAmount?: true
     netAmount?: true
+    companyId?: true
+    branchId?: true
   }
 
   export type InvoiceCountAggregateInputType = {
@@ -15991,6 +16464,8 @@ export namespace Prisma {
     retentionRate?: true
     retentionAmount?: true
     netAmount?: true
+    companyId?: true
+    branchId?: true
     _all?: true
   }
 
@@ -16107,6 +16582,8 @@ export namespace Prisma {
     retentionRate: Decimal
     retentionAmount: Decimal
     netAmount: Decimal
+    companyId: string | null
+    branchId: string | null
     _count: InvoiceCountAggregateOutputType | null
     _avg: InvoiceAvgAggregateOutputType | null
     _sum: InvoiceSumAggregateOutputType | null
@@ -16155,12 +16632,16 @@ export namespace Prisma {
     retentionRate?: boolean
     retentionAmount?: boolean
     netAmount?: boolean
+    companyId?: boolean
+    branchId?: boolean
     deletedBy?: boolean | Invoice$deletedByArgs<ExtArgs>
     contract?: boolean | Invoice$contractArgs<ExtArgs>
     createdBy?: boolean | Invoice$createdByArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
     payments?: boolean | Invoice$paymentsArgs<ExtArgs>
     revenues?: boolean | Invoice$revenuesArgs<ExtArgs>
+    company?: boolean | Invoice$companyArgs<ExtArgs>
+    branch?: boolean | Invoice$branchArgs<ExtArgs>
     _count?: boolean | InvoiceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
 
@@ -16191,10 +16672,14 @@ export namespace Prisma {
     retentionRate?: boolean
     retentionAmount?: boolean
     netAmount?: boolean
+    companyId?: boolean
+    branchId?: boolean
     deletedBy?: boolean | Invoice$deletedByArgs<ExtArgs>
     contract?: boolean | Invoice$contractArgs<ExtArgs>
     createdBy?: boolean | Invoice$createdByArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
+    company?: boolean | Invoice$companyArgs<ExtArgs>
+    branch?: boolean | Invoice$branchArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
 
   export type InvoiceSelectScalar = {
@@ -16224,6 +16709,8 @@ export namespace Prisma {
     retentionRate?: boolean
     retentionAmount?: boolean
     netAmount?: boolean
+    companyId?: boolean
+    branchId?: boolean
   }
 
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16233,6 +16720,8 @@ export namespace Prisma {
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
     payments?: boolean | Invoice$paymentsArgs<ExtArgs>
     revenues?: boolean | Invoice$revenuesArgs<ExtArgs>
+    company?: boolean | Invoice$companyArgs<ExtArgs>
+    branch?: boolean | Invoice$branchArgs<ExtArgs>
     _count?: boolean | InvoiceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type InvoiceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16240,6 +16729,8 @@ export namespace Prisma {
     contract?: boolean | Invoice$contractArgs<ExtArgs>
     createdBy?: boolean | Invoice$createdByArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
+    company?: boolean | Invoice$companyArgs<ExtArgs>
+    branch?: boolean | Invoice$branchArgs<ExtArgs>
   }
 
   export type $InvoicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16251,6 +16742,8 @@ export namespace Prisma {
       wbs: Prisma.$WBSItemPayload<ExtArgs>
       payments: Prisma.$PaymentPayload<ExtArgs>[]
       revenues: Prisma.$RevenuePayload<ExtArgs>[]
+      company: Prisma.$CompanyPayload<ExtArgs> | null
+      branch: Prisma.$BranchPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -16279,6 +16772,8 @@ export namespace Prisma {
       retentionRate: Prisma.Decimal
       retentionAmount: Prisma.Decimal
       netAmount: Prisma.Decimal
+      companyId: string | null
+      branchId: string | null
     }, ExtArgs["result"]["invoice"]>
     composites: {}
   }
@@ -16649,6 +17144,8 @@ export namespace Prisma {
     wbs<T extends WBSItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WBSItemDefaultArgs<ExtArgs>>): Prisma__WBSItemClient<$Result.GetResult<Prisma.$WBSItemPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     payments<T extends Invoice$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany"> | Null>
     revenues<T extends Invoice$revenuesArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$revenuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RevenuePayload<ExtArgs>, T, "findMany"> | Null>
+    company<T extends Invoice$companyArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    branch<T extends Invoice$branchArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$branchArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16704,6 +17201,8 @@ export namespace Prisma {
     readonly retentionRate: FieldRef<"Invoice", 'Decimal'>
     readonly retentionAmount: FieldRef<"Invoice", 'Decimal'>
     readonly netAmount: FieldRef<"Invoice", 'Decimal'>
+    readonly companyId: FieldRef<"Invoice", 'String'>
+    readonly branchId: FieldRef<"Invoice", 'String'>
   }
     
 
@@ -17104,6 +17603,36 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RevenueScalarFieldEnum | RevenueScalarFieldEnum[]
+  }
+
+  /**
+   * Invoice.company
+   */
+  export type Invoice$companyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    where?: CompanyWhereInput
+  }
+
+  /**
+   * Invoice.branch
+   */
+  export type Invoice$branchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    where?: BranchWhereInput
   }
 
   /**
@@ -55413,6 +55942,2105 @@ export namespace Prisma {
 
 
   /**
+   * Model Company
+   */
+
+  export type AggregateCompany = {
+    _count: CompanyCountAggregateOutputType | null
+    _min: CompanyMinAggregateOutputType | null
+    _max: CompanyMaxAggregateOutputType | null
+  }
+
+  export type CompanyMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    code: string | null
+    taxCode: string | null
+    address: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CompanyMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    code: string | null
+    taxCode: string | null
+    address: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CompanyCountAggregateOutputType = {
+    id: number
+    name: number
+    code: number
+    taxCode: number
+    address: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CompanyMinAggregateInputType = {
+    id?: true
+    name?: true
+    code?: true
+    taxCode?: true
+    address?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CompanyMaxAggregateInputType = {
+    id?: true
+    name?: true
+    code?: true
+    taxCode?: true
+    address?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CompanyCountAggregateInputType = {
+    id?: true
+    name?: true
+    code?: true
+    taxCode?: true
+    address?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CompanyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Company to aggregate.
+     */
+    where?: CompanyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Companies to fetch.
+     */
+    orderBy?: CompanyOrderByWithRelationInput | CompanyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CompanyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Companies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Companies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Companies
+    **/
+    _count?: true | CompanyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CompanyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CompanyMaxAggregateInputType
+  }
+
+  export type GetCompanyAggregateType<T extends CompanyAggregateArgs> = {
+        [P in keyof T & keyof AggregateCompany]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCompany[P]>
+      : GetScalarType<T[P], AggregateCompany[P]>
+  }
+
+
+
+
+  export type CompanyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CompanyWhereInput
+    orderBy?: CompanyOrderByWithAggregationInput | CompanyOrderByWithAggregationInput[]
+    by: CompanyScalarFieldEnum[] | CompanyScalarFieldEnum
+    having?: CompanyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CompanyCountAggregateInputType | true
+    _min?: CompanyMinAggregateInputType
+    _max?: CompanyMaxAggregateInputType
+  }
+
+  export type CompanyGroupByOutputType = {
+    id: string
+    name: string
+    code: string
+    taxCode: string | null
+    address: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CompanyCountAggregateOutputType | null
+    _min: CompanyMinAggregateOutputType | null
+    _max: CompanyMaxAggregateOutputType | null
+  }
+
+  type GetCompanyGroupByPayload<T extends CompanyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CompanyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CompanyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CompanyGroupByOutputType[P]>
+            : GetScalarType<T[P], CompanyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CompanySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    code?: boolean
+    taxCode?: boolean
+    address?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    projects?: boolean | Company$projectsArgs<ExtArgs>
+    users?: boolean | Company$usersArgs<ExtArgs>
+    costs?: boolean | Company$costsArgs<ExtArgs>
+    invoices?: boolean | Company$invoicesArgs<ExtArgs>
+    branches?: boolean | Company$branchesArgs<ExtArgs>
+    _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["company"]>
+
+  export type CompanySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    code?: boolean
+    taxCode?: boolean
+    address?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["company"]>
+
+  export type CompanySelectScalar = {
+    id?: boolean
+    name?: boolean
+    code?: boolean
+    taxCode?: boolean
+    address?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    projects?: boolean | Company$projectsArgs<ExtArgs>
+    users?: boolean | Company$usersArgs<ExtArgs>
+    costs?: boolean | Company$costsArgs<ExtArgs>
+    invoices?: boolean | Company$invoicesArgs<ExtArgs>
+    branches?: boolean | Company$branchesArgs<ExtArgs>
+    _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $CompanyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Company"
+    objects: {
+      projects: Prisma.$ProjectPayload<ExtArgs>[]
+      users: Prisma.$UserPayload<ExtArgs>[]
+      costs: Prisma.$CostRecordPayload<ExtArgs>[]
+      invoices: Prisma.$InvoicePayload<ExtArgs>[]
+      branches: Prisma.$BranchPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      code: string
+      taxCode: string | null
+      address: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["company"]>
+    composites: {}
+  }
+
+  type CompanyGetPayload<S extends boolean | null | undefined | CompanyDefaultArgs> = $Result.GetResult<Prisma.$CompanyPayload, S>
+
+  type CompanyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<CompanyFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: CompanyCountAggregateInputType | true
+    }
+
+  export interface CompanyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Company'], meta: { name: 'Company' } }
+    /**
+     * Find zero or one Company that matches the filter.
+     * @param {CompanyFindUniqueArgs} args - Arguments to find a Company
+     * @example
+     * // Get one Company
+     * const company = await prisma.company.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CompanyFindUniqueArgs>(args: SelectSubset<T, CompanyFindUniqueArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Company that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {CompanyFindUniqueOrThrowArgs} args - Arguments to find a Company
+     * @example
+     * // Get one Company
+     * const company = await prisma.company.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CompanyFindUniqueOrThrowArgs>(args: SelectSubset<T, CompanyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Company that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompanyFindFirstArgs} args - Arguments to find a Company
+     * @example
+     * // Get one Company
+     * const company = await prisma.company.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CompanyFindFirstArgs>(args?: SelectSubset<T, CompanyFindFirstArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Company that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompanyFindFirstOrThrowArgs} args - Arguments to find a Company
+     * @example
+     * // Get one Company
+     * const company = await prisma.company.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CompanyFindFirstOrThrowArgs>(args?: SelectSubset<T, CompanyFindFirstOrThrowArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Companies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompanyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Companies
+     * const companies = await prisma.company.findMany()
+     * 
+     * // Get first 10 Companies
+     * const companies = await prisma.company.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const companyWithIdOnly = await prisma.company.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CompanyFindManyArgs>(args?: SelectSubset<T, CompanyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Company.
+     * @param {CompanyCreateArgs} args - Arguments to create a Company.
+     * @example
+     * // Create one Company
+     * const Company = await prisma.company.create({
+     *   data: {
+     *     // ... data to create a Company
+     *   }
+     * })
+     * 
+     */
+    create<T extends CompanyCreateArgs>(args: SelectSubset<T, CompanyCreateArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Companies.
+     * @param {CompanyCreateManyArgs} args - Arguments to create many Companies.
+     * @example
+     * // Create many Companies
+     * const company = await prisma.company.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CompanyCreateManyArgs>(args?: SelectSubset<T, CompanyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Companies and returns the data saved in the database.
+     * @param {CompanyCreateManyAndReturnArgs} args - Arguments to create many Companies.
+     * @example
+     * // Create many Companies
+     * const company = await prisma.company.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Companies and only return the `id`
+     * const companyWithIdOnly = await prisma.company.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CompanyCreateManyAndReturnArgs>(args?: SelectSubset<T, CompanyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Company.
+     * @param {CompanyDeleteArgs} args - Arguments to delete one Company.
+     * @example
+     * // Delete one Company
+     * const Company = await prisma.company.delete({
+     *   where: {
+     *     // ... filter to delete one Company
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CompanyDeleteArgs>(args: SelectSubset<T, CompanyDeleteArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Company.
+     * @param {CompanyUpdateArgs} args - Arguments to update one Company.
+     * @example
+     * // Update one Company
+     * const company = await prisma.company.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CompanyUpdateArgs>(args: SelectSubset<T, CompanyUpdateArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Companies.
+     * @param {CompanyDeleteManyArgs} args - Arguments to filter Companies to delete.
+     * @example
+     * // Delete a few Companies
+     * const { count } = await prisma.company.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CompanyDeleteManyArgs>(args?: SelectSubset<T, CompanyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Companies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompanyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Companies
+     * const company = await prisma.company.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CompanyUpdateManyArgs>(args: SelectSubset<T, CompanyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Company.
+     * @param {CompanyUpsertArgs} args - Arguments to update or create a Company.
+     * @example
+     * // Update or create a Company
+     * const company = await prisma.company.upsert({
+     *   create: {
+     *     // ... data to create a Company
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Company we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CompanyUpsertArgs>(args: SelectSubset<T, CompanyUpsertArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Companies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompanyCountArgs} args - Arguments to filter Companies to count.
+     * @example
+     * // Count the number of Companies
+     * const count = await prisma.company.count({
+     *   where: {
+     *     // ... the filter for the Companies we want to count
+     *   }
+     * })
+    **/
+    count<T extends CompanyCountArgs>(
+      args?: Subset<T, CompanyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CompanyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Company.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompanyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CompanyAggregateArgs>(args: Subset<T, CompanyAggregateArgs>): Prisma.PrismaPromise<GetCompanyAggregateType<T>>
+
+    /**
+     * Group by Company.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompanyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CompanyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CompanyGroupByArgs['orderBy'] }
+        : { orderBy?: CompanyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CompanyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCompanyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Company model
+   */
+  readonly fields: CompanyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Company.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    projects<T extends Company$projectsArgs<ExtArgs> = {}>(args?: Subset<T, Company$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
+    users<T extends Company$usersArgs<ExtArgs> = {}>(args?: Subset<T, Company$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany"> | Null>
+    costs<T extends Company$costsArgs<ExtArgs> = {}>(args?: Subset<T, Company$costsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CostRecordPayload<ExtArgs>, T, "findMany"> | Null>
+    invoices<T extends Company$invoicesArgs<ExtArgs> = {}>(args?: Subset<T, Company$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany"> | Null>
+    branches<T extends Company$branchesArgs<ExtArgs> = {}>(args?: Subset<T, Company$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Company model
+   */ 
+  interface CompanyFieldRefs {
+    readonly id: FieldRef<"Company", 'String'>
+    readonly name: FieldRef<"Company", 'String'>
+    readonly code: FieldRef<"Company", 'String'>
+    readonly taxCode: FieldRef<"Company", 'String'>
+    readonly address: FieldRef<"Company", 'String'>
+    readonly createdAt: FieldRef<"Company", 'DateTime'>
+    readonly updatedAt: FieldRef<"Company", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Company findUnique
+   */
+  export type CompanyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    /**
+     * Filter, which Company to fetch.
+     */
+    where: CompanyWhereUniqueInput
+  }
+
+  /**
+   * Company findUniqueOrThrow
+   */
+  export type CompanyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    /**
+     * Filter, which Company to fetch.
+     */
+    where: CompanyWhereUniqueInput
+  }
+
+  /**
+   * Company findFirst
+   */
+  export type CompanyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    /**
+     * Filter, which Company to fetch.
+     */
+    where?: CompanyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Companies to fetch.
+     */
+    orderBy?: CompanyOrderByWithRelationInput | CompanyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Companies.
+     */
+    cursor?: CompanyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Companies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Companies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Companies.
+     */
+    distinct?: CompanyScalarFieldEnum | CompanyScalarFieldEnum[]
+  }
+
+  /**
+   * Company findFirstOrThrow
+   */
+  export type CompanyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    /**
+     * Filter, which Company to fetch.
+     */
+    where?: CompanyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Companies to fetch.
+     */
+    orderBy?: CompanyOrderByWithRelationInput | CompanyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Companies.
+     */
+    cursor?: CompanyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Companies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Companies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Companies.
+     */
+    distinct?: CompanyScalarFieldEnum | CompanyScalarFieldEnum[]
+  }
+
+  /**
+   * Company findMany
+   */
+  export type CompanyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    /**
+     * Filter, which Companies to fetch.
+     */
+    where?: CompanyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Companies to fetch.
+     */
+    orderBy?: CompanyOrderByWithRelationInput | CompanyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Companies.
+     */
+    cursor?: CompanyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Companies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Companies.
+     */
+    skip?: number
+    distinct?: CompanyScalarFieldEnum | CompanyScalarFieldEnum[]
+  }
+
+  /**
+   * Company create
+   */
+  export type CompanyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Company.
+     */
+    data: XOR<CompanyCreateInput, CompanyUncheckedCreateInput>
+  }
+
+  /**
+   * Company createMany
+   */
+  export type CompanyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Companies.
+     */
+    data: CompanyCreateManyInput | CompanyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Company createManyAndReturn
+   */
+  export type CompanyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Companies.
+     */
+    data: CompanyCreateManyInput | CompanyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Company update
+   */
+  export type CompanyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Company.
+     */
+    data: XOR<CompanyUpdateInput, CompanyUncheckedUpdateInput>
+    /**
+     * Choose, which Company to update.
+     */
+    where: CompanyWhereUniqueInput
+  }
+
+  /**
+   * Company updateMany
+   */
+  export type CompanyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Companies.
+     */
+    data: XOR<CompanyUpdateManyMutationInput, CompanyUncheckedUpdateManyInput>
+    /**
+     * Filter which Companies to update
+     */
+    where?: CompanyWhereInput
+  }
+
+  /**
+   * Company upsert
+   */
+  export type CompanyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Company to update in case it exists.
+     */
+    where: CompanyWhereUniqueInput
+    /**
+     * In case the Company found by the `where` argument doesn't exist, create a new Company with this data.
+     */
+    create: XOR<CompanyCreateInput, CompanyUncheckedCreateInput>
+    /**
+     * In case the Company was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CompanyUpdateInput, CompanyUncheckedUpdateInput>
+  }
+
+  /**
+   * Company delete
+   */
+  export type CompanyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    /**
+     * Filter which Company to delete.
+     */
+    where: CompanyWhereUniqueInput
+  }
+
+  /**
+   * Company deleteMany
+   */
+  export type CompanyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Companies to delete
+     */
+    where?: CompanyWhereInput
+  }
+
+  /**
+   * Company.projects
+   */
+  export type Company$projectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    where?: ProjectWhereInput
+    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    cursor?: ProjectWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+  }
+
+  /**
+   * Company.users
+   */
+  export type Company$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * Company.costs
+   */
+  export type Company$costsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CostRecord
+     */
+    select?: CostRecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CostRecordInclude<ExtArgs> | null
+    where?: CostRecordWhereInput
+    orderBy?: CostRecordOrderByWithRelationInput | CostRecordOrderByWithRelationInput[]
+    cursor?: CostRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CostRecordScalarFieldEnum | CostRecordScalarFieldEnum[]
+  }
+
+  /**
+   * Company.invoices
+   */
+  export type Company$invoicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Invoice
+     */
+    select?: InvoiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InvoiceInclude<ExtArgs> | null
+    where?: InvoiceWhereInput
+    orderBy?: InvoiceOrderByWithRelationInput | InvoiceOrderByWithRelationInput[]
+    cursor?: InvoiceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InvoiceScalarFieldEnum | InvoiceScalarFieldEnum[]
+  }
+
+  /**
+   * Company.branches
+   */
+  export type Company$branchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    where?: BranchWhereInput
+    orderBy?: BranchOrderByWithRelationInput | BranchOrderByWithRelationInput[]
+    cursor?: BranchWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BranchScalarFieldEnum | BranchScalarFieldEnum[]
+  }
+
+  /**
+   * Company without action
+   */
+  export type CompanyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Branch
+   */
+
+  export type AggregateBranch = {
+    _count: BranchCountAggregateOutputType | null
+    _min: BranchMinAggregateOutputType | null
+    _max: BranchMaxAggregateOutputType | null
+  }
+
+  export type BranchMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    name: string | null
+    code: string | null
+    address: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BranchMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    name: string | null
+    code: string | null
+    address: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BranchCountAggregateOutputType = {
+    id: number
+    companyId: number
+    name: number
+    code: number
+    address: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BranchMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    name?: true
+    code?: true
+    address?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BranchMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    name?: true
+    code?: true
+    address?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BranchCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    name?: true
+    code?: true
+    address?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BranchAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Branch to aggregate.
+     */
+    where?: BranchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Branches to fetch.
+     */
+    orderBy?: BranchOrderByWithRelationInput | BranchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BranchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Branches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Branches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Branches
+    **/
+    _count?: true | BranchCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BranchMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BranchMaxAggregateInputType
+  }
+
+  export type GetBranchAggregateType<T extends BranchAggregateArgs> = {
+        [P in keyof T & keyof AggregateBranch]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBranch[P]>
+      : GetScalarType<T[P], AggregateBranch[P]>
+  }
+
+
+
+
+  export type BranchGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BranchWhereInput
+    orderBy?: BranchOrderByWithAggregationInput | BranchOrderByWithAggregationInput[]
+    by: BranchScalarFieldEnum[] | BranchScalarFieldEnum
+    having?: BranchScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BranchCountAggregateInputType | true
+    _min?: BranchMinAggregateInputType
+    _max?: BranchMaxAggregateInputType
+  }
+
+  export type BranchGroupByOutputType = {
+    id: string
+    companyId: string
+    name: string
+    code: string
+    address: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: BranchCountAggregateOutputType | null
+    _min: BranchMinAggregateOutputType | null
+    _max: BranchMaxAggregateOutputType | null
+  }
+
+  type GetBranchGroupByPayload<T extends BranchGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BranchGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BranchGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BranchGroupByOutputType[P]>
+            : GetScalarType<T[P], BranchGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BranchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    name?: boolean
+    code?: boolean
+    address?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    projects?: boolean | Branch$projectsArgs<ExtArgs>
+    costs?: boolean | Branch$costsArgs<ExtArgs>
+    invoices?: boolean | Branch$invoicesArgs<ExtArgs>
+    _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["branch"]>
+
+  export type BranchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    name?: boolean
+    code?: boolean
+    address?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["branch"]>
+
+  export type BranchSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    name?: boolean
+    code?: boolean
+    address?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BranchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    projects?: boolean | Branch$projectsArgs<ExtArgs>
+    costs?: boolean | Branch$costsArgs<ExtArgs>
+    invoices?: boolean | Branch$invoicesArgs<ExtArgs>
+    _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type BranchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+
+  export type $BranchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Branch"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      projects: Prisma.$ProjectPayload<ExtArgs>[]
+      costs: Prisma.$CostRecordPayload<ExtArgs>[]
+      invoices: Prisma.$InvoicePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      name: string
+      code: string
+      address: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["branch"]>
+    composites: {}
+  }
+
+  type BranchGetPayload<S extends boolean | null | undefined | BranchDefaultArgs> = $Result.GetResult<Prisma.$BranchPayload, S>
+
+  type BranchCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<BranchFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: BranchCountAggregateInputType | true
+    }
+
+  export interface BranchDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Branch'], meta: { name: 'Branch' } }
+    /**
+     * Find zero or one Branch that matches the filter.
+     * @param {BranchFindUniqueArgs} args - Arguments to find a Branch
+     * @example
+     * // Get one Branch
+     * const branch = await prisma.branch.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BranchFindUniqueArgs>(args: SelectSubset<T, BranchFindUniqueArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Branch that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {BranchFindUniqueOrThrowArgs} args - Arguments to find a Branch
+     * @example
+     * // Get one Branch
+     * const branch = await prisma.branch.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BranchFindUniqueOrThrowArgs>(args: SelectSubset<T, BranchFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Branch that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchFindFirstArgs} args - Arguments to find a Branch
+     * @example
+     * // Get one Branch
+     * const branch = await prisma.branch.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BranchFindFirstArgs>(args?: SelectSubset<T, BranchFindFirstArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Branch that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchFindFirstOrThrowArgs} args - Arguments to find a Branch
+     * @example
+     * // Get one Branch
+     * const branch = await prisma.branch.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BranchFindFirstOrThrowArgs>(args?: SelectSubset<T, BranchFindFirstOrThrowArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Branches that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Branches
+     * const branches = await prisma.branch.findMany()
+     * 
+     * // Get first 10 Branches
+     * const branches = await prisma.branch.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const branchWithIdOnly = await prisma.branch.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BranchFindManyArgs>(args?: SelectSubset<T, BranchFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Branch.
+     * @param {BranchCreateArgs} args - Arguments to create a Branch.
+     * @example
+     * // Create one Branch
+     * const Branch = await prisma.branch.create({
+     *   data: {
+     *     // ... data to create a Branch
+     *   }
+     * })
+     * 
+     */
+    create<T extends BranchCreateArgs>(args: SelectSubset<T, BranchCreateArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Branches.
+     * @param {BranchCreateManyArgs} args - Arguments to create many Branches.
+     * @example
+     * // Create many Branches
+     * const branch = await prisma.branch.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BranchCreateManyArgs>(args?: SelectSubset<T, BranchCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Branches and returns the data saved in the database.
+     * @param {BranchCreateManyAndReturnArgs} args - Arguments to create many Branches.
+     * @example
+     * // Create many Branches
+     * const branch = await prisma.branch.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Branches and only return the `id`
+     * const branchWithIdOnly = await prisma.branch.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BranchCreateManyAndReturnArgs>(args?: SelectSubset<T, BranchCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Branch.
+     * @param {BranchDeleteArgs} args - Arguments to delete one Branch.
+     * @example
+     * // Delete one Branch
+     * const Branch = await prisma.branch.delete({
+     *   where: {
+     *     // ... filter to delete one Branch
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BranchDeleteArgs>(args: SelectSubset<T, BranchDeleteArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Branch.
+     * @param {BranchUpdateArgs} args - Arguments to update one Branch.
+     * @example
+     * // Update one Branch
+     * const branch = await prisma.branch.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BranchUpdateArgs>(args: SelectSubset<T, BranchUpdateArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Branches.
+     * @param {BranchDeleteManyArgs} args - Arguments to filter Branches to delete.
+     * @example
+     * // Delete a few Branches
+     * const { count } = await prisma.branch.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BranchDeleteManyArgs>(args?: SelectSubset<T, BranchDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Branches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Branches
+     * const branch = await prisma.branch.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BranchUpdateManyArgs>(args: SelectSubset<T, BranchUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Branch.
+     * @param {BranchUpsertArgs} args - Arguments to update or create a Branch.
+     * @example
+     * // Update or create a Branch
+     * const branch = await prisma.branch.upsert({
+     *   create: {
+     *     // ... data to create a Branch
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Branch we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BranchUpsertArgs>(args: SelectSubset<T, BranchUpsertArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Branches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchCountArgs} args - Arguments to filter Branches to count.
+     * @example
+     * // Count the number of Branches
+     * const count = await prisma.branch.count({
+     *   where: {
+     *     // ... the filter for the Branches we want to count
+     *   }
+     * })
+    **/
+    count<T extends BranchCountArgs>(
+      args?: Subset<T, BranchCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BranchCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Branch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BranchAggregateArgs>(args: Subset<T, BranchAggregateArgs>): Prisma.PrismaPromise<GetBranchAggregateType<T>>
+
+    /**
+     * Group by Branch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BranchGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BranchGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BranchGroupByArgs['orderBy'] }
+        : { orderBy?: BranchGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BranchGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBranchGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Branch model
+   */
+  readonly fields: BranchFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Branch.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BranchClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    projects<T extends Branch$projectsArgs<ExtArgs> = {}>(args?: Subset<T, Branch$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
+    costs<T extends Branch$costsArgs<ExtArgs> = {}>(args?: Subset<T, Branch$costsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CostRecordPayload<ExtArgs>, T, "findMany"> | Null>
+    invoices<T extends Branch$invoicesArgs<ExtArgs> = {}>(args?: Subset<T, Branch$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Branch model
+   */ 
+  interface BranchFieldRefs {
+    readonly id: FieldRef<"Branch", 'String'>
+    readonly companyId: FieldRef<"Branch", 'String'>
+    readonly name: FieldRef<"Branch", 'String'>
+    readonly code: FieldRef<"Branch", 'String'>
+    readonly address: FieldRef<"Branch", 'String'>
+    readonly createdAt: FieldRef<"Branch", 'DateTime'>
+    readonly updatedAt: FieldRef<"Branch", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Branch findUnique
+   */
+  export type BranchFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * Filter, which Branch to fetch.
+     */
+    where: BranchWhereUniqueInput
+  }
+
+  /**
+   * Branch findUniqueOrThrow
+   */
+  export type BranchFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * Filter, which Branch to fetch.
+     */
+    where: BranchWhereUniqueInput
+  }
+
+  /**
+   * Branch findFirst
+   */
+  export type BranchFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * Filter, which Branch to fetch.
+     */
+    where?: BranchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Branches to fetch.
+     */
+    orderBy?: BranchOrderByWithRelationInput | BranchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Branches.
+     */
+    cursor?: BranchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Branches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Branches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Branches.
+     */
+    distinct?: BranchScalarFieldEnum | BranchScalarFieldEnum[]
+  }
+
+  /**
+   * Branch findFirstOrThrow
+   */
+  export type BranchFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * Filter, which Branch to fetch.
+     */
+    where?: BranchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Branches to fetch.
+     */
+    orderBy?: BranchOrderByWithRelationInput | BranchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Branches.
+     */
+    cursor?: BranchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Branches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Branches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Branches.
+     */
+    distinct?: BranchScalarFieldEnum | BranchScalarFieldEnum[]
+  }
+
+  /**
+   * Branch findMany
+   */
+  export type BranchFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * Filter, which Branches to fetch.
+     */
+    where?: BranchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Branches to fetch.
+     */
+    orderBy?: BranchOrderByWithRelationInput | BranchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Branches.
+     */
+    cursor?: BranchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Branches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Branches.
+     */
+    skip?: number
+    distinct?: BranchScalarFieldEnum | BranchScalarFieldEnum[]
+  }
+
+  /**
+   * Branch create
+   */
+  export type BranchCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Branch.
+     */
+    data: XOR<BranchCreateInput, BranchUncheckedCreateInput>
+  }
+
+  /**
+   * Branch createMany
+   */
+  export type BranchCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Branches.
+     */
+    data: BranchCreateManyInput | BranchCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Branch createManyAndReturn
+   */
+  export type BranchCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Branches.
+     */
+    data: BranchCreateManyInput | BranchCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Branch update
+   */
+  export type BranchUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Branch.
+     */
+    data: XOR<BranchUpdateInput, BranchUncheckedUpdateInput>
+    /**
+     * Choose, which Branch to update.
+     */
+    where: BranchWhereUniqueInput
+  }
+
+  /**
+   * Branch updateMany
+   */
+  export type BranchUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Branches.
+     */
+    data: XOR<BranchUpdateManyMutationInput, BranchUncheckedUpdateManyInput>
+    /**
+     * Filter which Branches to update
+     */
+    where?: BranchWhereInput
+  }
+
+  /**
+   * Branch upsert
+   */
+  export type BranchUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Branch to update in case it exists.
+     */
+    where: BranchWhereUniqueInput
+    /**
+     * In case the Branch found by the `where` argument doesn't exist, create a new Branch with this data.
+     */
+    create: XOR<BranchCreateInput, BranchUncheckedCreateInput>
+    /**
+     * In case the Branch was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BranchUpdateInput, BranchUncheckedUpdateInput>
+  }
+
+  /**
+   * Branch delete
+   */
+  export type BranchDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    /**
+     * Filter which Branch to delete.
+     */
+    where: BranchWhereUniqueInput
+  }
+
+  /**
+   * Branch deleteMany
+   */
+  export type BranchDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Branches to delete
+     */
+    where?: BranchWhereInput
+  }
+
+  /**
+   * Branch.projects
+   */
+  export type Branch$projectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    where?: ProjectWhereInput
+    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    cursor?: ProjectWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+  }
+
+  /**
+   * Branch.costs
+   */
+  export type Branch$costsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CostRecord
+     */
+    select?: CostRecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CostRecordInclude<ExtArgs> | null
+    where?: CostRecordWhereInput
+    orderBy?: CostRecordOrderByWithRelationInput | CostRecordOrderByWithRelationInput[]
+    cursor?: CostRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CostRecordScalarFieldEnum | CostRecordScalarFieldEnum[]
+  }
+
+  /**
+   * Branch.invoices
+   */
+  export type Branch$invoicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Invoice
+     */
+    select?: InvoiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InvoiceInclude<ExtArgs> | null
+    where?: InvoiceWhereInput
+    orderBy?: InvoiceOrderByWithRelationInput | InvoiceOrderByWithRelationInput[]
+    cursor?: InvoiceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InvoiceScalarFieldEnum | InvoiceScalarFieldEnum[]
+  }
+
+  /**
+   * Branch without action
+   */
+  export type BranchDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -55433,7 +58061,8 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     deletedAt: 'deletedAt',
-    role: 'role'
+    role: 'role',
+    companyId: 'companyId'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -55464,7 +58093,9 @@ export namespace Prisma {
     contractValue: 'contractValue',
     endDate: 'endDate',
     startDate: 'startDate',
-    totalBudget: 'totalBudget'
+    totalBudget: 'totalBudget',
+    companyId: 'companyId',
+    branchId: 'branchId'
   };
 
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
@@ -55531,7 +58162,9 @@ export namespace Prisma {
     vatAmount: 'vatAmount',
     retentionRate: 'retentionRate',
     retentionAmount: 'retentionAmount',
-    netAmount: 'netAmount'
+    netAmount: 'netAmount',
+    companyId: 'companyId',
+    branchId: 'branchId'
   };
 
   export type CostRecordScalarFieldEnum = (typeof CostRecordScalarFieldEnum)[keyof typeof CostRecordScalarFieldEnum]
@@ -55596,7 +58229,9 @@ export namespace Prisma {
     vatAmount: 'vatAmount',
     retentionRate: 'retentionRate',
     retentionAmount: 'retentionAmount',
-    netAmount: 'netAmount'
+    netAmount: 'netAmount',
+    companyId: 'companyId',
+    branchId: 'branchId'
   };
 
   export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
@@ -56198,6 +58833,32 @@ export namespace Prisma {
   export type QuotationScalarFieldEnum = (typeof QuotationScalarFieldEnum)[keyof typeof QuotationScalarFieldEnum]
 
 
+  export const CompanyScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    code: 'code',
+    taxCode: 'taxCode',
+    address: 'address',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
+
+
+  export const BranchScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    name: 'name',
+    code: 'code',
+    address: 'address',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BranchScalarFieldEnum = (typeof BranchScalarFieldEnum)[keyof typeof BranchScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -56531,6 +59192,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    companyId?: StringNullableFilter<"User"> | string | null
     ActivityFeed?: ActivityFeedListRelationFilter
     ApprovalRequest?: ApprovalRequestListRelationFilter
     ApprovalStep?: ApprovalStepListRelationFilter
@@ -56557,6 +59219,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordListRelationFilter
     invoicesDeleted?: InvoiceListRelationFilter
     paymentsDeleted?: PaymentListRelationFilter
+    company?: XOR<CompanyNullableRelationFilter, CompanyWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -56567,6 +59230,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     role?: SortOrder
+    companyId?: SortOrderInput | SortOrder
     ActivityFeed?: ActivityFeedOrderByRelationAggregateInput
     ApprovalRequest?: ApprovalRequestOrderByRelationAggregateInput
     ApprovalStep?: ApprovalStepOrderByRelationAggregateInput
@@ -56593,6 +59257,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordOrderByRelationAggregateInput
     invoicesDeleted?: InvoiceOrderByRelationAggregateInput
     paymentsDeleted?: PaymentOrderByRelationAggregateInput
+    company?: CompanyOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -56606,6 +59271,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    companyId?: StringNullableFilter<"User"> | string | null
     ActivityFeed?: ActivityFeedListRelationFilter
     ApprovalRequest?: ApprovalRequestListRelationFilter
     ApprovalStep?: ApprovalStepListRelationFilter
@@ -56632,6 +59298,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordListRelationFilter
     invoicesDeleted?: InvoiceListRelationFilter
     paymentsDeleted?: PaymentListRelationFilter
+    company?: XOR<CompanyNullableRelationFilter, CompanyWhereInput> | null
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -56642,6 +59309,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     role?: SortOrder
+    companyId?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -56658,6 +59326,7 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
+    companyId?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type CategoryWhereInput = {
@@ -56733,6 +59402,8 @@ export namespace Prisma {
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     totalBudget?: DecimalFilter<"Project"> | Decimal | DecimalJsLike | number | string
+    companyId?: StringNullableFilter<"Project"> | string | null
+    branchId?: StringNullableFilter<"Project"> | string | null
     deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     ActivityFeed?: ActivityFeedListRelationFilter
     ApprovalRequest?: ApprovalRequestListRelationFilter
@@ -56750,6 +59421,8 @@ export namespace Prisma {
     SiteLog?: SiteLogListRelationFilter
     tasks?: TaskListRelationFilter
     wbsItems?: WBSItemListRelationFilter
+    company?: XOR<CompanyNullableRelationFilter, CompanyWhereInput> | null
+    branch?: XOR<BranchNullableRelationFilter, BranchWhereInput> | null
   }
 
   export type ProjectOrderByWithRelationInput = {
@@ -56767,6 +59440,8 @@ export namespace Prisma {
     endDate?: SortOrderInput | SortOrder
     startDate?: SortOrderInput | SortOrder
     totalBudget?: SortOrder
+    companyId?: SortOrderInput | SortOrder
+    branchId?: SortOrderInput | SortOrder
     deletedBy?: UserOrderByWithRelationInput
     ActivityFeed?: ActivityFeedOrderByRelationAggregateInput
     ApprovalRequest?: ApprovalRequestOrderByRelationAggregateInput
@@ -56784,6 +59459,8 @@ export namespace Prisma {
     SiteLog?: SiteLogOrderByRelationAggregateInput
     tasks?: TaskOrderByRelationAggregateInput
     wbsItems?: WBSItemOrderByRelationAggregateInput
+    company?: CompanyOrderByWithRelationInput
+    branch?: BranchOrderByWithRelationInput
   }
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -56804,6 +59481,8 @@ export namespace Prisma {
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     totalBudget?: DecimalFilter<"Project"> | Decimal | DecimalJsLike | number | string
+    companyId?: StringNullableFilter<"Project"> | string | null
+    branchId?: StringNullableFilter<"Project"> | string | null
     deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     ActivityFeed?: ActivityFeedListRelationFilter
     ApprovalRequest?: ApprovalRequestListRelationFilter
@@ -56821,6 +59500,8 @@ export namespace Prisma {
     SiteLog?: SiteLogListRelationFilter
     tasks?: TaskListRelationFilter
     wbsItems?: WBSItemListRelationFilter
+    company?: XOR<CompanyNullableRelationFilter, CompanyWhereInput> | null
+    branch?: XOR<BranchNullableRelationFilter, BranchWhereInput> | null
   }, "id">
 
   export type ProjectOrderByWithAggregationInput = {
@@ -56838,6 +59519,8 @@ export namespace Prisma {
     endDate?: SortOrderInput | SortOrder
     startDate?: SortOrderInput | SortOrder
     totalBudget?: SortOrder
+    companyId?: SortOrderInput | SortOrder
+    branchId?: SortOrderInput | SortOrder
     _count?: ProjectCountOrderByAggregateInput
     _avg?: ProjectAvgOrderByAggregateInput
     _max?: ProjectMaxOrderByAggregateInput
@@ -56863,6 +59546,8 @@ export namespace Prisma {
     endDate?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     startDate?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     totalBudget?: DecimalWithAggregatesFilter<"Project"> | Decimal | DecimalJsLike | number | string
+    companyId?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    branchId?: StringNullableWithAggregatesFilter<"Project"> | string | null
   }
 
   export type TaskWhereInput = {
@@ -57120,10 +59805,14 @@ export namespace Prisma {
     retentionRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    companyId?: StringNullableFilter<"CostRecord"> | string | null
+    branchId?: StringNullableFilter<"CostRecord"> | string | null
     deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     purchaseOrder?: XOR<PurchaseOrderNullableRelationFilter, PurchaseOrderWhereInput> | null
     wbs?: XOR<WBSItemRelationFilter, WBSItemWhereInput>
+    company?: XOR<CompanyNullableRelationFilter, CompanyWhereInput> | null
+    branch?: XOR<BranchNullableRelationFilter, BranchWhereInput> | null
   }
 
   export type CostRecordOrderByWithRelationInput = {
@@ -57152,10 +59841,14 @@ export namespace Prisma {
     retentionRate?: SortOrder
     retentionAmount?: SortOrder
     netAmount?: SortOrder
+    companyId?: SortOrderInput | SortOrder
+    branchId?: SortOrderInput | SortOrder
     deletedBy?: UserOrderByWithRelationInput
     createdBy?: UserOrderByWithRelationInput
     purchaseOrder?: PurchaseOrderOrderByWithRelationInput
     wbs?: WBSItemOrderByWithRelationInput
+    company?: CompanyOrderByWithRelationInput
+    branch?: BranchOrderByWithRelationInput
   }
 
   export type CostRecordWhereUniqueInput = Prisma.AtLeast<{
@@ -57187,10 +59880,14 @@ export namespace Prisma {
     retentionRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    companyId?: StringNullableFilter<"CostRecord"> | string | null
+    branchId?: StringNullableFilter<"CostRecord"> | string | null
     deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     purchaseOrder?: XOR<PurchaseOrderNullableRelationFilter, PurchaseOrderWhereInput> | null
     wbs?: XOR<WBSItemRelationFilter, WBSItemWhereInput>
+    company?: XOR<CompanyNullableRelationFilter, CompanyWhereInput> | null
+    branch?: XOR<BranchNullableRelationFilter, BranchWhereInput> | null
   }, "id" | "requestId">
 
   export type CostRecordOrderByWithAggregationInput = {
@@ -57219,6 +59916,8 @@ export namespace Prisma {
     retentionRate?: SortOrder
     retentionAmount?: SortOrder
     netAmount?: SortOrder
+    companyId?: SortOrderInput | SortOrder
+    branchId?: SortOrderInput | SortOrder
     _count?: CostRecordCountOrderByAggregateInput
     _avg?: CostRecordAvgOrderByAggregateInput
     _max?: CostRecordMaxOrderByAggregateInput
@@ -57255,6 +59954,8 @@ export namespace Prisma {
     retentionRate?: DecimalWithAggregatesFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalWithAggregatesFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalWithAggregatesFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    companyId?: StringNullableWithAggregatesFilter<"CostRecord"> | string | null
+    branchId?: StringNullableWithAggregatesFilter<"CostRecord"> | string | null
   }
 
   export type BudgetRecordWhereInput = {
@@ -57465,12 +60166,16 @@ export namespace Prisma {
     retentionRate?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    companyId?: StringNullableFilter<"Invoice"> | string | null
+    branchId?: StringNullableFilter<"Invoice"> | string | null
     deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     contract?: XOR<ContractNullableRelationFilter, ContractWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     wbs?: XOR<WBSItemRelationFilter, WBSItemWhereInput>
     payments?: PaymentListRelationFilter
     revenues?: RevenueListRelationFilter
+    company?: XOR<CompanyNullableRelationFilter, CompanyWhereInput> | null
+    branch?: XOR<BranchNullableRelationFilter, BranchWhereInput> | null
   }
 
   export type InvoiceOrderByWithRelationInput = {
@@ -57500,12 +60205,16 @@ export namespace Prisma {
     retentionRate?: SortOrder
     retentionAmount?: SortOrder
     netAmount?: SortOrder
+    companyId?: SortOrderInput | SortOrder
+    branchId?: SortOrderInput | SortOrder
     deletedBy?: UserOrderByWithRelationInput
     contract?: ContractOrderByWithRelationInput
     createdBy?: UserOrderByWithRelationInput
     wbs?: WBSItemOrderByWithRelationInput
     payments?: PaymentOrderByRelationAggregateInput
     revenues?: RevenueOrderByRelationAggregateInput
+    company?: CompanyOrderByWithRelationInput
+    branch?: BranchOrderByWithRelationInput
   }
 
   export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
@@ -57538,12 +60247,16 @@ export namespace Prisma {
     retentionRate?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    companyId?: StringNullableFilter<"Invoice"> | string | null
+    branchId?: StringNullableFilter<"Invoice"> | string | null
     deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     contract?: XOR<ContractNullableRelationFilter, ContractWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     wbs?: XOR<WBSItemRelationFilter, WBSItemWhereInput>
     payments?: PaymentListRelationFilter
     revenues?: RevenueListRelationFilter
+    company?: XOR<CompanyNullableRelationFilter, CompanyWhereInput> | null
+    branch?: XOR<BranchNullableRelationFilter, BranchWhereInput> | null
   }, "id" | "requestId">
 
   export type InvoiceOrderByWithAggregationInput = {
@@ -57573,6 +60286,8 @@ export namespace Prisma {
     retentionRate?: SortOrder
     retentionAmount?: SortOrder
     netAmount?: SortOrder
+    companyId?: SortOrderInput | SortOrder
+    branchId?: SortOrderInput | SortOrder
     _count?: InvoiceCountOrderByAggregateInput
     _avg?: InvoiceAvgOrderByAggregateInput
     _max?: InvoiceMaxOrderByAggregateInput
@@ -57610,6 +60325,8 @@ export namespace Prisma {
     retentionRate?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    companyId?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
+    branchId?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
   }
 
   export type PaymentWhereInput = {
@@ -60736,6 +63453,157 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Quotation"> | Date | string
   }
 
+  export type CompanyWhereInput = {
+    AND?: CompanyWhereInput | CompanyWhereInput[]
+    OR?: CompanyWhereInput[]
+    NOT?: CompanyWhereInput | CompanyWhereInput[]
+    id?: StringFilter<"Company"> | string
+    name?: StringFilter<"Company"> | string
+    code?: StringFilter<"Company"> | string
+    taxCode?: StringNullableFilter<"Company"> | string | null
+    address?: StringNullableFilter<"Company"> | string | null
+    createdAt?: DateTimeFilter<"Company"> | Date | string
+    updatedAt?: DateTimeFilter<"Company"> | Date | string
+    projects?: ProjectListRelationFilter
+    users?: UserListRelationFilter
+    costs?: CostRecordListRelationFilter
+    invoices?: InvoiceListRelationFilter
+    branches?: BranchListRelationFilter
+  }
+
+  export type CompanyOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    taxCode?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    projects?: ProjectOrderByRelationAggregateInput
+    users?: UserOrderByRelationAggregateInput
+    costs?: CostRecordOrderByRelationAggregateInput
+    invoices?: InvoiceOrderByRelationAggregateInput
+    branches?: BranchOrderByRelationAggregateInput
+  }
+
+  export type CompanyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    AND?: CompanyWhereInput | CompanyWhereInput[]
+    OR?: CompanyWhereInput[]
+    NOT?: CompanyWhereInput | CompanyWhereInput[]
+    name?: StringFilter<"Company"> | string
+    taxCode?: StringNullableFilter<"Company"> | string | null
+    address?: StringNullableFilter<"Company"> | string | null
+    createdAt?: DateTimeFilter<"Company"> | Date | string
+    updatedAt?: DateTimeFilter<"Company"> | Date | string
+    projects?: ProjectListRelationFilter
+    users?: UserListRelationFilter
+    costs?: CostRecordListRelationFilter
+    invoices?: InvoiceListRelationFilter
+    branches?: BranchListRelationFilter
+  }, "id" | "code">
+
+  export type CompanyOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    taxCode?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CompanyCountOrderByAggregateInput
+    _max?: CompanyMaxOrderByAggregateInput
+    _min?: CompanyMinOrderByAggregateInput
+  }
+
+  export type CompanyScalarWhereWithAggregatesInput = {
+    AND?: CompanyScalarWhereWithAggregatesInput | CompanyScalarWhereWithAggregatesInput[]
+    OR?: CompanyScalarWhereWithAggregatesInput[]
+    NOT?: CompanyScalarWhereWithAggregatesInput | CompanyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Company"> | string
+    name?: StringWithAggregatesFilter<"Company"> | string
+    code?: StringWithAggregatesFilter<"Company"> | string
+    taxCode?: StringNullableWithAggregatesFilter<"Company"> | string | null
+    address?: StringNullableWithAggregatesFilter<"Company"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
+  }
+
+  export type BranchWhereInput = {
+    AND?: BranchWhereInput | BranchWhereInput[]
+    OR?: BranchWhereInput[]
+    NOT?: BranchWhereInput | BranchWhereInput[]
+    id?: StringFilter<"Branch"> | string
+    companyId?: StringFilter<"Branch"> | string
+    name?: StringFilter<"Branch"> | string
+    code?: StringFilter<"Branch"> | string
+    address?: StringNullableFilter<"Branch"> | string | null
+    createdAt?: DateTimeFilter<"Branch"> | Date | string
+    updatedAt?: DateTimeFilter<"Branch"> | Date | string
+    company?: XOR<CompanyRelationFilter, CompanyWhereInput>
+    projects?: ProjectListRelationFilter
+    costs?: CostRecordListRelationFilter
+    invoices?: InvoiceListRelationFilter
+  }
+
+  export type BranchOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    address?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    company?: CompanyOrderByWithRelationInput
+    projects?: ProjectOrderByRelationAggregateInput
+    costs?: CostRecordOrderByRelationAggregateInput
+    invoices?: InvoiceOrderByRelationAggregateInput
+  }
+
+  export type BranchWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    AND?: BranchWhereInput | BranchWhereInput[]
+    OR?: BranchWhereInput[]
+    NOT?: BranchWhereInput | BranchWhereInput[]
+    companyId?: StringFilter<"Branch"> | string
+    name?: StringFilter<"Branch"> | string
+    address?: StringNullableFilter<"Branch"> | string | null
+    createdAt?: DateTimeFilter<"Branch"> | Date | string
+    updatedAt?: DateTimeFilter<"Branch"> | Date | string
+    company?: XOR<CompanyRelationFilter, CompanyWhereInput>
+    projects?: ProjectListRelationFilter
+    costs?: CostRecordListRelationFilter
+    invoices?: InvoiceListRelationFilter
+  }, "id" | "code">
+
+  export type BranchOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    address?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BranchCountOrderByAggregateInput
+    _max?: BranchMaxOrderByAggregateInput
+    _min?: BranchMinOrderByAggregateInput
+  }
+
+  export type BranchScalarWhereWithAggregatesInput = {
+    AND?: BranchScalarWhereWithAggregatesInput | BranchScalarWhereWithAggregatesInput[]
+    OR?: BranchScalarWhereWithAggregatesInput[]
+    NOT?: BranchScalarWhereWithAggregatesInput | BranchScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Branch"> | string
+    companyId?: StringWithAggregatesFilter<"Branch"> | string
+    name?: StringWithAggregatesFilter<"Branch"> | string
+    code?: StringWithAggregatesFilter<"Branch"> | string
+    address?: StringNullableWithAggregatesFilter<"Branch"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Branch"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Branch"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -60770,6 +63638,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -60780,6 +63649,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -60842,6 +63712,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -60852,6 +63723,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -60888,6 +63760,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -60908,6 +63781,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CategoryCreateInput = {
@@ -61000,6 +63874,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateInput = {
@@ -61017,6 +63893,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -61064,6 +63942,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateInput = {
@@ -61081,6 +63961,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -61113,6 +63995,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type ProjectUpdateManyMutationInput = {
@@ -61145,6 +64029,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TaskCreateInput = {
@@ -61417,6 +64303,8 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutCostsCreatedInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutCostRecordsInput
     wbs: WBSItemCreateNestedOneWithoutCostsInput
+    company?: CompanyCreateNestedOneWithoutCostsInput
+    branch?: BranchCreateNestedOneWithoutCostsInput
   }
 
   export type CostRecordUncheckedCreateInput = {
@@ -61445,6 +64333,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type CostRecordUpdateInput = {
@@ -61473,6 +64363,8 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutCostsCreatedNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutCostRecordsNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutCostsNestedInput
+    company?: CompanyUpdateOneWithoutCostsNestedInput
+    branch?: BranchUpdateOneWithoutCostsNestedInput
   }
 
   export type CostRecordUncheckedUpdateInput = {
@@ -61501,6 +64393,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CostRecordCreateManyInput = {
@@ -61529,6 +64423,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type CostRecordUpdateManyMutationInput = {
@@ -61581,6 +64477,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BudgetRecordCreateInput = {
@@ -61796,6 +64694,8 @@ export namespace Prisma {
     wbs: WBSItemCreateNestedOneWithoutInvoicesInput
     payments?: PaymentCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueCreateNestedManyWithoutInvoiceInput
+    company?: CompanyCreateNestedOneWithoutInvoicesInput
+    branch?: BranchCreateNestedOneWithoutInvoicesInput
   }
 
   export type InvoiceUncheckedCreateInput = {
@@ -61825,6 +64725,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
   }
@@ -61858,6 +64760,8 @@ export namespace Prisma {
     wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
     payments?: PaymentUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUpdateManyWithoutInvoiceNestedInput
+    company?: CompanyUpdateOneWithoutInvoicesNestedInput
+    branch?: BranchUpdateOneWithoutInvoicesNestedInput
   }
 
   export type InvoiceUncheckedUpdateInput = {
@@ -61887,6 +64791,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
   }
@@ -61918,6 +64824,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type InvoiceUpdateManyMutationInput = {
@@ -61972,6 +64880,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PaymentCreateInput = {
@@ -65387,6 +68297,177 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CompanyCreateInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    users?: UserCreateNestedManyWithoutCompanyInput
+    costs?: CostRecordCreateNestedManyWithoutCompanyInput
+    invoices?: InvoiceCreateNestedManyWithoutCompanyInput
+    branches?: BranchCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    costs?: CostRecordUncheckedCreateNestedManyWithoutCompanyInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutCompanyInput
+    branches?: BranchUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    costs?: CostRecordUpdateManyWithoutCompanyNestedInput
+    invoices?: InvoiceUpdateManyWithoutCompanyNestedInput
+    branches?: BranchUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    costs?: CostRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutCompanyNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyCreateManyInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CompanyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CompanyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchCreateInput = {
+    id?: string
+    name: string
+    code: string
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutBranchesInput
+    projects?: ProjectCreateNestedManyWithoutBranchInput
+    costs?: CostRecordCreateNestedManyWithoutBranchInput
+    invoices?: InvoiceCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    name: string
+    code: string
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectUncheckedCreateNestedManyWithoutBranchInput
+    costs?: CostRecordUncheckedCreateNestedManyWithoutBranchInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutBranchesNestedInput
+    projects?: ProjectUpdateManyWithoutBranchNestedInput
+    costs?: CostRecordUpdateManyWithoutBranchNestedInput
+    invoices?: InvoiceUpdateManyWithoutBranchNestedInput
+  }
+
+  export type BranchUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUncheckedUpdateManyWithoutBranchNestedInput
+    costs?: CostRecordUncheckedUpdateManyWithoutBranchNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutBranchNestedInput
+  }
+
+  export type BranchCreateManyInput = {
+    id?: string
+    companyId: string
+    name: string
+    code: string
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BranchUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BranchUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -65577,6 +68658,11 @@ export namespace Prisma {
     none?: PaymentWhereInput
   }
 
+  export type CompanyNullableRelationFilter = {
+    is?: CompanyWhereInput | null
+    isNot?: CompanyWhereInput | null
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -65674,6 +68760,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrder
     role?: SortOrder
+    companyId?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -65684,6 +68771,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrder
     role?: SortOrder
+    companyId?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -65694,6 +68782,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrder
     role?: SortOrder
+    companyId?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -65876,6 +68965,11 @@ export namespace Prisma {
     none?: SiteLogWhereInput
   }
 
+  export type BranchNullableRelationFilter = {
+    is?: BranchWhereInput | null
+    isNot?: BranchWhereInput | null
+  }
+
   export type BOQItemOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -65923,6 +69017,8 @@ export namespace Prisma {
     endDate?: SortOrder
     startDate?: SortOrder
     totalBudget?: SortOrder
+    companyId?: SortOrder
+    branchId?: SortOrder
   }
 
   export type ProjectAvgOrderByAggregateInput = {
@@ -65946,6 +69042,8 @@ export namespace Prisma {
     endDate?: SortOrder
     startDate?: SortOrder
     totalBudget?: SortOrder
+    companyId?: SortOrder
+    branchId?: SortOrder
   }
 
   export type ProjectMinOrderByAggregateInput = {
@@ -65963,6 +69061,8 @@ export namespace Prisma {
     endDate?: SortOrder
     startDate?: SortOrder
     totalBudget?: SortOrder
+    companyId?: SortOrder
+    branchId?: SortOrder
   }
 
   export type ProjectSumOrderByAggregateInput = {
@@ -66232,6 +69332,8 @@ export namespace Prisma {
     retentionRate?: SortOrder
     retentionAmount?: SortOrder
     netAmount?: SortOrder
+    companyId?: SortOrder
+    branchId?: SortOrder
   }
 
   export type CostRecordAvgOrderByAggregateInput = {
@@ -66272,6 +69374,8 @@ export namespace Prisma {
     retentionRate?: SortOrder
     retentionAmount?: SortOrder
     netAmount?: SortOrder
+    companyId?: SortOrder
+    branchId?: SortOrder
   }
 
   export type CostRecordMinOrderByAggregateInput = {
@@ -66300,6 +69404,8 @@ export namespace Prisma {
     retentionRate?: SortOrder
     retentionAmount?: SortOrder
     netAmount?: SortOrder
+    companyId?: SortOrder
+    branchId?: SortOrder
   }
 
   export type CostRecordSumOrderByAggregateInput = {
@@ -66485,6 +69591,8 @@ export namespace Prisma {
     retentionRate?: SortOrder
     retentionAmount?: SortOrder
     netAmount?: SortOrder
+    companyId?: SortOrder
+    branchId?: SortOrder
   }
 
   export type InvoiceAvgOrderByAggregateInput = {
@@ -66527,6 +69635,8 @@ export namespace Prisma {
     retentionRate?: SortOrder
     retentionAmount?: SortOrder
     netAmount?: SortOrder
+    companyId?: SortOrder
+    branchId?: SortOrder
   }
 
   export type InvoiceMinOrderByAggregateInput = {
@@ -66556,6 +69666,8 @@ export namespace Prisma {
     retentionRate?: SortOrder
     retentionAmount?: SortOrder
     netAmount?: SortOrder
+    companyId?: SortOrder
+    branchId?: SortOrder
   }
 
   export type InvoiceSumOrderByAggregateInput = {
@@ -68716,6 +71828,91 @@ export namespace Prisma {
     leadTimeDays?: SortOrder
   }
 
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
+  }
+
+  export type BranchListRelationFilter = {
+    every?: BranchWhereInput
+    some?: BranchWhereInput
+    none?: BranchWhereInput
+  }
+
+  export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type BranchOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CompanyCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    taxCode?: SortOrder
+    address?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CompanyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    taxCode?: SortOrder
+    address?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CompanyMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    taxCode?: SortOrder
+    address?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CompanyRelationFilter = {
+    is?: CompanyWhereInput
+    isNot?: CompanyWhereInput
+  }
+
+  export type BranchCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    address?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BranchMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    address?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BranchMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    address?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type ActivityFeedCreateNestedManyWithoutUserInput = {
     create?: XOR<ActivityFeedCreateWithoutUserInput, ActivityFeedUncheckedCreateWithoutUserInput> | ActivityFeedCreateWithoutUserInput[] | ActivityFeedUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ActivityFeedCreateOrConnectWithoutUserInput | ActivityFeedCreateOrConnectWithoutUserInput[]
@@ -68895,6 +72092,12 @@ export namespace Prisma {
     connectOrCreate?: PaymentCreateOrConnectWithoutDeletedByInput | PaymentCreateOrConnectWithoutDeletedByInput[]
     createMany?: PaymentCreateManyDeletedByInputEnvelope
     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+  }
+
+  export type CompanyCreateNestedOneWithoutUsersInput = {
+    create?: XOR<CompanyCreateWithoutUsersInput, CompanyUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutUsersInput
+    connect?: CompanyWhereUniqueInput
   }
 
   export type ActivityFeedUncheckedCreateNestedManyWithoutUserInput = {
@@ -69458,6 +72661,16 @@ export namespace Prisma {
     deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
   }
 
+  export type CompanyUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<CompanyCreateWithoutUsersInput, CompanyUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutUsersInput
+    upsert?: CompanyUpsertWithoutUsersInput
+    disconnect?: CompanyWhereInput | boolean
+    delete?: CompanyWhereInput | boolean
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutUsersInput, CompanyUpdateWithoutUsersInput>, CompanyUncheckedUpdateWithoutUsersInput>
+  }
+
   export type ActivityFeedUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<ActivityFeedCreateWithoutUserInput, ActivityFeedUncheckedCreateWithoutUserInput> | ActivityFeedCreateWithoutUserInput[] | ActivityFeedUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ActivityFeedCreateOrConnectWithoutUserInput | ActivityFeedCreateOrConnectWithoutUserInput[]
@@ -69977,6 +73190,18 @@ export namespace Prisma {
     connect?: WBSItemWhereUniqueInput | WBSItemWhereUniqueInput[]
   }
 
+  export type CompanyCreateNestedOneWithoutProjectsInput = {
+    create?: XOR<CompanyCreateWithoutProjectsInput, CompanyUncheckedCreateWithoutProjectsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutProjectsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type BranchCreateNestedOneWithoutProjectsInput = {
+    create?: XOR<BranchCreateWithoutProjectsInput, BranchUncheckedCreateWithoutProjectsInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutProjectsInput
+    connect?: BranchWhereUniqueInput
+  }
+
   export type ActivityFeedUncheckedCreateNestedManyWithoutProjectInput = {
     create?: XOR<ActivityFeedCreateWithoutProjectInput, ActivityFeedUncheckedCreateWithoutProjectInput> | ActivityFeedCreateWithoutProjectInput[] | ActivityFeedUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ActivityFeedCreateOrConnectWithoutProjectInput | ActivityFeedCreateOrConnectWithoutProjectInput[]
@@ -70330,6 +73555,26 @@ export namespace Prisma {
     update?: WBSItemUpdateWithWhereUniqueWithoutProjectInput | WBSItemUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: WBSItemUpdateManyWithWhereWithoutProjectInput | WBSItemUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: WBSItemScalarWhereInput | WBSItemScalarWhereInput[]
+  }
+
+  export type CompanyUpdateOneWithoutProjectsNestedInput = {
+    create?: XOR<CompanyCreateWithoutProjectsInput, CompanyUncheckedCreateWithoutProjectsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutProjectsInput
+    upsert?: CompanyUpsertWithoutProjectsInput
+    disconnect?: CompanyWhereInput | boolean
+    delete?: CompanyWhereInput | boolean
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutProjectsInput, CompanyUpdateWithoutProjectsInput>, CompanyUncheckedUpdateWithoutProjectsInput>
+  }
+
+  export type BranchUpdateOneWithoutProjectsNestedInput = {
+    create?: XOR<BranchCreateWithoutProjectsInput, BranchUncheckedCreateWithoutProjectsInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutProjectsInput
+    upsert?: BranchUpsertWithoutProjectsInput
+    disconnect?: BranchWhereInput | boolean
+    delete?: BranchWhereInput | boolean
+    connect?: BranchWhereUniqueInput
+    update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutProjectsInput, BranchUpdateWithoutProjectsInput>, BranchUncheckedUpdateWithoutProjectsInput>
   }
 
   export type ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput = {
@@ -71082,6 +74327,18 @@ export namespace Prisma {
     connect?: WBSItemWhereUniqueInput
   }
 
+  export type CompanyCreateNestedOneWithoutCostsInput = {
+    create?: XOR<CompanyCreateWithoutCostsInput, CompanyUncheckedCreateWithoutCostsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutCostsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type BranchCreateNestedOneWithoutCostsInput = {
+    create?: XOR<BranchCreateWithoutCostsInput, BranchUncheckedCreateWithoutCostsInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutCostsInput
+    connect?: BranchWhereUniqueInput
+  }
+
   export type EnumCostTypeFieldUpdateOperationsInput = {
     set?: $Enums.CostType
   }
@@ -71130,6 +74387,26 @@ export namespace Prisma {
     upsert?: WBSItemUpsertWithoutCostsInput
     connect?: WBSItemWhereUniqueInput
     update?: XOR<XOR<WBSItemUpdateToOneWithWhereWithoutCostsInput, WBSItemUpdateWithoutCostsInput>, WBSItemUncheckedUpdateWithoutCostsInput>
+  }
+
+  export type CompanyUpdateOneWithoutCostsNestedInput = {
+    create?: XOR<CompanyCreateWithoutCostsInput, CompanyUncheckedCreateWithoutCostsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutCostsInput
+    upsert?: CompanyUpsertWithoutCostsInput
+    disconnect?: CompanyWhereInput | boolean
+    delete?: CompanyWhereInput | boolean
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutCostsInput, CompanyUpdateWithoutCostsInput>, CompanyUncheckedUpdateWithoutCostsInput>
+  }
+
+  export type BranchUpdateOneWithoutCostsNestedInput = {
+    create?: XOR<BranchCreateWithoutCostsInput, BranchUncheckedCreateWithoutCostsInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutCostsInput
+    upsert?: BranchUpsertWithoutCostsInput
+    disconnect?: BranchWhereInput | boolean
+    delete?: BranchWhereInput | boolean
+    connect?: BranchWhereUniqueInput
+    update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutCostsInput, BranchUpdateWithoutCostsInput>, BranchUncheckedUpdateWithoutCostsInput>
   }
 
   export type UserCreateNestedOneWithoutBudgetsCreatedInput = {
@@ -71246,6 +74523,18 @@ export namespace Prisma {
     connect?: RevenueWhereUniqueInput | RevenueWhereUniqueInput[]
   }
 
+  export type CompanyCreateNestedOneWithoutInvoicesInput = {
+    create?: XOR<CompanyCreateWithoutInvoicesInput, CompanyUncheckedCreateWithoutInvoicesInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutInvoicesInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type BranchCreateNestedOneWithoutInvoicesInput = {
+    create?: XOR<BranchCreateWithoutInvoicesInput, BranchUncheckedCreateWithoutInvoicesInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutInvoicesInput
+    connect?: BranchWhereUniqueInput
+  }
+
   export type PaymentUncheckedCreateNestedManyWithoutInvoiceInput = {
     create?: XOR<PaymentCreateWithoutInvoiceInput, PaymentUncheckedCreateWithoutInvoiceInput> | PaymentCreateWithoutInvoiceInput[] | PaymentUncheckedCreateWithoutInvoiceInput[]
     connectOrCreate?: PaymentCreateOrConnectWithoutInvoiceInput | PaymentCreateOrConnectWithoutInvoiceInput[]
@@ -71328,6 +74617,26 @@ export namespace Prisma {
     update?: RevenueUpdateWithWhereUniqueWithoutInvoiceInput | RevenueUpdateWithWhereUniqueWithoutInvoiceInput[]
     updateMany?: RevenueUpdateManyWithWhereWithoutInvoiceInput | RevenueUpdateManyWithWhereWithoutInvoiceInput[]
     deleteMany?: RevenueScalarWhereInput | RevenueScalarWhereInput[]
+  }
+
+  export type CompanyUpdateOneWithoutInvoicesNestedInput = {
+    create?: XOR<CompanyCreateWithoutInvoicesInput, CompanyUncheckedCreateWithoutInvoicesInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutInvoicesInput
+    upsert?: CompanyUpsertWithoutInvoicesInput
+    disconnect?: CompanyWhereInput | boolean
+    delete?: CompanyWhereInput | boolean
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutInvoicesInput, CompanyUpdateWithoutInvoicesInput>, CompanyUncheckedUpdateWithoutInvoicesInput>
+  }
+
+  export type BranchUpdateOneWithoutInvoicesNestedInput = {
+    create?: XOR<BranchCreateWithoutInvoicesInput, BranchUncheckedCreateWithoutInvoicesInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutInvoicesInput
+    upsert?: BranchUpsertWithoutInvoicesInput
+    disconnect?: BranchWhereInput | boolean
+    delete?: BranchWhereInput | boolean
+    connect?: BranchWhereUniqueInput
+    update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutInvoicesInput, BranchUpdateWithoutInvoicesInput>, BranchUncheckedUpdateWithoutInvoicesInput>
   }
 
   export type PaymentUncheckedUpdateManyWithoutInvoiceNestedInput = {
@@ -72846,6 +76155,356 @@ export namespace Prisma {
     update?: XOR<XOR<PurchaseRequestUpdateToOneWithWhereWithoutQuotationsInput, PurchaseRequestUpdateWithoutQuotationsInput>, PurchaseRequestUncheckedUpdateWithoutQuotationsInput>
   }
 
+  export type ProjectCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ProjectCreateWithoutCompanyInput, ProjectUncheckedCreateWithoutCompanyInput> | ProjectCreateWithoutCompanyInput[] | ProjectUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutCompanyInput | ProjectCreateOrConnectWithoutCompanyInput[]
+    createMany?: ProjectCreateManyCompanyInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type UserCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
+    createMany?: UserCreateManyCompanyInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type CostRecordCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<CostRecordCreateWithoutCompanyInput, CostRecordUncheckedCreateWithoutCompanyInput> | CostRecordCreateWithoutCompanyInput[] | CostRecordUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CostRecordCreateOrConnectWithoutCompanyInput | CostRecordCreateOrConnectWithoutCompanyInput[]
+    createMany?: CostRecordCreateManyCompanyInputEnvelope
+    connect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+  }
+
+  export type InvoiceCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<InvoiceCreateWithoutCompanyInput, InvoiceUncheckedCreateWithoutCompanyInput> | InvoiceCreateWithoutCompanyInput[] | InvoiceUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutCompanyInput | InvoiceCreateOrConnectWithoutCompanyInput[]
+    createMany?: InvoiceCreateManyCompanyInputEnvelope
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+  }
+
+  export type BranchCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<BranchCreateWithoutCompanyInput, BranchUncheckedCreateWithoutCompanyInput> | BranchCreateWithoutCompanyInput[] | BranchUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: BranchCreateOrConnectWithoutCompanyInput | BranchCreateOrConnectWithoutCompanyInput[]
+    createMany?: BranchCreateManyCompanyInputEnvelope
+    connect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+  }
+
+  export type ProjectUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ProjectCreateWithoutCompanyInput, ProjectUncheckedCreateWithoutCompanyInput> | ProjectCreateWithoutCompanyInput[] | ProjectUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutCompanyInput | ProjectCreateOrConnectWithoutCompanyInput[]
+    createMany?: ProjectCreateManyCompanyInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
+    createMany?: UserCreateManyCompanyInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type CostRecordUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<CostRecordCreateWithoutCompanyInput, CostRecordUncheckedCreateWithoutCompanyInput> | CostRecordCreateWithoutCompanyInput[] | CostRecordUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CostRecordCreateOrConnectWithoutCompanyInput | CostRecordCreateOrConnectWithoutCompanyInput[]
+    createMany?: CostRecordCreateManyCompanyInputEnvelope
+    connect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+  }
+
+  export type InvoiceUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<InvoiceCreateWithoutCompanyInput, InvoiceUncheckedCreateWithoutCompanyInput> | InvoiceCreateWithoutCompanyInput[] | InvoiceUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutCompanyInput | InvoiceCreateOrConnectWithoutCompanyInput[]
+    createMany?: InvoiceCreateManyCompanyInputEnvelope
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+  }
+
+  export type BranchUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<BranchCreateWithoutCompanyInput, BranchUncheckedCreateWithoutCompanyInput> | BranchCreateWithoutCompanyInput[] | BranchUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: BranchCreateOrConnectWithoutCompanyInput | BranchCreateOrConnectWithoutCompanyInput[]
+    createMany?: BranchCreateManyCompanyInputEnvelope
+    connect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+  }
+
+  export type ProjectUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ProjectCreateWithoutCompanyInput, ProjectUncheckedCreateWithoutCompanyInput> | ProjectCreateWithoutCompanyInput[] | ProjectUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutCompanyInput | ProjectCreateOrConnectWithoutCompanyInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutCompanyInput | ProjectUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ProjectCreateManyCompanyInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutCompanyInput | ProjectUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutCompanyInput | ProjectUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type UserUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutCompanyInput | UserUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: UserCreateManyCompanyInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutCompanyInput | UserUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutCompanyInput | UserUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type CostRecordUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<CostRecordCreateWithoutCompanyInput, CostRecordUncheckedCreateWithoutCompanyInput> | CostRecordCreateWithoutCompanyInput[] | CostRecordUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CostRecordCreateOrConnectWithoutCompanyInput | CostRecordCreateOrConnectWithoutCompanyInput[]
+    upsert?: CostRecordUpsertWithWhereUniqueWithoutCompanyInput | CostRecordUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: CostRecordCreateManyCompanyInputEnvelope
+    set?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    disconnect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    delete?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    connect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    update?: CostRecordUpdateWithWhereUniqueWithoutCompanyInput | CostRecordUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: CostRecordUpdateManyWithWhereWithoutCompanyInput | CostRecordUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: CostRecordScalarWhereInput | CostRecordScalarWhereInput[]
+  }
+
+  export type InvoiceUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<InvoiceCreateWithoutCompanyInput, InvoiceUncheckedCreateWithoutCompanyInput> | InvoiceCreateWithoutCompanyInput[] | InvoiceUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutCompanyInput | InvoiceCreateOrConnectWithoutCompanyInput[]
+    upsert?: InvoiceUpsertWithWhereUniqueWithoutCompanyInput | InvoiceUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: InvoiceCreateManyCompanyInputEnvelope
+    set?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    disconnect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    delete?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    update?: InvoiceUpdateWithWhereUniqueWithoutCompanyInput | InvoiceUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: InvoiceUpdateManyWithWhereWithoutCompanyInput | InvoiceUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
+  }
+
+  export type BranchUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<BranchCreateWithoutCompanyInput, BranchUncheckedCreateWithoutCompanyInput> | BranchCreateWithoutCompanyInput[] | BranchUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: BranchCreateOrConnectWithoutCompanyInput | BranchCreateOrConnectWithoutCompanyInput[]
+    upsert?: BranchUpsertWithWhereUniqueWithoutCompanyInput | BranchUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: BranchCreateManyCompanyInputEnvelope
+    set?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    disconnect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    delete?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    connect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    update?: BranchUpdateWithWhereUniqueWithoutCompanyInput | BranchUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: BranchUpdateManyWithWhereWithoutCompanyInput | BranchUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: BranchScalarWhereInput | BranchScalarWhereInput[]
+  }
+
+  export type ProjectUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ProjectCreateWithoutCompanyInput, ProjectUncheckedCreateWithoutCompanyInput> | ProjectCreateWithoutCompanyInput[] | ProjectUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutCompanyInput | ProjectCreateOrConnectWithoutCompanyInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutCompanyInput | ProjectUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ProjectCreateManyCompanyInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutCompanyInput | ProjectUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutCompanyInput | ProjectUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutCompanyInput | UserUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: UserCreateManyCompanyInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutCompanyInput | UserUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutCompanyInput | UserUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type CostRecordUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<CostRecordCreateWithoutCompanyInput, CostRecordUncheckedCreateWithoutCompanyInput> | CostRecordCreateWithoutCompanyInput[] | CostRecordUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CostRecordCreateOrConnectWithoutCompanyInput | CostRecordCreateOrConnectWithoutCompanyInput[]
+    upsert?: CostRecordUpsertWithWhereUniqueWithoutCompanyInput | CostRecordUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: CostRecordCreateManyCompanyInputEnvelope
+    set?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    disconnect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    delete?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    connect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    update?: CostRecordUpdateWithWhereUniqueWithoutCompanyInput | CostRecordUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: CostRecordUpdateManyWithWhereWithoutCompanyInput | CostRecordUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: CostRecordScalarWhereInput | CostRecordScalarWhereInput[]
+  }
+
+  export type InvoiceUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<InvoiceCreateWithoutCompanyInput, InvoiceUncheckedCreateWithoutCompanyInput> | InvoiceCreateWithoutCompanyInput[] | InvoiceUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutCompanyInput | InvoiceCreateOrConnectWithoutCompanyInput[]
+    upsert?: InvoiceUpsertWithWhereUniqueWithoutCompanyInput | InvoiceUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: InvoiceCreateManyCompanyInputEnvelope
+    set?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    disconnect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    delete?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    update?: InvoiceUpdateWithWhereUniqueWithoutCompanyInput | InvoiceUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: InvoiceUpdateManyWithWhereWithoutCompanyInput | InvoiceUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
+  }
+
+  export type BranchUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<BranchCreateWithoutCompanyInput, BranchUncheckedCreateWithoutCompanyInput> | BranchCreateWithoutCompanyInput[] | BranchUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: BranchCreateOrConnectWithoutCompanyInput | BranchCreateOrConnectWithoutCompanyInput[]
+    upsert?: BranchUpsertWithWhereUniqueWithoutCompanyInput | BranchUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: BranchCreateManyCompanyInputEnvelope
+    set?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    disconnect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    delete?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    connect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+    update?: BranchUpdateWithWhereUniqueWithoutCompanyInput | BranchUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: BranchUpdateManyWithWhereWithoutCompanyInput | BranchUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: BranchScalarWhereInput | BranchScalarWhereInput[]
+  }
+
+  export type CompanyCreateNestedOneWithoutBranchesInput = {
+    create?: XOR<CompanyCreateWithoutBranchesInput, CompanyUncheckedCreateWithoutBranchesInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutBranchesInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type ProjectCreateNestedManyWithoutBranchInput = {
+    create?: XOR<ProjectCreateWithoutBranchInput, ProjectUncheckedCreateWithoutBranchInput> | ProjectCreateWithoutBranchInput[] | ProjectUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutBranchInput | ProjectCreateOrConnectWithoutBranchInput[]
+    createMany?: ProjectCreateManyBranchInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type CostRecordCreateNestedManyWithoutBranchInput = {
+    create?: XOR<CostRecordCreateWithoutBranchInput, CostRecordUncheckedCreateWithoutBranchInput> | CostRecordCreateWithoutBranchInput[] | CostRecordUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: CostRecordCreateOrConnectWithoutBranchInput | CostRecordCreateOrConnectWithoutBranchInput[]
+    createMany?: CostRecordCreateManyBranchInputEnvelope
+    connect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+  }
+
+  export type InvoiceCreateNestedManyWithoutBranchInput = {
+    create?: XOR<InvoiceCreateWithoutBranchInput, InvoiceUncheckedCreateWithoutBranchInput> | InvoiceCreateWithoutBranchInput[] | InvoiceUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutBranchInput | InvoiceCreateOrConnectWithoutBranchInput[]
+    createMany?: InvoiceCreateManyBranchInputEnvelope
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+  }
+
+  export type ProjectUncheckedCreateNestedManyWithoutBranchInput = {
+    create?: XOR<ProjectCreateWithoutBranchInput, ProjectUncheckedCreateWithoutBranchInput> | ProjectCreateWithoutBranchInput[] | ProjectUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutBranchInput | ProjectCreateOrConnectWithoutBranchInput[]
+    createMany?: ProjectCreateManyBranchInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type CostRecordUncheckedCreateNestedManyWithoutBranchInput = {
+    create?: XOR<CostRecordCreateWithoutBranchInput, CostRecordUncheckedCreateWithoutBranchInput> | CostRecordCreateWithoutBranchInput[] | CostRecordUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: CostRecordCreateOrConnectWithoutBranchInput | CostRecordCreateOrConnectWithoutBranchInput[]
+    createMany?: CostRecordCreateManyBranchInputEnvelope
+    connect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+  }
+
+  export type InvoiceUncheckedCreateNestedManyWithoutBranchInput = {
+    create?: XOR<InvoiceCreateWithoutBranchInput, InvoiceUncheckedCreateWithoutBranchInput> | InvoiceCreateWithoutBranchInput[] | InvoiceUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutBranchInput | InvoiceCreateOrConnectWithoutBranchInput[]
+    createMany?: InvoiceCreateManyBranchInputEnvelope
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+  }
+
+  export type CompanyUpdateOneRequiredWithoutBranchesNestedInput = {
+    create?: XOR<CompanyCreateWithoutBranchesInput, CompanyUncheckedCreateWithoutBranchesInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutBranchesInput
+    upsert?: CompanyUpsertWithoutBranchesInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutBranchesInput, CompanyUpdateWithoutBranchesInput>, CompanyUncheckedUpdateWithoutBranchesInput>
+  }
+
+  export type ProjectUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<ProjectCreateWithoutBranchInput, ProjectUncheckedCreateWithoutBranchInput> | ProjectCreateWithoutBranchInput[] | ProjectUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutBranchInput | ProjectCreateOrConnectWithoutBranchInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutBranchInput | ProjectUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: ProjectCreateManyBranchInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutBranchInput | ProjectUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutBranchInput | ProjectUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type CostRecordUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<CostRecordCreateWithoutBranchInput, CostRecordUncheckedCreateWithoutBranchInput> | CostRecordCreateWithoutBranchInput[] | CostRecordUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: CostRecordCreateOrConnectWithoutBranchInput | CostRecordCreateOrConnectWithoutBranchInput[]
+    upsert?: CostRecordUpsertWithWhereUniqueWithoutBranchInput | CostRecordUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: CostRecordCreateManyBranchInputEnvelope
+    set?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    disconnect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    delete?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    connect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    update?: CostRecordUpdateWithWhereUniqueWithoutBranchInput | CostRecordUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: CostRecordUpdateManyWithWhereWithoutBranchInput | CostRecordUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: CostRecordScalarWhereInput | CostRecordScalarWhereInput[]
+  }
+
+  export type InvoiceUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<InvoiceCreateWithoutBranchInput, InvoiceUncheckedCreateWithoutBranchInput> | InvoiceCreateWithoutBranchInput[] | InvoiceUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutBranchInput | InvoiceCreateOrConnectWithoutBranchInput[]
+    upsert?: InvoiceUpsertWithWhereUniqueWithoutBranchInput | InvoiceUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: InvoiceCreateManyBranchInputEnvelope
+    set?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    disconnect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    delete?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    update?: InvoiceUpdateWithWhereUniqueWithoutBranchInput | InvoiceUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: InvoiceUpdateManyWithWhereWithoutBranchInput | InvoiceUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
+  }
+
+  export type ProjectUncheckedUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<ProjectCreateWithoutBranchInput, ProjectUncheckedCreateWithoutBranchInput> | ProjectCreateWithoutBranchInput[] | ProjectUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutBranchInput | ProjectCreateOrConnectWithoutBranchInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutBranchInput | ProjectUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: ProjectCreateManyBranchInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutBranchInput | ProjectUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutBranchInput | ProjectUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type CostRecordUncheckedUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<CostRecordCreateWithoutBranchInput, CostRecordUncheckedCreateWithoutBranchInput> | CostRecordCreateWithoutBranchInput[] | CostRecordUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: CostRecordCreateOrConnectWithoutBranchInput | CostRecordCreateOrConnectWithoutBranchInput[]
+    upsert?: CostRecordUpsertWithWhereUniqueWithoutBranchInput | CostRecordUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: CostRecordCreateManyBranchInputEnvelope
+    set?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    disconnect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    delete?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    connect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    update?: CostRecordUpdateWithWhereUniqueWithoutBranchInput | CostRecordUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: CostRecordUpdateManyWithWhereWithoutBranchInput | CostRecordUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: CostRecordScalarWhereInput | CostRecordScalarWhereInput[]
+  }
+
+  export type InvoiceUncheckedUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<InvoiceCreateWithoutBranchInput, InvoiceUncheckedCreateWithoutBranchInput> | InvoiceCreateWithoutBranchInput[] | InvoiceUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutBranchInput | InvoiceCreateOrConnectWithoutBranchInput[]
+    upsert?: InvoiceUpsertWithWhereUniqueWithoutBranchInput | InvoiceUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: InvoiceCreateManyBranchInputEnvelope
+    set?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    disconnect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    delete?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    update?: InvoiceUpdateWithWhereUniqueWithoutBranchInput | InvoiceUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: InvoiceUpdateManyWithWhereWithoutBranchInput | InvoiceUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -73661,6 +77320,8 @@ export namespace Prisma {
     deletedBy?: UserCreateNestedOneWithoutCostsDeletedInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutCostRecordsInput
     wbs: WBSItemCreateNestedOneWithoutCostsInput
+    company?: CompanyCreateNestedOneWithoutCostsInput
+    branch?: BranchCreateNestedOneWithoutCostsInput
   }
 
   export type CostRecordUncheckedCreateWithoutCreatedByInput = {
@@ -73688,6 +77349,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type CostRecordCreateOrConnectWithoutCreatedByInput = {
@@ -73864,6 +77527,8 @@ export namespace Prisma {
     wbs: WBSItemCreateNestedOneWithoutInvoicesInput
     payments?: PaymentCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueCreateNestedManyWithoutInvoiceInput
+    company?: CompanyCreateNestedOneWithoutInvoicesInput
+    branch?: BranchCreateNestedOneWithoutInvoicesInput
   }
 
   export type InvoiceUncheckedCreateWithoutCreatedByInput = {
@@ -73892,6 +77557,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
   }
@@ -73971,6 +77638,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutOwnerInput = {
@@ -73987,6 +77656,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -74268,6 +77939,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutDeletedByInput = {
@@ -74284,6 +77957,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -74394,6 +78069,8 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutCostsCreatedInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutCostRecordsInput
     wbs: WBSItemCreateNestedOneWithoutCostsInput
+    company?: CompanyCreateNestedOneWithoutCostsInput
+    branch?: BranchCreateNestedOneWithoutCostsInput
   }
 
   export type CostRecordUncheckedCreateWithoutDeletedByInput = {
@@ -74421,6 +78098,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type CostRecordCreateOrConnectWithoutDeletedByInput = {
@@ -74461,6 +78140,8 @@ export namespace Prisma {
     wbs: WBSItemCreateNestedOneWithoutInvoicesInput
     payments?: PaymentCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueCreateNestedManyWithoutInvoiceInput
+    company?: CompanyCreateNestedOneWithoutInvoicesInput
+    branch?: BranchCreateNestedOneWithoutInvoicesInput
   }
 
   export type InvoiceUncheckedCreateWithoutDeletedByInput = {
@@ -74489,6 +78170,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
   }
@@ -74541,6 +78224,39 @@ export namespace Prisma {
   export type PaymentCreateManyDeletedByInputEnvelope = {
     data: PaymentCreateManyDeletedByInput | PaymentCreateManyDeletedByInput[]
     skipDuplicates?: boolean
+  }
+
+  export type CompanyCreateWithoutUsersInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    costs?: CostRecordCreateNestedManyWithoutCompanyInput
+    invoices?: InvoiceCreateNestedManyWithoutCompanyInput
+    branches?: BranchCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutUsersInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    costs?: CostRecordUncheckedCreateNestedManyWithoutCompanyInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutCompanyInput
+    branches?: BranchUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutUsersInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutUsersInput, CompanyUncheckedCreateWithoutUsersInput>
   }
 
   export type ActivityFeedUpsertWithWhereUniqueWithoutUserInput = {
@@ -74817,6 +78533,8 @@ export namespace Prisma {
     retentionRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
+    companyId?: StringNullableFilter<"CostRecord"> | string | null
+    branchId?: StringNullableFilter<"CostRecord"> | string | null
   }
 
   export type DelegationWindowUpsertWithWhereUniqueWithoutUser_DelegationWindow_delegateIdToUserInput = {
@@ -74978,6 +78696,8 @@ export namespace Prisma {
     retentionRate?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    companyId?: StringNullableFilter<"Invoice"> | string | null
+    branchId?: StringNullableFilter<"Invoice"> | string | null
   }
 
   export type ProgressEntryUpsertWithWhereUniqueWithoutUserInput = {
@@ -75046,6 +78766,8 @@ export namespace Prisma {
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     totalBudget?: DecimalFilter<"Project"> | Decimal | DecimalJsLike | number | string
+    companyId?: StringNullableFilter<"Project"> | string | null
+    branchId?: StringNullableFilter<"Project"> | string | null
   }
 
   export type PurchaseOrderUpsertWithWhereUniqueWithoutCreatedByInput = {
@@ -75365,6 +79087,45 @@ export namespace Prisma {
     approvalStatus?: EnumApprovalStatusFilter<"Payment"> | $Enums.ApprovalStatus
   }
 
+  export type CompanyUpsertWithoutUsersInput = {
+    update: XOR<CompanyUpdateWithoutUsersInput, CompanyUncheckedUpdateWithoutUsersInput>
+    create: XOR<CompanyCreateWithoutUsersInput, CompanyUncheckedCreateWithoutUsersInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutUsersInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutUsersInput, CompanyUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type CompanyUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    costs?: CostRecordUpdateManyWithoutCompanyNestedInput
+    invoices?: InvoiceUpdateManyWithoutCompanyNestedInput
+    branches?: BranchUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    costs?: CostRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutCompanyNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
   export type TaskCreateWithoutCategoryInput = {
     id?: string
     title: string
@@ -75452,6 +79213,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutProjectsDeletedInput = {
@@ -75462,6 +79224,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -75827,6 +79590,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutProjectsOwnedInput = {
@@ -75837,6 +79601,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -76161,6 +79926,68 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CompanyCreateWithoutProjectsInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutCompanyInput
+    costs?: CostRecordCreateNestedManyWithoutCompanyInput
+    invoices?: InvoiceCreateNestedManyWithoutCompanyInput
+    branches?: BranchCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutProjectsInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    costs?: CostRecordUncheckedCreateNestedManyWithoutCompanyInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutCompanyInput
+    branches?: BranchUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutProjectsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutProjectsInput, CompanyUncheckedCreateWithoutProjectsInput>
+  }
+
+  export type BranchCreateWithoutProjectsInput = {
+    id?: string
+    name: string
+    code: string
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutBranchesInput
+    costs?: CostRecordCreateNestedManyWithoutBranchInput
+    invoices?: InvoiceCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchUncheckedCreateWithoutProjectsInput = {
+    id?: string
+    companyId: string
+    name: string
+    code: string
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    costs?: CostRecordUncheckedCreateNestedManyWithoutBranchInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchCreateOrConnectWithoutProjectsInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutProjectsInput, BranchUncheckedCreateWithoutProjectsInput>
+  }
+
   export type UserUpsertWithoutProjectsDeletedInput = {
     update: XOR<UserUpdateWithoutProjectsDeletedInput, UserUncheckedUpdateWithoutProjectsDeletedInput>
     create: XOR<UserCreateWithoutProjectsDeletedInput, UserUncheckedCreateWithoutProjectsDeletedInput>
@@ -76205,6 +80032,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsDeletedInput = {
@@ -76215,6 +80043,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -76479,6 +80308,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsOwnedInput = {
@@ -76489,6 +80319,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -76696,6 +80527,80 @@ export namespace Prisma {
     data: XOR<WBSItemUpdateManyMutationInput, WBSItemUncheckedUpdateManyWithoutProjectInput>
   }
 
+  export type CompanyUpsertWithoutProjectsInput = {
+    update: XOR<CompanyUpdateWithoutProjectsInput, CompanyUncheckedUpdateWithoutProjectsInput>
+    create: XOR<CompanyCreateWithoutProjectsInput, CompanyUncheckedCreateWithoutProjectsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutProjectsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutProjectsInput, CompanyUncheckedUpdateWithoutProjectsInput>
+  }
+
+  export type CompanyUpdateWithoutProjectsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    costs?: CostRecordUpdateManyWithoutCompanyNestedInput
+    invoices?: InvoiceUpdateManyWithoutCompanyNestedInput
+    branches?: BranchUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutProjectsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    costs?: CostRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutCompanyNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type BranchUpsertWithoutProjectsInput = {
+    update: XOR<BranchUpdateWithoutProjectsInput, BranchUncheckedUpdateWithoutProjectsInput>
+    create: XOR<BranchCreateWithoutProjectsInput, BranchUncheckedCreateWithoutProjectsInput>
+    where?: BranchWhereInput
+  }
+
+  export type BranchUpdateToOneWithWhereWithoutProjectsInput = {
+    where?: BranchWhereInput
+    data: XOR<BranchUpdateWithoutProjectsInput, BranchUncheckedUpdateWithoutProjectsInput>
+  }
+
+  export type BranchUpdateWithoutProjectsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutBranchesNestedInput
+    costs?: CostRecordUpdateManyWithoutBranchNestedInput
+    invoices?: InvoiceUpdateManyWithoutBranchNestedInput
+  }
+
+  export type BranchUncheckedUpdateWithoutProjectsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    costs?: CostRecordUncheckedUpdateManyWithoutBranchNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutBranchNestedInput
+  }
+
   export type UserCreateWithoutTasksAssignedInput = {
     id?: string
     email: string
@@ -76729,6 +80634,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutTasksAssignedInput = {
@@ -76739,6 +80645,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -76821,6 +80728,8 @@ export namespace Prisma {
     VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutTasksInput = {
@@ -76838,6 +80747,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -76903,6 +80814,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksAssignedInput = {
@@ -76913,6 +80825,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -77007,6 +80920,8 @@ export namespace Prisma {
     VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTasksInput = {
@@ -77024,6 +80939,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -77073,6 +80990,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutWbsDeletedInput = {
@@ -77083,6 +81001,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -77214,6 +81133,8 @@ export namespace Prisma {
     deletedBy?: UserCreateNestedOneWithoutCostsDeletedInput
     createdBy?: UserCreateNestedOneWithoutCostsCreatedInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutCostRecordsInput
+    company?: CompanyCreateNestedOneWithoutCostsInput
+    branch?: BranchCreateNestedOneWithoutCostsInput
   }
 
   export type CostRecordUncheckedCreateWithoutWbsInput = {
@@ -77241,6 +81162,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type CostRecordCreateOrConnectWithoutWbsInput = {
@@ -77281,6 +81204,8 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
     payments?: PaymentCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueCreateNestedManyWithoutInvoiceInput
+    company?: CompanyCreateNestedOneWithoutInvoicesInput
+    branch?: BranchCreateNestedOneWithoutInvoicesInput
   }
 
   export type InvoiceUncheckedCreateWithoutWbsInput = {
@@ -77309,6 +81234,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
   }
@@ -77635,6 +81562,8 @@ export namespace Prisma {
     VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutWbsItemsInput = {
@@ -77652,6 +81581,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -77717,6 +81648,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWbsDeletedInput = {
@@ -77727,6 +81659,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -78044,6 +81977,8 @@ export namespace Prisma {
     VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutWbsItemsInput = {
@@ -78061,6 +81996,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -78110,6 +82047,7 @@ export namespace Prisma {
     wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutCostsDeletedInput = {
@@ -78120,6 +82058,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -78185,6 +82124,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutCostsCreatedInput = {
@@ -78195,6 +82135,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -78323,6 +82264,68 @@ export namespace Prisma {
     create: XOR<WBSItemCreateWithoutCostsInput, WBSItemUncheckedCreateWithoutCostsInput>
   }
 
+  export type CompanyCreateWithoutCostsInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    users?: UserCreateNestedManyWithoutCompanyInput
+    invoices?: InvoiceCreateNestedManyWithoutCompanyInput
+    branches?: BranchCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutCostsInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutCompanyInput
+    branches?: BranchUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutCostsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutCostsInput, CompanyUncheckedCreateWithoutCostsInput>
+  }
+
+  export type BranchCreateWithoutCostsInput = {
+    id?: string
+    name: string
+    code: string
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutBranchesInput
+    projects?: ProjectCreateNestedManyWithoutBranchInput
+    invoices?: InvoiceCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchUncheckedCreateWithoutCostsInput = {
+    id?: string
+    companyId: string
+    name: string
+    code: string
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectUncheckedCreateNestedManyWithoutBranchInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchCreateOrConnectWithoutCostsInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutCostsInput, BranchUncheckedCreateWithoutCostsInput>
+  }
+
   export type UserUpsertWithoutCostsDeletedInput = {
     update: XOR<UserUpdateWithoutCostsDeletedInput, UserUncheckedUpdateWithoutCostsDeletedInput>
     create: XOR<UserCreateWithoutCostsDeletedInput, UserUncheckedCreateWithoutCostsDeletedInput>
@@ -78367,6 +82370,7 @@ export namespace Prisma {
     wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCostsDeletedInput = {
@@ -78377,6 +82381,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -78448,6 +82453,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCostsCreatedInput = {
@@ -78458,6 +82464,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -78593,6 +82600,80 @@ export namespace Prisma {
     children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
   }
 
+  export type CompanyUpsertWithoutCostsInput = {
+    update: XOR<CompanyUpdateWithoutCostsInput, CompanyUncheckedUpdateWithoutCostsInput>
+    create: XOR<CompanyCreateWithoutCostsInput, CompanyUncheckedCreateWithoutCostsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutCostsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutCostsInput, CompanyUncheckedUpdateWithoutCostsInput>
+  }
+
+  export type CompanyUpdateWithoutCostsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    invoices?: InvoiceUpdateManyWithoutCompanyNestedInput
+    branches?: BranchUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutCostsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutCompanyNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type BranchUpsertWithoutCostsInput = {
+    update: XOR<BranchUpdateWithoutCostsInput, BranchUncheckedUpdateWithoutCostsInput>
+    create: XOR<BranchCreateWithoutCostsInput, BranchUncheckedCreateWithoutCostsInput>
+    where?: BranchWhereInput
+  }
+
+  export type BranchUpdateToOneWithWhereWithoutCostsInput = {
+    where?: BranchWhereInput
+    data: XOR<BranchUpdateWithoutCostsInput, BranchUncheckedUpdateWithoutCostsInput>
+  }
+
+  export type BranchUpdateWithoutCostsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutBranchesNestedInput
+    projects?: ProjectUpdateManyWithoutBranchNestedInput
+    invoices?: InvoiceUpdateManyWithoutBranchNestedInput
+  }
+
+  export type BranchUncheckedUpdateWithoutCostsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUncheckedUpdateManyWithoutBranchNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutBranchNestedInput
+  }
+
   export type UserCreateWithoutBudgetsCreatedInput = {
     id?: string
     email: string
@@ -78626,6 +82707,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutBudgetsCreatedInput = {
@@ -78636,6 +82718,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -78765,6 +82848,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBudgetsCreatedInput = {
@@ -78775,6 +82859,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -78894,6 +82979,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutRevenuesCreatedInput = {
@@ -78904,6 +82990,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -78964,6 +83051,8 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
     wbs: WBSItemCreateNestedOneWithoutInvoicesInput
     payments?: PaymentCreateNestedManyWithoutInvoiceInput
+    company?: CompanyCreateNestedOneWithoutInvoicesInput
+    branch?: BranchCreateNestedOneWithoutInvoicesInput
   }
 
   export type InvoiceUncheckedCreateWithoutRevenuesInput = {
@@ -78993,6 +83082,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
@@ -79098,6 +83189,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRevenuesCreatedInput = {
@@ -79108,6 +83200,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -79174,6 +83267,8 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
     payments?: PaymentUpdateManyWithoutInvoiceNestedInput
+    company?: CompanyUpdateOneWithoutInvoicesNestedInput
+    branch?: BranchUpdateOneWithoutInvoicesNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutRevenuesInput = {
@@ -79203,6 +83298,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
@@ -79298,6 +83395,7 @@ export namespace Prisma {
     wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutInvoicesDeletedInput = {
@@ -79308,6 +83406,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -79418,6 +83517,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutInvoicesCreatedInput = {
@@ -79428,6 +83528,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -79591,6 +83692,68 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CompanyCreateWithoutInvoicesInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    users?: UserCreateNestedManyWithoutCompanyInput
+    costs?: CostRecordCreateNestedManyWithoutCompanyInput
+    branches?: BranchCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutInvoicesInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    costs?: CostRecordUncheckedCreateNestedManyWithoutCompanyInput
+    branches?: BranchUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutInvoicesInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutInvoicesInput, CompanyUncheckedCreateWithoutInvoicesInput>
+  }
+
+  export type BranchCreateWithoutInvoicesInput = {
+    id?: string
+    name: string
+    code: string
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutBranchesInput
+    projects?: ProjectCreateNestedManyWithoutBranchInput
+    costs?: CostRecordCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchUncheckedCreateWithoutInvoicesInput = {
+    id?: string
+    companyId: string
+    name: string
+    code: string
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectUncheckedCreateNestedManyWithoutBranchInput
+    costs?: CostRecordUncheckedCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchCreateOrConnectWithoutInvoicesInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutInvoicesInput, BranchUncheckedCreateWithoutInvoicesInput>
+  }
+
   export type UserUpsertWithoutInvoicesDeletedInput = {
     update: XOR<UserUpdateWithoutInvoicesDeletedInput, UserUncheckedUpdateWithoutInvoicesDeletedInput>
     create: XOR<UserCreateWithoutInvoicesDeletedInput, UserUncheckedCreateWithoutInvoicesDeletedInput>
@@ -79635,6 +83798,7 @@ export namespace Prisma {
     wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvoicesDeletedInput = {
@@ -79645,6 +83809,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -79767,6 +83932,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvoicesCreatedInput = {
@@ -79777,6 +83943,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -79895,6 +84062,80 @@ export namespace Prisma {
     data: XOR<RevenueUpdateManyMutationInput, RevenueUncheckedUpdateManyWithoutInvoiceInput>
   }
 
+  export type CompanyUpsertWithoutInvoicesInput = {
+    update: XOR<CompanyUpdateWithoutInvoicesInput, CompanyUncheckedUpdateWithoutInvoicesInput>
+    create: XOR<CompanyCreateWithoutInvoicesInput, CompanyUncheckedCreateWithoutInvoicesInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutInvoicesInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutInvoicesInput, CompanyUncheckedUpdateWithoutInvoicesInput>
+  }
+
+  export type CompanyUpdateWithoutInvoicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    costs?: CostRecordUpdateManyWithoutCompanyNestedInput
+    branches?: BranchUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutInvoicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    costs?: CostRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type BranchUpsertWithoutInvoicesInput = {
+    update: XOR<BranchUpdateWithoutInvoicesInput, BranchUncheckedUpdateWithoutInvoicesInput>
+    create: XOR<BranchCreateWithoutInvoicesInput, BranchUncheckedCreateWithoutInvoicesInput>
+    where?: BranchWhereInput
+  }
+
+  export type BranchUpdateToOneWithWhereWithoutInvoicesInput = {
+    where?: BranchWhereInput
+    data: XOR<BranchUpdateWithoutInvoicesInput, BranchUncheckedUpdateWithoutInvoicesInput>
+  }
+
+  export type BranchUpdateWithoutInvoicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutBranchesNestedInput
+    projects?: ProjectUpdateManyWithoutBranchNestedInput
+    costs?: CostRecordUpdateManyWithoutBranchNestedInput
+  }
+
+  export type BranchUncheckedUpdateWithoutInvoicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUncheckedUpdateManyWithoutBranchNestedInput
+    costs?: CostRecordUncheckedUpdateManyWithoutBranchNestedInput
+  }
+
   export type UserCreateWithoutPaymentsDeletedInput = {
     id?: string
     email: string
@@ -79928,6 +84169,7 @@ export namespace Prisma {
     wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutPaymentsDeletedInput = {
@@ -79938,6 +84180,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -79998,6 +84241,8 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
     wbs: WBSItemCreateNestedOneWithoutInvoicesInput
     revenues?: RevenueCreateNestedManyWithoutInvoiceInput
+    company?: CompanyCreateNestedOneWithoutInvoicesInput
+    branch?: BranchCreateNestedOneWithoutInvoicesInput
   }
 
   export type InvoiceUncheckedCreateWithoutPaymentsInput = {
@@ -80027,6 +84272,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
@@ -80079,6 +84326,7 @@ export namespace Prisma {
     wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPaymentsDeletedInput = {
@@ -80089,6 +84337,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -80155,6 +84404,8 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
     revenues?: RevenueUpdateManyWithoutInvoiceNestedInput
+    company?: CompanyUpdateOneWithoutInvoicesNestedInput
+    branch?: BranchUpdateOneWithoutInvoicesNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutPaymentsInput = {
@@ -80184,6 +84435,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
@@ -80273,6 +84526,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutJournalEntriesInput = {
@@ -80290,6 +84545,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -80379,6 +84636,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutJournalEntriesInput = {
@@ -80396,6 +84655,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -80679,6 +84940,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutPurchaseRequestsCreatedInput = {
@@ -80689,6 +84951,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -80813,6 +85076,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPurchaseRequestsCreatedInput = {
@@ -80823,6 +85087,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -80875,6 +85140,8 @@ export namespace Prisma {
     deletedBy?: UserCreateNestedOneWithoutCostsDeletedInput
     createdBy?: UserCreateNestedOneWithoutCostsCreatedInput
     wbs: WBSItemCreateNestedOneWithoutCostsInput
+    company?: CompanyCreateNestedOneWithoutCostsInput
+    branch?: BranchCreateNestedOneWithoutCostsInput
   }
 
   export type CostRecordUncheckedCreateWithoutPurchaseOrderInput = {
@@ -80902,6 +85169,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type CostRecordCreateOrConnectWithoutPurchaseOrderInput = {
@@ -80979,6 +85248,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutPurchaseOrdersCreatedInput = {
@@ -80989,6 +85259,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -81050,6 +85321,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutPurchaseOrdersInput = {
@@ -81067,6 +85340,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -81256,6 +85531,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPurchaseOrdersCreatedInput = {
@@ -81266,6 +85542,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -81333,6 +85610,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutPurchaseOrdersInput = {
@@ -81350,6 +85629,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -81758,6 +86039,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutContractsCreatedInput = {
@@ -81768,6 +86050,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -81829,6 +86112,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutContractsInput = {
@@ -81846,6 +86131,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -81931,6 +86218,8 @@ export namespace Prisma {
     wbs: WBSItemCreateNestedOneWithoutInvoicesInput
     payments?: PaymentCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueCreateNestedManyWithoutInvoiceInput
+    company?: CompanyCreateNestedOneWithoutInvoicesInput
+    branch?: BranchCreateNestedOneWithoutInvoicesInput
   }
 
   export type InvoiceUncheckedCreateWithoutContractInput = {
@@ -81959,6 +86248,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
     revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
   }
@@ -82017,6 +86308,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContractsCreatedInput = {
@@ -82027,6 +86319,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -82094,6 +86387,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutContractsInput = {
@@ -82111,6 +86406,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -82305,6 +86602,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -82315,6 +86613,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -82391,6 +86690,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -82401,6 +86701,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -82457,6 +86758,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutActivityFeedInput = {
@@ -82474,6 +86777,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
     BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
@@ -82528,6 +86833,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutActivityFeedInput = {
@@ -82538,6 +86844,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -82610,6 +86917,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutActivityFeedInput = {
@@ -82627,6 +86936,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
     BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
@@ -82687,6 +86998,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActivityFeedInput = {
@@ -82697,6 +87009,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -82753,6 +87066,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutApprovalRequestInput = {
@@ -82770,6 +87085,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
     BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
@@ -82824,6 +87141,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutApprovalRequestInput = {
@@ -82834,6 +87152,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -82938,6 +87257,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutApprovalRequestInput = {
@@ -82955,6 +87276,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
     BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
@@ -83015,6 +87338,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovalRequestInput = {
@@ -83025,6 +87349,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -83132,6 +87457,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutApprovalStepInput = {
@@ -83142,6 +87468,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -83255,6 +87582,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovalStepInput = {
@@ -83265,6 +87593,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -83321,6 +87650,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutBOQItemInput = {
@@ -83338,6 +87669,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
@@ -83488,6 +87821,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutBOQItemInput = {
@@ -83505,6 +87840,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
@@ -83625,6 +87962,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutBudgetVersionInput = {
@@ -83642,6 +87981,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -83703,6 +88044,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutBudgetVersionInput = {
@@ -83720,6 +88063,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -83769,6 +88114,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutCommentInput = {
@@ -83779,6 +88125,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -83855,6 +88202,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCommentInput = {
@@ -83865,6 +88213,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -83925,6 +88274,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutDelegationWindow_DelegationWindow_delegateIdToUserInput = {
@@ -83935,6 +88285,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -84000,6 +88351,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutDelegationWindow_DelegationWindow_ownerIdToUserInput = {
@@ -84010,6 +88362,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -84086,6 +88439,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDelegationWindow_DelegationWindow_delegateIdToUserInput = {
@@ -84096,6 +88450,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -84167,6 +88522,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDelegationWindow_DelegationWindow_ownerIdToUserInput = {
@@ -84177,6 +88533,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -84233,6 +88590,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutDocumentInput = {
@@ -84250,6 +88609,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -84304,6 +88665,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutDocumentInput = {
@@ -84314,6 +88676,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -84386,6 +88749,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutDocumentInput = {
@@ -84403,6 +88768,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -84463,6 +88830,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentInput = {
@@ -84473,6 +88841,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -84533,6 +88902,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutFiscalPeriodInput = {
@@ -84543,6 +88913,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -84619,6 +88990,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFiscalPeriodInput = {
@@ -84629,6 +89001,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -84712,6 +89085,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutInventoryTransactionInput = {
@@ -84729,6 +89104,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -84823,6 +89200,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutInventoryTransactionInput = {
@@ -84840,6 +89219,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -85116,6 +89497,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutProgressEntryInput = {
@@ -85126,6 +89508,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -85275,6 +89658,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProgressEntryInput = {
@@ -85285,6 +89669,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -85368,6 +89753,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutSiteConsumptionInput = {
@@ -85385,6 +89772,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -85532,6 +89921,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutSiteConsumptionInput = {
@@ -85549,6 +89940,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -85653,6 +90046,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutSubcontractInput = {
@@ -85670,6 +90065,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -85795,6 +90192,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutSubcontractInput = {
@@ -85812,6 +90211,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -86308,6 +90709,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutTrainingRecordInput = {
@@ -86318,6 +90720,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -86394,6 +90797,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTrainingRecordInput = {
@@ -86404,6 +90808,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -86464,6 +90869,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+    company?: CompanyCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutUserMaturityInput = {
@@ -86474,6 +90880,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     role?: $Enums.UserRole
+    companyId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
     ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
@@ -86550,6 +90957,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+    company?: CompanyUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserMaturityInput = {
@@ -86560,6 +90968,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
     ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
@@ -86616,6 +91025,8 @@ export namespace Prisma {
     SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutVariationOrderInput = {
@@ -86633,6 +91044,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -86747,6 +91160,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutVariationOrderInput = {
@@ -86764,6 +91179,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -86868,6 +91285,8 @@ export namespace Prisma {
     VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutSiteLogInput = {
@@ -86885,6 +91304,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
@@ -86946,6 +91367,8 @@ export namespace Prisma {
     VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutSiteLogInput = {
@@ -86963,6 +91386,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -87065,6 +91490,785 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutPurchaseRequestNestedInput
+  }
+
+  export type ProjectCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
+    ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
+    BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
+    contracts?: ContractCreateNestedManyWithoutProjectInput
+    Document?: DocumentCreateNestedManyWithoutProjectInput
+    InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
+    journalEntries?: JournalEntryCreateNestedManyWithoutProjectInput
+    owner?: UserCreateNestedOneWithoutProjectsOwnedInput
+    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
+    SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
+    Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    branch?: BranchCreateNestedOneWithoutProjectsInput
+  }
+
+  export type ProjectUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    description?: string | null
+    ownerId?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+    branchId?: string | null
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
+    ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
+    BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
+    contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
+    Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
+    journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutProjectInput
+    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
+    Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutCompanyInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutCompanyInput, ProjectUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type ProjectCreateManyCompanyInputEnvelope = {
+    data: ProjectCreateManyCompanyInput | ProjectCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserCreateWithoutCompanyInput = {
+    id?: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    role?: $Enums.UserRole
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutUserInput
+    ApprovalStep?: ApprovalStepCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    budgetsCreated?: BudgetRecordCreateNestedManyWithoutCreatedByInput
+    Comment?: CommentCreateNestedManyWithoutUserInput
+    contractsCreated?: ContractCreateNestedManyWithoutCreatedByInput
+    costsCreated?: CostRecordCreateNestedManyWithoutCreatedByInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
+    Document?: DocumentCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
+    ProgressEntry?: ProgressEntryCreateNestedManyWithoutUserInput
+    projectsOwned?: ProjectCreateNestedManyWithoutOwnerInput
+    purchaseOrdersCreated?: PurchaseOrderCreateNestedManyWithoutCreatedByInput
+    purchaseRequestsCreated?: PurchaseRequestCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
+    UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+  }
+
+  export type UserUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    role?: $Enums.UserRole
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
+    ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    budgetsCreated?: BudgetRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    Comment?: CommentUncheckedCreateNestedManyWithoutUserInput
+    contractsCreated?: ContractUncheckedCreateNestedManyWithoutCreatedByInput
+    costsCreated?: CostRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
+    Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+    ProgressEntry?: ProgressEntryUncheckedCreateNestedManyWithoutUserInput
+    projectsOwned?: ProjectUncheckedCreateNestedManyWithoutOwnerInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
+  }
+
+  export type UserCreateOrConnectWithoutCompanyInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type UserCreateManyCompanyInputEnvelope = {
+    data: UserCreateManyCompanyInput | UserCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CostRecordCreateWithoutCompanyInput = {
+    id?: string
+    projectId: string
+    costType?: $Enums.CostType
+    amount: Decimal | DecimalJsLike | number | string
+    quantity?: Decimal | DecimalJsLike | number | string
+    unitPrice?: Decimal | DecimalJsLike | number | string
+    supplier?: string | null
+    note?: string | null
+    date?: Date | string
+    status?: $Enums.PaymentStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    version?: number
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutCostsDeletedInput
+    createdBy?: UserCreateNestedOneWithoutCostsCreatedInput
+    purchaseOrder?: PurchaseOrderCreateNestedOneWithoutCostRecordsInput
+    wbs: WBSItemCreateNestedOneWithoutCostsInput
+    branch?: BranchCreateNestedOneWithoutCostsInput
+  }
+
+  export type CostRecordUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    projectId: string
+    wbsId: string
+    costType?: $Enums.CostType
+    amount: Decimal | DecimalJsLike | number | string
+    quantity?: Decimal | DecimalJsLike | number | string
+    unitPrice?: Decimal | DecimalJsLike | number | string
+    supplier?: string | null
+    note?: string | null
+    date?: Date | string
+    status?: $Enums.PaymentStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    version?: number
+    createdById?: string | null
+    purchaseOrderId?: string | null
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
+    branchId?: string | null
+  }
+
+  export type CostRecordCreateOrConnectWithoutCompanyInput = {
+    where: CostRecordWhereUniqueInput
+    create: XOR<CostRecordCreateWithoutCompanyInput, CostRecordUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type CostRecordCreateManyCompanyInputEnvelope = {
+    data: CostRecordCreateManyCompanyInput | CostRecordCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InvoiceCreateWithoutCompanyInput = {
+    id?: string
+    projectId: string
+    amount: Decimal | DecimalJsLike | number | string
+    issuedDate?: Date | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dueDate?: Date | string | null
+    invoiceNumber?: string | null
+    note?: string | null
+    status?: $Enums.InvoiceStatus
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    version?: number
+    certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutInvoicesDeletedInput
+    contract?: ContractCreateNestedOneWithoutInvoicesInput
+    createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
+    wbs: WBSItemCreateNestedOneWithoutInvoicesInput
+    payments?: PaymentCreateNestedManyWithoutInvoiceInput
+    revenues?: RevenueCreateNestedManyWithoutInvoiceInput
+    branch?: BranchCreateNestedOneWithoutInvoicesInput
+  }
+
+  export type InvoiceUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    projectId: string
+    wbsId: string
+    amount: Decimal | DecimalJsLike | number | string
+    issuedDate?: Date | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+    dueDate?: Date | string | null
+    invoiceNumber?: string | null
+    note?: string | null
+    status?: $Enums.InvoiceStatus
+    contractId?: string | null
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    version?: number
+    certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
+    branchId?: string | null
+    payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
+    revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
+  }
+
+  export type InvoiceCreateOrConnectWithoutCompanyInput = {
+    where: InvoiceWhereUniqueInput
+    create: XOR<InvoiceCreateWithoutCompanyInput, InvoiceUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type InvoiceCreateManyCompanyInputEnvelope = {
+    data: InvoiceCreateManyCompanyInput | InvoiceCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BranchCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    code: string
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectCreateNestedManyWithoutBranchInput
+    costs?: CostRecordCreateNestedManyWithoutBranchInput
+    invoices?: InvoiceCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    code: string
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectUncheckedCreateNestedManyWithoutBranchInput
+    costs?: CostRecordUncheckedCreateNestedManyWithoutBranchInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutBranchInput
+  }
+
+  export type BranchCreateOrConnectWithoutCompanyInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutCompanyInput, BranchUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type BranchCreateManyCompanyInputEnvelope = {
+    data: BranchCreateManyCompanyInput | BranchCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: ProjectWhereUniqueInput
+    update: XOR<ProjectUpdateWithoutCompanyInput, ProjectUncheckedUpdateWithoutCompanyInput>
+    create: XOR<ProjectCreateWithoutCompanyInput, ProjectUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type ProjectUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: ProjectWhereUniqueInput
+    data: XOR<ProjectUpdateWithoutCompanyInput, ProjectUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type ProjectUpdateManyWithWhereWithoutCompanyInput = {
+    where: ProjectScalarWhereInput
+    data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutCompanyInput, UserUncheckedUpdateWithoutCompanyInput>
+    create: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutCompanyInput, UserUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutCompanyInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type UserScalarWhereInput = {
+    AND?: UserScalarWhereInput | UserScalarWhereInput[]
+    OR?: UserScalarWhereInput[]
+    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
+    id?: StringFilter<"User"> | string
+    email?: StringFilter<"User"> | string
+    name?: StringNullableFilter<"User"> | string | null
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    companyId?: StringNullableFilter<"User"> | string | null
+  }
+
+  export type CostRecordUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: CostRecordWhereUniqueInput
+    update: XOR<CostRecordUpdateWithoutCompanyInput, CostRecordUncheckedUpdateWithoutCompanyInput>
+    create: XOR<CostRecordCreateWithoutCompanyInput, CostRecordUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type CostRecordUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: CostRecordWhereUniqueInput
+    data: XOR<CostRecordUpdateWithoutCompanyInput, CostRecordUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type CostRecordUpdateManyWithWhereWithoutCompanyInput = {
+    where: CostRecordScalarWhereInput
+    data: XOR<CostRecordUpdateManyMutationInput, CostRecordUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type InvoiceUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: InvoiceWhereUniqueInput
+    update: XOR<InvoiceUpdateWithoutCompanyInput, InvoiceUncheckedUpdateWithoutCompanyInput>
+    create: XOR<InvoiceCreateWithoutCompanyInput, InvoiceUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type InvoiceUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: InvoiceWhereUniqueInput
+    data: XOR<InvoiceUpdateWithoutCompanyInput, InvoiceUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type InvoiceUpdateManyWithWhereWithoutCompanyInput = {
+    where: InvoiceScalarWhereInput
+    data: XOR<InvoiceUpdateManyMutationInput, InvoiceUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type BranchUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: BranchWhereUniqueInput
+    update: XOR<BranchUpdateWithoutCompanyInput, BranchUncheckedUpdateWithoutCompanyInput>
+    create: XOR<BranchCreateWithoutCompanyInput, BranchUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type BranchUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: BranchWhereUniqueInput
+    data: XOR<BranchUpdateWithoutCompanyInput, BranchUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type BranchUpdateManyWithWhereWithoutCompanyInput = {
+    where: BranchScalarWhereInput
+    data: XOR<BranchUpdateManyMutationInput, BranchUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type BranchScalarWhereInput = {
+    AND?: BranchScalarWhereInput | BranchScalarWhereInput[]
+    OR?: BranchScalarWhereInput[]
+    NOT?: BranchScalarWhereInput | BranchScalarWhereInput[]
+    id?: StringFilter<"Branch"> | string
+    companyId?: StringFilter<"Branch"> | string
+    name?: StringFilter<"Branch"> | string
+    code?: StringFilter<"Branch"> | string
+    address?: StringNullableFilter<"Branch"> | string | null
+    createdAt?: DateTimeFilter<"Branch"> | Date | string
+    updatedAt?: DateTimeFilter<"Branch"> | Date | string
+  }
+
+  export type CompanyCreateWithoutBranchesInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    users?: UserCreateNestedManyWithoutCompanyInput
+    costs?: CostRecordCreateNestedManyWithoutCompanyInput
+    invoices?: InvoiceCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutBranchesInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    costs?: CostRecordUncheckedCreateNestedManyWithoutCompanyInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutBranchesInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutBranchesInput, CompanyUncheckedCreateWithoutBranchesInput>
+  }
+
+  export type ProjectCreateWithoutBranchInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
+    ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
+    BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
+    contracts?: ContractCreateNestedManyWithoutProjectInput
+    Document?: DocumentCreateNestedManyWithoutProjectInput
+    InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
+    journalEntries?: JournalEntryCreateNestedManyWithoutProjectInput
+    owner?: UserCreateNestedOneWithoutProjectsOwnedInput
+    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
+    SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
+    Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+  }
+
+  export type ProjectUncheckedCreateWithoutBranchInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    description?: string | null
+    ownerId?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
+    ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
+    BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
+    contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
+    Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
+    journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutProjectInput
+    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
+    Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    VariationOrder?: VariationOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteLog?: SiteLogUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutBranchInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutBranchInput, ProjectUncheckedCreateWithoutBranchInput>
+  }
+
+  export type ProjectCreateManyBranchInputEnvelope = {
+    data: ProjectCreateManyBranchInput | ProjectCreateManyBranchInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CostRecordCreateWithoutBranchInput = {
+    id?: string
+    projectId: string
+    costType?: $Enums.CostType
+    amount: Decimal | DecimalJsLike | number | string
+    quantity?: Decimal | DecimalJsLike | number | string
+    unitPrice?: Decimal | DecimalJsLike | number | string
+    supplier?: string | null
+    note?: string | null
+    date?: Date | string
+    status?: $Enums.PaymentStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    version?: number
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutCostsDeletedInput
+    createdBy?: UserCreateNestedOneWithoutCostsCreatedInput
+    purchaseOrder?: PurchaseOrderCreateNestedOneWithoutCostRecordsInput
+    wbs: WBSItemCreateNestedOneWithoutCostsInput
+    company?: CompanyCreateNestedOneWithoutCostsInput
+  }
+
+  export type CostRecordUncheckedCreateWithoutBranchInput = {
+    id?: string
+    projectId: string
+    wbsId: string
+    costType?: $Enums.CostType
+    amount: Decimal | DecimalJsLike | number | string
+    quantity?: Decimal | DecimalJsLike | number | string
+    unitPrice?: Decimal | DecimalJsLike | number | string
+    supplier?: string | null
+    note?: string | null
+    date?: Date | string
+    status?: $Enums.PaymentStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    version?: number
+    createdById?: string | null
+    purchaseOrderId?: string | null
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+  }
+
+  export type CostRecordCreateOrConnectWithoutBranchInput = {
+    where: CostRecordWhereUniqueInput
+    create: XOR<CostRecordCreateWithoutBranchInput, CostRecordUncheckedCreateWithoutBranchInput>
+  }
+
+  export type CostRecordCreateManyBranchInputEnvelope = {
+    data: CostRecordCreateManyBranchInput | CostRecordCreateManyBranchInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InvoiceCreateWithoutBranchInput = {
+    id?: string
+    projectId: string
+    amount: Decimal | DecimalJsLike | number | string
+    issuedDate?: Date | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dueDate?: Date | string | null
+    invoiceNumber?: string | null
+    note?: string | null
+    status?: $Enums.InvoiceStatus
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    version?: number
+    certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutInvoicesDeletedInput
+    contract?: ContractCreateNestedOneWithoutInvoicesInput
+    createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
+    wbs: WBSItemCreateNestedOneWithoutInvoicesInput
+    payments?: PaymentCreateNestedManyWithoutInvoiceInput
+    revenues?: RevenueCreateNestedManyWithoutInvoiceInput
+    company?: CompanyCreateNestedOneWithoutInvoicesInput
+  }
+
+  export type InvoiceUncheckedCreateWithoutBranchInput = {
+    id?: string
+    projectId: string
+    wbsId: string
+    amount: Decimal | DecimalJsLike | number | string
+    issuedDate?: Date | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+    dueDate?: Date | string | null
+    invoiceNumber?: string | null
+    note?: string | null
+    status?: $Enums.InvoiceStatus
+    contractId?: string | null
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    version?: number
+    certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
+    revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
+  }
+
+  export type InvoiceCreateOrConnectWithoutBranchInput = {
+    where: InvoiceWhereUniqueInput
+    create: XOR<InvoiceCreateWithoutBranchInput, InvoiceUncheckedCreateWithoutBranchInput>
+  }
+
+  export type InvoiceCreateManyBranchInputEnvelope = {
+    data: InvoiceCreateManyBranchInput | InvoiceCreateManyBranchInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CompanyUpsertWithoutBranchesInput = {
+    update: XOR<CompanyUpdateWithoutBranchesInput, CompanyUncheckedUpdateWithoutBranchesInput>
+    create: XOR<CompanyCreateWithoutBranchesInput, CompanyUncheckedCreateWithoutBranchesInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutBranchesInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutBranchesInput, CompanyUncheckedUpdateWithoutBranchesInput>
+  }
+
+  export type CompanyUpdateWithoutBranchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    costs?: CostRecordUpdateManyWithoutCompanyNestedInput
+    invoices?: InvoiceUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutBranchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    costs?: CostRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type ProjectUpsertWithWhereUniqueWithoutBranchInput = {
+    where: ProjectWhereUniqueInput
+    update: XOR<ProjectUpdateWithoutBranchInput, ProjectUncheckedUpdateWithoutBranchInput>
+    create: XOR<ProjectCreateWithoutBranchInput, ProjectUncheckedCreateWithoutBranchInput>
+  }
+
+  export type ProjectUpdateWithWhereUniqueWithoutBranchInput = {
+    where: ProjectWhereUniqueInput
+    data: XOR<ProjectUpdateWithoutBranchInput, ProjectUncheckedUpdateWithoutBranchInput>
+  }
+
+  export type ProjectUpdateManyWithWhereWithoutBranchInput = {
+    where: ProjectScalarWhereInput
+    data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyWithoutBranchInput>
+  }
+
+  export type CostRecordUpsertWithWhereUniqueWithoutBranchInput = {
+    where: CostRecordWhereUniqueInput
+    update: XOR<CostRecordUpdateWithoutBranchInput, CostRecordUncheckedUpdateWithoutBranchInput>
+    create: XOR<CostRecordCreateWithoutBranchInput, CostRecordUncheckedCreateWithoutBranchInput>
+  }
+
+  export type CostRecordUpdateWithWhereUniqueWithoutBranchInput = {
+    where: CostRecordWhereUniqueInput
+    data: XOR<CostRecordUpdateWithoutBranchInput, CostRecordUncheckedUpdateWithoutBranchInput>
+  }
+
+  export type CostRecordUpdateManyWithWhereWithoutBranchInput = {
+    where: CostRecordScalarWhereInput
+    data: XOR<CostRecordUpdateManyMutationInput, CostRecordUncheckedUpdateManyWithoutBranchInput>
+  }
+
+  export type InvoiceUpsertWithWhereUniqueWithoutBranchInput = {
+    where: InvoiceWhereUniqueInput
+    update: XOR<InvoiceUpdateWithoutBranchInput, InvoiceUncheckedUpdateWithoutBranchInput>
+    create: XOR<InvoiceCreateWithoutBranchInput, InvoiceUncheckedCreateWithoutBranchInput>
+  }
+
+  export type InvoiceUpdateWithWhereUniqueWithoutBranchInput = {
+    where: InvoiceWhereUniqueInput
+    data: XOR<InvoiceUpdateWithoutBranchInput, InvoiceUncheckedUpdateWithoutBranchInput>
+  }
+
+  export type InvoiceUpdateManyWithWhereWithoutBranchInput = {
+    where: InvoiceScalarWhereInput
+    data: XOR<InvoiceUpdateManyMutationInput, InvoiceUncheckedUpdateManyWithoutBranchInput>
   }
 
   export type ActivityFeedCreateManyUserInput = {
@@ -87181,6 +92385,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type DelegationWindowCreateManyUser_DelegationWindow_delegateIdToUserInput = {
@@ -87257,6 +92463,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type ProgressEntryCreateManyUserInput = {
@@ -87285,6 +92493,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type PurchaseOrderCreateManyCreatedByInput = {
@@ -87372,6 +92582,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type WBSItemCreateManyDeletedByInput = {
@@ -87413,6 +92625,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type InvoiceCreateManyDeletedByInput = {
@@ -87441,6 +92655,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type PaymentCreateManyDeletedByInput = {
@@ -87756,6 +92972,8 @@ export namespace Prisma {
     deletedBy?: UserUpdateOneWithoutCostsDeletedNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutCostRecordsNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutCostsNestedInput
+    company?: CompanyUpdateOneWithoutCostsNestedInput
+    branch?: BranchUpdateOneWithoutCostsNestedInput
   }
 
   export type CostRecordUncheckedUpdateWithoutCreatedByInput = {
@@ -87783,6 +93001,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CostRecordUncheckedUpdateManyWithoutCreatedByInput = {
@@ -87810,6 +93030,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DelegationWindowUpdateWithoutUser_DelegationWindow_delegateIdToUserInput = {
@@ -87984,6 +93206,8 @@ export namespace Prisma {
     wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
     payments?: PaymentUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUpdateManyWithoutInvoiceNestedInput
+    company?: CompanyUpdateOneWithoutInvoicesNestedInput
+    branch?: BranchUpdateOneWithoutInvoicesNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutCreatedByInput = {
@@ -88012,6 +93236,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
   }
@@ -88042,6 +93268,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProgressEntryUpdateWithoutUserInput = {
@@ -88111,6 +93339,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutOwnerInput = {
@@ -88127,6 +93357,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -88158,6 +93390,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PurchaseOrderUpdateWithoutCreatedByInput = {
@@ -88412,6 +93646,8 @@ export namespace Prisma {
     SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutDeletedByInput = {
@@ -88428,6 +93664,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -88459,6 +93697,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type WBSItemUpdateWithoutDeletedByInput = {
@@ -88548,6 +93788,8 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutCostsCreatedNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutCostRecordsNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutCostsNestedInput
+    company?: CompanyUpdateOneWithoutCostsNestedInput
+    branch?: BranchUpdateOneWithoutCostsNestedInput
   }
 
   export type CostRecordUncheckedUpdateWithoutDeletedByInput = {
@@ -88575,6 +93817,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CostRecordUncheckedUpdateManyWithoutDeletedByInput = {
@@ -88602,6 +93846,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InvoiceUpdateWithoutDeletedByInput = {
@@ -88632,6 +93878,8 @@ export namespace Prisma {
     wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
     payments?: PaymentUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUpdateManyWithoutInvoiceNestedInput
+    company?: CompanyUpdateOneWithoutInvoicesNestedInput
+    branch?: BranchUpdateOneWithoutInvoicesNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutDeletedByInput = {
@@ -88660,6 +93908,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
   }
@@ -88690,6 +93940,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PaymentUpdateWithoutDeletedByInput = {
@@ -89688,6 +94940,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type InvoiceCreateManyWbsInput = {
@@ -89716,6 +94970,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type PurchaseOrderItemCreateManyWbsInput = {
@@ -89897,6 +95153,8 @@ export namespace Prisma {
     deletedBy?: UserUpdateOneWithoutCostsDeletedNestedInput
     createdBy?: UserUpdateOneWithoutCostsCreatedNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutCostRecordsNestedInput
+    company?: CompanyUpdateOneWithoutCostsNestedInput
+    branch?: BranchUpdateOneWithoutCostsNestedInput
   }
 
   export type CostRecordUncheckedUpdateWithoutWbsInput = {
@@ -89924,6 +95182,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CostRecordUncheckedUpdateManyWithoutWbsInput = {
@@ -89951,6 +95211,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InvoiceUpdateWithoutWbsInput = {
@@ -89981,6 +95243,8 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
     payments?: PaymentUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUpdateManyWithoutInvoiceNestedInput
+    company?: CompanyUpdateOneWithoutInvoicesNestedInput
+    branch?: BranchUpdateOneWithoutInvoicesNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutWbsInput = {
@@ -90009,6 +95273,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
   }
@@ -90039,6 +95305,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PurchaseOrderItemUpdateWithoutWbsInput = {
@@ -90616,6 +95884,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type GoodsReceiptCreateManyPurchaseOrderInput = {
@@ -90667,6 +95937,8 @@ export namespace Prisma {
     deletedBy?: UserUpdateOneWithoutCostsDeletedNestedInput
     createdBy?: UserUpdateOneWithoutCostsCreatedNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutCostsNestedInput
+    company?: CompanyUpdateOneWithoutCostsNestedInput
+    branch?: BranchUpdateOneWithoutCostsNestedInput
   }
 
   export type CostRecordUncheckedUpdateWithoutPurchaseOrderInput = {
@@ -90694,6 +95966,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CostRecordUncheckedUpdateManyWithoutPurchaseOrderInput = {
@@ -90721,6 +95995,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GoodsReceiptUpdateWithoutPurchaseOrderInput = {
@@ -90834,6 +96110,8 @@ export namespace Prisma {
     retentionRate?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
     netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+    branchId?: string | null
   }
 
   export type ContractChangeUpdateWithoutContractInput = {
@@ -90903,6 +96181,8 @@ export namespace Prisma {
     wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
     payments?: PaymentUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUpdateManyWithoutInvoiceNestedInput
+    company?: CompanyUpdateOneWithoutInvoicesNestedInput
+    branch?: BranchUpdateOneWithoutInvoicesNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutContractInput = {
@@ -90931,6 +96211,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
     revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
   }
@@ -90961,6 +96243,8 @@ export namespace Prisma {
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApprovalStepCreateManyApprovalRequestInput = {
@@ -91303,6 +96587,824 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectCreateManyCompanyInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    description?: string | null
+    ownerId?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+    branchId?: string | null
+  }
+
+  export type UserCreateManyCompanyInput = {
+    id?: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    role?: $Enums.UserRole
+  }
+
+  export type CostRecordCreateManyCompanyInput = {
+    id?: string
+    projectId: string
+    wbsId: string
+    costType?: $Enums.CostType
+    amount: Decimal | DecimalJsLike | number | string
+    quantity?: Decimal | DecimalJsLike | number | string
+    unitPrice?: Decimal | DecimalJsLike | number | string
+    supplier?: string | null
+    note?: string | null
+    date?: Date | string
+    status?: $Enums.PaymentStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    version?: number
+    createdById?: string | null
+    purchaseOrderId?: string | null
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
+    branchId?: string | null
+  }
+
+  export type InvoiceCreateManyCompanyInput = {
+    id?: string
+    projectId: string
+    wbsId: string
+    amount: Decimal | DecimalJsLike | number | string
+    issuedDate?: Date | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+    dueDate?: Date | string | null
+    invoiceNumber?: string | null
+    note?: string | null
+    status?: $Enums.InvoiceStatus
+    contractId?: string | null
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    version?: number
+    certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
+    branchId?: string | null
+  }
+
+  export type BranchCreateManyCompanyInput = {
+    id?: string
+    name: string
+    code: string
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
+    ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
+    BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
+    contracts?: ContractUpdateManyWithoutProjectNestedInput
+    Document?: DocumentUpdateManyWithoutProjectNestedInput
+    InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
+    journalEntries?: JournalEntryUpdateManyWithoutProjectNestedInput
+    owner?: UserUpdateOneWithoutProjectsOwnedNestedInput
+    purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
+    SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
+    Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    branch?: BranchUpdateOneWithoutProjectsNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
+    ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
+    BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
+    contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
+    Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
+    journalEntries?: JournalEntryUncheckedUpdateManyWithoutProjectNestedInput
+    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
+    Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    ApprovalRequest?: ApprovalRequestUpdateManyWithoutUserNestedInput
+    ApprovalStep?: ApprovalStepUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    budgetsCreated?: BudgetRecordUpdateManyWithoutCreatedByNestedInput
+    Comment?: CommentUpdateManyWithoutUserNestedInput
+    contractsCreated?: ContractUpdateManyWithoutCreatedByNestedInput
+    costsCreated?: CostRecordUpdateManyWithoutCreatedByNestedInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
+    Document?: DocumentUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
+    ProgressEntry?: ProgressEntryUpdateManyWithoutUserNestedInput
+    projectsOwned?: ProjectUpdateManyWithoutOwnerNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
+    UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
+    ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    budgetsCreated?: BudgetRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    Comment?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    contractsCreated?: ContractUncheckedUpdateManyWithoutCreatedByNestedInput
+    costsCreated?: CostRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
+    Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+    ProgressEntry?: ProgressEntryUncheckedUpdateManyWithoutUserNestedInput
+    projectsOwned?: ProjectUncheckedUpdateManyWithoutOwnerNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  }
+
+  export type CostRecordUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    costType?: EnumCostTypeFieldUpdateOperationsInput | $Enums.CostType
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutCostsDeletedNestedInput
+    createdBy?: UserUpdateOneWithoutCostsCreatedNestedInput
+    purchaseOrder?: PurchaseOrderUpdateOneWithoutCostRecordsNestedInput
+    wbs?: WBSItemUpdateOneRequiredWithoutCostsNestedInput
+    branch?: BranchUpdateOneWithoutCostsNestedInput
+  }
+
+  export type CostRecordUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    wbsId?: StringFieldUpdateOperationsInput | string
+    costType?: EnumCostTypeFieldUpdateOperationsInput | $Enums.CostType
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CostRecordUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    wbsId?: StringFieldUpdateOperationsInput | string
+    costType?: EnumCostTypeFieldUpdateOperationsInput | $Enums.CostType
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InvoiceUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    issuedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    version?: IntFieldUpdateOperationsInput | number
+    certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutInvoicesDeletedNestedInput
+    contract?: ContractUpdateOneWithoutInvoicesNestedInput
+    createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
+    wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
+    payments?: PaymentUpdateManyWithoutInvoiceNestedInput
+    revenues?: RevenueUpdateManyWithoutInvoiceNestedInput
+    branch?: BranchUpdateOneWithoutInvoicesNestedInput
+  }
+
+  export type InvoiceUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    wbsId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    issuedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    contractId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    version?: IntFieldUpdateOperationsInput | number
+    certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
+    revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
+  }
+
+  export type InvoiceUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    wbsId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    issuedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    contractId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    version?: IntFieldUpdateOperationsInput | number
+    certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type BranchUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUpdateManyWithoutBranchNestedInput
+    costs?: CostRecordUpdateManyWithoutBranchNestedInput
+    invoices?: InvoiceUpdateManyWithoutBranchNestedInput
+  }
+
+  export type BranchUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUncheckedUpdateManyWithoutBranchNestedInput
+    costs?: CostRecordUncheckedUpdateManyWithoutBranchNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutBranchNestedInput
+  }
+
+  export type BranchUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectCreateManyBranchInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    description?: string | null
+    ownerId?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+  }
+
+  export type CostRecordCreateManyBranchInput = {
+    id?: string
+    projectId: string
+    wbsId: string
+    costType?: $Enums.CostType
+    amount: Decimal | DecimalJsLike | number | string
+    quantity?: Decimal | DecimalJsLike | number | string
+    unitPrice?: Decimal | DecimalJsLike | number | string
+    supplier?: string | null
+    note?: string | null
+    date?: Date | string
+    status?: $Enums.PaymentStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    version?: number
+    createdById?: string | null
+    purchaseOrderId?: string | null
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+  }
+
+  export type InvoiceCreateManyBranchInput = {
+    id?: string
+    projectId: string
+    wbsId: string
+    amount: Decimal | DecimalJsLike | number | string
+    issuedDate?: Date | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+    dueDate?: Date | string | null
+    invoiceNumber?: string | null
+    note?: string | null
+    status?: $Enums.InvoiceStatus
+    contractId?: string | null
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    version?: number
+    certifiedProgress?: Decimal | DecimalJsLike | number | string
+    vatRate?: Decimal | DecimalJsLike | number | string
+    vatAmount?: Decimal | DecimalJsLike | number | string
+    retentionRate?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    netAmount?: Decimal | DecimalJsLike | number | string
+    companyId?: string | null
+  }
+
+  export type ProjectUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
+    ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
+    BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
+    contracts?: ContractUpdateManyWithoutProjectNestedInput
+    Document?: DocumentUpdateManyWithoutProjectNestedInput
+    InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
+    journalEntries?: JournalEntryUpdateManyWithoutProjectNestedInput
+    owner?: UserUpdateOneWithoutProjectsOwnedNestedInput
+    purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
+    SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
+    Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
+    ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
+    BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
+    contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
+    Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
+    journalEntries?: JournalEntryUncheckedUpdateManyWithoutProjectNestedInput
+    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
+    Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    VariationOrder?: VariationOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteLog?: SiteLogUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateManyWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CostRecordUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    costType?: EnumCostTypeFieldUpdateOperationsInput | $Enums.CostType
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutCostsDeletedNestedInput
+    createdBy?: UserUpdateOneWithoutCostsCreatedNestedInput
+    purchaseOrder?: PurchaseOrderUpdateOneWithoutCostRecordsNestedInput
+    wbs?: WBSItemUpdateOneRequiredWithoutCostsNestedInput
+    company?: CompanyUpdateOneWithoutCostsNestedInput
+  }
+
+  export type CostRecordUncheckedUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    wbsId?: StringFieldUpdateOperationsInput | string
+    costType?: EnumCostTypeFieldUpdateOperationsInput | $Enums.CostType
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CostRecordUncheckedUpdateManyWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    wbsId?: StringFieldUpdateOperationsInput | string
+    costType?: EnumCostTypeFieldUpdateOperationsInput | $Enums.CostType
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InvoiceUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    issuedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    version?: IntFieldUpdateOperationsInput | number
+    certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutInvoicesDeletedNestedInput
+    contract?: ContractUpdateOneWithoutInvoicesNestedInput
+    createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
+    wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
+    payments?: PaymentUpdateManyWithoutInvoiceNestedInput
+    revenues?: RevenueUpdateManyWithoutInvoiceNestedInput
+    company?: CompanyUpdateOneWithoutInvoicesNestedInput
+  }
+
+  export type InvoiceUncheckedUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    wbsId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    issuedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    contractId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    version?: IntFieldUpdateOperationsInput | number
+    certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
+    revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
+  }
+
+  export type InvoiceUncheckedUpdateManyWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    wbsId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    issuedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    contractId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    version?: IntFieldUpdateOperationsInput | number
+    certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
 
 
   /**
@@ -91372,6 +97474,14 @@ export namespace Prisma {
      * @deprecated Use SubcontractItemCountOutputTypeDefaultArgs instead
      */
     export type SubcontractItemCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SubcontractItemCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use CompanyCountOutputTypeDefaultArgs instead
+     */
+    export type CompanyCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CompanyCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use BranchCountOutputTypeDefaultArgs instead
+     */
+    export type BranchCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BranchCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use UserDefaultArgs instead
      */
@@ -91556,6 +97666,14 @@ export namespace Prisma {
      * @deprecated Use QuotationDefaultArgs instead
      */
     export type QuotationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = QuotationDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use CompanyDefaultArgs instead
+     */
+    export type CompanyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CompanyDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use BranchDefaultArgs instead
+     */
+    export type BranchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BranchDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

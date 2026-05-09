@@ -56,7 +56,7 @@ export default function CostTable({ data, onEdit }: { data: DashboardData, onEdi
                 </td>
                 <td className="px-4 py-2.5 text-center">
                   <div className="flex items-center justify-center gap-2">
-                    <button 
+                    <button
                       onClick={() => onEdit(cost)}
                       className="text-slate-400 hover:text-white transition-colors"
                     >
@@ -64,7 +64,7 @@ export default function CostTable({ data, onEdit }: { data: DashboardData, onEdi
                         <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
                       </svg>
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleDelete(cost.id)}
                       className="text-red-500 hover:text-red-400 transition-colors"
                     >
