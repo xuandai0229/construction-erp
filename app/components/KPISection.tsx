@@ -16,8 +16,8 @@ export default function KPISection({ data }: { data: DashboardData }) {
   const profit = data.revenue - totalCost;
   const budgetDelta = totalBudget > 0 ? ((totalBudget - totalCost) / totalBudget) * 100 : 0;
   const margin = data.revenue > 0 ? (profit / data.revenue) * 100 : 0;
-  const budgetVsContract = data.project.totalValue > 0 ? (totalBudget / data.project.totalValue) * 100 : 0;
-  const revenueVsContract = data.project.totalValue > 0 ? (data.revenue / data.project.totalValue) * 100 : 0;
+  const budgetVsContract = (data.project.totalValue ?? 0) > 0 ? (totalBudget / (data.project.totalValue ?? 0)) * 100 : 0;
+  const revenueVsContract = (data.project.totalValue ?? 0) > 0 ? (data.revenue / (data.project.totalValue ?? 0)) * 100 : 0;
 
   const cards = [
     { title: 'Tổng giá trị hợp đồng', value: data.project.totalValue, change: 'Giá trị gốc dự án', tone: 'blue', icon: icons.contract },

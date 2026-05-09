@@ -365,13 +365,16 @@ export const useERPStore = create<ERPState>((set, get) => ({
   getAgingReport: (projectId: string) => {
     const { invoices, costs } = get();
     const now = new Date();
-    const categories = ['0-30', '31-60', '61-90', '90+'];
 
-    const getCategory = (dateStr: string) => {
+    const getDaysOverdue = (dateStr: string) => {
       const diff = Math.floor((now.getTime() - new Date(dateStr).getTime()) / (1000 * 60 * 60 * 24));
-      if (diff <= 30) return '0-30';
-      if (diff <= 60) return '31-60';
-      if (diff <= 90) return '61-90';
+      return Math.max(0, diff);
+    };
+
+    const getCategory = (days: number) => {
+      if (days <= 30) return '0-30';
+      if (days <= 60) return '31-60';
+      if (days <= 90) return '61-90';
       return '90+';
     };
 
@@ -379,23 +382,29 @@ export const useERPStore = create<ERPState>((set, get) => ({
 
     // Receivable (Invoices)
     invoices.filter(i => i.remainingAmount > 0).forEach(i => {
+      const days = getDaysOverdue(i.issuedDate);
       report.push({
+        id: i.id,
         type: 'receivable',
-        category: getCategory(i.issuedDate),
+        entityName: 'Khách hàng',
         amount: Number(i.remainingAmount),
-        refId: i.id,
-        partner: 'Khách hàng'
+        date: i.issuedDate,
+        daysOverdue: days,
+        category: getCategory(days)
       });
     });
 
     // Payable (Costs)
     costs.filter(c => c.status === 'unpaid').forEach(c => {
+      const days = getDaysOverdue(c.date);
       report.push({
+        id: c.id,
         type: 'payable',
-        category: getCategory(c.date),
+        entityName: c.supplier || 'Nhiều người bán',
         amount: Number(c.amount),
-        refId: c.id,
-        partner: c.supplier || 'Nhiều người bán'
+        date: c.date,
+        daysOverdue: days,
+        category: getCategory(days)
       });
     });
 
