@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
 
 interface Props {
@@ -15,13 +15,19 @@ export default function AddRevenueModal({ isOpen, onClose }: Props) {
   const addRevenue = useERPStore(state => state.addRevenue);
 
   const [form, setForm] = useState({
-    projectId: currentProjectId || projects[0]?.id || '',
+    projectId: currentProjectId || (projects.length > 0 ? projects[0].id : ''),
     wbsId: '',
     amount: '',
     status: 'unpaid' as 'paid' | 'unpaid',
     description: '',
     date: new Date().toISOString().split('T')[0],
   });
+
+  useEffect(() => {
+    if (!form.projectId && projects.length > 0) {
+      setForm(prev => ({ ...prev, projectId: currentProjectId || projects[0].id }));
+    }
+  }, [projects, currentProjectId]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 

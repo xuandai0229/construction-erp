@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import KPISection from './KPISection';
@@ -25,7 +25,7 @@ export default function Dashboard() {
     init();
   }, [init]);
 
-  const data = getDashboardData();
+  const data = useMemo(() => getDashboardData(), [getDashboardData, projects, costs, budgets]);
   const [editingCost, setEditingCost] = useState<CostRecord | null>(null);
 
   console.log('[UI] Dashboard Render', { isInitialized, hasProjects: projects.length > 0 });

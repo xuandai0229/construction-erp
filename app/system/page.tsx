@@ -15,6 +15,25 @@ export default function SystemPage() {
   const [backupJson, setBackupJson] = useState('');
   const [status, setStatus] = useState({ message: '', type: '' });
 
+  if (userRole !== 'ADMIN') {
+    return (
+      <div className="flex min-h-screen bg-[#020617] text-slate-100">
+        <Sidebar activeItem="system" />
+        <main className="ml-[258px] flex-1 flex items-center justify-center p-8">
+          <div className="text-center space-y-4">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-rose-500/10 text-rose-500 ring-1 ring-rose-500/20">
+              <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-white">Truy cập bị từ chối</h1>
+            <p className="text-slate-400 max-w-sm">Bạn không có quyền quản trị để truy cập trang cấu hình hệ thống.</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   const handleExport = () => {
     const json = getFullBackup();
     const blob = new Blob([json], { type: 'application/json' });

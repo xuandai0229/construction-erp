@@ -160,22 +160,22 @@ export class ProjectService {
   }
 
   static async getAccountingSummary(projectId: string) {
-    const [costs, budgets, revenues, invoices, wbsCount, taskStats, purchaseOrders] = await Promise.all([
-      prisma.costRecord.findMany({
+    const [costsAgg, budgetsAgg, revenuesAgg, invoicesAgg, wbsCount, taskStats, purchaseOrdersAgg] = await Promise.all([
+      prisma.costRecord.aggregate({
         where: { projectId },
-        select: { amount: true, costType: true, status: true },
+        _sum: { amount: true },
       }),
-      prisma.budgetRecord.findMany({
+      prisma.budgetRecord.aggregate({
         where: { projectId },
-        select: { estimatedAmount: true, costType: true },
+        _sum: { estimatedAmount: true },
       }),
-      prisma.revenue.findMany({
+      prisma.revenue.aggregate({
         where: { projectId },
-        select: { amount: true, status: true },
+        _sum: { amount: true },
       }),
-      prisma.invoice.findMany({
+      prisma.invoice.aggregate({
         where: { projectId },
-        select: { amount: true, paidAmount: true, remainingAmount: true, status: true },
+        _sum: { amount: true, paidAmount: true, remainingAmount: true },
       }),
       prisma.wBSItem.count({ where: { projectId } }),
       prisma.task.groupBy({
@@ -183,25 +183,93 @@ export class ProjectService {
         where: { projectId, deletedAt: null },
         _count: { status: true },
       }),
-      prisma.purchaseOrder.findMany({
+      prisma.purchaseOrder.aggregate({
         where: { projectId, status: { in: ["ORDERED", "PARTIALLY_RECEIVED"] } },
-        select: { totalAmount: true }
+        _sum: { totalAmount: true }
       })
     ]);
 
-    return ProjectFinance.calculateProjectStats({
-      costs: costs.map(c => ({ ...c, amount: Number(c.amount) })) as unknown as CostRecord[],
-      budgets: budgets.map(b => ({ ...b, estimatedAmount: Number(b.estimatedAmount) })) as unknown as BudgetRecord[],
-      revenues: revenues.map(r => ({ ...r, amount: Number(r.amount) })) as unknown as RevenueRecord[],
-      invoices: invoices.map(i => ({ 
-        ...i, 
-        amount: Number(i.amount), 
-        paidAmount: Number(i.paidAmount), 
-        remainingAmount: Number(i.remainingAmount) 
-      })) as unknown as InvoiceRecord[],
-      committedCosts: purchaseOrders.map(p => ({ amount: Number(p.totalAmount) })),
-      wbsCount,
-      taskStats,
+    // Extra: Get grouped costs and budgets by type for breakdown
+    const [costsByType, budgetsByType, paidCostsAgg, paidRevenuesAgg] = await Promise.all([
+      prisma.costRecord.groupBy({
+        by: ["costType"],
+        where: { projectId },
+        _sum: { amount: true }
+      }),
+      prisma.budgetRecord.groupBy({
+        by: ["costType"],
+        where: { projectId },
+        _sum: { estimatedAmount: true }
+      }),
+      prisma.costRecord.aggregate({
+        where: { projectId, status: "paid" },
+        _sum: { amount: true }
+      }),
+      prisma.revenue.aggregate({
+        where: { projectId, status: "paid" },
+        _sum: { amount: true }
+      })
+    ]);
+
+    const overdueCount = await prisma.invoice.count({
+      where: { projectId, status: "OVERDUE" }
     });
+
+    const totalCost = Number(costsAgg._sum?.amount || 0);
+    const totalBudget = Number(budgetsAgg._sum?.estimatedAmount || 0);
+    const totalRevenue = Number(revenuesAgg._sum?.amount || 0);
+    const totalInvoiced = Number(invoicesAgg._sum?.amount || 0);
+    const totalPaidInvoice = Number(invoicesAgg._sum?.paidAmount || 0);
+    const totalRemainingInvoice = Number(invoicesAgg._sum?.remainingAmount || 0);
+    const committedCost = Number(purchaseOrdersAgg._sum?.totalAmount || 0);
+    const paidCost = Number(paidCostsAgg._sum?.amount || 0);
+    const paidRevenue = Number(paidRevenuesAgg._sum?.amount || 0);
+
+    const costByType: Record<string, number> = {};
+    costsByType.forEach(c => costByType[c.costType] = Number(c._sum.amount || 0));
+
+    const budgetByType: Record<string, number> = {};
+    budgetsByType.forEach(b => budgetByType[b.costType] = Number(b._sum.estimatedAmount || 0));
+
+    const taskBreakdown: Record<string, number> = {};
+    taskStats.forEach(t => taskBreakdown[t.status] = t._count.status);
+
+    const totalTasks = Object.values(taskBreakdown).reduce((s, v) => s + v, 0);
+    const doneTasks = taskBreakdown["DONE"] ?? 0;
+    const taskProgress = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
+
+    const profit = totalRevenue - totalCost;
+    const profitMargin = totalRevenue > 0 ? (profit / totalRevenue) * 100 : 0;
+    const costVariance = totalBudget - totalCost;
+    const costOverrunPct = totalBudget > 0 ? (totalCost / totalBudget) * 100 : 0;
+    const totalExposure = totalCost + committedCost;
+    const budgetRemaining = totalBudget - totalExposure;
+
+    return {
+      totalCost,
+      paidCost,
+      unpaidCost: totalCost - paidCost,
+      costByType,
+      totalBudget,
+      budgetByType,
+      costVariance,
+      costOverrunPct,
+      isCostOverrun: totalCost > totalBudget && totalBudget > 0,
+      totalRevenue,
+      paidRevenue,
+      unpaidRevenue: totalRevenue - paidRevenue,
+      totalInvoiced,
+      totalPaidInvoice,
+      totalRemainingInvoice,
+      overdueInvoices: overdueCount,
+      profit,
+      profitMargin,
+      taskProgress,
+      taskBreakdown,
+      wbsCount,
+      committedCost,
+      totalExposure,
+      budgetRemaining,
+    };
   }
 }

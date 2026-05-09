@@ -2,8 +2,8 @@ import { RevenueRecord, InvoiceRecord, PaymentRecord, ServiceResponse } from '@/
 import { mapRevenueFromApi, mapInvoiceFromApi, mapPaymentFromApi } from '@/lib/mappers/revenue.mapper';
 
 export const revenueApi = {
-  async getRevenuesByProject(projectId: string): Promise<ServiceResponse<RevenueRecord[]>> {
-    const res = await fetch(`/api/revenues?projectId=${projectId}`);
+  async getRevenuesByProject(projectId: string, headers: any = {}): Promise<ServiceResponse<RevenueRecord[]>> {
+    const res = await fetch(`/api/revenues?projectId=${projectId}`, { headers });
     const json = await res.json();
     if (json.success) {
       return { success: true, data: json.data.map(mapRevenueFromApi) };
@@ -11,8 +11,8 @@ export const revenueApi = {
     return { success: false, error: json.error };
   },
 
-  async getInvoicesByProject(projectId: string): Promise<ServiceResponse<InvoiceRecord[]>> {
-    const res = await fetch(`/api/invoices?projectId=${projectId}`);
+  async getInvoicesByProject(projectId: string, headers: any = {}): Promise<ServiceResponse<InvoiceRecord[]>> {
+    const res = await fetch(`/api/invoices?projectId=${projectId}`, { headers });
     const json = await res.json();
     if (json.success) {
       return { success: true, data: json.data.map(mapInvoiceFromApi) };
@@ -20,8 +20,8 @@ export const revenueApi = {
     return { success: false, error: json.error };
   },
 
-  async getPaymentsByProject(projectId: string): Promise<ServiceResponse<PaymentRecord[]>> {
-    const res = await fetch(`/api/payments?projectId=${projectId}`);
+  async getPaymentsByProject(projectId: string, headers: any = {}): Promise<ServiceResponse<PaymentRecord[]>> {
+    const res = await fetch(`/api/payments?projectId=${projectId}`, { headers });
     const json = await res.json();
     if (json.success) {
       return { success: true, data: json.data.map(mapPaymentFromApi) };
@@ -29,72 +29,74 @@ export const revenueApi = {
     return { success: false, error: json.error };
   },
 
-  async createRevenue(data: any): Promise<ServiceResponse<void>> {
+  async createRevenue(data: any, headers: any = {}): Promise<ServiceResponse<RevenueRecord>> {
     const res = await fetch('/api/revenues', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        project_id: data.projectId,
-        wbs_id: data.wbsId,
-        amount: data.amount,
-        status: data.status,
-        description: data.description,
-        date: data.date
-      }),
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
     });
     const json = await res.json();
-    return { success: json.success, error: json.error };
+    return { success: json.success, data: json.data, error: json.error };
   },
 
-  async updateRevenue(id: string, updates: any): Promise<ServiceResponse<void>> {
+  async updateRevenue(id: string, updates: any, headers: any = {}): Promise<ServiceResponse<void>> {
     const res = await fetch(`/api/revenues/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...headers, 'Content-Type': 'application/json' },
       body: JSON.stringify(updates),
     });
     const json = await res.json();
     return { success: json.success, error: json.error };
   },
 
-  async createInvoice(data: any): Promise<ServiceResponse<void>> {
+  async createInvoice(data: any, headers: any = {}): Promise<ServiceResponse<InvoiceRecord>> {
     const res = await fetch('/api/invoices', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        project_id: data.projectId,
-        wbs_id: data.wbsId,
-        amount: data.amount,
-        issued_date: data.issuedDate
-      }),
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
     });
     const json = await res.json();
-    return { success: json.success, error: json.error };
+    return { success: json.success, data: json.data, error: json.error };
   },
 
-  async deleteInvoice(id: string): Promise<ServiceResponse<void>> {
-    const res = await fetch(`/api/invoices/${id}`, { method: 'DELETE' });
-    const json = await res.json();
-    return { success: json.success, error: json.error };
-  },
-
-  async createPayment(data: any): Promise<ServiceResponse<void>> {
+  async createPayment(data: any, headers: any = {}): Promise<ServiceResponse<PaymentRecord>> {
     const res = await fetch('/api/payments', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        project_id: data.projectId,
-        invoice_id: data.invoiceId,
-        amount: data.amount,
-        date: data.date,
-        description: data.description
-      }),
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const json = await res.json();
+    return { success: json.success, data: json.data, error: json.error };
+  },
+
+  async deletePayment(id: string, headers: any = {}): Promise<ServiceResponse<void>> {
+    const res = await fetch(`/api/payments/${id}`, { method: 'DELETE', headers });
+    const json = await res.json();
+    return { success: json.success, error: json.error };
+  },
+
+  async updateInvoice(id: string, updates: any, headers: any = {}): Promise<ServiceResponse<void>> {
+    const res = await fetch(`/api/invoices/${id}`, {
+      method: 'PUT',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates),
     });
     const json = await res.json();
     return { success: json.success, error: json.error };
   },
 
-  async deletePayment(id: string): Promise<ServiceResponse<void>> {
-    const res = await fetch(`/api/payments/${id}`, { method: 'DELETE' });
+  async updatePayment(id: string, updates: any, headers: any = {}): Promise<ServiceResponse<void>> {
+    const res = await fetch(`/api/payments/${id}`, {
+      method: 'PUT',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates),
+    });
+    const json = await res.json();
+    return { success: json.success, error: json.error };
+  },
+
+  async deleteInvoice(id: string, headers: any = {}): Promise<ServiceResponse<void>> {
+    const res = await fetch(`/api/invoices/${id}`, { method: 'DELETE', headers });
     const json = await res.json();
     return { success: json.success, error: json.error };
   }

@@ -1,5 +1,6 @@
 import { handleApiError, successResponse, ApiError } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
+import { RevenueService } from "@/services/revenue.service";
 
 export async function DELETE(
   _request: Request,
@@ -30,6 +31,20 @@ export async function DELETE(
     });
 
     return successResponse({ deleted: true });
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const body = await request.json();
+    const updated = await RevenueService.updatePayment(id, body);
+    return successResponse(updated);
   } catch (error) {
     return handleApiError(error);
   }

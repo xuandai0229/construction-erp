@@ -83,7 +83,7 @@ export class CostService {
   }
 
   static async findByProject(projectId: string, filters: any = {}) {
-    const { costType, status, startDate, endDate } = filters;
+    const { costType, status, startDate, endDate, limit, skip } = filters;
     
     return prisma.costRecord.findMany({
       where: {
@@ -97,6 +97,8 @@ export class CostService {
           }
         })
       },
+      take: limit ? Number(limit) : 500,
+      skip: skip ? Number(skip) : 0,
       orderBy: { date: "desc" },
       include: {
         wbs: { select: { name: true } }

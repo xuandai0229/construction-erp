@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter, usePathname } from 'next/navigation';
+import { useERPStore } from '@/store/erpStore';
 
 const menuItems = [
   { id: 'overview', label: 'Tổng quan', href: '/', icon: 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
@@ -26,11 +27,18 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
   const router = useRouter();
   const pathname = usePathname();
 
+  const userRole = useERPStore(state => state.userRole);
+
   const isActive = (item: typeof menuItems[0]) => {
     if (activeItem) return activeItem === item.id;
     if (item.href === '/') return pathname === '/';
     return pathname.startsWith(item.href);
   };
+
+  const filteredItems = menuItems.filter(item => {
+    if (item.id === 'system') return userRole === 'ADMIN';
+    return true;
+  });
 
   return (
     <aside className="fixed inset-y-0 left-0 z-30 flex w-[258px] flex-col border-r border-slate-800 bg-[#020617] shadow-2xl shadow-black/30">
@@ -49,7 +57,7 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
 
       <nav className="flex-1 px-3 py-5">
         <div className="space-y-1.5">
-          {menuItems.map((item) => (
+          {filteredItems.map((item) => (
             <button
               key={item.id}
               onClick={() => router.push(item.href)}

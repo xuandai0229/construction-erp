@@ -131,14 +131,77 @@ export class RevenueService {
     });
   }
 
-  static async findInvoicesByProject(projectId: string) {
+  static async findInvoicesByProject(projectId: string, filters: any = {}) {
+    const { limit, skip } = filters;
     return prisma.invoice.findMany({
       where: { projectId },
       include: {
         payments: true,
         wbs: { select: { name: true } }
       },
+      take: limit ? Number(limit) : 500,
+      skip: skip ? Number(skip) : 0,
       orderBy: { issuedDate: "desc" }
+    });
+  }
+
+  static async findRevenuesByProject(projectId: string, filters: any = {}) {
+    const { limit, skip } = filters;
+    return prisma.revenue.findMany({
+      where: { projectId },
+      take: limit ? Number(limit) : 500,
+      skip: skip ? Number(skip) : 0,
+      orderBy: { date: "desc" }
+    });
+  }
+
+  static async findPaymentsByProject(projectId: string, filters: any = {}) {
+    const { limit, skip } = filters;
+    return prisma.payment.findMany({
+      where: { projectId },
+      take: limit ? Number(limit) : 500,
+      skip: skip ? Number(skip) : 0,
+      orderBy: { date: "desc" }
+    });
+  }
+
+  static async updateInvoice(id: string, updates: any) {
+    const existing = await prisma.invoice.findUnique({ where: { id } });
+    if (!existing) throw new ApiError(404, "Không tìm thấy hóa đơn");
+    
+    return prisma.$transaction(async (tx) => {
+      const updated = await tx.invoice.update({
+        where: { id },
+        data: updates
+      });
+      await AuditService.log({
+        action: "UPDATE",
+        entity: "Invoice",
+        entityId: id,
+        oldData: existing,
+        newData: updated
+      });
+      return updated;
+    });
+  }
+
+  static async updatePayment(id: string, updates: any) {
+    const existing = await prisma.payment.findUnique({ where: { id } });
+    if (!existing) throw new ApiError(404, "Không tìm thấy thanh toán");
+    
+    return prisma.$transaction(async (tx) => {
+      const updated = await tx.payment.update({
+        where: { id },
+        data: updates
+      });
+      await AuditService.log({
+        action: "UPDATE",
+        entity: "Payment",
+        entityId: id,
+        oldData: existing,
+        newData: updated
+      });
+      return updated;
     });
   }
 

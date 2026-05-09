@@ -2,8 +2,8 @@ import { CostRecord, BudgetRecord, ServiceResponse } from '@/app/types';
 import { mapCostFromApi, mapBudgetFromApi, mapCostToApi } from '@/lib/mappers/cost.mapper';
 
 export const costApi = {
-  async getCostsByProject(projectId: string): Promise<ServiceResponse<CostRecord[]>> {
-    const res = await fetch(`/api/costs?projectId=${projectId}`);
+  async getCostsByProject(projectId: string, headers: any = {}): Promise<ServiceResponse<CostRecord[]>> {
+    const res = await fetch(`/api/costs?projectId=${projectId}`, { headers });
     const json = await res.json();
     if (json.success) {
       return { success: true, data: json.data.map(mapCostFromApi) };
@@ -11,8 +11,8 @@ export const costApi = {
     return { success: false, error: json.error };
   },
 
-  async getBudgetsByProject(projectId: string): Promise<ServiceResponse<BudgetRecord[]>> {
-    const res = await fetch(`/api/budgets?projectId=${projectId}`);
+  async getBudgetsByProject(projectId: string, headers: any = {}): Promise<ServiceResponse<BudgetRecord[]>> {
+    const res = await fetch(`/api/budgets?projectId=${projectId}`, { headers });
     const json = await res.json();
     if (json.success) {
       return { success: true, data: json.data.map(mapBudgetFromApi) };
@@ -20,49 +20,44 @@ export const costApi = {
     return { success: false, error: json.error };
   },
 
-  async createCost(data: Partial<CostRecord>): Promise<ServiceResponse<void>> {
+  async createCost(data: any, headers: any = {}): Promise<ServiceResponse<CostRecord>> {
     const res = await fetch('/api/costs', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...headers, 'Content-Type': 'application/json' },
       body: JSON.stringify(mapCostToApi(data)),
     });
     const json = await res.json();
-    return { success: json.success, error: json.error };
+    return { success: json.success, data: json.data, error: json.error };
   },
 
-  async updateCost(id: string, updates: Partial<CostRecord>): Promise<ServiceResponse<void>> {
+  async updateCost(id: string, updates: Partial<CostRecord>, headers: any = {}): Promise<ServiceResponse<void>> {
     const res = await fetch(`/api/costs/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...headers, 'Content-Type': 'application/json' },
       body: JSON.stringify(mapCostToApi(updates)),
     });
     const json = await res.json();
     return { success: json.success, error: json.error };
   },
 
-  async deleteCost(id: string): Promise<ServiceResponse<void>> {
-    const res = await fetch(`/api/costs/${id}`, { method: 'DELETE' });
+  async deleteCost(id: string, headers: any = {}): Promise<ServiceResponse<void>> {
+    const res = await fetch(`/api/costs/${id}`, { method: 'DELETE', headers });
     const json = await res.json();
     return { success: json.success, error: json.error };
   },
 
-  async createBudget(data: any): Promise<ServiceResponse<void>> {
+  async createBudget(data: any, headers: any = {}): Promise<ServiceResponse<BudgetRecord>> {
     const res = await fetch('/api/budgets', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        project_id: data.projectId,
-        wbs_id: data.wbsId,
-        cost_type: data.costType,
-        estimated_amount: data.estimatedAmount
-      }),
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
     });
     const json = await res.json();
-    return { success: json.success, error: json.error };
+    return { success: json.success, data: json.data, error: json.error };
   },
 
-  async deleteBudget(id: string): Promise<ServiceResponse<void>> {
-    const res = await fetch(`/api/budgets/${id}`, { method: 'DELETE' });
+  async deleteBudget(id: string, headers: any = {}): Promise<ServiceResponse<void>> {
+    const res = await fetch(`/api/budgets/${id}`, { method: 'DELETE', headers });
     const json = await res.json();
     return { success: json.success, error: json.error };
   }

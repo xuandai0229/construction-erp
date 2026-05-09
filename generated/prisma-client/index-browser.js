@@ -126,10 +126,10 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
-  role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  role: 'role'
 };
 
 exports.Prisma.CategoryScalarFieldEnum = {
@@ -143,16 +143,16 @@ exports.Prisma.CategoryScalarFieldEnum = {
 exports.Prisma.ProjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  description: 'description',
-  status: 'status',
-  ownerId: 'ownerId',
-  contractValue: 'contractValue',
-  totalBudget: 'totalBudget',
-  startDate: 'startDate',
-  endDate: 'endDate',
   createdAt: 'createdAt',
+  deletedAt: 'deletedAt',
+  description: 'description',
+  ownerId: 'ownerId',
+  status: 'status',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  contractValue: 'contractValue',
+  endDate: 'endDate',
+  startDate: 'startDate',
+  totalBudget: 'totalBudget'
 };
 
 exports.Prisma.TaskScalarFieldEnum = {
@@ -163,24 +163,25 @@ exports.Prisma.TaskScalarFieldEnum = {
   projectId: 'projectId',
   categoryId: 'categoryId',
   assigneeId: 'assigneeId',
-  dueDate: 'dueDate',
-  priority: 'priority',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  dueDate: 'dueDate',
+  priority: 'priority'
 };
 
 exports.Prisma.WBSItemScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
   name: 'name',
-  code: 'code',
   parentId: 'parentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  budgetAmount: 'budgetAmount',
+  code: 'code',
   level: 'level',
   sortOrder: 'sortOrder',
-  budgetAmount: 'budgetAmount',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.CostRecordScalarFieldEnum = {
@@ -195,11 +196,12 @@ exports.Prisma.CostRecordScalarFieldEnum = {
   note: 'note',
   date: 'date',
   status: 'status',
-  requestId: 'requestId',
-  purchaseOrderId: 'purchaseOrderId',
-  createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  createdById: 'createdById',
+  purchaseOrderId: 'purchaseOrderId',
+  requestId: 'requestId',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.BudgetRecordScalarFieldEnum = {
@@ -208,9 +210,10 @@ exports.Prisma.BudgetRecordScalarFieldEnum = {
   wbsId: 'wbsId',
   costType: 'costType',
   estimatedAmount: 'estimatedAmount',
-  createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  createdById: 'createdById',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.RevenueScalarFieldEnum = {
@@ -222,28 +225,33 @@ exports.Prisma.RevenueScalarFieldEnum = {
   date: 'date',
   status: 'status',
   description: 'description',
-  createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  createdById: 'createdById',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.InvoiceScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
   wbsId: 'wbsId',
-  invoiceNumber: 'invoiceNumber',
   amount: 'amount',
   issuedDate: 'issuedDate',
-  dueDate: 'dueDate',
   paidAmount: 'paidAmount',
   remainingAmount: 'remainingAmount',
-  status: 'status',
-  note: 'note',
-  requestId: 'requestId',
-  createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  contractId: 'contractId'
+  createdById: 'createdById',
+  dueDate: 'dueDate',
+  invoiceNumber: 'invoiceNumber',
+  note: 'note',
+  status: 'status',
+  contractId: 'contractId',
+  requestId: 'requestId',
+  deletedAt: 'deletedAt',
+  version: 'version',
+  certifiedProgress: 'certifiedProgress',
+  retentionAmount: 'retentionAmount'
 };
 
 exports.Prisma.PaymentScalarFieldEnum = {
@@ -253,9 +261,10 @@ exports.Prisma.PaymentScalarFieldEnum = {
   amount: 'amount',
   date: 'date',
   description: 'description',
-  requestId: 'requestId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  requestId: 'requestId',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.LedgerAccountScalarFieldEnum = {
@@ -266,7 +275,8 @@ exports.Prisma.LedgerAccountScalarFieldEnum = {
   description: 'description',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.JournalEntryScalarFieldEnum = {
@@ -279,7 +289,8 @@ exports.Prisma.JournalEntryScalarFieldEnum = {
   sourceId: 'sourceId',
   isPosted: 'isPosted',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.TransactionLineScalarFieldEnum = {
@@ -288,7 +299,8 @@ exports.Prisma.TransactionLineScalarFieldEnum = {
   accountId: 'accountId',
   amount: 'amount',
   type: 'type',
-  description: 'description'
+  description: 'description',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.PurchaseRequestScalarFieldEnum = {
@@ -304,7 +316,8 @@ exports.Prisma.PurchaseRequestScalarFieldEnum = {
   neededBy: 'neededBy',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.PurchaseOrderScalarFieldEnum = {
@@ -320,7 +333,8 @@ exports.Prisma.PurchaseOrderScalarFieldEnum = {
   expectedDelivery: 'expectedDelivery',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.PurchaseOrderItemScalarFieldEnum = {
@@ -333,7 +347,8 @@ exports.Prisma.PurchaseOrderItemScalarFieldEnum = {
   amount: 'amount',
   costType: 'costType',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.GoodsReceiptScalarFieldEnum = {
@@ -344,7 +359,8 @@ exports.Prisma.GoodsReceiptScalarFieldEnum = {
   notes: 'notes',
   receivedById: 'receivedById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.ContractScalarFieldEnum = {
@@ -362,7 +378,8 @@ exports.Prisma.ContractScalarFieldEnum = {
   endDate: 'endDate',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.ContractChangeScalarFieldEnum = {
@@ -375,7 +392,8 @@ exports.Prisma.ContractChangeScalarFieldEnum = {
   approvedDate: 'approvedDate',
   status: 'status',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.AuditLogScalarFieldEnum = {
@@ -388,7 +406,261 @@ exports.Prisma.AuditLogScalarFieldEnum = {
   newData: 'newData',
   timestamp: 'timestamp',
   ipAddress: 'ipAddress',
-  userAgent: 'userAgent'
+  userAgent: 'userAgent',
+  correlationId: 'correlationId',
+  reason: 'reason',
+  requestId: 'requestId',
+  severity: 'severity'
+};
+
+exports.Prisma.ActivityFeedScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  userId: 'userId',
+  action: 'action',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  message: 'message',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ApprovalRequestScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  requesterId: 'requesterId',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  requestData: 'requestData',
+  status: 'status',
+  reason: 'reason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ApprovalStepScalarFieldEnum = {
+  id: 'id',
+  approvalRequestId: 'approvalRequestId',
+  approverId: 'approverId',
+  status: 'status',
+  comment: 'comment',
+  stepOrder: 'stepOrder',
+  processedAt: 'processedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AuthorityMatrixScalarFieldEnum = {
+  id: 'id',
+  role: 'role',
+  maxAmount: 'maxAmount',
+  entityType: 'entityType',
+  projectType: 'projectType',
+  priority: 'priority',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BOQItemScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  wbsId: 'wbsId',
+  description: 'description',
+  unit: 'unit',
+  quantity: 'quantity',
+  unitRate: 'unitRate',
+  totalAmount: 'totalAmount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.CommentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.DelegationPolicyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  rules: 'rules',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DelegationWindowScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  delegateId: 'delegateId',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  reason: 'reason',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DocumentScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  name: 'name',
+  url: 'url',
+  type: 'type',
+  version: 'version',
+  size: 'size',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  uploadedById: 'uploadedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.FiscalPeriodScalarFieldEnum = {
+  id: 'id',
+  month: 'month',
+  isLocked: 'isLocked',
+  lockedAt: 'lockedAt',
+  lockedById: 'lockedById',
+  closingBalance: 'closingBalance',
+  reconciledAt: 'reconciledAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InventoryTransactionScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  materialId: 'materialId',
+  type: 'type',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  referenceId: 'referenceId',
+  note: 'note',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.MaterialScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  unit: 'unit',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.MeasurementScalarFieldEnum = {
+  id: 'id',
+  progressEntryId: 'progressEntryId',
+  description: 'description',
+  length: 'length',
+  width: 'width',
+  height: 'height',
+  factor: 'factor',
+  quantity: 'quantity'
+};
+
+exports.Prisma.ProgressEntryScalarFieldEnum = {
+  id: 'id',
+  boqItemId: 'boqItemId',
+  date: 'date',
+  quantity: 'quantity',
+  amount: 'amount',
+  createdById: 'createdById',
+  note: 'note',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SiteConsumptionScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  wbsId: 'wbsId',
+  materialId: 'materialId',
+  quantity: 'quantity',
+  date: 'date',
+  note: 'note'
+};
+
+exports.Prisma.SubcontractScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  contractorName: 'contractorName',
+  contractNumber: 'contractNumber',
+  title: 'title',
+  status: 'status',
+  totalValue: 'totalValue',
+  retentionRate: 'retentionRate',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.SubcontractInvoiceScalarFieldEnum = {
+  id: 'id',
+  subcontractId: 'subcontractId',
+  invoiceNumber: 'invoiceNumber',
+  amount: 'amount',
+  retentionAmount: 'retentionAmount',
+  netAmount: 'netAmount',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SubcontractItemScalarFieldEnum = {
+  id: 'id',
+  subcontractId: 'subcontractId',
+  wbsId: 'wbsId',
+  description: 'description',
+  unit: 'unit',
+  quantity: 'quantity',
+  unitRate: 'unitRate',
+  totalAmount: 'totalAmount'
+};
+
+exports.Prisma.SubcontractProgressScalarFieldEnum = {
+  id: 'id',
+  subcontractItemId: 'subcontractItemId',
+  date: 'date',
+  quantity: 'quantity',
+  amount: 'amount',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TrainingRecordScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  module: 'module',
+  status: 'status',
+  score: 'score',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserMaturityScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  accuracy: 'accuracy',
+  maturityLevel: 'maturityLevel',
+  lastAssessedAt: 'lastAssessedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -398,6 +670,10 @@ exports.Prisma.SortOrder = {
 
 exports.Prisma.NullableJsonNullValueInput = {
   DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
@@ -426,10 +702,10 @@ exports.UserRole = exports.$Enums.UserRole = {
 exports.ProjectStatus = exports.$Enums.ProjectStatus = {
   PLANNED: 'PLANNED',
   IN_PROGRESS: 'IN_PROGRESS',
-  ACTIVE: 'ACTIVE',
   COMPLETED: 'COMPLETED',
-  CLOSED: 'CLOSED',
-  CANCELLED: 'CANCELLED'
+  CANCELLED: 'CANCELLED',
+  ACTIVE: 'ACTIVE',
+  CLOSED: 'CLOSED'
 };
 
 exports.TaskStatus = exports.$Enums.TaskStatus = {
@@ -493,6 +769,28 @@ exports.ContractStatus = exports.$Enums.ContractStatus = {
   TERMINATED: 'TERMINATED'
 };
 
+exports.ApprovalStatus = exports.$Enums.ApprovalStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.InventoryTransactionType = exports.$Enums.InventoryTransactionType = {
+  RECEIPT: 'RECEIPT',
+  ISSUE: 'ISSUE',
+  RETURN: 'RETURN',
+  ADJUST: 'ADJUST'
+};
+
+exports.SubcontractStatus = exports.$Enums.SubcontractStatus = {
+  DRAFT: 'DRAFT',
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  COMPLETED: 'COMPLETED',
+  TERMINATED: 'TERMINATED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Category: 'Category',
@@ -513,7 +811,28 @@ exports.Prisma.ModelName = {
   GoodsReceipt: 'GoodsReceipt',
   Contract: 'Contract',
   ContractChange: 'ContractChange',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  ActivityFeed: 'ActivityFeed',
+  ApprovalRequest: 'ApprovalRequest',
+  ApprovalStep: 'ApprovalStep',
+  AuthorityMatrix: 'AuthorityMatrix',
+  BOQItem: 'BOQItem',
+  Comment: 'Comment',
+  DelegationPolicy: 'DelegationPolicy',
+  DelegationWindow: 'DelegationWindow',
+  Document: 'Document',
+  FiscalPeriod: 'FiscalPeriod',
+  InventoryTransaction: 'InventoryTransaction',
+  Material: 'Material',
+  Measurement: 'Measurement',
+  ProgressEntry: 'ProgressEntry',
+  SiteConsumption: 'SiteConsumption',
+  Subcontract: 'Subcontract',
+  SubcontractInvoice: 'SubcontractInvoice',
+  SubcontractItem: 'SubcontractItem',
+  SubcontractProgress: 'SubcontractProgress',
+  TrainingRecord: 'TrainingRecord',
+  UserMaturity: 'UserMaturity'
 };
 
 /**

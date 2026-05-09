@@ -15,31 +15,33 @@ export async function GET(request: Request) {
     }
 
     // Global stats across all projects for main dashboard
-    const [projects, costs, budgets, revenues, invoices] = await Promise.all([
-      prisma.project.findMany({ where: { deletedAt: null } }),
-      prisma.costRecord.findMany({ select: { amount: true, costType: true } }),
-      prisma.budgetRecord.findMany({ select: { estimatedAmount: true } }),
-      prisma.revenue.findMany({ select: { amount: true } }),
-      prisma.invoice.findMany({ select: { amount: true, paidAmount: true, remainingAmount: true } }),
+    const [projectCount, activeProjectCount, costAgg, budgetAgg, revenueAgg, invoiceAgg, costsByType] = await Promise.all([
+      prisma.project.count({ where: { deletedAt: null } }),
+      prisma.project.count({ where: { deletedAt: null, status: { in: ['ACTIVE', 'IN_PROGRESS'] } } }),
+      prisma.costRecord.aggregate({ _sum: { amount: true } }),
+      prisma.budgetRecord.aggregate({ _sum: { estimatedAmount: true } }),
+      prisma.revenue.aggregate({ _sum: { amount: true } }),
+      prisma.invoice.aggregate({ _sum: { amount: true, paidAmount: true, remainingAmount: true } }),
+      prisma.costRecord.groupBy({ by: ["costType"], _sum: { amount: true } })
     ]);
 
-    const totalRevenue = revenues.reduce((s, r) => s + Number(r.amount), 0);
-    const totalCost = costs.reduce((s, c) => s + Number(c.amount), 0);
-    const totalBudget = budgets.reduce((s, b) => s + Number(b.estimatedAmount), 0);
+    const totalRevenue = Number(revenueAgg._sum?.amount || 0);
+    const totalCost = Number(costAgg._sum?.amount || 0);
+    const totalBudget = Number(budgetAgg._sum?.estimatedAmount || 0);
     
     const costByType: Record<string, number> = {};
-    costs.forEach(c => {
-      costByType[c.costType] = (costByType[c.costType] || 0) + Number(c.amount);
+    costsByType.forEach(c => {
+      costByType[c.costType] = Number(c._sum?.amount || 0);
     });
 
-    const totalInvoiced = invoices.reduce((s, i) => s + Number(i.amount), 0);
-    const totalCollected = invoices.reduce((s, i) => s + Number(i.paidAmount), 0);
-    const totalReceivable = invoices.reduce((s, i) => s + Number(i.remainingAmount), 0);
+    const totalInvoiced = Number(invoiceAgg._sum?.amount || 0);
+    const totalCollected = Number(invoiceAgg._sum?.paidAmount || 0);
+    const totalReceivable = Number(invoiceAgg._sum?.remainingAmount || 0);
 
     return successResponse({
       global: {
-        totalProjects: projects.length,
-        activeProjects: projects.filter(p => p.status === 'ACTIVE' || p.status === 'IN_PROGRESS').length,
+        totalProjects: projectCount,
+        activeProjects: activeProjectCount,
         totalRevenue,
         totalCost,
         totalBudget,

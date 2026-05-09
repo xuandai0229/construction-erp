@@ -29,7 +29,7 @@ interface ERPState {
   projectStats: any; // Financial summary
   initialized: boolean;
 
-  init: () => Promise<void>;
+  init: (params?: any) => Promise<void>;
   setCurrentProject: (projectId: string) => Promise<void>;
   
   addProject: (name: string, investor: string, totalValue: number, status: ProjectStatus, startDate?: string, endDate?: string) => Promise<{ success: boolean; data?: any; error?: string }>;
@@ -73,6 +73,7 @@ interface ERPState {
 
   // Internal: refresh all data for current project
   _refreshProjectData: (projectId: string) => Promise<void>;
+  _refreshing: boolean;
 }
 
 export const useERPStore = create<ERPState>((set, get) => ({
@@ -90,16 +91,17 @@ export const useERPStore = create<ERPState>((set, get) => ({
   currentProjectId: '', 
   projectStats: null,
   initialized: false,
+  _refreshing: false,
 
-  init: async () => {
+  init: async (params: any = {}) => {
     try {
-      const res = await projectApi.getAll();
+      const res = await projectApi.getAll(params);
       if (res.success && res.data) {
-        set({ projects: res.data, initialized: true });
-        if (res.data.length > 0) {
-           const projectId = get().currentProjectId || res.data[0].id;
-           set({ currentProjectId: projectId });
-           await get()._refreshProjectData(projectId);
+        set({ projects: res.data.data, initialized: true });
+        if (res.data.data.length > 0) {
+            const projectId = get().currentProjectId || res.data.data[0].id;
+            set({ currentProjectId: projectId });
+            await get()._refreshProjectData(projectId);
         }
       } else {
         set({ initialized: true });
@@ -111,16 +113,20 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   _refreshProjectData: async (projectId: string) => {
-    if (!projectId) return;
+    if (!projectId || get()._refreshing) return;
+    set({ _refreshing: true });
     try {
+      const role = get().userRole;
+      const headers = { 'x-user-role': role };
+
       const [wbsRes, costsRes, budgetsRes, revenuesRes, invoicesRes, paymentsRes, statsRes] = await Promise.all([
-        wbsApi.getByProject(projectId),
-        costApi.getCostsByProject(projectId),
-        costApi.getBudgetsByProject(projectId),
-        revenueApi.getRevenuesByProject(projectId),
-        revenueApi.getInvoicesByProject(projectId),
-        revenueApi.getPaymentsByProject(projectId),
-        projectApi.getStats(projectId),
+        wbsApi.getByProject(projectId, headers),
+        costApi.getCostsByProject(projectId, headers),
+        costApi.getBudgetsByProject(projectId, headers),
+        revenueApi.getRevenuesByProject(projectId, headers),
+        revenueApi.getInvoicesByProject(projectId, headers),
+        revenueApi.getPaymentsByProject(projectId, headers),
+        projectApi.getStats(projectId, headers),
       ]);
 
       set({
@@ -131,9 +137,11 @@ export const useERPStore = create<ERPState>((set, get) => ({
         revenues: revenuesRes.success && revenuesRes.data ? revenuesRes.data : [],
         invoices: invoicesRes.success && invoicesRes.data ? invoicesRes.data : [],
         payments: paymentsRes.success && paymentsRes.data ? paymentsRes.data : [],
+        _refreshing: false,
       });
     } catch (e) {
       console.error('_refreshProjectData error:', e);
+      set({ _refreshing: false });
     }
   },
 
@@ -143,7 +151,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   addProject: async (name, investor, totalValue, status, startDate, endDate) => {
-    const res = await projectApi.create({ name, investor, totalValue, status, startDate, endDate });
+    const role = get().userRole;
+    const res = await projectApi.create({ name, investor, totalValue, status, startDate, endDate }, { 'x-user-role': role });
     if (res.success) {
       await get().init();
     }
@@ -151,7 +160,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   updateProject: async (id, updates) => {
-    const res = await projectApi.update(id, updates);
+    const role = get().userRole;
+    const res = await projectApi.update(id, updates, { 'x-user-role': role });
     if (res.success) {
       await get().init();
     }
@@ -159,7 +169,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   deleteProject: async (id) => {
-    const res = await projectApi.delete(id);
+    const role = get().userRole;
+    const res = await projectApi.delete(id, { 'x-user-role': role });
     if (res.success) {
       await get().init();
     }
@@ -169,9 +180,13 @@ export const useERPStore = create<ERPState>((set, get) => ({
   addTask: async (projectId, title, description, status) => {
     try {
       const body = { projectId, title, description, status: status ?? 'TODO' };
+      const role = get().userRole;
       const res = await fetch('/api/tasks', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-user-role': role 
+        },
         body: JSON.stringify(body),
       });
       const json = await res.json();
@@ -191,7 +206,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   addWBS: async (projectId, name, parentId) => {
-    const res = await wbsApi.create({ projectId, name, parentId });
+    const role = get().userRole;
+    const res = await wbsApi.create({ projectId, name, parentId }, { 'x-user-role': role });
     if (res.success) {
       await get()._refreshProjectData(projectId);
     }
@@ -199,7 +215,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   updateWBS: async (projectId, wbsId, updates) => {
-    const res = await wbsApi.update(wbsId, updates);
+    const role = get().userRole;
+    const res = await wbsApi.update(wbsId, updates, { 'x-user-role': role });
     if (res.success) {
       await get()._refreshProjectData(projectId);
     }
@@ -207,7 +224,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   deleteWBS: async (projectId, wbsId) => {
-    const res = await wbsApi.delete(wbsId);
+    const role = get().userRole;
+    const res = await wbsApi.delete(wbsId, { 'x-user-role': role });
     if (res.success) {
       await get()._refreshProjectData(projectId);
     }
@@ -215,7 +233,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   addCost: async (projectId, wbsId, costType, amount, quantity, unitPrice) => {
-    const res = await costApi.createCost({ projectId, wbsId, costType, amount, quantity, unitPrice });
+    const role = get().userRole;
+    const res = await costApi.createCost({ projectId, wbsId, costType, amount, quantity, unitPrice }, { 'x-user-role': role });
     if (res.success) {
       await get()._refreshProjectData(projectId);
     }
@@ -223,7 +242,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   updateCost: async (projectId, costId, updates) => {
-    const res = await costApi.updateCost(costId, updates);
+    const role = get().userRole;
+    const res = await costApi.updateCost(costId, updates, { 'x-user-role': role });
     if (res.success) {
       await get()._refreshProjectData(projectId);
     }
@@ -231,7 +251,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   deleteCost: async (projectId, costId) => {
-    const res = await costApi.deleteCost(costId);
+    const role = get().userRole;
+    const res = await costApi.deleteCost(costId, { 'x-user-role': role });
     if (res.success) {
       await get()._refreshProjectData(projectId);
     }
@@ -239,7 +260,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   addBudget: async (projectId, wbsId, costType, estimatedAmount) => {
-    const res = await costApi.createBudget({ projectId, wbsId, costType, estimatedAmount });
+    const role = get().userRole;
+    const res = await costApi.createBudget({ projectId, wbsId, costType, estimatedAmount }, { 'x-user-role': role });
     if (res.success) {
       await get()._refreshProjectData(projectId);
     }
@@ -247,7 +269,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   deleteBudget: async (projectId, budgetId) => {
-    const res = await costApi.deleteBudget(budgetId);
+    const role = get().userRole;
+    const res = await costApi.deleteBudget(budgetId, { 'x-user-role': role });
     if (res.success) {
       await get()._refreshProjectData(projectId);
     }
@@ -255,7 +278,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   addRevenue: async (projectId, wbsId, amount, status, description, date) => {
-    const res = await revenueApi.createRevenue({ projectId, wbsId, amount, status, description, date });
+    const role = get().userRole;
+    const res = await revenueApi.createRevenue({ projectId, wbsId, amount, status, description, date }, { 'x-user-role': role });
     if (res.success) {
       await get()._refreshProjectData(projectId);
     }
@@ -263,7 +287,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   updateRevenue: async (id, updates) => {
-    const res = await revenueApi.updateRevenue(id, updates);
+    const role = get().userRole;
+    const res = await revenueApi.updateRevenue(id, updates, { 'x-user-role': role });
     if (res.success) {
       const { currentProjectId } = get();
       if (currentProjectId) await get()._refreshProjectData(currentProjectId);
@@ -272,7 +297,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   addInvoice: async (projectId, wbsId, amount, issuedDate) => {
-    const res = await revenueApi.createInvoice({ projectId, wbsId, amount, issuedDate });
+    const role = get().userRole;
+    const res = await revenueApi.createInvoice({ projectId, wbsId, amount, issuedDate }, { 'x-user-role': role });
     if (res.success) {
       await get()._refreshProjectData(projectId);
     }
@@ -280,11 +306,18 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   updateInvoice: async (id, updates) => {
-    return { success: true };
+    const role = get().userRole;
+    const res = await revenueApi.updateInvoice(id, updates, { 'x-user-role': role });
+    if (res.success) {
+      const { currentProjectId } = get();
+      if (currentProjectId) await get()._refreshProjectData(currentProjectId);
+    }
+    return res as any;
   },
 
   deleteInvoice: async (id) => {
-    const res = await revenueApi.deleteInvoice(id);
+    const role = get().userRole;
+    const res = await revenueApi.deleteInvoice(id, { 'x-user-role': role });
     if (res.success) {
       const { currentProjectId } = get();
       if (currentProjectId) await get()._refreshProjectData(currentProjectId);
@@ -293,7 +326,8 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   addPayment: async (projectId, invoiceId, amount, date, description) => {
-    const res = await revenueApi.createPayment({ projectId, invoiceId, amount, date, description });
+    const role = get().userRole;
+    const res = await revenueApi.createPayment({ projectId, invoiceId, amount, date, description }, { 'x-user-role': role });
     if (res.success) {
       await get()._refreshProjectData(projectId);
     }
@@ -301,11 +335,18 @@ export const useERPStore = create<ERPState>((set, get) => ({
   },
 
   updatePayment: async (id, updates) => {
-    return { success: true };
+    const role = get().userRole;
+    const res = await revenueApi.updatePayment(id, updates, { 'x-user-role': role });
+    if (res.success) {
+      const { currentProjectId } = get();
+      if (currentProjectId) await get()._refreshProjectData(currentProjectId);
+    }
+    return res as any;
   },
 
   deletePayment: async (id) => {
-    const res = await revenueApi.deletePayment(id);
+    const role = get().userRole;
+    const res = await revenueApi.deletePayment(id, { 'x-user-role': role });
     if (res.success) {
       const { currentProjectId } = get();
       if (currentProjectId) await get()._refreshProjectData(currentProjectId);
@@ -354,7 +395,17 @@ export const useERPStore = create<ERPState>((set, get) => ({
     let balance = 0;
     return sortedMonths.map(m => {
       const row = months[m];
-      row.cashOut = row.cost; // Simplified: Cost = Cash Out for now
+      
+      // FIX ACCOUNTING LOGIC: 
+      // Revenue/Cost are Accrual.
+      // cashIn/cashOut are Cashflow.
+      
+      // Calculate cashOut specifically from paid costs if not already done
+      const monthlyPaidCosts = costs
+        .filter(c => getMonth(c.date) === m && c.status === 'paid')
+        .reduce((sum, c) => sum + Number(c.amount), 0);
+      
+      row.cashOut = monthlyPaidCosts;
       row.profit = row.revenue - row.cost;
       balance += (row.cashIn - row.cashOut);
       row.runningBalance = balance;

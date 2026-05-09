@@ -17,9 +17,11 @@ export default function ProjectListScreen() {
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [isAddingProject, setIsAddingProject] = useState(false);
 
+  const [page, setPage] = useState(1);
+
   useEffect(() => {
-    init();
-  }, [init]);
+    init({ page, limit: 10 });
+  }, [init, page]);
 
   const projects = useMemo(() => {
     return rawProjects;
@@ -50,6 +52,25 @@ export default function ProjectListScreen() {
           <ProjectCardStats projects={projects} />
           <ProjectFilters />
           <ProjectTable projects={projects} onEdit={setEditingProject} />
+          
+          <div className="mt-6 flex items-center justify-between border-t border-slate-800 pt-4">
+            <div className="text-xs text-slate-500">Hiển thị trang {page}</div>
+            <div className="flex gap-2">
+              <button 
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="rounded bg-slate-800 px-3 py-1 text-xs font-medium text-slate-300 hover:bg-slate-700 disabled:opacity-50"
+              >
+                Trang trước
+              </button>
+              <button 
+                onClick={() => setPage(p => p + 1)}
+                className="rounded bg-slate-800 px-3 py-1 text-xs font-medium text-slate-300 hover:bg-slate-700"
+              >
+                Trang sau
+              </button>
+            </div>
+          </div>
         </div>
       </main>
       

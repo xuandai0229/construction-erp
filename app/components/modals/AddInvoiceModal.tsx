@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
 
 interface Props {
@@ -15,11 +15,18 @@ export default function AddInvoiceModal({ isOpen, onClose }: Props) {
   const addInvoice = useERPStore(state => state.addInvoice);
 
   const [form, setForm] = useState({
-    projectId: currentProjectId || projects[0]?.id || '',
+    projectId: currentProjectId || (projects.length > 0 ? projects[0].id : ''),
     wbsId: '',
     amount: '',
     issuedDate: new Date().toISOString().split('T')[0],
   });
+
+  // Ensure projectId is updated if projects load late
+  useEffect(() => {
+    if (!form.projectId && projects.length > 0) {
+      setForm(prev => ({ ...prev, projectId: currentProjectId || projects[0].id }));
+    }
+  }, [projects, currentProjectId]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 

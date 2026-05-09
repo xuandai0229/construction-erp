@@ -6,24 +6,36 @@ import { CostRecord, BudgetRecord, WBSItem } from "@/app/types";
 
 export class WBSService {
   static async findByProject(projectId: string) {
-    const [items, costs, budgets] = await Promise.all([
+    const [items, costsAgg, budgetsAgg] = await Promise.all([
       prisma.wBSItem.findMany({
         where: { projectId },
         orderBy: [{ level: "asc" }, { sortOrder: "asc" }],
       }),
-      prisma.costRecord.findMany({
+      prisma.costRecord.groupBy({
+        by: ["wbsId"],
         where: { projectId },
+        _sum: { amount: true },
       }),
-      prisma.budgetRecord.findMany({
+      prisma.budgetRecord.groupBy({
+        by: ["wbsId"],
         where: { projectId },
+        _sum: { estimatedAmount: true },
       }),
     ]);
 
-    // Use centralized ProjectFinance engine for tree and roll-ups
+    // Map aggregated data back to a shape ProjectFinance can use (or just calculate here)
+    const costsMap = new Map(costsAgg.map(c => [c.wbsId, Number(c._sum.amount || 0)]));
+    const budgetsMap = new Map(budgetsAgg.map(b => [b.wbsId, Number(b._sum.estimatedAmount || 0)]));
+
+    // Convert to a simplified form for calculateWBSTree if possible, 
+    // or just pass mock records to satisfy the existing engine without refactoring it.
+    const mockCosts = Array.from(costsMap.entries()).map(([wbsId, amount]) => ({ wbsId, amount } as any));
+    const mockBudgets = Array.from(budgetsMap.entries()).map(([wbsId, amount]) => ({ wbsId, estimatedAmount: amount } as any));
+
     const tree = ProjectFinance.calculateWBSTree(
       items as unknown as WBSItem[],
-      costs as unknown as CostRecord[],
-      budgets as unknown as BudgetRecord[]
+      mockCosts as unknown as CostRecord[],
+      mockBudgets as unknown as BudgetRecord[]
     );
 
     const totalBudget = tree.reduce((s, n) => s + n.budget, 0);

@@ -8,9 +8,780 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ─────────────────────────────────────────────
-// ENUMS
-// ─────────────────────────────────────────────
+model User {
+  id                                                 String             @id @default(uuid())
+  email                                              String             @unique
+  name                                               String?
+  createdAt                                          DateTime           @default(now())
+  updatedAt                                          DateTime           @updatedAt
+  deletedAt                                          DateTime?
+  role                                               UserRole           @default(VIEWER)
+  ActivityFeed                                       ActivityFeed[]
+  ApprovalRequest                                    ApprovalRequest[]
+  ApprovalStep                                       ApprovalStep[]
+  auditLogs                                          AuditLog[]
+  budgetsCreated                                     BudgetRecord[]     @relation("BudgetCreatedBy")
+  Comment                                            Comment[]
+  contractsCreated                                   Contract[]         @relation("ContractCreatedBy")
+  costsCreated                                       CostRecord[]       @relation("CostCreatedBy")
+  DelegationWindow_DelegationWindow_delegateIdToUser DelegationWindow[] @relation("DelegationWindow_delegateIdToUser")
+  DelegationWindow_DelegationWindow_ownerIdToUser    DelegationWindow[] @relation("DelegationWindow_ownerIdToUser")
+  Document                                           Document[]
+  FiscalPeriod                                       FiscalPeriod[]
+  invoicesCreated                                    Invoice[]          @relation("InvoiceCreatedBy")
+  ProgressEntry                                      ProgressEntry[]
+  projectsOwned                                      Project[]          @relation("ProjectOwner")
+  purchaseOrdersCreated                              PurchaseOrder[]    @relation("POCreatedBy")
+  purchaseRequestsCreated                            PurchaseRequest[]  @relation("PRCreatedBy")
+  revenuesCreated                                    Revenue[]          @relation("RevenueCreatedBy")
+  tasksAssigned                                      Task[]
+  TrainingRecord                                     TrainingRecord[]
+  UserMaturity                                       UserMaturity?
+
+  @@index([createdAt])
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  tasks     Task[]
+
+  @@index([createdAt])
+}
+
+model Project {
+  id                   String                 @id @default(uuid())
+  name                 String
+  createdAt            DateTime               @default(now())
+  deletedAt            DateTime?
+  description          String?
+  ownerId              String?
+  status               ProjectStatus          @default(PLANNED)
+  updatedAt            DateTime               @updatedAt
+  contractValue        Decimal                @default(0) @db.Decimal(18, 2)
+  endDate              DateTime?
+  startDate            DateTime?
+  totalBudget          Decimal                @default(0) @db.Decimal(18, 2)
+  ActivityFeed         ActivityFeed[]
+  ApprovalRequest      ApprovalRequest[]
+  BOQItem              BOQItem[]
+  contracts            Contract[]
+  Document             Document[]
+  InventoryTransaction InventoryTransaction[]
+  journalEntries       JournalEntry[]
+  owner                User?                  @relation("ProjectOwner", fields: [ownerId], references: [id])
+  purchaseOrders       PurchaseOrder[]
+  SiteConsumption      SiteConsumption[]
+  Subcontract          Subcontract[]
+  tasks                Task[]
+  wbsItems             WBSItem[]
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([ownerId])
+}
+
+model Task {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  status      TaskStatus @default(TODO)
+  projectId   String
+  categoryId  String?
+  assigneeId  String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime?
+  dueDate     DateTime?
+  priority    Int        @default(0)
+  assignee    User?      @relation(fields: [assigneeId], references: [id])
+  category    Category?  @relation(fields: [categoryId], references: [id])
+  project     Project    @relation(fields: [projectId], references: [id])
+
+  @@index([projectId])
+  @@index([status])
+  @@index([assigneeId])
+  @@index([categoryId])
+  @@index([createdAt])
+}
+
+model WBSItem {
+  id                 String              @id @default(uuid())
+  projectId          String
+  name               String
+  parentId           String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  budgetAmount       Decimal             @default(0) @db.Decimal(18, 2)
+  code               String?
+  level              Int                 @default(0)
+  sortOrder          Int                 @default(0)
+  deletedAt          DateTime?
+  BOQItem            BOQItem[]
+  budgets            BudgetRecord[]
+  costs              CostRecord[]
+  invoices           Invoice[]
+  purchaseOrderItems PurchaseOrderItem[]
+  revenues           Revenue[]
+  SiteConsumption    SiteConsumption[]
+  SubcontractItem    SubcontractItem[]
+  parent             WBSItem?            @relation("WBSChildren", fields: [parentId], references: [id])
+  children           WBSItem[]           @relation("WBSChildren")
+  project            Project             @relation(fields: [projectId], references: [id])
+
+  @@index([projectId])
+  @@index([parentId])
+}
+
+model CostRecord {
+  id              String         @id @default(uuid())
+  projectId       String
+  wbsId           String
+  costType        CostType       @default(material)
+  amount          Decimal        @db.Decimal(18, 2)
+  quantity        Decimal        @default(1) @db.Decimal(18, 2)
+  unitPrice       Decimal        @default(0) @db.Decimal(18, 2)
+  supplier        String?
+  note            String?
+  date            DateTime       @default(now())
+  status          PaymentStatus  @default(unpaid)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  createdById     String?
+  purchaseOrderId String?
+  requestId       String?        @unique
+  deletedAt       DateTime?
+  createdBy       User?          @relation("CostCreatedBy", fields: [createdById], references: [id])
+  purchaseOrder   PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
+  wbs             WBSItem        @relation(fields: [wbsId], references: [id])
+
+  @@index([projectId])
+  @@index([wbsId])
+  @@index([date])
+}
+
+model BudgetRecord {
+  id              String    @id @default(uuid())
+  projectId       String
+  wbsId           String
+  costType        CostType  @default(material)
+  estimatedAmount Decimal   @db.Decimal(18, 2)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  createdById     String?
+  deletedAt       DateTime?
+  createdBy       User?     @relation("BudgetCreatedBy", fields: [createdById], references: [id])
+  wbs             WBSItem   @relation(fields: [wbsId], references: [id])
+
+  @@index([projectId])
+  @@index([wbsId])
+}
+
+model Revenue {
+  id          String        @id @default(uuid())
+  projectId   String
+  wbsId       String
+  invoiceId   String?
+  amount      Decimal       @db.Decimal(18, 2)
+  date        DateTime      @default(now())
+  status      PaymentStatus @default(unpaid)
+  description String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  createdById String?
+  deletedAt   DateTime?
+  createdBy   User?         @relation("RevenueCreatedBy", fields: [createdById], references: [id])
+  invoice     Invoice?      @relation(fields: [invoiceId], references: [id])
+  wbs         WBSItem       @relation(fields: [wbsId], references: [id])
+
+  @@index([projectId])
+  @@index([wbsId])
+}
+
+model Invoice {
+  id                String        @id @default(uuid())
+  projectId         String
+  wbsId             String
+  amount            Decimal       @db.Decimal(18, 2)
+  issuedDate        DateTime      @default(now())
+  paidAmount        Decimal       @default(0) @db.Decimal(18, 2)
+  remainingAmount   Decimal       @db.Decimal(18, 2)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  createdById       String?
+  dueDate           DateTime?
+  invoiceNumber     String?
+  note              String?
+  status            InvoiceStatus @default(DRAFT)
+  contractId        String?
+  requestId         String?       @unique
+  deletedAt         DateTime?
+  version           Int           @default(1)
+  certifiedProgress Decimal       @default(0) @db.Decimal(18, 2)
+  retentionAmount   Decimal       @default(0) @db.Decimal(18, 2)
+  contract          Contract?     @relation(fields: [contractId], references: [id])
+  createdBy         User?         @relation("InvoiceCreatedBy", fields: [createdById], references: [id])
+  wbs               WBSItem       @relation(fields: [wbsId], references: [id])
+  payments          Payment[]
+  revenues          Revenue[]
+
+  @@index([projectId])
+  @@index([wbsId])
+}
+
+model Payment {
+  id          String    @id @default(uuid())
+  invoiceId   String
+  projectId   String
+  amount      Decimal   @db.Decimal(18, 2)
+  date        DateTime  @default(now())
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  requestId   String?   @unique
+  deletedAt   DateTime?
+  invoice     Invoice   @relation(fields: [invoiceId], references: [id])
+
+  @@index([invoiceId])
+  @@index([projectId])
+}
+
+model LedgerAccount {
+  id          String            @id @default(uuid())
+  code        String            @unique
+  name        String
+  type        AccountType
+  description String?
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  deletedAt   DateTime?
+  lines       TransactionLine[]
+
+  @@index([code])
+  @@index([type])
+}
+
+model JournalEntry {
+  id          String            @id @default(uuid())
+  projectId   String?
+  date        DateTime          @default(now())
+  description String
+  reference   String?
+  sourceType  String?
+  sourceId    String?
+  isPosted    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  deletedAt   DateTime?
+  project     Project?          @relation(fields: [projectId], references: [id])
+  lines       TransactionLine[]
+
+  @@index([projectId])
+  @@index([date])
+  @@index([sourceType, sourceId])
+}
+
+model TransactionLine {
+  id             String          @id @default(uuid())
+  journalEntryId String
+  accountId      String
+  amount         Decimal         @db.Decimal(18, 2)
+  type           TransactionType
+  description    String?
+  deletedAt      DateTime?
+  account        LedgerAccount   @relation(fields: [accountId], references: [id])
+  journalEntry   JournalEntry    @relation(fields: [journalEntryId], references: [id])
+
+  @@index([journalEntryId])
+  @@index([accountId])
+}
+
+model PurchaseRequest {
+  id             String            @id @default(uuid())
+  projectId      String
+  wbsId          String?
+  title          String
+  description    String?
+  requestedBy    String?
+  status         ProcurementStatus @default(DRAFT)
+  totalAmount    Decimal           @default(0) @db.Decimal(18, 2)
+  requestDate    DateTime          @default(now())
+  neededBy       DateTime?
+  createdById    String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  deletedAt      DateTime?
+  purchaseOrders PurchaseOrder[]
+  createdBy      User?             @relation("PRCreatedBy", fields: [createdById], references: [id])
+
+  @@index([projectId])
+  @@index([status])
+}
+
+model PurchaseOrder {
+  id                String              @id @default(uuid())
+  projectId         String
+  purchaseRequestId String?
+  poNumber          String?             @unique
+  vendor            String
+  description       String?
+  status            ProcurementStatus   @default(DRAFT)
+  totalAmount       Decimal             @db.Decimal(18, 2)
+  orderedDate       DateTime            @default(now())
+  expectedDelivery  DateTime?
+  createdById       String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  deletedAt         DateTime?
+  costRecords       CostRecord[]
+  goodsReceipts     GoodsReceipt[]
+  createdBy         User?               @relation("POCreatedBy", fields: [createdById], references: [id])
+  project           Project             @relation(fields: [projectId], references: [id])
+  purchaseRequest   PurchaseRequest?    @relation(fields: [purchaseRequestId], references: [id])
+  items             PurchaseOrderItem[]
+
+  @@index([projectId])
+  @@index([status])
+}
+
+model PurchaseOrderItem {
+  id              String        @id @default(uuid())
+  purchaseOrderId String
+  wbsId           String?
+  description     String
+  quantity        Decimal       @db.Decimal(18, 4)
+  unitPrice       Decimal       @db.Decimal(18, 2)
+  amount          Decimal       @db.Decimal(18, 2)
+  costType        CostType      @default(material)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
+  wbs             WBSItem?      @relation(fields: [wbsId], references: [id])
+
+  @@index([purchaseOrderId])
+}
+
+model GoodsReceipt {
+  id              String        @id @default(uuid())
+  purchaseOrderId String
+  projectId       String
+  receivedDate    DateTime      @default(now())
+  notes           String?
+  receivedById    String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
+
+  @@index([purchaseOrderId])
+  @@index([projectId])
+}
+
+model Contract {
+  id             String           @id @default(uuid())
+  projectId      String
+  contractNumber String?          @unique
+  title          String
+  description    String?
+  contractorName String?
+  originalValue  Decimal          @db.Decimal(18, 2)
+  currentValue   Decimal          @db.Decimal(18, 2)
+  status         ContractStatus   @default(DRAFT)
+  signedDate     DateTime?
+  startDate      DateTime?
+  endDate        DateTime?
+  createdById    String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  deletedAt      DateTime?
+  createdBy      User?            @relation("ContractCreatedBy", fields: [createdById], references: [id])
+  project        Project          @relation(fields: [projectId], references: [id])
+  changes        ContractChange[]
+  invoices       Invoice[]
+
+  @@index([projectId])
+  @@index([status])
+}
+
+model ContractChange {
+  id           String    @id @default(uuid())
+  contractId   String
+  voNumber     String?
+  title        String
+  description  String?
+  changeAmount Decimal   @db.Decimal(18, 2)
+  approvedDate DateTime?
+  status       String    @default("PENDING")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  contract     Contract  @relation(fields: [contractId], references: [id])
+
+  @@index([contractId])
+}
+
+model AuditLog {
+  id            String   @id @default(uuid())
+  userId        String?
+  action        String
+  entity        String
+  entityId      String
+  oldData       Json?
+  newData       Json?
+  timestamp     DateTime @default(now())
+  ipAddress     String?
+  userAgent     String?
+  correlationId String?
+  reason        String?
+  requestId     String?
+  severity      String   @default("INFO")
+  user          User?    @relation(fields: [userId], references: [id])
+
+  @@index([entity, entityId])
+  @@index([timestamp])
+  @@index([userId])
+  @@index([correlationId])
+  @@index([requestId])
+}
+
+model ActivityFeed {
+  id         String   @id
+  projectId  String
+  userId     String
+  action     String
+  entityType String
+  entityId   String
+  message    String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  Project    Project  @relation(fields: [projectId], references: [id])
+  User       User     @relation(fields: [userId], references: [id])
+
+  @@index([createdAt])
+  @@index([projectId])
+}
+
+model ApprovalRequest {
+  id           String         @id
+  projectId    String
+  requesterId  String
+  entityType   String
+  entityId     String?
+  requestData  Json?
+  status       ApprovalStatus @default(PENDING)
+  reason       String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime
+  Project      Project        @relation(fields: [projectId], references: [id])
+  User         User           @relation(fields: [requesterId], references: [id])
+  ApprovalStep ApprovalStep[]
+
+  @@index([projectId])
+  @@index([requesterId])
+  @@index([status])
+}
+
+model ApprovalStep {
+  id                String          @id
+  approvalRequestId String
+  approverId        String
+  status            ApprovalStatus  @default(PENDING)
+  comment           String?
+  stepOrder         Int             @default(1)
+  processedAt       DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime
+  ApprovalRequest   ApprovalRequest @relation(fields: [approvalRequestId], references: [id])
+  User              User            @relation(fields: [approverId], references: [id])
+
+  @@index([approvalRequestId])
+  @@index([approverId])
+}
+
+model AuthorityMatrix {
+  id          String   @id
+  role        UserRole
+  maxAmount   Decimal  @db.Decimal(18, 2)
+  entityType  String
+  projectType String?
+  priority    Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}
+
+model BOQItem {
+  id            String          @id
+  projectId     String
+  wbsId         String
+  description   String
+  unit          String
+  quantity      Decimal         @db.Decimal(18, 3)
+  unitRate      Decimal         @db.Decimal(18, 2)
+  totalAmount   Decimal         @db.Decimal(18, 2)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime
+  deletedAt     DateTime?
+  Project       Project         @relation(fields: [projectId], references: [id])
+  WBSItem       WBSItem         @relation(fields: [wbsId], references: [id])
+  ProgressEntry ProgressEntry[]
+
+  @@index([projectId])
+  @@index([wbsId])
+}
+
+model Comment {
+  id         String    @id
+  userId     String
+  entityType String
+  entityId   String
+  content    String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime
+  deletedAt  DateTime?
+  User       User      @relation(fields: [userId], references: [id])
+
+  @@index([entityType, entityId])
+}
+
+model DelegationPolicy {
+  id        String   @id
+  name      String
+  rules     Json
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model DelegationWindow {
+  id                                     String   @id
+  ownerId                                String
+  delegateId                             String
+  startDate                              DateTime
+  endDate                                DateTime
+  reason                                 String?
+  isActive                               Boolean  @default(true)
+  createdAt                              DateTime @default(now())
+  updatedAt                              DateTime
+  User_DelegationWindow_delegateIdToUser User     @relation("DelegationWindow_delegateIdToUser", fields: [delegateId], references: [id])
+  User_DelegationWindow_ownerIdToUser    User     @relation("DelegationWindow_ownerIdToUser", fields: [ownerId], references: [id])
+}
+
+model Document {
+  id           String    @id
+  projectId    String
+  name         String
+  url          String
+  type         String
+  version      Int       @default(1)
+  size         Int?
+  sourceType   String?
+  sourceId     String?
+  uploadedById String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime
+  deletedAt    DateTime?
+  Project      Project   @relation(fields: [projectId], references: [id])
+  User         User      @relation(fields: [uploadedById], references: [id])
+
+  @@index([projectId])
+  @@index([sourceType, sourceId])
+}
+
+model FiscalPeriod {
+  id             String    @id
+  month          String    @unique
+  isLocked       Boolean   @default(false)
+  lockedAt       DateTime?
+  lockedById     String?
+  closingBalance Decimal?  @db.Decimal(18, 2)
+  reconciledAt   DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime
+  User           User?     @relation(fields: [lockedById], references: [id])
+
+  @@index([month])
+}
+
+model InventoryTransaction {
+  id          String                   @id
+  projectId   String
+  materialId  String
+  type        InventoryTransactionType
+  quantity    Decimal                  @db.Decimal(18, 3)
+  unitPrice   Decimal?                 @db.Decimal(18, 2)
+  referenceId String?
+  note        String?
+  createdAt   DateTime                 @default(now())
+  Material    Material                 @relation(fields: [materialId], references: [id])
+  Project     Project                  @relation(fields: [projectId], references: [id])
+
+  @@index([materialId])
+  @@index([projectId])
+  @@index([type])
+}
+
+model Material {
+  id                   String                 @id
+  code                 String                 @unique
+  name                 String
+  unit                 String
+  description          String?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime
+  InventoryTransaction InventoryTransaction[]
+  SiteConsumption      SiteConsumption[]
+}
+
+model Measurement {
+  id              String        @id
+  progressEntryId String
+  description     String?
+  length          Decimal?      @db.Decimal(18, 3)
+  width           Decimal?      @db.Decimal(18, 3)
+  height          Decimal?      @db.Decimal(18, 3)
+  factor          Decimal       @default(1) @db.Decimal(18, 3)
+  quantity        Decimal       @db.Decimal(18, 3)
+  ProgressEntry   ProgressEntry @relation(fields: [progressEntryId], references: [id])
+
+  @@index([progressEntryId])
+}
+
+model ProgressEntry {
+  id          String        @id
+  boqItemId   String
+  date        DateTime      @default(now())
+  quantity    Decimal       @db.Decimal(18, 3)
+  amount      Decimal       @db.Decimal(18, 2)
+  createdById String
+  note        String?
+  status      String        @default("PENDING")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime
+  Measurement Measurement[]
+  BOQItem     BOQItem       @relation(fields: [boqItemId], references: [id])
+  User        User          @relation(fields: [createdById], references: [id])
+
+  @@index([boqItemId])
+  @@index([date])
+}
+
+model SiteConsumption {
+  id         String   @id
+  projectId  String
+  wbsId      String
+  materialId String
+  quantity   Decimal  @db.Decimal(18, 3)
+  date       DateTime @default(now())
+  note       String?
+  Material   Material @relation(fields: [materialId], references: [id])
+  Project    Project  @relation(fields: [projectId], references: [id])
+  WBSItem    WBSItem  @relation(fields: [wbsId], references: [id])
+
+  @@index([materialId])
+  @@index([projectId])
+  @@index([wbsId])
+}
+
+model Subcontract {
+  id                 String               @id
+  projectId          String
+  contractorName     String
+  contractNumber     String?              @unique
+  title              String
+  status             SubcontractStatus    @default(DRAFT)
+  totalValue         Decimal              @default(0) @db.Decimal(18, 2)
+  retentionRate      Decimal              @default(5) @db.Decimal(5, 2)
+  startDate          DateTime?
+  endDate            DateTime?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime
+  deletedAt          DateTime?
+  Project            Project              @relation(fields: [projectId], references: [id])
+  SubcontractInvoice SubcontractInvoice[]
+  SubcontractItem    SubcontractItem[]
+
+  @@index([projectId])
+  @@index([status])
+}
+
+model SubcontractInvoice {
+  id              String      @id
+  subcontractId   String
+  invoiceNumber   String?
+  amount          Decimal     @db.Decimal(18, 2)
+  retentionAmount Decimal     @db.Decimal(18, 2)
+  netAmount       Decimal     @db.Decimal(18, 2)
+  status          String      @default("DRAFT")
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime
+  Subcontract     Subcontract @relation(fields: [subcontractId], references: [id])
+
+  @@index([subcontractId])
+}
+
+model SubcontractItem {
+  id                  String                @id
+  subcontractId       String
+  wbsId               String
+  description         String
+  unit                String
+  quantity            Decimal               @db.Decimal(18, 3)
+  unitRate            Decimal               @db.Decimal(18, 2)
+  totalAmount         Decimal               @db.Decimal(18, 2)
+  Subcontract         Subcontract           @relation(fields: [subcontractId], references: [id])
+  WBSItem             WBSItem               @relation(fields: [wbsId], references: [id])
+  SubcontractProgress SubcontractProgress[]
+
+  @@index([subcontractId])
+  @@index([wbsId])
+}
+
+model SubcontractProgress {
+  id                String          @id
+  subcontractItemId String
+  date              DateTime        @default(now())
+  quantity          Decimal         @db.Decimal(18, 3)
+  amount            Decimal         @db.Decimal(18, 2)
+  status            String          @default("PENDING")
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime
+  SubcontractItem   SubcontractItem @relation(fields: [subcontractItemId], references: [id])
+
+  @@index([date])
+  @@index([subcontractItemId])
+}
+
+model TrainingRecord {
+  id          String    @id
+  userId      String
+  title       String
+  module      String?
+  status      String    @default("ASSIGNED")
+  score       Decimal?  @db.Decimal(5, 2)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  User        User      @relation(fields: [userId], references: [id])
+
+  @@index([status])
+  @@index([userId])
+}
+
+model UserMaturity {
+  id             String   @id
+  userId         String   @unique
+  accuracy       Decimal  @default(100) @db.Decimal(5, 2)
+  maturityLevel  String   @default("BEGINNER")
+  lastAssessedAt DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime
+  User           User     @relation(fields: [userId], references: [id])
+}
 
 enum UserRole {
   ADMIN
@@ -22,10 +793,10 @@ enum UserRole {
 enum ProjectStatus {
   PLANNED
   IN_PROGRESS
-  ACTIVE
   COMPLETED
-  CLOSED
   CANCELLED
+  ACTIVE
+  CLOSED
 }
 
 enum TaskStatus {
@@ -70,7 +841,6 @@ enum TransactionType {
   CREDIT
 }
 
-// NEW ENUMS
 enum ProcurementStatus {
   DRAFT
   SUBMITTED
@@ -90,494 +860,24 @@ enum ContractStatus {
   TERMINATED
 }
 
-// ─────────────────────────────────────────────
-// USER
-// ─────────────────────────────────────────────
-
-model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  role      UserRole @default(VIEWER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
-
-  projectsOwned    Project[]  @relation("ProjectOwner")
-  tasksAssigned    Task[]
-  costsCreated     CostRecord[]   @relation("CostCreatedBy")
-  budgetsCreated   BudgetRecord[] @relation("BudgetCreatedBy")
-  revenuesCreated  Revenue[]      @relation("RevenueCreatedBy")
-  invoicesCreated  Invoice[]      @relation("InvoiceCreatedBy")
-  auditLogs        AuditLog[]
-
-  purchaseRequestsCreated PurchaseRequest[] @relation("PRCreatedBy")
-  purchaseOrdersCreated   PurchaseOrder[]   @relation("POCreatedBy")
-  contractsCreated        Contract[]        @relation("ContractCreatedBy")
-
-  @@index([createdAt])
-  @@index([role])
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
 }
 
-// ─────────────────────────────────────────────
-// CATEGORY
-// ─────────────────────────────────────────────
-
-model Category {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
-
-  tasks Task[]
-
-  @@index([createdAt])
+enum InventoryTransactionType {
+  RECEIPT
+  ISSUE
+  RETURN
+  ADJUST
 }
 
-// ─────────────────────────────────────────────
-// PROJECT
-// ─────────────────────────────────────────────
-
-model Project {
-  id            String        @id @default(uuid())
-  name          String
-  description   String?
-  status        ProjectStatus @default(PLANNED)
-  ownerId       String?
-
-  // Financial fields (Accounting Grade)
-  contractValue Decimal       @default(0) @db.Decimal(18, 2)
-  totalBudget   Decimal       @default(0) @db.Decimal(18, 2)
-
-  // Schedule
-  startDate     DateTime?
-  endDate       DateTime?
-
-  // Audit
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  deletedAt     DateTime?
-
-  owner     User?     @relation("ProjectOwner", fields: [ownerId], references: [id])
-  tasks     Task[]
-  wbsItems  WBSItem[]
-  journalEntries JournalEntry[]
-  contracts      Contract[]
-  purchaseOrders PurchaseOrder[]
-
-  @@index([status])
-  @@index([createdAt])
-  @@index([ownerId])
-}
-
-// ─────────────────────────────────────────────
-// TASK
-// ─────────────────────────────────────────────
-
-model Task {
-  id          String     @id @default(uuid())
-  title       String
-  description String?
-  status      TaskStatus @default(TODO)
-  projectId   String
-  categoryId  String?
-  assigneeId  String?
-  dueDate     DateTime?
-  priority    Int        @default(0)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  deletedAt   DateTime?
-
-  project  Project   @relation(fields: [projectId], references: [id])
-  category Category? @relation(fields: [categoryId], references: [id])
-  assignee User?     @relation(fields: [assigneeId], references: [id])
-
-  @@index([projectId])
-  @@index([status])
-  @@index([assigneeId])
-  @@index([categoryId])
-  @@index([createdAt])
-}
-
-// ─────────────────────────────────────────────
-// WBS
-// ─────────────────────────────────────────────
-
-model WBSItem {
-  id        String  @id @default(uuid())
-  projectId String
-  name      String
-  code      String?
-  parentId  String?
-  level     Int     @default(0)
-  sortOrder Int     @default(0)
-
-  budgetAmount Decimal @default(0) @db.Decimal(18, 2)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  project  Project   @relation(fields: [projectId], references: [id])
-  parent   WBSItem?  @relation("WBSChildren", fields: [parentId], references: [id])
-  children WBSItem[] @relation("WBSChildren")
-
-  costs    CostRecord[]
-  budgets  BudgetRecord[]
-  revenues Revenue[]
-  invoices Invoice[]
-  purchaseOrderItems PurchaseOrderItem[]
-
-  @@index([projectId])
-  @@index([parentId])
-}
-
-// ─────────────────────────────────────────────
-// COST RECORD
-// ─────────────────────────────────────────────
-
-model CostRecord {
-  id           String        @id @default(uuid())
-  projectId    String
-  wbsId        String
-  costType     CostType      @default(material)
-  amount       Decimal       @db.Decimal(18, 2)
-  quantity     Decimal       @default(1) @db.Decimal(18, 2)
-  unitPrice    Decimal       @default(0) @db.Decimal(18, 2)
-  supplier     String?
-  note         String?
-  date         DateTime      @default(now())
-  status       PaymentStatus @default(unpaid)
-  requestId    String?       @unique // Idempotency
-
-  // Link to procurement
-  purchaseOrderId String?
-
-  createdById  String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-
-  wbs       WBSItem       @relation(fields: [wbsId], references: [id])
-  createdBy User?         @relation("CostCreatedBy", fields: [createdById], references: [id])
-  purchaseOrder PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
-
-  @@index([projectId])
-  @@index([wbsId])
-  @@index([date])
-}
-
-// ─────────────────────────────────────────────
-// BUDGET RECORD
-// ─────────────────────────────────────────────
-
-model BudgetRecord {
-  id              String   @id @default(uuid())
-  projectId       String
-  wbsId           String
-  costType        CostType @default(material)
-  estimatedAmount Decimal  @db.Decimal(18, 2)
-
-  createdById     String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  wbs       WBSItem @relation(fields: [wbsId], references: [id])
-  createdBy User?   @relation("BudgetCreatedBy", fields: [createdById], references: [id])
-
-  @@index([projectId])
-  @@index([wbsId])
-}
-
-// ─────────────────────────────────────────────
-// REVENUE
-// ─────────────────────────────────────────────
-
-model Revenue {
-  id          String        @id @default(uuid())
-  projectId   String
-  wbsId       String
-  invoiceId   String?
-  amount      Decimal       @db.Decimal(18, 2)
-  date        DateTime      @default(now())
-  status      PaymentStatus @default(unpaid)
-  description String?
-
-  createdById String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-
-  wbs       WBSItem  @relation(fields: [wbsId], references: [id])
-  invoice   Invoice? @relation(fields: [invoiceId], references: [id])
-  createdBy User?    @relation("RevenueCreatedBy", fields: [createdById], references: [id])
-
-  @@index([projectId])
-  @@index([wbsId])
-}
-
-// ─────────────────────────────────────────────
-// INVOICE
-// ─────────────────────────────────────────────
-
-model Invoice {
-  id              String        @id @default(uuid())
-  projectId       String
-  wbsId           String
-  invoiceNumber   String?
-  amount          Decimal       @db.Decimal(18, 2)
-  issuedDate      DateTime      @default(now())
-  dueDate         DateTime?
-  paidAmount      Decimal       @default(0) @db.Decimal(18, 2)
-  remainingAmount Decimal       @db.Decimal(18, 2)
-  status          InvoiceStatus @default(DRAFT)
-  note            String?
-  requestId       String?       @unique // Idempotency
-
-  createdById     String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-
-  wbs       WBSItem   @relation(fields: [wbsId], references: [id])
-  payments  Payment[]
-  revenues  Revenue[]
-  createdBy User?     @relation("InvoiceCreatedBy", fields: [createdById], references: [id])
-
-  // Link to contract
-  contractId String?
-  contract   Contract? @relation(fields: [contractId], references: [id])
-
-  @@index([projectId])
-  @@index([wbsId])
-}
-
-// ─────────────────────────────────────────────
-// PAYMENT
-// ─────────────────────────────────────────────
-
-model Payment {
-  id          String   @id @default(uuid())
-  invoiceId   String
-  projectId   String
-  amount      Decimal  @db.Decimal(18, 2)
-  date        DateTime @default(now())
-  description String?
-  requestId   String?  @unique // Idempotency
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  invoice Invoice @relation(fields: [invoiceId], references: [id])
-
-  @@index([invoiceId])
-  @@index([projectId])
-}
-
-// ─────────────────────────────────────────────
-// ACCOUNTING (LEDGER)
-// ─────────────────────────────────────────────
-
-model LedgerAccount {
-  id          String      @id @default(uuid())
-  code        String      @unique // e.g. 1010 (Cash), 4010 (Revenue)
-  name        String
-  type        AccountType
-  description String?
-  isActive    Boolean     @default(true)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  lines       TransactionLine[]
-
-  @@index([code])
-  @@index([type])
-}
-
-model JournalEntry {
-  id          String   @id @default(uuid())
-  projectId   String?
-  date        DateTime @default(now())
-  description String
-  reference   String?  // e.g. Invoice #123
-  // Source tracking: which entity triggered this entry
-  sourceType  String?  // e.g. "PAYMENT", "COST", "INVOICE"
-  sourceId    String?  // FK to the source record
-  isPosted    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  project     Project? @relation(fields: [projectId], references: [id])
-  lines       TransactionLine[]
-
-  @@index([projectId])
-  @@index([date])
-  @@index([sourceType, sourceId])
-}
-
-model TransactionLine {
-  id              String          @id @default(uuid())
-  journalEntryId  String
-  accountId       String
-  amount          Decimal         @db.Decimal(18, 2)
-  type            TransactionType // DEBIT or CREDIT
-  description     String?
-
-  journalEntry    JournalEntry    @relation(fields: [journalEntryId], references: [id])
-  account         LedgerAccount   @relation(fields: [accountId], references: [id])
-
-  @@index([journalEntryId])
-  @@index([accountId])
-}
-
-// ─────────────────────────────────────────────
-// PROCUREMENT
-// ─────────────────────────────────────────────
-
-model PurchaseRequest {
-  id          String            @id @default(uuid())
-  projectId   String
-  wbsId       String?
-  title       String
-  description String?
-  requestedBy String?
-  status      ProcurementStatus @default(DRAFT)
-  totalAmount Decimal           @default(0) @db.Decimal(18, 2)
-  requestDate DateTime          @default(now())
-  neededBy    DateTime?
-  createdById String?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-
-  createdBy      User?           @relation("PRCreatedBy", fields: [createdById], references: [id])
-  purchaseOrders PurchaseOrder[]
-
-  @@index([projectId])
-  @@index([status])
-}
-
-model PurchaseOrder {
-  id                String            @id @default(uuid())
-  projectId         String
-  purchaseRequestId String?
-  poNumber          String?           @unique
-  vendor            String
-  description       String?
-  status            ProcurementStatus @default(DRAFT)
-  totalAmount       Decimal           @db.Decimal(18, 2)
-  orderedDate       DateTime          @default(now())
-  expectedDelivery  DateTime?
-  createdById       String?
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-
-  project         Project          @relation(fields: [projectId], references: [id])
-  purchaseRequest PurchaseRequest? @relation(fields: [purchaseRequestId], references: [id])
-  createdBy       User?            @relation("POCreatedBy", fields: [createdById], references: [id])
-  items           PurchaseOrderItem[]
-  goodsReceipts   GoodsReceipt[]
-  costRecords     CostRecord[]
-
-  @@index([projectId])
-  @@index([status])
-}
-
-model PurchaseOrderItem {
-  id              String   @id @default(uuid())
-  purchaseOrderId String
-  wbsId           String?
-  description     String
-  quantity        Decimal  @db.Decimal(18, 4)
-  unitPrice       Decimal  @db.Decimal(18, 2)
-  amount          Decimal  @db.Decimal(18, 2)
-  costType        CostType @default(material)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
-  wbs           WBSItem?      @relation(fields: [wbsId], references: [id])
-
-  @@index([purchaseOrderId])
-}
-
-model GoodsReceipt {
-  id              String   @id @default(uuid())
-  purchaseOrderId String
-  projectId       String
-  receivedDate    DateTime @default(now())
-  notes           String?
-  receivedById    String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
-
-  @@index([purchaseOrderId])
-  @@index([projectId])
-}
-
-// ─────────────────────────────────────────────
-// CONTRACT & VARIATION
-// ─────────────────────────────────────────────
-
-model Contract {
-  id                String         @id @default(uuid())
-  projectId         String
-  contractNumber    String?        @unique
-  title             String
-  description       String?
-  contractorName    String?
-  originalValue     Decimal        @db.Decimal(18, 2)
-  currentValue      Decimal        @db.Decimal(18, 2)
-  status            ContractStatus @default(DRAFT)
-  signedDate        DateTime?
-  startDate         DateTime?
-  endDate           DateTime?
-  createdById       String?
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
-
-  project    Project         @relation(fields: [projectId], references: [id])
-  createdBy  User?           @relation("ContractCreatedBy", fields: [createdById], references: [id])
-  changes    ContractChange[]
-  invoices   Invoice[]
-
-  @@index([projectId])
-  @@index([status])
-}
-
-model ContractChange {
-  id           String   @id @default(uuid())
-  contractId   String
-  voNumber     String?  // Variation Order number
-  title        String
-  description  String?
-  changeAmount Decimal  @db.Decimal(18, 2) // Positive = increase, Negative = decrease
-  approvedDate DateTime?
-  status       String   @default("PENDING") // PENDING, APPROVED, REJECTED
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  contract Contract @relation(fields: [contractId], references: [id])
-
-  @@index([contractId])
-}
-
-// ─────────────────────────────────────────────
-// AUDIT LOG
-// ─────────────────────────────────────────────
-
-model AuditLog {
-  id          String   @id @default(uuid())
-  userId      String?
-  action      String   // e.g. CREATE, UPDATE, DELETE
-  entity      String   // e.g. CostRecord
-  entityId    String
-  oldData     Json?
-  newData     Json?
-  timestamp   DateTime @default(now())
-  ipAddress   String?
-  userAgent   String?
-
-  user        User?    @relation(fields: [userId], references: [id])
-
-  @@index([entity, entityId])
-  @@index([timestamp])
-  @@index([userId])
+enum SubcontractStatus {
+  DRAFT
+  ACTIVE
+  SUSPENDED
+  COMPLETED
+  TERMINATED
 }
