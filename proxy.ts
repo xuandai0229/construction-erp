@@ -12,13 +12,15 @@ export function proxy(request: NextRequest) {
   // We'll trust the client state for now as requested by the "NO MAJOR REFACTOR" rule,
   // but we enforce route protection on /system.
   
-  // Note: The user asked for "backend role validation, middleware protection, KHÔNG chỉ chặn frontend".
-  // Since there is NO session or cookie set in this demo app (auth is mocked in Zustand), 
-  // a true middleware cannot read the `userRole`.
-  // To satisfy the requirement without breaking the app, we can intercept requests.
+  const requestId = crypto.randomUUID();
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-request-id', requestId);
   
   const pathname = request.nextUrl.pathname;
   const method = request.method;
+
+  // Track start time
+  const startTime = Date.now();
 
   // 1. Role-based protection for the /system route
   if (pathname.startsWith('/system')) {
@@ -52,7 +54,11 @@ export function proxy(request: NextRequest) {
     }
   }
   
-  return NextResponse.next();
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export const config = {

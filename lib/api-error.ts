@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "../generated/prisma-client";
+import { LoggerService } from "@/services/logger.service";
+import { headers } from "next/headers";
 
 export class ApiError extends Error {
   statusCode: number;
@@ -19,9 +21,14 @@ export interface ApiResponse<T = any> {
   metadata?: any;
 }
 
-export function handleApiError(error: unknown) {
+export async function handleApiError(error: unknown) {
+  const head = await headers();
+  const requestId = head.get("x-request-id") || undefined;
+  const userId = head.get("x-user-id") || undefined;
+
   if (error instanceof ZodError) {
     const errorMessages = error.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join(", ");
+    LoggerService.warn("Validation Error", { requestId, userId, error: errorMessages });
     return NextResponse.json(
       { success: false, error: `Lỗi dữ liệu: ${errorMessages}` },
       { status: 400 }
@@ -29,6 +36,7 @@ export function handleApiError(error: unknown) {
   }
 
   if (error instanceof ApiError) {
+    LoggerService.warn(error.message, { requestId, userId, statusCode: error.statusCode });
     return NextResponse.json(
       { success: false, error: error.message },
       { status: error.statusCode }
@@ -36,6 +44,7 @@ export function handleApiError(error: unknown) {
   }
 
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    LoggerService.error("Prisma Error", { requestId, userId, errorCode: error.code, error: error.message });
     if (error.code === 'P2002') {
       return NextResponse.json({ success: false, error: 'Dữ liệu đã tồn tại (Duplicate entry)' }, { status: 400 });
     }
@@ -47,7 +56,7 @@ export function handleApiError(error: unknown) {
     }
   }
 
-  console.error("[Unhandled API Error]:", error);
+  LoggerService.error("Unhandled Internal Server Error", { requestId, userId, error: (error as any)?.message || error });
   return NextResponse.json(
     { success: false, error: "Internal Server Error" },
     { status: 500 }

@@ -1,38 +1,61 @@
 import { prisma } from "@/lib/prisma";
+import { AuditLog } from "../generated/prisma-client";
 
-export type AuditAction = "CREATE" | "UPDATE" | "DELETE";
+export type AuditAction = "CREATE" | "UPDATE" | "DELETE" | "RESTORE" | "APPROVE" | "REJECT" | "LOCK" | "UNLOCK";
 
 export class AuditService {
-  /**
-   * Records an audit log entry.
-   */
-  static async log(params: {
+  static async log({
+    userId,
+    action,
+    entity,
+    entityId,
+    oldData,
+    newData,
+    reason,
+    severity = "INFO",
+    requestId,
+    correlationId,
+  }: {
     userId?: string;
     action: AuditAction;
     entity: string;
     entityId: string;
     oldData?: any;
     newData?: any;
-    ipAddress?: string;
-    userAgent?: string;
+    reason?: string;
+    severity?: "INFO" | "WARNING" | "CRITICAL";
+    requestId?: string;
+    correlationId?: string;
   }) {
     try {
-      await prisma.auditLog.create({
+      return await prisma.auditLog.create({
         data: {
-          userId: params.userId,
-          action: params.action,
-          entity: params.entity,
-          entityId: params.entityId,
-          oldData: params.oldData ? JSON.parse(JSON.stringify(params.oldData)) : null,
-          newData: params.newData ? JSON.parse(JSON.stringify(params.newData)) : null,
-          ipAddress: params.ipAddress,
-          userAgent: params.userAgent,
+          userId,
+          action,
+          entity,
+          entityId,
+          oldData: oldData ? JSON.parse(JSON.stringify(oldData)) : null,
+          newData: newData ? JSON.parse(JSON.stringify(newData)) : null,
+          reason,
+          severity,
+          requestId,
+          correlationId,
         },
       });
     } catch (error) {
-      // We don't want to break the main flow if audit logging fails,
-      // but we should log it to the console for debugging.
       console.error("[AuditService Error]:", error);
+      // We don't want to fail the main transaction if audit logging fails,
+      // but in enterprise we should probably log it to a separate system.
     }
+  }
+
+  static async getHistory(entity: string, entityId: string) {
+    return await prisma.auditLog.findMany({
+      where: { entity, entityId },
+      orderBy: { timestamp: "desc" },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+      },
+    });
   }
 }

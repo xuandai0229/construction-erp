@@ -18,7 +18,9 @@ export const createProjectSchema = z.object({
 
 export type CreateProjectDTO = z.infer<typeof createProjectSchema>;
 
-export const updateProjectSchema = createProjectSchema.partial();
+export const updateProjectSchema = createProjectSchema.partial().extend({
+  version: z.number().int().optional(),
+});
 export type UpdateProjectDTO = z.infer<typeof updateProjectSchema>;
 
 // ─────────────────────────────────────────────

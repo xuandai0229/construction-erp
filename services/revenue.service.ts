@@ -5,11 +5,12 @@ import { assertValidEntity } from "@/lib/assertion";
 import { round } from "@/lib/math";
 import { PostingEngine } from "@/lib/accounting/postingEngine";
 import { AuditService } from "./audit.service";
+import { assertPeriodNotLocked } from "@/lib/period";
 
 export class RevenueService {
   
   // ─── INVOICE ───────────────────────────────────────
-  static async createInvoice(data: any) {
+  static async createInvoice(data: any, userId?: string) {
     assertValidEntity(data, "CreateInvoiceDTO");
 
     const project = await prisma.project.findUnique({ where: { id: data.projectId } });
@@ -20,6 +21,7 @@ export class RevenueService {
     if (wbs.projectId !== data.projectId) throw new ApiError(400, "Hạng mục WBS không thuộc về dự án đã chọn");
 
     const amount = round(data.amount);
+    await assertPeriodNotLocked(data.issuedDate || new Date());
 
     return prisma.$transaction(async (tx) => {
       const invoice = await tx.invoice.create({
@@ -33,7 +35,8 @@ export class RevenueService {
           remainingAmount: amount,
           status: "DRAFT",
           note: data.note,
-          createdById: data.createdById
+          createdById: data.createdById,
+          approvalStatus: "DRAFT"
         }
       });
 
@@ -59,11 +62,12 @@ export class RevenueService {
   }
 
   // ─── PAYMENT ───────────────────────────────────────
-  static async createPayment(data: any) {
+  static async createPayment(data: any, userId?: string) {
     assertValidEntity(data, "CreatePaymentDTO");
     
     if (data.amount <= 0) throw new ApiError(400, "Số tiền thanh toán phải lớn hơn 0");
     const amount = round(data.amount);
+    await assertPeriodNotLocked(data.date || new Date());
 
     return prisma.$transaction(async (tx) => {
       const invoice = await tx.invoice.findUnique({ where: { id: data.invoiceId } });
@@ -86,6 +90,7 @@ export class RevenueService {
           amount: amount,
           date: data.date ? new Date(data.date) : new Date(),
           description: data.description,
+          approvalStatus: "DRAFT"
         },
       });
 
@@ -205,18 +210,72 @@ export class RevenueService {
     });
   }
 
-  static async deleteInvoice(id: string) {
+  static async deleteInvoice(id: string, userId?: string) {
     const existing = await prisma.invoice.findUnique({ where: { id } });
     if (!existing) throw new ApiError(404, "Không tìm thấy hóa đơn");
 
+    await assertPeriodNotLocked(existing.issuedDate);
+
     return prisma.$transaction(async (tx) => {
+      const item = await tx.invoice.update({
+        where: { id },
+        data: { 
+          deletedAt: new Date(),
+          deletedById: userId,
+        }
+      });
+
       await AuditService.log({
+        userId,
         action: "DELETE",
         entity: "Invoice",
         entityId: id,
-        oldData: existing
+        oldData: existing,
+        reason: "User requested soft delete",
       });
-      return tx.invoice.delete({ where: { id } });
+      return item;
     });
+  }
+
+  static async updateInvoiceApproval(id: string, status: "APPROVED" | "REJECTED" | "PENDING", userId?: string) {
+    const existing = await prisma.invoice.findUnique({ where: { id } });
+    if (!existing) throw new ApiError(404, "Không tìm thấy hóa đơn");
+
+    const item = await prisma.invoice.update({
+      where: { id },
+      data: { approvalStatus: status }
+    });
+
+    await AuditService.log({
+      userId,
+      action: status === "APPROVED" ? "APPROVE" : status === "REJECTED" ? "REJECT" : "UPDATE",
+      entity: "Invoice",
+      entityId: id,
+      oldData: existing,
+      newData: item,
+    });
+
+    return item;
+  }
+
+  static async updatePaymentApproval(id: string, status: "APPROVED" | "REJECTED" | "PENDING", userId?: string) {
+    const existing = await prisma.payment.findUnique({ where: { id } });
+    if (!existing) throw new ApiError(404, "Không tìm thấy thanh toán");
+
+    const item = await prisma.payment.update({
+      where: { id },
+      data: { approvalStatus: status }
+    });
+
+    await AuditService.log({
+      userId,
+      action: status === "APPROVED" ? "APPROVE" : status === "REJECTED" ? "REJECT" : "UPDATE",
+      entity: "Payment",
+      entityId: id,
+      oldData: existing,
+      newData: item,
+    });
+
+    return item;
   }
 }

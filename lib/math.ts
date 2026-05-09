@@ -10,8 +10,9 @@
  * @param val The number to round
  * @returns Rounded number
  */
-export function round(val: number): number {
-  return Math.round((val + Number.EPSILON) * 100) / 100;
+export function round(val: number, precision: number = 2): number {
+  const factor = Math.pow(10, precision);
+  return Math.round((val + Number.EPSILON) * factor) / factor;
 }
 
 /**

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { Prisma, ProjectStatus } from "@prisma/client";
+import { Prisma, ProjectStatus, ApprovalStatus } from "../generated/prisma-client";
+import { AuditService } from "./audit.service";
 import { ApiError } from "@/lib/api-error";
 import { CreateProjectDTO, UpdateProjectDTO } from "@/lib/validations";
 import { ProjectFinance } from "./finance/projectFinance";
@@ -88,7 +89,7 @@ export class ProjectService {
     return project;
   }
 
-  static async create(data: CreateProjectDTO) {
+  static async create(data: CreateProjectDTO, userId?: string) {
     assertValidEntity(data, "CreateProjectDTO");
 
     if (data.ownerId) {
@@ -96,7 +97,7 @@ export class ProjectService {
       if (!user) throw new ApiError(404, "Owner (User) not found");
     }
 
-    return prisma.project.create({
+    const project = await prisma.project.create({
       data: {
         name: data.name,
         description: data.description,
@@ -109,9 +110,19 @@ export class ProjectService {
       },
       include: { owner: { select: { id: true, name: true, email: true } } },
     });
+
+    await AuditService.log({
+      userId,
+      action: "CREATE",
+      entity: "Project",
+      entityId: project.id,
+      newData: project,
+    });
+
+    return project;
   }
 
-  static async update(id: string, data: UpdateProjectDTO) {
+  static async update(id: string, data: UpdateProjectDTO, userId?: string) {
     assertValidEntity(data, "UpdateProjectDTO");
 
     if (data.ownerId) {
@@ -119,8 +130,15 @@ export class ProjectService {
       if (!user) throw new ApiError(404, "Owner (User) not found");
     }
 
-    return prisma.project.update({
-      where: { id },
+    const oldProject = await this.findById(id);
+
+    // Optimistic Locking Check
+    if (data.version !== undefined && oldProject.version !== data.version) {
+      throw new ApiError(409, "Dữ liệu đã bị thay đổi bởi người dùng khác. Vui lòng tải lại trang.");
+    }
+
+    const project = await prisma.project.update({
+      where: { id, version: data.version }, // Ensure we only update if version matches
       data: {
         ...(data.name !== undefined && { name: data.name }),
         ...(data.description !== undefined && { description: data.description }),
@@ -132,11 +150,23 @@ export class ProjectService {
         ...(data.ownerId !== undefined && {
           owner: data.ownerId ? { connect: { id: data.ownerId } } : { disconnect: true },
         }),
+        version: { increment: 1 } // Increment version
       },
     });
+
+    await AuditService.log({
+      userId,
+      action: "UPDATE",
+      entity: "Project",
+      entityId: project.id,
+      oldData: oldProject,
+      newData: project,
+    });
+
+    return project;
   }
 
-  static async delete(id: string) {
+  static async delete(id: string, userId?: string) {
     // Financial Safety Check: Don't delete if there are invoices or costs
     const [invoiceCount, costCount] = await Promise.all([
       prisma.invoice.count({ where: { projectId: id } }),
@@ -147,16 +177,46 @@ export class ProjectService {
       throw new ApiError(400, "Không thể xóa dự án đã có dữ liệu tài chính (Hóa đơn hoặc Chi phí).");
     }
 
-    return prisma.$transaction(async (tx) => {
-      await tx.task.updateMany({
-        where: { projectId: id },
-        data: { deletedAt: new Date() },
-      });
-      return tx.project.update({
-        where: { id },
-        data: { deletedAt: new Date() },
-      });
+    const oldProject = await this.findById(id);
+
+    const project = await prisma.project.update({
+      where: { id },
+      data: { 
+        deletedAt: new Date(),
+        deletedById: userId,
+      }
     });
+
+    await AuditService.log({
+      userId,
+      action: "DELETE",
+      entity: "Project",
+      entityId: id,
+      oldData: oldProject,
+      reason: "User requested soft delete",
+    });
+
+    return project;
+  }
+
+  static async restore(id: string, userId?: string) {
+    const project = await prisma.project.update({
+      where: { id },
+      data: { 
+        deletedAt: null,
+        deletedById: null,
+      }
+    });
+
+    await AuditService.log({
+      userId,
+      action: "RESTORE",
+      entity: "Project",
+      entityId: id,
+      newData: project,
+    });
+
+    return project;
   }
 
   static async getAccountingSummary(projectId: string) {

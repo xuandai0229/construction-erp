@@ -139,6 +139,11 @@ export type AuthorityMatrix = $Result.DefaultSelection<Prisma.$AuthorityMatrixPa
  */
 export type BOQItem = $Result.DefaultSelection<Prisma.$BOQItemPayload>
 /**
+ * Model BudgetVersion
+ * 
+ */
+export type BudgetVersion = $Result.DefaultSelection<Prisma.$BudgetVersionPayload>
+/**
  * Model Comment
  * 
  */
@@ -163,6 +168,11 @@ export type Document = $Result.DefaultSelection<Prisma.$DocumentPayload>
  * 
  */
 export type FiscalPeriod = $Result.DefaultSelection<Prisma.$FiscalPeriodPayload>
+/**
+ * Model Job
+ * 
+ */
+export type Job = $Result.DefaultSelection<Prisma.$JobPayload>
 /**
  * Model InventoryTransaction
  * 
@@ -275,6 +285,17 @@ export const PaymentStatus: {
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
 
+export const ApprovalStatus: {
+  DRAFT: 'DRAFT',
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+};
+
+export type ApprovalStatus = (typeof ApprovalStatus)[keyof typeof ApprovalStatus]
+
+
 export const InvoiceStatus: {
   DRAFT: 'DRAFT',
   SENT: 'SENT',
@@ -330,16 +351,6 @@ export const ContractStatus: {
 export type ContractStatus = (typeof ContractStatus)[keyof typeof ContractStatus]
 
 
-export const ApprovalStatus: {
-  PENDING: 'PENDING',
-  APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED',
-  CANCELLED: 'CANCELLED'
-};
-
-export type ApprovalStatus = (typeof ApprovalStatus)[keyof typeof ApprovalStatus]
-
-
 export const InventoryTransactionType: {
   RECEIPT: 'RECEIPT',
   ISSUE: 'ISSUE',
@@ -382,6 +393,10 @@ export type PaymentStatus = $Enums.PaymentStatus
 
 export const PaymentStatus: typeof $Enums.PaymentStatus
 
+export type ApprovalStatus = $Enums.ApprovalStatus
+
+export const ApprovalStatus: typeof $Enums.ApprovalStatus
+
 export type InvoiceStatus = $Enums.InvoiceStatus
 
 export const InvoiceStatus: typeof $Enums.InvoiceStatus
@@ -401,10 +416,6 @@ export const ProcurementStatus: typeof $Enums.ProcurementStatus
 export type ContractStatus = $Enums.ContractStatus
 
 export const ContractStatus: typeof $Enums.ContractStatus
-
-export type ApprovalStatus = $Enums.ApprovalStatus
-
-export const ApprovalStatus: typeof $Enums.ApprovalStatus
 
 export type InventoryTransactionType = $Enums.InventoryTransactionType
 
@@ -788,6 +799,16 @@ export class PrismaClient<
   get bOQItem(): Prisma.BOQItemDelegate<ExtArgs>;
 
   /**
+   * `prisma.budgetVersion`: Exposes CRUD operations for the **BudgetVersion** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BudgetVersions
+    * const budgetVersions = await prisma.budgetVersion.findMany()
+    * ```
+    */
+  get budgetVersion(): Prisma.BudgetVersionDelegate<ExtArgs>;
+
+  /**
    * `prisma.comment`: Exposes CRUD operations for the **Comment** model.
     * Example usage:
     * ```ts
@@ -836,6 +857,16 @@ export class PrismaClient<
     * ```
     */
   get fiscalPeriod(): Prisma.FiscalPeriodDelegate<ExtArgs>;
+
+  /**
+   * `prisma.job`: Exposes CRUD operations for the **Job** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Jobs
+    * const jobs = await prisma.job.findMany()
+    * ```
+    */
+  get job(): Prisma.JobDelegate<ExtArgs>;
 
   /**
    * `prisma.inventoryTransaction`: Exposes CRUD operations for the **InventoryTransaction** model.
@@ -1412,11 +1443,13 @@ export namespace Prisma {
     ApprovalStep: 'ApprovalStep',
     AuthorityMatrix: 'AuthorityMatrix',
     BOQItem: 'BOQItem',
+    BudgetVersion: 'BudgetVersion',
     Comment: 'Comment',
     DelegationPolicy: 'DelegationPolicy',
     DelegationWindow: 'DelegationWindow',
     Document: 'Document',
     FiscalPeriod: 'FiscalPeriod',
+    Job: 'Job',
     InventoryTransaction: 'InventoryTransaction',
     Material: 'Material',
     Measurement: 'Measurement',
@@ -1443,7 +1476,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "category" | "project" | "task" | "wBSItem" | "costRecord" | "budgetRecord" | "revenue" | "invoice" | "payment" | "ledgerAccount" | "journalEntry" | "transactionLine" | "purchaseRequest" | "purchaseOrder" | "purchaseOrderItem" | "goodsReceipt" | "contract" | "contractChange" | "auditLog" | "activityFeed" | "approvalRequest" | "approvalStep" | "authorityMatrix" | "bOQItem" | "comment" | "delegationPolicy" | "delegationWindow" | "document" | "fiscalPeriod" | "inventoryTransaction" | "material" | "measurement" | "progressEntry" | "siteConsumption" | "subcontract" | "subcontractInvoice" | "subcontractItem" | "subcontractProgress" | "trainingRecord" | "userMaturity"
+      modelProps: "user" | "category" | "project" | "task" | "wBSItem" | "costRecord" | "budgetRecord" | "revenue" | "invoice" | "payment" | "ledgerAccount" | "journalEntry" | "transactionLine" | "purchaseRequest" | "purchaseOrder" | "purchaseOrderItem" | "goodsReceipt" | "contract" | "contractChange" | "auditLog" | "activityFeed" | "approvalRequest" | "approvalStep" | "authorityMatrix" | "bOQItem" | "budgetVersion" | "comment" | "delegationPolicy" | "delegationWindow" | "document" | "fiscalPeriod" | "job" | "inventoryTransaction" | "material" | "measurement" | "progressEntry" | "siteConsumption" | "subcontract" | "subcontractInvoice" | "subcontractItem" | "subcontractProgress" | "trainingRecord" | "userMaturity"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3197,6 +3230,76 @@ export namespace Prisma {
           }
         }
       }
+      BudgetVersion: {
+        payload: Prisma.$BudgetVersionPayload<ExtArgs>
+        fields: Prisma.BudgetVersionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BudgetVersionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BudgetVersionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BudgetVersionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BudgetVersionPayload>
+          }
+          findFirst: {
+            args: Prisma.BudgetVersionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BudgetVersionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BudgetVersionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BudgetVersionPayload>
+          }
+          findMany: {
+            args: Prisma.BudgetVersionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BudgetVersionPayload>[]
+          }
+          create: {
+            args: Prisma.BudgetVersionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BudgetVersionPayload>
+          }
+          createMany: {
+            args: Prisma.BudgetVersionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BudgetVersionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BudgetVersionPayload>[]
+          }
+          delete: {
+            args: Prisma.BudgetVersionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BudgetVersionPayload>
+          }
+          update: {
+            args: Prisma.BudgetVersionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BudgetVersionPayload>
+          }
+          deleteMany: {
+            args: Prisma.BudgetVersionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BudgetVersionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.BudgetVersionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BudgetVersionPayload>
+          }
+          aggregate: {
+            args: Prisma.BudgetVersionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBudgetVersion>
+          }
+          groupBy: {
+            args: Prisma.BudgetVersionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BudgetVersionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BudgetVersionCountArgs<ExtArgs>
+            result: $Utils.Optional<BudgetVersionCountAggregateOutputType> | number
+          }
+        }
+      }
       Comment: {
         payload: Prisma.$CommentPayload<ExtArgs>
         fields: Prisma.CommentFieldRefs
@@ -3544,6 +3647,76 @@ export namespace Prisma {
           count: {
             args: Prisma.FiscalPeriodCountArgs<ExtArgs>
             result: $Utils.Optional<FiscalPeriodCountAggregateOutputType> | number
+          }
+        }
+      }
+      Job: {
+        payload: Prisma.$JobPayload<ExtArgs>
+        fields: Prisma.JobFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.JobFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.JobFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobPayload>
+          }
+          findFirst: {
+            args: Prisma.JobFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.JobFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobPayload>
+          }
+          findMany: {
+            args: Prisma.JobFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobPayload>[]
+          }
+          create: {
+            args: Prisma.JobCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobPayload>
+          }
+          createMany: {
+            args: Prisma.JobCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.JobCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobPayload>[]
+          }
+          delete: {
+            args: Prisma.JobDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobPayload>
+          }
+          update: {
+            args: Prisma.JobUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobPayload>
+          }
+          deleteMany: {
+            args: Prisma.JobDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.JobUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.JobUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobPayload>
+          }
+          aggregate: {
+            args: Prisma.JobAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateJob>
+          }
+          groupBy: {
+            args: Prisma.JobGroupByArgs<ExtArgs>
+            result: $Utils.Optional<JobGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.JobCountArgs<ExtArgs>
+            result: $Utils.Optional<JobCountAggregateOutputType> | number
           }
         }
       }
@@ -4498,6 +4671,11 @@ export namespace Prisma {
     revenuesCreated: number
     tasksAssigned: number
     TrainingRecord: number
+    projectsDeleted: number
+    wbsDeleted: number
+    costsDeleted: number
+    invoicesDeleted: number
+    paymentsDeleted: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4521,6 +4699,11 @@ export namespace Prisma {
     revenuesCreated?: boolean | UserCountOutputTypeCountRevenuesCreatedArgs
     tasksAssigned?: boolean | UserCountOutputTypeCountTasksAssignedArgs
     TrainingRecord?: boolean | UserCountOutputTypeCountTrainingRecordArgs
+    projectsDeleted?: boolean | UserCountOutputTypeCountProjectsDeletedArgs
+    wbsDeleted?: boolean | UserCountOutputTypeCountWbsDeletedArgs
+    costsDeleted?: boolean | UserCountOutputTypeCountCostsDeletedArgs
+    invoicesDeleted?: boolean | UserCountOutputTypeCountInvoicesDeletedArgs
+    paymentsDeleted?: boolean | UserCountOutputTypeCountPaymentsDeletedArgs
   }
 
   // Custom InputTypes
@@ -4674,6 +4857,41 @@ export namespace Prisma {
     where?: TrainingRecordWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountProjectsDeletedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountWbsDeletedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WBSItemWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCostsDeletedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CostRecordWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountInvoicesDeletedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InvoiceWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPaymentsDeletedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentWhereInput
+  }
+
 
   /**
    * Count Type CategoryCountOutputType
@@ -4714,6 +4932,7 @@ export namespace Prisma {
     ActivityFeed: number
     ApprovalRequest: number
     BOQItem: number
+    BudgetVersion: number
     contracts: number
     Document: number
     InventoryTransaction: number
@@ -4729,6 +4948,7 @@ export namespace Prisma {
     ActivityFeed?: boolean | ProjectCountOutputTypeCountActivityFeedArgs
     ApprovalRequest?: boolean | ProjectCountOutputTypeCountApprovalRequestArgs
     BOQItem?: boolean | ProjectCountOutputTypeCountBOQItemArgs
+    BudgetVersion?: boolean | ProjectCountOutputTypeCountBudgetVersionArgs
     contracts?: boolean | ProjectCountOutputTypeCountContractsArgs
     Document?: boolean | ProjectCountOutputTypeCountDocumentArgs
     InventoryTransaction?: boolean | ProjectCountOutputTypeCountInventoryTransactionArgs
@@ -4770,6 +4990,13 @@ export namespace Prisma {
    */
   export type ProjectCountOutputTypeCountBOQItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BOQItemWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountBudgetVersionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BudgetVersionWhereInput
   }
 
   /**
@@ -5570,6 +5797,11 @@ export namespace Prisma {
     tasksAssigned?: boolean | User$tasksAssignedArgs<ExtArgs>
     TrainingRecord?: boolean | User$TrainingRecordArgs<ExtArgs>
     UserMaturity?: boolean | User$UserMaturityArgs<ExtArgs>
+    projectsDeleted?: boolean | User$projectsDeletedArgs<ExtArgs>
+    wbsDeleted?: boolean | User$wbsDeletedArgs<ExtArgs>
+    costsDeleted?: boolean | User$costsDeletedArgs<ExtArgs>
+    invoicesDeleted?: boolean | User$invoicesDeletedArgs<ExtArgs>
+    paymentsDeleted?: boolean | User$paymentsDeletedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -5615,6 +5847,11 @@ export namespace Prisma {
     tasksAssigned?: boolean | User$tasksAssignedArgs<ExtArgs>
     TrainingRecord?: boolean | User$TrainingRecordArgs<ExtArgs>
     UserMaturity?: boolean | User$UserMaturityArgs<ExtArgs>
+    projectsDeleted?: boolean | User$projectsDeletedArgs<ExtArgs>
+    wbsDeleted?: boolean | User$wbsDeletedArgs<ExtArgs>
+    costsDeleted?: boolean | User$costsDeletedArgs<ExtArgs>
+    invoicesDeleted?: boolean | User$invoicesDeletedArgs<ExtArgs>
+    paymentsDeleted?: boolean | User$paymentsDeletedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5643,6 +5880,11 @@ export namespace Prisma {
       tasksAssigned: Prisma.$TaskPayload<ExtArgs>[]
       TrainingRecord: Prisma.$TrainingRecordPayload<ExtArgs>[]
       UserMaturity: Prisma.$UserMaturityPayload<ExtArgs> | null
+      projectsDeleted: Prisma.$ProjectPayload<ExtArgs>[]
+      wbsDeleted: Prisma.$WBSItemPayload<ExtArgs>[]
+      costsDeleted: Prisma.$CostRecordPayload<ExtArgs>[]
+      invoicesDeleted: Prisma.$InvoicePayload<ExtArgs>[]
+      paymentsDeleted: Prisma.$PaymentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6037,6 +6279,11 @@ export namespace Prisma {
     tasksAssigned<T extends User$tasksAssignedArgs<ExtArgs> = {}>(args?: Subset<T, User$tasksAssignedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany"> | Null>
     TrainingRecord<T extends User$TrainingRecordArgs<ExtArgs> = {}>(args?: Subset<T, User$TrainingRecordArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrainingRecordPayload<ExtArgs>, T, "findMany"> | Null>
     UserMaturity<T extends User$UserMaturityArgs<ExtArgs> = {}>(args?: Subset<T, User$UserMaturityArgs<ExtArgs>>): Prisma__UserMaturityClient<$Result.GetResult<Prisma.$UserMaturityPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    projectsDeleted<T extends User$projectsDeletedArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsDeletedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
+    wbsDeleted<T extends User$wbsDeletedArgs<ExtArgs> = {}>(args?: Subset<T, User$wbsDeletedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WBSItemPayload<ExtArgs>, T, "findMany"> | Null>
+    costsDeleted<T extends User$costsDeletedArgs<ExtArgs> = {}>(args?: Subset<T, User$costsDeletedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CostRecordPayload<ExtArgs>, T, "findMany"> | Null>
+    invoicesDeleted<T extends User$invoicesDeletedArgs<ExtArgs> = {}>(args?: Subset<T, User$invoicesDeletedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany"> | Null>
+    paymentsDeleted<T extends User$paymentsDeletedArgs<ExtArgs> = {}>(args?: Subset<T, User$paymentsDeletedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6799,6 +7046,106 @@ export namespace Prisma {
      */
     include?: UserMaturityInclude<ExtArgs> | null
     where?: UserMaturityWhereInput
+  }
+
+  /**
+   * User.projectsDeleted
+   */
+  export type User$projectsDeletedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    where?: ProjectWhereInput
+    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    cursor?: ProjectWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+  }
+
+  /**
+   * User.wbsDeleted
+   */
+  export type User$wbsDeletedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WBSItem
+     */
+    select?: WBSItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WBSItemInclude<ExtArgs> | null
+    where?: WBSItemWhereInput
+    orderBy?: WBSItemOrderByWithRelationInput | WBSItemOrderByWithRelationInput[]
+    cursor?: WBSItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WBSItemScalarFieldEnum | WBSItemScalarFieldEnum[]
+  }
+
+  /**
+   * User.costsDeleted
+   */
+  export type User$costsDeletedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CostRecord
+     */
+    select?: CostRecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CostRecordInclude<ExtArgs> | null
+    where?: CostRecordWhereInput
+    orderBy?: CostRecordOrderByWithRelationInput | CostRecordOrderByWithRelationInput[]
+    cursor?: CostRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CostRecordScalarFieldEnum | CostRecordScalarFieldEnum[]
+  }
+
+  /**
+   * User.invoicesDeleted
+   */
+  export type User$invoicesDeletedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Invoice
+     */
+    select?: InvoiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InvoiceInclude<ExtArgs> | null
+    where?: InvoiceWhereInput
+    orderBy?: InvoiceOrderByWithRelationInput | InvoiceOrderByWithRelationInput[]
+    cursor?: InvoiceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InvoiceScalarFieldEnum | InvoiceScalarFieldEnum[]
+  }
+
+  /**
+   * User.paymentsDeleted
+   */
+  export type User$paymentsDeletedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    where?: PaymentWhereInput
+    orderBy?: PaymentOrderByWithRelationInput | PaymentOrderByWithRelationInput[]
+    cursor?: PaymentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
   }
 
   /**
@@ -7777,11 +8124,13 @@ export namespace Prisma {
   }
 
   export type ProjectAvgAggregateOutputType = {
+    version: number | null
     contractValue: Decimal | null
     totalBudget: Decimal | null
   }
 
   export type ProjectSumAggregateOutputType = {
+    version: number | null
     contractValue: Decimal | null
     totalBudget: Decimal | null
   }
@@ -7791,10 +8140,12 @@ export namespace Prisma {
     name: string | null
     createdAt: Date | null
     deletedAt: Date | null
+    deletedById: string | null
     description: string | null
     ownerId: string | null
     status: $Enums.ProjectStatus | null
     updatedAt: Date | null
+    version: number | null
     contractValue: Decimal | null
     endDate: Date | null
     startDate: Date | null
@@ -7806,10 +8157,12 @@ export namespace Prisma {
     name: string | null
     createdAt: Date | null
     deletedAt: Date | null
+    deletedById: string | null
     description: string | null
     ownerId: string | null
     status: $Enums.ProjectStatus | null
     updatedAt: Date | null
+    version: number | null
     contractValue: Decimal | null
     endDate: Date | null
     startDate: Date | null
@@ -7821,10 +8174,12 @@ export namespace Prisma {
     name: number
     createdAt: number
     deletedAt: number
+    deletedById: number
     description: number
     ownerId: number
     status: number
     updatedAt: number
+    version: number
     contractValue: number
     endDate: number
     startDate: number
@@ -7834,11 +8189,13 @@ export namespace Prisma {
 
 
   export type ProjectAvgAggregateInputType = {
+    version?: true
     contractValue?: true
     totalBudget?: true
   }
 
   export type ProjectSumAggregateInputType = {
+    version?: true
     contractValue?: true
     totalBudget?: true
   }
@@ -7848,10 +8205,12 @@ export namespace Prisma {
     name?: true
     createdAt?: true
     deletedAt?: true
+    deletedById?: true
     description?: true
     ownerId?: true
     status?: true
     updatedAt?: true
+    version?: true
     contractValue?: true
     endDate?: true
     startDate?: true
@@ -7863,10 +8222,12 @@ export namespace Prisma {
     name?: true
     createdAt?: true
     deletedAt?: true
+    deletedById?: true
     description?: true
     ownerId?: true
     status?: true
     updatedAt?: true
+    version?: true
     contractValue?: true
     endDate?: true
     startDate?: true
@@ -7878,10 +8239,12 @@ export namespace Prisma {
     name?: true
     createdAt?: true
     deletedAt?: true
+    deletedById?: true
     description?: true
     ownerId?: true
     status?: true
     updatedAt?: true
+    version?: true
     contractValue?: true
     endDate?: true
     startDate?: true
@@ -7980,10 +8343,12 @@ export namespace Prisma {
     name: string
     createdAt: Date
     deletedAt: Date | null
+    deletedById: string | null
     description: string | null
     ownerId: string | null
     status: $Enums.ProjectStatus
     updatedAt: Date
+    version: number
     contractValue: Decimal
     endDate: Date | null
     startDate: Date | null
@@ -8014,17 +8379,21 @@ export namespace Prisma {
     name?: boolean
     createdAt?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
     description?: boolean
     ownerId?: boolean
     status?: boolean
     updatedAt?: boolean
+    version?: boolean
     contractValue?: boolean
     endDate?: boolean
     startDate?: boolean
     totalBudget?: boolean
+    deletedBy?: boolean | Project$deletedByArgs<ExtArgs>
     ActivityFeed?: boolean | Project$ActivityFeedArgs<ExtArgs>
     ApprovalRequest?: boolean | Project$ApprovalRequestArgs<ExtArgs>
     BOQItem?: boolean | Project$BOQItemArgs<ExtArgs>
+    BudgetVersion?: boolean | Project$BudgetVersionArgs<ExtArgs>
     contracts?: boolean | Project$contractsArgs<ExtArgs>
     Document?: boolean | Project$DocumentArgs<ExtArgs>
     InventoryTransaction?: boolean | Project$InventoryTransactionArgs<ExtArgs>
@@ -8043,14 +8412,17 @@ export namespace Prisma {
     name?: boolean
     createdAt?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
     description?: boolean
     ownerId?: boolean
     status?: boolean
     updatedAt?: boolean
+    version?: boolean
     contractValue?: boolean
     endDate?: boolean
     startDate?: boolean
     totalBudget?: boolean
+    deletedBy?: boolean | Project$deletedByArgs<ExtArgs>
     owner?: boolean | Project$ownerArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -8059,10 +8431,12 @@ export namespace Prisma {
     name?: boolean
     createdAt?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
     description?: boolean
     ownerId?: boolean
     status?: boolean
     updatedAt?: boolean
+    version?: boolean
     contractValue?: boolean
     endDate?: boolean
     startDate?: boolean
@@ -8070,9 +8444,11 @@ export namespace Prisma {
   }
 
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deletedBy?: boolean | Project$deletedByArgs<ExtArgs>
     ActivityFeed?: boolean | Project$ActivityFeedArgs<ExtArgs>
     ApprovalRequest?: boolean | Project$ApprovalRequestArgs<ExtArgs>
     BOQItem?: boolean | Project$BOQItemArgs<ExtArgs>
+    BudgetVersion?: boolean | Project$BudgetVersionArgs<ExtArgs>
     contracts?: boolean | Project$contractsArgs<ExtArgs>
     Document?: boolean | Project$DocumentArgs<ExtArgs>
     InventoryTransaction?: boolean | Project$InventoryTransactionArgs<ExtArgs>
@@ -8086,15 +8462,18 @@ export namespace Prisma {
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deletedBy?: boolean | Project$deletedByArgs<ExtArgs>
     owner?: boolean | Project$ownerArgs<ExtArgs>
   }
 
   export type $ProjectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Project"
     objects: {
+      deletedBy: Prisma.$UserPayload<ExtArgs> | null
       ActivityFeed: Prisma.$ActivityFeedPayload<ExtArgs>[]
       ApprovalRequest: Prisma.$ApprovalRequestPayload<ExtArgs>[]
       BOQItem: Prisma.$BOQItemPayload<ExtArgs>[]
+      BudgetVersion: Prisma.$BudgetVersionPayload<ExtArgs>[]
       contracts: Prisma.$ContractPayload<ExtArgs>[]
       Document: Prisma.$DocumentPayload<ExtArgs>[]
       InventoryTransaction: Prisma.$InventoryTransactionPayload<ExtArgs>[]
@@ -8111,10 +8490,12 @@ export namespace Prisma {
       name: string
       createdAt: Date
       deletedAt: Date | null
+      deletedById: string | null
       description: string | null
       ownerId: string | null
       status: $Enums.ProjectStatus
       updatedAt: Date
+      version: number
       contractValue: Prisma.Decimal
       endDate: Date | null
       startDate: Date | null
@@ -8483,9 +8864,11 @@ export namespace Prisma {
    */
   export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    deletedBy<T extends Project$deletedByArgs<ExtArgs> = {}>(args?: Subset<T, Project$deletedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     ActivityFeed<T extends Project$ActivityFeedArgs<ExtArgs> = {}>(args?: Subset<T, Project$ActivityFeedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findMany"> | Null>
     ApprovalRequest<T extends Project$ApprovalRequestArgs<ExtArgs> = {}>(args?: Subset<T, Project$ApprovalRequestArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findMany"> | Null>
     BOQItem<T extends Project$BOQItemArgs<ExtArgs> = {}>(args?: Subset<T, Project$BOQItemArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BOQItemPayload<ExtArgs>, T, "findMany"> | Null>
+    BudgetVersion<T extends Project$BudgetVersionArgs<ExtArgs> = {}>(args?: Subset<T, Project$BudgetVersionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BudgetVersionPayload<ExtArgs>, T, "findMany"> | Null>
     contracts<T extends Project$contractsArgs<ExtArgs> = {}>(args?: Subset<T, Project$contractsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findMany"> | Null>
     Document<T extends Project$DocumentArgs<ExtArgs> = {}>(args?: Subset<T, Project$DocumentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany"> | Null>
     InventoryTransaction<T extends Project$InventoryTransactionArgs<ExtArgs> = {}>(args?: Subset<T, Project$InventoryTransactionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryTransactionPayload<ExtArgs>, T, "findMany"> | Null>
@@ -8529,10 +8912,12 @@ export namespace Prisma {
     readonly name: FieldRef<"Project", 'String'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
     readonly deletedAt: FieldRef<"Project", 'DateTime'>
+    readonly deletedById: FieldRef<"Project", 'String'>
     readonly description: FieldRef<"Project", 'String'>
     readonly ownerId: FieldRef<"Project", 'String'>
     readonly status: FieldRef<"Project", 'ProjectStatus'>
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
+    readonly version: FieldRef<"Project", 'Int'>
     readonly contractValue: FieldRef<"Project", 'Decimal'>
     readonly endDate: FieldRef<"Project", 'DateTime'>
     readonly startDate: FieldRef<"Project", 'DateTime'>
@@ -8855,6 +9240,21 @@ export namespace Prisma {
   }
 
   /**
+   * Project.deletedBy
+   */
+  export type Project$deletedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
    * Project.ActivityFeed
    */
   export type Project$ActivityFeedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8912,6 +9312,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: BOQItemScalarFieldEnum | BOQItemScalarFieldEnum[]
+  }
+
+  /**
+   * Project.BudgetVersion
+   */
+  export type Project$BudgetVersionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BudgetVersion
+     */
+    select?: BudgetVersionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BudgetVersionInclude<ExtArgs> | null
+    where?: BudgetVersionWhereInput
+    orderBy?: BudgetVersionOrderByWithRelationInput | BudgetVersionOrderByWithRelationInput[]
+    cursor?: BudgetVersionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BudgetVersionScalarFieldEnum | BudgetVersionScalarFieldEnum[]
   }
 
   /**
@@ -10253,6 +10673,7 @@ export namespace Prisma {
     level: number | null
     sortOrder: number | null
     deletedAt: Date | null
+    deletedById: string | null
   }
 
   export type WBSItemMaxAggregateOutputType = {
@@ -10267,6 +10688,7 @@ export namespace Prisma {
     level: number | null
     sortOrder: number | null
     deletedAt: Date | null
+    deletedById: string | null
   }
 
   export type WBSItemCountAggregateOutputType = {
@@ -10281,6 +10703,7 @@ export namespace Prisma {
     level: number
     sortOrder: number
     deletedAt: number
+    deletedById: number
     _all: number
   }
 
@@ -10309,6 +10732,7 @@ export namespace Prisma {
     level?: true
     sortOrder?: true
     deletedAt?: true
+    deletedById?: true
   }
 
   export type WBSItemMaxAggregateInputType = {
@@ -10323,6 +10747,7 @@ export namespace Prisma {
     level?: true
     sortOrder?: true
     deletedAt?: true
+    deletedById?: true
   }
 
   export type WBSItemCountAggregateInputType = {
@@ -10337,6 +10762,7 @@ export namespace Prisma {
     level?: true
     sortOrder?: true
     deletedAt?: true
+    deletedById?: true
     _all?: true
   }
 
@@ -10438,6 +10864,7 @@ export namespace Prisma {
     level: number
     sortOrder: number
     deletedAt: Date | null
+    deletedById: string | null
     _count: WBSItemCountAggregateOutputType | null
     _avg: WBSItemAvgAggregateOutputType | null
     _sum: WBSItemSumAggregateOutputType | null
@@ -10471,6 +10898,8 @@ export namespace Prisma {
     level?: boolean
     sortOrder?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
+    deletedBy?: boolean | WBSItem$deletedByArgs<ExtArgs>
     BOQItem?: boolean | WBSItem$BOQItemArgs<ExtArgs>
     budgets?: boolean | WBSItem$budgetsArgs<ExtArgs>
     costs?: boolean | WBSItem$costsArgs<ExtArgs>
@@ -10497,6 +10926,8 @@ export namespace Prisma {
     level?: boolean
     sortOrder?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
+    deletedBy?: boolean | WBSItem$deletedByArgs<ExtArgs>
     parent?: boolean | WBSItem$parentArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["wBSItem"]>
@@ -10513,9 +10944,11 @@ export namespace Prisma {
     level?: boolean
     sortOrder?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
   }
 
   export type WBSItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deletedBy?: boolean | WBSItem$deletedByArgs<ExtArgs>
     BOQItem?: boolean | WBSItem$BOQItemArgs<ExtArgs>
     budgets?: boolean | WBSItem$budgetsArgs<ExtArgs>
     costs?: boolean | WBSItem$costsArgs<ExtArgs>
@@ -10530,6 +10963,7 @@ export namespace Prisma {
     _count?: boolean | WBSItemCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type WBSItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deletedBy?: boolean | WBSItem$deletedByArgs<ExtArgs>
     parent?: boolean | WBSItem$parentArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
   }
@@ -10537,6 +10971,7 @@ export namespace Prisma {
   export type $WBSItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "WBSItem"
     objects: {
+      deletedBy: Prisma.$UserPayload<ExtArgs> | null
       BOQItem: Prisma.$BOQItemPayload<ExtArgs>[]
       budgets: Prisma.$BudgetRecordPayload<ExtArgs>[]
       costs: Prisma.$CostRecordPayload<ExtArgs>[]
@@ -10561,6 +10996,7 @@ export namespace Prisma {
       level: number
       sortOrder: number
       deletedAt: Date | null
+      deletedById: string | null
     }, ExtArgs["result"]["wBSItem"]>
     composites: {}
   }
@@ -10925,6 +11361,7 @@ export namespace Prisma {
    */
   export interface Prisma__WBSItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    deletedBy<T extends WBSItem$deletedByArgs<ExtArgs> = {}>(args?: Subset<T, WBSItem$deletedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     BOQItem<T extends WBSItem$BOQItemArgs<ExtArgs> = {}>(args?: Subset<T, WBSItem$BOQItemArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BOQItemPayload<ExtArgs>, T, "findMany"> | Null>
     budgets<T extends WBSItem$budgetsArgs<ExtArgs> = {}>(args?: Subset<T, WBSItem$budgetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BudgetRecordPayload<ExtArgs>, T, "findMany"> | Null>
     costs<T extends WBSItem$costsArgs<ExtArgs> = {}>(args?: Subset<T, WBSItem$costsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CostRecordPayload<ExtArgs>, T, "findMany"> | Null>
@@ -10976,6 +11413,7 @@ export namespace Prisma {
     readonly level: FieldRef<"WBSItem", 'Int'>
     readonly sortOrder: FieldRef<"WBSItem", 'Int'>
     readonly deletedAt: FieldRef<"WBSItem", 'DateTime'>
+    readonly deletedById: FieldRef<"WBSItem", 'String'>
   }
     
 
@@ -11294,6 +11732,21 @@ export namespace Prisma {
   }
 
   /**
+   * WBSItem.deletedBy
+   */
+  export type WBSItem$deletedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
    * WBSItem.BOQItem
    */
   export type WBSItem$BOQItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11519,12 +11972,14 @@ export namespace Prisma {
     amount: Decimal | null
     quantity: Decimal | null
     unitPrice: Decimal | null
+    version: number | null
   }
 
   export type CostRecordSumAggregateOutputType = {
     amount: Decimal | null
     quantity: Decimal | null
     unitPrice: Decimal | null
+    version: number | null
   }
 
   export type CostRecordMinAggregateOutputType = {
@@ -11541,10 +11996,13 @@ export namespace Prisma {
     status: $Enums.PaymentStatus | null
     createdAt: Date | null
     updatedAt: Date | null
+    version: number | null
     createdById: string | null
     purchaseOrderId: string | null
     requestId: string | null
     deletedAt: Date | null
+    deletedById: string | null
+    approvalStatus: $Enums.ApprovalStatus | null
   }
 
   export type CostRecordMaxAggregateOutputType = {
@@ -11561,10 +12019,13 @@ export namespace Prisma {
     status: $Enums.PaymentStatus | null
     createdAt: Date | null
     updatedAt: Date | null
+    version: number | null
     createdById: string | null
     purchaseOrderId: string | null
     requestId: string | null
     deletedAt: Date | null
+    deletedById: string | null
+    approvalStatus: $Enums.ApprovalStatus | null
   }
 
   export type CostRecordCountAggregateOutputType = {
@@ -11581,10 +12042,13 @@ export namespace Prisma {
     status: number
     createdAt: number
     updatedAt: number
+    version: number
     createdById: number
     purchaseOrderId: number
     requestId: number
     deletedAt: number
+    deletedById: number
+    approvalStatus: number
     _all: number
   }
 
@@ -11593,12 +12057,14 @@ export namespace Prisma {
     amount?: true
     quantity?: true
     unitPrice?: true
+    version?: true
   }
 
   export type CostRecordSumAggregateInputType = {
     amount?: true
     quantity?: true
     unitPrice?: true
+    version?: true
   }
 
   export type CostRecordMinAggregateInputType = {
@@ -11615,10 +12081,13 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    version?: true
     createdById?: true
     purchaseOrderId?: true
     requestId?: true
     deletedAt?: true
+    deletedById?: true
+    approvalStatus?: true
   }
 
   export type CostRecordMaxAggregateInputType = {
@@ -11635,10 +12104,13 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    version?: true
     createdById?: true
     purchaseOrderId?: true
     requestId?: true
     deletedAt?: true
+    deletedById?: true
+    approvalStatus?: true
   }
 
   export type CostRecordCountAggregateInputType = {
@@ -11655,10 +12127,13 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    version?: true
     createdById?: true
     purchaseOrderId?: true
     requestId?: true
     deletedAt?: true
+    deletedById?: true
+    approvalStatus?: true
     _all?: true
   }
 
@@ -11762,10 +12237,13 @@ export namespace Prisma {
     status: $Enums.PaymentStatus
     createdAt: Date
     updatedAt: Date
+    version: number
     createdById: string | null
     purchaseOrderId: string | null
     requestId: string | null
     deletedAt: Date | null
+    deletedById: string | null
+    approvalStatus: $Enums.ApprovalStatus
     _count: CostRecordCountAggregateOutputType | null
     _avg: CostRecordAvgAggregateOutputType | null
     _sum: CostRecordSumAggregateOutputType | null
@@ -11801,10 +12279,14 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    version?: boolean
     createdById?: boolean
     purchaseOrderId?: boolean
     requestId?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
+    approvalStatus?: boolean
+    deletedBy?: boolean | CostRecord$deletedByArgs<ExtArgs>
     createdBy?: boolean | CostRecord$createdByArgs<ExtArgs>
     purchaseOrder?: boolean | CostRecord$purchaseOrderArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
@@ -11824,10 +12306,14 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    version?: boolean
     createdById?: boolean
     purchaseOrderId?: boolean
     requestId?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
+    approvalStatus?: boolean
+    deletedBy?: boolean | CostRecord$deletedByArgs<ExtArgs>
     createdBy?: boolean | CostRecord$createdByArgs<ExtArgs>
     purchaseOrder?: boolean | CostRecord$purchaseOrderArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
@@ -11847,18 +12333,23 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    version?: boolean
     createdById?: boolean
     purchaseOrderId?: boolean
     requestId?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
+    approvalStatus?: boolean
   }
 
   export type CostRecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deletedBy?: boolean | CostRecord$deletedByArgs<ExtArgs>
     createdBy?: boolean | CostRecord$createdByArgs<ExtArgs>
     purchaseOrder?: boolean | CostRecord$purchaseOrderArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
   }
   export type CostRecordIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deletedBy?: boolean | CostRecord$deletedByArgs<ExtArgs>
     createdBy?: boolean | CostRecord$createdByArgs<ExtArgs>
     purchaseOrder?: boolean | CostRecord$purchaseOrderArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
@@ -11867,6 +12358,7 @@ export namespace Prisma {
   export type $CostRecordPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CostRecord"
     objects: {
+      deletedBy: Prisma.$UserPayload<ExtArgs> | null
       createdBy: Prisma.$UserPayload<ExtArgs> | null
       purchaseOrder: Prisma.$PurchaseOrderPayload<ExtArgs> | null
       wbs: Prisma.$WBSItemPayload<ExtArgs>
@@ -11885,10 +12377,13 @@ export namespace Prisma {
       status: $Enums.PaymentStatus
       createdAt: Date
       updatedAt: Date
+      version: number
       createdById: string | null
       purchaseOrderId: string | null
       requestId: string | null
       deletedAt: Date | null
+      deletedById: string | null
+      approvalStatus: $Enums.ApprovalStatus
     }, ExtArgs["result"]["costRecord"]>
     composites: {}
   }
@@ -12253,6 +12748,7 @@ export namespace Prisma {
    */
   export interface Prisma__CostRecordClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    deletedBy<T extends CostRecord$deletedByArgs<ExtArgs> = {}>(args?: Subset<T, CostRecord$deletedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     createdBy<T extends CostRecord$createdByArgs<ExtArgs> = {}>(args?: Subset<T, CostRecord$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     purchaseOrder<T extends CostRecord$purchaseOrderArgs<ExtArgs> = {}>(args?: Subset<T, CostRecord$purchaseOrderArgs<ExtArgs>>): Prisma__PurchaseOrderClient<$Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     wbs<T extends WBSItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WBSItemDefaultArgs<ExtArgs>>): Prisma__WBSItemClient<$Result.GetResult<Prisma.$WBSItemPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
@@ -12298,10 +12794,13 @@ export namespace Prisma {
     readonly status: FieldRef<"CostRecord", 'PaymentStatus'>
     readonly createdAt: FieldRef<"CostRecord", 'DateTime'>
     readonly updatedAt: FieldRef<"CostRecord", 'DateTime'>
+    readonly version: FieldRef<"CostRecord", 'Int'>
     readonly createdById: FieldRef<"CostRecord", 'String'>
     readonly purchaseOrderId: FieldRef<"CostRecord", 'String'>
     readonly requestId: FieldRef<"CostRecord", 'String'>
     readonly deletedAt: FieldRef<"CostRecord", 'DateTime'>
+    readonly deletedById: FieldRef<"CostRecord", 'String'>
+    readonly approvalStatus: FieldRef<"CostRecord", 'ApprovalStatus'>
   }
     
 
@@ -12617,6 +13116,21 @@ export namespace Prisma {
      * Filter which CostRecords to delete
      */
     where?: CostRecordWhereInput
+  }
+
+  /**
+   * CostRecord.deletedBy
+   */
+  export type CostRecord$deletedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -14841,6 +15355,8 @@ export namespace Prisma {
     contractId: string | null
     requestId: string | null
     deletedAt: Date | null
+    deletedById: string | null
+    approvalStatus: $Enums.ApprovalStatus | null
     version: number | null
     certifiedProgress: Decimal | null
     retentionAmount: Decimal | null
@@ -14864,6 +15380,8 @@ export namespace Prisma {
     contractId: string | null
     requestId: string | null
     deletedAt: Date | null
+    deletedById: string | null
+    approvalStatus: $Enums.ApprovalStatus | null
     version: number | null
     certifiedProgress: Decimal | null
     retentionAmount: Decimal | null
@@ -14887,6 +15405,8 @@ export namespace Prisma {
     contractId: number
     requestId: number
     deletedAt: number
+    deletedById: number
+    approvalStatus: number
     version: number
     certifiedProgress: number
     retentionAmount: number
@@ -14930,6 +15450,8 @@ export namespace Prisma {
     contractId?: true
     requestId?: true
     deletedAt?: true
+    deletedById?: true
+    approvalStatus?: true
     version?: true
     certifiedProgress?: true
     retentionAmount?: true
@@ -14953,6 +15475,8 @@ export namespace Prisma {
     contractId?: true
     requestId?: true
     deletedAt?: true
+    deletedById?: true
+    approvalStatus?: true
     version?: true
     certifiedProgress?: true
     retentionAmount?: true
@@ -14976,6 +15500,8 @@ export namespace Prisma {
     contractId?: true
     requestId?: true
     deletedAt?: true
+    deletedById?: true
+    approvalStatus?: true
     version?: true
     certifiedProgress?: true
     retentionAmount?: true
@@ -15086,6 +15612,8 @@ export namespace Prisma {
     contractId: string | null
     requestId: string | null
     deletedAt: Date | null
+    deletedById: string | null
+    approvalStatus: $Enums.ApprovalStatus
     version: number
     certifiedProgress: Decimal
     retentionAmount: Decimal
@@ -15128,9 +15656,12 @@ export namespace Prisma {
     contractId?: boolean
     requestId?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
+    approvalStatus?: boolean
     version?: boolean
     certifiedProgress?: boolean
     retentionAmount?: boolean
+    deletedBy?: boolean | Invoice$deletedByArgs<ExtArgs>
     contract?: boolean | Invoice$contractArgs<ExtArgs>
     createdBy?: boolean | Invoice$createdByArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
@@ -15157,9 +15688,12 @@ export namespace Prisma {
     contractId?: boolean
     requestId?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
+    approvalStatus?: boolean
     version?: boolean
     certifiedProgress?: boolean
     retentionAmount?: boolean
+    deletedBy?: boolean | Invoice$deletedByArgs<ExtArgs>
     contract?: boolean | Invoice$contractArgs<ExtArgs>
     createdBy?: boolean | Invoice$createdByArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
@@ -15183,12 +15717,15 @@ export namespace Prisma {
     contractId?: boolean
     requestId?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
+    approvalStatus?: boolean
     version?: boolean
     certifiedProgress?: boolean
     retentionAmount?: boolean
   }
 
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deletedBy?: boolean | Invoice$deletedByArgs<ExtArgs>
     contract?: boolean | Invoice$contractArgs<ExtArgs>
     createdBy?: boolean | Invoice$createdByArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
@@ -15197,6 +15734,7 @@ export namespace Prisma {
     _count?: boolean | InvoiceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type InvoiceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deletedBy?: boolean | Invoice$deletedByArgs<ExtArgs>
     contract?: boolean | Invoice$contractArgs<ExtArgs>
     createdBy?: boolean | Invoice$createdByArgs<ExtArgs>
     wbs?: boolean | WBSItemDefaultArgs<ExtArgs>
@@ -15205,6 +15743,7 @@ export namespace Prisma {
   export type $InvoicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Invoice"
     objects: {
+      deletedBy: Prisma.$UserPayload<ExtArgs> | null
       contract: Prisma.$ContractPayload<ExtArgs> | null
       createdBy: Prisma.$UserPayload<ExtArgs> | null
       wbs: Prisma.$WBSItemPayload<ExtArgs>
@@ -15229,6 +15768,8 @@ export namespace Prisma {
       contractId: string | null
       requestId: string | null
       deletedAt: Date | null
+      deletedById: string | null
+      approvalStatus: $Enums.ApprovalStatus
       version: number
       certifiedProgress: Prisma.Decimal
       retentionAmount: Prisma.Decimal
@@ -15596,6 +16137,7 @@ export namespace Prisma {
    */
   export interface Prisma__InvoiceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    deletedBy<T extends Invoice$deletedByArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$deletedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     contract<T extends Invoice$contractArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$contractArgs<ExtArgs>>): Prisma__ContractClient<$Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     createdBy<T extends Invoice$createdByArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     wbs<T extends WBSItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WBSItemDefaultArgs<ExtArgs>>): Prisma__WBSItemClient<$Result.GetResult<Prisma.$WBSItemPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
@@ -15647,6 +16189,8 @@ export namespace Prisma {
     readonly contractId: FieldRef<"Invoice", 'String'>
     readonly requestId: FieldRef<"Invoice", 'String'>
     readonly deletedAt: FieldRef<"Invoice", 'DateTime'>
+    readonly deletedById: FieldRef<"Invoice", 'String'>
+    readonly approvalStatus: FieldRef<"Invoice", 'ApprovalStatus'>
     readonly version: FieldRef<"Invoice", 'Int'>
     readonly certifiedProgress: FieldRef<"Invoice", 'Decimal'>
     readonly retentionAmount: FieldRef<"Invoice", 'Decimal'>
@@ -15968,6 +16512,21 @@ export namespace Prisma {
   }
 
   /**
+   * Invoice.deletedBy
+   */
+  export type Invoice$deletedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
    * Invoice.contract
    */
   export type Invoice$contractArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16066,10 +16625,12 @@ export namespace Prisma {
 
   export type PaymentAvgAggregateOutputType = {
     amount: Decimal | null
+    version: number | null
   }
 
   export type PaymentSumAggregateOutputType = {
     amount: Decimal | null
+    version: number | null
   }
 
   export type PaymentMinAggregateOutputType = {
@@ -16081,8 +16642,11 @@ export namespace Prisma {
     description: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    version: number | null
     requestId: string | null
     deletedAt: Date | null
+    deletedById: string | null
+    approvalStatus: $Enums.ApprovalStatus | null
   }
 
   export type PaymentMaxAggregateOutputType = {
@@ -16094,8 +16658,11 @@ export namespace Prisma {
     description: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    version: number | null
     requestId: string | null
     deletedAt: Date | null
+    deletedById: string | null
+    approvalStatus: $Enums.ApprovalStatus | null
   }
 
   export type PaymentCountAggregateOutputType = {
@@ -16107,18 +16674,23 @@ export namespace Prisma {
     description: number
     createdAt: number
     updatedAt: number
+    version: number
     requestId: number
     deletedAt: number
+    deletedById: number
+    approvalStatus: number
     _all: number
   }
 
 
   export type PaymentAvgAggregateInputType = {
     amount?: true
+    version?: true
   }
 
   export type PaymentSumAggregateInputType = {
     amount?: true
+    version?: true
   }
 
   export type PaymentMinAggregateInputType = {
@@ -16130,8 +16702,11 @@ export namespace Prisma {
     description?: true
     createdAt?: true
     updatedAt?: true
+    version?: true
     requestId?: true
     deletedAt?: true
+    deletedById?: true
+    approvalStatus?: true
   }
 
   export type PaymentMaxAggregateInputType = {
@@ -16143,8 +16718,11 @@ export namespace Prisma {
     description?: true
     createdAt?: true
     updatedAt?: true
+    version?: true
     requestId?: true
     deletedAt?: true
+    deletedById?: true
+    approvalStatus?: true
   }
 
   export type PaymentCountAggregateInputType = {
@@ -16156,8 +16734,11 @@ export namespace Prisma {
     description?: true
     createdAt?: true
     updatedAt?: true
+    version?: true
     requestId?: true
     deletedAt?: true
+    deletedById?: true
+    approvalStatus?: true
     _all?: true
   }
 
@@ -16256,8 +16837,11 @@ export namespace Prisma {
     description: string | null
     createdAt: Date
     updatedAt: Date
+    version: number
     requestId: string | null
     deletedAt: Date | null
+    deletedById: string | null
+    approvalStatus: $Enums.ApprovalStatus
     _count: PaymentCountAggregateOutputType | null
     _avg: PaymentAvgAggregateOutputType | null
     _sum: PaymentSumAggregateOutputType | null
@@ -16288,8 +16872,12 @@ export namespace Prisma {
     description?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    version?: boolean
     requestId?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
+    approvalStatus?: boolean
+    deletedBy?: boolean | Payment$deletedByArgs<ExtArgs>
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["payment"]>
 
@@ -16302,8 +16890,12 @@ export namespace Prisma {
     description?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    version?: boolean
     requestId?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
+    approvalStatus?: boolean
+    deletedBy?: boolean | Payment$deletedByArgs<ExtArgs>
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["payment"]>
 
@@ -16316,20 +16908,26 @@ export namespace Prisma {
     description?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    version?: boolean
     requestId?: boolean
     deletedAt?: boolean
+    deletedById?: boolean
+    approvalStatus?: boolean
   }
 
   export type PaymentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deletedBy?: boolean | Payment$deletedByArgs<ExtArgs>
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
   }
   export type PaymentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deletedBy?: boolean | Payment$deletedByArgs<ExtArgs>
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
   }
 
   export type $PaymentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Payment"
     objects: {
+      deletedBy: Prisma.$UserPayload<ExtArgs> | null
       invoice: Prisma.$InvoicePayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -16341,8 +16939,11 @@ export namespace Prisma {
       description: string | null
       createdAt: Date
       updatedAt: Date
+      version: number
       requestId: string | null
       deletedAt: Date | null
+      deletedById: string | null
+      approvalStatus: $Enums.ApprovalStatus
     }, ExtArgs["result"]["payment"]>
     composites: {}
   }
@@ -16707,6 +17308,7 @@ export namespace Prisma {
    */
   export interface Prisma__PaymentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    deletedBy<T extends Payment$deletedByArgs<ExtArgs> = {}>(args?: Subset<T, Payment$deletedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     invoice<T extends InvoiceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InvoiceDefaultArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -16745,8 +17347,11 @@ export namespace Prisma {
     readonly description: FieldRef<"Payment", 'String'>
     readonly createdAt: FieldRef<"Payment", 'DateTime'>
     readonly updatedAt: FieldRef<"Payment", 'DateTime'>
+    readonly version: FieldRef<"Payment", 'Int'>
     readonly requestId: FieldRef<"Payment", 'String'>
     readonly deletedAt: FieldRef<"Payment", 'DateTime'>
+    readonly deletedById: FieldRef<"Payment", 'String'>
+    readonly approvalStatus: FieldRef<"Payment", 'ApprovalStatus'>
   }
     
 
@@ -17062,6 +17667,21 @@ export namespace Prisma {
      * Filter which Payments to delete
      */
     where?: PaymentWhereInput
+  }
+
+  /**
+   * Payment.deletedBy
+   */
+  export type Payment$deletedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -31728,12 +32348,14 @@ export namespace Prisma {
     quantity: Decimal | null
     unitRate: Decimal | null
     totalAmount: Decimal | null
+    version: number | null
   }
 
   export type BOQItemSumAggregateOutputType = {
     quantity: Decimal | null
     unitRate: Decimal | null
     totalAmount: Decimal | null
+    version: number | null
   }
 
   export type BOQItemMinAggregateOutputType = {
@@ -31745,6 +32367,8 @@ export namespace Prisma {
     quantity: Decimal | null
     unitRate: Decimal | null
     totalAmount: Decimal | null
+    status: string | null
+    version: number | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
@@ -31759,6 +32383,8 @@ export namespace Prisma {
     quantity: Decimal | null
     unitRate: Decimal | null
     totalAmount: Decimal | null
+    status: string | null
+    version: number | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
@@ -31773,6 +32399,8 @@ export namespace Prisma {
     quantity: number
     unitRate: number
     totalAmount: number
+    status: number
+    version: number
     createdAt: number
     updatedAt: number
     deletedAt: number
@@ -31784,12 +32412,14 @@ export namespace Prisma {
     quantity?: true
     unitRate?: true
     totalAmount?: true
+    version?: true
   }
 
   export type BOQItemSumAggregateInputType = {
     quantity?: true
     unitRate?: true
     totalAmount?: true
+    version?: true
   }
 
   export type BOQItemMinAggregateInputType = {
@@ -31801,6 +32431,8 @@ export namespace Prisma {
     quantity?: true
     unitRate?: true
     totalAmount?: true
+    status?: true
+    version?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -31815,6 +32447,8 @@ export namespace Prisma {
     quantity?: true
     unitRate?: true
     totalAmount?: true
+    status?: true
+    version?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -31829,6 +32463,8 @@ export namespace Prisma {
     quantity?: true
     unitRate?: true
     totalAmount?: true
+    status?: true
+    version?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -31930,6 +32566,8 @@ export namespace Prisma {
     quantity: Decimal
     unitRate: Decimal
     totalAmount: Decimal
+    status: string
+    version: number
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -31963,6 +32601,8 @@ export namespace Prisma {
     quantity?: boolean
     unitRate?: boolean
     totalAmount?: boolean
+    status?: boolean
+    version?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -31981,6 +32621,8 @@ export namespace Prisma {
     quantity?: boolean
     unitRate?: boolean
     totalAmount?: boolean
+    status?: boolean
+    version?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -31997,6 +32639,8 @@ export namespace Prisma {
     quantity?: boolean
     unitRate?: boolean
     totalAmount?: boolean
+    status?: boolean
+    version?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -32029,6 +32673,8 @@ export namespace Prisma {
       quantity: Prisma.Decimal
       unitRate: Prisma.Decimal
       totalAmount: Prisma.Decimal
+      status: string
+      version: number
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
@@ -32436,6 +33082,8 @@ export namespace Prisma {
     readonly quantity: FieldRef<"BOQItem", 'Decimal'>
     readonly unitRate: FieldRef<"BOQItem", 'Decimal'>
     readonly totalAmount: FieldRef<"BOQItem", 'Decimal'>
+    readonly status: FieldRef<"BOQItem", 'String'>
+    readonly version: FieldRef<"BOQItem", 'Int'>
     readonly createdAt: FieldRef<"BOQItem", 'DateTime'>
     readonly updatedAt: FieldRef<"BOQItem", 'DateTime'>
     readonly deletedAt: FieldRef<"BOQItem", 'DateTime'>
@@ -32788,6 +33436,1005 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: BOQItemInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model BudgetVersion
+   */
+
+  export type AggregateBudgetVersion = {
+    _count: BudgetVersionCountAggregateOutputType | null
+    _avg: BudgetVersionAvgAggregateOutputType | null
+    _sum: BudgetVersionSumAggregateOutputType | null
+    _min: BudgetVersionMinAggregateOutputType | null
+    _max: BudgetVersionMaxAggregateOutputType | null
+  }
+
+  export type BudgetVersionAvgAggregateOutputType = {
+    version: number | null
+  }
+
+  export type BudgetVersionSumAggregateOutputType = {
+    version: number | null
+  }
+
+  export type BudgetVersionMinAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    version: number | null
+    description: string | null
+    status: string | null
+    createdAt: Date | null
+    createdById: string | null
+  }
+
+  export type BudgetVersionMaxAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    version: number | null
+    description: string | null
+    status: string | null
+    createdAt: Date | null
+    createdById: string | null
+  }
+
+  export type BudgetVersionCountAggregateOutputType = {
+    id: number
+    projectId: number
+    version: number
+    description: number
+    status: number
+    snapshot: number
+    createdAt: number
+    createdById: number
+    _all: number
+  }
+
+
+  export type BudgetVersionAvgAggregateInputType = {
+    version?: true
+  }
+
+  export type BudgetVersionSumAggregateInputType = {
+    version?: true
+  }
+
+  export type BudgetVersionMinAggregateInputType = {
+    id?: true
+    projectId?: true
+    version?: true
+    description?: true
+    status?: true
+    createdAt?: true
+    createdById?: true
+  }
+
+  export type BudgetVersionMaxAggregateInputType = {
+    id?: true
+    projectId?: true
+    version?: true
+    description?: true
+    status?: true
+    createdAt?: true
+    createdById?: true
+  }
+
+  export type BudgetVersionCountAggregateInputType = {
+    id?: true
+    projectId?: true
+    version?: true
+    description?: true
+    status?: true
+    snapshot?: true
+    createdAt?: true
+    createdById?: true
+    _all?: true
+  }
+
+  export type BudgetVersionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BudgetVersion to aggregate.
+     */
+    where?: BudgetVersionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BudgetVersions to fetch.
+     */
+    orderBy?: BudgetVersionOrderByWithRelationInput | BudgetVersionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BudgetVersionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BudgetVersions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BudgetVersions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BudgetVersions
+    **/
+    _count?: true | BudgetVersionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: BudgetVersionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BudgetVersionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BudgetVersionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BudgetVersionMaxAggregateInputType
+  }
+
+  export type GetBudgetVersionAggregateType<T extends BudgetVersionAggregateArgs> = {
+        [P in keyof T & keyof AggregateBudgetVersion]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBudgetVersion[P]>
+      : GetScalarType<T[P], AggregateBudgetVersion[P]>
+  }
+
+
+
+
+  export type BudgetVersionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BudgetVersionWhereInput
+    orderBy?: BudgetVersionOrderByWithAggregationInput | BudgetVersionOrderByWithAggregationInput[]
+    by: BudgetVersionScalarFieldEnum[] | BudgetVersionScalarFieldEnum
+    having?: BudgetVersionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BudgetVersionCountAggregateInputType | true
+    _avg?: BudgetVersionAvgAggregateInputType
+    _sum?: BudgetVersionSumAggregateInputType
+    _min?: BudgetVersionMinAggregateInputType
+    _max?: BudgetVersionMaxAggregateInputType
+  }
+
+  export type BudgetVersionGroupByOutputType = {
+    id: string
+    projectId: string
+    version: number
+    description: string | null
+    status: string
+    snapshot: JsonValue
+    createdAt: Date
+    createdById: string | null
+    _count: BudgetVersionCountAggregateOutputType | null
+    _avg: BudgetVersionAvgAggregateOutputType | null
+    _sum: BudgetVersionSumAggregateOutputType | null
+    _min: BudgetVersionMinAggregateOutputType | null
+    _max: BudgetVersionMaxAggregateOutputType | null
+  }
+
+  type GetBudgetVersionGroupByPayload<T extends BudgetVersionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BudgetVersionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BudgetVersionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BudgetVersionGroupByOutputType[P]>
+            : GetScalarType<T[P], BudgetVersionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BudgetVersionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    version?: boolean
+    description?: boolean
+    status?: boolean
+    snapshot?: boolean
+    createdAt?: boolean
+    createdById?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["budgetVersion"]>
+
+  export type BudgetVersionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    version?: boolean
+    description?: boolean
+    status?: boolean
+    snapshot?: boolean
+    createdAt?: boolean
+    createdById?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["budgetVersion"]>
+
+  export type BudgetVersionSelectScalar = {
+    id?: boolean
+    projectId?: boolean
+    version?: boolean
+    description?: boolean
+    status?: boolean
+    snapshot?: boolean
+    createdAt?: boolean
+    createdById?: boolean
+  }
+
+  export type BudgetVersionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }
+  export type BudgetVersionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }
+
+  export type $BudgetVersionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BudgetVersion"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      projectId: string
+      version: number
+      description: string | null
+      status: string
+      snapshot: Prisma.JsonValue
+      createdAt: Date
+      createdById: string | null
+    }, ExtArgs["result"]["budgetVersion"]>
+    composites: {}
+  }
+
+  type BudgetVersionGetPayload<S extends boolean | null | undefined | BudgetVersionDefaultArgs> = $Result.GetResult<Prisma.$BudgetVersionPayload, S>
+
+  type BudgetVersionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<BudgetVersionFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: BudgetVersionCountAggregateInputType | true
+    }
+
+  export interface BudgetVersionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BudgetVersion'], meta: { name: 'BudgetVersion' } }
+    /**
+     * Find zero or one BudgetVersion that matches the filter.
+     * @param {BudgetVersionFindUniqueArgs} args - Arguments to find a BudgetVersion
+     * @example
+     * // Get one BudgetVersion
+     * const budgetVersion = await prisma.budgetVersion.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BudgetVersionFindUniqueArgs>(args: SelectSubset<T, BudgetVersionFindUniqueArgs<ExtArgs>>): Prisma__BudgetVersionClient<$Result.GetResult<Prisma.$BudgetVersionPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one BudgetVersion that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {BudgetVersionFindUniqueOrThrowArgs} args - Arguments to find a BudgetVersion
+     * @example
+     * // Get one BudgetVersion
+     * const budgetVersion = await prisma.budgetVersion.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BudgetVersionFindUniqueOrThrowArgs>(args: SelectSubset<T, BudgetVersionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BudgetVersionClient<$Result.GetResult<Prisma.$BudgetVersionPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first BudgetVersion that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BudgetVersionFindFirstArgs} args - Arguments to find a BudgetVersion
+     * @example
+     * // Get one BudgetVersion
+     * const budgetVersion = await prisma.budgetVersion.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BudgetVersionFindFirstArgs>(args?: SelectSubset<T, BudgetVersionFindFirstArgs<ExtArgs>>): Prisma__BudgetVersionClient<$Result.GetResult<Prisma.$BudgetVersionPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first BudgetVersion that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BudgetVersionFindFirstOrThrowArgs} args - Arguments to find a BudgetVersion
+     * @example
+     * // Get one BudgetVersion
+     * const budgetVersion = await prisma.budgetVersion.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BudgetVersionFindFirstOrThrowArgs>(args?: SelectSubset<T, BudgetVersionFindFirstOrThrowArgs<ExtArgs>>): Prisma__BudgetVersionClient<$Result.GetResult<Prisma.$BudgetVersionPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more BudgetVersions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BudgetVersionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BudgetVersions
+     * const budgetVersions = await prisma.budgetVersion.findMany()
+     * 
+     * // Get first 10 BudgetVersions
+     * const budgetVersions = await prisma.budgetVersion.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const budgetVersionWithIdOnly = await prisma.budgetVersion.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BudgetVersionFindManyArgs>(args?: SelectSubset<T, BudgetVersionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BudgetVersionPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a BudgetVersion.
+     * @param {BudgetVersionCreateArgs} args - Arguments to create a BudgetVersion.
+     * @example
+     * // Create one BudgetVersion
+     * const BudgetVersion = await prisma.budgetVersion.create({
+     *   data: {
+     *     // ... data to create a BudgetVersion
+     *   }
+     * })
+     * 
+     */
+    create<T extends BudgetVersionCreateArgs>(args: SelectSubset<T, BudgetVersionCreateArgs<ExtArgs>>): Prisma__BudgetVersionClient<$Result.GetResult<Prisma.$BudgetVersionPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many BudgetVersions.
+     * @param {BudgetVersionCreateManyArgs} args - Arguments to create many BudgetVersions.
+     * @example
+     * // Create many BudgetVersions
+     * const budgetVersion = await prisma.budgetVersion.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BudgetVersionCreateManyArgs>(args?: SelectSubset<T, BudgetVersionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BudgetVersions and returns the data saved in the database.
+     * @param {BudgetVersionCreateManyAndReturnArgs} args - Arguments to create many BudgetVersions.
+     * @example
+     * // Create many BudgetVersions
+     * const budgetVersion = await prisma.budgetVersion.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BudgetVersions and only return the `id`
+     * const budgetVersionWithIdOnly = await prisma.budgetVersion.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BudgetVersionCreateManyAndReturnArgs>(args?: SelectSubset<T, BudgetVersionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BudgetVersionPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a BudgetVersion.
+     * @param {BudgetVersionDeleteArgs} args - Arguments to delete one BudgetVersion.
+     * @example
+     * // Delete one BudgetVersion
+     * const BudgetVersion = await prisma.budgetVersion.delete({
+     *   where: {
+     *     // ... filter to delete one BudgetVersion
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BudgetVersionDeleteArgs>(args: SelectSubset<T, BudgetVersionDeleteArgs<ExtArgs>>): Prisma__BudgetVersionClient<$Result.GetResult<Prisma.$BudgetVersionPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one BudgetVersion.
+     * @param {BudgetVersionUpdateArgs} args - Arguments to update one BudgetVersion.
+     * @example
+     * // Update one BudgetVersion
+     * const budgetVersion = await prisma.budgetVersion.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BudgetVersionUpdateArgs>(args: SelectSubset<T, BudgetVersionUpdateArgs<ExtArgs>>): Prisma__BudgetVersionClient<$Result.GetResult<Prisma.$BudgetVersionPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more BudgetVersions.
+     * @param {BudgetVersionDeleteManyArgs} args - Arguments to filter BudgetVersions to delete.
+     * @example
+     * // Delete a few BudgetVersions
+     * const { count } = await prisma.budgetVersion.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BudgetVersionDeleteManyArgs>(args?: SelectSubset<T, BudgetVersionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BudgetVersions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BudgetVersionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BudgetVersions
+     * const budgetVersion = await prisma.budgetVersion.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BudgetVersionUpdateManyArgs>(args: SelectSubset<T, BudgetVersionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one BudgetVersion.
+     * @param {BudgetVersionUpsertArgs} args - Arguments to update or create a BudgetVersion.
+     * @example
+     * // Update or create a BudgetVersion
+     * const budgetVersion = await prisma.budgetVersion.upsert({
+     *   create: {
+     *     // ... data to create a BudgetVersion
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BudgetVersion we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BudgetVersionUpsertArgs>(args: SelectSubset<T, BudgetVersionUpsertArgs<ExtArgs>>): Prisma__BudgetVersionClient<$Result.GetResult<Prisma.$BudgetVersionPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of BudgetVersions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BudgetVersionCountArgs} args - Arguments to filter BudgetVersions to count.
+     * @example
+     * // Count the number of BudgetVersions
+     * const count = await prisma.budgetVersion.count({
+     *   where: {
+     *     // ... the filter for the BudgetVersions we want to count
+     *   }
+     * })
+    **/
+    count<T extends BudgetVersionCountArgs>(
+      args?: Subset<T, BudgetVersionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BudgetVersionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BudgetVersion.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BudgetVersionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BudgetVersionAggregateArgs>(args: Subset<T, BudgetVersionAggregateArgs>): Prisma.PrismaPromise<GetBudgetVersionAggregateType<T>>
+
+    /**
+     * Group by BudgetVersion.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BudgetVersionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BudgetVersionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BudgetVersionGroupByArgs['orderBy'] }
+        : { orderBy?: BudgetVersionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BudgetVersionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBudgetVersionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BudgetVersion model
+   */
+  readonly fields: BudgetVersionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BudgetVersion.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BudgetVersionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the BudgetVersion model
+   */ 
+  interface BudgetVersionFieldRefs {
+    readonly id: FieldRef<"BudgetVersion", 'String'>
+    readonly projectId: FieldRef<"BudgetVersion", 'String'>
+    readonly version: FieldRef<"BudgetVersion", 'Int'>
+    readonly description: FieldRef<"BudgetVersion", 'String'>
+    readonly status: FieldRef<"BudgetVersion", 'String'>
+    readonly snapshot: FieldRef<"BudgetVersion", 'Json'>
+    readonly createdAt: FieldRef<"BudgetVersion", 'DateTime'>
+    readonly createdById: FieldRef<"BudgetVersion", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BudgetVersion findUnique
+   */
+  export type BudgetVersionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BudgetVersion
+     */
+    select?: BudgetVersionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BudgetVersionInclude<ExtArgs> | null
+    /**
+     * Filter, which BudgetVersion to fetch.
+     */
+    where: BudgetVersionWhereUniqueInput
+  }
+
+  /**
+   * BudgetVersion findUniqueOrThrow
+   */
+  export type BudgetVersionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BudgetVersion
+     */
+    select?: BudgetVersionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BudgetVersionInclude<ExtArgs> | null
+    /**
+     * Filter, which BudgetVersion to fetch.
+     */
+    where: BudgetVersionWhereUniqueInput
+  }
+
+  /**
+   * BudgetVersion findFirst
+   */
+  export type BudgetVersionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BudgetVersion
+     */
+    select?: BudgetVersionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BudgetVersionInclude<ExtArgs> | null
+    /**
+     * Filter, which BudgetVersion to fetch.
+     */
+    where?: BudgetVersionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BudgetVersions to fetch.
+     */
+    orderBy?: BudgetVersionOrderByWithRelationInput | BudgetVersionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BudgetVersions.
+     */
+    cursor?: BudgetVersionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BudgetVersions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BudgetVersions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BudgetVersions.
+     */
+    distinct?: BudgetVersionScalarFieldEnum | BudgetVersionScalarFieldEnum[]
+  }
+
+  /**
+   * BudgetVersion findFirstOrThrow
+   */
+  export type BudgetVersionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BudgetVersion
+     */
+    select?: BudgetVersionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BudgetVersionInclude<ExtArgs> | null
+    /**
+     * Filter, which BudgetVersion to fetch.
+     */
+    where?: BudgetVersionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BudgetVersions to fetch.
+     */
+    orderBy?: BudgetVersionOrderByWithRelationInput | BudgetVersionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BudgetVersions.
+     */
+    cursor?: BudgetVersionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BudgetVersions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BudgetVersions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BudgetVersions.
+     */
+    distinct?: BudgetVersionScalarFieldEnum | BudgetVersionScalarFieldEnum[]
+  }
+
+  /**
+   * BudgetVersion findMany
+   */
+  export type BudgetVersionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BudgetVersion
+     */
+    select?: BudgetVersionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BudgetVersionInclude<ExtArgs> | null
+    /**
+     * Filter, which BudgetVersions to fetch.
+     */
+    where?: BudgetVersionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BudgetVersions to fetch.
+     */
+    orderBy?: BudgetVersionOrderByWithRelationInput | BudgetVersionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BudgetVersions.
+     */
+    cursor?: BudgetVersionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BudgetVersions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BudgetVersions.
+     */
+    skip?: number
+    distinct?: BudgetVersionScalarFieldEnum | BudgetVersionScalarFieldEnum[]
+  }
+
+  /**
+   * BudgetVersion create
+   */
+  export type BudgetVersionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BudgetVersion
+     */
+    select?: BudgetVersionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BudgetVersionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a BudgetVersion.
+     */
+    data: XOR<BudgetVersionCreateInput, BudgetVersionUncheckedCreateInput>
+  }
+
+  /**
+   * BudgetVersion createMany
+   */
+  export type BudgetVersionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BudgetVersions.
+     */
+    data: BudgetVersionCreateManyInput | BudgetVersionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BudgetVersion createManyAndReturn
+   */
+  export type BudgetVersionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BudgetVersion
+     */
+    select?: BudgetVersionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many BudgetVersions.
+     */
+    data: BudgetVersionCreateManyInput | BudgetVersionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BudgetVersionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BudgetVersion update
+   */
+  export type BudgetVersionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BudgetVersion
+     */
+    select?: BudgetVersionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BudgetVersionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a BudgetVersion.
+     */
+    data: XOR<BudgetVersionUpdateInput, BudgetVersionUncheckedUpdateInput>
+    /**
+     * Choose, which BudgetVersion to update.
+     */
+    where: BudgetVersionWhereUniqueInput
+  }
+
+  /**
+   * BudgetVersion updateMany
+   */
+  export type BudgetVersionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BudgetVersions.
+     */
+    data: XOR<BudgetVersionUpdateManyMutationInput, BudgetVersionUncheckedUpdateManyInput>
+    /**
+     * Filter which BudgetVersions to update
+     */
+    where?: BudgetVersionWhereInput
+  }
+
+  /**
+   * BudgetVersion upsert
+   */
+  export type BudgetVersionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BudgetVersion
+     */
+    select?: BudgetVersionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BudgetVersionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the BudgetVersion to update in case it exists.
+     */
+    where: BudgetVersionWhereUniqueInput
+    /**
+     * In case the BudgetVersion found by the `where` argument doesn't exist, create a new BudgetVersion with this data.
+     */
+    create: XOR<BudgetVersionCreateInput, BudgetVersionUncheckedCreateInput>
+    /**
+     * In case the BudgetVersion was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BudgetVersionUpdateInput, BudgetVersionUncheckedUpdateInput>
+  }
+
+  /**
+   * BudgetVersion delete
+   */
+  export type BudgetVersionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BudgetVersion
+     */
+    select?: BudgetVersionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BudgetVersionInclude<ExtArgs> | null
+    /**
+     * Filter which BudgetVersion to delete.
+     */
+    where: BudgetVersionWhereUniqueInput
+  }
+
+  /**
+   * BudgetVersion deleteMany
+   */
+  export type BudgetVersionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BudgetVersions to delete
+     */
+    where?: BudgetVersionWhereInput
+  }
+
+  /**
+   * BudgetVersion without action
+   */
+  export type BudgetVersionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BudgetVersion
+     */
+    select?: BudgetVersionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BudgetVersionInclude<ExtArgs> | null
   }
 
 
@@ -37733,6 +39380,1026 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: FiscalPeriodInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Job
+   */
+
+  export type AggregateJob = {
+    _count: JobCountAggregateOutputType | null
+    _avg: JobAvgAggregateOutputType | null
+    _sum: JobSumAggregateOutputType | null
+    _min: JobMinAggregateOutputType | null
+    _max: JobMaxAggregateOutputType | null
+  }
+
+  export type JobAvgAggregateOutputType = {
+    attempts: number | null
+    maxAttempts: number | null
+    priority: number | null
+  }
+
+  export type JobSumAggregateOutputType = {
+    attempts: number | null
+    maxAttempts: number | null
+    priority: number | null
+  }
+
+  export type JobMinAggregateOutputType = {
+    id: string | null
+    type: string | null
+    status: string | null
+    error: string | null
+    attempts: number | null
+    maxAttempts: number | null
+    priority: number | null
+    runAt: Date | null
+    processedAt: Date | null
+    finishedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type JobMaxAggregateOutputType = {
+    id: string | null
+    type: string | null
+    status: string | null
+    error: string | null
+    attempts: number | null
+    maxAttempts: number | null
+    priority: number | null
+    runAt: Date | null
+    processedAt: Date | null
+    finishedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type JobCountAggregateOutputType = {
+    id: number
+    type: number
+    status: number
+    payload: number
+    result: number
+    error: number
+    attempts: number
+    maxAttempts: number
+    priority: number
+    runAt: number
+    processedAt: number
+    finishedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type JobAvgAggregateInputType = {
+    attempts?: true
+    maxAttempts?: true
+    priority?: true
+  }
+
+  export type JobSumAggregateInputType = {
+    attempts?: true
+    maxAttempts?: true
+    priority?: true
+  }
+
+  export type JobMinAggregateInputType = {
+    id?: true
+    type?: true
+    status?: true
+    error?: true
+    attempts?: true
+    maxAttempts?: true
+    priority?: true
+    runAt?: true
+    processedAt?: true
+    finishedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type JobMaxAggregateInputType = {
+    id?: true
+    type?: true
+    status?: true
+    error?: true
+    attempts?: true
+    maxAttempts?: true
+    priority?: true
+    runAt?: true
+    processedAt?: true
+    finishedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type JobCountAggregateInputType = {
+    id?: true
+    type?: true
+    status?: true
+    payload?: true
+    result?: true
+    error?: true
+    attempts?: true
+    maxAttempts?: true
+    priority?: true
+    runAt?: true
+    processedAt?: true
+    finishedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type JobAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Job to aggregate.
+     */
+    where?: JobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Jobs to fetch.
+     */
+    orderBy?: JobOrderByWithRelationInput | JobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: JobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Jobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Jobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Jobs
+    **/
+    _count?: true | JobCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: JobAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: JobSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: JobMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: JobMaxAggregateInputType
+  }
+
+  export type GetJobAggregateType<T extends JobAggregateArgs> = {
+        [P in keyof T & keyof AggregateJob]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateJob[P]>
+      : GetScalarType<T[P], AggregateJob[P]>
+  }
+
+
+
+
+  export type JobGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JobWhereInput
+    orderBy?: JobOrderByWithAggregationInput | JobOrderByWithAggregationInput[]
+    by: JobScalarFieldEnum[] | JobScalarFieldEnum
+    having?: JobScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: JobCountAggregateInputType | true
+    _avg?: JobAvgAggregateInputType
+    _sum?: JobSumAggregateInputType
+    _min?: JobMinAggregateInputType
+    _max?: JobMaxAggregateInputType
+  }
+
+  export type JobGroupByOutputType = {
+    id: string
+    type: string
+    status: string
+    payload: JsonValue | null
+    result: JsonValue | null
+    error: string | null
+    attempts: number
+    maxAttempts: number
+    priority: number
+    runAt: Date
+    processedAt: Date | null
+    finishedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: JobCountAggregateOutputType | null
+    _avg: JobAvgAggregateOutputType | null
+    _sum: JobSumAggregateOutputType | null
+    _min: JobMinAggregateOutputType | null
+    _max: JobMaxAggregateOutputType | null
+  }
+
+  type GetJobGroupByPayload<T extends JobGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<JobGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof JobGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], JobGroupByOutputType[P]>
+            : GetScalarType<T[P], JobGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type JobSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    status?: boolean
+    payload?: boolean
+    result?: boolean
+    error?: boolean
+    attempts?: boolean
+    maxAttempts?: boolean
+    priority?: boolean
+    runAt?: boolean
+    processedAt?: boolean
+    finishedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["job"]>
+
+  export type JobSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    status?: boolean
+    payload?: boolean
+    result?: boolean
+    error?: boolean
+    attempts?: boolean
+    maxAttempts?: boolean
+    priority?: boolean
+    runAt?: boolean
+    processedAt?: boolean
+    finishedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["job"]>
+
+  export type JobSelectScalar = {
+    id?: boolean
+    type?: boolean
+    status?: boolean
+    payload?: boolean
+    result?: boolean
+    error?: boolean
+    attempts?: boolean
+    maxAttempts?: boolean
+    priority?: boolean
+    runAt?: boolean
+    processedAt?: boolean
+    finishedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $JobPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Job"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      type: string
+      status: string
+      payload: Prisma.JsonValue | null
+      result: Prisma.JsonValue | null
+      error: string | null
+      attempts: number
+      maxAttempts: number
+      priority: number
+      runAt: Date
+      processedAt: Date | null
+      finishedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["job"]>
+    composites: {}
+  }
+
+  type JobGetPayload<S extends boolean | null | undefined | JobDefaultArgs> = $Result.GetResult<Prisma.$JobPayload, S>
+
+  type JobCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<JobFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: JobCountAggregateInputType | true
+    }
+
+  export interface JobDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Job'], meta: { name: 'Job' } }
+    /**
+     * Find zero or one Job that matches the filter.
+     * @param {JobFindUniqueArgs} args - Arguments to find a Job
+     * @example
+     * // Get one Job
+     * const job = await prisma.job.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends JobFindUniqueArgs>(args: SelectSubset<T, JobFindUniqueArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Job that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {JobFindUniqueOrThrowArgs} args - Arguments to find a Job
+     * @example
+     * // Get one Job
+     * const job = await prisma.job.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends JobFindUniqueOrThrowArgs>(args: SelectSubset<T, JobFindUniqueOrThrowArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Job that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobFindFirstArgs} args - Arguments to find a Job
+     * @example
+     * // Get one Job
+     * const job = await prisma.job.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends JobFindFirstArgs>(args?: SelectSubset<T, JobFindFirstArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Job that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobFindFirstOrThrowArgs} args - Arguments to find a Job
+     * @example
+     * // Get one Job
+     * const job = await prisma.job.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends JobFindFirstOrThrowArgs>(args?: SelectSubset<T, JobFindFirstOrThrowArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Jobs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Jobs
+     * const jobs = await prisma.job.findMany()
+     * 
+     * // Get first 10 Jobs
+     * const jobs = await prisma.job.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const jobWithIdOnly = await prisma.job.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends JobFindManyArgs>(args?: SelectSubset<T, JobFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Job.
+     * @param {JobCreateArgs} args - Arguments to create a Job.
+     * @example
+     * // Create one Job
+     * const Job = await prisma.job.create({
+     *   data: {
+     *     // ... data to create a Job
+     *   }
+     * })
+     * 
+     */
+    create<T extends JobCreateArgs>(args: SelectSubset<T, JobCreateArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Jobs.
+     * @param {JobCreateManyArgs} args - Arguments to create many Jobs.
+     * @example
+     * // Create many Jobs
+     * const job = await prisma.job.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends JobCreateManyArgs>(args?: SelectSubset<T, JobCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Jobs and returns the data saved in the database.
+     * @param {JobCreateManyAndReturnArgs} args - Arguments to create many Jobs.
+     * @example
+     * // Create many Jobs
+     * const job = await prisma.job.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Jobs and only return the `id`
+     * const jobWithIdOnly = await prisma.job.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends JobCreateManyAndReturnArgs>(args?: SelectSubset<T, JobCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Job.
+     * @param {JobDeleteArgs} args - Arguments to delete one Job.
+     * @example
+     * // Delete one Job
+     * const Job = await prisma.job.delete({
+     *   where: {
+     *     // ... filter to delete one Job
+     *   }
+     * })
+     * 
+     */
+    delete<T extends JobDeleteArgs>(args: SelectSubset<T, JobDeleteArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Job.
+     * @param {JobUpdateArgs} args - Arguments to update one Job.
+     * @example
+     * // Update one Job
+     * const job = await prisma.job.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends JobUpdateArgs>(args: SelectSubset<T, JobUpdateArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Jobs.
+     * @param {JobDeleteManyArgs} args - Arguments to filter Jobs to delete.
+     * @example
+     * // Delete a few Jobs
+     * const { count } = await prisma.job.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends JobDeleteManyArgs>(args?: SelectSubset<T, JobDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Jobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Jobs
+     * const job = await prisma.job.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends JobUpdateManyArgs>(args: SelectSubset<T, JobUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Job.
+     * @param {JobUpsertArgs} args - Arguments to update or create a Job.
+     * @example
+     * // Update or create a Job
+     * const job = await prisma.job.upsert({
+     *   create: {
+     *     // ... data to create a Job
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Job we want to update
+     *   }
+     * })
+     */
+    upsert<T extends JobUpsertArgs>(args: SelectSubset<T, JobUpsertArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Jobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobCountArgs} args - Arguments to filter Jobs to count.
+     * @example
+     * // Count the number of Jobs
+     * const count = await prisma.job.count({
+     *   where: {
+     *     // ... the filter for the Jobs we want to count
+     *   }
+     * })
+    **/
+    count<T extends JobCountArgs>(
+      args?: Subset<T, JobCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], JobCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Job.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends JobAggregateArgs>(args: Subset<T, JobAggregateArgs>): Prisma.PrismaPromise<GetJobAggregateType<T>>
+
+    /**
+     * Group by Job.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends JobGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: JobGroupByArgs['orderBy'] }
+        : { orderBy?: JobGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, JobGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetJobGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Job model
+   */
+  readonly fields: JobFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Job.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__JobClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Job model
+   */ 
+  interface JobFieldRefs {
+    readonly id: FieldRef<"Job", 'String'>
+    readonly type: FieldRef<"Job", 'String'>
+    readonly status: FieldRef<"Job", 'String'>
+    readonly payload: FieldRef<"Job", 'Json'>
+    readonly result: FieldRef<"Job", 'Json'>
+    readonly error: FieldRef<"Job", 'String'>
+    readonly attempts: FieldRef<"Job", 'Int'>
+    readonly maxAttempts: FieldRef<"Job", 'Int'>
+    readonly priority: FieldRef<"Job", 'Int'>
+    readonly runAt: FieldRef<"Job", 'DateTime'>
+    readonly processedAt: FieldRef<"Job", 'DateTime'>
+    readonly finishedAt: FieldRef<"Job", 'DateTime'>
+    readonly createdAt: FieldRef<"Job", 'DateTime'>
+    readonly updatedAt: FieldRef<"Job", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Job findUnique
+   */
+  export type JobFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Job
+     */
+    select?: JobSelect<ExtArgs> | null
+    /**
+     * Filter, which Job to fetch.
+     */
+    where: JobWhereUniqueInput
+  }
+
+  /**
+   * Job findUniqueOrThrow
+   */
+  export type JobFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Job
+     */
+    select?: JobSelect<ExtArgs> | null
+    /**
+     * Filter, which Job to fetch.
+     */
+    where: JobWhereUniqueInput
+  }
+
+  /**
+   * Job findFirst
+   */
+  export type JobFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Job
+     */
+    select?: JobSelect<ExtArgs> | null
+    /**
+     * Filter, which Job to fetch.
+     */
+    where?: JobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Jobs to fetch.
+     */
+    orderBy?: JobOrderByWithRelationInput | JobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Jobs.
+     */
+    cursor?: JobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Jobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Jobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Jobs.
+     */
+    distinct?: JobScalarFieldEnum | JobScalarFieldEnum[]
+  }
+
+  /**
+   * Job findFirstOrThrow
+   */
+  export type JobFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Job
+     */
+    select?: JobSelect<ExtArgs> | null
+    /**
+     * Filter, which Job to fetch.
+     */
+    where?: JobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Jobs to fetch.
+     */
+    orderBy?: JobOrderByWithRelationInput | JobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Jobs.
+     */
+    cursor?: JobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Jobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Jobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Jobs.
+     */
+    distinct?: JobScalarFieldEnum | JobScalarFieldEnum[]
+  }
+
+  /**
+   * Job findMany
+   */
+  export type JobFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Job
+     */
+    select?: JobSelect<ExtArgs> | null
+    /**
+     * Filter, which Jobs to fetch.
+     */
+    where?: JobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Jobs to fetch.
+     */
+    orderBy?: JobOrderByWithRelationInput | JobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Jobs.
+     */
+    cursor?: JobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Jobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Jobs.
+     */
+    skip?: number
+    distinct?: JobScalarFieldEnum | JobScalarFieldEnum[]
+  }
+
+  /**
+   * Job create
+   */
+  export type JobCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Job
+     */
+    select?: JobSelect<ExtArgs> | null
+    /**
+     * The data needed to create a Job.
+     */
+    data: XOR<JobCreateInput, JobUncheckedCreateInput>
+  }
+
+  /**
+   * Job createMany
+   */
+  export type JobCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Jobs.
+     */
+    data: JobCreateManyInput | JobCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Job createManyAndReturn
+   */
+  export type JobCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Job
+     */
+    select?: JobSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Jobs.
+     */
+    data: JobCreateManyInput | JobCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Job update
+   */
+  export type JobUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Job
+     */
+    select?: JobSelect<ExtArgs> | null
+    /**
+     * The data needed to update a Job.
+     */
+    data: XOR<JobUpdateInput, JobUncheckedUpdateInput>
+    /**
+     * Choose, which Job to update.
+     */
+    where: JobWhereUniqueInput
+  }
+
+  /**
+   * Job updateMany
+   */
+  export type JobUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Jobs.
+     */
+    data: XOR<JobUpdateManyMutationInput, JobUncheckedUpdateManyInput>
+    /**
+     * Filter which Jobs to update
+     */
+    where?: JobWhereInput
+  }
+
+  /**
+   * Job upsert
+   */
+  export type JobUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Job
+     */
+    select?: JobSelect<ExtArgs> | null
+    /**
+     * The filter to search for the Job to update in case it exists.
+     */
+    where: JobWhereUniqueInput
+    /**
+     * In case the Job found by the `where` argument doesn't exist, create a new Job with this data.
+     */
+    create: XOR<JobCreateInput, JobUncheckedCreateInput>
+    /**
+     * In case the Job was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<JobUpdateInput, JobUncheckedUpdateInput>
+  }
+
+  /**
+   * Job delete
+   */
+  export type JobDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Job
+     */
+    select?: JobSelect<ExtArgs> | null
+    /**
+     * Filter which Job to delete.
+     */
+    where: JobWhereUniqueInput
+  }
+
+  /**
+   * Job deleteMany
+   */
+  export type JobDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Jobs to delete
+     */
+    where?: JobWhereInput
+  }
+
+  /**
+   * Job without action
+   */
+  export type JobDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Job
+     */
+    select?: JobSelect<ExtArgs> | null
   }
 
 
@@ -49081,10 +51748,12 @@ export namespace Prisma {
     name: 'name',
     createdAt: 'createdAt',
     deletedAt: 'deletedAt',
+    deletedById: 'deletedById',
     description: 'description',
     ownerId: 'ownerId',
     status: 'status',
     updatedAt: 'updatedAt',
+    version: 'version',
     contractValue: 'contractValue',
     endDate: 'endDate',
     startDate: 'startDate',
@@ -49123,7 +51792,8 @@ export namespace Prisma {
     code: 'code',
     level: 'level',
     sortOrder: 'sortOrder',
-    deletedAt: 'deletedAt'
+    deletedAt: 'deletedAt',
+    deletedById: 'deletedById'
   };
 
   export type WBSItemScalarFieldEnum = (typeof WBSItemScalarFieldEnum)[keyof typeof WBSItemScalarFieldEnum]
@@ -49143,10 +51813,13 @@ export namespace Prisma {
     status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    version: 'version',
     createdById: 'createdById',
     purchaseOrderId: 'purchaseOrderId',
     requestId: 'requestId',
-    deletedAt: 'deletedAt'
+    deletedAt: 'deletedAt',
+    deletedById: 'deletedById',
+    approvalStatus: 'approvalStatus'
   };
 
   export type CostRecordScalarFieldEnum = (typeof CostRecordScalarFieldEnum)[keyof typeof CostRecordScalarFieldEnum]
@@ -49203,6 +51876,8 @@ export namespace Prisma {
     contractId: 'contractId',
     requestId: 'requestId',
     deletedAt: 'deletedAt',
+    deletedById: 'deletedById',
+    approvalStatus: 'approvalStatus',
     version: 'version',
     certifiedProgress: 'certifiedProgress',
     retentionAmount: 'retentionAmount'
@@ -49220,8 +51895,11 @@ export namespace Prisma {
     description: 'description',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    version: 'version',
     requestId: 'requestId',
-    deletedAt: 'deletedAt'
+    deletedAt: 'deletedAt',
+    deletedById: 'deletedById',
+    approvalStatus: 'approvalStatus'
   };
 
   export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
@@ -49472,12 +52150,28 @@ export namespace Prisma {
     quantity: 'quantity',
     unitRate: 'unitRate',
     totalAmount: 'totalAmount',
+    status: 'status',
+    version: 'version',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     deletedAt: 'deletedAt'
   };
 
   export type BOQItemScalarFieldEnum = (typeof BOQItemScalarFieldEnum)[keyof typeof BOQItemScalarFieldEnum]
+
+
+  export const BudgetVersionScalarFieldEnum: {
+    id: 'id',
+    projectId: 'projectId',
+    version: 'version',
+    description: 'description',
+    status: 'status',
+    snapshot: 'snapshot',
+    createdAt: 'createdAt',
+    createdById: 'createdById'
+  };
+
+  export type BudgetVersionScalarFieldEnum = (typeof BudgetVersionScalarFieldEnum)[keyof typeof BudgetVersionScalarFieldEnum]
 
 
   export const CommentScalarFieldEnum: {
@@ -49553,6 +52247,26 @@ export namespace Prisma {
   };
 
   export type FiscalPeriodScalarFieldEnum = (typeof FiscalPeriodScalarFieldEnum)[keyof typeof FiscalPeriodScalarFieldEnum]
+
+
+  export const JobScalarFieldEnum: {
+    id: 'id',
+    type: 'type',
+    status: 'status',
+    payload: 'payload',
+    result: 'result',
+    error: 'error',
+    attempts: 'attempts',
+    maxAttempts: 'maxAttempts',
+    priority: 'priority',
+    runAt: 'runAt',
+    processedAt: 'processedAt',
+    finishedAt: 'finishedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type JobScalarFieldEnum = (typeof JobScalarFieldEnum)[keyof typeof JobScalarFieldEnum]
 
 
   export const InventoryTransactionScalarFieldEnum: {
@@ -49826,6 +52540,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Decimal'
    */
   export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -49854,20 +52582,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
    * Reference to a field of type 'CostType'
    */
   export type EnumCostTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CostType'>
@@ -49892,6 +52606,20 @@ export namespace Prisma {
    * Reference to a field of type 'PaymentStatus[]'
    */
   export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ApprovalStatus'
+   */
+  export type EnumApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ApprovalStatus[]'
+   */
+  export type ListEnumApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalStatus[]'>
     
 
 
@@ -49980,20 +52708,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'ApprovalStatus'
-   */
-  export type EnumApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'ApprovalStatus[]'
-   */
-  export type ListEnumApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'InventoryTransactionType'
    */
   export type EnumInventoryTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryTransactionType'>
@@ -50070,6 +52784,11 @@ export namespace Prisma {
     tasksAssigned?: TaskListRelationFilter
     TrainingRecord?: TrainingRecordListRelationFilter
     UserMaturity?: XOR<UserMaturityNullableRelationFilter, UserMaturityWhereInput> | null
+    projectsDeleted?: ProjectListRelationFilter
+    wbsDeleted?: WBSItemListRelationFilter
+    costsDeleted?: CostRecordListRelationFilter
+    invoicesDeleted?: InvoiceListRelationFilter
+    paymentsDeleted?: PaymentListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -50101,6 +52820,11 @@ export namespace Prisma {
     tasksAssigned?: TaskOrderByRelationAggregateInput
     TrainingRecord?: TrainingRecordOrderByRelationAggregateInput
     UserMaturity?: UserMaturityOrderByWithRelationInput
+    projectsDeleted?: ProjectOrderByRelationAggregateInput
+    wbsDeleted?: WBSItemOrderByRelationAggregateInput
+    costsDeleted?: CostRecordOrderByRelationAggregateInput
+    invoicesDeleted?: InvoiceOrderByRelationAggregateInput
+    paymentsDeleted?: PaymentOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -50135,6 +52859,11 @@ export namespace Prisma {
     tasksAssigned?: TaskListRelationFilter
     TrainingRecord?: TrainingRecordListRelationFilter
     UserMaturity?: XOR<UserMaturityNullableRelationFilter, UserMaturityWhereInput> | null
+    projectsDeleted?: ProjectListRelationFilter
+    wbsDeleted?: WBSItemListRelationFilter
+    costsDeleted?: CostRecordListRelationFilter
+    invoicesDeleted?: InvoiceListRelationFilter
+    paymentsDeleted?: PaymentListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -50226,17 +52955,21 @@ export namespace Prisma {
     name?: StringFilter<"Project"> | string
     createdAt?: DateTimeFilter<"Project"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    deletedById?: StringNullableFilter<"Project"> | string | null
     description?: StringNullableFilter<"Project"> | string | null
     ownerId?: StringNullableFilter<"Project"> | string | null
     status?: EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    version?: IntFilter<"Project"> | number
     contractValue?: DecimalFilter<"Project"> | Decimal | DecimalJsLike | number | string
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     totalBudget?: DecimalFilter<"Project"> | Decimal | DecimalJsLike | number | string
+    deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     ActivityFeed?: ActivityFeedListRelationFilter
     ApprovalRequest?: ApprovalRequestListRelationFilter
     BOQItem?: BOQItemListRelationFilter
+    BudgetVersion?: BudgetVersionListRelationFilter
     contracts?: ContractListRelationFilter
     Document?: DocumentListRelationFilter
     InventoryTransaction?: InventoryTransactionListRelationFilter
@@ -50254,17 +52987,21 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedById?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     ownerId?: SortOrderInput | SortOrder
     status?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     contractValue?: SortOrder
     endDate?: SortOrderInput | SortOrder
     startDate?: SortOrderInput | SortOrder
     totalBudget?: SortOrder
+    deletedBy?: UserOrderByWithRelationInput
     ActivityFeed?: ActivityFeedOrderByRelationAggregateInput
     ApprovalRequest?: ApprovalRequestOrderByRelationAggregateInput
     BOQItem?: BOQItemOrderByRelationAggregateInput
+    BudgetVersion?: BudgetVersionOrderByRelationAggregateInput
     contracts?: ContractOrderByRelationAggregateInput
     Document?: DocumentOrderByRelationAggregateInput
     InventoryTransaction?: InventoryTransactionOrderByRelationAggregateInput
@@ -50285,17 +53022,21 @@ export namespace Prisma {
     name?: StringFilter<"Project"> | string
     createdAt?: DateTimeFilter<"Project"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    deletedById?: StringNullableFilter<"Project"> | string | null
     description?: StringNullableFilter<"Project"> | string | null
     ownerId?: StringNullableFilter<"Project"> | string | null
     status?: EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    version?: IntFilter<"Project"> | number
     contractValue?: DecimalFilter<"Project"> | Decimal | DecimalJsLike | number | string
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     totalBudget?: DecimalFilter<"Project"> | Decimal | DecimalJsLike | number | string
+    deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     ActivityFeed?: ActivityFeedListRelationFilter
     ApprovalRequest?: ApprovalRequestListRelationFilter
     BOQItem?: BOQItemListRelationFilter
+    BudgetVersion?: BudgetVersionListRelationFilter
     contracts?: ContractListRelationFilter
     Document?: DocumentListRelationFilter
     InventoryTransaction?: InventoryTransactionListRelationFilter
@@ -50313,10 +53054,12 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedById?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     ownerId?: SortOrderInput | SortOrder
     status?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     contractValue?: SortOrder
     endDate?: SortOrderInput | SortOrder
     startDate?: SortOrderInput | SortOrder
@@ -50336,10 +53079,12 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Project"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
+    deletedById?: StringNullableWithAggregatesFilter<"Project"> | string | null
     description?: StringNullableWithAggregatesFilter<"Project"> | string | null
     ownerId?: StringNullableWithAggregatesFilter<"Project"> | string | null
     status?: EnumProjectStatusWithAggregatesFilter<"Project"> | $Enums.ProjectStatus
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
+    version?: IntWithAggregatesFilter<"Project"> | number
     contractValue?: DecimalWithAggregatesFilter<"Project"> | Decimal | DecimalJsLike | number | string
     endDate?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     startDate?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
@@ -50459,6 +53204,8 @@ export namespace Prisma {
     level?: IntFilter<"WBSItem"> | number
     sortOrder?: IntFilter<"WBSItem"> | number
     deletedAt?: DateTimeNullableFilter<"WBSItem"> | Date | string | null
+    deletedById?: StringNullableFilter<"WBSItem"> | string | null
+    deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     BOQItem?: BOQItemListRelationFilter
     budgets?: BudgetRecordListRelationFilter
     costs?: CostRecordListRelationFilter
@@ -50484,6 +53231,8 @@ export namespace Prisma {
     level?: SortOrder
     sortOrder?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedById?: SortOrderInput | SortOrder
+    deletedBy?: UserOrderByWithRelationInput
     BOQItem?: BOQItemOrderByRelationAggregateInput
     budgets?: BudgetRecordOrderByRelationAggregateInput
     costs?: CostRecordOrderByRelationAggregateInput
@@ -50512,6 +53261,8 @@ export namespace Prisma {
     level?: IntFilter<"WBSItem"> | number
     sortOrder?: IntFilter<"WBSItem"> | number
     deletedAt?: DateTimeNullableFilter<"WBSItem"> | Date | string | null
+    deletedById?: StringNullableFilter<"WBSItem"> | string | null
+    deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     BOQItem?: BOQItemListRelationFilter
     budgets?: BudgetRecordListRelationFilter
     costs?: CostRecordListRelationFilter
@@ -50537,6 +53288,7 @@ export namespace Prisma {
     level?: SortOrder
     sortOrder?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedById?: SortOrderInput | SortOrder
     _count?: WBSItemCountOrderByAggregateInput
     _avg?: WBSItemAvgOrderByAggregateInput
     _max?: WBSItemMaxOrderByAggregateInput
@@ -50559,6 +53311,7 @@ export namespace Prisma {
     level?: IntWithAggregatesFilter<"WBSItem"> | number
     sortOrder?: IntWithAggregatesFilter<"WBSItem"> | number
     deletedAt?: DateTimeNullableWithAggregatesFilter<"WBSItem"> | Date | string | null
+    deletedById?: StringNullableWithAggregatesFilter<"WBSItem"> | string | null
   }
 
   export type CostRecordWhereInput = {
@@ -50578,10 +53331,14 @@ export namespace Prisma {
     status?: EnumPaymentStatusFilter<"CostRecord"> | $Enums.PaymentStatus
     createdAt?: DateTimeFilter<"CostRecord"> | Date | string
     updatedAt?: DateTimeFilter<"CostRecord"> | Date | string
+    version?: IntFilter<"CostRecord"> | number
     createdById?: StringNullableFilter<"CostRecord"> | string | null
     purchaseOrderId?: StringNullableFilter<"CostRecord"> | string | null
     requestId?: StringNullableFilter<"CostRecord"> | string | null
     deletedAt?: DateTimeNullableFilter<"CostRecord"> | Date | string | null
+    deletedById?: StringNullableFilter<"CostRecord"> | string | null
+    approvalStatus?: EnumApprovalStatusFilter<"CostRecord"> | $Enums.ApprovalStatus
+    deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     purchaseOrder?: XOR<PurchaseOrderNullableRelationFilter, PurchaseOrderWhereInput> | null
     wbs?: XOR<WBSItemRelationFilter, WBSItemWhereInput>
@@ -50601,10 +53358,14 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     createdById?: SortOrderInput | SortOrder
     purchaseOrderId?: SortOrderInput | SortOrder
     requestId?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedById?: SortOrderInput | SortOrder
+    approvalStatus?: SortOrder
+    deletedBy?: UserOrderByWithRelationInput
     createdBy?: UserOrderByWithRelationInput
     purchaseOrder?: PurchaseOrderOrderByWithRelationInput
     wbs?: WBSItemOrderByWithRelationInput
@@ -50628,9 +53389,13 @@ export namespace Prisma {
     status?: EnumPaymentStatusFilter<"CostRecord"> | $Enums.PaymentStatus
     createdAt?: DateTimeFilter<"CostRecord"> | Date | string
     updatedAt?: DateTimeFilter<"CostRecord"> | Date | string
+    version?: IntFilter<"CostRecord"> | number
     createdById?: StringNullableFilter<"CostRecord"> | string | null
     purchaseOrderId?: StringNullableFilter<"CostRecord"> | string | null
     deletedAt?: DateTimeNullableFilter<"CostRecord"> | Date | string | null
+    deletedById?: StringNullableFilter<"CostRecord"> | string | null
+    approvalStatus?: EnumApprovalStatusFilter<"CostRecord"> | $Enums.ApprovalStatus
+    deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     purchaseOrder?: XOR<PurchaseOrderNullableRelationFilter, PurchaseOrderWhereInput> | null
     wbs?: XOR<WBSItemRelationFilter, WBSItemWhereInput>
@@ -50650,10 +53415,13 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     createdById?: SortOrderInput | SortOrder
     purchaseOrderId?: SortOrderInput | SortOrder
     requestId?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedById?: SortOrderInput | SortOrder
+    approvalStatus?: SortOrder
     _count?: CostRecordCountOrderByAggregateInput
     _avg?: CostRecordAvgOrderByAggregateInput
     _max?: CostRecordMaxOrderByAggregateInput
@@ -50678,10 +53446,13 @@ export namespace Prisma {
     status?: EnumPaymentStatusWithAggregatesFilter<"CostRecord"> | $Enums.PaymentStatus
     createdAt?: DateTimeWithAggregatesFilter<"CostRecord"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CostRecord"> | Date | string
+    version?: IntWithAggregatesFilter<"CostRecord"> | number
     createdById?: StringNullableWithAggregatesFilter<"CostRecord"> | string | null
     purchaseOrderId?: StringNullableWithAggregatesFilter<"CostRecord"> | string | null
     requestId?: StringNullableWithAggregatesFilter<"CostRecord"> | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"CostRecord"> | Date | string | null
+    deletedById?: StringNullableWithAggregatesFilter<"CostRecord"> | string | null
+    approvalStatus?: EnumApprovalStatusWithAggregatesFilter<"CostRecord"> | $Enums.ApprovalStatus
   }
 
   export type BudgetRecordWhereInput = {
@@ -50883,9 +53654,12 @@ export namespace Prisma {
     contractId?: StringNullableFilter<"Invoice"> | string | null
     requestId?: StringNullableFilter<"Invoice"> | string | null
     deletedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
+    deletedById?: StringNullableFilter<"Invoice"> | string | null
+    approvalStatus?: EnumApprovalStatusFilter<"Invoice"> | $Enums.ApprovalStatus
     version?: IntFilter<"Invoice"> | number
     certifiedProgress?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     contract?: XOR<ContractNullableRelationFilter, ContractWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     wbs?: XOR<WBSItemRelationFilter, WBSItemWhereInput>
@@ -50911,9 +53685,12 @@ export namespace Prisma {
     contractId?: SortOrderInput | SortOrder
     requestId?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedById?: SortOrderInput | SortOrder
+    approvalStatus?: SortOrder
     version?: SortOrder
     certifiedProgress?: SortOrder
     retentionAmount?: SortOrder
+    deletedBy?: UserOrderByWithRelationInput
     contract?: ContractOrderByWithRelationInput
     createdBy?: UserOrderByWithRelationInput
     wbs?: WBSItemOrderByWithRelationInput
@@ -50942,9 +53719,12 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
     contractId?: StringNullableFilter<"Invoice"> | string | null
     deletedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
+    deletedById?: StringNullableFilter<"Invoice"> | string | null
+    approvalStatus?: EnumApprovalStatusFilter<"Invoice"> | $Enums.ApprovalStatus
     version?: IntFilter<"Invoice"> | number
     certifiedProgress?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     contract?: XOR<ContractNullableRelationFilter, ContractWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     wbs?: XOR<WBSItemRelationFilter, WBSItemWhereInput>
@@ -50970,6 +53750,8 @@ export namespace Prisma {
     contractId?: SortOrderInput | SortOrder
     requestId?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedById?: SortOrderInput | SortOrder
+    approvalStatus?: SortOrder
     version?: SortOrder
     certifiedProgress?: SortOrder
     retentionAmount?: SortOrder
@@ -51001,6 +53783,8 @@ export namespace Prisma {
     contractId?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     requestId?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
+    deletedById?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
+    approvalStatus?: EnumApprovalStatusWithAggregatesFilter<"Invoice"> | $Enums.ApprovalStatus
     version?: IntWithAggregatesFilter<"Invoice"> | number
     certifiedProgress?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
@@ -51018,8 +53802,12 @@ export namespace Prisma {
     description?: StringNullableFilter<"Payment"> | string | null
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
+    version?: IntFilter<"Payment"> | number
     requestId?: StringNullableFilter<"Payment"> | string | null
     deletedAt?: DateTimeNullableFilter<"Payment"> | Date | string | null
+    deletedById?: StringNullableFilter<"Payment"> | string | null
+    approvalStatus?: EnumApprovalStatusFilter<"Payment"> | $Enums.ApprovalStatus
+    deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     invoice?: XOR<InvoiceRelationFilter, InvoiceWhereInput>
   }
 
@@ -51032,8 +53820,12 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     requestId?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedById?: SortOrderInput | SortOrder
+    approvalStatus?: SortOrder
+    deletedBy?: UserOrderByWithRelationInput
     invoice?: InvoiceOrderByWithRelationInput
   }
 
@@ -51050,7 +53842,11 @@ export namespace Prisma {
     description?: StringNullableFilter<"Payment"> | string | null
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
+    version?: IntFilter<"Payment"> | number
     deletedAt?: DateTimeNullableFilter<"Payment"> | Date | string | null
+    deletedById?: StringNullableFilter<"Payment"> | string | null
+    approvalStatus?: EnumApprovalStatusFilter<"Payment"> | $Enums.ApprovalStatus
+    deletedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     invoice?: XOR<InvoiceRelationFilter, InvoiceWhereInput>
   }, "id" | "requestId">
 
@@ -51063,8 +53859,11 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     requestId?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    deletedById?: SortOrderInput | SortOrder
+    approvalStatus?: SortOrder
     _count?: PaymentCountOrderByAggregateInput
     _avg?: PaymentAvgOrderByAggregateInput
     _max?: PaymentMaxOrderByAggregateInput
@@ -51084,8 +53883,11 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
+    version?: IntWithAggregatesFilter<"Payment"> | number
     requestId?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Payment"> | Date | string | null
+    deletedById?: StringNullableWithAggregatesFilter<"Payment"> | string | null
+    approvalStatus?: EnumApprovalStatusWithAggregatesFilter<"Payment"> | $Enums.ApprovalStatus
   }
 
   export type LedgerAccountWhereInput = {
@@ -52341,6 +55143,8 @@ export namespace Prisma {
     quantity?: DecimalFilter<"BOQItem"> | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFilter<"BOQItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"BOQItem"> | Decimal | DecimalJsLike | number | string
+    status?: StringFilter<"BOQItem"> | string
+    version?: IntFilter<"BOQItem"> | number
     createdAt?: DateTimeFilter<"BOQItem"> | Date | string
     updatedAt?: DateTimeFilter<"BOQItem"> | Date | string
     deletedAt?: DateTimeNullableFilter<"BOQItem"> | Date | string | null
@@ -52358,6 +55162,8 @@ export namespace Prisma {
     quantity?: SortOrder
     unitRate?: SortOrder
     totalAmount?: SortOrder
+    status?: SortOrder
+    version?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -52378,6 +55184,8 @@ export namespace Prisma {
     quantity?: DecimalFilter<"BOQItem"> | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFilter<"BOQItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"BOQItem"> | Decimal | DecimalJsLike | number | string
+    status?: StringFilter<"BOQItem"> | string
+    version?: IntFilter<"BOQItem"> | number
     createdAt?: DateTimeFilter<"BOQItem"> | Date | string
     updatedAt?: DateTimeFilter<"BOQItem"> | Date | string
     deletedAt?: DateTimeNullableFilter<"BOQItem"> | Date | string | null
@@ -52395,6 +55203,8 @@ export namespace Prisma {
     quantity?: SortOrder
     unitRate?: SortOrder
     totalAmount?: SortOrder
+    status?: SortOrder
+    version?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -52417,9 +55227,83 @@ export namespace Prisma {
     quantity?: DecimalWithAggregatesFilter<"BOQItem"> | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalWithAggregatesFilter<"BOQItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalWithAggregatesFilter<"BOQItem"> | Decimal | DecimalJsLike | number | string
+    status?: StringWithAggregatesFilter<"BOQItem"> | string
+    version?: IntWithAggregatesFilter<"BOQItem"> | number
     createdAt?: DateTimeWithAggregatesFilter<"BOQItem"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"BOQItem"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"BOQItem"> | Date | string | null
+  }
+
+  export type BudgetVersionWhereInput = {
+    AND?: BudgetVersionWhereInput | BudgetVersionWhereInput[]
+    OR?: BudgetVersionWhereInput[]
+    NOT?: BudgetVersionWhereInput | BudgetVersionWhereInput[]
+    id?: StringFilter<"BudgetVersion"> | string
+    projectId?: StringFilter<"BudgetVersion"> | string
+    version?: IntFilter<"BudgetVersion"> | number
+    description?: StringNullableFilter<"BudgetVersion"> | string | null
+    status?: StringFilter<"BudgetVersion"> | string
+    snapshot?: JsonFilter<"BudgetVersion">
+    createdAt?: DateTimeFilter<"BudgetVersion"> | Date | string
+    createdById?: StringNullableFilter<"BudgetVersion"> | string | null
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+  }
+
+  export type BudgetVersionOrderByWithRelationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    version?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    snapshot?: SortOrder
+    createdAt?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    project?: ProjectOrderByWithRelationInput
+  }
+
+  export type BudgetVersionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: BudgetVersionWhereInput | BudgetVersionWhereInput[]
+    OR?: BudgetVersionWhereInput[]
+    NOT?: BudgetVersionWhereInput | BudgetVersionWhereInput[]
+    projectId?: StringFilter<"BudgetVersion"> | string
+    version?: IntFilter<"BudgetVersion"> | number
+    description?: StringNullableFilter<"BudgetVersion"> | string | null
+    status?: StringFilter<"BudgetVersion"> | string
+    snapshot?: JsonFilter<"BudgetVersion">
+    createdAt?: DateTimeFilter<"BudgetVersion"> | Date | string
+    createdById?: StringNullableFilter<"BudgetVersion"> | string | null
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+  }, "id">
+
+  export type BudgetVersionOrderByWithAggregationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    version?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    snapshot?: SortOrder
+    createdAt?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    _count?: BudgetVersionCountOrderByAggregateInput
+    _avg?: BudgetVersionAvgOrderByAggregateInput
+    _max?: BudgetVersionMaxOrderByAggregateInput
+    _min?: BudgetVersionMinOrderByAggregateInput
+    _sum?: BudgetVersionSumOrderByAggregateInput
+  }
+
+  export type BudgetVersionScalarWhereWithAggregatesInput = {
+    AND?: BudgetVersionScalarWhereWithAggregatesInput | BudgetVersionScalarWhereWithAggregatesInput[]
+    OR?: BudgetVersionScalarWhereWithAggregatesInput[]
+    NOT?: BudgetVersionScalarWhereWithAggregatesInput | BudgetVersionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"BudgetVersion"> | string
+    projectId?: StringWithAggregatesFilter<"BudgetVersion"> | string
+    version?: IntWithAggregatesFilter<"BudgetVersion"> | number
+    description?: StringNullableWithAggregatesFilter<"BudgetVersion"> | string | null
+    status?: StringWithAggregatesFilter<"BudgetVersion"> | string
+    snapshot?: JsonWithAggregatesFilter<"BudgetVersion">
+    createdAt?: DateTimeWithAggregatesFilter<"BudgetVersion"> | Date | string
+    createdById?: StringNullableWithAggregatesFilter<"BudgetVersion"> | string | null
   }
 
   export type CommentWhereInput = {
@@ -52802,6 +55686,105 @@ export namespace Prisma {
     reconciledAt?: DateTimeNullableWithAggregatesFilter<"FiscalPeriod"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"FiscalPeriod"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"FiscalPeriod"> | Date | string
+  }
+
+  export type JobWhereInput = {
+    AND?: JobWhereInput | JobWhereInput[]
+    OR?: JobWhereInput[]
+    NOT?: JobWhereInput | JobWhereInput[]
+    id?: StringFilter<"Job"> | string
+    type?: StringFilter<"Job"> | string
+    status?: StringFilter<"Job"> | string
+    payload?: JsonNullableFilter<"Job">
+    result?: JsonNullableFilter<"Job">
+    error?: StringNullableFilter<"Job"> | string | null
+    attempts?: IntFilter<"Job"> | number
+    maxAttempts?: IntFilter<"Job"> | number
+    priority?: IntFilter<"Job"> | number
+    runAt?: DateTimeFilter<"Job"> | Date | string
+    processedAt?: DateTimeNullableFilter<"Job"> | Date | string | null
+    finishedAt?: DateTimeNullableFilter<"Job"> | Date | string | null
+    createdAt?: DateTimeFilter<"Job"> | Date | string
+    updatedAt?: DateTimeFilter<"Job"> | Date | string
+  }
+
+  export type JobOrderByWithRelationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    payload?: SortOrderInput | SortOrder
+    result?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    attempts?: SortOrder
+    maxAttempts?: SortOrder
+    priority?: SortOrder
+    runAt?: SortOrder
+    processedAt?: SortOrderInput | SortOrder
+    finishedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type JobWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: JobWhereInput | JobWhereInput[]
+    OR?: JobWhereInput[]
+    NOT?: JobWhereInput | JobWhereInput[]
+    type?: StringFilter<"Job"> | string
+    status?: StringFilter<"Job"> | string
+    payload?: JsonNullableFilter<"Job">
+    result?: JsonNullableFilter<"Job">
+    error?: StringNullableFilter<"Job"> | string | null
+    attempts?: IntFilter<"Job"> | number
+    maxAttempts?: IntFilter<"Job"> | number
+    priority?: IntFilter<"Job"> | number
+    runAt?: DateTimeFilter<"Job"> | Date | string
+    processedAt?: DateTimeNullableFilter<"Job"> | Date | string | null
+    finishedAt?: DateTimeNullableFilter<"Job"> | Date | string | null
+    createdAt?: DateTimeFilter<"Job"> | Date | string
+    updatedAt?: DateTimeFilter<"Job"> | Date | string
+  }, "id">
+
+  export type JobOrderByWithAggregationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    payload?: SortOrderInput | SortOrder
+    result?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    attempts?: SortOrder
+    maxAttempts?: SortOrder
+    priority?: SortOrder
+    runAt?: SortOrder
+    processedAt?: SortOrderInput | SortOrder
+    finishedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: JobCountOrderByAggregateInput
+    _avg?: JobAvgOrderByAggregateInput
+    _max?: JobMaxOrderByAggregateInput
+    _min?: JobMinOrderByAggregateInput
+    _sum?: JobSumOrderByAggregateInput
+  }
+
+  export type JobScalarWhereWithAggregatesInput = {
+    AND?: JobScalarWhereWithAggregatesInput | JobScalarWhereWithAggregatesInput[]
+    OR?: JobScalarWhereWithAggregatesInput[]
+    NOT?: JobScalarWhereWithAggregatesInput | JobScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Job"> | string
+    type?: StringWithAggregatesFilter<"Job"> | string
+    status?: StringWithAggregatesFilter<"Job"> | string
+    payload?: JsonNullableWithAggregatesFilter<"Job">
+    result?: JsonNullableWithAggregatesFilter<"Job">
+    error?: StringNullableWithAggregatesFilter<"Job"> | string | null
+    attempts?: IntWithAggregatesFilter<"Job"> | number
+    maxAttempts?: IntWithAggregatesFilter<"Job"> | number
+    priority?: IntWithAggregatesFilter<"Job"> | number
+    runAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
+    processedAt?: DateTimeNullableWithAggregatesFilter<"Job"> | Date | string | null
+    finishedAt?: DateTimeNullableWithAggregatesFilter<"Job"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
   }
 
   export type InventoryTransactionWhereInput = {
@@ -53688,6 +56671,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -53719,6 +56707,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUpdateInput = {
@@ -53750,6 +56743,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -53781,6 +56779,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -53881,13 +56884,16 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
     contracts?: ContractCreateNestedManyWithoutProjectInput
     Document?: DocumentCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
@@ -53905,10 +56911,12 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     ownerId?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
@@ -53916,6 +56924,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
     contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
     Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
@@ -53935,13 +56944,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
     contracts?: ContractUpdateManyWithoutProjectNestedInput
     Document?: DocumentUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
@@ -53959,10 +56971,12 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -53970,6 +56984,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
     contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
@@ -53986,10 +57001,12 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     ownerId?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
@@ -54004,6 +57021,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -54015,10 +57033,12 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -54137,6 +57157,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedBy?: UserCreateNestedOneWithoutWbsDeletedInput
     BOQItem?: BOQItemCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordCreateNestedManyWithoutWbsInput
     costs?: CostRecordCreateNestedManyWithoutWbsInput
@@ -54162,6 +57183,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordUncheckedCreateNestedManyWithoutWbsInput
     costs?: CostRecordUncheckedCreateNestedManyWithoutWbsInput
@@ -54183,6 +57205,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: UserUpdateOneWithoutWbsDeletedNestedInput
     BOQItem?: BOQItemUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUpdateManyWithoutWbsNestedInput
@@ -54208,6 +57231,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     BOQItem?: BOQItemUncheckedUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUncheckedUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUncheckedUpdateManyWithoutWbsNestedInput
@@ -54231,6 +57255,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
   }
 
   export type WBSItemUpdateManyMutationInput = {
@@ -54257,6 +57282,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CostRecordCreateInput = {
@@ -54272,8 +57298,11 @@ export namespace Prisma {
     status?: $Enums.PaymentStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     requestId?: string | null
     deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    deletedBy?: UserCreateNestedOneWithoutCostsDeletedInput
     createdBy?: UserCreateNestedOneWithoutCostsCreatedInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutCostRecordsInput
     wbs: WBSItemCreateNestedOneWithoutCostsInput
@@ -54293,10 +57322,13 @@ export namespace Prisma {
     status?: $Enums.PaymentStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     createdById?: string | null
     purchaseOrderId?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
   }
 
   export type CostRecordUpdateInput = {
@@ -54312,8 +57344,11 @@ export namespace Prisma {
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    deletedBy?: UserUpdateOneWithoutCostsDeletedNestedInput
     createdBy?: UserUpdateOneWithoutCostsCreatedNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutCostRecordsNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutCostsNestedInput
@@ -54333,10 +57368,13 @@ export namespace Prisma {
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   }
 
   export type CostRecordCreateManyInput = {
@@ -54353,10 +57391,13 @@ export namespace Prisma {
     status?: $Enums.PaymentStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     createdById?: string | null
     purchaseOrderId?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
   }
 
   export type CostRecordUpdateManyMutationInput = {
@@ -54372,8 +57413,10 @@ export namespace Prisma {
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   }
 
   export type CostRecordUncheckedUpdateManyInput = {
@@ -54390,10 +57433,13 @@ export namespace Prisma {
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   }
 
   export type BudgetRecordCreateInput = {
@@ -54595,9 +57641,11 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     requestId?: string | null
     deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutInvoicesDeletedInput
     contract?: ContractCreateNestedOneWithoutInvoicesInput
     createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
     wbs: WBSItemCreateNestedOneWithoutInvoicesInput
@@ -54623,6 +57671,8 @@ export namespace Prisma {
     contractId?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
@@ -54645,9 +57695,11 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutInvoicesDeletedNestedInput
     contract?: ContractUpdateOneWithoutInvoicesNestedInput
     createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
@@ -54673,6 +57725,8 @@ export namespace Prisma {
     contractId?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -54698,6 +57752,8 @@ export namespace Prisma {
     contractId?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
@@ -54718,6 +57774,7 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -54741,6 +57798,8 @@ export namespace Prisma {
     contractId?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -54754,8 +57813,11 @@ export namespace Prisma {
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     requestId?: string | null
     deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    deletedBy?: UserCreateNestedOneWithoutPaymentsDeletedInput
     invoice: InvoiceCreateNestedOneWithoutPaymentsInput
   }
 
@@ -54768,8 +57830,11 @@ export namespace Prisma {
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
   }
 
   export type PaymentUpdateInput = {
@@ -54780,8 +57845,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    deletedBy?: UserUpdateOneWithoutPaymentsDeletedNestedInput
     invoice?: InvoiceUpdateOneRequiredWithoutPaymentsNestedInput
   }
 
@@ -54794,8 +57862,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   }
 
   export type PaymentCreateManyInput = {
@@ -54807,8 +57878,11 @@ export namespace Prisma {
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
   }
 
   export type PaymentUpdateManyMutationInput = {
@@ -54819,8 +57893,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   }
 
   export type PaymentUncheckedUpdateManyInput = {
@@ -54832,8 +57908,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   }
 
   export type LedgerAccountCreateInput = {
@@ -56211,14 +59290,16 @@ export namespace Prisma {
   }
 
   export type BOQItemCreateInput = {
-    id: string
+    id?: string
     description: string
     unit: string
     quantity: Decimal | DecimalJsLike | number | string
     unitRate: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    status?: string
+    version?: number
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
     deletedAt?: Date | string | null
     Project: ProjectCreateNestedOneWithoutBOQItemInput
     WBSItem: WBSItemCreateNestedOneWithoutBOQItemInput
@@ -56226,7 +59307,7 @@ export namespace Prisma {
   }
 
   export type BOQItemUncheckedCreateInput = {
-    id: string
+    id?: string
     projectId: string
     wbsId: string
     description: string
@@ -56234,8 +59315,10 @@ export namespace Prisma {
     quantity: Decimal | DecimalJsLike | number | string
     unitRate: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    status?: string
+    version?: number
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
     deletedAt?: Date | string | null
     ProgressEntry?: ProgressEntryUncheckedCreateNestedManyWithoutBOQItemInput
   }
@@ -56247,6 +59330,8 @@ export namespace Prisma {
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -56264,6 +59349,8 @@ export namespace Prisma {
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -56271,7 +59358,7 @@ export namespace Prisma {
   }
 
   export type BOQItemCreateManyInput = {
-    id: string
+    id?: string
     projectId: string
     wbsId: string
     description: string
@@ -56279,8 +59366,10 @@ export namespace Prisma {
     quantity: Decimal | DecimalJsLike | number | string
     unitRate: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    status?: string
+    version?: number
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
     deletedAt?: Date | string | null
   }
 
@@ -56291,6 +59380,8 @@ export namespace Prisma {
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -56305,9 +59396,87 @@ export namespace Prisma {
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type BudgetVersionCreateInput = {
+    id?: string
+    version: number
+    description?: string | null
+    status?: string
+    snapshot: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    createdById?: string | null
+    project: ProjectCreateNestedOneWithoutBudgetVersionInput
+  }
+
+  export type BudgetVersionUncheckedCreateInput = {
+    id?: string
+    projectId: string
+    version: number
+    description?: string | null
+    status?: string
+    snapshot: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type BudgetVersionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    snapshot?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    project?: ProjectUpdateOneRequiredWithoutBudgetVersionNestedInput
+  }
+
+  export type BudgetVersionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    snapshot?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type BudgetVersionCreateManyInput = {
+    id?: string
+    projectId: string
+    version: number
+    description?: string | null
+    status?: string
+    snapshot: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type BudgetVersionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    snapshot?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type BudgetVersionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    snapshot?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CommentCreateInput = {
@@ -56720,6 +59889,125 @@ export namespace Prisma {
     lockedById?: NullableStringFieldUpdateOperationsInput | string | null
     closingBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobCreateInput = {
+    id?: string
+    type: string
+    status?: string
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    result?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    attempts?: number
+    maxAttempts?: number
+    priority?: number
+    runAt?: Date | string
+    processedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type JobUncheckedCreateInput = {
+    id?: string
+    type: string
+    status?: string
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    result?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    attempts?: number
+    maxAttempts?: number
+    priority?: number
+    runAt?: Date | string
+    processedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type JobUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    result?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    attempts?: IntFieldUpdateOperationsInput | number
+    maxAttempts?: IntFieldUpdateOperationsInput | number
+    priority?: IntFieldUpdateOperationsInput | number
+    runAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    result?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    attempts?: IntFieldUpdateOperationsInput | number
+    maxAttempts?: IntFieldUpdateOperationsInput | number
+    priority?: IntFieldUpdateOperationsInput | number
+    runAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobCreateManyInput = {
+    id?: string
+    type: string
+    status?: string
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    result?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    attempts?: number
+    maxAttempts?: number
+    priority?: number
+    runAt?: Date | string
+    processedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type JobUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    result?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    attempts?: IntFieldUpdateOperationsInput | number
+    maxAttempts?: IntFieldUpdateOperationsInput | number
+    priority?: IntFieldUpdateOperationsInput | number
+    runAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    result?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    attempts?: IntFieldUpdateOperationsInput | number
+    maxAttempts?: IntFieldUpdateOperationsInput | number
+    priority?: IntFieldUpdateOperationsInput | number
+    runAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -57807,6 +61095,18 @@ export namespace Prisma {
     isNot?: UserMaturityWhereInput | null
   }
 
+  export type WBSItemListRelationFilter = {
+    every?: WBSItemWhereInput
+    some?: WBSItemWhereInput
+    none?: WBSItemWhereInput
+  }
+
+  export type PaymentListRelationFilter = {
+    every?: PaymentWhereInput
+    some?: PaymentWhereInput
+    none?: PaymentWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -57885,6 +61185,14 @@ export namespace Prisma {
   }
 
   export type TrainingRecordOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WBSItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PaymentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -58023,6 +61331,17 @@ export namespace Prisma {
     not?: NestedEnumProjectStatusFilter<$PrismaModel> | $Enums.ProjectStatus
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type DecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -58034,10 +61353,21 @@ export namespace Prisma {
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
+  export type UserNullableRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type BOQItemListRelationFilter = {
     every?: BOQItemWhereInput
     some?: BOQItemWhereInput
     none?: BOQItemWhereInput
+  }
+
+  export type BudgetVersionListRelationFilter = {
+    every?: BudgetVersionWhereInput
+    some?: BudgetVersionWhereInput
+    none?: BudgetVersionWhereInput
   }
 
   export type InventoryTransactionListRelationFilter = {
@@ -58052,11 +61382,6 @@ export namespace Prisma {
     none?: JournalEntryWhereInput
   }
 
-  export type UserNullableRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
-  }
-
   export type SiteConsumptionListRelationFilter = {
     every?: SiteConsumptionWhereInput
     some?: SiteConsumptionWhereInput
@@ -58069,13 +61394,11 @@ export namespace Prisma {
     none?: SubcontractWhereInput
   }
 
-  export type WBSItemListRelationFilter = {
-    every?: WBSItemWhereInput
-    some?: WBSItemWhereInput
-    none?: WBSItemWhereInput
+  export type BOQItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
-  export type BOQItemOrderByRelationAggregateInput = {
+  export type BudgetVersionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -58095,19 +61418,17 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type WBSItemOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type ProjectCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
     description?: SortOrder
     ownerId?: SortOrder
     status?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     contractValue?: SortOrder
     endDate?: SortOrder
     startDate?: SortOrder
@@ -58115,6 +61436,7 @@ export namespace Prisma {
   }
 
   export type ProjectAvgOrderByAggregateInput = {
+    version?: SortOrder
     contractValue?: SortOrder
     totalBudget?: SortOrder
   }
@@ -58124,10 +61446,12 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
     description?: SortOrder
     ownerId?: SortOrder
     status?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     contractValue?: SortOrder
     endDate?: SortOrder
     startDate?: SortOrder
@@ -58139,10 +61463,12 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
     description?: SortOrder
     ownerId?: SortOrder
     status?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     contractValue?: SortOrder
     endDate?: SortOrder
     startDate?: SortOrder
@@ -58150,6 +61476,7 @@ export namespace Prisma {
   }
 
   export type ProjectSumOrderByAggregateInput = {
+    version?: SortOrder
     contractValue?: SortOrder
     totalBudget?: SortOrder
   }
@@ -58162,6 +61489,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumProjectStatusFilter<$PrismaModel>
     _max?: NestedEnumProjectStatusFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -58185,17 +61528,6 @@ export namespace Prisma {
     in?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type CategoryNullableRelationFilter = {
@@ -58271,22 +61603,6 @@ export namespace Prisma {
     _max?: NestedEnumTaskStatusFilter<$PrismaModel>
   }
 
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
   export type PurchaseOrderItemListRelationFilter = {
     every?: PurchaseOrderItemWhereInput
     some?: PurchaseOrderItemWhereInput
@@ -58324,6 +61640,7 @@ export namespace Prisma {
     level?: SortOrder
     sortOrder?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
   }
 
   export type WBSItemAvgOrderByAggregateInput = {
@@ -58344,6 +61661,7 @@ export namespace Prisma {
     level?: SortOrder
     sortOrder?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
   }
 
   export type WBSItemMinOrderByAggregateInput = {
@@ -58358,6 +61676,7 @@ export namespace Prisma {
     level?: SortOrder
     sortOrder?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
   }
 
   export type WBSItemSumOrderByAggregateInput = {
@@ -58378,6 +61697,13 @@ export namespace Prisma {
     in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumPaymentStatusFilter<$PrismaModel> | $Enums.PaymentStatus
+  }
+
+  export type EnumApprovalStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApprovalStatus | EnumApprovalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApprovalStatusFilter<$PrismaModel> | $Enums.ApprovalStatus
   }
 
   export type PurchaseOrderNullableRelationFilter = {
@@ -58404,16 +61730,20 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     createdById?: SortOrder
     purchaseOrderId?: SortOrder
     requestId?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
+    approvalStatus?: SortOrder
   }
 
   export type CostRecordAvgOrderByAggregateInput = {
     amount?: SortOrder
     quantity?: SortOrder
     unitPrice?: SortOrder
+    version?: SortOrder
   }
 
   export type CostRecordMaxOrderByAggregateInput = {
@@ -58430,10 +61760,13 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     createdById?: SortOrder
     purchaseOrderId?: SortOrder
     requestId?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
+    approvalStatus?: SortOrder
   }
 
   export type CostRecordMinOrderByAggregateInput = {
@@ -58450,16 +61783,20 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     createdById?: SortOrder
     purchaseOrderId?: SortOrder
     requestId?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
+    approvalStatus?: SortOrder
   }
 
   export type CostRecordSumOrderByAggregateInput = {
     amount?: SortOrder
     quantity?: SortOrder
     unitPrice?: SortOrder
+    version?: SortOrder
   }
 
   export type EnumCostTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -58480,6 +61817,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentStatusFilter<$PrismaModel>
     _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
+  }
+
+  export type EnumApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApprovalStatus | EnumApprovalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApprovalStatusWithAggregatesFilter<$PrismaModel> | $Enums.ApprovalStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumApprovalStatusFilter<$PrismaModel>
+    _max?: NestedEnumApprovalStatusFilter<$PrismaModel>
   }
 
   export type BudgetRecordCountOrderByAggregateInput = {
@@ -58596,16 +61943,6 @@ export namespace Prisma {
     isNot?: ContractWhereInput | null
   }
 
-  export type PaymentListRelationFilter = {
-    every?: PaymentWhereInput
-    some?: PaymentWhereInput
-    none?: PaymentWhereInput
-  }
-
-  export type PaymentOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type InvoiceCountOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
@@ -58624,6 +61961,8 @@ export namespace Prisma {
     contractId?: SortOrder
     requestId?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
+    approvalStatus?: SortOrder
     version?: SortOrder
     certifiedProgress?: SortOrder
     retentionAmount?: SortOrder
@@ -58656,6 +61995,8 @@ export namespace Prisma {
     contractId?: SortOrder
     requestId?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
+    approvalStatus?: SortOrder
     version?: SortOrder
     certifiedProgress?: SortOrder
     retentionAmount?: SortOrder
@@ -58679,6 +62020,8 @@ export namespace Prisma {
     contractId?: SortOrder
     requestId?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
+    approvalStatus?: SortOrder
     version?: SortOrder
     certifiedProgress?: SortOrder
     retentionAmount?: SortOrder
@@ -58717,12 +62060,16 @@ export namespace Prisma {
     description?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     requestId?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
+    approvalStatus?: SortOrder
   }
 
   export type PaymentAvgOrderByAggregateInput = {
     amount?: SortOrder
+    version?: SortOrder
   }
 
   export type PaymentMaxOrderByAggregateInput = {
@@ -58734,8 +62081,11 @@ export namespace Prisma {
     description?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     requestId?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
+    approvalStatus?: SortOrder
   }
 
   export type PaymentMinOrderByAggregateInput = {
@@ -58747,12 +62097,16 @@ export namespace Prisma {
     description?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    version?: SortOrder
     requestId?: SortOrder
     deletedAt?: SortOrder
+    deletedById?: SortOrder
+    approvalStatus?: SortOrder
   }
 
   export type PaymentSumOrderByAggregateInput = {
     amount?: SortOrder
+    version?: SortOrder
   }
 
   export type EnumAccountTypeFilter<$PrismaModel = never> = {
@@ -59470,13 +62824,6 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type EnumApprovalStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.ApprovalStatus | EnumApprovalStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumApprovalStatusFilter<$PrismaModel> | $Enums.ApprovalStatus
-  }
-
   export type ApprovalRequestCountOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
@@ -59512,16 +62859,6 @@ export namespace Prisma {
     reason?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type EnumApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ApprovalStatus | EnumApprovalStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumApprovalStatusWithAggregatesFilter<$PrismaModel> | $Enums.ApprovalStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumApprovalStatusFilter<$PrismaModel>
-    _max?: NestedEnumApprovalStatusFilter<$PrismaModel>
   }
 
   export type ApprovalRequestRelationFilter = {
@@ -59625,6 +62962,8 @@ export namespace Prisma {
     quantity?: SortOrder
     unitRate?: SortOrder
     totalAmount?: SortOrder
+    status?: SortOrder
+    version?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -59634,6 +62973,7 @@ export namespace Prisma {
     quantity?: SortOrder
     unitRate?: SortOrder
     totalAmount?: SortOrder
+    version?: SortOrder
   }
 
   export type BOQItemMaxOrderByAggregateInput = {
@@ -59645,6 +62985,8 @@ export namespace Prisma {
     quantity?: SortOrder
     unitRate?: SortOrder
     totalAmount?: SortOrder
+    status?: SortOrder
+    version?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -59659,6 +63001,8 @@ export namespace Prisma {
     quantity?: SortOrder
     unitRate?: SortOrder
     totalAmount?: SortOrder
+    status?: SortOrder
+    version?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -59668,6 +63012,93 @@ export namespace Prisma {
     quantity?: SortOrder
     unitRate?: SortOrder
     totalAmount?: SortOrder
+    version?: SortOrder
+  }
+  export type JsonFilter<$PrismaModel = never> = 
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type BudgetVersionCountOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    version?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    snapshot?: SortOrder
+    createdAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type BudgetVersionAvgOrderByAggregateInput = {
+    version?: SortOrder
+  }
+
+  export type BudgetVersionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    version?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type BudgetVersionMinOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    version?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type BudgetVersionSumOrderByAggregateInput = {
+    version?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> = 
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type CommentCountOrderByAggregateInput = {
@@ -59702,28 +63133,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrder
   }
-  export type JsonFilter<$PrismaModel = never> = 
-    | PatchUndefined<
-        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type DelegationPolicyCountOrderByAggregateInput = {
     id?: SortOrder
@@ -59748,31 +63157,6 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-  export type JsonWithAggregatesFilter<$PrismaModel = never> = 
-    | PatchUndefined<
-        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedJsonFilter<$PrismaModel>
-    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type DelegationWindowCountOrderByAggregateInput = {
@@ -59965,6 +63349,65 @@ export namespace Prisma {
     _sum?: NestedDecimalNullableFilter<$PrismaModel>
     _min?: NestedDecimalNullableFilter<$PrismaModel>
     _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type JobCountOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    payload?: SortOrder
+    result?: SortOrder
+    error?: SortOrder
+    attempts?: SortOrder
+    maxAttempts?: SortOrder
+    priority?: SortOrder
+    runAt?: SortOrder
+    processedAt?: SortOrder
+    finishedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type JobAvgOrderByAggregateInput = {
+    attempts?: SortOrder
+    maxAttempts?: SortOrder
+    priority?: SortOrder
+  }
+
+  export type JobMaxOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    error?: SortOrder
+    attempts?: SortOrder
+    maxAttempts?: SortOrder
+    priority?: SortOrder
+    runAt?: SortOrder
+    processedAt?: SortOrder
+    finishedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type JobMinOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    error?: SortOrder
+    attempts?: SortOrder
+    maxAttempts?: SortOrder
+    priority?: SortOrder
+    runAt?: SortOrder
+    processedAt?: SortOrder
+    finishedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type JobSumOrderByAggregateInput = {
+    attempts?: SortOrder
+    maxAttempts?: SortOrder
+    priority?: SortOrder
   }
 
   export type EnumInventoryTransactionTypeFilter<$PrismaModel = never> = {
@@ -60690,6 +64133,41 @@ export namespace Prisma {
     connect?: UserMaturityWhereUniqueInput
   }
 
+  export type ProjectCreateNestedManyWithoutDeletedByInput = {
+    create?: XOR<ProjectCreateWithoutDeletedByInput, ProjectUncheckedCreateWithoutDeletedByInput> | ProjectCreateWithoutDeletedByInput[] | ProjectUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutDeletedByInput | ProjectCreateOrConnectWithoutDeletedByInput[]
+    createMany?: ProjectCreateManyDeletedByInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type WBSItemCreateNestedManyWithoutDeletedByInput = {
+    create?: XOR<WBSItemCreateWithoutDeletedByInput, WBSItemUncheckedCreateWithoutDeletedByInput> | WBSItemCreateWithoutDeletedByInput[] | WBSItemUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: WBSItemCreateOrConnectWithoutDeletedByInput | WBSItemCreateOrConnectWithoutDeletedByInput[]
+    createMany?: WBSItemCreateManyDeletedByInputEnvelope
+    connect?: WBSItemWhereUniqueInput | WBSItemWhereUniqueInput[]
+  }
+
+  export type CostRecordCreateNestedManyWithoutDeletedByInput = {
+    create?: XOR<CostRecordCreateWithoutDeletedByInput, CostRecordUncheckedCreateWithoutDeletedByInput> | CostRecordCreateWithoutDeletedByInput[] | CostRecordUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: CostRecordCreateOrConnectWithoutDeletedByInput | CostRecordCreateOrConnectWithoutDeletedByInput[]
+    createMany?: CostRecordCreateManyDeletedByInputEnvelope
+    connect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+  }
+
+  export type InvoiceCreateNestedManyWithoutDeletedByInput = {
+    create?: XOR<InvoiceCreateWithoutDeletedByInput, InvoiceUncheckedCreateWithoutDeletedByInput> | InvoiceCreateWithoutDeletedByInput[] | InvoiceUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutDeletedByInput | InvoiceCreateOrConnectWithoutDeletedByInput[]
+    createMany?: InvoiceCreateManyDeletedByInputEnvelope
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+  }
+
+  export type PaymentCreateNestedManyWithoutDeletedByInput = {
+    create?: XOR<PaymentCreateWithoutDeletedByInput, PaymentUncheckedCreateWithoutDeletedByInput> | PaymentCreateWithoutDeletedByInput[] | PaymentUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutDeletedByInput | PaymentCreateOrConnectWithoutDeletedByInput[]
+    createMany?: PaymentCreateManyDeletedByInputEnvelope
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+  }
+
   export type ActivityFeedUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<ActivityFeedCreateWithoutUserInput, ActivityFeedUncheckedCreateWithoutUserInput> | ActivityFeedCreateWithoutUserInput[] | ActivityFeedUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ActivityFeedCreateOrConnectWithoutUserInput | ActivityFeedCreateOrConnectWithoutUserInput[]
@@ -60834,6 +64312,41 @@ export namespace Prisma {
     create?: XOR<UserMaturityCreateWithoutUserInput, UserMaturityUncheckedCreateWithoutUserInput>
     connectOrCreate?: UserMaturityCreateOrConnectWithoutUserInput
     connect?: UserMaturityWhereUniqueInput
+  }
+
+  export type ProjectUncheckedCreateNestedManyWithoutDeletedByInput = {
+    create?: XOR<ProjectCreateWithoutDeletedByInput, ProjectUncheckedCreateWithoutDeletedByInput> | ProjectCreateWithoutDeletedByInput[] | ProjectUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutDeletedByInput | ProjectCreateOrConnectWithoutDeletedByInput[]
+    createMany?: ProjectCreateManyDeletedByInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type WBSItemUncheckedCreateNestedManyWithoutDeletedByInput = {
+    create?: XOR<WBSItemCreateWithoutDeletedByInput, WBSItemUncheckedCreateWithoutDeletedByInput> | WBSItemCreateWithoutDeletedByInput[] | WBSItemUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: WBSItemCreateOrConnectWithoutDeletedByInput | WBSItemCreateOrConnectWithoutDeletedByInput[]
+    createMany?: WBSItemCreateManyDeletedByInputEnvelope
+    connect?: WBSItemWhereUniqueInput | WBSItemWhereUniqueInput[]
+  }
+
+  export type CostRecordUncheckedCreateNestedManyWithoutDeletedByInput = {
+    create?: XOR<CostRecordCreateWithoutDeletedByInput, CostRecordUncheckedCreateWithoutDeletedByInput> | CostRecordCreateWithoutDeletedByInput[] | CostRecordUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: CostRecordCreateOrConnectWithoutDeletedByInput | CostRecordCreateOrConnectWithoutDeletedByInput[]
+    createMany?: CostRecordCreateManyDeletedByInputEnvelope
+    connect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+  }
+
+  export type InvoiceUncheckedCreateNestedManyWithoutDeletedByInput = {
+    create?: XOR<InvoiceCreateWithoutDeletedByInput, InvoiceUncheckedCreateWithoutDeletedByInput> | InvoiceCreateWithoutDeletedByInput[] | InvoiceUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutDeletedByInput | InvoiceCreateOrConnectWithoutDeletedByInput[]
+    createMany?: InvoiceCreateManyDeletedByInputEnvelope
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+  }
+
+  export type PaymentUncheckedCreateNestedManyWithoutDeletedByInput = {
+    create?: XOR<PaymentCreateWithoutDeletedByInput, PaymentUncheckedCreateWithoutDeletedByInput> | PaymentCreateWithoutDeletedByInput[] | PaymentUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutDeletedByInput | PaymentCreateOrConnectWithoutDeletedByInput[]
+    createMany?: PaymentCreateManyDeletedByInputEnvelope
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -61146,6 +64659,76 @@ export namespace Prisma {
     update?: XOR<XOR<UserMaturityUpdateToOneWithWhereWithoutUserInput, UserMaturityUpdateWithoutUserInput>, UserMaturityUncheckedUpdateWithoutUserInput>
   }
 
+  export type ProjectUpdateManyWithoutDeletedByNestedInput = {
+    create?: XOR<ProjectCreateWithoutDeletedByInput, ProjectUncheckedCreateWithoutDeletedByInput> | ProjectCreateWithoutDeletedByInput[] | ProjectUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutDeletedByInput | ProjectCreateOrConnectWithoutDeletedByInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutDeletedByInput | ProjectUpsertWithWhereUniqueWithoutDeletedByInput[]
+    createMany?: ProjectCreateManyDeletedByInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutDeletedByInput | ProjectUpdateWithWhereUniqueWithoutDeletedByInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutDeletedByInput | ProjectUpdateManyWithWhereWithoutDeletedByInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type WBSItemUpdateManyWithoutDeletedByNestedInput = {
+    create?: XOR<WBSItemCreateWithoutDeletedByInput, WBSItemUncheckedCreateWithoutDeletedByInput> | WBSItemCreateWithoutDeletedByInput[] | WBSItemUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: WBSItemCreateOrConnectWithoutDeletedByInput | WBSItemCreateOrConnectWithoutDeletedByInput[]
+    upsert?: WBSItemUpsertWithWhereUniqueWithoutDeletedByInput | WBSItemUpsertWithWhereUniqueWithoutDeletedByInput[]
+    createMany?: WBSItemCreateManyDeletedByInputEnvelope
+    set?: WBSItemWhereUniqueInput | WBSItemWhereUniqueInput[]
+    disconnect?: WBSItemWhereUniqueInput | WBSItemWhereUniqueInput[]
+    delete?: WBSItemWhereUniqueInput | WBSItemWhereUniqueInput[]
+    connect?: WBSItemWhereUniqueInput | WBSItemWhereUniqueInput[]
+    update?: WBSItemUpdateWithWhereUniqueWithoutDeletedByInput | WBSItemUpdateWithWhereUniqueWithoutDeletedByInput[]
+    updateMany?: WBSItemUpdateManyWithWhereWithoutDeletedByInput | WBSItemUpdateManyWithWhereWithoutDeletedByInput[]
+    deleteMany?: WBSItemScalarWhereInput | WBSItemScalarWhereInput[]
+  }
+
+  export type CostRecordUpdateManyWithoutDeletedByNestedInput = {
+    create?: XOR<CostRecordCreateWithoutDeletedByInput, CostRecordUncheckedCreateWithoutDeletedByInput> | CostRecordCreateWithoutDeletedByInput[] | CostRecordUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: CostRecordCreateOrConnectWithoutDeletedByInput | CostRecordCreateOrConnectWithoutDeletedByInput[]
+    upsert?: CostRecordUpsertWithWhereUniqueWithoutDeletedByInput | CostRecordUpsertWithWhereUniqueWithoutDeletedByInput[]
+    createMany?: CostRecordCreateManyDeletedByInputEnvelope
+    set?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    disconnect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    delete?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    connect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    update?: CostRecordUpdateWithWhereUniqueWithoutDeletedByInput | CostRecordUpdateWithWhereUniqueWithoutDeletedByInput[]
+    updateMany?: CostRecordUpdateManyWithWhereWithoutDeletedByInput | CostRecordUpdateManyWithWhereWithoutDeletedByInput[]
+    deleteMany?: CostRecordScalarWhereInput | CostRecordScalarWhereInput[]
+  }
+
+  export type InvoiceUpdateManyWithoutDeletedByNestedInput = {
+    create?: XOR<InvoiceCreateWithoutDeletedByInput, InvoiceUncheckedCreateWithoutDeletedByInput> | InvoiceCreateWithoutDeletedByInput[] | InvoiceUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutDeletedByInput | InvoiceCreateOrConnectWithoutDeletedByInput[]
+    upsert?: InvoiceUpsertWithWhereUniqueWithoutDeletedByInput | InvoiceUpsertWithWhereUniqueWithoutDeletedByInput[]
+    createMany?: InvoiceCreateManyDeletedByInputEnvelope
+    set?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    disconnect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    delete?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    update?: InvoiceUpdateWithWhereUniqueWithoutDeletedByInput | InvoiceUpdateWithWhereUniqueWithoutDeletedByInput[]
+    updateMany?: InvoiceUpdateManyWithWhereWithoutDeletedByInput | InvoiceUpdateManyWithWhereWithoutDeletedByInput[]
+    deleteMany?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
+  }
+
+  export type PaymentUpdateManyWithoutDeletedByNestedInput = {
+    create?: XOR<PaymentCreateWithoutDeletedByInput, PaymentUncheckedCreateWithoutDeletedByInput> | PaymentCreateWithoutDeletedByInput[] | PaymentUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutDeletedByInput | PaymentCreateOrConnectWithoutDeletedByInput[]
+    upsert?: PaymentUpsertWithWhereUniqueWithoutDeletedByInput | PaymentUpsertWithWhereUniqueWithoutDeletedByInput[]
+    createMany?: PaymentCreateManyDeletedByInputEnvelope
+    set?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    disconnect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    delete?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    update?: PaymentUpdateWithWhereUniqueWithoutDeletedByInput | PaymentUpdateWithWhereUniqueWithoutDeletedByInput[]
+    updateMany?: PaymentUpdateManyWithWhereWithoutDeletedByInput | PaymentUpdateManyWithWhereWithoutDeletedByInput[]
+    deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+  }
+
   export type ActivityFeedUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<ActivityFeedCreateWithoutUserInput, ActivityFeedUncheckedCreateWithoutUserInput> | ActivityFeedCreateWithoutUserInput[] | ActivityFeedUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ActivityFeedCreateOrConnectWithoutUserInput | ActivityFeedCreateOrConnectWithoutUserInput[]
@@ -61436,6 +65019,76 @@ export namespace Prisma {
     update?: XOR<XOR<UserMaturityUpdateToOneWithWhereWithoutUserInput, UserMaturityUpdateWithoutUserInput>, UserMaturityUncheckedUpdateWithoutUserInput>
   }
 
+  export type ProjectUncheckedUpdateManyWithoutDeletedByNestedInput = {
+    create?: XOR<ProjectCreateWithoutDeletedByInput, ProjectUncheckedCreateWithoutDeletedByInput> | ProjectCreateWithoutDeletedByInput[] | ProjectUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutDeletedByInput | ProjectCreateOrConnectWithoutDeletedByInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutDeletedByInput | ProjectUpsertWithWhereUniqueWithoutDeletedByInput[]
+    createMany?: ProjectCreateManyDeletedByInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutDeletedByInput | ProjectUpdateWithWhereUniqueWithoutDeletedByInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutDeletedByInput | ProjectUpdateManyWithWhereWithoutDeletedByInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput = {
+    create?: XOR<WBSItemCreateWithoutDeletedByInput, WBSItemUncheckedCreateWithoutDeletedByInput> | WBSItemCreateWithoutDeletedByInput[] | WBSItemUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: WBSItemCreateOrConnectWithoutDeletedByInput | WBSItemCreateOrConnectWithoutDeletedByInput[]
+    upsert?: WBSItemUpsertWithWhereUniqueWithoutDeletedByInput | WBSItemUpsertWithWhereUniqueWithoutDeletedByInput[]
+    createMany?: WBSItemCreateManyDeletedByInputEnvelope
+    set?: WBSItemWhereUniqueInput | WBSItemWhereUniqueInput[]
+    disconnect?: WBSItemWhereUniqueInput | WBSItemWhereUniqueInput[]
+    delete?: WBSItemWhereUniqueInput | WBSItemWhereUniqueInput[]
+    connect?: WBSItemWhereUniqueInput | WBSItemWhereUniqueInput[]
+    update?: WBSItemUpdateWithWhereUniqueWithoutDeletedByInput | WBSItemUpdateWithWhereUniqueWithoutDeletedByInput[]
+    updateMany?: WBSItemUpdateManyWithWhereWithoutDeletedByInput | WBSItemUpdateManyWithWhereWithoutDeletedByInput[]
+    deleteMany?: WBSItemScalarWhereInput | WBSItemScalarWhereInput[]
+  }
+
+  export type CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput = {
+    create?: XOR<CostRecordCreateWithoutDeletedByInput, CostRecordUncheckedCreateWithoutDeletedByInput> | CostRecordCreateWithoutDeletedByInput[] | CostRecordUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: CostRecordCreateOrConnectWithoutDeletedByInput | CostRecordCreateOrConnectWithoutDeletedByInput[]
+    upsert?: CostRecordUpsertWithWhereUniqueWithoutDeletedByInput | CostRecordUpsertWithWhereUniqueWithoutDeletedByInput[]
+    createMany?: CostRecordCreateManyDeletedByInputEnvelope
+    set?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    disconnect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    delete?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    connect?: CostRecordWhereUniqueInput | CostRecordWhereUniqueInput[]
+    update?: CostRecordUpdateWithWhereUniqueWithoutDeletedByInput | CostRecordUpdateWithWhereUniqueWithoutDeletedByInput[]
+    updateMany?: CostRecordUpdateManyWithWhereWithoutDeletedByInput | CostRecordUpdateManyWithWhereWithoutDeletedByInput[]
+    deleteMany?: CostRecordScalarWhereInput | CostRecordScalarWhereInput[]
+  }
+
+  export type InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput = {
+    create?: XOR<InvoiceCreateWithoutDeletedByInput, InvoiceUncheckedCreateWithoutDeletedByInput> | InvoiceCreateWithoutDeletedByInput[] | InvoiceUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutDeletedByInput | InvoiceCreateOrConnectWithoutDeletedByInput[]
+    upsert?: InvoiceUpsertWithWhereUniqueWithoutDeletedByInput | InvoiceUpsertWithWhereUniqueWithoutDeletedByInput[]
+    createMany?: InvoiceCreateManyDeletedByInputEnvelope
+    set?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    disconnect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    delete?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    update?: InvoiceUpdateWithWhereUniqueWithoutDeletedByInput | InvoiceUpdateWithWhereUniqueWithoutDeletedByInput[]
+    updateMany?: InvoiceUpdateManyWithWhereWithoutDeletedByInput | InvoiceUpdateManyWithWhereWithoutDeletedByInput[]
+    deleteMany?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
+  }
+
+  export type PaymentUncheckedUpdateManyWithoutDeletedByNestedInput = {
+    create?: XOR<PaymentCreateWithoutDeletedByInput, PaymentUncheckedCreateWithoutDeletedByInput> | PaymentCreateWithoutDeletedByInput[] | PaymentUncheckedCreateWithoutDeletedByInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutDeletedByInput | PaymentCreateOrConnectWithoutDeletedByInput[]
+    upsert?: PaymentUpsertWithWhereUniqueWithoutDeletedByInput | PaymentUpsertWithWhereUniqueWithoutDeletedByInput[]
+    createMany?: PaymentCreateManyDeletedByInputEnvelope
+    set?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    disconnect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    delete?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    update?: PaymentUpdateWithWhereUniqueWithoutDeletedByInput | PaymentUpdateWithWhereUniqueWithoutDeletedByInput[]
+    updateMany?: PaymentUpdateManyWithWhereWithoutDeletedByInput | PaymentUpdateManyWithWhereWithoutDeletedByInput[]
+    deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+  }
+
   export type TaskCreateNestedManyWithoutCategoryInput = {
     create?: XOR<TaskCreateWithoutCategoryInput, TaskUncheckedCreateWithoutCategoryInput> | TaskCreateWithoutCategoryInput[] | TaskUncheckedCreateWithoutCategoryInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutCategoryInput | TaskCreateOrConnectWithoutCategoryInput[]
@@ -61478,6 +65131,12 @@ export namespace Prisma {
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
+  export type UserCreateNestedOneWithoutProjectsDeletedInput = {
+    create?: XOR<UserCreateWithoutProjectsDeletedInput, UserUncheckedCreateWithoutProjectsDeletedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProjectsDeletedInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type ActivityFeedCreateNestedManyWithoutProjectInput = {
     create?: XOR<ActivityFeedCreateWithoutProjectInput, ActivityFeedUncheckedCreateWithoutProjectInput> | ActivityFeedCreateWithoutProjectInput[] | ActivityFeedUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ActivityFeedCreateOrConnectWithoutProjectInput | ActivityFeedCreateOrConnectWithoutProjectInput[]
@@ -61497,6 +65156,13 @@ export namespace Prisma {
     connectOrCreate?: BOQItemCreateOrConnectWithoutProjectInput | BOQItemCreateOrConnectWithoutProjectInput[]
     createMany?: BOQItemCreateManyProjectInputEnvelope
     connect?: BOQItemWhereUniqueInput | BOQItemWhereUniqueInput[]
+  }
+
+  export type BudgetVersionCreateNestedManyWithoutProjectInput = {
+    create?: XOR<BudgetVersionCreateWithoutProjectInput, BudgetVersionUncheckedCreateWithoutProjectInput> | BudgetVersionCreateWithoutProjectInput[] | BudgetVersionUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: BudgetVersionCreateOrConnectWithoutProjectInput | BudgetVersionCreateOrConnectWithoutProjectInput[]
+    createMany?: BudgetVersionCreateManyProjectInputEnvelope
+    connect?: BudgetVersionWhereUniqueInput | BudgetVersionWhereUniqueInput[]
   }
 
   export type ContractCreateNestedManyWithoutProjectInput = {
@@ -61589,6 +65255,13 @@ export namespace Prisma {
     connect?: BOQItemWhereUniqueInput | BOQItemWhereUniqueInput[]
   }
 
+  export type BudgetVersionUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<BudgetVersionCreateWithoutProjectInput, BudgetVersionUncheckedCreateWithoutProjectInput> | BudgetVersionCreateWithoutProjectInput[] | BudgetVersionUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: BudgetVersionCreateOrConnectWithoutProjectInput | BudgetVersionCreateOrConnectWithoutProjectInput[]
+    createMany?: BudgetVersionCreateManyProjectInputEnvelope
+    connect?: BudgetVersionWhereUniqueInput | BudgetVersionWhereUniqueInput[]
+  }
+
   export type ContractUncheckedCreateNestedManyWithoutProjectInput = {
     create?: XOR<ContractCreateWithoutProjectInput, ContractUncheckedCreateWithoutProjectInput> | ContractCreateWithoutProjectInput[] | ContractUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ContractCreateOrConnectWithoutProjectInput | ContractCreateOrConnectWithoutProjectInput[]
@@ -61656,12 +65329,30 @@ export namespace Prisma {
     set?: $Enums.ProjectStatus
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type DecimalFieldUpdateOperationsInput = {
     set?: Decimal | DecimalJsLike | number | string
     increment?: Decimal | DecimalJsLike | number | string
     decrement?: Decimal | DecimalJsLike | number | string
     multiply?: Decimal | DecimalJsLike | number | string
     divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type UserUpdateOneWithoutProjectsDeletedNestedInput = {
+    create?: XOR<UserCreateWithoutProjectsDeletedInput, UserUncheckedCreateWithoutProjectsDeletedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProjectsDeletedInput
+    upsert?: UserUpsertWithoutProjectsDeletedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProjectsDeletedInput, UserUpdateWithoutProjectsDeletedInput>, UserUncheckedUpdateWithoutProjectsDeletedInput>
   }
 
   export type ActivityFeedUpdateManyWithoutProjectNestedInput = {
@@ -61704,6 +65395,20 @@ export namespace Prisma {
     update?: BOQItemUpdateWithWhereUniqueWithoutProjectInput | BOQItemUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: BOQItemUpdateManyWithWhereWithoutProjectInput | BOQItemUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: BOQItemScalarWhereInput | BOQItemScalarWhereInput[]
+  }
+
+  export type BudgetVersionUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<BudgetVersionCreateWithoutProjectInput, BudgetVersionUncheckedCreateWithoutProjectInput> | BudgetVersionCreateWithoutProjectInput[] | BudgetVersionUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: BudgetVersionCreateOrConnectWithoutProjectInput | BudgetVersionCreateOrConnectWithoutProjectInput[]
+    upsert?: BudgetVersionUpsertWithWhereUniqueWithoutProjectInput | BudgetVersionUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: BudgetVersionCreateManyProjectInputEnvelope
+    set?: BudgetVersionWhereUniqueInput | BudgetVersionWhereUniqueInput[]
+    disconnect?: BudgetVersionWhereUniqueInput | BudgetVersionWhereUniqueInput[]
+    delete?: BudgetVersionWhereUniqueInput | BudgetVersionWhereUniqueInput[]
+    connect?: BudgetVersionWhereUniqueInput | BudgetVersionWhereUniqueInput[]
+    update?: BudgetVersionUpdateWithWhereUniqueWithoutProjectInput | BudgetVersionUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: BudgetVersionUpdateManyWithWhereWithoutProjectInput | BudgetVersionUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: BudgetVersionScalarWhereInput | BudgetVersionScalarWhereInput[]
   }
 
   export type ContractUpdateManyWithoutProjectNestedInput = {
@@ -61884,6 +65589,20 @@ export namespace Prisma {
     deleteMany?: BOQItemScalarWhereInput | BOQItemScalarWhereInput[]
   }
 
+  export type BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<BudgetVersionCreateWithoutProjectInput, BudgetVersionUncheckedCreateWithoutProjectInput> | BudgetVersionCreateWithoutProjectInput[] | BudgetVersionUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: BudgetVersionCreateOrConnectWithoutProjectInput | BudgetVersionCreateOrConnectWithoutProjectInput[]
+    upsert?: BudgetVersionUpsertWithWhereUniqueWithoutProjectInput | BudgetVersionUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: BudgetVersionCreateManyProjectInputEnvelope
+    set?: BudgetVersionWhereUniqueInput | BudgetVersionWhereUniqueInput[]
+    disconnect?: BudgetVersionWhereUniqueInput | BudgetVersionWhereUniqueInput[]
+    delete?: BudgetVersionWhereUniqueInput | BudgetVersionWhereUniqueInput[]
+    connect?: BudgetVersionWhereUniqueInput | BudgetVersionWhereUniqueInput[]
+    update?: BudgetVersionUpdateWithWhereUniqueWithoutProjectInput | BudgetVersionUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: BudgetVersionUpdateManyWithWhereWithoutProjectInput | BudgetVersionUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: BudgetVersionScalarWhereInput | BudgetVersionScalarWhereInput[]
+  }
+
   export type ContractUncheckedUpdateManyWithoutProjectNestedInput = {
     create?: XOR<ContractCreateWithoutProjectInput, ContractUncheckedCreateWithoutProjectInput> | ContractCreateWithoutProjectInput[] | ContractUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ContractCreateOrConnectWithoutProjectInput | ContractCreateOrConnectWithoutProjectInput[]
@@ -62032,14 +65751,6 @@ export namespace Prisma {
     set?: $Enums.TaskStatus
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type UserUpdateOneWithoutTasksAssignedNestedInput = {
     create?: XOR<UserCreateWithoutTasksAssignedInput, UserUncheckedCreateWithoutTasksAssignedInput>
     connectOrCreate?: UserCreateOrConnectWithoutTasksAssignedInput
@@ -62066,6 +65777,12 @@ export namespace Prisma {
     upsert?: ProjectUpsertWithoutTasksInput
     connect?: ProjectWhereUniqueInput
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutTasksInput, ProjectUpdateWithoutTasksInput>, ProjectUncheckedUpdateWithoutTasksInput>
+  }
+
+  export type UserCreateNestedOneWithoutWbsDeletedInput = {
+    create?: XOR<UserCreateWithoutWbsDeletedInput, UserUncheckedCreateWithoutWbsDeletedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWbsDeletedInput
+    connect?: UserWhereUniqueInput
   }
 
   export type BOQItemCreateNestedManyWithoutWBSItemInput = {
@@ -62204,6 +65921,16 @@ export namespace Prisma {
     connectOrCreate?: WBSItemCreateOrConnectWithoutParentInput | WBSItemCreateOrConnectWithoutParentInput[]
     createMany?: WBSItemCreateManyParentInputEnvelope
     connect?: WBSItemWhereUniqueInput | WBSItemWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneWithoutWbsDeletedNestedInput = {
+    create?: XOR<UserCreateWithoutWbsDeletedInput, UserUncheckedCreateWithoutWbsDeletedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWbsDeletedInput
+    upsert?: UserUpsertWithoutWbsDeletedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutWbsDeletedInput, UserUpdateWithoutWbsDeletedInput>, UserUncheckedUpdateWithoutWbsDeletedInput>
   }
 
   export type BOQItemUpdateManyWithoutWBSItemNestedInput = {
@@ -62476,6 +66203,12 @@ export namespace Prisma {
     deleteMany?: WBSItemScalarWhereInput | WBSItemScalarWhereInput[]
   }
 
+  export type UserCreateNestedOneWithoutCostsDeletedInput = {
+    create?: XOR<UserCreateWithoutCostsDeletedInput, UserUncheckedCreateWithoutCostsDeletedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCostsDeletedInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutCostsCreatedInput = {
     create?: XOR<UserCreateWithoutCostsCreatedInput, UserUncheckedCreateWithoutCostsCreatedInput>
     connectOrCreate?: UserCreateOrConnectWithoutCostsCreatedInput
@@ -62500,6 +66233,20 @@ export namespace Prisma {
 
   export type EnumPaymentStatusFieldUpdateOperationsInput = {
     set?: $Enums.PaymentStatus
+  }
+
+  export type EnumApprovalStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ApprovalStatus
+  }
+
+  export type UserUpdateOneWithoutCostsDeletedNestedInput = {
+    create?: XOR<UserCreateWithoutCostsDeletedInput, UserUncheckedCreateWithoutCostsDeletedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCostsDeletedInput
+    upsert?: UserUpsertWithoutCostsDeletedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCostsDeletedInput, UserUpdateWithoutCostsDeletedInput>, UserUncheckedUpdateWithoutCostsDeletedInput>
   }
 
   export type UserUpdateOneWithoutCostsCreatedNestedInput = {
@@ -62606,6 +66353,12 @@ export namespace Prisma {
     update?: XOR<XOR<WBSItemUpdateToOneWithWhereWithoutRevenuesInput, WBSItemUpdateWithoutRevenuesInput>, WBSItemUncheckedUpdateWithoutRevenuesInput>
   }
 
+  export type UserCreateNestedOneWithoutInvoicesDeletedInput = {
+    create?: XOR<UserCreateWithoutInvoicesDeletedInput, UserUncheckedCreateWithoutInvoicesDeletedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutInvoicesDeletedInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type ContractCreateNestedOneWithoutInvoicesInput = {
     create?: XOR<ContractCreateWithoutInvoicesInput, ContractUncheckedCreateWithoutInvoicesInput>
     connectOrCreate?: ContractCreateOrConnectWithoutInvoicesInput
@@ -62654,6 +66407,16 @@ export namespace Prisma {
 
   export type EnumInvoiceStatusFieldUpdateOperationsInput = {
     set?: $Enums.InvoiceStatus
+  }
+
+  export type UserUpdateOneWithoutInvoicesDeletedNestedInput = {
+    create?: XOR<UserCreateWithoutInvoicesDeletedInput, UserUncheckedCreateWithoutInvoicesDeletedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutInvoicesDeletedInput
+    upsert?: UserUpsertWithoutInvoicesDeletedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutInvoicesDeletedInput, UserUpdateWithoutInvoicesDeletedInput>, UserUncheckedUpdateWithoutInvoicesDeletedInput>
   }
 
   export type ContractUpdateOneWithoutInvoicesNestedInput = {
@@ -62740,10 +66503,26 @@ export namespace Prisma {
     deleteMany?: RevenueScalarWhereInput | RevenueScalarWhereInput[]
   }
 
+  export type UserCreateNestedOneWithoutPaymentsDeletedInput = {
+    create?: XOR<UserCreateWithoutPaymentsDeletedInput, UserUncheckedCreateWithoutPaymentsDeletedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPaymentsDeletedInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type InvoiceCreateNestedOneWithoutPaymentsInput = {
     create?: XOR<InvoiceCreateWithoutPaymentsInput, InvoiceUncheckedCreateWithoutPaymentsInput>
     connectOrCreate?: InvoiceCreateOrConnectWithoutPaymentsInput
     connect?: InvoiceWhereUniqueInput
+  }
+
+  export type UserUpdateOneWithoutPaymentsDeletedNestedInput = {
+    create?: XOR<UserCreateWithoutPaymentsDeletedInput, UserUncheckedCreateWithoutPaymentsDeletedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPaymentsDeletedInput
+    upsert?: UserUpsertWithoutPaymentsDeletedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPaymentsDeletedInput, UserUpdateWithoutPaymentsDeletedInput>, UserUncheckedUpdateWithoutPaymentsDeletedInput>
   }
 
   export type InvoiceUpdateOneRequiredWithoutPaymentsNestedInput = {
@@ -63374,10 +67153,6 @@ export namespace Prisma {
     connect?: ApprovalStepWhereUniqueInput | ApprovalStepWhereUniqueInput[]
   }
 
-  export type EnumApprovalStatusFieldUpdateOperationsInput = {
-    set?: $Enums.ApprovalStatus
-  }
-
   export type ProjectUpdateOneRequiredWithoutApprovalRequestNestedInput = {
     create?: XOR<ProjectCreateWithoutApprovalRequestInput, ProjectUncheckedCreateWithoutApprovalRequestInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutApprovalRequestInput
@@ -63518,6 +67293,20 @@ export namespace Prisma {
     update?: ProgressEntryUpdateWithWhereUniqueWithoutBOQItemInput | ProgressEntryUpdateWithWhereUniqueWithoutBOQItemInput[]
     updateMany?: ProgressEntryUpdateManyWithWhereWithoutBOQItemInput | ProgressEntryUpdateManyWithWhereWithoutBOQItemInput[]
     deleteMany?: ProgressEntryScalarWhereInput | ProgressEntryScalarWhereInput[]
+  }
+
+  export type ProjectCreateNestedOneWithoutBudgetVersionInput = {
+    create?: XOR<ProjectCreateWithoutBudgetVersionInput, ProjectUncheckedCreateWithoutBudgetVersionInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutBudgetVersionInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type ProjectUpdateOneRequiredWithoutBudgetVersionNestedInput = {
+    create?: XOR<ProjectCreateWithoutBudgetVersionInput, ProjectUncheckedCreateWithoutBudgetVersionInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutBudgetVersionInput
+    upsert?: ProjectUpsertWithoutBudgetVersionInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutBudgetVersionInput, ProjectUpdateWithoutBudgetVersionInput>, ProjectUncheckedUpdateWithoutBudgetVersionInput>
   }
 
   export type UserCreateNestedOneWithoutCommentInput = {
@@ -64271,6 +68060,33 @@ export namespace Prisma {
     _max?: NestedEnumProjectStatusFilter<$PrismaModel>
   }
 
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -64304,33 +68120,6 @@ export namespace Prisma {
     _max?: NestedEnumTaskStatusFilter<$PrismaModel>
   }
 
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
   export type NestedEnumCostTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.CostType | EnumCostTypeFieldRefInput<$PrismaModel>
     in?: $Enums.CostType[] | ListEnumCostTypeFieldRefInput<$PrismaModel>
@@ -64343,6 +68132,13 @@ export namespace Prisma {
     in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumPaymentStatusFilter<$PrismaModel> | $Enums.PaymentStatus
+  }
+
+  export type NestedEnumApprovalStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApprovalStatus | EnumApprovalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApprovalStatusFilter<$PrismaModel> | $Enums.ApprovalStatus
   }
 
   export type NestedEnumCostTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -64363,6 +68159,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentStatusFilter<$PrismaModel>
     _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApprovalStatus | EnumApprovalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApprovalStatusWithAggregatesFilter<$PrismaModel> | $Enums.ApprovalStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumApprovalStatusFilter<$PrismaModel>
+    _max?: NestedEnumApprovalStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumInvoiceStatusFilter<$PrismaModel = never> = {
@@ -64483,23 +68289,6 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type NestedEnumApprovalStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.ApprovalStatus | EnumApprovalStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumApprovalStatusFilter<$PrismaModel> | $Enums.ApprovalStatus
-  }
-
-  export type NestedEnumApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ApprovalStatus | EnumApprovalStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumApprovalStatusWithAggregatesFilter<$PrismaModel> | $Enums.ApprovalStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumApprovalStatusFilter<$PrismaModel>
-    _max?: NestedEnumApprovalStatusFilter<$PrismaModel>
   }
   export type NestedJsonFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -64879,8 +68668,11 @@ export namespace Prisma {
     status?: $Enums.PaymentStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     requestId?: string | null
     deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    deletedBy?: UserCreateNestedOneWithoutCostsDeletedInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutCostRecordsInput
     wbs: WBSItemCreateNestedOneWithoutCostsInput
   }
@@ -64899,9 +68691,12 @@ export namespace Prisma {
     status?: $Enums.PaymentStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     purchaseOrderId?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
   }
 
   export type CostRecordCreateOrConnectWithoutCreatedByInput = {
@@ -65065,9 +68860,11 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     requestId?: string | null
     deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutInvoicesDeletedInput
     contract?: ContractCreateNestedOneWithoutInvoicesInput
     wbs: WBSItemCreateNestedOneWithoutInvoicesInput
     payments?: PaymentCreateNestedManyWithoutInvoiceInput
@@ -65091,6 +68888,8 @@ export namespace Prisma {
     contractId?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
@@ -65152,13 +68951,16 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
     contracts?: ContractCreateNestedManyWithoutProjectInput
     Document?: DocumentCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
@@ -65175,9 +68977,11 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
@@ -65185,6 +68989,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
     contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
     Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
@@ -65427,6 +69232,286 @@ export namespace Prisma {
   export type UserMaturityCreateOrConnectWithoutUserInput = {
     where: UserMaturityWhereUniqueInput
     create: XOR<UserMaturityCreateWithoutUserInput, UserMaturityUncheckedCreateWithoutUserInput>
+  }
+
+  export type ProjectCreateWithoutDeletedByInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
+    ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
+    BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
+    contracts?: ContractCreateNestedManyWithoutProjectInput
+    Document?: DocumentCreateNestedManyWithoutProjectInput
+    InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
+    journalEntries?: JournalEntryCreateNestedManyWithoutProjectInput
+    owner?: UserCreateNestedOneWithoutProjectsOwnedInput
+    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
+    SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
+    Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutDeletedByInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    description?: string | null
+    ownerId?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
+    ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
+    BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
+    contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
+    Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
+    journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutProjectInput
+    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
+    Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutDeletedByInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutDeletedByInput, ProjectUncheckedCreateWithoutDeletedByInput>
+  }
+
+  export type ProjectCreateManyDeletedByInputEnvelope = {
+    data: ProjectCreateManyDeletedByInput | ProjectCreateManyDeletedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WBSItemCreateWithoutDeletedByInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    budgetAmount?: Decimal | DecimalJsLike | number | string
+    code?: string | null
+    level?: number
+    sortOrder?: number
+    deletedAt?: Date | string | null
+    BOQItem?: BOQItemCreateNestedManyWithoutWBSItemInput
+    budgets?: BudgetRecordCreateNestedManyWithoutWbsInput
+    costs?: CostRecordCreateNestedManyWithoutWbsInput
+    invoices?: InvoiceCreateNestedManyWithoutWbsInput
+    purchaseOrderItems?: PurchaseOrderItemCreateNestedManyWithoutWbsInput
+    revenues?: RevenueCreateNestedManyWithoutWbsInput
+    SiteConsumption?: SiteConsumptionCreateNestedManyWithoutWBSItemInput
+    SubcontractItem?: SubcontractItemCreateNestedManyWithoutWBSItemInput
+    parent?: WBSItemCreateNestedOneWithoutChildrenInput
+    children?: WBSItemCreateNestedManyWithoutParentInput
+    project: ProjectCreateNestedOneWithoutWbsItemsInput
+  }
+
+  export type WBSItemUncheckedCreateWithoutDeletedByInput = {
+    id?: string
+    projectId: string
+    name: string
+    parentId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    budgetAmount?: Decimal | DecimalJsLike | number | string
+    code?: string | null
+    level?: number
+    sortOrder?: number
+    deletedAt?: Date | string | null
+    BOQItem?: BOQItemUncheckedCreateNestedManyWithoutWBSItemInput
+    budgets?: BudgetRecordUncheckedCreateNestedManyWithoutWbsInput
+    costs?: CostRecordUncheckedCreateNestedManyWithoutWbsInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutWbsInput
+    purchaseOrderItems?: PurchaseOrderItemUncheckedCreateNestedManyWithoutWbsInput
+    revenues?: RevenueUncheckedCreateNestedManyWithoutWbsInput
+    SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutWBSItemInput
+    SubcontractItem?: SubcontractItemUncheckedCreateNestedManyWithoutWBSItemInput
+    children?: WBSItemUncheckedCreateNestedManyWithoutParentInput
+  }
+
+  export type WBSItemCreateOrConnectWithoutDeletedByInput = {
+    where: WBSItemWhereUniqueInput
+    create: XOR<WBSItemCreateWithoutDeletedByInput, WBSItemUncheckedCreateWithoutDeletedByInput>
+  }
+
+  export type WBSItemCreateManyDeletedByInputEnvelope = {
+    data: WBSItemCreateManyDeletedByInput | WBSItemCreateManyDeletedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CostRecordCreateWithoutDeletedByInput = {
+    id?: string
+    projectId: string
+    costType?: $Enums.CostType
+    amount: Decimal | DecimalJsLike | number | string
+    quantity?: Decimal | DecimalJsLike | number | string
+    unitPrice?: Decimal | DecimalJsLike | number | string
+    supplier?: string | null
+    note?: string | null
+    date?: Date | string
+    status?: $Enums.PaymentStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    version?: number
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    createdBy?: UserCreateNestedOneWithoutCostsCreatedInput
+    purchaseOrder?: PurchaseOrderCreateNestedOneWithoutCostRecordsInput
+    wbs: WBSItemCreateNestedOneWithoutCostsInput
+  }
+
+  export type CostRecordUncheckedCreateWithoutDeletedByInput = {
+    id?: string
+    projectId: string
+    wbsId: string
+    costType?: $Enums.CostType
+    amount: Decimal | DecimalJsLike | number | string
+    quantity?: Decimal | DecimalJsLike | number | string
+    unitPrice?: Decimal | DecimalJsLike | number | string
+    supplier?: string | null
+    note?: string | null
+    date?: Date | string
+    status?: $Enums.PaymentStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    version?: number
+    createdById?: string | null
+    purchaseOrderId?: string | null
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+  }
+
+  export type CostRecordCreateOrConnectWithoutDeletedByInput = {
+    where: CostRecordWhereUniqueInput
+    create: XOR<CostRecordCreateWithoutDeletedByInput, CostRecordUncheckedCreateWithoutDeletedByInput>
+  }
+
+  export type CostRecordCreateManyDeletedByInputEnvelope = {
+    data: CostRecordCreateManyDeletedByInput | CostRecordCreateManyDeletedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InvoiceCreateWithoutDeletedByInput = {
+    id?: string
+    projectId: string
+    amount: Decimal | DecimalJsLike | number | string
+    issuedDate?: Date | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dueDate?: Date | string | null
+    invoiceNumber?: string | null
+    note?: string | null
+    status?: $Enums.InvoiceStatus
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    version?: number
+    certifiedProgress?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    contract?: ContractCreateNestedOneWithoutInvoicesInput
+    createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
+    wbs: WBSItemCreateNestedOneWithoutInvoicesInput
+    payments?: PaymentCreateNestedManyWithoutInvoiceInput
+    revenues?: RevenueCreateNestedManyWithoutInvoiceInput
+  }
+
+  export type InvoiceUncheckedCreateWithoutDeletedByInput = {
+    id?: string
+    projectId: string
+    wbsId: string
+    amount: Decimal | DecimalJsLike | number | string
+    issuedDate?: Date | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+    dueDate?: Date | string | null
+    invoiceNumber?: string | null
+    note?: string | null
+    status?: $Enums.InvoiceStatus
+    contractId?: string | null
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    version?: number
+    certifiedProgress?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+    payments?: PaymentUncheckedCreateNestedManyWithoutInvoiceInput
+    revenues?: RevenueUncheckedCreateNestedManyWithoutInvoiceInput
+  }
+
+  export type InvoiceCreateOrConnectWithoutDeletedByInput = {
+    where: InvoiceWhereUniqueInput
+    create: XOR<InvoiceCreateWithoutDeletedByInput, InvoiceUncheckedCreateWithoutDeletedByInput>
+  }
+
+  export type InvoiceCreateManyDeletedByInputEnvelope = {
+    data: InvoiceCreateManyDeletedByInput | InvoiceCreateManyDeletedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PaymentCreateWithoutDeletedByInput = {
+    id?: string
+    projectId: string
+    amount: Decimal | DecimalJsLike | number | string
+    date?: Date | string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    version?: number
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    invoice: InvoiceCreateNestedOneWithoutPaymentsInput
+  }
+
+  export type PaymentUncheckedCreateWithoutDeletedByInput = {
+    id?: string
+    invoiceId: string
+    projectId: string
+    amount: Decimal | DecimalJsLike | number | string
+    date?: Date | string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    version?: number
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+  }
+
+  export type PaymentCreateOrConnectWithoutDeletedByInput = {
+    where: PaymentWhereUniqueInput
+    create: XOR<PaymentCreateWithoutDeletedByInput, PaymentUncheckedCreateWithoutDeletedByInput>
+  }
+
+  export type PaymentCreateManyDeletedByInputEnvelope = {
+    data: PaymentCreateManyDeletedByInput | PaymentCreateManyDeletedByInput[]
+    skipDuplicates?: boolean
   }
 
   export type ActivityFeedUpsertWithWhereUniqueWithoutUserInput = {
@@ -65691,10 +69776,13 @@ export namespace Prisma {
     status?: EnumPaymentStatusFilter<"CostRecord"> | $Enums.PaymentStatus
     createdAt?: DateTimeFilter<"CostRecord"> | Date | string
     updatedAt?: DateTimeFilter<"CostRecord"> | Date | string
+    version?: IntFilter<"CostRecord"> | number
     createdById?: StringNullableFilter<"CostRecord"> | string | null
     purchaseOrderId?: StringNullableFilter<"CostRecord"> | string | null
     requestId?: StringNullableFilter<"CostRecord"> | string | null
     deletedAt?: DateTimeNullableFilter<"CostRecord"> | Date | string | null
+    deletedById?: StringNullableFilter<"CostRecord"> | string | null
+    approvalStatus?: EnumApprovalStatusFilter<"CostRecord"> | $Enums.ApprovalStatus
   }
 
   export type DelegationWindowUpsertWithWhereUniqueWithoutUser_DelegationWindow_delegateIdToUserInput = {
@@ -65847,6 +69935,8 @@ export namespace Prisma {
     contractId?: StringNullableFilter<"Invoice"> | string | null
     requestId?: StringNullableFilter<"Invoice"> | string | null
     deletedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
+    deletedById?: StringNullableFilter<"Invoice"> | string | null
+    approvalStatus?: EnumApprovalStatusFilter<"Invoice"> | $Enums.ApprovalStatus
     version?: IntFilter<"Invoice"> | number
     certifiedProgress?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
@@ -65908,10 +69998,12 @@ export namespace Prisma {
     name?: StringFilter<"Project"> | string
     createdAt?: DateTimeFilter<"Project"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    deletedById?: StringNullableFilter<"Project"> | string | null
     description?: StringNullableFilter<"Project"> | string | null
     ownerId?: StringNullableFilter<"Project"> | string | null
     status?: EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    version?: IntFilter<"Project"> | number
     contractValue?: DecimalFilter<"Project"> | Decimal | DecimalJsLike | number | string
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
@@ -66118,6 +70210,123 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectUpsertWithWhereUniqueWithoutDeletedByInput = {
+    where: ProjectWhereUniqueInput
+    update: XOR<ProjectUpdateWithoutDeletedByInput, ProjectUncheckedUpdateWithoutDeletedByInput>
+    create: XOR<ProjectCreateWithoutDeletedByInput, ProjectUncheckedCreateWithoutDeletedByInput>
+  }
+
+  export type ProjectUpdateWithWhereUniqueWithoutDeletedByInput = {
+    where: ProjectWhereUniqueInput
+    data: XOR<ProjectUpdateWithoutDeletedByInput, ProjectUncheckedUpdateWithoutDeletedByInput>
+  }
+
+  export type ProjectUpdateManyWithWhereWithoutDeletedByInput = {
+    where: ProjectScalarWhereInput
+    data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyWithoutDeletedByInput>
+  }
+
+  export type WBSItemUpsertWithWhereUniqueWithoutDeletedByInput = {
+    where: WBSItemWhereUniqueInput
+    update: XOR<WBSItemUpdateWithoutDeletedByInput, WBSItemUncheckedUpdateWithoutDeletedByInput>
+    create: XOR<WBSItemCreateWithoutDeletedByInput, WBSItemUncheckedCreateWithoutDeletedByInput>
+  }
+
+  export type WBSItemUpdateWithWhereUniqueWithoutDeletedByInput = {
+    where: WBSItemWhereUniqueInput
+    data: XOR<WBSItemUpdateWithoutDeletedByInput, WBSItemUncheckedUpdateWithoutDeletedByInput>
+  }
+
+  export type WBSItemUpdateManyWithWhereWithoutDeletedByInput = {
+    where: WBSItemScalarWhereInput
+    data: XOR<WBSItemUpdateManyMutationInput, WBSItemUncheckedUpdateManyWithoutDeletedByInput>
+  }
+
+  export type WBSItemScalarWhereInput = {
+    AND?: WBSItemScalarWhereInput | WBSItemScalarWhereInput[]
+    OR?: WBSItemScalarWhereInput[]
+    NOT?: WBSItemScalarWhereInput | WBSItemScalarWhereInput[]
+    id?: StringFilter<"WBSItem"> | string
+    projectId?: StringFilter<"WBSItem"> | string
+    name?: StringFilter<"WBSItem"> | string
+    parentId?: StringNullableFilter<"WBSItem"> | string | null
+    createdAt?: DateTimeFilter<"WBSItem"> | Date | string
+    updatedAt?: DateTimeFilter<"WBSItem"> | Date | string
+    budgetAmount?: DecimalFilter<"WBSItem"> | Decimal | DecimalJsLike | number | string
+    code?: StringNullableFilter<"WBSItem"> | string | null
+    level?: IntFilter<"WBSItem"> | number
+    sortOrder?: IntFilter<"WBSItem"> | number
+    deletedAt?: DateTimeNullableFilter<"WBSItem"> | Date | string | null
+    deletedById?: StringNullableFilter<"WBSItem"> | string | null
+  }
+
+  export type CostRecordUpsertWithWhereUniqueWithoutDeletedByInput = {
+    where: CostRecordWhereUniqueInput
+    update: XOR<CostRecordUpdateWithoutDeletedByInput, CostRecordUncheckedUpdateWithoutDeletedByInput>
+    create: XOR<CostRecordCreateWithoutDeletedByInput, CostRecordUncheckedCreateWithoutDeletedByInput>
+  }
+
+  export type CostRecordUpdateWithWhereUniqueWithoutDeletedByInput = {
+    where: CostRecordWhereUniqueInput
+    data: XOR<CostRecordUpdateWithoutDeletedByInput, CostRecordUncheckedUpdateWithoutDeletedByInput>
+  }
+
+  export type CostRecordUpdateManyWithWhereWithoutDeletedByInput = {
+    where: CostRecordScalarWhereInput
+    data: XOR<CostRecordUpdateManyMutationInput, CostRecordUncheckedUpdateManyWithoutDeletedByInput>
+  }
+
+  export type InvoiceUpsertWithWhereUniqueWithoutDeletedByInput = {
+    where: InvoiceWhereUniqueInput
+    update: XOR<InvoiceUpdateWithoutDeletedByInput, InvoiceUncheckedUpdateWithoutDeletedByInput>
+    create: XOR<InvoiceCreateWithoutDeletedByInput, InvoiceUncheckedCreateWithoutDeletedByInput>
+  }
+
+  export type InvoiceUpdateWithWhereUniqueWithoutDeletedByInput = {
+    where: InvoiceWhereUniqueInput
+    data: XOR<InvoiceUpdateWithoutDeletedByInput, InvoiceUncheckedUpdateWithoutDeletedByInput>
+  }
+
+  export type InvoiceUpdateManyWithWhereWithoutDeletedByInput = {
+    where: InvoiceScalarWhereInput
+    data: XOR<InvoiceUpdateManyMutationInput, InvoiceUncheckedUpdateManyWithoutDeletedByInput>
+  }
+
+  export type PaymentUpsertWithWhereUniqueWithoutDeletedByInput = {
+    where: PaymentWhereUniqueInput
+    update: XOR<PaymentUpdateWithoutDeletedByInput, PaymentUncheckedUpdateWithoutDeletedByInput>
+    create: XOR<PaymentCreateWithoutDeletedByInput, PaymentUncheckedCreateWithoutDeletedByInput>
+  }
+
+  export type PaymentUpdateWithWhereUniqueWithoutDeletedByInput = {
+    where: PaymentWhereUniqueInput
+    data: XOR<PaymentUpdateWithoutDeletedByInput, PaymentUncheckedUpdateWithoutDeletedByInput>
+  }
+
+  export type PaymentUpdateManyWithWhereWithoutDeletedByInput = {
+    where: PaymentScalarWhereInput
+    data: XOR<PaymentUpdateManyMutationInput, PaymentUncheckedUpdateManyWithoutDeletedByInput>
+  }
+
+  export type PaymentScalarWhereInput = {
+    AND?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+    OR?: PaymentScalarWhereInput[]
+    NOT?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+    id?: StringFilter<"Payment"> | string
+    invoiceId?: StringFilter<"Payment"> | string
+    projectId?: StringFilter<"Payment"> | string
+    amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
+    date?: DateTimeFilter<"Payment"> | Date | string
+    description?: StringNullableFilter<"Payment"> | string | null
+    createdAt?: DateTimeFilter<"Payment"> | Date | string
+    updatedAt?: DateTimeFilter<"Payment"> | Date | string
+    version?: IntFilter<"Payment"> | number
+    requestId?: StringNullableFilter<"Payment"> | string | null
+    deletedAt?: DateTimeNullableFilter<"Payment"> | Date | string | null
+    deletedById?: StringNullableFilter<"Payment"> | string | null
+    approvalStatus?: EnumApprovalStatusFilter<"Payment"> | $Enums.ApprovalStatus
+  }
+
   export type TaskCreateWithoutCategoryInput = {
     id?: string
     title: string
@@ -66170,6 +70379,81 @@ export namespace Prisma {
   export type TaskUpdateManyWithWhereWithoutCategoryInput = {
     where: TaskScalarWhereInput
     data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutCategoryInput>
+  }
+
+  export type UserCreateWithoutProjectsDeletedInput = {
+    id?: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    role?: $Enums.UserRole
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutUserInput
+    ApprovalStep?: ApprovalStepCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    budgetsCreated?: BudgetRecordCreateNestedManyWithoutCreatedByInput
+    Comment?: CommentCreateNestedManyWithoutUserInput
+    contractsCreated?: ContractCreateNestedManyWithoutCreatedByInput
+    costsCreated?: CostRecordCreateNestedManyWithoutCreatedByInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
+    Document?: DocumentCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
+    ProgressEntry?: ProgressEntryCreateNestedManyWithoutUserInput
+    projectsOwned?: ProjectCreateNestedManyWithoutOwnerInput
+    purchaseOrdersCreated?: PurchaseOrderCreateNestedManyWithoutCreatedByInput
+    purchaseRequestsCreated?: PurchaseRequestCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
+    UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+  }
+
+  export type UserUncheckedCreateWithoutProjectsDeletedInput = {
+    id?: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    role?: $Enums.UserRole
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
+    ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    budgetsCreated?: BudgetRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    Comment?: CommentUncheckedCreateNestedManyWithoutUserInput
+    contractsCreated?: ContractUncheckedCreateNestedManyWithoutCreatedByInput
+    costsCreated?: CostRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
+    Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+    ProgressEntry?: ProgressEntryUncheckedCreateNestedManyWithoutUserInput
+    projectsOwned?: ProjectUncheckedCreateNestedManyWithoutOwnerInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
+  }
+
+  export type UserCreateOrConnectWithoutProjectsDeletedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutProjectsDeletedInput, UserUncheckedCreateWithoutProjectsDeletedInput>
   }
 
   export type ActivityFeedCreateWithoutProjectInput = {
@@ -66241,29 +70525,33 @@ export namespace Prisma {
   }
 
   export type BOQItemCreateWithoutProjectInput = {
-    id: string
+    id?: string
     description: string
     unit: string
     quantity: Decimal | DecimalJsLike | number | string
     unitRate: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    status?: string
+    version?: number
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
     deletedAt?: Date | string | null
     WBSItem: WBSItemCreateNestedOneWithoutBOQItemInput
     ProgressEntry?: ProgressEntryCreateNestedManyWithoutBOQItemInput
   }
 
   export type BOQItemUncheckedCreateWithoutProjectInput = {
-    id: string
+    id?: string
     wbsId: string
     description: string
     unit: string
     quantity: Decimal | DecimalJsLike | number | string
     unitRate: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    status?: string
+    version?: number
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
     deletedAt?: Date | string | null
     ProgressEntry?: ProgressEntryUncheckedCreateNestedManyWithoutBOQItemInput
   }
@@ -66275,6 +70563,36 @@ export namespace Prisma {
 
   export type BOQItemCreateManyProjectInputEnvelope = {
     data: BOQItemCreateManyProjectInput | BOQItemCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BudgetVersionCreateWithoutProjectInput = {
+    id?: string
+    version: number
+    description?: string | null
+    status?: string
+    snapshot: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type BudgetVersionUncheckedCreateWithoutProjectInput = {
+    id?: string
+    version: number
+    description?: string | null
+    status?: string
+    snapshot: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type BudgetVersionCreateOrConnectWithoutProjectInput = {
+    where: BudgetVersionWhereUniqueInput
+    create: XOR<BudgetVersionCreateWithoutProjectInput, BudgetVersionUncheckedCreateWithoutProjectInput>
+  }
+
+  export type BudgetVersionCreateManyProjectInputEnvelope = {
+    data: BudgetVersionCreateManyProjectInput | BudgetVersionCreateManyProjectInput[]
     skipDuplicates?: boolean
   }
 
@@ -66466,6 +70784,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutProjectsOwnedInput = {
@@ -66496,6 +70819,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutProjectsOwnedInput = {
@@ -66671,6 +70999,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedBy?: UserCreateNestedOneWithoutWbsDeletedInput
     BOQItem?: BOQItemCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordCreateNestedManyWithoutWbsInput
     costs?: CostRecordCreateNestedManyWithoutWbsInput
@@ -66694,6 +71023,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordUncheckedCreateNestedManyWithoutWbsInput
     costs?: CostRecordUncheckedCreateNestedManyWithoutWbsInput
@@ -66713,6 +71043,87 @@ export namespace Prisma {
   export type WBSItemCreateManyProjectInputEnvelope = {
     data: WBSItemCreateManyProjectInput | WBSItemCreateManyProjectInput[]
     skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutProjectsDeletedInput = {
+    update: XOR<UserUpdateWithoutProjectsDeletedInput, UserUncheckedUpdateWithoutProjectsDeletedInput>
+    create: XOR<UserCreateWithoutProjectsDeletedInput, UserUncheckedCreateWithoutProjectsDeletedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutProjectsDeletedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutProjectsDeletedInput, UserUncheckedUpdateWithoutProjectsDeletedInput>
+  }
+
+  export type UserUpdateWithoutProjectsDeletedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    ApprovalRequest?: ApprovalRequestUpdateManyWithoutUserNestedInput
+    ApprovalStep?: ApprovalStepUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    budgetsCreated?: BudgetRecordUpdateManyWithoutCreatedByNestedInput
+    Comment?: CommentUpdateManyWithoutUserNestedInput
+    contractsCreated?: ContractUpdateManyWithoutCreatedByNestedInput
+    costsCreated?: CostRecordUpdateManyWithoutCreatedByNestedInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
+    Document?: DocumentUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
+    ProgressEntry?: ProgressEntryUpdateManyWithoutUserNestedInput
+    projectsOwned?: ProjectUpdateManyWithoutOwnerNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
+    UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutProjectsDeletedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
+    ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    budgetsCreated?: BudgetRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    Comment?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    contractsCreated?: ContractUncheckedUpdateManyWithoutCreatedByNestedInput
+    costsCreated?: CostRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
+    Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+    ProgressEntry?: ProgressEntryUncheckedUpdateManyWithoutUserNestedInput
+    projectsOwned?: ProjectUncheckedUpdateManyWithoutOwnerNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type ActivityFeedUpsertWithWhereUniqueWithoutProjectInput = {
@@ -66775,9 +71186,41 @@ export namespace Prisma {
     quantity?: DecimalFilter<"BOQItem"> | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFilter<"BOQItem"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"BOQItem"> | Decimal | DecimalJsLike | number | string
+    status?: StringFilter<"BOQItem"> | string
+    version?: IntFilter<"BOQItem"> | number
     createdAt?: DateTimeFilter<"BOQItem"> | Date | string
     updatedAt?: DateTimeFilter<"BOQItem"> | Date | string
     deletedAt?: DateTimeNullableFilter<"BOQItem"> | Date | string | null
+  }
+
+  export type BudgetVersionUpsertWithWhereUniqueWithoutProjectInput = {
+    where: BudgetVersionWhereUniqueInput
+    update: XOR<BudgetVersionUpdateWithoutProjectInput, BudgetVersionUncheckedUpdateWithoutProjectInput>
+    create: XOR<BudgetVersionCreateWithoutProjectInput, BudgetVersionUncheckedCreateWithoutProjectInput>
+  }
+
+  export type BudgetVersionUpdateWithWhereUniqueWithoutProjectInput = {
+    where: BudgetVersionWhereUniqueInput
+    data: XOR<BudgetVersionUpdateWithoutProjectInput, BudgetVersionUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type BudgetVersionUpdateManyWithWhereWithoutProjectInput = {
+    where: BudgetVersionScalarWhereInput
+    data: XOR<BudgetVersionUpdateManyMutationInput, BudgetVersionUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type BudgetVersionScalarWhereInput = {
+    AND?: BudgetVersionScalarWhereInput | BudgetVersionScalarWhereInput[]
+    OR?: BudgetVersionScalarWhereInput[]
+    NOT?: BudgetVersionScalarWhereInput | BudgetVersionScalarWhereInput[]
+    id?: StringFilter<"BudgetVersion"> | string
+    projectId?: StringFilter<"BudgetVersion"> | string
+    version?: IntFilter<"BudgetVersion"> | number
+    description?: StringNullableFilter<"BudgetVersion"> | string | null
+    status?: StringFilter<"BudgetVersion"> | string
+    snapshot?: JsonFilter<"BudgetVersion">
+    createdAt?: DateTimeFilter<"BudgetVersion"> | Date | string
+    createdById?: StringNullableFilter<"BudgetVersion"> | string | null
   }
 
   export type ContractUpsertWithWhereUniqueWithoutProjectInput = {
@@ -66915,6 +71358,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsOwnedInput = {
@@ -66945,6 +71393,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type PurchaseOrderUpsertWithWhereUniqueWithoutProjectInput = {
@@ -67059,23 +71512,6 @@ export namespace Prisma {
     data: XOR<WBSItemUpdateManyMutationInput, WBSItemUncheckedUpdateManyWithoutProjectInput>
   }
 
-  export type WBSItemScalarWhereInput = {
-    AND?: WBSItemScalarWhereInput | WBSItemScalarWhereInput[]
-    OR?: WBSItemScalarWhereInput[]
-    NOT?: WBSItemScalarWhereInput | WBSItemScalarWhereInput[]
-    id?: StringFilter<"WBSItem"> | string
-    projectId?: StringFilter<"WBSItem"> | string
-    name?: StringFilter<"WBSItem"> | string
-    parentId?: StringNullableFilter<"WBSItem"> | string | null
-    createdAt?: DateTimeFilter<"WBSItem"> | Date | string
-    updatedAt?: DateTimeFilter<"WBSItem"> | Date | string
-    budgetAmount?: DecimalFilter<"WBSItem"> | Decimal | DecimalJsLike | number | string
-    code?: StringNullableFilter<"WBSItem"> | string | null
-    level?: IntFilter<"WBSItem"> | number
-    sortOrder?: IntFilter<"WBSItem"> | number
-    deletedAt?: DateTimeNullableFilter<"WBSItem"> | Date | string | null
-  }
-
   export type UserCreateWithoutTasksAssignedInput = {
     id?: string
     email: string
@@ -67104,6 +71540,11 @@ export namespace Prisma {
     revenuesCreated?: RevenueCreateNestedManyWithoutCreatedByInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutTasksAssignedInput = {
@@ -67134,6 +71575,11 @@ export namespace Prisma {
     revenuesCreated?: RevenueUncheckedCreateNestedManyWithoutCreatedByInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutTasksAssignedInput = {
@@ -67170,13 +71616,16 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
     contracts?: ContractCreateNestedManyWithoutProjectInput
     Document?: DocumentCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
@@ -67193,10 +71642,12 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     ownerId?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
@@ -67204,6 +71655,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
     contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
     Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
@@ -67258,6 +71710,11 @@ export namespace Prisma {
     revenuesCreated?: RevenueUpdateManyWithoutCreatedByNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksAssignedInput = {
@@ -67288,6 +71745,11 @@ export namespace Prisma {
     revenuesCreated?: RevenueUncheckedUpdateManyWithoutCreatedByNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type CategoryUpsertWithoutTasksInput = {
@@ -67336,13 +71798,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
     contracts?: ContractUpdateManyWithoutProjectNestedInput
     Document?: DocumentUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
@@ -67359,10 +71824,12 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -67370,6 +71837,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
     contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
@@ -67380,30 +71848,109 @@ export namespace Prisma {
     wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
 
+  export type UserCreateWithoutWbsDeletedInput = {
+    id?: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    role?: $Enums.UserRole
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutUserInput
+    ApprovalStep?: ApprovalStepCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    budgetsCreated?: BudgetRecordCreateNestedManyWithoutCreatedByInput
+    Comment?: CommentCreateNestedManyWithoutUserInput
+    contractsCreated?: ContractCreateNestedManyWithoutCreatedByInput
+    costsCreated?: CostRecordCreateNestedManyWithoutCreatedByInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
+    Document?: DocumentCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
+    ProgressEntry?: ProgressEntryCreateNestedManyWithoutUserInput
+    projectsOwned?: ProjectCreateNestedManyWithoutOwnerInput
+    purchaseOrdersCreated?: PurchaseOrderCreateNestedManyWithoutCreatedByInput
+    purchaseRequestsCreated?: PurchaseRequestCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
+    UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+  }
+
+  export type UserUncheckedCreateWithoutWbsDeletedInput = {
+    id?: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    role?: $Enums.UserRole
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
+    ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    budgetsCreated?: BudgetRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    Comment?: CommentUncheckedCreateNestedManyWithoutUserInput
+    contractsCreated?: ContractUncheckedCreateNestedManyWithoutCreatedByInput
+    costsCreated?: CostRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
+    Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+    ProgressEntry?: ProgressEntryUncheckedCreateNestedManyWithoutUserInput
+    projectsOwned?: ProjectUncheckedCreateNestedManyWithoutOwnerInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
+  }
+
+  export type UserCreateOrConnectWithoutWbsDeletedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutWbsDeletedInput, UserUncheckedCreateWithoutWbsDeletedInput>
+  }
+
   export type BOQItemCreateWithoutWBSItemInput = {
-    id: string
+    id?: string
     description: string
     unit: string
     quantity: Decimal | DecimalJsLike | number | string
     unitRate: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    status?: string
+    version?: number
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
     deletedAt?: Date | string | null
     Project: ProjectCreateNestedOneWithoutBOQItemInput
     ProgressEntry?: ProgressEntryCreateNestedManyWithoutBOQItemInput
   }
 
   export type BOQItemUncheckedCreateWithoutWBSItemInput = {
-    id: string
+    id?: string
     projectId: string
     description: string
     unit: string
     quantity: Decimal | DecimalJsLike | number | string
     unitRate: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    status?: string
+    version?: number
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
     deletedAt?: Date | string | null
     ProgressEntry?: ProgressEntryUncheckedCreateNestedManyWithoutBOQItemInput
   }
@@ -67463,8 +72010,11 @@ export namespace Prisma {
     status?: $Enums.PaymentStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     requestId?: string | null
     deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    deletedBy?: UserCreateNestedOneWithoutCostsDeletedInput
     createdBy?: UserCreateNestedOneWithoutCostsCreatedInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutCostRecordsInput
   }
@@ -67482,10 +72032,13 @@ export namespace Prisma {
     status?: $Enums.PaymentStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     createdById?: string | null
     purchaseOrderId?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
   }
 
   export type CostRecordCreateOrConnectWithoutWbsInput = {
@@ -67513,9 +72066,11 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     requestId?: string | null
     deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutInvoicesDeletedInput
     contract?: ContractCreateNestedOneWithoutInvoicesInput
     createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
     payments?: PaymentCreateNestedManyWithoutInvoiceInput
@@ -67539,6 +72094,8 @@ export namespace Prisma {
     contractId?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
@@ -67700,6 +72257,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedBy?: UserCreateNestedOneWithoutWbsDeletedInput
     BOQItem?: BOQItemCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordCreateNestedManyWithoutWbsInput
     costs?: CostRecordCreateNestedManyWithoutWbsInput
@@ -67724,6 +72282,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordUncheckedCreateNestedManyWithoutWbsInput
     costs?: CostRecordUncheckedCreateNestedManyWithoutWbsInput
@@ -67749,6 +72308,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedBy?: UserCreateNestedOneWithoutWbsDeletedInput
     BOQItem?: BOQItemCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordCreateNestedManyWithoutWbsInput
     costs?: CostRecordCreateNestedManyWithoutWbsInput
@@ -67772,6 +72332,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordUncheckedCreateNestedManyWithoutWbsInput
     costs?: CostRecordUncheckedCreateNestedManyWithoutWbsInput
@@ -67801,13 +72362,16 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
     contracts?: ContractCreateNestedManyWithoutProjectInput
     Document?: DocumentCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
@@ -67824,10 +72388,12 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     ownerId?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
@@ -67835,6 +72401,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
     contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
     Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
@@ -67848,6 +72415,87 @@ export namespace Prisma {
   export type ProjectCreateOrConnectWithoutWbsItemsInput = {
     where: ProjectWhereUniqueInput
     create: XOR<ProjectCreateWithoutWbsItemsInput, ProjectUncheckedCreateWithoutWbsItemsInput>
+  }
+
+  export type UserUpsertWithoutWbsDeletedInput = {
+    update: XOR<UserUpdateWithoutWbsDeletedInput, UserUncheckedUpdateWithoutWbsDeletedInput>
+    create: XOR<UserCreateWithoutWbsDeletedInput, UserUncheckedCreateWithoutWbsDeletedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutWbsDeletedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutWbsDeletedInput, UserUncheckedUpdateWithoutWbsDeletedInput>
+  }
+
+  export type UserUpdateWithoutWbsDeletedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    ApprovalRequest?: ApprovalRequestUpdateManyWithoutUserNestedInput
+    ApprovalStep?: ApprovalStepUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    budgetsCreated?: BudgetRecordUpdateManyWithoutCreatedByNestedInput
+    Comment?: CommentUpdateManyWithoutUserNestedInput
+    contractsCreated?: ContractUpdateManyWithoutCreatedByNestedInput
+    costsCreated?: CostRecordUpdateManyWithoutCreatedByNestedInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
+    Document?: DocumentUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
+    ProgressEntry?: ProgressEntryUpdateManyWithoutUserNestedInput
+    projectsOwned?: ProjectUpdateManyWithoutOwnerNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
+    UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutWbsDeletedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
+    ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    budgetsCreated?: BudgetRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    Comment?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    contractsCreated?: ContractUncheckedUpdateManyWithoutCreatedByNestedInput
+    costsCreated?: CostRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
+    Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+    ProgressEntry?: ProgressEntryUncheckedUpdateManyWithoutUserNestedInput
+    projectsOwned?: ProjectUncheckedUpdateManyWithoutOwnerNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type BOQItemUpsertWithWhereUniqueWithoutWBSItemInput = {
@@ -68030,6 +72678,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: UserUpdateOneWithoutWbsDeletedNestedInput
     BOQItem?: BOQItemUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUpdateManyWithoutWbsNestedInput
@@ -68054,6 +72703,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     BOQItem?: BOQItemUncheckedUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUncheckedUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUncheckedUpdateManyWithoutWbsNestedInput
@@ -68099,13 +72749,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
     contracts?: ContractUpdateManyWithoutProjectNestedInput
     Document?: DocumentUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
@@ -68122,10 +72775,12 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68133,6 +72788,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
     contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
@@ -68141,6 +72797,81 @@ export namespace Prisma {
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
     Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type UserCreateWithoutCostsDeletedInput = {
+    id?: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    role?: $Enums.UserRole
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutUserInput
+    ApprovalStep?: ApprovalStepCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    budgetsCreated?: BudgetRecordCreateNestedManyWithoutCreatedByInput
+    Comment?: CommentCreateNestedManyWithoutUserInput
+    contractsCreated?: ContractCreateNestedManyWithoutCreatedByInput
+    costsCreated?: CostRecordCreateNestedManyWithoutCreatedByInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
+    Document?: DocumentCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
+    ProgressEntry?: ProgressEntryCreateNestedManyWithoutUserInput
+    projectsOwned?: ProjectCreateNestedManyWithoutOwnerInput
+    purchaseOrdersCreated?: PurchaseOrderCreateNestedManyWithoutCreatedByInput
+    purchaseRequestsCreated?: PurchaseRequestCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
+    UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+  }
+
+  export type UserUncheckedCreateWithoutCostsDeletedInput = {
+    id?: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    role?: $Enums.UserRole
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
+    ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    budgetsCreated?: BudgetRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    Comment?: CommentUncheckedCreateNestedManyWithoutUserInput
+    contractsCreated?: ContractUncheckedCreateNestedManyWithoutCreatedByInput
+    costsCreated?: CostRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
+    Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+    ProgressEntry?: ProgressEntryUncheckedCreateNestedManyWithoutUserInput
+    projectsOwned?: ProjectUncheckedCreateNestedManyWithoutOwnerInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
+  }
+
+  export type UserCreateOrConnectWithoutCostsDeletedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCostsDeletedInput, UserUncheckedCreateWithoutCostsDeletedInput>
   }
 
   export type UserCreateWithoutCostsCreatedInput = {
@@ -68171,6 +72902,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutCostsCreatedInput = {
@@ -68201,6 +72937,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutCostsCreatedInput = {
@@ -68261,6 +73002,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedBy?: UserCreateNestedOneWithoutWbsDeletedInput
     BOQItem?: BOQItemCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordCreateNestedManyWithoutWbsInput
     invoices?: InvoiceCreateNestedManyWithoutWbsInput
@@ -68285,6 +73027,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordUncheckedCreateNestedManyWithoutWbsInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWbsInput
@@ -68298,6 +73041,87 @@ export namespace Prisma {
   export type WBSItemCreateOrConnectWithoutCostsInput = {
     where: WBSItemWhereUniqueInput
     create: XOR<WBSItemCreateWithoutCostsInput, WBSItemUncheckedCreateWithoutCostsInput>
+  }
+
+  export type UserUpsertWithoutCostsDeletedInput = {
+    update: XOR<UserUpdateWithoutCostsDeletedInput, UserUncheckedUpdateWithoutCostsDeletedInput>
+    create: XOR<UserCreateWithoutCostsDeletedInput, UserUncheckedCreateWithoutCostsDeletedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCostsDeletedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCostsDeletedInput, UserUncheckedUpdateWithoutCostsDeletedInput>
+  }
+
+  export type UserUpdateWithoutCostsDeletedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    ApprovalRequest?: ApprovalRequestUpdateManyWithoutUserNestedInput
+    ApprovalStep?: ApprovalStepUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    budgetsCreated?: BudgetRecordUpdateManyWithoutCreatedByNestedInput
+    Comment?: CommentUpdateManyWithoutUserNestedInput
+    contractsCreated?: ContractUpdateManyWithoutCreatedByNestedInput
+    costsCreated?: CostRecordUpdateManyWithoutCreatedByNestedInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
+    Document?: DocumentUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
+    ProgressEntry?: ProgressEntryUpdateManyWithoutUserNestedInput
+    projectsOwned?: ProjectUpdateManyWithoutOwnerNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
+    UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCostsDeletedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
+    ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    budgetsCreated?: BudgetRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    Comment?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    contractsCreated?: ContractUncheckedUpdateManyWithoutCreatedByNestedInput
+    costsCreated?: CostRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
+    Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+    ProgressEntry?: ProgressEntryUncheckedUpdateManyWithoutUserNestedInput
+    projectsOwned?: ProjectUncheckedUpdateManyWithoutOwnerNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUpsertWithoutCostsCreatedInput = {
@@ -68339,6 +73163,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCostsCreatedInput = {
@@ -68369,6 +73198,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type PurchaseOrderUpsertWithoutCostRecordsInput = {
@@ -68441,6 +73275,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: UserUpdateOneWithoutWbsDeletedNestedInput
     BOQItem?: BOQItemUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUpdateManyWithoutWbsNestedInput
     invoices?: InvoiceUpdateManyWithoutWbsNestedInput
@@ -68465,6 +73300,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     BOQItem?: BOQItemUncheckedUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUncheckedUpdateManyWithoutWbsNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWbsNestedInput
@@ -68503,6 +73339,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutBudgetsCreatedInput = {
@@ -68533,6 +73374,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutBudgetsCreatedInput = {
@@ -68550,6 +73396,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedBy?: UserCreateNestedOneWithoutWbsDeletedInput
     BOQItem?: BOQItemCreateNestedManyWithoutWBSItemInput
     costs?: CostRecordCreateNestedManyWithoutWbsInput
     invoices?: InvoiceCreateNestedManyWithoutWbsInput
@@ -68574,6 +73421,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutWBSItemInput
     costs?: CostRecordUncheckedCreateNestedManyWithoutWbsInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWbsInput
@@ -68628,6 +73476,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBudgetsCreatedInput = {
@@ -68658,6 +73511,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type WBSItemUpsertWithoutBudgetsInput = {
@@ -68681,6 +73539,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: UserUpdateOneWithoutWbsDeletedNestedInput
     BOQItem?: BOQItemUpdateManyWithoutWBSItemNestedInput
     costs?: CostRecordUpdateManyWithoutWbsNestedInput
     invoices?: InvoiceUpdateManyWithoutWbsNestedInput
@@ -68705,6 +73564,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     BOQItem?: BOQItemUncheckedUpdateManyWithoutWBSItemNestedInput
     costs?: CostRecordUncheckedUpdateManyWithoutWbsNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWbsNestedInput
@@ -68743,6 +73603,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutRevenuesCreatedInput = {
@@ -68773,6 +73638,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutRevenuesCreatedInput = {
@@ -68795,9 +73665,11 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     requestId?: string | null
     deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutInvoicesDeletedInput
     contract?: ContractCreateNestedOneWithoutInvoicesInput
     createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
     wbs: WBSItemCreateNestedOneWithoutInvoicesInput
@@ -68822,6 +73694,8 @@ export namespace Prisma {
     contractId?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
@@ -68843,6 +73717,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedBy?: UserCreateNestedOneWithoutWbsDeletedInput
     BOQItem?: BOQItemCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordCreateNestedManyWithoutWbsInput
     costs?: CostRecordCreateNestedManyWithoutWbsInput
@@ -68867,6 +73742,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordUncheckedCreateNestedManyWithoutWbsInput
     costs?: CostRecordUncheckedCreateNestedManyWithoutWbsInput
@@ -68921,6 +73797,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRevenuesCreatedInput = {
@@ -68951,6 +73832,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type InvoiceUpsertWithoutRevenuesInput = {
@@ -68979,9 +73865,11 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutInvoicesDeletedNestedInput
     contract?: ContractUpdateOneWithoutInvoicesNestedInput
     createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
@@ -69006,6 +73894,8 @@ export namespace Prisma {
     contractId?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -69033,6 +73923,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: UserUpdateOneWithoutWbsDeletedNestedInput
     BOQItem?: BOQItemUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUpdateManyWithoutWbsNestedInput
@@ -69057,6 +73948,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     BOQItem?: BOQItemUncheckedUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUncheckedUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUncheckedUpdateManyWithoutWbsNestedInput
@@ -69065,6 +73957,81 @@ export namespace Prisma {
     SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
     SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
     children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
+  }
+
+  export type UserCreateWithoutInvoicesDeletedInput = {
+    id?: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    role?: $Enums.UserRole
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutUserInput
+    ApprovalStep?: ApprovalStepCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    budgetsCreated?: BudgetRecordCreateNestedManyWithoutCreatedByInput
+    Comment?: CommentCreateNestedManyWithoutUserInput
+    contractsCreated?: ContractCreateNestedManyWithoutCreatedByInput
+    costsCreated?: CostRecordCreateNestedManyWithoutCreatedByInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
+    Document?: DocumentCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
+    ProgressEntry?: ProgressEntryCreateNestedManyWithoutUserInput
+    projectsOwned?: ProjectCreateNestedManyWithoutOwnerInput
+    purchaseOrdersCreated?: PurchaseOrderCreateNestedManyWithoutCreatedByInput
+    purchaseRequestsCreated?: PurchaseRequestCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
+    UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
+  }
+
+  export type UserUncheckedCreateWithoutInvoicesDeletedInput = {
+    id?: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    role?: $Enums.UserRole
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
+    ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    budgetsCreated?: BudgetRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    Comment?: CommentUncheckedCreateNestedManyWithoutUserInput
+    contractsCreated?: ContractUncheckedCreateNestedManyWithoutCreatedByInput
+    costsCreated?: CostRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
+    Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+    ProgressEntry?: ProgressEntryUncheckedCreateNestedManyWithoutUserInput
+    projectsOwned?: ProjectUncheckedCreateNestedManyWithoutOwnerInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
+  }
+
+  export type UserCreateOrConnectWithoutInvoicesDeletedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutInvoicesDeletedInput, UserUncheckedCreateWithoutInvoicesDeletedInput>
   }
 
   export type ContractCreateWithoutInvoicesInput = {
@@ -69140,6 +74107,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutInvoicesCreatedInput = {
@@ -69170,6 +74142,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutInvoicesCreatedInput = {
@@ -69187,6 +74164,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedBy?: UserCreateNestedOneWithoutWbsDeletedInput
     BOQItem?: BOQItemCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordCreateNestedManyWithoutWbsInput
     costs?: CostRecordCreateNestedManyWithoutWbsInput
@@ -69211,6 +74189,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordUncheckedCreateNestedManyWithoutWbsInput
     costs?: CostRecordUncheckedCreateNestedManyWithoutWbsInput
@@ -69234,8 +74213,11 @@ export namespace Prisma {
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     requestId?: string | null
     deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    deletedBy?: UserCreateNestedOneWithoutPaymentsDeletedInput
   }
 
   export type PaymentUncheckedCreateWithoutInvoiceInput = {
@@ -69246,8 +74228,11 @@ export namespace Prisma {
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
   }
 
   export type PaymentCreateOrConnectWithoutInvoiceInput = {
@@ -69296,6 +74281,87 @@ export namespace Prisma {
   export type RevenueCreateManyInvoiceInputEnvelope = {
     data: RevenueCreateManyInvoiceInput | RevenueCreateManyInvoiceInput[]
     skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutInvoicesDeletedInput = {
+    update: XOR<UserUpdateWithoutInvoicesDeletedInput, UserUncheckedUpdateWithoutInvoicesDeletedInput>
+    create: XOR<UserCreateWithoutInvoicesDeletedInput, UserUncheckedCreateWithoutInvoicesDeletedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutInvoicesDeletedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutInvoicesDeletedInput, UserUncheckedUpdateWithoutInvoicesDeletedInput>
+  }
+
+  export type UserUpdateWithoutInvoicesDeletedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    ApprovalRequest?: ApprovalRequestUpdateManyWithoutUserNestedInput
+    ApprovalStep?: ApprovalStepUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    budgetsCreated?: BudgetRecordUpdateManyWithoutCreatedByNestedInput
+    Comment?: CommentUpdateManyWithoutUserNestedInput
+    contractsCreated?: ContractUpdateManyWithoutCreatedByNestedInput
+    costsCreated?: CostRecordUpdateManyWithoutCreatedByNestedInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
+    Document?: DocumentUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
+    ProgressEntry?: ProgressEntryUpdateManyWithoutUserNestedInput
+    projectsOwned?: ProjectUpdateManyWithoutOwnerNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
+    UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutInvoicesDeletedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
+    ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    budgetsCreated?: BudgetRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    Comment?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    contractsCreated?: ContractUncheckedUpdateManyWithoutCreatedByNestedInput
+    costsCreated?: CostRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
+    Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+    ProgressEntry?: ProgressEntryUncheckedUpdateManyWithoutUserNestedInput
+    projectsOwned?: ProjectUncheckedUpdateManyWithoutOwnerNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type ContractUpsertWithoutInvoicesInput = {
@@ -69388,6 +74454,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvoicesCreatedInput = {
@@ -69418,6 +74489,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type WBSItemUpsertWithoutInvoicesInput = {
@@ -69441,6 +74517,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: UserUpdateOneWithoutWbsDeletedNestedInput
     BOQItem?: BOQItemUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUpdateManyWithoutWbsNestedInput
@@ -69465,6 +74542,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     BOQItem?: BOQItemUncheckedUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUncheckedUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUncheckedUpdateManyWithoutWbsNestedInput
@@ -69491,22 +74569,6 @@ export namespace Prisma {
     data: XOR<PaymentUpdateManyMutationInput, PaymentUncheckedUpdateManyWithoutInvoiceInput>
   }
 
-  export type PaymentScalarWhereInput = {
-    AND?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
-    OR?: PaymentScalarWhereInput[]
-    NOT?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
-    id?: StringFilter<"Payment"> | string
-    invoiceId?: StringFilter<"Payment"> | string
-    projectId?: StringFilter<"Payment"> | string
-    amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
-    date?: DateTimeFilter<"Payment"> | Date | string
-    description?: StringNullableFilter<"Payment"> | string | null
-    createdAt?: DateTimeFilter<"Payment"> | Date | string
-    updatedAt?: DateTimeFilter<"Payment"> | Date | string
-    requestId?: StringNullableFilter<"Payment"> | string | null
-    deletedAt?: DateTimeNullableFilter<"Payment"> | Date | string | null
-  }
-
   export type RevenueUpsertWithWhereUniqueWithoutInvoiceInput = {
     where: RevenueWhereUniqueInput
     update: XOR<RevenueUpdateWithoutInvoiceInput, RevenueUncheckedUpdateWithoutInvoiceInput>
@@ -69521,6 +74583,81 @@ export namespace Prisma {
   export type RevenueUpdateManyWithWhereWithoutInvoiceInput = {
     where: RevenueScalarWhereInput
     data: XOR<RevenueUpdateManyMutationInput, RevenueUncheckedUpdateManyWithoutInvoiceInput>
+  }
+
+  export type UserCreateWithoutPaymentsDeletedInput = {
+    id?: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    role?: $Enums.UserRole
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutUserInput
+    ApprovalStep?: ApprovalStepCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    budgetsCreated?: BudgetRecordCreateNestedManyWithoutCreatedByInput
+    Comment?: CommentCreateNestedManyWithoutUserInput
+    contractsCreated?: ContractCreateNestedManyWithoutCreatedByInput
+    costsCreated?: CostRecordCreateNestedManyWithoutCreatedByInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
+    Document?: DocumentCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
+    ProgressEntry?: ProgressEntryCreateNestedManyWithoutUserInput
+    projectsOwned?: ProjectCreateNestedManyWithoutOwnerInput
+    purchaseOrdersCreated?: PurchaseOrderCreateNestedManyWithoutCreatedByInput
+    purchaseRequestsCreated?: PurchaseRequestCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
+    UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+  }
+
+  export type UserUncheckedCreateWithoutPaymentsDeletedInput = {
+    id?: string
+    email: string
+    name?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    role?: $Enums.UserRole
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutUserInput
+    ApprovalStep?: ApprovalStepUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    budgetsCreated?: BudgetRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    Comment?: CommentUncheckedCreateNestedManyWithoutUserInput
+    contractsCreated?: ContractUncheckedCreateNestedManyWithoutCreatedByInput
+    costsCreated?: CostRecordUncheckedCreateNestedManyWithoutCreatedByInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
+    Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
+    ProgressEntry?: ProgressEntryUncheckedCreateNestedManyWithoutUserInput
+    projectsOwned?: ProjectUncheckedCreateNestedManyWithoutOwnerInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedCreateNestedManyWithoutCreatedByInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedCreateNestedManyWithoutCreatedByInput
+    revenuesCreated?: RevenueUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+  }
+
+  export type UserCreateOrConnectWithoutPaymentsDeletedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPaymentsDeletedInput, UserUncheckedCreateWithoutPaymentsDeletedInput>
   }
 
   export type InvoiceCreateWithoutPaymentsInput = {
@@ -69538,9 +74675,11 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     requestId?: string | null
     deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutInvoicesDeletedInput
     contract?: ContractCreateNestedOneWithoutInvoicesInput
     createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
     wbs: WBSItemCreateNestedOneWithoutInvoicesInput
@@ -69565,6 +74704,8 @@ export namespace Prisma {
     contractId?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
@@ -69574,6 +74715,87 @@ export namespace Prisma {
   export type InvoiceCreateOrConnectWithoutPaymentsInput = {
     where: InvoiceWhereUniqueInput
     create: XOR<InvoiceCreateWithoutPaymentsInput, InvoiceUncheckedCreateWithoutPaymentsInput>
+  }
+
+  export type UserUpsertWithoutPaymentsDeletedInput = {
+    update: XOR<UserUpdateWithoutPaymentsDeletedInput, UserUncheckedUpdateWithoutPaymentsDeletedInput>
+    create: XOR<UserCreateWithoutPaymentsDeletedInput, UserUncheckedCreateWithoutPaymentsDeletedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPaymentsDeletedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPaymentsDeletedInput, UserUncheckedUpdateWithoutPaymentsDeletedInput>
+  }
+
+  export type UserUpdateWithoutPaymentsDeletedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    ApprovalRequest?: ApprovalRequestUpdateManyWithoutUserNestedInput
+    ApprovalStep?: ApprovalStepUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    budgetsCreated?: BudgetRecordUpdateManyWithoutCreatedByNestedInput
+    Comment?: CommentUpdateManyWithoutUserNestedInput
+    contractsCreated?: ContractUpdateManyWithoutCreatedByNestedInput
+    costsCreated?: CostRecordUpdateManyWithoutCreatedByNestedInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
+    Document?: DocumentUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
+    ProgressEntry?: ProgressEntryUpdateManyWithoutUserNestedInput
+    projectsOwned?: ProjectUpdateManyWithoutOwnerNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUpdateManyWithoutCreatedByNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
+    UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPaymentsDeletedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutUserNestedInput
+    ApprovalStep?: ApprovalStepUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    budgetsCreated?: BudgetRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    Comment?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    contractsCreated?: ContractUncheckedUpdateManyWithoutCreatedByNestedInput
+    costsCreated?: CostRecordUncheckedUpdateManyWithoutCreatedByNestedInput
+    DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
+    DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
+    Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
+    ProgressEntry?: ProgressEntryUncheckedUpdateManyWithoutUserNestedInput
+    projectsOwned?: ProjectUncheckedUpdateManyWithoutOwnerNestedInput
+    purchaseOrdersCreated?: PurchaseOrderUncheckedUpdateManyWithoutCreatedByNestedInput
+    purchaseRequestsCreated?: PurchaseRequestUncheckedUpdateManyWithoutCreatedByNestedInput
+    revenuesCreated?: RevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type InvoiceUpsertWithoutPaymentsInput = {
@@ -69602,9 +74824,11 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutInvoicesDeletedNestedInput
     contract?: ContractUpdateOneWithoutInvoicesNestedInput
     createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
@@ -69629,6 +74853,8 @@ export namespace Prisma {
     contractId?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -69700,13 +74926,16 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
     contracts?: ContractCreateNestedManyWithoutProjectInput
     Document?: DocumentCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
@@ -69723,10 +74952,12 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     ownerId?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
@@ -69734,6 +74965,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
     contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
     Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
@@ -69796,13 +75028,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
     contracts?: ContractUpdateManyWithoutProjectNestedInput
     Document?: DocumentUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
@@ -69819,10 +75054,12 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -69830,6 +75067,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
     contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
@@ -70068,6 +75306,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutPurchaseRequestsCreatedInput = {
@@ -70098,6 +75341,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutPurchaseRequestsCreatedInput = {
@@ -70160,6 +75408,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPurchaseRequestsCreatedInput = {
@@ -70190,6 +75443,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type CostRecordCreateWithoutPurchaseOrderInput = {
@@ -70205,8 +75463,11 @@ export namespace Prisma {
     status?: $Enums.PaymentStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     requestId?: string | null
     deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    deletedBy?: UserCreateNestedOneWithoutCostsDeletedInput
     createdBy?: UserCreateNestedOneWithoutCostsCreatedInput
     wbs: WBSItemCreateNestedOneWithoutCostsInput
   }
@@ -70225,9 +75486,12 @@ export namespace Prisma {
     status?: $Enums.PaymentStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     createdById?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
   }
 
   export type CostRecordCreateOrConnectWithoutPurchaseOrderInput = {
@@ -70300,6 +75564,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutPurchaseOrdersCreatedInput = {
@@ -70330,6 +75599,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutPurchaseOrdersCreatedInput = {
@@ -70345,13 +75619,16 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
     contracts?: ContractCreateNestedManyWithoutProjectInput
     Document?: DocumentCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
@@ -70368,10 +75645,12 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     ownerId?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
@@ -70379,6 +75658,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
     contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
     Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
@@ -70555,6 +75835,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPurchaseOrdersCreatedInput = {
@@ -70585,6 +75870,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type ProjectUpsertWithoutPurchaseOrdersInput = {
@@ -70606,13 +75896,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
     contracts?: ContractUpdateManyWithoutProjectNestedInput
     Document?: DocumentUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
@@ -70629,10 +75922,12 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70640,6 +75935,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
     contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
@@ -70764,6 +76060,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedBy?: UserCreateNestedOneWithoutWbsDeletedInput
     BOQItem?: BOQItemCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordCreateNestedManyWithoutWbsInput
     costs?: CostRecordCreateNestedManyWithoutWbsInput
@@ -70788,6 +76085,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordUncheckedCreateNestedManyWithoutWbsInput
     costs?: CostRecordUncheckedCreateNestedManyWithoutWbsInput
@@ -70873,6 +76171,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: UserUpdateOneWithoutWbsDeletedNestedInput
     BOQItem?: BOQItemUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUpdateManyWithoutWbsNestedInput
@@ -70897,6 +76196,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     BOQItem?: BOQItemUncheckedUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUncheckedUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUncheckedUpdateManyWithoutWbsNestedInput
@@ -71027,6 +76327,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutContractsCreatedInput = {
@@ -71057,6 +76362,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutContractsCreatedInput = {
@@ -71072,13 +76382,16 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
     Document?: DocumentCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
     journalEntries?: JournalEntryCreateNestedManyWithoutProjectInput
@@ -71095,10 +76408,12 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     ownerId?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
@@ -71106,6 +76421,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
     Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
     journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutProjectInput
@@ -71172,9 +76488,11 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     requestId?: string | null
     deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutInvoicesDeletedInput
     createdBy?: UserCreateNestedOneWithoutInvoicesCreatedInput
     wbs: WBSItemCreateNestedOneWithoutInvoicesInput
     payments?: PaymentCreateNestedManyWithoutInvoiceInput
@@ -71198,6 +76516,8 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
@@ -71254,6 +76574,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContractsCreatedInput = {
@@ -71284,6 +76609,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type ProjectUpsertWithoutContractsInput = {
@@ -71305,13 +76635,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
     Document?: DocumentUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
     journalEntries?: JournalEntryUpdateManyWithoutProjectNestedInput
@@ -71328,10 +76661,12 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -71339,6 +76674,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
     journalEntries?: JournalEntryUncheckedUpdateManyWithoutProjectNestedInput
@@ -71522,6 +76858,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -71552,6 +76893,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -71598,6 +76944,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -71628,6 +76979,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type ProjectCreateWithoutActivityFeedInput = {
@@ -71638,12 +76994,15 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
     ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
     contracts?: ContractCreateNestedManyWithoutProjectInput
     Document?: DocumentCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
@@ -71661,16 +77020,19 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     ownerId?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
     contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
     Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
@@ -71715,6 +77077,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutActivityFeedInput = {
@@ -71745,6 +77112,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutActivityFeedInput = {
@@ -71771,12 +77143,15 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
     ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
     contracts?: ContractUpdateManyWithoutProjectNestedInput
     Document?: DocumentUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
@@ -71794,16 +77169,19 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
     contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
@@ -71854,6 +77232,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActivityFeedInput = {
@@ -71884,6 +77267,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type ProjectCreateWithoutApprovalRequestInput = {
@@ -71894,12 +77282,15 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
     contracts?: ContractCreateNestedManyWithoutProjectInput
     Document?: DocumentCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
@@ -71917,16 +77308,19 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     ownerId?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
     contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
     Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
@@ -71971,6 +77365,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutApprovalRequestInput = {
@@ -72001,6 +77400,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutApprovalRequestInput = {
@@ -72059,12 +77463,15 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
     contracts?: ContractUpdateManyWithoutProjectNestedInput
     Document?: DocumentUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
@@ -72082,16 +77489,19 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
     contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
@@ -72142,6 +77552,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovalRequestInput = {
@@ -72172,6 +77587,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type ApprovalStepUpsertWithWhereUniqueWithoutApprovalRequestInput = {
@@ -72249,6 +77669,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutApprovalStepInput = {
@@ -72279,6 +77704,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutApprovalStepInput = {
@@ -72362,6 +77792,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovalStepInput = {
@@ -72392,6 +77827,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type ProjectCreateWithoutBOQItemInput = {
@@ -72402,12 +77842,15 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
     contracts?: ContractCreateNestedManyWithoutProjectInput
     Document?: DocumentCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
@@ -72425,16 +77868,19 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     ownerId?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
     contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
     Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
@@ -72461,6 +77907,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedBy?: UserCreateNestedOneWithoutWbsDeletedInput
     budgets?: BudgetRecordCreateNestedManyWithoutWbsInput
     costs?: CostRecordCreateNestedManyWithoutWbsInput
     invoices?: InvoiceCreateNestedManyWithoutWbsInput
@@ -72485,6 +77932,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
     budgets?: BudgetRecordUncheckedCreateNestedManyWithoutWbsInput
     costs?: CostRecordUncheckedCreateNestedManyWithoutWbsInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutWbsInput
@@ -72555,12 +78003,15 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
     contracts?: ContractUpdateManyWithoutProjectNestedInput
     Document?: DocumentUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
@@ -72578,16 +78029,19 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
     contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
@@ -72620,6 +78074,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: UserUpdateOneWithoutWbsDeletedNestedInput
     budgets?: BudgetRecordUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUpdateManyWithoutWbsNestedInput
     invoices?: InvoiceUpdateManyWithoutWbsNestedInput
@@ -72644,6 +78099,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     budgets?: BudgetRecordUncheckedUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUncheckedUpdateManyWithoutWbsNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutWbsNestedInput
@@ -72668,6 +78124,138 @@ export namespace Prisma {
   export type ProgressEntryUpdateManyWithWhereWithoutBOQItemInput = {
     where: ProgressEntryScalarWhereInput
     data: XOR<ProgressEntryUpdateManyMutationInput, ProgressEntryUncheckedUpdateManyWithoutBOQItemInput>
+  }
+
+  export type ProjectCreateWithoutBudgetVersionInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
+    ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
+    BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    contracts?: ContractCreateNestedManyWithoutProjectInput
+    Document?: DocumentCreateNestedManyWithoutProjectInput
+    InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
+    journalEntries?: JournalEntryCreateNestedManyWithoutProjectInput
+    owner?: UserCreateNestedOneWithoutProjectsOwnedInput
+    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutProjectInput
+    SiteConsumption?: SiteConsumptionCreateNestedManyWithoutProjectInput
+    Subcontract?: SubcontractCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    wbsItems?: WBSItemCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutBudgetVersionInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    deletedById?: string | null
+    description?: string | null
+    ownerId?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
+    ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
+    BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
+    Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
+    journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutProjectInput
+    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutProjectInput
+    SiteConsumption?: SiteConsumptionUncheckedCreateNestedManyWithoutProjectInput
+    Subcontract?: SubcontractUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    wbsItems?: WBSItemUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutBudgetVersionInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutBudgetVersionInput, ProjectUncheckedCreateWithoutBudgetVersionInput>
+  }
+
+  export type ProjectUpsertWithoutBudgetVersionInput = {
+    update: XOR<ProjectUpdateWithoutBudgetVersionInput, ProjectUncheckedUpdateWithoutBudgetVersionInput>
+    create: XOR<ProjectCreateWithoutBudgetVersionInput, ProjectUncheckedCreateWithoutBudgetVersionInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutBudgetVersionInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutBudgetVersionInput, ProjectUncheckedUpdateWithoutBudgetVersionInput>
+  }
+
+  export type ProjectUpdateWithoutBudgetVersionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
+    ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
+    BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    contracts?: ContractUpdateManyWithoutProjectNestedInput
+    Document?: DocumentUpdateManyWithoutProjectNestedInput
+    InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
+    journalEntries?: JournalEntryUpdateManyWithoutProjectNestedInput
+    owner?: UserUpdateOneWithoutProjectsOwnedNestedInput
+    purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
+    SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
+    Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutBudgetVersionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
+    ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
+    BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
+    Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
+    journalEntries?: JournalEntryUncheckedUpdateManyWithoutProjectNestedInput
+    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
+    Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserCreateWithoutCommentInput = {
@@ -72698,6 +78286,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutCommentInput = {
@@ -72728,6 +78321,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutCommentInput = {
@@ -72774,6 +78372,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCommentInput = {
@@ -72804,6 +78407,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserCreateWithoutDelegationWindow_DelegationWindow_delegateIdToUserInput = {
@@ -72834,6 +78442,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutDelegationWindow_DelegationWindow_delegateIdToUserInput = {
@@ -72864,6 +78477,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutDelegationWindow_DelegationWindow_delegateIdToUserInput = {
@@ -72899,6 +78517,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutDelegationWindow_DelegationWindow_ownerIdToUserInput = {
@@ -72929,6 +78552,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutDelegationWindow_DelegationWindow_ownerIdToUserInput = {
@@ -72975,6 +78603,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDelegationWindow_DelegationWindow_delegateIdToUserInput = {
@@ -73005,6 +78638,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUpsertWithoutDelegationWindow_DelegationWindow_ownerIdToUserInput = {
@@ -73046,6 +78684,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDelegationWindow_DelegationWindow_ownerIdToUserInput = {
@@ -73076,6 +78719,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type ProjectCreateWithoutDocumentInput = {
@@ -73086,13 +78734,16 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
     contracts?: ContractCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
     journalEntries?: JournalEntryCreateNestedManyWithoutProjectInput
@@ -73109,10 +78760,12 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     ownerId?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
@@ -73120,6 +78773,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
     contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
     journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutProjectInput
@@ -73163,6 +78817,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutDocumentInput = {
@@ -73193,6 +78852,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutDocumentInput = {
@@ -73219,13 +78883,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
     contracts?: ContractUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
     journalEntries?: JournalEntryUpdateManyWithoutProjectNestedInput
@@ -73242,10 +78909,12 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73253,6 +78922,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
     contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
     journalEntries?: JournalEntryUncheckedUpdateManyWithoutProjectNestedInput
@@ -73302,6 +78972,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentInput = {
@@ -73332,6 +79007,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserCreateWithoutFiscalPeriodInput = {
@@ -73362,6 +79042,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutFiscalPeriodInput = {
@@ -73392,6 +79077,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutFiscalPeriodInput = {
@@ -73438,6 +79128,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFiscalPeriodInput = {
@@ -73468,6 +79163,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type MaterialCreateWithoutInventoryTransactionInput = {
@@ -73505,13 +79205,16 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
     contracts?: ContractCreateNestedManyWithoutProjectInput
     Document?: DocumentCreateNestedManyWithoutProjectInput
     journalEntries?: JournalEntryCreateNestedManyWithoutProjectInput
@@ -73528,10 +79231,12 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     ownerId?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
@@ -73539,6 +79244,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
     contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
     Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     journalEntries?: JournalEntryUncheckedCreateNestedManyWithoutProjectInput
@@ -73606,13 +79312,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
     contracts?: ContractUpdateManyWithoutProjectNestedInput
     Document?: DocumentUpdateManyWithoutProjectNestedInput
     journalEntries?: JournalEntryUpdateManyWithoutProjectNestedInput
@@ -73629,10 +79338,12 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73640,6 +79351,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
     contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     journalEntries?: JournalEntryUncheckedUpdateManyWithoutProjectNestedInput
@@ -73841,21 +79553,23 @@ export namespace Prisma {
   }
 
   export type BOQItemCreateWithoutProgressEntryInput = {
-    id: string
+    id?: string
     description: string
     unit: string
     quantity: Decimal | DecimalJsLike | number | string
     unitRate: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    status?: string
+    version?: number
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
     deletedAt?: Date | string | null
     Project: ProjectCreateNestedOneWithoutBOQItemInput
     WBSItem: WBSItemCreateNestedOneWithoutBOQItemInput
   }
 
   export type BOQItemUncheckedCreateWithoutProgressEntryInput = {
-    id: string
+    id?: string
     projectId: string
     wbsId: string
     description: string
@@ -73863,8 +79577,10 @@ export namespace Prisma {
     quantity: Decimal | DecimalJsLike | number | string
     unitRate: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    status?: string
+    version?: number
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
     deletedAt?: Date | string | null
   }
 
@@ -73901,6 +79617,11 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutProgressEntryInput = {
@@ -73931,6 +79652,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutProgressEntryInput = {
@@ -73986,6 +79712,8 @@ export namespace Prisma {
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74002,6 +79730,8 @@ export namespace Prisma {
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74046,6 +79776,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProgressEntryInput = {
@@ -74076,6 +79811,11 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type MaterialCreateWithoutSiteConsumptionInput = {
@@ -74113,13 +79853,16 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
     contracts?: ContractCreateNestedManyWithoutProjectInput
     Document?: DocumentCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
@@ -74136,10 +79879,12 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     ownerId?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
@@ -74147,6 +79892,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
     contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
     Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
@@ -74172,6 +79918,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedBy?: UserCreateNestedOneWithoutWbsDeletedInput
     BOQItem?: BOQItemCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordCreateNestedManyWithoutWbsInput
     costs?: CostRecordCreateNestedManyWithoutWbsInput
@@ -74196,6 +79943,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordUncheckedCreateNestedManyWithoutWbsInput
     costs?: CostRecordUncheckedCreateNestedManyWithoutWbsInput
@@ -74263,13 +80011,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
     contracts?: ContractUpdateManyWithoutProjectNestedInput
     Document?: DocumentUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
@@ -74286,10 +80037,12 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74297,6 +80050,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
     contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
@@ -74328,6 +80082,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: UserUpdateOneWithoutWbsDeletedNestedInput
     BOQItem?: BOQItemUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUpdateManyWithoutWbsNestedInput
@@ -74352,6 +80107,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     BOQItem?: BOQItemUncheckedUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUncheckedUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUncheckedUpdateManyWithoutWbsNestedInput
@@ -74370,13 +80126,16 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
+    deletedBy?: UserCreateNestedOneWithoutProjectsDeletedInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionCreateNestedManyWithoutProjectInput
     contracts?: ContractCreateNestedManyWithoutProjectInput
     Document?: DocumentCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionCreateNestedManyWithoutProjectInput
@@ -74393,10 +80152,12 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     ownerId?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
@@ -74404,6 +80165,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutProjectInput
     ApprovalRequest?: ApprovalRequestUncheckedCreateNestedManyWithoutProjectInput
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutProjectInput
+    BudgetVersion?: BudgetVersionUncheckedCreateNestedManyWithoutProjectInput
     contracts?: ContractUncheckedCreateNestedManyWithoutProjectInput
     Document?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     InventoryTransaction?: InventoryTransactionUncheckedCreateNestedManyWithoutProjectInput
@@ -74502,13 +80264,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
     contracts?: ContractUpdateManyWithoutProjectNestedInput
     Document?: DocumentUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
@@ -74525,10 +80290,12 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74536,6 +80303,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
     contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
@@ -74726,6 +80494,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedBy?: UserCreateNestedOneWithoutWbsDeletedInput
     BOQItem?: BOQItemCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordCreateNestedManyWithoutWbsInput
     costs?: CostRecordCreateNestedManyWithoutWbsInput
@@ -74750,6 +80519,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
     BOQItem?: BOQItemUncheckedCreateNestedManyWithoutWBSItemInput
     budgets?: BudgetRecordUncheckedCreateNestedManyWithoutWbsInput
     costs?: CostRecordUncheckedCreateNestedManyWithoutWbsInput
@@ -74861,6 +80631,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: UserUpdateOneWithoutWbsDeletedNestedInput
     BOQItem?: BOQItemUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUpdateManyWithoutWbsNestedInput
@@ -74885,6 +80656,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     BOQItem?: BOQItemUncheckedUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUncheckedUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUncheckedUpdateManyWithoutWbsNestedInput
@@ -75013,6 +80785,11 @@ export namespace Prisma {
     revenuesCreated?: RevenueCreateNestedManyWithoutCreatedByInput
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     UserMaturity?: UserMaturityCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutTrainingRecordInput = {
@@ -75043,6 +80820,11 @@ export namespace Prisma {
     revenuesCreated?: RevenueUncheckedCreateNestedManyWithoutCreatedByInput
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     UserMaturity?: UserMaturityUncheckedCreateNestedOneWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutTrainingRecordInput = {
@@ -75089,6 +80871,11 @@ export namespace Prisma {
     revenuesCreated?: RevenueUpdateManyWithoutCreatedByNestedInput
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     UserMaturity?: UserMaturityUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTrainingRecordInput = {
@@ -75119,6 +80906,11 @@ export namespace Prisma {
     revenuesCreated?: RevenueUncheckedUpdateManyWithoutCreatedByNestedInput
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserCreateWithoutUserMaturityInput = {
@@ -75149,6 +80941,11 @@ export namespace Prisma {
     revenuesCreated?: RevenueCreateNestedManyWithoutCreatedByInput
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordCreateNestedManyWithoutUserInput
+    projectsDeleted?: ProjectCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserUncheckedCreateWithoutUserMaturityInput = {
@@ -75179,6 +80976,11 @@ export namespace Prisma {
     revenuesCreated?: RevenueUncheckedCreateNestedManyWithoutCreatedByInput
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     TrainingRecord?: TrainingRecordUncheckedCreateNestedManyWithoutUserInput
+    projectsDeleted?: ProjectUncheckedCreateNestedManyWithoutDeletedByInput
+    wbsDeleted?: WBSItemUncheckedCreateNestedManyWithoutDeletedByInput
+    costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
+    invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
+    paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
   }
 
   export type UserCreateOrConnectWithoutUserMaturityInput = {
@@ -75225,6 +81027,11 @@ export namespace Prisma {
     revenuesCreated?: RevenueUpdateManyWithoutCreatedByNestedInput
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUpdateManyWithoutUserNestedInput
+    projectsDeleted?: ProjectUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserMaturityInput = {
@@ -75255,6 +81062,11 @@ export namespace Prisma {
     revenuesCreated?: RevenueUncheckedUpdateManyWithoutCreatedByNestedInput
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
+    projectsDeleted?: ProjectUncheckedUpdateManyWithoutDeletedByNestedInput
+    wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+    costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
+    invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
+    paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
   }
 
   export type ActivityFeedCreateManyUserInput = {
@@ -75360,9 +81172,12 @@ export namespace Prisma {
     status?: $Enums.PaymentStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     purchaseOrderId?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
   }
 
   export type DelegationWindowCreateManyUser_DelegationWindow_delegateIdToUserInput = {
@@ -75430,6 +81245,8 @@ export namespace Prisma {
     contractId?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
@@ -75452,9 +81269,11 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     deletedAt?: Date | string | null
+    deletedById?: string | null
     description?: string | null
     status?: $Enums.ProjectStatus
     updatedAt?: Date | string
+    version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
     endDate?: Date | string | null
     startDate?: Date | string | null
@@ -75530,6 +81349,97 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt: Date | string
+  }
+
+  export type ProjectCreateManyDeletedByInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    description?: string | null
+    ownerId?: string | null
+    status?: $Enums.ProjectStatus
+    updatedAt?: Date | string
+    version?: number
+    contractValue?: Decimal | DecimalJsLike | number | string
+    endDate?: Date | string | null
+    startDate?: Date | string | null
+    totalBudget?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type WBSItemCreateManyDeletedByInput = {
+    id?: string
+    projectId: string
+    name: string
+    parentId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    budgetAmount?: Decimal | DecimalJsLike | number | string
+    code?: string | null
+    level?: number
+    sortOrder?: number
+    deletedAt?: Date | string | null
+  }
+
+  export type CostRecordCreateManyDeletedByInput = {
+    id?: string
+    projectId: string
+    wbsId: string
+    costType?: $Enums.CostType
+    amount: Decimal | DecimalJsLike | number | string
+    quantity?: Decimal | DecimalJsLike | number | string
+    unitPrice?: Decimal | DecimalJsLike | number | string
+    supplier?: string | null
+    note?: string | null
+    date?: Date | string
+    status?: $Enums.PaymentStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    version?: number
+    createdById?: string | null
+    purchaseOrderId?: string | null
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+  }
+
+  export type InvoiceCreateManyDeletedByInput = {
+    id?: string
+    projectId: string
+    wbsId: string
+    amount: Decimal | DecimalJsLike | number | string
+    issuedDate?: Date | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+    dueDate?: Date | string | null
+    invoiceNumber?: string | null
+    note?: string | null
+    status?: $Enums.InvoiceStatus
+    contractId?: string | null
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
+    version?: number
+    certifiedProgress?: Decimal | DecimalJsLike | number | string
+    retentionAmount?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type PaymentCreateManyDeletedByInput = {
+    id?: string
+    invoiceId: string
+    projectId: string
+    amount: Decimal | DecimalJsLike | number | string
+    date?: Date | string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    version?: number
+    requestId?: string | null
+    deletedAt?: Date | string | null
+    approvalStatus?: $Enums.ApprovalStatus
   }
 
   export type ActivityFeedUpdateWithoutUserInput = {
@@ -75818,8 +81728,11 @@ export namespace Prisma {
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    deletedBy?: UserUpdateOneWithoutCostsDeletedNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutCostRecordsNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutCostsNestedInput
   }
@@ -75838,9 +81751,12 @@ export namespace Prisma {
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   }
 
   export type CostRecordUncheckedUpdateManyWithoutCreatedByInput = {
@@ -75857,9 +81773,12 @@ export namespace Prisma {
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   }
 
   export type DelegationWindowUpdateWithoutUser_DelegationWindow_delegateIdToUserInput = {
@@ -76021,9 +81940,11 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutInvoicesDeletedNestedInput
     contract?: ContractUpdateOneWithoutInvoicesNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
     payments?: PaymentUpdateManyWithoutInvoiceNestedInput
@@ -76047,6 +81968,8 @@ export namespace Prisma {
     contractId?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -76071,6 +81994,8 @@ export namespace Prisma {
     contractId?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -76122,13 +82047,16 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutProjectsDeletedNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
     contracts?: ContractUpdateManyWithoutProjectNestedInput
     Document?: DocumentUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
@@ -76145,9 +82073,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -76155,6 +82085,7 @@ export namespace Prisma {
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
     ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
     BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
     contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
@@ -76171,9 +82102,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -76401,6 +82334,327 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectUpdateWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    ActivityFeed?: ActivityFeedUpdateManyWithoutProjectNestedInput
+    ApprovalRequest?: ApprovalRequestUpdateManyWithoutProjectNestedInput
+    BOQItem?: BOQItemUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUpdateManyWithoutProjectNestedInput
+    contracts?: ContractUpdateManyWithoutProjectNestedInput
+    Document?: DocumentUpdateManyWithoutProjectNestedInput
+    InventoryTransaction?: InventoryTransactionUpdateManyWithoutProjectNestedInput
+    journalEntries?: JournalEntryUpdateManyWithoutProjectNestedInput
+    owner?: UserUpdateOneWithoutProjectsOwnedNestedInput
+    purchaseOrders?: PurchaseOrderUpdateManyWithoutProjectNestedInput
+    SiteConsumption?: SiteConsumptionUpdateManyWithoutProjectNestedInput
+    Subcontract?: SubcontractUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    wbsItems?: WBSItemUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutProjectNestedInput
+    ApprovalRequest?: ApprovalRequestUncheckedUpdateManyWithoutProjectNestedInput
+    BOQItem?: BOQItemUncheckedUpdateManyWithoutProjectNestedInput
+    BudgetVersion?: BudgetVersionUncheckedUpdateManyWithoutProjectNestedInput
+    contracts?: ContractUncheckedUpdateManyWithoutProjectNestedInput
+    Document?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    InventoryTransaction?: InventoryTransactionUncheckedUpdateManyWithoutProjectNestedInput
+    journalEntries?: JournalEntryUncheckedUpdateManyWithoutProjectNestedInput
+    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutProjectNestedInput
+    SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutProjectNestedInput
+    Subcontract?: SubcontractUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    wbsItems?: WBSItemUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateManyWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type WBSItemUpdateWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    budgetAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    BOQItem?: BOQItemUpdateManyWithoutWBSItemNestedInput
+    budgets?: BudgetRecordUpdateManyWithoutWbsNestedInput
+    costs?: CostRecordUpdateManyWithoutWbsNestedInput
+    invoices?: InvoiceUpdateManyWithoutWbsNestedInput
+    purchaseOrderItems?: PurchaseOrderItemUpdateManyWithoutWbsNestedInput
+    revenues?: RevenueUpdateManyWithoutWbsNestedInput
+    SiteConsumption?: SiteConsumptionUpdateManyWithoutWBSItemNestedInput
+    SubcontractItem?: SubcontractItemUpdateManyWithoutWBSItemNestedInput
+    parent?: WBSItemUpdateOneWithoutChildrenNestedInput
+    children?: WBSItemUpdateManyWithoutParentNestedInput
+    project?: ProjectUpdateOneRequiredWithoutWbsItemsNestedInput
+  }
+
+  export type WBSItemUncheckedUpdateWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    budgetAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    BOQItem?: BOQItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    budgets?: BudgetRecordUncheckedUpdateManyWithoutWbsNestedInput
+    costs?: CostRecordUncheckedUpdateManyWithoutWbsNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutWbsNestedInput
+    purchaseOrderItems?: PurchaseOrderItemUncheckedUpdateManyWithoutWbsNestedInput
+    revenues?: RevenueUncheckedUpdateManyWithoutWbsNestedInput
+    SiteConsumption?: SiteConsumptionUncheckedUpdateManyWithoutWBSItemNestedInput
+    SubcontractItem?: SubcontractItemUncheckedUpdateManyWithoutWBSItemNestedInput
+    children?: WBSItemUncheckedUpdateManyWithoutParentNestedInput
+  }
+
+  export type WBSItemUncheckedUpdateManyWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    budgetAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CostRecordUpdateWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    costType?: EnumCostTypeFieldUpdateOperationsInput | $Enums.CostType
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    createdBy?: UserUpdateOneWithoutCostsCreatedNestedInput
+    purchaseOrder?: PurchaseOrderUpdateOneWithoutCostRecordsNestedInput
+    wbs?: WBSItemUpdateOneRequiredWithoutCostsNestedInput
+  }
+
+  export type CostRecordUncheckedUpdateWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    wbsId?: StringFieldUpdateOperationsInput | string
+    costType?: EnumCostTypeFieldUpdateOperationsInput | $Enums.CostType
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  }
+
+  export type CostRecordUncheckedUpdateManyWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    wbsId?: StringFieldUpdateOperationsInput | string
+    costType?: EnumCostTypeFieldUpdateOperationsInput | $Enums.CostType
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  }
+
+  export type InvoiceUpdateWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    issuedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    version?: IntFieldUpdateOperationsInput | number
+    certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contract?: ContractUpdateOneWithoutInvoicesNestedInput
+    createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
+    wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
+    payments?: PaymentUpdateManyWithoutInvoiceNestedInput
+    revenues?: RevenueUpdateManyWithoutInvoiceNestedInput
+  }
+
+  export type InvoiceUncheckedUpdateWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    wbsId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    issuedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    contractId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    version?: IntFieldUpdateOperationsInput | number
+    certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    payments?: PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
+    revenues?: RevenueUncheckedUpdateManyWithoutInvoiceNestedInput
+  }
+
+  export type InvoiceUncheckedUpdateManyWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    wbsId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    issuedDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    contractId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    version?: IntFieldUpdateOperationsInput | number
+    certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type PaymentUpdateWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    invoice?: InvoiceUpdateOneRequiredWithoutPaymentsNestedInput
+  }
+
+  export type PaymentUncheckedUpdateWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invoiceId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  }
+
+  export type PaymentUncheckedUpdateManyWithoutDeletedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invoiceId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+  }
+
   export type TaskCreateManyCategoryInput = {
     id?: string
     title: string
@@ -76481,16 +82735,28 @@ export namespace Prisma {
   }
 
   export type BOQItemCreateManyProjectInput = {
-    id: string
+    id?: string
     wbsId: string
     description: string
     unit: string
     quantity: Decimal | DecimalJsLike | number | string
     unitRate: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    status?: string
+    version?: number
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
     deletedAt?: Date | string | null
+  }
+
+  export type BudgetVersionCreateManyProjectInput = {
+    id?: string
+    version: number
+    description?: string | null
+    status?: string
+    snapshot: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    createdById?: string | null
   }
 
   export type ContractCreateManyProjectInput = {
@@ -76615,6 +82881,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
   }
 
   export type ActivityFeedUpdateWithoutProjectInput = {
@@ -76695,6 +82962,8 @@ export namespace Prisma {
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -76710,6 +82979,8 @@ export namespace Prisma {
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -76724,9 +82995,41 @@ export namespace Prisma {
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type BudgetVersionUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    snapshot?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type BudgetVersionUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    snapshot?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type BudgetVersionUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    snapshot?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ContractUpdateWithoutProjectInput = {
@@ -77088,6 +83391,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: UserUpdateOneWithoutWbsDeletedNestedInput
     BOQItem?: BOQItemUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUpdateManyWithoutWbsNestedInput
@@ -77111,6 +83415,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     BOQItem?: BOQItemUncheckedUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUncheckedUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUncheckedUpdateManyWithoutWbsNestedInput
@@ -77133,18 +83438,21 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BOQItemCreateManyWBSItemInput = {
-    id: string
+    id?: string
     projectId: string
     description: string
     unit: string
     quantity: Decimal | DecimalJsLike | number | string
     unitRate: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    status?: string
+    version?: number
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
     deletedAt?: Date | string | null
   }
 
@@ -77172,10 +83480,13 @@ export namespace Prisma {
     status?: $Enums.PaymentStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     createdById?: string | null
     purchaseOrderId?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
   }
 
   export type InvoiceCreateManyWbsInput = {
@@ -77195,6 +83506,8 @@ export namespace Prisma {
     contractId?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
@@ -77257,6 +83570,7 @@ export namespace Prisma {
     level?: number
     sortOrder?: number
     deletedAt?: Date | string | null
+    deletedById?: string | null
   }
 
   export type BOQItemUpdateWithoutWBSItemInput = {
@@ -77266,6 +83580,8 @@ export namespace Prisma {
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -77281,6 +83597,8 @@ export namespace Prisma {
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -77295,6 +83613,8 @@ export namespace Prisma {
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -77346,8 +83666,11 @@ export namespace Prisma {
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    deletedBy?: UserUpdateOneWithoutCostsDeletedNestedInput
     createdBy?: UserUpdateOneWithoutCostsCreatedNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutCostRecordsNestedInput
   }
@@ -77365,10 +83688,13 @@ export namespace Prisma {
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   }
 
   export type CostRecordUncheckedUpdateManyWithoutWbsInput = {
@@ -77384,10 +83710,13 @@ export namespace Prisma {
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   }
 
   export type InvoiceUpdateWithoutWbsInput = {
@@ -77405,9 +83734,11 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutInvoicesDeletedNestedInput
     contract?: ContractUpdateOneWithoutInvoicesNestedInput
     createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
     payments?: PaymentUpdateManyWithoutInvoiceNestedInput
@@ -77431,6 +83762,8 @@ export namespace Prisma {
     contractId?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -77455,6 +83788,8 @@ export namespace Prisma {
     contractId?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -77610,6 +83945,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: UserUpdateOneWithoutWbsDeletedNestedInput
     BOQItem?: BOQItemUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUpdateManyWithoutWbsNestedInput
@@ -77633,6 +83969,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     BOQItem?: BOQItemUncheckedUpdateManyWithoutWBSItemNestedInput
     budgets?: BudgetRecordUncheckedUpdateManyWithoutWbsNestedInput
     costs?: CostRecordUncheckedUpdateManyWithoutWbsNestedInput
@@ -77655,6 +83992,7 @@ export namespace Prisma {
     level?: IntFieldUpdateOperationsInput | number
     sortOrder?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PaymentCreateManyInvoiceInput = {
@@ -77665,8 +84003,11 @@ export namespace Prisma {
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
   }
 
   export type RevenueCreateManyInvoiceInput = {
@@ -77691,8 +84032,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    deletedBy?: UserUpdateOneWithoutPaymentsDeletedNestedInput
   }
 
   export type PaymentUncheckedUpdateWithoutInvoiceInput = {
@@ -77703,8 +84047,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   }
 
   export type PaymentUncheckedUpdateManyWithoutInvoiceInput = {
@@ -77715,8 +84062,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   }
 
   export type RevenueUpdateWithoutInvoiceInput = {
@@ -77917,9 +84267,12 @@ export namespace Prisma {
     status?: $Enums.PaymentStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    version?: number
     createdById?: string | null
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
   }
 
   export type GoodsReceiptCreateManyPurchaseOrderInput = {
@@ -77959,8 +84312,11 @@ export namespace Prisma {
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    deletedBy?: UserUpdateOneWithoutCostsDeletedNestedInput
     createdBy?: UserUpdateOneWithoutCostsCreatedNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutCostsNestedInput
   }
@@ -77979,9 +84335,12 @@ export namespace Prisma {
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   }
 
   export type CostRecordUncheckedUpdateManyWithoutPurchaseOrderInput = {
@@ -77998,9 +84357,12 @@ export namespace Prisma {
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   }
 
   export type GoodsReceiptUpdateWithoutPurchaseOrderInput = {
@@ -78105,6 +84467,8 @@ export namespace Prisma {
     status?: $Enums.InvoiceStatus
     requestId?: string | null
     deletedAt?: Date | string | null
+    deletedById?: string | null
+    approvalStatus?: $Enums.ApprovalStatus
     version?: number
     certifiedProgress?: Decimal | DecimalJsLike | number | string
     retentionAmount?: Decimal | DecimalJsLike | number | string
@@ -78164,9 +84528,11 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deletedBy?: UserUpdateOneWithoutInvoicesDeletedNestedInput
     createdBy?: UserUpdateOneWithoutInvoicesCreatedNestedInput
     wbs?: WBSItemUpdateOneRequiredWithoutInvoicesNestedInput
     payments?: PaymentUpdateManyWithoutInvoiceNestedInput
@@ -78190,6 +84556,8 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -78214,6 +84582,8 @@ export namespace Prisma {
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     version?: IntFieldUpdateOperationsInput | number
     certifiedProgress?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -78729,6 +85099,10 @@ export namespace Prisma {
      */
     export type BOQItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BOQItemDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use BudgetVersionDefaultArgs instead
+     */
+    export type BudgetVersionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BudgetVersionDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use CommentDefaultArgs instead
      */
     export type CommentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CommentDefaultArgs<ExtArgs>
@@ -78748,6 +85122,10 @@ export namespace Prisma {
      * @deprecated Use FiscalPeriodDefaultArgs instead
      */
     export type FiscalPeriodArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = FiscalPeriodDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use JobDefaultArgs instead
+     */
+    export type JobArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = JobDefaultArgs<ExtArgs>
     /**
      * @deprecated Use InventoryTransactionDefaultArgs instead
      */

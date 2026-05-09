@@ -145,10 +145,12 @@ exports.Prisma.ProjectScalarFieldEnum = {
   name: 'name',
   createdAt: 'createdAt',
   deletedAt: 'deletedAt',
+  deletedById: 'deletedById',
   description: 'description',
   ownerId: 'ownerId',
   status: 'status',
   updatedAt: 'updatedAt',
+  version: 'version',
   contractValue: 'contractValue',
   endDate: 'endDate',
   startDate: 'startDate',
@@ -181,7 +183,8 @@ exports.Prisma.WBSItemScalarFieldEnum = {
   code: 'code',
   level: 'level',
   sortOrder: 'sortOrder',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  deletedById: 'deletedById'
 };
 
 exports.Prisma.CostRecordScalarFieldEnum = {
@@ -198,10 +201,13 @@ exports.Prisma.CostRecordScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  version: 'version',
   createdById: 'createdById',
   purchaseOrderId: 'purchaseOrderId',
   requestId: 'requestId',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  deletedById: 'deletedById',
+  approvalStatus: 'approvalStatus'
 };
 
 exports.Prisma.BudgetRecordScalarFieldEnum = {
@@ -249,6 +255,8 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   contractId: 'contractId',
   requestId: 'requestId',
   deletedAt: 'deletedAt',
+  deletedById: 'deletedById',
+  approvalStatus: 'approvalStatus',
   version: 'version',
   certifiedProgress: 'certifiedProgress',
   retentionAmount: 'retentionAmount'
@@ -263,8 +271,11 @@ exports.Prisma.PaymentScalarFieldEnum = {
   description: 'description',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  version: 'version',
   requestId: 'requestId',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  deletedById: 'deletedById',
+  approvalStatus: 'approvalStatus'
 };
 
 exports.Prisma.LedgerAccountScalarFieldEnum = {
@@ -470,9 +481,22 @@ exports.Prisma.BOQItemScalarFieldEnum = {
   quantity: 'quantity',
   unitRate: 'unitRate',
   totalAmount: 'totalAmount',
+  status: 'status',
+  version: 'version',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
+};
+
+exports.Prisma.BudgetVersionScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  version: 'version',
+  description: 'description',
+  status: 'status',
+  snapshot: 'snapshot',
+  createdAt: 'createdAt',
+  createdById: 'createdById'
 };
 
 exports.Prisma.CommentScalarFieldEnum = {
@@ -531,6 +555,23 @@ exports.Prisma.FiscalPeriodScalarFieldEnum = {
   lockedById: 'lockedById',
   closingBalance: 'closingBalance',
   reconciledAt: 'reconciledAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.JobScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  status: 'status',
+  payload: 'payload',
+  result: 'result',
+  error: 'error',
+  attempts: 'attempts',
+  maxAttempts: 'maxAttempts',
+  priority: 'priority',
+  runAt: 'runAt',
+  processedAt: 'processedAt',
+  finishedAt: 'finishedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -729,6 +770,14 @@ exports.PaymentStatus = exports.$Enums.PaymentStatus = {
   unpaid: 'unpaid'
 };
 
+exports.ApprovalStatus = exports.$Enums.ApprovalStatus = {
+  DRAFT: 'DRAFT',
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.InvoiceStatus = exports.$Enums.InvoiceStatus = {
   DRAFT: 'DRAFT',
   SENT: 'SENT',
@@ -767,13 +816,6 @@ exports.ContractStatus = exports.$Enums.ContractStatus = {
   AMENDED: 'AMENDED',
   COMPLETED: 'COMPLETED',
   TERMINATED: 'TERMINATED'
-};
-
-exports.ApprovalStatus = exports.$Enums.ApprovalStatus = {
-  PENDING: 'PENDING',
-  APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED',
-  CANCELLED: 'CANCELLED'
 };
 
 exports.InventoryTransactionType = exports.$Enums.InventoryTransactionType = {
@@ -817,11 +859,13 @@ exports.Prisma.ModelName = {
   ApprovalStep: 'ApprovalStep',
   AuthorityMatrix: 'AuthorityMatrix',
   BOQItem: 'BOQItem',
+  BudgetVersion: 'BudgetVersion',
   Comment: 'Comment',
   DelegationPolicy: 'DelegationPolicy',
   DelegationWindow: 'DelegationWindow',
   Document: 'Document',
   FiscalPeriod: 'FiscalPeriod',
+  Job: 'Job',
   InventoryTransaction: 'InventoryTransaction',
   Material: 'Material',
   Measurement: 'Measurement',

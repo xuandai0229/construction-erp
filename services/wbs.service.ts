@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { ApiError } from "@/lib/api-error";
 import { CreateWBSDTO, UpdateWBSDTO } from "@/lib/validations";
+import { AuditService } from "./audit.service";
 import { ProjectFinance } from "./finance/projectFinance";
 import { CostRecord, BudgetRecord, WBSItem } from "@/app/types";
 
@@ -55,7 +56,7 @@ export class WBSService {
     };
   }
 
-  static async create(data: CreateWBSDTO) {
+  static async create(data: CreateWBSDTO, userId?: string) {
     // Check if project exists
     const project = await prisma.project.findUnique({ where: { id: data.projectId } });
     if (!project) throw new ApiError(404, "Không tìm thấy dự án");
@@ -72,7 +73,7 @@ export class WBSService {
       level = (parent?.level ?? 0) + 1;
     }
 
-    return prisma.wBSItem.create({
+    const item = await prisma.wBSItem.create({
       data: {
         projectId: data.projectId,
         name: data.name,
@@ -82,9 +83,19 @@ export class WBSService {
         sortOrder: data.sortOrder ?? 0,
       },
     });
+
+    await AuditService.log({
+      userId,
+      action: "CREATE",
+      entity: "WBSItem",
+      entityId: item.id,
+      newData: item,
+    });
+
+    return item;
   }
 
-  static async update(id: string, data: UpdateWBSDTO) {
+  static async update(id: string, data: UpdateWBSDTO, userId?: string) {
     const existing = await prisma.wBSItem.findUnique({ where: { id } });
     if (!existing) throw new ApiError(404, "Không tìm thấy hạng mục");
 
@@ -99,7 +110,9 @@ export class WBSService {
       }
     }
 
-    return prisma.wBSItem.update({
+    const oldItem = await prisma.wBSItem.findUnique({ where: { id } });
+
+    const item = await prisma.wBSItem.update({
       where: { id },
       data: {
         ...(data.name !== undefined && { name: data.name }),
@@ -109,9 +122,20 @@ export class WBSService {
         level,
       },
     });
+
+    await AuditService.log({
+      userId,
+      action: "UPDATE",
+      entity: "WBSItem",
+      entityId: item.id,
+      oldData: oldItem,
+      newData: item,
+    });
+
+    return item;
   }
 
-  static async delete(id: string) {
+  static async delete(id: string, userId?: string) {
     const existing = await prisma.wBSItem.findUnique({ where: { id } });
     if (!existing) throw new ApiError(404, "Không tìm thấy hạng mục");
 
@@ -120,11 +144,25 @@ export class WBSService {
       throw new ApiError(400, "Không thể xóa hạng mục có hạng mục con");
     }
 
-    const costCount = await prisma.costRecord.count({ where: { wbsId: id } });
-    if (costCount > 0) {
-      throw new ApiError(400, "Không thể xóa hạng mục đã có chi phí. Hãy xóa chi phí trước.");
-    }
+    const oldItem = await prisma.wBSItem.findUnique({ where: { id } });
 
-    return prisma.wBSItem.delete({ where: { id } });
+    const item = await prisma.wBSItem.update({ 
+      where: { id },
+      data: { 
+        deletedAt: new Date(),
+        deletedById: userId,
+      }
+    });
+
+    await AuditService.log({
+      userId,
+      action: "DELETE",
+      entity: "WBSItem",
+      entityId: id,
+      oldData: oldItem,
+      reason: "User requested soft delete",
+    });
+
+    return item;
   }
 }

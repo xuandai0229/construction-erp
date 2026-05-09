@@ -25,7 +25,8 @@ export async function PUT(
     const body = await request.json();
     const validatedData = updateProjectSchema.parse(body);
     
-    const project = await ProjectService.update(id, validatedData);
+    const userId = request.headers.get("x-user-id") || undefined;
+    const project = await ProjectService.update(id, validatedData, userId);
     return successResponse(project);
   } catch (error) {
     return handleApiError(error);
@@ -38,7 +39,8 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    await ProjectService.delete(id);
+    const userId = request.headers.get("x-user-id") || undefined;
+    await ProjectService.delete(id, userId);
     return successResponse({ message: "Project deleted successfully" });
   } catch (error) {
     return handleApiError(error);

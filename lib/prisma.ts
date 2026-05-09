@@ -1,7 +1,7 @@
 import { PrismaClient } from "../generated/prisma-client";
 
 // Models that support soft-delete via deletedAt
-const SOFT_DELETE_MODELS = new Set(['user', 'category', 'project', 'task']);
+const SOFT_DELETE_MODELS = new Set(['user', 'category', 'project', 'task', 'invoice', 'payment', 'costrecord', 'wbsitem', 'revenue']);
 
 const prismaClientSingleton = () => {
   return new PrismaClient().$extends({

@@ -38,6 +38,12 @@ model User {
   TrainingRecord                                     TrainingRecord[]
   UserMaturity                                       UserMaturity?
 
+  projectsDeleted Project[]    @relation("ProjectDeletedBy")
+  wbsDeleted      WBSItem[]    @relation("WBSDeletedBy")
+  costsDeleted    CostRecord[] @relation("CostDeletedBy")
+  invoicesDeleted Invoice[]    @relation("InvoiceDeletedBy")
+  paymentsDeleted Payment[]    @relation("PaymentDeletedBy")
+
   @@index([createdAt])
 }
 
@@ -57,10 +63,13 @@ model Project {
   name                 String
   createdAt            DateTime               @default(now())
   deletedAt            DateTime?
+  deletedById          String?
+  deletedBy            User?                  @relation("ProjectDeletedBy", fields: [deletedById], references: [id])
   description          String?
   ownerId              String?
   status               ProjectStatus          @default(PLANNED)
   updatedAt            DateTime               @updatedAt
+  version              Int                    @default(1)
   contractValue        Decimal                @default(0) @db.Decimal(18, 2)
   endDate              DateTime?
   startDate            DateTime?
@@ -68,6 +77,7 @@ model Project {
   ActivityFeed         ActivityFeed[]
   ApprovalRequest      ApprovalRequest[]
   BOQItem              BOQItem[]
+  BudgetVersion        BudgetVersion[]
   contracts            Contract[]
   Document             Document[]
   InventoryTransaction InventoryTransaction[]
@@ -120,6 +130,8 @@ model WBSItem {
   level              Int                 @default(0)
   sortOrder          Int                 @default(0)
   deletedAt          DateTime?
+  deletedById        String?
+  deletedBy          User?               @relation("WBSDeletedBy", fields: [deletedById], references: [id])
   BOQItem            BOQItem[]
   budgets            BudgetRecord[]
   costs              CostRecord[]
@@ -150,10 +162,14 @@ model CostRecord {
   status          PaymentStatus  @default(unpaid)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
+  version         Int            @default(1)
   createdById     String?
   purchaseOrderId String?
   requestId       String?        @unique
   deletedAt       DateTime?
+  deletedById     String?
+  approvalStatus  ApprovalStatus @default(DRAFT)
+  deletedBy       User?          @relation("CostDeletedBy", fields: [deletedById], references: [id])
   createdBy       User?          @relation("CostCreatedBy", fields: [createdById], references: [id])
   purchaseOrder   PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
   wbs             WBSItem        @relation(fields: [wbsId], references: [id])
@@ -202,29 +218,32 @@ model Revenue {
 }
 
 model Invoice {
-  id                String        @id @default(uuid())
+  id                String         @id @default(uuid())
   projectId         String
   wbsId             String
-  amount            Decimal       @db.Decimal(18, 2)
-  issuedDate        DateTime      @default(now())
-  paidAmount        Decimal       @default(0) @db.Decimal(18, 2)
-  remainingAmount   Decimal       @db.Decimal(18, 2)
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  amount            Decimal        @db.Decimal(18, 2)
+  issuedDate        DateTime       @default(now())
+  paidAmount        Decimal        @default(0) @db.Decimal(18, 2)
+  remainingAmount   Decimal        @db.Decimal(18, 2)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
   createdById       String?
   dueDate           DateTime?
   invoiceNumber     String?
   note              String?
-  status            InvoiceStatus @default(DRAFT)
+  status            InvoiceStatus  @default(DRAFT)
   contractId        String?
-  requestId         String?       @unique
+  requestId         String?        @unique
   deletedAt         DateTime?
-  version           Int           @default(1)
-  certifiedProgress Decimal       @default(0) @db.Decimal(18, 2)
-  retentionAmount   Decimal       @default(0) @db.Decimal(18, 2)
-  contract          Contract?     @relation(fields: [contractId], references: [id])
-  createdBy         User?         @relation("InvoiceCreatedBy", fields: [createdById], references: [id])
-  wbs               WBSItem       @relation(fields: [wbsId], references: [id])
+  deletedById       String?
+  approvalStatus    ApprovalStatus @default(DRAFT)
+  deletedBy         User?          @relation("InvoiceDeletedBy", fields: [deletedById], references: [id])
+  version           Int            @default(1)
+  certifiedProgress Decimal        @default(0) @db.Decimal(18, 2)
+  retentionAmount   Decimal        @default(0) @db.Decimal(18, 2)
+  contract          Contract?      @relation(fields: [contractId], references: [id])
+  createdBy         User?          @relation("InvoiceCreatedBy", fields: [createdById], references: [id])
+  wbs               WBSItem        @relation(fields: [wbsId], references: [id])
   payments          Payment[]
   revenues          Revenue[]
 
@@ -233,17 +252,21 @@ model Invoice {
 }
 
 model Payment {
-  id          String    @id @default(uuid())
-  invoiceId   String
-  projectId   String
-  amount      Decimal   @db.Decimal(18, 2)
-  date        DateTime  @default(now())
-  description String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  requestId   String?   @unique
-  deletedAt   DateTime?
-  invoice     Invoice   @relation(fields: [invoiceId], references: [id])
+  id             String         @id @default(uuid())
+  invoiceId      String
+  projectId      String
+  amount         Decimal        @db.Decimal(18, 2)
+  date           DateTime       @default(now())
+  description    String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  version        Int            @default(1)
+  requestId      String?        @unique
+  deletedAt      DateTime?
+  deletedById    String?
+  approvalStatus ApprovalStatus @default(DRAFT)
+  deletedBy      User?          @relation("PaymentDeletedBy", fields: [deletedById], references: [id])
+  invoice        Invoice        @relation(fields: [invoiceId], references: [id])
 
   @@index([invoiceId])
   @@index([projectId])
@@ -515,7 +538,7 @@ model AuthorityMatrix {
 }
 
 model BOQItem {
-  id            String          @id
+  id            String          @id @default(uuid())
   projectId     String
   wbsId         String
   description   String
@@ -523,8 +546,10 @@ model BOQItem {
   quantity      Decimal         @db.Decimal(18, 3)
   unitRate      Decimal         @db.Decimal(18, 2)
   totalAmount   Decimal         @db.Decimal(18, 2)
+  status        String          @default("ACTIVE")
+  version       Int             @default(1)
   createdAt     DateTime        @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime        @updatedAt
   deletedAt     DateTime?
   Project       Project         @relation(fields: [projectId], references: [id])
   WBSItem       WBSItem         @relation(fields: [wbsId], references: [id])
@@ -532,6 +557,20 @@ model BOQItem {
 
   @@index([projectId])
   @@index([wbsId])
+}
+
+model BudgetVersion {
+  id          String   @id @default(uuid())
+  projectId   String
+  version     Int
+  description String?
+  status      String   @default("DRAFT")
+  snapshot    Json
+  createdAt   DateTime @default(now())
+  createdById String?
+  project     Project  @relation(fields: [projectId], references: [id])
+
+  @@index([projectId])
 }
 
 model Comment {
@@ -605,6 +644,26 @@ model FiscalPeriod {
   User           User?     @relation(fields: [lockedById], references: [id])
 
   @@index([month])
+}
+
+model Job {
+  id          String    @id @default(uuid())
+  type        String // e.g. BACKUP, EXPORT, REPORT
+  status      String    @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  payload     Json?
+  result      Json?
+  error       String?
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(3)
+  priority    Int       @default(0)
+  runAt       DateTime  @default(now())
+  processedAt DateTime?
+  finishedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status, runAt])
+  @@index([type])
 }
 
 model InventoryTransaction {
@@ -861,6 +920,7 @@ enum ContractStatus {
 }
 
 enum ApprovalStatus {
+  DRAFT
   PENDING
   APPROVED
   REJECTED

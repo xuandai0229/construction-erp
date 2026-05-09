@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { AuthProvider } from './components/auth/AuthProvider';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 export const metadata: Metadata = {
   title: 'Construction ERP - Quản lý dự án xây dựng',
@@ -15,9 +16,11 @@ export default function RootLayout({
   return (
     <html lang="vi" className="dark">
       <body className="min-h-screen bg-[#020617] text-slate-100 antialiased">
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <ErrorBoundary>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

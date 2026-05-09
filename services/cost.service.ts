@@ -5,10 +5,13 @@ import { assertValidEntity } from "@/lib/assertion";
 import { round } from "@/lib/math";
 import { PostingEngine } from "@/lib/accounting/postingEngine";
 import { AuditService } from "./audit.service";
+import { assertPeriodNotLocked } from "@/lib/period";
+import { LoggerService } from "./logger.service";
 
 export class CostService {
   static async create(data: CreateCostDTO) {
     assertValidEntity(data, "CreateCostDTO");
+    await assertPeriodNotLocked(data.date || new Date());
 
     // 1. Validate Project existence
     const project = await prisma.project.findUnique({ where: { id: data.projectId } });
@@ -24,23 +27,30 @@ export class CostService {
     const roundedAmount = round(data.amount);
 
     return prisma.$transaction(async (tx) => {
-      // Cost Control Logic: Warning if cost > budget
-      const budget = await tx.budgetRecord.aggregate({
-        where: { wbsId: data.wbsId },
-        _sum: { estimatedAmount: true }
+      // 2. Cost Control Logic: Compare against BOQ
+      const boqAgg = await tx.bOQItem.aggregate({
+        where: { wbsId: data.wbsId, deletedAt: null },
+        _sum: { totalAmount: true }
       });
 
       const existingCosts = await tx.costRecord.aggregate({
-        where: { wbsId: data.wbsId },
+        where: { wbsId: data.wbsId, deletedAt: null },
         _sum: { amount: true }
       });
 
-      const totalBudget = budget._sum?.estimatedAmount ? Number(budget._sum.estimatedAmount) : 0;
-      const currentCosts = existingCosts._sum?.amount ? Number(existingCosts._sum.amount) : 0;
+      const totalBOQ = Number(boqAgg._sum?.totalAmount || 0);
+      const currentCosts = Number(existingCosts._sum?.amount || 0);
       const totalCostsAfter = round(currentCosts + roundedAmount);
 
-      if (totalBudget > 0 && totalCostsAfter > totalBudget) {
-        console.warn(`WARNING: Cost overrun for WBS ${data.wbsId}. Budget: ${totalBudget}, Actual: ${totalCostsAfter}`);
+      if (totalBOQ > 0 && totalCostsAfter > totalBOQ) {
+        // We log a warning but allow the transaction in this "MVP" state 
+        // In real enterprise we might block it if policy is "HARD_BLOCK"
+        LoggerService.warn(`Cost Overrun detected for WBS ${data.wbsId}`, {
+          totalBOQ,
+          currentCosts,
+          requestedAmount: roundedAmount,
+          totalCostsAfter
+        });
       }
 
       // 3. Create Cost Record
@@ -56,7 +66,8 @@ export class CostService {
           note: data.note,
           date: data.date ? new Date(data.date) : new Date(),
           status: data.status,
-          createdById: data.createdById
+          createdById: data.createdById,
+          approvalStatus: "DRAFT" // New costs start as DRAFT
         }
       });
 
@@ -106,19 +117,52 @@ export class CostService {
     });
   }
 
-  static async delete(id: string) {
+  static async delete(id: string, userId?: string) {
     const existing = await prisma.costRecord.findUnique({ where: { id } });
     if (!existing) throw new ApiError(404, "Không tìm thấy chi phí");
 
+    await assertPeriodNotLocked(existing.date);
+
     return prisma.$transaction(async (tx) => {
-      // Logic for reversing posting could be added here if needed for full compliance
+      const item = await tx.costRecord.update({ 
+        where: { id },
+        data: { 
+          deletedAt: new Date(),
+          deletedById: userId,
+        }
+      });
+
       await AuditService.log({
+        userId,
         action: "DELETE",
         entity: "CostRecord",
         entityId: id,
-        oldData: existing
+        oldData: existing,
+        reason: "User requested soft delete",
       });
-      return tx.costRecord.delete({ where: { id } });
+
+      return item;
     });
+  }
+
+  static async updateApproval(id: string, status: "APPROVED" | "REJECTED" | "PENDING", userId?: string) {
+    const existing = await prisma.costRecord.findUnique({ where: { id } });
+    if (!existing) throw new ApiError(404, "Không tìm thấy chi phí");
+
+    const item = await prisma.costRecord.update({
+      where: { id },
+      data: { approvalStatus: status }
+    });
+
+    await AuditService.log({
+      userId,
+      action: status === "APPROVED" ? "APPROVE" : status === "REJECTED" ? "REJECT" : "UPDATE",
+      entity: "CostRecord",
+      entityId: id,
+      oldData: existing,
+      newData: item,
+    });
+
+    return item;
   }
 }
