@@ -16,23 +16,23 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
             <td className="whitespace-nowrap">
               <div className="flex items-center gap-2" style={{ paddingLeft: `${level * 18}px` }}>
                 {item.children.length > 0 && (
-                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 text-slate-600" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 text-[var(--text-muted)]" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="m6 9 6 6 6-6" />
                   </svg>
                 )}
-                <span className={`font-bold ${level === 0 ? 'text-blue-400 text-[13px]' : 'text-slate-300 text-[12.5px]'}`}>
+                <span className={`font-bold ${level === 0 ? 'text-blue-500 text-[13px]' : 'text-[var(--text-secondary)] text-[12.5px]'}`}>
                   {item.name}
                 </span>
               </div>
             </td>
 
             {/* Budget */}
-            <td className="text-right tabular-nums text-[12.5px] font-semibold text-slate-400 whitespace-nowrap">
+            <td className="text-right tabular-nums text-[12.5px] font-semibold text-[var(--text-tertiary)] whitespace-nowrap">
               {formatVnd(item.budget)}
             </td>
 
             {/* Actual */}
-            <td className="text-right tabular-nums text-[12.5px] font-black text-white group-hover:text-blue-300 transition-colors whitespace-nowrap">
+            <td className="text-right tabular-nums text-[12.5px] font-black text-[var(--text-primary)] group-hover:text-blue-500 transition-colors whitespace-nowrap">
               {formatVnd(item.actual)}
             </td>
 
@@ -44,7 +44,7 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
             {/* Progress bar */}
             <td className="text-center w-[120px]">
               <div className="flex flex-col items-center gap-1 px-3">
-                <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-800/80 ring-1 ring-white/5">
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--secondary)] ring-1 ring-[var(--border)]">
                   <div
                     className={`h-full rounded-full transition-all duration-700 ${
                       isOverBudget
@@ -54,7 +54,7 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
                     style={{ width: `${Math.min(100, percentage)}%` }}
                   />
                 </div>
-                <span className={`text-[9px] font-black tracking-tight ${isOverBudget ? 'text-rose-500' : 'text-slate-600'}`}>
+                <span className={`text-[9px] font-black tracking-tight ${isOverBudget ? 'text-rose-500' : 'text-[var(--text-muted)]'}`}>
                   {percentage.toFixed(1)}%
                 </span>
               </div>
@@ -81,7 +81,7 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
         <tbody>
           {data.length > 0 ? renderRows(data) : (
             <tr>
-              <td colSpan={5} className="h-32 text-center text-[11px] font-bold text-slate-600 uppercase tracking-widest">
+              <td colSpan={5} className="h-32 text-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest">
                 Không có dữ liệu WBS
               </td>
             </tr>

@@ -29,8 +29,7 @@ export default function BudgetPage() {
     <div className="erp-page">
       <Sidebar activeItem="budget" />
       <main
-        className="erp-page-main"
-        style={{ marginLeft: sidebarCollapsed ? 'var(--erp-sidebar-collapsed)' : 'var(--erp-sidebar-width)' }}
+        className={`erp-page-main transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${sidebarCollapsed ? 'md:ml-[var(--erp-sidebar-collapsed)]' : 'md:ml-[var(--erp-sidebar-width)]'}`}
       >
         <Header data={{ costs, budgets } as any} />
 
@@ -43,9 +42,9 @@ export default function BudgetPage() {
           {/* KPIs */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { label: 'Tổng ngân sách', value: formatVnd(totalBudget), unit: 'VND', accent: 'text-blue-500' },
-              { label: 'Đã sử dụng', value: formatVnd(totalUsed), unit: 'VND', accent: 'text-amber-500' },
-              { label: 'Còn lại', value: formatVnd(remaining), unit: 'VND', accent: remaining >= 0 ? 'text-emerald-500' : 'text-rose-500' },
+              { label: 'Tổng ngân sách', value: formatVnd(totalBudget), unit: 'VNĐ', accent: 'text-blue-500' },
+              { label: 'Đã sử dụng', value: formatVnd(totalUsed), unit: 'VNĐ', accent: 'text-amber-500' },
+              { label: 'Còn lại', value: formatVnd(remaining), unit: 'VNĐ', accent: remaining >= 0 ? 'text-emerald-500' : 'text-rose-500' },
               { label: 'Tỷ lệ sử dụng', value: `${pct.toFixed(1)}%`, unit: '', accent: pct > 90 ? 'text-rose-500' : pct > 70 ? 'text-amber-500' : 'text-emerald-500' },
             ].map(kpi => (
               <div key={kpi.label} className="card-elevation p-5">
@@ -71,8 +70,8 @@ export default function BudgetPage() {
               />
             </div>
             <div className="flex justify-between mt-2 text-[10px] font-bold text-[var(--text-muted)]">
-              <span>0 VND</span>
-              <span>{formatVnd(totalBudget)} VND</span>
+              <span>0 VNĐ</span>
+              <span>{formatVnd(totalBudget)} VNĐ</span>
             </div>
           </section>
 
@@ -93,8 +92,8 @@ export default function BudgetPage() {
                   <tr>
                     <th>#</th>
                     <th>Hạng mục</th>
-                    <th className="text-right">Ngân sách (VND)</th>
-                    <th className="text-right">Thực tế (VND)</th>
+                    <th className="text-right">Ngân sách (VNĐ)</th>
+                    <th className="text-right">Thực tế (VNĐ)</th>
                     <th className="text-right">Còn lại</th>
                     <th className="w-[120px]">Tiến độ</th>
                     <th className="text-center">Thao tác</th>

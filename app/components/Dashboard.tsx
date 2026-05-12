@@ -155,13 +155,13 @@ export default function Dashboard() {
                     <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--secondary)] ring-1 ring-[var(--border)] ${kpi.color} group-hover:scale-110 group-hover:brightness-110 transition-all duration-300`}>
                       <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2"><path d={kpi.icon} /></svg>
                     </div>
-                    <div className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Real-time</div>
+                    <div className="text-[10px] font-bold text-[var(--text-muted)]">Thời gian thực</div>
                   </div>
                   <div className="mt-auto">
-                    <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] mb-1">{kpi.label}</div>
+                    <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--text-secondary)] mb-1">{kpi.label}</div>
                     <div className="flex items-baseline gap-2">
-                      <div className="text-2xl font-black text-[var(--text-primary)] tabular-nums tracking-tight animate-count-up">{formatVnd(kpi.value)}</div>
-                      <div className="text-[10px] font-bold text-[var(--text-muted)]">VND</div>
+                      <div className="text-2xl font-black text-[var(--text-primary)] tabular-nums tracking-tight animate-count-up truncate min-w-0">{formatVnd(kpi.value)}</div>
+                      <div className="text-[10px] font-bold text-[var(--text-muted)] shrink-0">VNĐ</div>
                     </div>
                   </div>
                 </div>
@@ -176,7 +176,7 @@ export default function Dashboard() {
                 <div className="mb-6 flex items-center justify-between">
                   <div className="accent-line border-l-4 border-[var(--text-accent)] pl-4">
                     <h3 className="text-[13px] font-black text-[var(--text-primary)] tracking-tight uppercase">Tiến độ dòng tiền & Hạng mục</h3>
-                    <p className="text-[9.5px] font-bold text-[var(--text-muted)] tracking-[0.2em] mt-0.5">REAL-TIME WBS ROLLUP</p>
+                    <p className="text-[9.5px] font-bold text-[var(--text-secondary)] tracking-wider mt-0.5">Tổng hợp WBS thời gian thực</p>
                   </div>
                 </div>
                 <div className="overflow-hidden rounded-xl border border-[var(--border)]">
@@ -189,7 +189,7 @@ export default function Dashboard() {
                 <div className="mb-6 flex items-center justify-between">
                   <div className="accent-line border-l-4 border-[var(--text-accent)] pl-4">
                     <h3 className="text-[13px] font-black text-[var(--text-primary)] tracking-tight uppercase">Chi phí ghi nhận gần nhất</h3>
-                    <p className="text-[9.5px] font-bold text-[var(--text-muted)] tracking-[0.2em] mt-0.5">LATEST COST INVOICES</p>
+                    <p className="text-[9.5px] font-bold text-[var(--text-secondary)] tracking-wider mt-0.5">Hóa đơn chi phí mới nhất</p>
                   </div>
                   <button
                     onClick={() => router.push('/costs')}

@@ -12,7 +12,7 @@ export function DebtPanel({ receivable, payable }: { receivable: DebtSummary, pa
       <div className="card-elevation p-5">
         <div className="accent-line mb-5">
           <h3 className="text-[11px] font-black text-[var(--text-primary)] uppercase tracking-[0.18em]">Khoản phải thu</h3>
-          <p className="text-[9.5px] font-bold text-[var(--text-muted)] tracking-widest mt-0.5">ACCOUNTS RECEIVABLE</p>
+          <p className="text-[9.5px] font-bold text-[var(--text-muted)] tracking-wider mt-0.5">Công nợ phải thu khách hàng</p>
         </div>
 
         <div className="space-y-3">
@@ -40,7 +40,7 @@ export function DebtPanel({ receivable, payable }: { receivable: DebtSummary, pa
       <div className="card-elevation p-5">
         <div className="accent-line mb-5" style={{ '--accent-color': '#f59e0b' } as React.CSSProperties}>
           <h3 className="text-[11px] font-black text-[var(--text-primary)] uppercase tracking-[0.18em]">Khoản phải trả</h3>
-          <p className="text-[9.5px] font-bold text-[var(--text-muted)] tracking-widest mt-0.5">ACCOUNTS PAYABLE</p>
+          <p className="text-[9.5px] font-bold text-[var(--text-muted)] tracking-wider mt-0.5">Công nợ phải trả nhà cung cấp</p>
         </div>
 
         <div className="space-y-3">
@@ -76,7 +76,7 @@ export function ProfitPanel({ revenue, cost, margin }: { revenue: number; cost: 
     <section className="card-elevation p-5">
       <div className="accent-line mb-5">
         <h3 className="text-[11px] font-black text-[var(--text-primary)] uppercase tracking-[0.18em]">Hiệu quả kinh doanh</h3>
-        <p className="text-[9.5px] font-bold text-[var(--text-muted)] tracking-widest mt-0.5">PROJECT PERFORMANCE</p>
+        <p className="text-[9.5px] font-bold text-[var(--text-muted)] tracking-wider mt-0.5">Chỉ số hiệu suất dự án</p>
       </div>
 
       <div className="space-y-5">
@@ -86,7 +86,7 @@ export function ProfitPanel({ revenue, cost, margin }: { revenue: number; cost: 
             <span className={`text-2xl font-black tabular-nums tracking-tight ${positive ? 'text-emerald-500' : 'text-rose-500'}`}>
               {positive ? '+' : ''}{formatVnd(profit)}
             </span>
-            <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase">VND</span>
+            <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase">VNĐ</span>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3">

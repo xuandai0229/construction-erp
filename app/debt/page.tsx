@@ -30,8 +30,7 @@ export default function DebtPage() {
     <div className="erp-page">
       <Sidebar activeItem="debt" />
       <main
-        className="erp-page-main"
-        style={{ marginLeft: sidebarCollapsed ? 'var(--erp-sidebar-collapsed)' : 'var(--erp-sidebar-width)' }}
+        className={`erp-page-main transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${sidebarCollapsed ? 'md:ml-[var(--erp-sidebar-collapsed)]' : 'md:ml-[var(--erp-sidebar-width)]'}`}
       >
         <Header />
 

@@ -75,7 +75,7 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
           {!sidebarCollapsed && (
             <div className="animate-fade-in whitespace-nowrap min-w-0">
               <div className="text-[13px] font-black text-white tracking-tight leading-tight">CONSTRUCTION ERP</div>
-              <div className="text-[9px] font-black uppercase tracking-[0.22em] text-blue-500/80 mt-0.5">PRO EDITION v2</div>
+              <div className="text-[9px] font-black uppercase tracking-[0.22em] text-blue-500/80 mt-0.5">PHIÊN BẢN PRO v2</div>
             </div>
           )}
         </div>

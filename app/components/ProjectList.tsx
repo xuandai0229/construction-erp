@@ -127,7 +127,7 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
                 />
               </div>
               <div>
-                <label className="block text-slate-400 mb-1">Giá trị (VND)</label>
+                <label className="block text-slate-400 mb-1">Giá trị (VNĐ)</label>
                 <input
                   type="text"
                   value={totalValue}

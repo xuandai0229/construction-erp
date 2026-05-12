@@ -43,14 +43,14 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
       <AddTaskModal    isOpen={showTaskModal}    onClose={() => setShowTaskModal(false)} />
 
       <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--header-bg)] backdrop-blur-xl">
-        <div className="flex h-[var(--erp-header-height)] items-center justify-between gap-4 px-4 md:px-6 overflow-hidden">
+        <div className="flex h-[var(--erp-header-height)] items-center justify-between gap-4 px-4 md:px-6">
 
           {/* ── Left: Mobile Toggle + Project Selector ── */}
           <div className="flex shrink-0 items-center gap-3 min-w-0">
             {/* Mobile Hamburger */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-800 text-slate-400 md:hidden hover:bg-slate-800 hover:text-white transition-all"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--border)] text-[var(--text-muted)] md:hidden hover:bg-[var(--secondary)] hover:text-[var(--text-primary)] transition-all"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 6h16M4 12h16M4 18h16" />
@@ -74,10 +74,10 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
               </div>
               <div className="flex items-center gap-2 mt-0.5">
                 <div className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.18em] truncate max-w-[80px] sm:max-w-none">
-                  ID: {currentProjectId ? currentProjectId.slice(0, 8).toUpperCase() : '--------'}
+                  Mã: {currentProjectId ? currentProjectId.slice(0, 8).toUpperCase() : '--------'}
                 </div>
                 <span className="shrink-0 rounded-full bg-blue-500/10 px-2 py-0.5 text-[9px] font-black text-blue-500 ring-1 ring-blue-500/30 tracking-tight flex items-center">
-                  ACTIVE
+                  ĐANG HOẠT ĐỘNG
                 </span>
               </div>
             </div>
@@ -87,16 +87,16 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
           <div className="hidden xl:flex flex-1 items-center justify-center gap-8">
             {stats.map((s, i) => (
               <div key={i} className="flex items-center gap-3 group">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-800/60 bg-slate-800/30 text-slate-500 group-hover:border-blue-500/25 group-hover:bg-blue-600/10 group-hover:text-blue-400 transition-all duration-200">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] group-hover:border-blue-500/25 group-hover:bg-blue-600/10 group-hover:text-blue-500 transition-all duration-200">
                   <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="none" stroke="currentColor" strokeWidth="1.8">
                     <path d={s.icon} />
                   </svg>
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-[9.5px] font-black uppercase tracking-[0.18em] text-slate-500 leading-none mb-0.5">
+                  <span className="text-[9.5px] font-black uppercase tracking-[0.18em] text-[var(--text-secondary)] leading-none mb-0.5">
                     {s.label}
                   </span>
-                  <span className="text-[12px] font-extrabold text-slate-200 truncate max-w-[140px] group-hover:text-white transition-colors">
+                  <span className="text-[12px] font-extrabold text-[var(--text-primary)] truncate max-w-[140px] group-hover:text-blue-500 transition-colors">
                     {s.value}
                   </span>
                 </div>
@@ -105,7 +105,7 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
           </div>
 
           {/* ── Right: Actions + Notifications + User ── */}
-          <div className="flex shrink-0 items-center gap-2 md:gap-3">
+          <div className="flex shrink-0 items-center gap-3 md:gap-5">
 
             {/* Quick-add buttons (lg+) */}
             <div className="hidden lg:flex items-center gap-2">
@@ -122,19 +122,19 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
             </div>
 
             {/* Notification Bell */}
-            <div className="relative">
+            <div className={`relative ${notifOpen ? 'z-[70]' : 'z-[10]'}`}>
               <button
                 onClick={() => setNotifOpen(!notifOpen)}
-                className={`relative flex h-9 w-9 items-center justify-center rounded-xl border transition-all ${
+                className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-all ${
                   notifOpen
-                    ? 'bg-slate-800 border-slate-700 text-white'
-                    : 'border-slate-800/60 text-slate-400 hover:bg-slate-800/50 hover:border-slate-700 hover:text-white'
+                    ? 'bg-[var(--secondary)] border-[var(--primary)] text-[var(--primary)] shadow-[0_0_20px_-5px_rgba(59,130,246,0.5)]'
+                    : 'border-[var(--border)] text-[var(--text-muted)] hover:bg-[var(--secondary)] hover:border-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
                 <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
                 </svg>
-                <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-blue-500 ring-2 ring-[#020617] shadow-[0_0_6px_rgba(59,130,246,0.8)]" />
+                <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-blue-500 ring-2 ring-[var(--background)] shadow-[0_0_6px_rgba(59,130,246,0.8)]" />
               </button>
 
               {notifOpen && (
@@ -147,23 +147,23 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
                     <div className="cursor-pointer group">
                       <div className="flex items-center gap-2 mb-0.5">
                         <div className="h-1.5 w-1.5 rounded-full bg-blue-500 shrink-0" />
-                        <span className="text-[11px] font-bold text-white">Hệ thống cập nhật</span>
+                        <span className="text-[11px] font-bold text-[var(--text-primary)]">Hệ thống cập nhật</span>
                       </div>
-                      <p className="pl-3.5 text-[11px] text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors">
+                      <p className="pl-3.5 text-[11px] text-[var(--text-secondary)] leading-relaxed group-hover:text-[var(--text-primary)] transition-colors">
                         &quot;{currentProject?.name}&quot; vừa có cập nhật chi phí mới.
                       </p>
-                      <span className="pl-3.5 text-[9px] font-bold text-slate-600 mt-0.5 block">2 PHÚT TRƯỚC</span>
+                      <span className="pl-3.5 text-[9px] font-bold text-[var(--text-muted)] mt-0.5 block">2 PHÚT TRƯỚC</span>
                     </div>
-                    <div className="h-px bg-slate-800/50" />
+                    <div className="h-px bg-[var(--border)]" />
                     <div className="cursor-pointer group">
                       <div className="flex items-center gap-2 mb-0.5">
                         <div className="h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0" />
-                        <span className="text-[11px] font-bold text-white">Công nợ quá hạn</span>
+                        <span className="text-[11px] font-bold text-[var(--text-primary)]">Công nợ quá hạn</span>
                       </div>
-                      <p className="pl-3.5 text-[11px] text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors">
+                      <p className="pl-3.5 text-[11px] text-[var(--text-secondary)] leading-relaxed group-hover:text-[var(--text-primary)] transition-colors">
                         Hóa đơn #INV-2024-001 quá hạn 3 ngày.
                       </p>
-                      <span className="pl-3.5 text-[9px] font-bold text-slate-600 mt-0.5 block">1 GIỜ TRƯỚC</span>
+                      <span className="pl-3.5 text-[9px] font-bold text-[var(--text-muted)] mt-0.5 block">1 GIỜ TRƯỚC</span>
                     </div>
                   </div>
                 </div>
@@ -174,13 +174,13 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
             <div className="h-7 w-px bg-slate-800/60" />
 
             {/* User Menu */}
-            <div className="relative">
+            <div className={`relative ${userMenuOpen ? 'z-[70]' : 'z-[10]'}`}>
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className={`flex items-center gap-2.5 rounded-xl border px-2 py-1 transition-all ${
                   userMenuOpen
-                    ? 'bg-slate-800 border-slate-700'
-                    : 'border-slate-800/60 bg-slate-800/20 hover:bg-slate-800 hover:border-slate-700'
+                    ? 'bg-[var(--secondary)] border-[var(--primary)]'
+                    : 'border-[var(--border)] bg-[var(--secondary)] hover:bg-[var(--secondary)] hover:border-[var(--text-muted)]'
                 }`}
               >
                 {/* Avatar */}
@@ -190,8 +190,8 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
 
                 {/* Name + Role */}
                 <div className="hidden flex-col items-start md:flex">
-                  <span className="text-[12.5px] font-bold text-slate-100 leading-none">
-                    {user?.name || 'Administrator'}
+                  <span className="text-[12.5px] font-bold text-[var(--text-primary)] leading-none">
+                    {user?.name || 'Quản trị viên'}
                   </span>
                   <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest mt-0.5">
                     {user?.role || userRole}

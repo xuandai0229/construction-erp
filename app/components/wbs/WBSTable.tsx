@@ -58,10 +58,10 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, totalBudget, t
   };
 
   const statusMap: Record<string, string> = {
-    'Đang thi công': 'border-green-500/30 text-green-400 bg-green-500/10',
-    'Chậm tiến độ': 'border-orange-500/30 text-orange-400 bg-orange-500/10',
-    'Chưa triển khai': 'border-slate-500/30 text-slate-400 bg-slate-500/10',
-    'Hoàn thành': 'border-blue-500/30 text-blue-400 bg-blue-500/10',
+    'Đang thi công': 'border-emerald-500/30 text-emerald-600 bg-emerald-500/10',
+    'Chậm tiến độ': 'border-orange-500/30 text-orange-600 bg-orange-500/10',
+    'Chưa triển khai': 'border-[var(--border)] text-[var(--text-muted)] bg-[var(--secondary)]',
+    'Hoàn thành': 'border-blue-500/30 text-blue-600 bg-blue-500/10',
   };
 
   return (
@@ -96,8 +96,8 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, totalBudget, t
               <th className="w-12 text-center bg-[var(--table-head-bg)]">#</th>
               <th className="min-w-[100px] bg-[var(--table-head-bg)]">Mã hạng mục</th>
               <th className="min-w-[200px] bg-[var(--table-head-bg)]">Tên hạng mục</th>
-              <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Dự toán (VND)</th>
-              <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Thực tế (VND)</th>
+              <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Dự toán (VNĐ)</th>
+              <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Thực tế (VNĐ)</th>
               <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Chênh lệch</th>
               <th className="w-[110px] text-center bg-[var(--table-head-bg)]">% HT</th>
               <th className="w-[90px] text-center bg-[var(--table-head-bg)]">Trạng thái</th>
@@ -160,7 +160,7 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, totalBudget, t
                 <td className="px-5 py-3">
                   <div className="flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button 
-                      onClick={() => alert(`Chi tiết hạng mục: ${node.name}\nMã: ${node.code || 'N/A'}\nDự toán: ${node.budget.toLocaleString()} VND\nThực tế: ${node.actual.toLocaleString()} VND`)}
+                      onClick={() => alert(`Chi tiết hạng mục: ${node.name}\nMã: ${node.code || 'N/A'}\nDự toán: ${node.budget.toLocaleString()} VNĐ\nThực tế: ${node.actual.toLocaleString()} VNĐ`)}
                       className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]" 
                       title="Xem chi tiết"
                     >

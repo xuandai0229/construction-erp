@@ -210,7 +210,7 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
               />
             </div>
             <div>
-              <label className="erp-label">Đơn giá (VND) <span className="text-red-500">*</span></label>
+              <label className="erp-label">Đơn giá (VNĐ) <span className="text-red-500">*</span></label>
               <input
                 type="number"
                 min="0"

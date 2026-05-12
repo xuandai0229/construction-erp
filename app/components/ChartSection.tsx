@@ -32,8 +32,8 @@ function BudgetPie({ data }: { data: DashboardData }) {
           </svg>
           <div className="absolute inset-0 grid place-items-center text-center">
             <div>
-              <div className="text-2xl font-extrabold text-white">{formatShortVnd(total)}</div>
-              <div className="text-xs font-bold text-slate-300">VND</div>
+              <div className="text-2xl font-extrabold text-[var(--text-primary)]">{formatShortVnd(total)}</div>
+              <div className="text-xs font-bold text-[var(--text-muted)]">VND</div>
             </div>
           </div>
         </div>
@@ -41,12 +41,12 @@ function BudgetPie({ data }: { data: DashboardData }) {
           {segments.map((row) => {
             return (
               <div key={row.type} className="grid grid-cols-[1fr_48px_108px] items-center gap-3 text-sm">
-                <div className="flex items-center gap-3 text-slate-100">
+                <div className="flex items-center gap-3 text-[var(--text-secondary)]">
                   <span className="h-3 w-3 rounded-full" style={{ backgroundColor: row.color }} />
                   {row.label}
                 </div>
-                <div className="text-right font-bold text-slate-100">{row.pct.toFixed(0)}%</div>
-                <div className="text-right font-bold text-slate-100">{formatVnd(row.value)}</div>
+                <div className="text-right font-bold text-[var(--text-primary)]">{row.pct.toFixed(0)}%</div>
+                <div className="text-right font-bold text-[var(--text-primary)]">{formatVnd(row.value)}</div>
               </div>
             );
           })}
@@ -67,25 +67,25 @@ function CashFlow({ data }: { data: DashboardData }) {
   return (
     <Panel title="DÒNG TIỀN (TRIỆU VND)">
       <div className="mb-2 flex items-center justify-center gap-8 text-sm font-semibold">
-        <span className="flex items-center gap-2 text-green-400"><i className="h-1.5 w-5 rounded-full bg-green-500" />Thu</span>
-        <span className="flex items-center gap-2 text-red-400"><i className="h-1.5 w-5 rounded-full bg-red-500" />Chi</span>
+        <span className="flex items-center gap-2 text-emerald-500"><i className="h-1.5 w-5 rounded-full bg-emerald-500" />Thu</span>
+        <span className="flex items-center gap-2 text-rose-500"><i className="h-1.5 w-5 rounded-full bg-rose-500" />Chi</span>
       </div>
       <svg viewBox={`0 0 ${width} ${height}`} className="h-[222px] w-full">
         {[0, 1, 2, 3, 4].map((tick) => {
           const yy = 18 + tick * 38;
-          return <line key={tick} x1="28" x2={width - 10} y1={yy} y2={yy} stroke="#1e293b" strokeWidth="1" />;
+          return <line key={tick} x1="28" x2={width - 10} y1={yy} y2={yy} stroke="var(--border)" strokeWidth="1" />;
         })}
         <polyline points={line('income')} fill="none" stroke="#22c55e" strokeWidth="3" />
         <polyline points={line('expense')} fill="none" stroke="#ef4444" strokeWidth="3" />
         {data.cashFlow.map((point, index) => (
           <g key={point.month}>
-            <circle cx={x(index)} cy={y(point.income)} r="4" fill="#22c55e" />
-            <circle cx={x(index)} cy={y(point.expense)} r="4" fill="#ef4444" />
-            {index % 2 === 0 && <text x={x(index)} y={height - 4} fill="#94a3b8" fontSize="11" textAnchor="middle">{point.month}</text>}
+            <circle cx={x(index)} cy={y(point.income)} r="4" fill="#10b981" />
+            <circle cx={x(index)} cy={y(point.expense)} r="4" fill="#f43f5e" />
+            {index % 2 === 0 && <text x={x(index)} y={height - 4} fill="var(--text-muted)" fontSize="11" textAnchor="middle">{point.month}</text>}
           </g>
         ))}
         {[0, 10, 20, 30, 40].map((label, index) => (
-          <text key={label} x="0" y={height - 24 - index * 38} fill="#94a3b8" fontSize="11">{label}B</text>
+          <text key={label} x="0" y={height - 24 - index * 38} fill="var(--text-muted)" fontSize="11">{label}B</text>
         ))}
       </svg>
     </Panel>
@@ -99,10 +99,10 @@ function ProgressCard({ data }: { data: DashboardData }) {
       <div className="grid place-items-center py-2">
         <div className="relative h-[190px] w-[190px]">
           <svg viewBox="0 0 160 160" className="-rotate-90">
-            <circle cx="80" cy="80" r="66" fill="none" stroke="#334155" strokeWidth="18" strokeDasharray={`${circumference * 0.5} ${circumference}`} strokeLinecap="butt" />
-            <circle cx="80" cy="80" r="66" fill="none" stroke="#22c55e" strokeWidth="18" strokeDasharray={`${circumference * (data.progress / 100) * 0.5} ${circumference}`} strokeLinecap="butt" />
+            <circle cx="80" cy="80" r="66" fill="none" stroke="var(--secondary)" strokeWidth="18" strokeDasharray={`${circumference * 0.5} ${circumference}`} strokeLinecap="butt" />
+            <circle cx="80" cy="80" r="66" fill="none" stroke="#10b981" strokeWidth="18" strokeDasharray={`${circumference * (data.progress / 100) * 0.5} ${circumference}`} strokeLinecap="butt" />
           </svg>
-          <div className="absolute inset-0 grid place-items-center text-4xl font-extrabold text-white">{data.progress}%</div>
+          <div className="absolute inset-0 grid place-items-center text-4xl font-extrabold text-[var(--text-primary)]">{data.progress}%</div>
         </div>
       </div>
       <div className="space-y-3 text-sm">
@@ -116,8 +116,8 @@ function ProgressCard({ data }: { data: DashboardData }) {
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <article className="rounded-lg border border-slate-800 bg-slate-900/70 p-5">
-      <h3 className="mb-4 text-[15px] font-extrabold text-slate-50">{title}</h3>
+    <article className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-5 card-elevation">
+      <h3 className="mb-4 text-[13px] font-black text-[var(--text-primary)] uppercase tracking-wider">{title}</h3>
       {children}
     </article>
   );
@@ -126,8 +126,8 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-slate-300">{label}</span>
-      <span className="font-bold text-white">{value}</span>
+      <span className="text-[var(--text-secondary)]">{label}</span>
+      <span className="font-bold text-[var(--text-primary)]">{value}</span>
     </div>
   );
 }

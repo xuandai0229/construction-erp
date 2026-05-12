@@ -1,17 +1,17 @@
 /**
- * Formats a number as Vietnamese Dong (VND)
- * Example: 1500000 -> 1.500.000 VND
+ * Formats a number as Vietnamese Dong (VNĐ)
+ * Example: 1500000 -> 1.500.000 VNĐ
  */
 export const formatVND = (amount: number | string): string => {
   const value = typeof amount === 'string' ? parseFloat(amount) : amount;
-  if (isNaN(value)) return '0 VND';
+  if (isNaN(value)) return '0 VNĐ';
   
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
     currency: 'VND',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(value).replace('₫', 'VND');
+  }).format(value).replace('₫', 'VNĐ');
 };
 
 /**

@@ -20,6 +20,7 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-tertiary: var(--text-tertiary);
   --radius-radius: var(--radius);
 }
 
@@ -84,30 +85,31 @@
   --secondary:        #f1f5f9;
   --secondary-foreground:#0f172a;
   --muted:            #f1f5f9;
-  --muted-foreground: #64748b;
+  --muted-foreground: #475569; /* Strengthened from 64748b */
   --accent:           #eff6ff;
   --accent-foreground:#1e40af;
   --destructive:      #ef4444;
   --destructive-foreground:#f8fafc;
-  --border:           #e2e8f0;
-  --input:            #e2e8f0;
+  --border:           #cbd5e1; /* Strengthened from e2e8f0 */
+  --input:            #cbd5e1;
   --ring:             #3b82f6;
   --header-bg:        rgba(255,255,255,0.9);
   --sidebar-bg:       #0f172a;
   --sidebar-border:   rgba(30,41,59,0.5);
-  --table-head-bg:    #f8fafc;
-  --table-row-hover:  rgba(59,130,246,0.03);
+  --table-head-bg:    #f1f5f9; /* Strengthened from f8fafc */
+  --table-row-hover:  rgba(59,130,246,0.04);
   --erp-card-shadow:  0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1);
   --erp-hover-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
   --text-primary:     #0f172a;
-  --text-secondary:   #475569;
-  --text-muted:       #94a3b8;
+  --text-secondary:   #334155; /* Strengthened from 475569 */
+  --text-tertiary:    #475569; /* New: for sub-labels */
+  --text-muted:       #64748b; /* Strengthened from 94a3b8 */
   --text-accent:      #2563eb;
   --badge-bg:         #f1f5f9;
-  --badge-border:     #e2e8f0;
+  --badge-border:     #cbd5e1;
   --input-bg:         #ffffff;
-  --input-border:     #cbd5e1;
-  --divider:          #f1f5f9;
+  --input-border:     #94a3b8; /* Strengthened from cbd5e1 */
+  --divider:          #e2e8f0;
 }
 
 /* ─── Base ────────────────────────────────────────────────── */
@@ -115,6 +117,8 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   @apply font-sans antialiased;
+  font-size: 0.875rem; /* 14px default */
+  line-height: 1.5;
 }
 
 /* ─── Scrollbar ───────────────────────────────────────────── */
@@ -179,8 +183,9 @@ body {
   border-collapse: separate;
   border-spacing: 0;
   text-align: left;
-  font-size: 0.8125rem;
+  font-size: 0.8125rem; /* 13px */
   font-variant-numeric: tabular-nums;
+  line-height: 1.4;
 }
 .erp-table th {
   position: sticky; top: 0; z-index: 10;
@@ -290,15 +295,31 @@ body {
   font-weight: 900;
   color: var(--text-primary);
   letter-spacing: -0.02em;
-  line-height: 1.2;
+  line-height: 1.1;
 }
+
+@media (max-width: 640px) {
+  .erp-section-title {
+    font-size: 1.25rem;
+  }
+}
+
 .erp-section-subtitle {
-  font-size: 0.75rem;
+  font-size: 0.75rem; /* 12px */
   font-weight: 700;
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  margin-top: 0.25rem;
+  letter-spacing: 0.12em;
+  margin-top: 0.35rem;
+  line-height: 1.4;
+  max-width: 600px;
+}
+
+@media (max-width: 640px) {
+  .erp-section-subtitle {
+    font-size: 0.6875rem; /* 11px on mobile */
+    letter-spacing: 0.08em;
+  }
 }
 
 /* ─── Badge ───────────────────────────────────────────────── */

@@ -35,24 +35,24 @@ export default function WBSRow({ node, onToggleExpand, onEdit, index }: { node: 
   };
 
   const statusMap: Record<string, string> = {
-    'Đang thi công': 'border-green-500/30 text-green-400 bg-green-500/10',
-    'Chậm tiến độ': 'border-orange-500/30 text-orange-400 bg-orange-500/10',
-    'Chưa triển khai': 'border-slate-500/30 text-slate-400 bg-slate-500/10',
-    'Hoàn thành': 'border-blue-500/30 text-blue-400 bg-blue-500/10',
+    'Đang thi công': 'border-emerald-500/30 text-emerald-600 bg-emerald-500/10',
+    'Chậm tiến độ': 'border-orange-500/30 text-orange-600 bg-orange-500/10',
+    'Chưa triển khai': 'border-[var(--border)] text-[var(--text-muted)] bg-[var(--secondary)]',
+    'Hoàn thành': 'border-blue-500/30 text-blue-600 bg-blue-500/10',
   };
 
   return (
     <>
-      <tr className={`transition-colors hover:bg-slate-800/30 ${isParent && node.level === 0 ? 'bg-slate-800/10' : ''}`}>
-        <td className="px-5 py-3 text-center border-r border-slate-800/50">
-          <input type="checkbox" className="rounded border-slate-700 bg-slate-800 text-blue-600 focus:ring-blue-500/20 focus:ring-offset-0" />
+      <tr className={`transition-colors hover:bg-[var(--secondary)]/50 ${isParent && node.level === 0 ? 'bg-[var(--secondary)]/30' : ''}`}>
+        <td className="px-5 py-3 text-center border-r border-[var(--border)]">
+          <input type="checkbox" className="rounded border-[var(--border)] bg-[var(--background)] text-blue-600 focus:ring-blue-500/20 focus:ring-offset-0" />
         </td>
-        <td className="px-5 py-3 text-center text-[12px] font-medium text-slate-500 border-r border-slate-800/50">{index}</td>
-        <td className="px-5 py-3 text-[13px] font-medium text-slate-400 border-r border-slate-800/50">{node.code}</td>
-        <td className="px-5 py-3 border-r border-slate-800/50">
+        <td className="px-5 py-3 text-center text-[12px] font-medium text-[var(--text-muted)] border-r border-[var(--border)]">{index}</td>
+        <td className="px-5 py-3 text-[13px] font-medium text-[var(--text-tertiary)] border-r border-[var(--border)]">{node.code}</td>
+        <td className="px-5 py-3 border-r border-[var(--border)]">
           <div className="flex items-center" style={{ paddingLeft: `${node.level * 24}px` }}>
             {isParent ? (
-              <button onClick={() => onToggleExpand(node.id)} className="mr-2 flex h-5 w-5 items-center justify-center rounded text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+              <button onClick={() => onToggleExpand(node.id)} className="mr-2 flex h-5 w-5 items-center justify-center rounded text-[var(--text-muted)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)] transition-colors">
                 <svg viewBox="0 0 24 24" className={`h-4 w-4 transition-transform ${node.isExpanded ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M9 18l6-6-6-6" />
                 </svg>
@@ -65,22 +65,22 @@ export default function WBSRow({ node, onToggleExpand, onEdit, index }: { node: 
                 <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
               </svg>
             ) : (
-              <span className="mr-2 text-slate-600">-</span>
+              <span className="mr-2 text-[var(--text-muted)]">-</span>
             )}
-            <span className={`text-[13px] ${isParent && node.level === 0 ? 'font-bold text-slate-200 uppercase' : 'font-medium text-slate-300'}`}>
+            <span className={`text-[13px] ${isParent && node.level === 0 ? 'font-bold text-[var(--text-primary)] uppercase' : 'font-medium text-[var(--text-secondary)]'}`}>
               {node.name}
             </span>
           </div>
         </td>
-        <td className="px-5 py-3 text-right text-[13px] font-bold text-slate-300 border-r border-slate-800/50">{node.budget.toLocaleString()}</td>
-        <td className="px-5 py-3 text-right text-[13px] font-bold text-slate-300 border-r border-slate-800/50">{node.actual.toLocaleString()}</td>
-        <td className={`px-5 py-3 text-right text-[13px] font-bold border-r border-slate-800/50 ${node.profit < 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
+        <td className="px-5 py-3 text-right text-[13px] font-bold text-[var(--text-secondary)] border-r border-[var(--border)]">{node.budget.toLocaleString()}</td>
+        <td className="px-5 py-3 text-right text-[13px] font-bold text-[var(--text-secondary)] border-r border-[var(--border)]">{node.actual.toLocaleString()}</td>
+        <td className={`px-5 py-3 text-right text-[13px] font-bold border-r border-[var(--border)] ${node.profit < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
           {node.profit.toLocaleString()}
         </td>
-        <td className="px-5 py-3 w-32 border-r border-slate-800/50">
+        <td className="px-5 py-3 w-32 border-r border-[var(--border)]">
           <div className="flex items-center gap-2">
-            <span className="text-[12px] font-bold text-slate-300 w-10 text-right">{node.percentage.toFixed(isParent ? 0 : 1)}%</span>
-            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-800">
+            <span className="text-[12px] font-bold text-[var(--text-secondary)] w-10 text-right">{node.percentage.toFixed(isParent ? 0 : 1)}%</span>
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--secondary)]">
               <div 
                 className={`h-full rounded-full ${node.percentage >= 100 ? 'bg-blue-500' : node.status === 'Chậm tiến độ' ? 'bg-orange-500' : 'bg-green-500'}`} 
                 style={{ width: `${Math.min(node.percentage, 100)}%` }} 
@@ -88,14 +88,14 @@ export default function WBSRow({ node, onToggleExpand, onEdit, index }: { node: 
             </div>
           </div>
         </td>
-        <td className="px-5 py-3 text-center border-r border-slate-800/50">
+        <td className="px-5 py-3 text-center border-r border-[var(--border)]">
           <span className={`inline-flex items-center justify-center rounded border px-2 py-0.5 text-[11px] font-medium shadow-sm ${statusMap[node.status] || statusMap['Chưa triển khai']}`}>
             {node.status}
           </span>
         </td>
         <td className="px-5 py-3">
           <div className="flex items-center justify-center gap-1.5">
-            <button className="flex h-7 w-7 items-center justify-center rounded border border-slate-700 bg-slate-800/80 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white" title="Xem chi tiết">
+            <button className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] transition-colors hover:bg-blue-600 hover:text-white" title="Xem chi tiết">
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                 <circle cx="12" cy="12" r="3" />
@@ -103,7 +103,7 @@ export default function WBSRow({ node, onToggleExpand, onEdit, index }: { node: 
             </button>
             <button 
               onClick={handleEdit}
-              className="flex h-7 w-7 items-center justify-center rounded border border-slate-700 bg-slate-800/80 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white" 
+              className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] transition-colors hover:bg-blue-600 hover:text-white" 
               title="Chỉnh sửa"
             >
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">

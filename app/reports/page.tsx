@@ -45,8 +45,7 @@ export default function ReportsPage() {
     <div className="erp-page">
       <Sidebar activeItem="reports" />
       <main
-        className="erp-page-main"
-        style={{ marginLeft: sidebarCollapsed ? 'var(--erp-sidebar-collapsed)' : 'var(--erp-sidebar-width)' }}
+        className={`erp-page-main transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${sidebarCollapsed ? 'md:ml-[var(--erp-sidebar-collapsed)]' : 'md:ml-[var(--erp-sidebar-width)]'}`}
       >
         <Header />
 
@@ -86,7 +85,7 @@ export default function ReportsPage() {
               </h2>
               <div className="flex items-center gap-2 text-[11px] text-[var(--text-muted)] italic">
                 <span className="h-2 w-2 rounded-full bg-rose-500 shrink-0" />
-                Kỳ đã chốt (không thể sửa)
+                Kỳ kế toán đã khóa (không thể sửa)
               </div>
             </div>
             <div className="overflow-x-auto scrollbar-hide">
@@ -94,13 +93,13 @@ export default function ReportsPage() {
                 <thead>
                   <tr>
                     <th className="min-w-[90px]">Tháng</th>
-                    <th className="text-right w-[120px]">Dòng tiền vào</th>
-                    <th className="text-right w-[120px]">Dòng tiền ra</th>
+                    <th className="text-right w-[120px]">Tổng thu</th>
+                    <th className="text-right w-[120px]">Tổng chi</th>
                     <th className="text-right w-[120px]">Doanh thu</th>
                     <th className="text-right w-[120px]">Chi phí</th>
                     <th className="text-right w-[120px]">Lợi nhuận</th>
                     <th className="text-right w-[120px]">Số dư</th>
-                    <th className="text-center w-[100px]">Chốt kỳ</th>
+                    <th className="text-center w-[100px]">Khóa sổ</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -136,7 +135,7 @@ export default function ReportsPage() {
                               : 'bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text-primary)]'
                             }`}
                           >
-                            {locked ? 'Mở khóa' : 'Chốt kỳ'}
+                            {locked ? 'Mở khóa' : 'Khóa sổ'}
                           </button>
                         </td>
                       </tr>
@@ -161,7 +160,7 @@ export default function ReportsPage() {
               <div className="px-5 py-4 border-b border-[var(--border)] flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)]" />
                 <h3 className="text-[12px] font-black text-[var(--text-primary)] uppercase tracking-widest">
-                  Tuổi nợ phải thu (Receivable)
+                  Phân tích tuổi nợ phải thu
                 </h3>
               </div>
               <div className="p-5 space-y-3">
@@ -172,7 +171,7 @@ export default function ReportsPage() {
                     <div key={cat} className="flex items-center justify-between p-3 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
                       <div>
                         <div className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-wider">{cat} ngày</div>
-                        <div className="text-[15px] font-extrabold text-[var(--text-primary)] tabular-nums mt-0.5">{formatVnd(total)}</div>
+                        <div className="text-[14px] font-black text-[var(--text-primary)] tabular-nums mt-0.5">{formatVnd(total)}</div>
                       </div>
                       <div className="text-[11px] text-[var(--text-muted)]">{items.length} khoản</div>
                     </div>
@@ -186,7 +185,7 @@ export default function ReportsPage() {
               <div className="px-5 py-4 border-b border-[var(--border)] flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-rose-500 shadow-[0_0_6px_rgba(239,68,68,0.6)]" />
                 <h3 className="text-[12px] font-black text-[var(--text-primary)] uppercase tracking-widest">
-                  Tuổi nợ phải trả (Payable)
+                  Phân tích tuổi nợ phải trả
                 </h3>
               </div>
               <div className="p-5 space-y-3">
@@ -197,7 +196,7 @@ export default function ReportsPage() {
                     <div key={cat} className="flex items-center justify-between p-3 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
                       <div>
                         <div className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-wider">{cat} ngày</div>
-                        <div className="text-[15px] font-extrabold text-[var(--text-primary)] tabular-nums mt-0.5">{formatVnd(total)}</div>
+                        <div className="text-[14px] font-black text-[var(--text-primary)] tabular-nums mt-0.5">{formatVnd(total)}</div>
                       </div>
                       <div className="text-[11px] text-[var(--text-muted)]">{items.length} khoản</div>
                     </div>

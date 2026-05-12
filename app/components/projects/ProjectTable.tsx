@@ -7,12 +7,12 @@ import { TableVirtuoso } from 'react-virtuoso';
 import { useDeleteProjectMutation } from '@/services/queries/useProjects';
 
 const statusLabels: Record<string, { text: string; class: string }> = {
-  PLANNED:     { text: 'Lập kế hoạch', class: 'bg-slate-500/15 text-slate-500 border-slate-500/30' },
-  IN_PROGRESS: { text: 'Đang thi công', class: 'bg-emerald-500/15 text-emerald-500 border-emerald-500/30' },
-  ACTIVE:      { text: 'Đang hoạt động', class: 'bg-emerald-500/15 text-emerald-500 border-emerald-500/30' },
-  COMPLETED:   { text: 'Hoàn thành', class: 'bg-blue-500/15 text-blue-500 border-blue-500/30' },
-  CLOSED:      { text: 'Đã đóng', class: 'bg-rose-500/15 text-rose-500 border-rose-500/30' },
-  CANCELLED:   { text: 'Tạm dừng', class: 'bg-amber-500/15 text-amber-500 border-amber-500/30' },
+  PLANNED:     { text: 'Lập kế hoạch', class: 'bg-slate-500/10 text-slate-600 border-slate-500/20' },
+  IN_PROGRESS: { text: 'Đang thi công', class: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
+  ACTIVE:      { text: 'Đang hoạt động', class: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
+  COMPLETED:   { text: 'Hoàn thành', class: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
+  CLOSED:      { text: 'Đã đóng', class: 'bg-rose-500/10 text-rose-600 border-rose-500/20' },
+  CANCELLED:   { text: 'Tạm dừng', class: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
 };
 
 // Mock extending data for visual completeness to match the screenshot exactly
@@ -28,16 +28,16 @@ const enrichProject = (p: Project, index: number) => {
   ];
   
   const typeColors = [
-    'border-blue-500/30 text-blue-400 bg-blue-500/10',
-    'border-purple-500/30 text-purple-400 bg-purple-500/10',
-    'border-yellow-500/30 text-yellow-400 bg-yellow-500/10',
-    'border-cyan-500/30 text-cyan-400 bg-cyan-500/10',
-    'border-pink-500/30 text-pink-400 bg-pink-500/10',
-    'border-emerald-500/30 text-emerald-400 bg-emerald-500/10',
-    'border-yellow-500/30 text-yellow-400 bg-yellow-500/10',
-    'border-purple-500/30 text-purple-400 bg-purple-500/10',
-    'border-red-500/30 text-red-400 bg-red-500/10',
-    'border-slate-500/30 text-slate-400 bg-slate-500/10',
+    'border-blue-500/30 text-blue-600 bg-blue-500/10',
+    'border-purple-500/30 text-purple-600 bg-purple-500/10',
+    'border-yellow-600/30 text-yellow-700 bg-yellow-500/10',
+    'border-cyan-500/30 text-cyan-600 bg-cyan-500/10',
+    'border-pink-500/30 text-pink-600 bg-pink-500/10',
+    'border-emerald-500/30 text-emerald-600 bg-emerald-500/10',
+    'border-yellow-600/30 text-yellow-700 bg-yellow-500/10',
+    'border-purple-500/30 text-purple-600 bg-purple-500/10',
+    'border-red-500/30 text-red-600 bg-red-500/10',
+    'border-[var(--border)] text-[var(--text-muted)] bg-[var(--secondary)]',
   ];
   
   const progressMap = [56, 32, 68, 100, 25, 40, 45, 18, 100, 60];
@@ -121,7 +121,7 @@ export default function ProjectTable({ projects, onEdit }: { projects: Project[]
                 </td>
                 <td className="text-right">
                   <div className="text-[12.5px] font-bold text-[var(--text-primary)] tabular-nums">{(p.totalValue ?? 0).toLocaleString()}</div>
-                  <div className="text-[10px] text-[var(--text-muted)]">VND</div>
+                  <div className="text-[10px] text-[var(--text-muted)]">VNĐ</div>
                 </td>
                 <td className="text-center text-[11px] font-semibold text-[var(--text-secondary)]">
                   {p.startDate ? new Date(p.startDate).toLocaleDateString('vi-VN') : '—'}
@@ -130,7 +130,7 @@ export default function ProjectTable({ projects, onEdit }: { projects: Project[]
                   {p.endDate ? new Date(p.endDate).toLocaleDateString('vi-VN') : '—'}
                 </td>
                 <td className="text-center">
-                  <span className={`inline-flex items-center justify-center rounded-lg border px-2 py-0.5 text-[10px] font-black ${statusLabels[p.status]?.class || 'bg-slate-500/15 text-slate-500 border-slate-500/30'}`}>
+                  <span className={`inline-flex items-center justify-center rounded-lg border px-2 py-0.5 text-[10px] font-black ${statusLabels[p.status]?.class || 'bg-[var(--secondary)] text-[var(--text-muted)] border-[var(--border)]'}`}>
                     {statusLabels[p.status]?.text || p.status}
                   </span>
                 </td>

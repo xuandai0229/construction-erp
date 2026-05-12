@@ -47,8 +47,7 @@ export default function CostsPage() {
       <Sidebar activeItem="costs" />
       
       <main
-        className="erp-page-main"
-        style={{ marginLeft: sidebarCollapsed ? 'var(--erp-sidebar-collapsed)' : 'var(--erp-sidebar-width)' }}
+        className={`erp-page-main transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${sidebarCollapsed ? 'md:ml-[var(--erp-sidebar-collapsed)]' : 'md:ml-[var(--erp-sidebar-width)]'}`}
       >
         <Header />
         
@@ -86,7 +85,7 @@ export default function CostsPage() {
                 className="erp-btn bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--hover-bg)]"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1m-4-4-4 4-4-4m4 4V4" /></svg>
-                Export Excel
+                Xuất Excel
               </button>
               <button
                 onClick={() => setShowAddModal(true)}
@@ -164,7 +163,7 @@ export default function CostsPage() {
                       <th className="bg-[var(--table-head-bg)] min-w-[150px]">Hạng mục (WBS)</th>
                       <th className="bg-[var(--table-head-bg)] w-[100px]">Loại</th>
                       <th className="bg-[var(--table-head-bg)] w-[100px] text-right">Số lượng</th>
-                      <th className="bg-[var(--table-head-bg)] w-[150px] text-right">Thành tiền (VND)</th>
+                      <th className="bg-[var(--table-head-bg)] w-[150px] text-right">Thành tiền (VNĐ)</th>
                       <th className="bg-[var(--table-head-bg)] w-[120px] text-center">Trạng thái</th>
                       <th className="bg-[var(--table-head-bg)] w-[80px] text-center">Thao tác</th>
                     </tr>
@@ -237,7 +236,7 @@ export default function CostsPage() {
                 {selectedCost.status === 'paid' ? 'Đã thanh toán' : 'Công nợ'}
               </span>
               <h2 className="text-2xl font-black text-[var(--text-primary)]">{selectedCost.supplier || 'Nhiều nhà CC'}</h2>
-              <p className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-1">ID: {selectedCost.id.slice(0, 12).toUpperCase()}</p>
+              <p className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-1">Mã: {selectedCost.id.slice(0, 12).toUpperCase()}</p>
             </div>
             <div className="grid grid-cols-2 gap-6 mb-8">
               <div>
@@ -259,7 +258,7 @@ export default function CostsPage() {
             </div>
             <div className="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)] mb-8">
               <label className="erp-label">Tổng cộng</label>
-              <div className="text-3xl font-black text-[var(--text-accent)] tabular-nums">{selectedCost.amount.toLocaleString('vi-VN')} <span className="text-[11px] text-[var(--text-muted)] uppercase">VND</span></div>
+              <div className="text-3xl font-black text-[var(--text-accent)] tabular-nums">{selectedCost.amount.toLocaleString('vi-VN')} <span className="text-[11px] text-[var(--text-muted)] uppercase">VNĐ</span></div>
             </div>
             <div className="flex gap-4">
               <button className="flex-1 erp-btn bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--hover-bg)]">In phiếu chi</button>
