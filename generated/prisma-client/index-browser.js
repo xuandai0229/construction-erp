@@ -213,6 +213,7 @@ exports.Prisma.CostRecordScalarFieldEnum = {
   deletedAt: 'deletedAt',
   deletedById: 'deletedById',
   approvalStatus: 'approvalStatus',
+  workflowStatus: 'workflowStatus',
   vatRate: 'vatRate',
   vatAmount: 'vatAmount',
   retentionRate: 'retentionRate',
@@ -319,7 +320,10 @@ exports.Prisma.JournalEntryScalarFieldEnum = {
   isPosted: 'isPosted',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  isReversed: 'isReversed',
+  reversedById: 'reversedById',
+  reversalRef: 'reversalRef'
 };
 
 exports.Prisma.TransactionLineScalarFieldEnum = {

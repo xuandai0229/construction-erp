@@ -40,24 +40,7 @@ export function useUpdateCostMutation(projectId: string) {
       if (!res.success) throw new Error(res.error || 'Failed to update cost');
       return res.data;
     },
-    onMutate: async ({ id, updates }) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.costs.byProject(projectId) });
-      const previousCosts = queryClient.getQueryData<CostRecord[]>(queryKeys.costs.byProject(projectId));
-
-      if (previousCosts) {
-        queryClient.setQueryData<CostRecord[]>(
-          queryKeys.costs.byProject(projectId),
-          previousCosts.map((c) => (c.id === id ? { ...c, ...updates } : c))
-        );
-      }
-      return { previousCosts };
-    },
-    onError: (err, variables, context) => {
-      if (context?.previousCosts) {
-        queryClient.setQueryData(queryKeys.costs.byProject(projectId), context.previousCosts);
-      }
-    },
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
     },
   });

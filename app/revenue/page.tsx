@@ -11,6 +11,13 @@ import { TableVirtuoso } from 'react-virtuoso';
 import { useRevenuesQuery, useUpdateRevenueMutation } from '@/services/queries/useRevenues';
 import { useWBSQuery } from '@/services/queries/useWBS';
 
+// Stable references to prevent re-render loops with TableVirtuoso
+const StableTableComponents = {
+  Table: (props: any) => <table {...props} className="erp-table w-full min-w-[860px]" />,
+  TableHead: (props: any) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
+  TableRow: (props: any) => <tr {...props} className="group hover:bg-[var(--secondary)] transition-colors" />,
+};
+
 export default function RevenueListPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const currentProjectId = useERPStore(state => state.currentProjectId);
@@ -75,11 +82,7 @@ export default function RevenueListPage() {
                 <TableVirtuoso
                   useWindowScroll
                   data={revenues}
-                  components={{
-                    Table: (props) => <table {...props} className="erp-table w-full min-w-[860px]" />,
-                    TableHead: (props) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
-                    TableRow: (props) => <tr {...props} className="group hover:bg-[var(--secondary)] transition-colors" />
-                  }}
+                  components={StableTableComponents}
                   fixedHeaderContent={() => (
                     <tr>
                       <th className="w-[100px] bg-[var(--table-head-bg)]">Ngày</th>

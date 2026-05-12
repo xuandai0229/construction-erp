@@ -15,6 +15,8 @@ export class AuditService {
     severity = "INFO",
     requestId,
     correlationId,
+    ipAddress,
+    userAgent,
   }: {
     userId?: string;
     action: AuditAction;
@@ -26,6 +28,8 @@ export class AuditService {
     severity?: "INFO" | "WARNING" | "CRITICAL";
     requestId?: string;
     correlationId?: string;
+    ipAddress?: string;
+    userAgent?: string;
   }) {
     try {
       return await prisma.auditLog.create({
@@ -40,6 +44,8 @@ export class AuditService {
           severity,
           requestId,
           correlationId,
+          ipAddress,
+          userAgent,
         },
       });
     } catch (error) {

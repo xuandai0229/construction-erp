@@ -11,6 +11,18 @@ import { TableVirtuoso } from 'react-virtuoso';
 import { useInvoicesQuery, useDeleteInvoiceMutation } from '@/services/queries/useDebts';
 import { useCostsQuery, useUpdateCostMutation } from '@/services/queries/useCosts';
 
+// Stable references for TableVirtuoso — prevents re-render loops
+const InvoiceTableComponents = {
+  Table: (props: any) => <table {...props} className="erp-table w-full min-w-[850px]" />,
+  TableHead: (props: any) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
+  TableRow: (props: any) => <tr {...props} className="group hover:bg-[var(--secondary)] transition-colors" />,
+};
+const CostTableComponents = {
+  Table: (props: any) => <table {...props} className="erp-table w-full min-w-[720px]" />,
+  TableHead: (props: any) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
+  TableRow: (props: any) => <tr {...props} className="group hover:bg-[var(--secondary)] transition-colors" />,
+};
+
 export default function DebtPage() {
   const currentProjectId = useERPStore(state => state.currentProjectId);
   const sidebarCollapsed = useERPStore(state => state.sidebarCollapsed);
@@ -67,11 +79,7 @@ export default function DebtPage() {
                   <TableVirtuoso
                     useWindowScroll
                     data={invoices}
-                    components={{
-                      Table: (props) => <table {...props} className="erp-table w-full min-w-[850px]" />,
-                      TableHead: (props) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
-                      TableRow: (props) => <tr {...props} className="group hover:bg-[var(--secondary)] transition-colors" />
-                    }}
+                    components={InvoiceTableComponents}
                     fixedHeaderContent={() => (
                       <tr>
                         <th className="w-[110px] bg-[var(--table-head-bg)]">Mã HĐ</th>
@@ -175,11 +183,7 @@ export default function DebtPage() {
                   <TableVirtuoso
                     useWindowScroll
                     data={unpaidCosts}
-                    components={{
-                      Table: (props) => <table {...props} className="erp-table w-full min-w-[720px]" />,
-                      TableHead: (props) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
-                      TableRow: (props) => <tr {...props} className="group hover:bg-[var(--secondary)] transition-colors" />
-                    }}
+                    components={CostTableComponents}
                     fixedHeaderContent={() => (
                       <tr>
                         <th className="w-[100px] bg-[var(--table-head-bg)]">Ngày</th>

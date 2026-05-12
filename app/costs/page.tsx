@@ -1,22 +1,33 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useERPStore } from '@/store/erpStore';
 import Sidebar from '@/app/components/Sidebar';
 import Header from '@/app/components/Header';
 import { formatVnd, formatDate } from '@/app/components/dashboard-data';
-import { CostType, CostRecord } from '@/app/types';
+import { CostType, CostRecord, costType_LABELS } from '@/app/types';
 import AddCostModal from '@/app/components/modals/AddCostModal';
 import { useCostsQuery } from '@/services/queries/useCosts';
 import { useWBSQuery } from '@/services/queries/useWBS';
 import { TableVirtuoso } from 'react-virtuoso';
 import { useProjectStatsQuery } from '@/services/queries/useProjects';
+import { queryKeys } from '@/lib/query-keys';
+
+const costTypes = Object.keys(costType_LABELS) as CostType[];
+
+// Define Table Components outside to ensure stability and avoid infinite loops
+const TableComponents = {
+  Table: (props: any) => <table {...props} className="erp-table w-full min-w-[1000px]" />,
+  TableHead: (props: any) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
+};
 
 export default function CostsPage() {
   const currentProjectId = useERPStore(state => state.currentProjectId);
   const sidebarCollapsed = useERPStore(state => state.sidebarCollapsed);
   
   // React Query server state
+  const queryClient = useQueryClient();
   const { data: costs = [], isLoading: isLoadingCosts } = useCostsQuery(currentProjectId);
   const { data: wbsData } = useWBSQuery(currentProjectId);
   const { data: stats } = useProjectStatsQuery(currentProjectId);
@@ -40,7 +51,13 @@ export default function CostsPage() {
     });
   }, [costs, search, typeFilter, statusFilter]);
 
-  const costTypes: CostType[] = ['material', 'labor', 'machine', 'subcontract', 'overhead', 'other'];
+  const virtuosoComponents = useMemo(() => ({
+    ...TableComponents,
+    TableRow: (props: any) => {
+      const { item, ...rest } = props;
+      return <tr {...rest} className="group hover:bg-[var(--secondary)] transition-colors cursor-pointer" onClick={() => setSelectedCost(item)} />;
+    }
+  }), []);
 
   return (
     <div className="erp-page">
@@ -88,7 +105,10 @@ export default function CostsPage() {
                 Xuất Excel
               </button>
               <button
-                onClick={() => setShowAddModal(true)}
+                onClick={() => {
+                  setSelectedCost(null);
+                  setShowAddModal(true);
+                }}
                 className="erp-btn bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14" /></svg>
@@ -151,13 +171,8 @@ export default function CostsPage() {
                 <TableVirtuoso
                   useWindowScroll
                   data={filteredCosts}
-                  components={{
-                    Table: (props) => <table {...props} className="erp-table w-full min-w-[1000px]" />,
-                    TableHead: (props) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
-                    TableRow: (props) => <tr {...props} className="group hover:bg-[var(--secondary)] transition-colors cursor-pointer" onClick={() => setSelectedCost(props.item)} />
-                  }}
-                  fixedHeaderContent={() => (
-                    <tr>
+                  components={virtuosoComponents}
+                  fixedHeaderContent={() => (                    <tr>
                       <th className="bg-[var(--table-head-bg)] w-[100px]">Ngày</th>
                       <th className="bg-[var(--table-head-bg)] min-w-[200px]">Nhà cung cấp & Nội dung</th>
                       <th className="bg-[var(--table-head-bg)] min-w-[150px]">Hạng mục (WBS)</th>
@@ -256,13 +271,89 @@ export default function CostsPage() {
                 <div className="text-[13px] font-bold text-[var(--text-primary)] tabular-nums">{(selectedCost.unitPrice || selectedCost.amount).toLocaleString('vi-VN')} ₫</div>
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)] mb-8">
+            <div className="mb-8 p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
+              <div className="flex items-center justify-between mb-2">
+                <label className="erp-label mb-0">Trạng thái sổ cái</label>
+                <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${
+                  selectedCost.workflowStatus === 'POSTED' ? 'bg-emerald-500/20 text-emerald-500' : 
+                  selectedCost.workflowStatus === 'REVERSED' ? 'bg-rose-500/20 text-rose-500' : 'bg-amber-500/20 text-amber-500'
+                }`}>
+                  {selectedCost.workflowStatus}
+                </span>
+              </div>
               <label className="erp-label">Tổng cộng</label>
               <div className="text-3xl font-black text-[var(--text-accent)] tabular-nums">{selectedCost.amount.toLocaleString('vi-VN')} <span className="text-[11px] text-[var(--text-muted)] uppercase">VNĐ</span></div>
             </div>
-            <div className="flex gap-4">
-              <button className="flex-1 erp-btn bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--hover-bg)]">In phiếu chi</button>
-              <button className="flex-1 erp-btn bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-600/20">Chỉnh sửa</button>
+
+            <div className="flex flex-col gap-4 mt-8 pt-6 border-t border-[var(--border)]">
+              <div className="flex gap-4">
+                <button 
+                  onClick={() => setShowAddModal(true)}
+                  className="flex-1 erp-btn bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-600/20"
+                >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                  Chỉnh sửa
+                </button>
+
+                <button 
+                  onClick={async () => {
+                    if (confirm('Bạn có chắc chắn muốn XÓA chi phí này? Hệ thống sẽ tạo bút toán đảo nếu đã post sổ cái.')) {
+                      try {
+                        const res = await fetch(`/api/costs/${selectedCost.id}`, {
+                          method: 'DELETE',
+                          headers: { 'x-user-id': 'admin' }
+                        });
+                        if (res.ok) {
+                          queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(currentProjectId) });
+                          queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(currentProjectId), 'stats'] });
+                          alert('Đã xóa thành công!');
+                          setSelectedCost(null);
+                        } else {
+                          const err = await res.json();
+                          alert('Lỗi: ' + err.error);
+                        }
+                      } catch (e) {
+                        alert('Lỗi kết nối');
+                      }
+                    }
+                  }}
+                  className="flex-1 erp-btn bg-red-600 text-white hover:bg-red-500 shadow-lg shadow-red-600/20"
+                >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+                  Xóa bỏ
+                </button>
+              </div>
+              
+              {selectedCost.workflowStatus === 'DRAFT' || selectedCost.workflowStatus === 'PENDING' ? (
+                <button 
+                  onClick={async () => {
+                    if (confirm('Bạn có chắc chắn muốn phê duyệt chi phí này và đẩy vào sổ cái?')) {
+                      try {
+                        const res = await fetch(`/api/costs/${selectedCost.id}/approve`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json', 'x-user-id': 'admin' },
+                          body: JSON.stringify({ status: 'POSTED' })
+                        });
+                        if (res.ok) {
+                          queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(currentProjectId) });
+                          queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(currentProjectId), 'stats'] });
+                          alert('Phê duyệt thành công!');
+                          setSelectedCost(null);
+                        } else {
+                          const err = await res.json();
+                          alert('Lỗi: ' + err.error);
+                        }
+                      } catch (e) {
+                        alert('Lỗi kết nối');
+                      }
+                    }
+                  }}
+                  className="w-full erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-600/20"
+                >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                  Duyệt & Post Sổ Cái
+                </button>
+              ) : null}
             </div>
           </div>
         </div>
@@ -271,6 +362,7 @@ export default function CostsPage() {
       <AddCostModal
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
+        costRecord={selectedCost}
       />
     </div>
   );

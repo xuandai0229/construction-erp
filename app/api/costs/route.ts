@@ -1,6 +1,17 @@
 import { handleApiError, successResponse } from "@/lib/api-error";
 import { createCostSchema } from "@/lib/validations";
 import { CostService } from "@/services/cost.service";
+import { headers } from "next/headers";
+
+async function getServiceOptions() {
+  const head = await headers();
+  return {
+    userId: head.get("x-user-id") || undefined,
+    correlationId: head.get("x-correlation-id") || crypto.randomUUID(),
+    ipAddress: head.get("x-forwarded-for") || head.get("remote-addr") || undefined,
+    userAgent: head.get("user-agent") || undefined,
+  };
+}
 
 export async function GET(request: Request) {
   try {
@@ -18,23 +29,7 @@ export async function GET(request: Request) {
 
     const items = await CostService.findByProject(projectId, filters);
 
-    // Map to frontend shape (snake_case)
-    const mapped = items.map((c) => ({
-      id: c.id,
-      projectId: c.projectId,
-      wbsId: c.wbsId,
-      wbsName: c.wbs.name,
-      costType: c.costType,
-      amount: c.amount,
-      quantity: c.quantity,
-      unitPrice: c.unitPrice,
-      supplier: c.supplier,
-      note: c.note,
-      date: c.date.toISOString(),
-      status: c.status,
-      createdAt: c.createdAt.toISOString(),
-    }));
-    return successResponse(mapped);
+    return successResponse(items);
   } catch (error) {
     return handleApiError(error);
   }
@@ -44,23 +39,11 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const data = createCostSchema.parse(body);
+    const options = await getServiceOptions();
 
-    const item = await CostService.create(data);
+    const item = await CostService.create(data, options);
 
-    return successResponse({
-      id: item.id,
-      projectId: item.projectId,
-      wbsId: item.wbsId,
-      costType: item.costType,
-      amount: item.amount,
-      quantity: item.quantity,
-      unitPrice: item.unitPrice,
-      supplier: item.supplier,
-      note: item.note,
-      date: item.date.toISOString(),
-      status: item.status,
-      createdAt: item.createdAt.toISOString(),
-    }, null, 201);
+    return successResponse(item, { correlationId: options.correlationId }, 201);
   } catch (error) {
     return handleApiError(error);
   }

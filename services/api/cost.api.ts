@@ -4,6 +4,10 @@ import { mapCostFromApi, mapBudgetFromApi, mapCostToApi } from '@/lib/mappers/co
 export const costApi = {
   async getCostsByProject(projectId: string, headers: any = {}): Promise<ServiceResponse<CostRecord[]>> {
     const res = await fetch(`/api/costs?projectId=${projectId}`, { headers });
+    if (!res.ok) {
+      const errorText = await res.text();
+      return { success: false, error: `API Error (${res.status}): ${errorText.substring(0, 100)}` };
+    }
     const json = await res.json();
     if (json.success) {
       return { success: true, data: json.data.map(mapCostFromApi) };
@@ -13,6 +17,10 @@ export const costApi = {
 
   async getBudgetsByProject(projectId: string, headers: any = {}): Promise<ServiceResponse<BudgetRecord[]>> {
     const res = await fetch(`/api/budgets?projectId=${projectId}`, { headers });
+    if (!res.ok) {
+      const errorText = await res.text();
+      return { success: false, error: `API Error (${res.status}): ${errorText.substring(0, 100)}` };
+    }
     const json = await res.json();
     if (json.success) {
       return { success: true, data: json.data.map(mapBudgetFromApi) };

@@ -77,6 +77,8 @@ export interface CostRecord {
   createdById?: string | null;
   createdAt: string;
   updatedAt: string;
+  workflowStatus: string;
+  approvalStatus: string;
 }
 
 export interface BudgetRecord {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
 import Sidebar from '@/app/components/Sidebar';
 import Header from '@/app/components/Header';
@@ -9,12 +9,17 @@ export default function SettingsPage() {
   const sidebarCollapsed = useERPStore(state => state.sidebarCollapsed);
   const userRole         = useERPStore(state => state.userRole);
 
-  const [theme, setTheme] = useState(
-    typeof window !== 'undefined' ? localStorage.getItem('theme') || 'dark' : 'dark'
-  );
+  const [theme, setTheme] = useState('dark');
   const [density, setDensity] = useState('compact');
   const [language, setLanguage] = useState('vi');
   const [saved, setSaved] = useState(false);
+
+  // Read saved settings on mount (client-only) to avoid SSR/hydration mismatch
+  useEffect(() => {
+    setTheme(localStorage.getItem('theme') || 'dark');
+    setDensity(localStorage.getItem('erp-density') || 'compact');
+    setLanguage(localStorage.getItem('erp-language') || 'vi');
+  }, []);
 
   const toggleTheme = (val: string) => {
     setTheme(val);

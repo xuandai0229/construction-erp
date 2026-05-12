@@ -16,6 +16,8 @@ export function mapCostFromApi(c: any): CostRecord {
     createdById: c.createdById ?? null,
     createdAt: new Date(c.createdAt).toISOString(),
     updatedAt: c.updatedAt ? new Date(c.updatedAt).toISOString() : new Date().toISOString(),
+    workflowStatus: c.workflowStatus || "DRAFT",
+    approvalStatus: c.approvalStatus || "DRAFT",
   };
 }
 

@@ -158,4 +158,54 @@ export class PostingEngine {
       });
     }
   }
+
+  /**
+   * Reverses an existing Journal Entry (Immutable Ledger approach)
+   */
+  static async reverseJournal(tx: any, sourceId: string, sourceType: string, userId: string) {
+    const oldEntry = await tx.journalEntry.findFirst({
+      where: { sourceId, sourceType },
+      include: { lines: true }
+    });
+
+    if (!oldEntry) return; // Nothing to reverse
+    if (oldEntry.isReversed) throw new Error("Giao dịch đã được hủy trước đó.");
+
+    // Mark old entry as reversed
+    await tx.journalEntry.update({
+      where: { id: oldEntry.id },
+      data: { isReversed: true, reversedById: userId }
+    });
+
+    // Create new reversing entry
+    const newEntry = await tx.journalEntry.create({
+      data: {
+        projectId: oldEntry.projectId,
+        description: `Hủy giao dịch: ${oldEntry.description}`,
+        reference: `REV-${oldEntry.reference}`,
+        sourceType: oldEntry.sourceType,
+        sourceId: oldEntry.sourceId,
+        reversalRef: oldEntry.id,
+        isPosted: true,
+      }
+    });
+
+    // Reverse lines (Swap DEBIT/CREDIT)
+    for (const line of oldEntry.lines) {
+      await tx.transactionLine.create({
+        data: {
+          journalEntryId: newEntry.id,
+          accountId: line.accountId,
+          amount: line.amount,
+          type: line.type === "DEBIT" ? "CREDIT" : "DEBIT",
+          description: `Hủy: ${line.description}`
+        }
+      });
+    }
+  }
+
+  static async assertPeriodNotLocked(date: Date) {
+    // Implement fiscal period lock check here
+    // throw new PeriodLockedError() if locked
+  }
 }

@@ -6,6 +6,22 @@ import { TableVirtuoso } from 'react-virtuoso';
 import { useMemo } from 'react';
 import { useDeleteWBSMutation } from '@/services/queries/useWBS';
 
+// Stable references to prevent re-render loops with TableVirtuoso
+const WBSStableTableComponents = {
+  Table: (props: any) => <table {...props} className="erp-table w-full min-w-[1200px]" />,
+  TableHead: (props: any) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
+  TableRow: (props: any) => {
+    const node = props.item as FlattenedNode;
+    const isParent = node.children && node.children.length > 0;
+    return (
+      <tr 
+        {...props} 
+        className={`transition-colors hover:bg-[var(--secondary)] ${isParent && node.level === 0 ? 'bg-[var(--secondary)]/50' : ''}`} 
+      />
+    );
+  }
+};
+
 interface WBSTableProps {
   nodes: EnrichedWBSNode[];
   onToggleExpand: (id: string) => void;
@@ -74,20 +90,7 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, totalBudget, t
         <TableVirtuoso
           useWindowScroll
           data={flattenedNodes}
-          components={{
-            Table: (props) => <table {...props} className="erp-table w-full min-w-[1200px]" />,
-            TableHead: (props) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
-            TableRow: (props) => {
-              const node = props.item as FlattenedNode;
-              const isParent = node.children && node.children.length > 0;
-              return (
-                <tr 
-                  {...props} 
-                  className={`transition-colors hover:bg-[var(--secondary)] ${isParent && node.level === 0 ? 'bg-[var(--secondary)]/50' : ''}`} 
-                />
-              );
-            }
-          }}
+          components={WBSStableTableComponents}
           fixedHeaderContent={() => (
             <tr>
               <th className="w-10 text-center bg-[var(--table-head-bg)]">

@@ -67,6 +67,7 @@ export type UpdateWBSDTO = z.infer<typeof updateWBSSchema>;
 // ─────────────────────────────────────────────
 
 export const createCostSchema = z.object({
+  requestId: z.string().uuid("Idempotency key bắt buộc phải là UUID").optional(),
   projectId: z.string().uuid("Dự án là bắt buộc"),
   wbsId: z.string().uuid("Hạng mục WBS là bắt buộc"),
   costType: z.nativeEnum(CostType).default(CostType.material),
@@ -84,6 +85,12 @@ export type CreateCostDTO = z.infer<typeof createCostSchema>;
 
 export const updateCostSchema = createCostSchema.partial().omit({ projectId: true });
 export type UpdateCostDTO = z.infer<typeof updateCostSchema>;
+
+export const approveCostSchema = z.object({
+  action: z.enum(["APPROVE", "REJECT"]),
+  comment: z.string().optional(),
+});
+export type ApproveCostDTO = z.infer<typeof approveCostSchema>;
 
 // ─────────────────────────────────────────────
 // BUDGET

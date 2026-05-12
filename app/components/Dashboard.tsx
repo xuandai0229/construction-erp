@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useERPStore } from '@/store/erpStore';
 import Sidebar from './Sidebar';
@@ -16,18 +16,35 @@ import { useCostsQuery } from '@/services/queries/useCosts';
 import { useWBSQuery } from '@/services/queries/useWBS';
 
 export default function Dashboard() {
-  const { currentProjectId, sidebarCollapsed } = useERPStore();
+  const { currentProjectId, sidebarCollapsed, setCurrentProject } = useERPStore();
   const router = useRouter();
 
   // Queries
-  const { data: projects = [], isLoading: isLoadingProjects } = useProjectsQuery();
-  const { data: stats, isLoading: isLoadingStats } = useProjectStatsQuery(currentProjectId);
-  const { data: costs = [], isLoading: isLoadingCosts } = useCostsQuery(currentProjectId);
-  const { data: wbsData, isLoading: isLoadingWBS } = useWBSQuery(currentProjectId);
+  const { data: projects = [], isLoading: isLoadingProjects, isError: isErrorProjects, refetch: refetchProjects } = useProjectsQuery();
+  const { data: stats, isLoading: isLoadingStats, isError: isErrorStats, refetch: refetchStats } = useProjectStatsQuery(currentProjectId);
+  const { data: costs = [], isLoading: isLoadingCosts, isError: isErrorCosts, refetch: refetchCosts } = useCostsQuery(currentProjectId);
+  const { data: wbsData, isLoading: isLoadingWBS, isError: isErrorWBS, refetch: refetchWBS } = useWBSQuery(currentProjectId);
 
   const [editingCost, setEditingCost] = useState<CostRecord | null>(null);
 
-  const isLoading = isLoadingProjects || (projects.length > 0 && (isLoadingStats || isLoadingCosts || isLoadingWBS));
+  // STABILITY FIX: Auto-select first project if none selected to prevent "idle loading"
+  useEffect(() => {
+    if (!currentProjectId && projects.length > 0) {
+      setCurrentProject(projects[0].id);
+    }
+  }, [projects, currentProjectId, setCurrentProject]);
+
+  const isLoading = isLoadingProjects || (currentProjectId && projects.length > 0 && (isLoadingStats || isLoadingCosts || isLoadingWBS));
+  const isError = isErrorProjects || (currentProjectId && (isErrorStats || isErrorCosts || isErrorWBS));
+
+  const handleRetry = () => {
+    refetchProjects();
+    if (currentProjectId) {
+      refetchStats();
+      refetchCosts();
+      refetchWBS();
+    }
+  };
 
   const data = useMemo(() => {
     const project = projects.find((p: Project) => p.id === currentProjectId) || projects[0] || { id: '', name: 'No Project', contractValue: 0, status: 'PLANNED' };
@@ -84,20 +101,43 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex">
+      <div className="min-h-screen bg-[#020617] flex">
         <Sidebar activeItem="overview" />
         <div className="flex-1">
-          <div className="h-[74px] border-b border-slate-800/50 bg-[var(--table-head-bg)] animate-pulse" />
+          <div className="h-[74px] border-b border-slate-800/50 bg-[#0f172a] animate-pulse" />
           <div className="p-8 space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[1, 2, 3, 4].map(i => <div key={i} className="h-32 rounded-2xl bg-[var(--secondary)] animate-pulse" />)}
+              {[1, 2, 3, 4].map(i => <div key={i} className="h-32 rounded-2xl bg-slate-900 animate-pulse" />)}
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 h-96 rounded-2xl bg-[var(--secondary)] animate-pulse" />
-              <div className="h-96 rounded-2xl bg-[var(--secondary)] animate-pulse" />
+              <div className="lg:col-span-2 h-96 rounded-2xl bg-slate-900 animate-pulse" />
+              <div className="h-96 rounded-2xl bg-slate-900 animate-pulse" />
             </div>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-[#020617] flex">
+        <Sidebar activeItem="overview" />
+        <main className="flex-1 flex flex-col items-center justify-center p-8">
+          <div className="max-w-md text-center">
+            <div className="mb-6 mx-auto h-20 w-20 rounded-2xl bg-rose-500/10 border border-rose-500/20 grid place-items-center">
+              <svg viewBox="0 0 24 24" className="h-10 w-10 text-rose-500" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            </div>
+            <h2 className="text-xl font-bold text-white mb-2">Lỗi kết nối dữ liệu</h2>
+            <p className="text-sm text-slate-400 mb-8">Không thể kết nối tới máy chủ API. Vui lòng kiểm tra lại đường truyền mạng hoặc liên hệ quản trị viên.</p>
+            <button 
+              onClick={handleRetry}
+              className="erp-btn bg-slate-800 text-white px-8 py-3 hover:bg-slate-700"
+            >
+              Thử lại ngay
+            </button>
+          </div>
+        </main>
       </div>
     );
   }
@@ -224,6 +264,7 @@ export default function Dashboard() {
         <AddCostModal 
           isOpen={!!editingCost} 
           onClose={() => setEditingCost(null)} 
+          costRecord={editingCost.id ? editingCost : undefined}
         />
       )}
     </div>
