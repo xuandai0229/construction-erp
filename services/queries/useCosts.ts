@@ -1,0 +1,79 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { costApi } from '@/services/api/cost.api';
+import { queryKeys } from '@/lib/query-keys';
+import { CostRecord } from '@/app/types';
+
+export function useCostsQuery(projectId: string) {
+  return useQuery({
+    queryKey: queryKeys.costs.byProject(projectId),
+    queryFn: async () => {
+      if (!projectId) return [];
+      const res = await costApi.getCostsByProject(projectId);
+      if (!res.success) throw new Error(res.error || 'Failed to fetch costs');
+      return res.data || [];
+    },
+    enabled: !!projectId,
+  });
+}
+
+export function useCreateCostMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: any) => {
+      const res = await costApi.createCost(data);
+      if (!res.success) throw new Error(res.error || 'Failed to create cost');
+      return res.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(variables.projectId) });
+    },
+  });
+}
+
+export function useUpdateCostMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, updates }: { id: string; updates: Partial<CostRecord> }) => {
+      const res = await costApi.updateCost(id, updates);
+      if (!res.success) throw new Error(res.error || 'Failed to update cost');
+      return res.data;
+    },
+    onMutate: async ({ id, updates }) => {
+      await queryClient.cancelQueries({ queryKey: queryKeys.costs.byProject(projectId) });
+      const previousCosts = queryClient.getQueryData<CostRecord[]>(queryKeys.costs.byProject(projectId));
+
+      if (previousCosts) {
+        queryClient.setQueryData<CostRecord[]>(
+          queryKeys.costs.byProject(projectId),
+          previousCosts.map((c) => (c.id === id ? { ...c, ...updates } : c))
+        );
+      }
+      return { previousCosts };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousCosts) {
+        queryClient.setQueryData(queryKeys.costs.byProject(projectId), context.previousCosts);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
+    },
+  });
+}
+
+export function useDeleteCostMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await costApi.deleteCost(id);
+      if (!res.success) throw new Error(res.error || 'Failed to delete cost');
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
+    },
+  });
+}

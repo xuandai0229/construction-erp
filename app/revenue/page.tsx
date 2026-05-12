@@ -1,79 +1,132 @@
 'use client';
 
+import { useState } from 'react';
 import Sidebar from '@/app/components/Sidebar';
 import Header from '@/app/components/Header';
 import { useERPStore } from '@/store/erpStore';
 import { formatVnd, formatDate } from '@/app/components/dashboard-data';
 import { RevenueStatus } from '@/app/types';
+import AddRevenueModal from '@/app/components/modals/AddRevenueModal';
+import { TableVirtuoso } from 'react-virtuoso';
+import { useRevenuesQuery, useUpdateRevenueMutation } from '@/services/queries/useRevenues';
+import { useWBSQuery } from '@/services/queries/useWBS';
 
 export default function RevenueListPage() {
-  const revenues = useERPStore(state => state.revenues);
-  const wbs = useERPStore(state => state.wbs);
-  const updateRevenue = useERPStore(state => state.updateRevenue);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const currentProjectId = useERPStore(state => state.currentProjectId);
+  const sidebarCollapsed = useERPStore(state => state.sidebarCollapsed);
 
-  const getWbsName = (id: string) => wbs.find(w => w.id === id)?.name || 'N/A';
+  // React Query
+  const { data: revenues = [], isLoading: isLoadingRevenues } = useRevenuesQuery(currentProjectId);
+  const { data: wbsData } = useWBSQuery(currentProjectId);
+  const { mutate: updateRevenue } = useUpdateRevenueMutation(currentProjectId);
 
-  const handleToggleStatus = (id: string, currentStatus: RevenueStatus) => {
-    const newStatus: RevenueStatus = currentStatus === 'paid' ? 'unpaid' : 'paid';
-    updateRevenue(id, { status: newStatus });
+  const wbs = wbsData?.flat || [];
+
+  const getWbsName = (id: string) => wbs.find(w => w.id === id)?.name || '—';
+
+  const handleToggle = (id: string, current: RevenueStatus) => {
+    updateRevenue({ id, updates: { status: current === 'paid' ? 'unpaid' : 'paid' } });
   };
 
   return (
-    <div className="flex min-h-screen bg-[#020617] text-slate-100">
+    <>
+    <AddRevenueModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} />
+    <div className="erp-page">
       <Sidebar activeItem="revenue" />
-      <main className="ml-[258px] flex-1">
+      <main
+        className="erp-page-main"
+        style={{ marginLeft: sidebarCollapsed ? 'var(--erp-sidebar-collapsed)' : 'var(--erp-sidebar-width)' }}
+      >
         <Header />
-        <div className="p-8 space-y-8">
-          <div>
-            <h1 className="text-2xl font-bold text-white">Danh sách doanh thu</h1>
-            <p className="text-slate-400 text-sm">Quản lý các khoản thu và trạng thái thanh toán</p>
+
+        <div className="p-6 md:p-8 space-y-6 animate-fade-in">
+          {/* Page Header */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[var(--border)] pb-6">
+            <div className="accent-line border-l-4 border-[var(--text-accent)] pl-4">
+              <h1 className="erp-section-title">Doanh thu</h1>
+              <p className="erp-section-subtitle">Quản lý các khoản thu và trạng thái thanh toán</p>
+            </div>
+            <button 
+              onClick={() => setShowAddModal(true)}
+              className="erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-900/20 gap-2 px-5"
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              Thêm doanh thu
+            </button>
           </div>
 
-          <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-slate-900 text-slate-400 font-bold border-b border-slate-800">
-                  <th className="px-5 py-4 text-left">Ngày</th>
-                  <th className="px-5 py-4 text-left">Hạng mục (WBS)</th>
-                  <th className="px-5 py-4 text-left">Diễn giải</th>
-                  <th className="px-5 py-4 text-right">Số tiền</th>
-                  <th className="px-5 py-4 text-center">Trạng thái</th>
-                  <th className="px-5 py-4 text-center">Thao tác</th>
-                </tr>
-              </thead>
-              <tbody>
-                {revenues.map((rev) => (
-                  <tr key={rev.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
-                    <td className="px-5 py-4 text-slate-400">{formatDate(rev.date)}</td>
-                    <td className="px-5 py-4 font-medium text-slate-200">{getWbsName(rev.wbsId)}</td>
-                    <td className="px-5 py-4 text-slate-400">{rev.description}</td>
-                    <td className="px-5 py-4 text-right font-bold text-emerald-400">{formatVnd(rev.amount)}</td>
-                    <td className="px-5 py-4 text-center">
-                      <span className={`inline-flex px-2 py-1 rounded-full text-[10px] font-bold uppercase ${rev.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/30' : 'bg-amber-500/10 text-amber-500 ring-1 ring-amber-500/30'}`}>
-                        {rev.status === 'paid' ? 'Đã thu' : 'Chưa thu'}
-                      </span>
-                    </td>
-                    <td className="px-5 py-4 text-center">
-                      <button 
-                        onClick={() => handleToggleStatus(rev.id, rev.status)}
-                        className="text-xs font-bold text-blue-400 hover:text-blue-300 underline underline-offset-4"
-                      >
-                        {rev.status === 'paid' ? 'Đánh dấu chưa thu' : 'Xác nhận đã thu'}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-                {revenues.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className="px-5 py-10 text-center text-slate-500">Chưa có bản ghi doanh thu nào</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+          {/* Table */}
+          <div className="card-elevation overflow-hidden border border-[var(--border)] rounded-lg">
+            <div className="overflow-x-auto scrollbar-hide">
+              {isLoadingRevenues ? (
+                <div className="h-32 flex flex-col items-center justify-center bg-[var(--table-head-bg)]">
+                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
+                  <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-3">
+                    Đang tải doanh thu...
+                  </div>
+                </div>
+              ) : revenues.length === 0 ? (
+                <div className="h-32 flex items-center justify-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest bg-[var(--table-head-bg)]">
+                  Chưa có bản ghi doanh thu nào
+                </div>
+              ) : (
+                <TableVirtuoso
+                  useWindowScroll
+                  data={revenues}
+                  components={{
+                    Table: (props) => <table {...props} className="erp-table w-full min-w-[860px]" />,
+                    TableHead: (props) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
+                    TableRow: (props) => <tr {...props} className="group hover:bg-[var(--secondary)] transition-colors" />
+                  }}
+                  fixedHeaderContent={() => (
+                    <tr>
+                      <th className="w-[100px] bg-[var(--table-head-bg)]">Ngày</th>
+                      <th className="min-w-[180px] bg-[var(--table-head-bg)]">Hạng mục (WBS)</th>
+                      <th className="min-w-[200px] bg-[var(--table-head-bg)]">Diễn giải</th>
+                      <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Số tiền</th>
+                      <th className="w-[100px] text-center bg-[var(--table-head-bg)]">Trạng thái</th>
+                      <th className="w-[140px] text-center bg-[var(--table-head-bg)]">Thao tác</th>
+                    </tr>
+                  )}
+                  itemContent={(i, rev) => (
+                    <>
+                      <td className="whitespace-nowrap text-[12px] font-semibold text-[var(--text-muted)] group-hover:text-[var(--text-accent)] transition-colors">
+                        {formatDate(rev.date)}
+                      </td>
+                      <td className="font-bold text-[var(--text-primary)]">
+                        {getWbsName(rev.wbsId)}
+                      </td>
+                      <td className="text-[var(--text-secondary)] text-[12.5px]">
+                        {rev.description}
+                      </td>
+                      <td className="text-right tabular-nums font-black text-emerald-500 whitespace-nowrap group-hover:text-emerald-400 transition-colors">
+                        {formatVnd(rev.amount)}
+                      </td>
+                      <td className="text-center">
+                        <span className={rev.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}>
+                          {rev.status === 'paid' ? 'Đã thu' : 'Chưa thu'}
+                        </span>
+                      </td>
+                      <td className="text-center">
+                        <button
+                          onClick={() => handleToggle(rev.id, rev.status)}
+                          className="text-[11px] font-bold text-[var(--text-accent)] hover:underline underline-offset-4 transition-colors"
+                        >
+                          {rev.status === 'paid' ? 'Đánh dấu chưa thu' : 'Xác nhận đã thu'}
+                        </button>
+                      </td>
+                    </>
+                  )}
+                />
+              )}
+            </div>
           </div>
         </div>
       </main>
     </div>
+    </>
   );
 }
-

@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useERPStore } from '@/store/erpStore';
 import { WBSItem } from '@/app/types';
+import { useProjectsQuery } from '@/services/queries/useProjects';
+import { useWBSQuery, useCreateWBSMutation, useUpdateWBSMutation } from '@/services/queries/useWBS';
 
 interface Props {
   isOpen: boolean;
@@ -11,12 +13,14 @@ interface Props {
 }
 
 export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
-  const projects = useERPStore(state => state.projects);
-  const currentProjectId = useERPStore(state => state.currentProjectId);
-  const wbsItems = useERPStore(state => state.wbs);
-  const addWBS = useERPStore(state => state.addWBS);
-  const updateWBS = useERPStore(state => state.updateWBS);
-  const setCurrentProject = useERPStore(state => state.setCurrentProject);
+  const { currentProjectId, setCurrentProject } = useERPStore();
+  
+  const { data: projects = [] } = useProjectsQuery();
+  const { data: wbsData } = useWBSQuery(currentProjectId);
+  const wbsItems = wbsData?.flat || [];
+
+  const { mutateAsync: createWBS } = useCreateWBSMutation(currentProjectId);
+  const { mutateAsync: updateWBS } = useUpdateWBSMutation(currentProjectId);
 
   const [form, setForm] = useState({
     projectId: currentProjectId || projects[0]?.id || '',
@@ -52,7 +56,7 @@ export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
     setError('');
   };
 
-  const parentOptions = wbsItems.filter(w =>
+  const parentOptions = wbsItems.filter((w: any) =>
     (form.projectId ? w.projectId === form.projectId : true) && (wbsItem ? w.id !== wbsItem.id : true)
   );
 
@@ -62,42 +66,44 @@ export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
     if (!form.name.trim()) return setError('Vui lòng nhập tên hạng mục');
 
     setLoading(true);
-    let res;
-    if (wbsItem) {
-      res = await updateWBS(form.projectId, wbsItem.id, {
+    try {
+      const payload = {
+        projectId: form.projectId,
         name: form.name.trim(),
         parentId: form.parentId || null,
-      });
-    } else {
-      res = await addWBS(form.projectId, form.name.trim(), form.parentId || null);
-    }
-    setLoading(false);
+      };
 
-    if (res?.success) {
+      if (wbsItem) {
+        await updateWBS({ id: wbsItem.id, updates: payload });
+      } else {
+        await createWBS(payload);
+      }
       onClose();
-    } else {
-      setError(res?.error || 'Lỗi không xác định');
+    } catch (err: any) {
+      setError(err.message || 'Lỗi không xác định');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-md mx-4 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl shadow-black/50">
+      <div className="relative z-10 w-full max-w-md mx-4 rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-2xl shadow-black/50">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-[var(--divider)] px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600/20 text-emerald-400 ring-1 ring-emerald-500/30">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600/20 text-emerald-500 ring-1 ring-emerald-500/30">
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
                 {wbsItem ? <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /> : <path d="M12 3v5m-6 4h12M6 12v5m12-5v5" />}
               </svg>
             </div>
             <div>
-              <h2 className="text-[15px] font-bold text-slate-100">{wbsItem ? 'Cập nhật hạng mục' : 'Thêm hạng mục WBS'}</h2>
-              <p className="text-xs text-slate-500">{wbsItem ? 'Chỉnh sửa mục công trình' : 'Tạo mục công trình mới'}</p>
+              <h2 className="text-[15px] font-bold text-[var(--text-primary)]">{wbsItem ? 'Cập nhật hạng mục' : 'Thêm hạng mục WBS'}</h2>
+              <p className="text-[11px] font-bold text-[var(--text-muted)] tracking-wider">{wbsItem ? 'Chỉnh sửa mục công trình' : 'Tạo mục công trình mới'}</p>
             </div>
           </div>
-          <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-800 hover:text-white transition-colors">
+          <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--text-muted)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)] transition-colors">
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
@@ -107,58 +113,58 @@ export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
         {/* Form */}
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Dự án <span className="text-red-400">*</span></label>
+            <label className="erp-label">Dự án <span className="text-red-500">*</span></label>
             <div className="relative">
               <select
                 value={form.projectId}
                 disabled={!!wbsItem}
                 onChange={e => handleChange('projectId', e.target.value)}
-                className="w-full h-9 appearance-none rounded-lg border border-slate-700 bg-slate-800/50 px-3 pr-8 text-sm text-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
+                className="erp-input w-full appearance-none pr-8 disabled:opacity-50"
               >
                 <option value="">-- Chọn dự án --</option>
-                {projects.map(p => (
+                {projects.map((p: any) => (
                   <option key={p.id} value={p.id}>{p.name}</option>
                 ))}
               </select>
-              <svg viewBox="0 0 24 24" className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg viewBox="0 0 24 24" className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)]" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="m6 9 6 6 6-6" />
               </svg>
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Hạng mục cha (tùy chọn)</label>
+            <label className="erp-label">Hạng mục cha (tùy chọn)</label>
             <div className="relative">
               <select
                 value={form.parentId}
                 onChange={e => handleChange('parentId', e.target.value)}
-                className="w-full h-9 appearance-none rounded-lg border border-slate-700 bg-slate-800/50 px-3 pr-8 text-sm text-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="erp-input w-full appearance-none pr-8"
               >
                 <option value="">-- Hạng mục gốc --</option>
-                {parentOptions.map(w => (
+                {parentOptions.map((w: any) => (
                   <option key={w.id} value={w.id}>{w.name}</option>
                 ))}
               </select>
-              <svg viewBox="0 0 24 24" className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg viewBox="0 0 24 24" className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)]" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="m6 9 6 6 6-6" />
               </svg>
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Tên hạng mục <span className="text-red-400">*</span></label>
+            <label className="erp-label">Tên hạng mục <span className="text-red-500">*</span></label>
             <input
               type="text"
               value={form.name}
               onChange={e => handleChange('name', e.target.value)}
               placeholder="VD: 1. Công tác chuẩn bị"
-              className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800/50 px-3 text-sm text-slate-200 placeholder:text-slate-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="erp-input w-full"
               autoFocus
             />
           </div>
 
           {error && (
-            <div className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-400">
+            <div className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-500">
               <svg viewBox="0 0 24 24" className="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" />
               </svg>
@@ -166,14 +172,14 @@ export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
             </div>
           )}
 
-          <div className="flex items-center justify-end gap-3 pt-2">
-            <button type="button" onClick={onClose} className="h-9 rounded-lg border border-slate-700 bg-slate-800 px-4 text-sm font-semibold text-slate-300 hover:bg-slate-700 hover:text-white transition-colors">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--divider)] mt-6">
+            <button type="button" onClick={onClose} className="erp-btn border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-primary)] hover:bg-[var(--hover-bg)] transition-colors">
               Hủy
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex h-9 items-center gap-2 rounded-lg bg-emerald-600 px-4 text-sm font-semibold text-white hover:bg-emerald-500 transition-colors disabled:opacity-60"
+              className="erp-btn bg-emerald-600 text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 transition-colors disabled:opacity-60"
             >
               {loading
                 ? <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
@@ -187,4 +193,3 @@ export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
     </div>
   );
 }
-

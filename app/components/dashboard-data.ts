@@ -64,6 +64,9 @@ export function formatShortVnd(value: number) {
 
 export function formatDate(value?: string | null) {
   if (!value) return '--';
-  return new Date(value).toLocaleDateString('vi-VN');
+  const d = new Date(value);
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  return `${dd}/${mm}/${d.getFullYear()}`;
 }
 

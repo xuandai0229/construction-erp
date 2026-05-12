@@ -1,94 +1,231 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+import { useERPStore } from '@/store/erpStore';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import KPISection from './KPISection';
-import ChartSection from './ChartSection';
 import WBSTable from './WBSTable';
 import CostTable from './CostTable';
-import DebtPanel from './DebtPanel';
-import ProfitPanel from './ProfitPanel';
-import AIChatBox from './AIChatBox';
-import { useERPStore } from '@/store/erpStore';
+import { DebtPanel, ProfitPanel } from './DebtPanel';
 import AddCostModal from './modals/AddCostModal';
-import { CostRecord } from '../types';
+import { CostRecord, CostType, Project } from '../types';
+import { formatVnd } from './dashboard-data';
+import { useProjectsQuery, useProjectStatsQuery } from '@/services/queries/useProjects';
+import { useCostsQuery } from '@/services/queries/useCosts';
+import { useWBSQuery } from '@/services/queries/useWBS';
 
 export default function Dashboard() {
-  const init = useERPStore(state => state.init);
-  const getDashboardData = useERPStore(state => state.getDashboardData);
-  const projects = useERPStore(state => state.projects);
-  const costs = useERPStore(state => state.costs);
-  const budgets = useERPStore(state => state.budgets);
-  const isInitialized = useERPStore(state => state.initialized);
+  const { currentProjectId, sidebarCollapsed } = useERPStore();
+  const router = useRouter();
 
-  useEffect(() => {
-    init();
-  }, [init]);
+  // Queries
+  const { data: projects = [], isLoading: isLoadingProjects } = useProjectsQuery();
+  const { data: stats, isLoading: isLoadingStats } = useProjectStatsQuery(currentProjectId);
+  const { data: costs = [], isLoading: isLoadingCosts } = useCostsQuery(currentProjectId);
+  const { data: wbsData, isLoading: isLoadingWBS } = useWBSQuery(currentProjectId);
 
-  const data = useMemo(() => getDashboardData(), [getDashboardData, projects, costs, budgets]);
   const [editingCost, setEditingCost] = useState<CostRecord | null>(null);
 
-  if (!isInitialized) {
-    return (
-      <div className="min-h-screen bg-[#020617] text-slate-100">
-        <Sidebar activeItem="overview" />
-        <main className="ml-[258px] grid min-h-screen place-items-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
-            <div className="text-sm font-medium text-slate-400">Đang tải dữ liệu...</div>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  const isLoading = isLoadingProjects || (projects.length > 0 && (isLoadingStats || isLoadingCosts || isLoadingWBS));
 
-  if (projects.length === 0) {
-    return (
-      <div className="min-h-screen bg-[#020617] text-slate-100">
-        <Sidebar activeItem="overview" />
-        <main className="ml-[258px] grid min-h-screen place-items-center">
-          <div className="flex flex-col items-center gap-3">
-            <svg viewBox="0 0 24 24" className="h-16 w-16 text-slate-600" fill="none" stroke="currentColor" strokeWidth="1">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-            <h3 className="text-lg font-semibold text-slate-300">Chưa có dự án nào</h3>
-            <p className="text-sm text-slate-500">Vui lòng tạo dự án mới ở mục Dự án để xem báo cáo.</p>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  const data = useMemo(() => {
+    const project = projects.find((p: Project) => p.id === currentProjectId) || projects[0] || { id: '', name: 'No Project', contractValue: 0, status: 'PLANNED' };
+    const wbsTree = wbsData?.tree || [];
+    
+    const fallbackData = {
+      project,
+      budget: [],
+      costs,
+      wbsTree,
+      revenue: Number(project.contractValue || 0),
+      receivable: { total: 0, paid: 0, remaining: 0, overdue: 0 },
+      payable: { total: 0, paid: 0, remaining: 0, overdue: 0 },
+      costByType: [],
+      cashFlow: [],
+      wbsRows: wbsTree as any,
+      progress: 0,
+      daysElapsed: 0,
+      durationDays: 0,
+    };
 
-  return (
-    <div className="min-h-screen bg-[#020617] text-slate-100">
-      <Sidebar activeItem="overview" />
-      <main className="ml-[258px] min-h-screen">
-        <Header data={data} />
-        <div className="space-y-5 px-6 py-5">
-          <KPISection data={data} />
-          <ChartSection data={data} />
-          <div className="grid grid-cols-[1.05fr_1.25fr] gap-4">
-            <WBSTable data={data} />
-            <div className="space-y-4">
-              <CostTable data={data} onEdit={setEditingCost} />
-              <div className="grid grid-cols-[1.05fr_.95fr] gap-4">
-                <DebtPanel data={data} />
-                <ProfitPanel data={data} />
-              </div>
+    if (!stats) return fallbackData;
+
+    const costByTypeArr = Object.entries(stats.costByType || {}).map(([type, value]) => ({
+      type: type as CostType,
+      label: type.charAt(0).toUpperCase() + type.slice(1),
+      value: value as number,
+      color: type === 'material' ? '#3b82f6' : type === 'labor' ? '#10b981' : '#f59e0b'
+    }));
+
+    return {
+      ...fallbackData,
+      project: {
+        ...project,
+        totalValue: Number(project.contractValue || stats.totalRevenue || 0),
+      },
+      revenue: Number(stats.totalRevenue || project.contractValue || 0),
+      receivable: {
+        total: stats.totalInvoiced,
+        paid: stats.totalPaidInvoice,
+        remaining: stats.totalRemainingInvoice,
+        overdue: stats.overdueInvoices,
+      },
+      payable: {
+        total: stats.totalCost,
+        paid: stats.paidCost,
+        remaining: stats.unpaidCost,
+        overdue: 0,
+      },
+      costByType: costByTypeArr,
+      progress: stats.taskProgress,
+    } as any;
+  }, [currentProjectId, projects, stats, costs, wbsData]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex">
+        <Sidebar activeItem="overview" />
+        <div className="flex-1">
+          <div className="h-[74px] border-b border-slate-800/50 bg-[var(--table-head-bg)] animate-pulse" />
+          <div className="p-8 space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map(i => <div key={i} className="h-32 rounded-2xl bg-[var(--secondary)] animate-pulse" />)}
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 h-96 rounded-2xl bg-[var(--secondary)] animate-pulse" />
+              <div className="h-96 rounded-2xl bg-[var(--secondary)] animate-pulse" />
             </div>
           </div>
-          <footer className="py-2 text-center text-xs text-slate-500">© 2024 Construction ERP. All rights reserved.</footer>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle Empty State
+  if (projects.length === 0) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex overflow-hidden">
+        <Sidebar activeItem="overview" />
+        <main className="flex-1 flex flex-col">
+          <Header data={data} />
+          <div className="flex-1 grid place-items-center p-8 text-center animate-fade-in">
+            <div className="max-w-md">
+              <div className="mb-6 mx-auto h-24 w-24 rounded-full bg-[var(--secondary)] grid place-items-center border border-[var(--border)] shadow-2xl">
+                <svg viewBox="0 0 24 24" className="h-10 w-10 text-[var(--text-muted)]" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M4 21V8l5-3 5 3v13M14 21V11l6 3v7M7 11h2M7 15h2" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-black text-[var(--text-primary)] mb-2">Chưa có dự án nào</h2>
+              <p className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-widest mb-8 leading-relaxed">Hãy khởi tạo dự án đầu tiên để bắt đầu quản lý chi phí & tiến độ.</p>
+              <button 
+                onClick={() => router.push('/projects')}
+                className="erp-btn bg-blue-600 text-white px-8 py-3 hover:bg-blue-500 shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)]"
+              >
+                Khởi tạo Dự án mới
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  const kpis = [
+    { label: 'Doanh thu (Hợp đồng)', value: data.revenue, color: 'text-blue-400', icon: 'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
+    { label: 'Tổng chi phí thực tế', value: data.payable.total, color: 'text-rose-400', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.407 2.67 1M12 17c-1.12 0-2.1-.425-2.69-1.041' },
+    { label: 'Phải thu khách hàng', value: data.receivable.total, color: 'text-emerald-400', icon: 'M17 9V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2m2 4h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2z' },
+    { label: 'Phải trả nhà thầu/NCC', value: data.payable.remaining, color: 'text-amber-400', icon: 'M3 10h18M7 15h1m4 0h1m4 0h1' },
+  ];
+
+  return (
+    <div className="min-h-screen bg-background text-foreground flex overflow-hidden">
+      <Sidebar activeItem="overview" />
+      
+      <main className={`flex-1 flex flex-col min-w-0 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${sidebarCollapsed ? 'md:ml-[var(--erp-sidebar-collapsed)]' : 'md:ml-[var(--erp-sidebar-width)]'}`}>
+        <Header data={data} />
+        
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8 space-y-8 animate-fade-in scrollbar-hide">
+          {/* KPI Section */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {kpis.map((kpi, i) => (
+              <div key={i} className="erp-kpi-card group cursor-default inner-border glow-primary bg-[var(--card)]">
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--secondary)] ring-1 ring-[var(--border)] ${kpi.color} group-hover:scale-110 group-hover:brightness-110 transition-all duration-300`}>
+                      <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2"><path d={kpi.icon} /></svg>
+                    </div>
+                    <div className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Real-time</div>
+                  </div>
+                  <div className="mt-auto">
+                    <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] mb-1">{kpi.label}</div>
+                    <div className="flex items-baseline gap-2">
+                      <div className="text-2xl font-black text-[var(--text-primary)] tabular-nums tracking-tight animate-count-up">{formatVnd(kpi.value)}</div>
+                      <div className="text-[10px] font-bold text-[var(--text-muted)]">VND</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-8">
+              {/* Financial Progress */}
+              <section className="card-elevation p-6 md:p-8">
+                <div className="mb-6 flex items-center justify-between">
+                  <div className="accent-line border-l-4 border-[var(--text-accent)] pl-4">
+                    <h3 className="text-[13px] font-black text-[var(--text-primary)] tracking-tight uppercase">Tiến độ dòng tiền & Hạng mục</h3>
+                    <p className="text-[9.5px] font-bold text-[var(--text-muted)] tracking-[0.2em] mt-0.5">REAL-TIME WBS ROLLUP</p>
+                  </div>
+                </div>
+                <div className="overflow-hidden rounded-xl border border-[var(--border)]">
+                  <WBSTable data={data.wbsRows} />
+                </div>
+              </section>
+
+              {/* Recent Costs */}
+              <section className="card-elevation p-6 md:p-8">
+                <div className="mb-6 flex items-center justify-between">
+                  <div className="accent-line border-l-4 border-[var(--text-accent)] pl-4">
+                    <h3 className="text-[13px] font-black text-[var(--text-primary)] tracking-tight uppercase">Chi phí ghi nhận gần nhất</h3>
+                    <p className="text-[9.5px] font-bold text-[var(--text-muted)] tracking-[0.2em] mt-0.5">LATEST COST INVOICES</p>
+                  </div>
+                  <button
+                    onClick={() => router.push('/costs')}
+                    className="group flex items-center gap-2 rounded-lg px-3 py-1.5 text-[11px] font-black text-blue-600 hover:bg-blue-600/10 transition-all uppercase tracking-widest"
+                  >
+                    Xem tất cả
+                    <svg viewBox="0 0 24 24" className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                  </button>
+                </div>
+                <div className="overflow-hidden rounded-xl border border-[var(--border)]">
+                  <CostTable costs={data.costs.slice(0, 5)} onEdit={setEditingCost} />
+                </div>
+              </section>
+            </div>
+
+            <div className="space-y-8">
+              {/* Debt Panels */}
+              <DebtPanel receivable={data.receivable} payable={data.payable} />
+              
+              {/* Profit Section */}
+              <ProfitPanel 
+                revenue={data.revenue} 
+                cost={data.payable.total} 
+                margin={data.progress} 
+              />
+            </div>
+          </div>
         </div>
       </main>
-
-      <AIChatBox />
-
-      <AddCostModal 
-        isOpen={!!editingCost} 
-        onClose={() => setEditingCost(null)} 
-        costRecord={editingCost} 
-      />
+      
+      {editingCost && (
+        <AddCostModal 
+          isOpen={!!editingCost} 
+          onClose={() => setEditingCost(null)} 
+        />
+      )}
     </div>
   );
 }

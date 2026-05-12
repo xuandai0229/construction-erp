@@ -73,6 +73,8 @@ model Project {
   updatedAt            DateTime               @updatedAt
   version              Int                    @default(1)
   contractValue        Decimal                @default(0) @db.Decimal(18, 2)
+  investor             String?
+  projectType          String?
   endDate              DateTime?
   startDate            DateTime?
   totalBudget          Decimal                @default(0) @db.Decimal(18, 2)

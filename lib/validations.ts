@@ -12,6 +12,8 @@ export const createProjectSchema = z.object({
   ownerId: z.string().uuid("Invalid Owner ID").optional(),
   contractValue: z.number().nonnegative("Giá trị hợp đồng không được âm").optional().default(0),
   totalBudget: z.number().nonnegative("Tổng dự toán không được âm").optional().default(0),
+  investor: z.string().min(1, "Chủ đầu tư là bắt buộc").max(255),
+  projectType: z.string().max(100).optional(),
   startDate: z.string().datetime({ offset: true }).optional().or(z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional()),
   endDate: z.string().datetime({ offset: true }).optional().or(z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional()),
 });

@@ -3,9 +3,11 @@
 import { EnrichedWBSNode, WBSItem } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
 
+import { useDeleteWBSMutation } from '@/services/queries/useWBS';
+
 export default function WBSRow({ node, onToggleExpand, onEdit, index }: { node: EnrichedWBSNode, onToggleExpand: (id: string) => void, onEdit: (w: WBSItem) => void, index: string }) {
-  const deleteWBS = useERPStore(state => state.deleteWBS);
   const currentProjectId = useERPStore(state => state.currentProjectId);
+  const { mutate: deleteWBS } = useDeleteWBSMutation(currentProjectId);
   
   const isParent = node.children && node.children.length > 0;
   const isOverBudget = node.variance < 0; 
@@ -28,7 +30,7 @@ export default function WBSRow({ node, onToggleExpand, onEdit, index }: { node: 
 
   const handleDelete = () => {
     if (window.confirm(`Bạn có chắc muốn xóa hạng mục "${node.name}" và toàn bộ hạng mục con?`)) {
-      deleteWBS(currentProjectId, node.id);
+      deleteWBS(node.id);
     }
   };
 

@@ -30,7 +30,8 @@ export class QuotationService {
     if (quotes.length === 0) return null;
 
     const minAmount = Number(quotes[0].totalAmount);
-    const minLeadTime = Math.min(...quotes.filter(q => q.leadTimeDays).map(q => q.leadTimeDays!));
+    const validLeadTimes = quotes.map(q => q.leadTimeDays).filter((v): v is number => v != null);
+    const minLeadTime = validLeadTimes.length > 0 ? Math.min(...validLeadTimes) : 0;
 
     return quotes.map(q => ({
       ...q,

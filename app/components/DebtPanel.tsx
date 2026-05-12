@@ -1,39 +1,110 @@
 'use client';
 
-import { DashboardData, DebtSummary, formatVnd } from './dashboard-data';
+import { DebtSummary, formatVnd } from './dashboard-data';
 
-export default function DebtPanel({ data }: { data: DashboardData }) {
+export function DebtPanel({ receivable, payable }: { receivable: DebtSummary, payable: DebtSummary }) {
+  const receivablePct = receivable.total > 0 ? (receivable.paid / receivable.total) * 100 : 0;
+  const payablePct    = payable.total    > 0 ? (payable.paid    / payable.total)    * 100 : 0;
+
   return (
-    <section className="rounded-lg border border-slate-800 bg-slate-900/70 p-5">
-      <h3 className="mb-4 text-[15px] font-extrabold text-slate-50">CÔNG NỢ</h3>
-      <div className="grid grid-cols-2 gap-4">
-        <DebtCard title="PHẢI THU (KHÁCH HÀNG)" data={data.receivable} labels={['Tổng phải thu', 'Đã thu', 'Còn lại', 'Quá hạn']} />
-        <DebtCard title="PHẢI TRẢ (NHÀ CUNG CẤP)" data={data.payable} labels={['Tổng phải trả', 'Đã trả', 'Còn lại', 'Quá hạn']} />
+    <section className="space-y-4">
+      {/* Receivable */}
+      <div className="card-elevation p-5">
+        <div className="accent-line mb-5">
+          <h3 className="text-[11px] font-black text-[var(--text-primary)] uppercase tracking-[0.18em]">Khoản phải thu</h3>
+          <p className="text-[9.5px] font-bold text-[var(--text-muted)] tracking-widest mt-0.5">ACCOUNTS RECEIVABLE</p>
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex items-baseline justify-between">
+            <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Tổng hóa đơn</span>
+            <span className="text-[13px] font-black text-[var(--text-primary)] tabular-nums">{formatVnd(receivable.total)}</span>
+          </div>
+          <div className="h-1.5 w-full rounded-full bg-[var(--secondary)] overflow-hidden border border-[var(--border)]">
+            <div className="h-full rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.4)] transition-all duration-700" style={{ width: `${Math.min(100, receivablePct)}%` }} />
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest">Đã thu</div>
+              <div className="text-[12px] font-bold text-blue-500 tabular-nums">{formatVnd(receivable.paid)}</div>
+            </div>
+            <div className="text-right">
+              <div className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest">Còn lại</div>
+              <div className="text-[12px] font-bold text-[var(--text-secondary)] tabular-nums">{formatVnd(receivable.remaining)}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Payable */}
+      <div className="card-elevation p-5">
+        <div className="accent-line mb-5" style={{ '--accent-color': '#f59e0b' } as React.CSSProperties}>
+          <h3 className="text-[11px] font-black text-[var(--text-primary)] uppercase tracking-[0.18em]">Khoản phải trả</h3>
+          <p className="text-[9.5px] font-bold text-[var(--text-muted)] tracking-widest mt-0.5">ACCOUNTS PAYABLE</p>
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex items-baseline justify-between">
+            <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Tổng công nợ</span>
+            <span className="text-[13px] font-black text-[var(--text-primary)] tabular-nums">{formatVnd(payable.total)}</span>
+          </div>
+          <div className="h-1.5 w-full rounded-full bg-[var(--secondary)] overflow-hidden border border-[var(--border)]">
+            <div className="h-full rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.4)] transition-all duration-700" style={{ width: `${Math.min(100, payablePct)}%` }} />
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest">Đã trả</div>
+              <div className="text-[12px] font-bold text-amber-500 tabular-nums">{formatVnd(payable.paid)}</div>
+            </div>
+            <div className="text-right">
+              <div className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest">Quá hạn</div>
+              <div className="text-[12px] font-bold text-rose-500 tabular-nums">{formatVnd(payable.overdue)}</div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
-function DebtCard({ title, data, labels }: { title: string; data: DebtSummary; labels: string[] }) {
-  const rows = [
-    { label: labels[0], value: data.total, color: 'bg-blue-500', text: 'text-slate-100' },
-    { label: labels[1], value: data.paid, color: 'bg-green-500', text: 'text-slate-100' },
-    { label: labels[2], value: data.remaining, color: 'bg-yellow-500', text: 'text-yellow-300' },
-    { label: labels[3], value: data.overdue, color: 'bg-red-500', text: 'text-red-400' },
-  ];
+export function ProfitPanel({ revenue, cost, margin }: { revenue: number; cost: number; margin: number }) {
+  const profit    = revenue - cost;
+  const profitPct = revenue > 0 ? (profit / revenue) * 100 : 0;
+  const positive  = profit >= 0;
 
   return (
-    <article className="rounded-lg border border-slate-800 bg-slate-950/40 p-4">
-      <h4 className="mb-4 text-sm font-extrabold text-slate-100">{title}</h4>
-      <div className="space-y-4 text-sm">
-        {rows.map((row) => (
-          <div key={row.label} className="flex items-center justify-between gap-4">
-            <span className="flex items-center gap-2 text-slate-300"><i className={`h-2.5 w-2.5 rounded-full ${row.color}`} />{row.label}</span>
-            <span className={`font-extrabold ${row.text}`}>{formatVnd(row.value)}</span>
-          </div>
-        ))}
+    <section className="card-elevation p-5">
+      <div className="accent-line mb-5">
+        <h3 className="text-[11px] font-black text-[var(--text-primary)] uppercase tracking-[0.18em]">Hiệu quả kinh doanh</h3>
+        <p className="text-[9.5px] font-bold text-[var(--text-muted)] tracking-widest mt-0.5">PROJECT PERFORMANCE</p>
       </div>
-    </article>
+
+      <div className="space-y-5">
+        <div>
+          <div className="text-[9.5px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-1">Lợi nhuận gộp</div>
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <span className={`text-2xl font-black tabular-nums tracking-tight ${positive ? 'text-emerald-500' : 'text-rose-500'}`}>
+              {positive ? '+' : ''}{formatVnd(profit)}
+            </span>
+            <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase">VND</span>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl bg-[var(--secondary)] border border-[var(--border)] p-3.5">
+            <div className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Tỷ suất LN</div>
+            <div className={`text-[18px] font-black tabular-nums ${profitPct >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+              {profitPct >= 0 ? '+' : ''}{profitPct.toFixed(1)}%
+            </div>
+          </div>
+          <div className="rounded-xl bg-[var(--secondary)] border border-[var(--border)] p-3.5">
+            <div className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Tiến độ</div>
+            <div className="text-[18px] font-black text-blue-500 tabular-nums">{margin.toFixed(1)}%</div>
+          </div>
+        </div>
+        <button className="w-full erp-btn bg-blue-600 text-white py-2.5 hover:bg-blue-500 shadow-lg shadow-blue-600/20">
+          Phân tích AI tài chính
+        </button>
+      </div>
+    </section>
   );
 }
-

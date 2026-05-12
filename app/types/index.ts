@@ -26,6 +26,7 @@ export interface Project {
   totalValue?: number;
   startDate?: string | null;
   endDate?: string | null;
+  projectType?: string | null;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
@@ -88,6 +89,8 @@ export interface BudgetRecord {
   createdAt: string;
   updatedAt: string;
 }
+
+export type Budget = BudgetRecord;
 
 export interface RevenueRecord {
   id: string;

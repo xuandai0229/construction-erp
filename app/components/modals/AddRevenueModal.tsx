@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
+import { useProjectsQuery } from '@/services/queries/useProjects';
+import { useWBSQuery } from '@/services/queries/useWBS';
+import { useCreateRevenueMutation } from '@/services/queries/useRevenues';
 
 interface Props {
   isOpen: boolean;
@@ -9,10 +12,13 @@ interface Props {
 }
 
 export default function AddRevenueModal({ isOpen, onClose }: Props) {
-  const projects = useERPStore(state => state.projects);
-  const wbsItems = useERPStore(state => state.wbs);
   const currentProjectId = useERPStore(state => state.currentProjectId);
-  const addRevenue = useERPStore(state => state.addRevenue);
+
+  const { data: projects = [] } = useProjectsQuery();
+  const { data: wbsData } = useWBSQuery(currentProjectId);
+  const wbsItems = wbsData?.flat || [];
+
+  const { mutateAsync: createRevenue } = useCreateRevenueMutation(currentProjectId);
 
   const [form, setForm] = useState({
     projectId: currentProjectId || (projects.length > 0 ? projects[0].id : ''),
@@ -27,11 +33,12 @@ export default function AddRevenueModal({ isOpen, onClose }: Props) {
     if (!form.projectId && projects.length > 0) {
       setForm(prev => ({ ...prev, projectId: currentProjectId || projects[0].id }));
     }
-  }, [projects, currentProjectId]);
+  }, [projects, currentProjectId, form.projectId]);
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const filteredWbs = wbsItems.filter(w =>
+  const filteredWbs = wbsItems.filter((w: any) =>
     form.projectId ? w.projectId === form.projectId : true
   );
 
@@ -45,65 +52,72 @@ export default function AddRevenueModal({ isOpen, onClose }: Props) {
     if (!form.amount || isNaN(amount) || amount <= 0) return setError('Số tiền phải là số dương');
 
     setLoading(true);
-    const res = await addRevenue(form.projectId, form.wbsId, amount, form.status, form.description, form.date);
-    setLoading(false);
-
-    if (res?.success) {
+    try {
+      await createRevenue({
+        projectId: form.projectId,
+        wbsId: form.wbsId,
+        amount: amount,
+        status: form.status,
+        description: form.description,
+        date: form.date,
+      });
       onClose();
-    } else {
-      setError(res?.error || 'Lỗi không xác định');
+    } catch (err: any) {
+      setError(err.message || 'Lỗi không xác định');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-lg mx-4 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
-          <h2 className="text-[15px] font-bold text-slate-100">Ghi nhận doanh thu</h2>
-          <button onClick={onClose} className="text-slate-500 hover:text-white">✕</button>
+      <div className="relative z-10 w-full max-w-lg mx-4 rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-2xl">
+        <div className="flex items-center justify-between border-b border-[var(--divider)] px-6 py-4">
+          <h2 className="text-[15px] font-bold text-[var(--text-primary)]">Ghi nhận doanh thu</h2>
+          <button onClick={onClose} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">✕</button>
         </div>
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1.5">Dự án</label>
+              <label className="erp-label">Dự án</label>
               <select
                 value={form.projectId}
                 onChange={e => setForm({...form, projectId: e.target.value, wbsId: ''})}
-                className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm text-slate-200"
+                className="erp-input w-full"
               >
                 <option value="">-- Chọn dự án --</option>
-                {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                {projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1.5">Hạng mục WBS</label>
+              <label className="erp-label">Hạng mục WBS</label>
               <select
                 value={form.wbsId}
                 onChange={e => setForm({...form, wbsId: e.target.value})}
-                className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm text-slate-200"
+                className="erp-input w-full"
               >
                 <option value="">-- Chọn hạng mục --</option>
-                {filteredWbs.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}
+                {filteredWbs.map((w: any) => <option key={w.id} value={w.id}>{w.name}</option>)}
               </select>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1.5">Số tiền (VND)</label>
+              <label className="erp-label">Số tiền (VND)</label>
               <input
                 type="number"
                 value={form.amount}
                 onChange={e => setForm({...form, amount: e.target.value})}
-                className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm text-slate-200"
+                className="erp-input w-full tabular-nums"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-400 mb-1.5">Trạng thái</label>
+              <label className="erp-label">Trạng thái</label>
               <select
                 value={form.status}
                 onChange={e => setForm({...form, status: e.target.value as 'paid' | 'unpaid'})}
-                className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm text-slate-200"
+                className="erp-input w-full"
               >
                 <option value="unpaid">Chưa thu tiền</option>
                 <option value="paid">Đã thu tiền</option>
@@ -111,22 +125,21 @@ export default function AddRevenueModal({ isOpen, onClose }: Props) {
             </div>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Mô tả</label>
+            <label className="erp-label">Mô tả</label>
             <input
               type="text"
               value={form.description}
               onChange={e => setForm({...form, description: e.target.value})}
-              className="w-full h-9 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm text-slate-200"
+              className="erp-input w-full"
             />
           </div>
-          {error && <div className="text-red-400 text-xs">{error}</div>}
-          <div className="flex justify-end gap-3 pt-2">
-            <button type="button" onClick={onClose} className="h-9 px-4 text-sm text-slate-300">Hủy</button>
-            <button type="submit" disabled={loading} className="h-9 px-4 bg-green-600 rounded-lg text-sm text-white">Lưu doanh thu</button>
+          {error && <div className="text-red-500 text-xs mt-2">{error}</div>}
+          <div className="flex justify-end gap-3 pt-4 border-t border-[var(--divider)] mt-6">
+            <button type="button" onClick={onClose} className="erp-btn border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-primary)] hover:bg-[var(--hover-bg)]">Hủy</button>
+            <button type="submit" disabled={loading} className="erp-btn bg-emerald-600 text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 disabled:opacity-60">Lưu doanh thu</button>
           </div>
         </form>
       </div>
     </div>
   );
 }
-

@@ -8772,6 +8772,8 @@ export namespace Prisma {
     updatedAt: Date | null
     version: number | null
     contractValue: Decimal | null
+    investor: string | null
+    projectType: string | null
     endDate: Date | null
     startDate: Date | null
     totalBudget: Decimal | null
@@ -8791,6 +8793,8 @@ export namespace Prisma {
     updatedAt: Date | null
     version: number | null
     contractValue: Decimal | null
+    investor: string | null
+    projectType: string | null
     endDate: Date | null
     startDate: Date | null
     totalBudget: Decimal | null
@@ -8810,6 +8814,8 @@ export namespace Prisma {
     updatedAt: number
     version: number
     contractValue: number
+    investor: number
+    projectType: number
     endDate: number
     startDate: number
     totalBudget: number
@@ -8843,6 +8849,8 @@ export namespace Prisma {
     updatedAt?: true
     version?: true
     contractValue?: true
+    investor?: true
+    projectType?: true
     endDate?: true
     startDate?: true
     totalBudget?: true
@@ -8862,6 +8870,8 @@ export namespace Prisma {
     updatedAt?: true
     version?: true
     contractValue?: true
+    investor?: true
+    projectType?: true
     endDate?: true
     startDate?: true
     totalBudget?: true
@@ -8881,6 +8891,8 @@ export namespace Prisma {
     updatedAt?: true
     version?: true
     contractValue?: true
+    investor?: true
+    projectType?: true
     endDate?: true
     startDate?: true
     totalBudget?: true
@@ -8987,6 +8999,8 @@ export namespace Prisma {
     updatedAt: Date
     version: number
     contractValue: Decimal
+    investor: string | null
+    projectType: string | null
     endDate: Date | null
     startDate: Date | null
     totalBudget: Decimal
@@ -9025,6 +9039,8 @@ export namespace Prisma {
     updatedAt?: boolean
     version?: boolean
     contractValue?: boolean
+    investor?: boolean
+    projectType?: boolean
     endDate?: boolean
     startDate?: boolean
     totalBudget?: boolean
@@ -9064,6 +9080,8 @@ export namespace Prisma {
     updatedAt?: boolean
     version?: boolean
     contractValue?: boolean
+    investor?: boolean
+    projectType?: boolean
     endDate?: boolean
     startDate?: boolean
     totalBudget?: boolean
@@ -9087,6 +9105,8 @@ export namespace Prisma {
     updatedAt?: boolean
     version?: boolean
     contractValue?: boolean
+    investor?: boolean
+    projectType?: boolean
     endDate?: boolean
     startDate?: boolean
     totalBudget?: boolean
@@ -9158,6 +9178,8 @@ export namespace Prisma {
       updatedAt: Date
       version: number
       contractValue: Prisma.Decimal
+      investor: string | null
+      projectType: string | null
       endDate: Date | null
       startDate: Date | null
       totalBudget: Prisma.Decimal
@@ -9586,6 +9608,8 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
     readonly version: FieldRef<"Project", 'Int'>
     readonly contractValue: FieldRef<"Project", 'Decimal'>
+    readonly investor: FieldRef<"Project", 'String'>
+    readonly projectType: FieldRef<"Project", 'String'>
     readonly endDate: FieldRef<"Project", 'DateTime'>
     readonly startDate: FieldRef<"Project", 'DateTime'>
     readonly totalBudget: FieldRef<"Project", 'Decimal'>
@@ -58091,6 +58115,8 @@ export namespace Prisma {
     updatedAt: 'updatedAt',
     version: 'version',
     contractValue: 'contractValue',
+    investor: 'investor',
+    projectType: 'projectType',
     endDate: 'endDate',
     startDate: 'startDate',
     totalBudget: 'totalBudget',
@@ -59399,6 +59425,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     version?: IntFilter<"Project"> | number
     contractValue?: DecimalFilter<"Project"> | Decimal | DecimalJsLike | number | string
+    investor?: StringNullableFilter<"Project"> | string | null
+    projectType?: StringNullableFilter<"Project"> | string | null
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     totalBudget?: DecimalFilter<"Project"> | Decimal | DecimalJsLike | number | string
@@ -59437,6 +59465,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     version?: SortOrder
     contractValue?: SortOrder
+    investor?: SortOrderInput | SortOrder
+    projectType?: SortOrderInput | SortOrder
     endDate?: SortOrderInput | SortOrder
     startDate?: SortOrderInput | SortOrder
     totalBudget?: SortOrder
@@ -59478,6 +59508,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     version?: IntFilter<"Project"> | number
     contractValue?: DecimalFilter<"Project"> | Decimal | DecimalJsLike | number | string
+    investor?: StringNullableFilter<"Project"> | string | null
+    projectType?: StringNullableFilter<"Project"> | string | null
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     totalBudget?: DecimalFilter<"Project"> | Decimal | DecimalJsLike | number | string
@@ -59516,6 +59548,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     version?: SortOrder
     contractValue?: SortOrder
+    investor?: SortOrderInput | SortOrder
+    projectType?: SortOrderInput | SortOrder
     endDate?: SortOrderInput | SortOrder
     startDate?: SortOrderInput | SortOrder
     totalBudget?: SortOrder
@@ -59543,6 +59577,8 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     version?: IntWithAggregatesFilter<"Project"> | number
     contractValue?: DecimalWithAggregatesFilter<"Project"> | Decimal | DecimalJsLike | number | string
+    investor?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    projectType?: StringNullableWithAggregatesFilter<"Project"> | string | null
     endDate?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     startDate?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     totalBudget?: DecimalWithAggregatesFilter<"Project"> | Decimal | DecimalJsLike | number | string
@@ -63854,6 +63890,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -63890,6 +63928,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -63922,6 +63962,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -63958,6 +64000,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -63992,6 +64036,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -64009,6 +64055,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -64026,6 +64074,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -69014,6 +69064,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     version?: SortOrder
     contractValue?: SortOrder
+    investor?: SortOrder
+    projectType?: SortOrder
     endDate?: SortOrder
     startDate?: SortOrder
     totalBudget?: SortOrder
@@ -69039,6 +69091,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     version?: SortOrder
     contractValue?: SortOrder
+    investor?: SortOrder
+    projectType?: SortOrder
     endDate?: SortOrder
     startDate?: SortOrder
     totalBudget?: SortOrder
@@ -69058,6 +69112,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     version?: SortOrder
     contractValue?: SortOrder
+    investor?: SortOrder
+    projectType?: SortOrder
     endDate?: SortOrder
     startDate?: SortOrder
     totalBudget?: SortOrder
@@ -77619,6 +77675,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -77653,6 +77711,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -77920,6 +77980,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -77954,6 +78016,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -78763,6 +78827,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     version?: IntFilter<"Project"> | number
     contractValue?: DecimalFilter<"Project"> | Decimal | DecimalJsLike | number | string
+    investor?: StringNullableFilter<"Project"> | string | null
+    projectType?: StringNullableFilter<"Project"> | string | null
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     totalBudget?: DecimalFilter<"Project"> | Decimal | DecimalJsLike | number | string
@@ -80709,6 +80775,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -80744,6 +80812,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -80901,6 +80971,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -80936,6 +81008,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -81543,6 +81617,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -81578,6 +81654,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -81958,6 +82036,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -81993,6 +82073,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -84507,6 +84589,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -84542,6 +84626,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -84617,6 +84703,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -84652,6 +84740,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -85302,6 +85392,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -85337,6 +85429,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -85591,6 +85685,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -85626,6 +85722,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -86093,6 +86191,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -86128,6 +86228,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -86368,6 +86470,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -86403,6 +86507,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -86739,6 +86845,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -86774,6 +86882,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -86898,6 +87008,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -86933,6 +87045,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -87047,6 +87161,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -87082,6 +87198,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -87238,6 +87356,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -87273,6 +87393,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -87631,6 +87753,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -87666,6 +87790,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -87802,6 +87928,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -87837,6 +87965,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -87943,6 +88073,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -87978,6 +88110,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -88025,6 +88159,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -88060,6 +88196,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -88571,6 +88709,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -88606,6 +88746,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -88730,6 +88872,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -88765,6 +88909,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -89066,6 +89212,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -89101,6 +89249,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -89181,6 +89331,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -89216,6 +89368,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -89734,6 +89888,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -89769,6 +89925,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -89902,6 +90060,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -89937,6 +90097,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -90027,6 +90189,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -90062,6 +90226,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -90173,6 +90339,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -90208,6 +90376,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -91006,6 +91176,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -91041,6 +91213,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -91141,6 +91315,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -91176,6 +91352,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -91266,6 +91444,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -91301,6 +91481,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -91348,6 +91530,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -91383,6 +91567,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -91502,6 +91688,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -91537,6 +91725,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -91976,6 +92166,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -92011,6 +92203,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -92490,6 +92684,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -92579,6 +92775,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -93320,6 +93518,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -93354,6 +93554,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -93387,6 +93589,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -93627,6 +93831,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -93661,6 +93867,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -93694,6 +93902,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -96599,6 +96809,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -96693,6 +96905,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -96728,6 +96942,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -96761,6 +96977,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -97075,6 +97293,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     version?: number
     contractValue?: Decimal | DecimalJsLike | number | string
+    investor?: string | null
+    projectType?: string | null
     endDate?: Date | string | null
     startDate?: Date | string | null
     totalBudget?: Decimal | DecimalJsLike | number | string
@@ -97150,6 +97370,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -97185,6 +97407,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -97218,6 +97442,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     contractValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    investor?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: NullableStringFieldUpdateOperationsInput | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalBudget?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string

@@ -1,7 +1,10 @@
 'use client';
 
 import { EnrichedWBSNode, WBSItem } from '@/app/types';
-import WBSRow from './WBSRow';
+import { useERPStore } from '@/store/erpStore';
+import { TableVirtuoso } from 'react-virtuoso';
+import { useMemo } from 'react';
+import { useDeleteWBSMutation } from '@/services/queries/useWBS';
 
 interface WBSTableProps {
   nodes: EnrichedWBSNode[];
@@ -13,111 +16,199 @@ interface WBSTableProps {
   progress: number;
 }
 
+type FlattenedNode = EnrichedWBSNode & { rowIndex: string };
+
+const flattenWBS = (nodes: EnrichedWBSNode[], indexPrefix: string = ''): FlattenedNode[] => {
+  let result: FlattenedNode[] = [];
+  nodes.forEach((node, idx) => {
+    const currentIndex = indexPrefix ? `${indexPrefix}.${idx + 1}` : `${idx + 1}`;
+    result.push({ ...node, rowIndex: currentIndex });
+    if (node.isExpanded && node.children && node.children.length > 0) {
+      result = result.concat(flattenWBS(node.children, currentIndex));
+    }
+  });
+  return result;
+};
+
 export default function WBSTable({ nodes, onToggleExpand, onEdit, totalBudget, totalActual, variance, progress }: WBSTableProps) {
+  const currentProjectId = useERPStore(state => state.currentProjectId);
+  const { mutate: deleteWBS } = useDeleteWBSMutation(currentProjectId);
+
+  const flattenedNodes = useMemo(() => flattenWBS(nodes), [nodes]);
+
+  const handleDelete = (node: FlattenedNode) => {
+    if (window.confirm(`Bạn có chắc muốn xóa hạng mục "${node.name}" và toàn bộ hạng mục con?`)) {
+      deleteWBS(node.id);
+    }
+  };
+
+  const handleEdit = (node: FlattenedNode) => {
+    const baseItem: WBSItem = {
+      id: node.id,
+      projectId: node.projectId,
+      name: node.name,
+      parentId: node.parentId,
+      level: node.level,
+      sortOrder: node.sortOrder,
+      budgetAmount: node.budgetAmount,
+      createdAt: node.createdAt,
+      updatedAt: node.updatedAt,
+    };
+    onEdit(baseItem);
+  };
+
+  const statusMap: Record<string, string> = {
+    'Đang thi công': 'border-green-500/30 text-green-400 bg-green-500/10',
+    'Chậm tiến độ': 'border-orange-500/30 text-orange-400 bg-orange-500/10',
+    'Chưa triển khai': 'border-slate-500/30 text-slate-400 bg-slate-500/10',
+    'Hoàn thành': 'border-blue-500/30 text-blue-400 bg-blue-500/10',
+  };
+
   return (
-    <div className="mt-6 rounded-xl border border-slate-800 bg-slate-900/40 shadow-sm overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm text-slate-300">
-          <thead className="border-b border-slate-800 bg-slate-800/60 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+    <div className="overflow-x-auto scrollbar-hide border border-[var(--border)] rounded-lg">
+      {flattenedNodes.length === 0 ? (
+        <div className="h-32 flex items-center justify-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest bg-[var(--table-head-bg)]">
+          Không có dữ liệu hạng mục
+        </div>
+      ) : (
+        <TableVirtuoso
+          useWindowScroll
+          data={flattenedNodes}
+          components={{
+            Table: (props) => <table {...props} className="erp-table w-full min-w-[1200px]" />,
+            TableHead: (props) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
+            TableRow: (props) => {
+              const node = props.item as FlattenedNode;
+              const isParent = node.children && node.children.length > 0;
+              return (
+                <tr 
+                  {...props} 
+                  className={`transition-colors hover:bg-[var(--secondary)] ${isParent && node.level === 0 ? 'bg-[var(--secondary)]/50' : ''}`} 
+                />
+              );
+            }
+          }}
+          fixedHeaderContent={() => (
             <tr>
-              <th className="px-5 py-4 text-center w-10 border-r border-slate-800">
-                <input type="checkbox" className="rounded border-slate-700 bg-slate-800 text-blue-600 focus:ring-blue-500/20 focus:ring-offset-0" />
+              <th className="w-10 text-center bg-[var(--table-head-bg)]">
+                <input type="checkbox" className="rounded border-[var(--border)] bg-[var(--secondary)] text-blue-600 focus:ring-blue-500/20 focus:ring-offset-0" />
               </th>
-              <th className="px-5 py-4 text-center w-12 border-r border-slate-800">#</th>
-              <th className="px-5 py-4 border-r border-slate-800">Mã hạng mục</th>
-              <th className="px-5 py-4 border-r border-slate-800">Tên hạng mục</th>
-              <th className="px-5 py-4 text-right border-r border-slate-800">Dự toán (VND)</th>
-              <th className="px-5 py-4 text-right border-r border-slate-800">Chi phí thực tế (VND)</th>
-              <th className="px-5 py-4 text-right border-r border-slate-800">Lợi nhuận (VND)</th>
-              <th className="px-5 py-4 text-center w-36 border-r border-slate-800">% HT</th>
-              <th className="px-5 py-4 text-center border-r border-slate-800">Trạng thái</th>
-              <th className="px-5 py-4 text-center w-32">Thao tác</th>
+              <th className="w-12 text-center bg-[var(--table-head-bg)]">#</th>
+              <th className="min-w-[100px] bg-[var(--table-head-bg)]">Mã hạng mục</th>
+              <th className="min-w-[200px] bg-[var(--table-head-bg)]">Tên hạng mục</th>
+              <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Dự toán (VND)</th>
+              <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Thực tế (VND)</th>
+              <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Chênh lệch</th>
+              <th className="w-[110px] text-center bg-[var(--table-head-bg)]">% HT</th>
+              <th className="w-[90px] text-center bg-[var(--table-head-bg)]">Trạng thái</th>
+              <th className="w-[90px] text-center bg-[var(--table-head-bg)]">Thao tác</th>
             </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-800/60">
-            {nodes.map((node, index) => (
-              <WBSRow key={node.id} node={node} onToggleExpand={onToggleExpand} onEdit={onEdit} index={(index + 1).toString()} />
-            ))}
-            {nodes.length === 0 && (
-              <tr>
-                <td colSpan={10} className="px-5 py-8 text-center text-slate-500">
-                  Không có dữ liệu hạng mục
+          )}
+          itemContent={(i, node) => {
+            const isParent = node.children && node.children.length > 0;
+            return (
+              <>
+                <td className="px-5 py-3 text-center border-r border-[var(--border)]">
+                  <input type="checkbox" className="rounded border-[var(--border)] bg-[var(--secondary)] text-blue-600 focus:ring-blue-500/20 focus:ring-offset-0" />
                 </td>
-              </tr>
-            )}
-          </tbody>
-          <tfoot className="border-t-2 border-slate-700 bg-slate-800/40">
-            <tr>
-              <td colSpan={4} className="px-5 py-4 text-center font-black uppercase tracking-widest text-slate-200 border-r border-slate-800">
-                Tổng cộng
-              </td>
-              <td className="px-5 py-4 text-right text-[14px] font-black text-slate-200 border-r border-slate-800">
-                {totalBudget.toLocaleString()}
-              </td>
-              <td className="px-5 py-4 text-right text-[14px] font-black text-slate-200 border-r border-slate-800">
-                {totalActual.toLocaleString()}
-              </td>
-              <td className={`px-5 py-4 text-right text-[14px] font-black border-r border-slate-800 ${variance < 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
-                {variance.toLocaleString()}
-              </td>
-              <td className="px-5 py-4 text-right text-[14px] font-black text-blue-400 border-r border-slate-800">
-                {(totalBudget - totalActual).toLocaleString()}
-              </td>
-              <td className="px-5 py-4 text-center border-r border-slate-800">
-                <div className="flex items-center gap-2">
-                  <span className="text-[13px] font-black text-slate-200 w-10 text-right">{progress.toFixed(0)}%</span>
-                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-800">
-                    <div className="h-full rounded-full bg-green-500" style={{ width: `${progress}%` }} />
+                <td className="px-5 py-3 text-center text-[12px] font-medium text-[var(--text-muted)] border-r border-[var(--border)]">{node.rowIndex}</td>
+                <td className="px-5 py-3 text-[13px] font-medium text-[var(--text-secondary)] border-r border-[var(--border)]">{node.code}</td>
+                <td className="px-5 py-3 border-r border-[var(--border)]">
+                  <div className="flex items-center" style={{ paddingLeft: `${node.level * 24}px` }}>
+                    {isParent ? (
+                      <button onClick={() => onToggleExpand(node.id)} className="mr-2 flex h-5 w-5 items-center justify-center rounded text-[var(--text-muted)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)] transition-colors">
+                        <svg viewBox="0 0 24 24" className={`h-4 w-4 transition-transform ${node.isExpanded ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M9 18l6-6-6-6" />
+                        </svg>
+                      </button>
+                    ) : (
+                      <div className="mr-2 w-5"></div>
+                    )}
+                    {isParent && node.level === 0 ? (
+                      <svg viewBox="0 0 24 24" className="mr-2 h-4 w-4 text-amber-500" fill="currentColor">
+                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
+                      </svg>
+                    ) : (
+                      <span className="mr-2 text-[var(--text-muted)]">-</span>
+                    )}
+                    <span className={`text-[13px] ${isParent && node.level === 0 ? 'font-bold text-[var(--text-primary)] uppercase' : 'font-medium text-[var(--text-secondary)]'}`}>
+                      {node.name}
+                    </span>
                   </div>
-                </div>
-              </td>
-              <td colSpan={2}></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+                </td>
+                <td className="px-5 py-3 text-right text-[13px] font-bold text-[var(--text-primary)] border-r border-[var(--border)]">{node.budget.toLocaleString()}</td>
+                <td className="px-5 py-3 text-right text-[13px] font-bold text-[var(--text-primary)] border-r border-[var(--border)]">{node.actual.toLocaleString()}</td>
+                <td className={`px-5 py-3 text-right text-[13px] font-bold border-r border-[var(--border)] ${node.profit < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
+                  {node.profit.toLocaleString()}
+                </td>
+                <td className="px-5 py-3 w-32 border-r border-[var(--border)]">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[12px] font-bold text-[var(--text-secondary)] w-10 text-right">{node.percentage.toFixed(isParent ? 0 : 1)}%</span>
+                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--secondary)] border border-[var(--border)]">
+                      <div 
+                        className={`h-full rounded-full ${node.percentage >= 100 ? 'bg-blue-500' : node.status === 'Chậm tiến độ' ? 'bg-amber-500' : 'bg-emerald-500'}`} 
+                        style={{ width: `${Math.min(node.percentage, 100)}%` }} 
+                      />
+                    </div>
+                  </div>
+                </td>
+                <td className="px-5 py-3 text-center border-r border-[var(--border)]">
+                  <span className={`inline-flex items-center justify-center rounded border px-2 py-0.5 text-[11px] font-medium shadow-sm ${statusMap[node.status] || statusMap['Chưa triển khai']}`}>
+                    {node.status}
+                  </span>
+                </td>
+                <td className="px-5 py-3">
+                  <div className="flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button 
+                      onClick={() => alert(`Chi tiết hạng mục: ${node.name}\nMã: ${node.code || 'N/A'}\nDự toán: ${node.budget.toLocaleString()} VND\nThực tế: ${node.actual.toLocaleString()} VND`)}
+                      className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]" 
+                      title="Xem chi tiết"
+                    >
+                      <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    </button>
+                    <button 
+                      onClick={() => handleEdit(node)}
+                      className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]" 
+                      title="Chỉnh sửa"
+                    >
+                      <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                      </svg>
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(node)}
+                      className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] transition-colors hover:text-rose-500 hover:bg-rose-500/10" 
+                      title="Xóa"
+                    >
+                      <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </>
+            );
+          }}
+        />
+      )}
       
-      {/* Pagination */}
-      <div className="flex items-center justify-between border-t border-slate-800 bg-slate-900/30 px-5 py-3">
-        <div className="text-[13px] text-slate-400">
-          Hiển thị <span className="font-semibold text-slate-200">1</span> đến <span className="font-semibold text-slate-200">15</span> trong tổng số <span className="font-semibold text-slate-200">156</span> hạng mục
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="flex h-8 w-8 items-center justify-center rounded border border-slate-700 bg-slate-800/50 text-slate-500 hover:bg-slate-800 hover:text-white disabled:opacity-50">
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-          </button>
-          <button className="flex h-8 w-8 items-center justify-center rounded bg-blue-600 text-sm font-semibold text-white shadow-md shadow-blue-900/20">
-            1
-          </button>
-          <button className="flex h-8 w-8 items-center justify-center rounded border border-slate-700 bg-slate-800/50 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
-            2
-          </button>
-          <button className="flex h-8 w-8 items-center justify-center rounded border border-slate-700 bg-slate-800/50 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
-            3
-          </button>
-          <span className="text-slate-500">...</span>
-          <button className="flex h-8 w-8 items-center justify-center rounded border border-slate-700 bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="m9 18 6-6-6-6" />
-            </svg>
-          </button>
-          <div className="ml-4 flex items-center gap-2">
-            <div className="relative">
-              <select className="h-8 appearance-none rounded border border-slate-700 bg-slate-800/50 py-0 pl-2 pr-6 text-[13px] text-slate-300 outline-none focus:border-blue-500">
-                <option>15 / trang</option>
-                <option>30 / trang</option>
-                <option>50 / trang</option>
-              </select>
-              <svg viewBox="0 0 24 24" className="pointer-events-none absolute right-1.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-500" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </div>
-          </div>
-        </div>
+      {/* TFOOT implementation below table */}
+      <div className="border-t-2 border-[var(--border)] bg-[var(--table-head-bg)] flex justify-between px-5 py-4 min-w-[1200px]">
+         <div className="w-[352px] text-[11px] font-black uppercase tracking-widest text-[var(--text-primary)]">Tổng cộng</div>
+         <div className="w-[140px] text-right text-[13px] font-black text-[var(--text-primary)] tabular-nums">{totalBudget.toLocaleString()}</div>
+         <div className="w-[140px] text-right text-[13px] font-black text-[var(--text-primary)] tabular-nums">{totalActual.toLocaleString()}</div>
+         <div className={`w-[140px] text-right text-[13px] font-black tabular-nums ${variance < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
+            {variance < 0 ? '' : '+'}{variance.toLocaleString()}
+         </div>
+         <div className="w-[110px] flex items-center justify-center px-5">
+            <span className="text-[12px] font-black text-[var(--text-primary)] tabular-nums mr-2">{progress.toFixed(0)}%</span>
+         </div>
+         <div className="w-[180px]"></div>
       </div>
     </div>
   );
 }
-

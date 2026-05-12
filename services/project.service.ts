@@ -104,6 +104,8 @@ export class ProjectService {
         status: data.status ?? ProjectStatus.PLANNED,
         contractValue: this.round(data.contractValue ?? 0),
         totalBudget: this.round(data.totalBudget ?? 0),
+        investor: data.investor,
+        projectType: data.projectType,
         startDate: data.startDate ? new Date(data.startDate) : null,
         endDate: data.endDate ? new Date(data.endDate) : null,
         ...(data.ownerId && { owner: { connect: { id: data.ownerId } } }),
@@ -145,6 +147,8 @@ export class ProjectService {
         ...(data.status !== undefined && { status: data.status }),
         ...(data.contractValue !== undefined && { contractValue: this.round(data.contractValue) }),
         ...(data.totalBudget !== undefined && { totalBudget: this.round(data.totalBudget) }),
+        ...(data.investor !== undefined && { investor: data.investor }),
+        ...(data.projectType !== undefined && { projectType: data.projectType }),
         ...(data.startDate !== undefined && { startDate: data.startDate ? new Date(data.startDate) : null }),
         ...(data.endDate !== undefined && { endDate: data.endDate ? new Date(data.endDate) : null }),
         ...(data.ownerId !== undefined && {

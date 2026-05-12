@@ -7,7 +7,8 @@ export function mapProjectFromApi(p: any): Project {
     description: p.description ?? null,
     status: p.status,
     ownerId: p.ownerId ?? null,
-    investor: p.owner?.name || p.investor || "Chưa có thông tin",
+    investor: p.investor || "Chưa có thông tin",
+    projectType: p.projectType || null,
     contractValue: Number(p.contractValue ?? 0),
     totalBudget: Number(p.totalBudget ?? 0),
     totalValue: Number(p.contractValue ?? 0), // Alias for UI compatibility
@@ -26,6 +27,7 @@ export function mapProjectToApi(p: Partial<Project>) {
     status: p.status,
     ownerId: p.ownerId,
     investor: p.investor,
+    projectType: p.projectType,
     contractValue: p.contractValue ?? p.totalValue, // Support both fields
     totalBudget: p.totalBudget,
     startDate: p.startDate,

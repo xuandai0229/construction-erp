@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Project, ProjectStatus } from '@/app/types';
-import { useERPStore } from '@/store/erpStore';
+import { useProjectsQuery, useCreateProjectMutation, useUpdateProjectMutation, useDeleteProjectMutation } from '@/services/queries/useProjects';
 
 interface ProjectListProps {
   onSelectProject?: (project: Project) => void;
@@ -24,10 +24,10 @@ const statusColors: Record<string, string> = {
 };
 
 export default function ProjectList({ onSelectProject }: ProjectListProps) {
-  const projects = useERPStore(state => state.projects);
-  const addProject = useERPStore(state => state.addProject);
-  const updateProject = useERPStore(state => state.updateProject);
-  const deleteProject = useERPStore(state => state.deleteProject);
+  const { data: projects = [] } = useProjectsQuery();
+  const { mutateAsync: addProject } = useCreateProjectMutation();
+  const { mutateAsync: updateProject } = useUpdateProjectMutation();
+  const { mutateAsync: deleteProject } = useDeleteProjectMutation();
   
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -51,9 +51,9 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
     const value = totalValue ? parseFloat(totalValue.replace(/,/g, '')) : 0;
 
     if (editingId) {
-      await updateProject(editingId, { name, investor, totalValue: value, status });
+      await updateProject({ id: editingId, updates: { name, investor, totalValue: value, status } });
     } else {
-      await addProject(name, investor, value, status);
+      await addProject({ name, investor, totalValue: value, status });
     }
 
     resetForm();

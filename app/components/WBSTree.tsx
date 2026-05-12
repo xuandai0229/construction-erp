@@ -5,20 +5,24 @@ import { useState, useEffect, useMemo } from 'react';
 import { WBSItem, WBSTreeNode } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
 import { buildWBSTree } from '@/app/utils/wbs.utils';
+import { useProjectsQuery } from '@/services/queries/useProjects';
+import { useWBSQuery, useCreateWBSMutation, useUpdateWBSMutation, useDeleteWBSMutation } from '@/services/queries/useWBS';
 
 interface WBSTreeProps {
   projectId?: string;
 }
 
 export default function WBSTree({ projectId }: WBSTreeProps) {
-  const projects = useERPStore(state => state.projects);
+  const { data: projects = [] } = useProjectsQuery();
   const currentProjectId = useERPStore(state => state.currentProjectId);
   const setCurrentProject = useERPStore(state => state.setCurrentProject);
-  const wbs = useERPStore(state => state.wbs);
+
+  const { data: wbsData } = useWBSQuery(currentProjectId);
+  const wbs = wbsData?.flat || [];
   
-  const addWBS = useERPStore(state => state.addWBS);
-  const updateWBS = useERPStore(state => state.updateWBS);
-  const deleteWBS = useERPStore(state => state.deleteWBS);
+  const { mutateAsync: addWBS } = useCreateWBSMutation(currentProjectId);
+  const { mutateAsync: updateWBS } = useUpdateWBSMutation(currentProjectId);
+  const { mutateAsync: deleteWBS } = useDeleteWBSMutation(currentProjectId);
 
   const [selectedProjectId, setSelectedProjectId] = useState<string>(projectId || currentProjectId || '');
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
@@ -92,9 +96,9 @@ export default function WBSTree({ projectId }: WBSTreeProps) {
     if (!selectedProjectId) return;
 
     if (editingId) {
-      await updateWBS(selectedProjectId, editingId, { name: wbsName });
+      await updateWBS({ id: editingId, updates: { name: wbsName } });
     } else {
-      await addWBS(selectedProjectId, wbsName, parentIdForNew);
+      await addWBS({ projectId: selectedProjectId, name: wbsName, parentId: parentIdForNew });
     }
 
     resetForm();
@@ -105,7 +109,7 @@ export default function WBSTree({ projectId }: WBSTreeProps) {
 
   async function handleDelete(projId: string, wbsId: string) {
     if (confirm('Xóa hạng mục này và tất cả hạng mục con?')) {
-      await deleteWBS(projId, wbsId);
+      await deleteWBS(wbsId);
     }
   }
 
@@ -148,7 +152,7 @@ export default function WBSTree({ projectId }: WBSTreeProps) {
             className="px-4 py-2 bg-slate-700 text-white border border-slate-600 rounded-lg"
           >
             <option value="">Chọn dự án...</option>
-            {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+            {projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
           </select>
           <button onClick={handleAddRoot} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             + Thêm hạng mục

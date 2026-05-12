@@ -24,14 +24,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-      initStore();
-      if (pathname === '/login') {
-        router.push('/');
+    const checkAuth = async () => {
+      const savedUser = localStorage.getItem('erp-user');
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+        if (pathname === '/login') {
+          router.push('/');
+        }
       }
-    }, 500);
-    return () => clearTimeout(timer);
+      
+      await initStore();
+      setLoading(false);
+    };
+
+    checkAuth();
   }, [initStore, pathname, router]);
 
   return (

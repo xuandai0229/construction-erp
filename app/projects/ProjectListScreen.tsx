@@ -10,33 +10,32 @@ import { Project } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
 import AddProjectModal from '@/app/components/modals/AddProjectModal';
 
+import { useProjectsQuery } from '@/services/queries/useProjects';
+
 export default function ProjectListScreen() {
-  const rawProjects = useERPStore(state => state.projects);
-  const init = useERPStore(state => state.init);
-  const isInitialized = useERPStore(state => state.initialized);
+  const init             = useERPStore(state => state.init);
+  const isInitialized    = useERPStore(state => state.initialized);
+  const sidebarCollapsed = useERPStore(state => state.sidebarCollapsed);
+
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [isAddingProject, setIsAddingProject] = useState(false);
-
   const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    init({ page, limit: 10 });
-  }, [init, page]);
+  useEffect(() => { init(); }, [init]);
 
-  const projects = useMemo(() => {
-    return rawProjects;
-  }, [rawProjects]);
+  const { data: projects = [] } = useProjectsQuery();
 
-  const loading = !isInitialized;
-
-  if (loading) {
+  if (!isInitialized) {
     return (
-      <div className="flex min-h-screen bg-[#020617]">
+      <div className="erp-page">
         <Sidebar activeItem="projects" />
-        <main className="ml-[258px] flex-1 grid place-items-center">
+        <main
+          className="erp-page-main items-center justify-center"
+          style={{ marginLeft: sidebarCollapsed ? 'var(--erp-sidebar-collapsed)' : 'var(--erp-sidebar-width)' }}
+        >
           <div className="flex flex-col items-center gap-4">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
-            <div className="text-sm font-medium text-slate-400">Đang tải dữ liệu...</div>
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+            <div className="text-[13px] font-semibold text-[var(--text-secondary)]">Đang tải dữ liệu...</div>
           </div>
         </main>
       </div>
@@ -44,28 +43,35 @@ export default function ProjectListScreen() {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#020617] text-slate-100">
+    <div className="erp-page">
       <Sidebar activeItem="projects" />
-      <main className="ml-[258px] flex-1">
+      <main
+        className="erp-page-main"
+        style={{ marginLeft: sidebarCollapsed ? 'var(--erp-sidebar-collapsed)' : 'var(--erp-sidebar-width)' }}
+      >
         <ProjectsHeader onAdd={() => setIsAddingProject(true)} />
-        <div className="p-6">
+
+        <div className="p-6 md:p-8 space-y-6 animate-fade-in">
           <ProjectCardStats projects={projects} />
           <ProjectFilters />
           <ProjectTable projects={projects} onEdit={setEditingProject} />
-          
-          <div className="mt-6 flex items-center justify-between border-t border-slate-800 pt-4">
-            <div className="text-xs text-slate-500">Hiển thị trang {page}</div>
+
+          {/* Pagination */}
+          <div className="flex items-center justify-between border-t border-[var(--border)] pt-4">
+            <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
+              Trang {page}
+            </div>
             <div className="flex gap-2">
-              <button 
+              <button
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="rounded bg-slate-800 px-3 py-1 text-xs font-medium text-slate-300 hover:bg-slate-700 disabled:opacity-50"
+                className="erp-btn h-8 px-4 bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text-primary)] disabled:opacity-40"
               >
                 Trang trước
               </button>
-              <button 
+              <button
                 onClick={() => setPage(p => p + 1)}
-                className="rounded bg-slate-800 px-3 py-1 text-xs font-medium text-slate-300 hover:bg-slate-700"
+                className="erp-btn h-8 px-4 bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text-primary)]"
               >
                 Trang sau
               </button>
@@ -73,13 +79,12 @@ export default function ProjectListScreen() {
           </div>
         </div>
       </main>
-      
-      <AddProjectModal 
-        isOpen={isAddingProject || !!editingProject} 
-        onClose={() => { setIsAddingProject(false); setEditingProject(null); }} 
-        project={editingProject} 
+
+      <AddProjectModal
+        isOpen={isAddingProject || !!editingProject}
+        onClose={() => { setIsAddingProject(false); setEditingProject(null); }}
+        project={editingProject}
       />
     </div>
   );
 }
-
