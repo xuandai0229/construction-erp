@@ -25,12 +25,12 @@ interface ERPState {
   toggleSidebar: () => void;
   setMobileMenuOpen: (open: boolean) => void;
   setCurrentProject: (projectId: string) => void;
-  setUserRole: (role: UserRole) => void;
+  canDo: (permission: string) => boolean;
 }
 
 export const useERPStore = create<ERPState>((set, get) => ({
   user: null,
-  userRole: 'ADMIN',
+  userRole: 'VIEWER',
   currentProjectId: '', 
   initialized: false,
   sidebarCollapsed: false,
@@ -50,25 +50,41 @@ export const useERPStore = create<ERPState>((set, get) => ({
       const { data: { session } } = await Promise.race([sessionPromise, timeoutPromise]) as any;
       
       if (session?.user) {
-        set({ 
-          user: {
-            name: session.user.user_metadata?.name || 'User',
-            email: session.user.email || '',
-            role: (session.user.user_metadata?.role as UserRole) || 'VIEWER',
-            createdAt: session.user.created_at
-          },
-          userRole: (session.user.user_metadata?.role as UserRole) || 'VIEWER'
-        });
-      } else {
+        // Sync with DB
         try {
-          const savedUser = typeof window !== 'undefined' ? localStorage.getItem('erp-user') : null;
-          if (savedUser) {
-            const userData = JSON.parse(savedUser);
-            set({ user: userData, userRole: userData.role });
-          }
-        } catch (e) {
-          console.warn('[Store] Failed to parse saved user:', e);
+          const syncRes = await fetch('/api/auth/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: session.user.id,
+              email: session.user.email,
+              name: session.user.user_metadata?.name
+            })
+          });
+          const dbUser = await syncRes.json();
+          
+          set({ 
+            user: {
+              name: dbUser.name || session.user.user_metadata?.name || 'User',
+              email: dbUser.email || session.user.email || '',
+              role: dbUser.role as UserRole,
+              createdAt: session.user.created_at
+            },
+            userRole: dbUser.role as UserRole
+          });
+        } catch (syncErr) {
+          console.error('[Store] Sync failed, falling back to metadata:', syncErr);
+          set({ 
+            user: {
+              name: session.user.user_metadata?.name || 'User',
+              email: session.user.email || '',
+              role: (session.user.user_metadata?.role as UserRole) || 'VIEWER',
+              createdAt: session.user.created_at
+            },
+            userRole: (session.user.user_metadata?.role as UserRole) || 'VIEWER'
+          });
         }
+      } else {
       }
       
       try {
@@ -83,14 +99,41 @@ export const useERPStore = create<ERPState>((set, get) => ({
       // Listen to auth changes — only set up once via initialized guard
       const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
         if (session?.user) {
-          set({ 
-            user: {
-              name: session.user.user_metadata?.name || 'User',
-              email: session.user.email || '',
-              role: (session.user.user_metadata?.role as UserRole) || 'VIEWER',
-              createdAt: session.user.created_at
-            },
-            userRole: (session.user.user_metadata?.role as UserRole) || 'VIEWER'
+          // Trigger sync in background or wait
+          fetch('/api/auth/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: session.user.id,
+              email: session.user.email,
+              name: session.user.user_metadata?.name
+            })
+          }).then(res => {
+            if (!res.ok) throw new Error('Sync failed');
+            return res.json();
+          }).then(dbUser => {
+            console.log('[Store] Auth Sync Success:', dbUser.email, dbUser.role);
+            set({ 
+              user: {
+                name: dbUser.name || session.user?.user_metadata?.name || 'User',
+                email: dbUser.email || session.user?.email || '',
+                role: dbUser.role as UserRole,
+                createdAt: session.user?.created_at || ''
+              },
+              userRole: dbUser.role as UserRole
+            });
+          }).catch(err => {
+            console.error('[Store] Auth Sync Error:', err);
+            // Fallback to metadata if sync fails
+            set({
+              user: {
+                name: session.user?.user_metadata?.name || 'User',
+                email: session.user?.email || '',
+                role: (session.user?.user_metadata?.role as UserRole) || 'VIEWER',
+                createdAt: session.user?.created_at || ''
+              },
+              userRole: (session.user?.user_metadata?.role as UserRole) || 'VIEWER'
+            });
           });
         } else {
           set({ user: null, userRole: 'VIEWER' });
@@ -116,36 +159,9 @@ export const useERPStore = create<ERPState>((set, get) => ({
         return true;
       }
       
-      // Development Fallback: If Supabase fails (e.g. offline), allow local admin for development
-      if (email === 'admin@construction.com' && pass === 'password123') {
-        const user: UserProfile = {
-          name: 'Hệ thống Quản trị (Offline Admin)',
-          email: 'admin@construction.com',
-          role: 'SUPER_ADMIN',
-          createdAt: new Date().toISOString()
-        };
-        set({ user, userRole: 'SUPER_ADMIN' });
-        localStorage.setItem('erp-user', JSON.stringify(user));
-        console.warn("[Auth] Using offline development fallback for SUPER_ADMIN");
-        return true;
-      }
-      
       console.error('Login error:', error);
       return false;
     } catch (e) {
-      // Handle fetch errors (offline)
-      if (email === 'admin@construction.com' && pass === 'password123') {
-        const user: UserProfile = {
-          name: 'Hệ thống Quản trị (Offline Admin)',
-          email: 'admin@construction.com',
-          role: 'SUPER_ADMIN',
-          createdAt: new Date().toISOString()
-        };
-        set({ user, userRole: 'SUPER_ADMIN' });
-        localStorage.setItem('erp-user', JSON.stringify(user));
-        console.warn("[Auth] Network error detected. Using offline development fallback.");
-        return true;
-      }
       console.error('Login exception:', e);
       return false;
     }
@@ -159,7 +175,6 @@ export const useERPStore = create<ERPState>((set, get) => ({
     }
     set({ user: null, userRole: 'VIEWER' });
     try {
-      localStorage.removeItem('erp-user');
       localStorage.removeItem('erp-project-id');
     } catch (e) { /* ignore */ }
     window.location.href = '/login';
@@ -170,7 +185,13 @@ export const useERPStore = create<ERPState>((set, get) => ({
     localStorage.setItem('erp-project-id', projectId);
   },
 
-  setUserRole: (role: UserRole) => set({ userRole: role }),
+  canDo: (permission: any) => {
+    const { userRole } = get();
+    const { RolePermissions } = require('@/lib/auth/rbac');
+    const allowed = RolePermissions[userRole] || [];
+    return allowed.includes(permission);
+  },
+
 
   toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
   setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),

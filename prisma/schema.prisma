@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma-client"
 }
 
 datasource db {
@@ -958,18 +957,6 @@ model Branch {
   projects  Project[]
 }
 
-enum UserRole {
-  ADMIN
-  MANAGER
-  ACCOUNTANT
-  VIEWER
-  SUPER_ADMIN
-  GROUP_DIRECTOR
-  CFO
-  BRANCH_DIRECTOR
-  AUDITOR
-}
-
 enum ProjectStatus {
   PLANNED
   IN_PROGRESS
@@ -1061,4 +1048,16 @@ enum SubcontractStatus {
   SUSPENDED
   COMPLETED
   TERMINATED
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  ACCOUNTANT
+  VIEWER
+  SUPER_ADMIN
+  GROUP_DIRECTOR
+  CFO
+  BRANCH_DIRECTOR
+  AUDITOR
 }

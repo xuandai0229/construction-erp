@@ -5,7 +5,7 @@
 import { 
   ProjectStatus, TaskStatus, CostType as PrismaCostType, 
   PaymentStatus as PrismaPaymentStatus, InvoiceStatus as PrismaInvoiceStatus,
-  UserRole as PrismaUserRole 
+  RoleKey as PrismaRoleKey 
 } from "@prisma/client";
 
 export { ProjectStatus, TaskStatus };
@@ -36,7 +36,7 @@ export interface User {
   id: string;
   email: string;
   name?: string | null;
-  role: PrismaUserRole;
+  role: PrismaRoleKey;
   createdAt: string;
 }
 
@@ -211,7 +211,7 @@ export interface ServiceResponse<T> {
   metadata?: any;
 }
 
-export type UserRole = PrismaUserRole;
+export type UserRole = PrismaRoleKey;
 
 // ============================================
 // LABELS & CONSTANTS

@@ -13,6 +13,7 @@ const menuItems = [
   { id: 'revenue',   label: 'Doanh thu',                    href: '/revenue',  icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.407 2.63 1m-2.63-1c-.74 0-1.4.194-1.92.512' },
   { id: 'debt',      label: 'Công nợ',                      href: '/debt',     icon: 'M7 4h10a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V6a2 2 0 0 1 2-2zM10 9h4M10 13h4' },
   { id: 'reports',   label: 'Báo cáo',                      href: '/reports',  icon: 'M5 19V5m0 14h14M9 16V9m4 7V7m4 9v-5' },
+  { id: 'users',     label: 'Nhân sự',                      href: '/users',    icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' },
   { id: 'system',    label: 'Hệ thống',                     href: '/system',   icon: 'M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83' },
 ];
 
@@ -36,8 +37,8 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
   };
 
   const filteredItems = menuItems.filter(item => {
-    if (item.id === 'system')  return userRole === 'SUPER_ADMIN';
-    if (item.id === 'budget' || item.id === 'costs') return ['SUPER_ADMIN', 'ADMIN', 'ACCOUNTANT', 'MANAGER'].includes(userRole);
+    if (item.id === 'system' || item.id === 'users')  return userRole === 'SUPER_ADMIN';
+    if (item.id === 'budget' || item.id === 'costs') return ['SUPER_ADMIN', 'CHIEF_ACCOUNTANT', 'ACCOUNTANT', 'PROJECT_MANAGER'].includes(userRole);
     return true;
   });
 

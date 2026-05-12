@@ -1,6 +1,7 @@
 import { CostService } from '@/services/cost.service';
 import { handleApiError, successResponse } from '@/lib/api-error';
-import { assertIsManager } from '@/lib/auth-guard';
+import { Authorizer } from "@/lib/auth/authorize";
+import { Permissions } from "@/lib/auth/permissions";
 import { headers } from "next/headers";
 
 async function getServiceOptions() {
@@ -22,8 +23,10 @@ export async function POST(
     const { status } = await request.json(); // nextStatus
     const options = await getServiceOptions();
 
-    // Security Guard: Only Managers/Admins can approve
-    await assertIsManager(options.userId);
+    // Security Guard: Granular Permission Check
+    if (options.userId) {
+      await Authorizer.requirePermission(options.userId, Permissions.COST_APPROVE);
+    }
     
     const result = await CostService.transition(id, status, options);
     return successResponse(result, { correlationId: options.correlationId });

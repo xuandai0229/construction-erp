@@ -8,7 +8,6 @@ import { UserRole } from '@/app/types';
 
 export default function SystemPage() {
   const userRole       = useERPStore(state => state.userRole);
-  const setUserRole    = useERPStore(state => state.setUserRole);
   const sidebarCollapsed = useERPStore(state => state.sidebarCollapsed);
 
   const getFullBackup = () => JSON.stringify({ version: '2.0.0', data: 'mock' });

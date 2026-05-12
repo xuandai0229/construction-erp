@@ -1,4 +1,4 @@
-import { UserRole } from "@prisma/client";
+import { RoleKey } from "@prisma/client";
 import { ApiError } from "@/lib/api-error";
 
 /**
@@ -9,7 +9,7 @@ export class RBAC {
    * Ensures the user has the required role.
    * Currently uses a placeholder for user retrieval (e.g. from session).
    */
-  static authorize(userRole: UserRole, requiredRoles: UserRole[]) {
+  static authorize(userRole: RoleKey, requiredRoles: RoleKey[]) {
     if (!requiredRoles.includes(userRole)) {
       throw new ApiError(403, "Bạn không có quyền thực hiện hành động này.");
     }
@@ -18,21 +18,21 @@ export class RBAC {
   /**
    * Helper to check if user is Admin.
    */
-  static isAdmin(role: UserRole) {
-    return role === UserRole.ADMIN;
+  static isAdmin(role: RoleKey) {
+    return role === RoleKey.SUPER_ADMIN || role === RoleKey.ADMIN;
   }
 
   /**
    * Helper to check if user is Accountant.
    */
-  static isAccountant(role: UserRole) {
-    return role === UserRole.ACCOUNTANT || role === UserRole.ADMIN;
+  static isAccountant(role: RoleKey) {
+    return role === RoleKey.ACCOUNTANT;
   }
 
   /**
    * Helper to check if user is Manager.
    */
-  static isManager(role: UserRole) {
-    return role === UserRole.MANAGER || role === UserRole.ADMIN;
+  static isManager(role: RoleKey) {
+    return role === RoleKey.MANAGER;
   }
 }

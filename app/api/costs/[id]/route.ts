@@ -2,6 +2,8 @@ import { handleApiError, successResponse } from "@/lib/api-error";
 import { updateCostSchema } from "@/lib/validations";
 import { CostService } from "@/services/cost.service";
 import { headers } from "next/headers";
+import { Authorizer } from "@/lib/auth/authorize";
+import { Permissions } from "@/lib/auth/permissions";
 
 async function getServiceOptions() {
   const head = await headers();
@@ -22,6 +24,11 @@ export async function PUT(
     const body = await request.json();
     const data = updateCostSchema.parse(body);
     const options = await getServiceOptions();
+    
+    // Security Enforcement
+    if (options.userId) {
+      await Authorizer.requirePermission(options.userId, Permissions.COST_CREATE);
+    }
 
     const item = await CostService.update(id, data, options);
 
@@ -38,6 +45,12 @@ export async function DELETE(
   try {
     const { id } = await params;
     const options = await getServiceOptions();
+    
+    // Security Enforcement
+    if (options.userId) {
+      await Authorizer.requirePermission(options.userId, Permissions.COST_DELETE);
+    }
+
     await CostService.delete(id, options);
     return successResponse({ deleted: true }, { correlationId: options.correlationId });
   } catch (error) {

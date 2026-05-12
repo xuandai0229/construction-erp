@@ -13,6 +13,8 @@ import { useWBSQuery } from '@/services/queries/useWBS';
 import { TableVirtuoso } from 'react-virtuoso';
 import { useProjectStatsQuery } from '@/services/queries/useProjects';
 import { queryKeys } from '@/lib/query-keys';
+import PermissionGuard from '@/app/components/auth/PermissionGuard';
+import { Permissions } from '@/lib/auth/permissions';
 
 const costTypes = Object.keys(costType_LABELS) as CostType[];
 
@@ -23,6 +25,7 @@ const TableComponents = {
 };
 
 export default function CostsPage() {
+  const user = useERPStore(state => state.user);
   const currentProjectId = useERPStore(state => state.currentProjectId);
   const sidebarCollapsed = useERPStore(state => state.sidebarCollapsed);
   
@@ -104,16 +107,18 @@ export default function CostsPage() {
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1m-4-4-4 4-4-4m4 4V4" /></svg>
                 Xuất Excel
               </button>
-              <button
-                onClick={() => {
-                  setSelectedCost(null);
-                  setShowAddModal(true);
-                }}
-                className="erp-btn bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500"
-              >
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14" /></svg>
-                Thêm chi phí mới
-              </button>
+              <PermissionGuard permission={Permissions.COST_CREATE}>
+                <button
+                  onClick={() => {
+                    setSelectedCost(null);
+                    setShowAddModal(true);
+                  }}
+                  className="erp-btn bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500"
+                >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14" /></svg>
+                  Thêm chi phí mới
+                </button>
+              </PermissionGuard>
             </div>
           </div>
 
@@ -295,64 +300,68 @@ export default function CostsPage() {
                   Chỉnh sửa
                 </button>
 
-                <button 
-                  onClick={async () => {
-                    if (confirm('Bạn có chắc chắn muốn XÓA chi phí này? Hệ thống sẽ tạo bút toán đảo nếu đã post sổ cái.')) {
-                      try {
-                        const res = await fetch(`/api/costs/${selectedCost.id}`, {
-                          method: 'DELETE',
-                          headers: { 'x-user-id': 'admin' }
-                        });
-                        if (res.ok) {
-                          queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(currentProjectId) });
-                          queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(currentProjectId), 'stats'] });
-                          alert('Đã xóa thành công!');
-                          setSelectedCost(null);
-                        } else {
-                          const err = await res.json();
-                          alert('Lỗi: ' + err.error);
+                <PermissionGuard permission={Permissions.COST_DELETE}>
+                  <button 
+                    onClick={async () => {
+                      if (confirm('Bạn có chắc chắn muốn XÓA chi phí này? Hệ thống sẽ tạo bút toán đảo nếu đã post sổ cái.')) {
+                        try {
+                          const res = await fetch(`/api/costs/${selectedCost.id}`, {
+                            method: 'DELETE',
+                            headers: { 'x-user-id': user?.email || 'anonymous' }
+                          });
+                          if (res.ok) {
+                            queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(currentProjectId) });
+                            queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(currentProjectId), 'stats'] });
+                            alert('Đã xóa thành công!');
+                            setSelectedCost(null);
+                          } else {
+                            const err = await res.json();
+                            alert('Lỗi: ' + err.error);
+                          }
+                        } catch (e) {
+                          alert('Lỗi kết nối');
                         }
-                      } catch (e) {
-                        alert('Lỗi kết nối');
                       }
-                    }
-                  }}
-                  className="flex-1 erp-btn bg-red-600 text-white hover:bg-red-500 shadow-lg shadow-red-600/20"
-                >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
-                  Xóa bỏ
-                </button>
+                    }}
+                    className="flex-1 erp-btn bg-red-600 text-white hover:bg-red-500 shadow-lg shadow-red-600/20"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+                    Xóa bỏ
+                  </button>
+                </PermissionGuard>
               </div>
               
               {selectedCost.workflowStatus === 'DRAFT' || selectedCost.workflowStatus === 'PENDING' ? (
-                <button 
-                  onClick={async () => {
-                    if (confirm('Bạn có chắc chắn muốn phê duyệt chi phí này và đẩy vào sổ cái?')) {
-                      try {
-                        const res = await fetch(`/api/costs/${selectedCost.id}/approve`, {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json', 'x-user-id': 'admin' },
-                          body: JSON.stringify({ status: 'POSTED' })
-                        });
-                        if (res.ok) {
-                          queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(currentProjectId) });
-                          queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(currentProjectId), 'stats'] });
-                          alert('Phê duyệt thành công!');
-                          setSelectedCost(null);
-                        } else {
-                          const err = await res.json();
-                          alert('Lỗi: ' + err.error);
+                <PermissionGuard permission={Permissions.COST_APPROVE}>
+                  <button 
+                    onClick={async () => {
+                      if (confirm('Bạn có chắc chắn muốn phê duyệt chi phí này và đẩy vào sổ cái?')) {
+                        try {
+                          const res = await fetch(`/api/costs/${selectedCost.id}/approve`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'x-user-id': user?.email || 'anonymous' },
+                            body: JSON.stringify({ status: 'POSTED' })
+                          });
+                          if (res.ok) {
+                            queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(currentProjectId) });
+                            queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(currentProjectId), 'stats'] });
+                            alert('Phê duyệt thành công!');
+                            setSelectedCost(null);
+                          } else {
+                            const err = await res.json();
+                            alert('Lỗi: ' + err.error);
+                          }
+                        } catch (e) {
+                          alert('Lỗi kết nối');
                         }
-                      } catch (e) {
-                        alert('Lỗi kết nối');
                       }
-                    }
-                  }}
-                  className="w-full erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-600/20"
-                >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
-                  Duyệt & Post Sổ Cái
-                </button>
+                    }}
+                    className="w-full erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-600/20"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                    Duyệt & Post Sổ Cái
+                  </button>
+                </PermissionGuard>
               ) : null}
             </div>
           </div>
