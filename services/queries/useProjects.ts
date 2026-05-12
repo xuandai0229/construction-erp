@@ -51,25 +51,7 @@ export function useUpdateProjectMutation() {
       if (!res.success) throw new Error(res.error || 'Failed to update project');
       return res.data;
     },
-    onMutate: async ({ id, updates }) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.projects.lists() });
-      const previousProjects = queryClient.getQueryData<Project[]>(queryKeys.projects.lists());
-
-      if (previousProjects) {
-        queryClient.setQueryData<Project[]>(
-          queryKeys.projects.lists(),
-          previousProjects.map((p) => (p.id === id ? { ...p, ...updates } : p))
-        );
-      }
-
-      return { previousProjects };
-    },
-    onError: (err, variables, context) => {
-      if (context?.previousProjects) {
-        queryClient.setQueryData(queryKeys.projects.lists(), context.previousProjects);
-      }
-    },
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.lists() });
     },
   });

@@ -12800,6 +12800,7 @@ export namespace Prisma {
     deletedAt: Date | null
     deletedById: string | null
     approvalStatus: $Enums.ApprovalStatus | null
+    workflowStatus: string | null
     vatRate: Decimal | null
     vatAmount: Decimal | null
     retentionRate: Decimal | null
@@ -12830,6 +12831,7 @@ export namespace Prisma {
     deletedAt: Date | null
     deletedById: string | null
     approvalStatus: $Enums.ApprovalStatus | null
+    workflowStatus: string | null
     vatRate: Decimal | null
     vatAmount: Decimal | null
     retentionRate: Decimal | null
@@ -12860,6 +12862,7 @@ export namespace Prisma {
     deletedAt: number
     deletedById: number
     approvalStatus: number
+    workflowStatus: number
     vatRate: number
     vatAmount: number
     retentionRate: number
@@ -12916,6 +12919,7 @@ export namespace Prisma {
     deletedAt?: true
     deletedById?: true
     approvalStatus?: true
+    workflowStatus?: true
     vatRate?: true
     vatAmount?: true
     retentionRate?: true
@@ -12946,6 +12950,7 @@ export namespace Prisma {
     deletedAt?: true
     deletedById?: true
     approvalStatus?: true
+    workflowStatus?: true
     vatRate?: true
     vatAmount?: true
     retentionRate?: true
@@ -12976,6 +12981,7 @@ export namespace Prisma {
     deletedAt?: true
     deletedById?: true
     approvalStatus?: true
+    workflowStatus?: true
     vatRate?: true
     vatAmount?: true
     retentionRate?: true
@@ -13093,6 +13099,7 @@ export namespace Prisma {
     deletedAt: Date | null
     deletedById: string | null
     approvalStatus: $Enums.ApprovalStatus
+    workflowStatus: string
     vatRate: Decimal
     vatAmount: Decimal
     retentionRate: Decimal
@@ -13142,6 +13149,7 @@ export namespace Prisma {
     deletedAt?: boolean
     deletedById?: boolean
     approvalStatus?: boolean
+    workflowStatus?: boolean
     vatRate?: boolean
     vatAmount?: boolean
     retentionRate?: boolean
@@ -13178,6 +13186,7 @@ export namespace Prisma {
     deletedAt?: boolean
     deletedById?: boolean
     approvalStatus?: boolean
+    workflowStatus?: boolean
     vatRate?: boolean
     vatAmount?: boolean
     retentionRate?: boolean
@@ -13214,6 +13223,7 @@ export namespace Prisma {
     deletedAt?: boolean
     deletedById?: boolean
     approvalStatus?: boolean
+    workflowStatus?: boolean
     vatRate?: boolean
     vatAmount?: boolean
     retentionRate?: boolean
@@ -13271,6 +13281,7 @@ export namespace Prisma {
       deletedAt: Date | null
       deletedById: string | null
       approvalStatus: $Enums.ApprovalStatus
+      workflowStatus: string
       vatRate: Prisma.Decimal
       vatAmount: Prisma.Decimal
       retentionRate: Prisma.Decimal
@@ -13697,6 +13708,7 @@ export namespace Prisma {
     readonly deletedAt: FieldRef<"CostRecord", 'DateTime'>
     readonly deletedById: FieldRef<"CostRecord", 'String'>
     readonly approvalStatus: FieldRef<"CostRecord", 'ApprovalStatus'>
+    readonly workflowStatus: FieldRef<"CostRecord", 'String'>
     readonly vatRate: FieldRef<"CostRecord", 'Decimal'>
     readonly vatAmount: FieldRef<"CostRecord", 'Decimal'>
     readonly retentionRate: FieldRef<"CostRecord", 'Decimal'>
@@ -19780,6 +19792,9 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
+    isReversed: boolean | null
+    reversedById: string | null
+    reversalRef: string | null
   }
 
   export type JournalEntryMaxAggregateOutputType = {
@@ -19794,6 +19809,9 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
+    isReversed: boolean | null
+    reversedById: string | null
+    reversalRef: string | null
   }
 
   export type JournalEntryCountAggregateOutputType = {
@@ -19808,6 +19826,9 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     deletedAt: number
+    isReversed: number
+    reversedById: number
+    reversalRef: number
     _all: number
   }
 
@@ -19824,6 +19845,9 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    isReversed?: true
+    reversedById?: true
+    reversalRef?: true
   }
 
   export type JournalEntryMaxAggregateInputType = {
@@ -19838,6 +19862,9 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    isReversed?: true
+    reversedById?: true
+    reversalRef?: true
   }
 
   export type JournalEntryCountAggregateInputType = {
@@ -19852,6 +19879,9 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
+    isReversed?: true
+    reversedById?: true
+    reversalRef?: true
     _all?: true
   }
 
@@ -19939,6 +19969,9 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
+    isReversed: boolean
+    reversedById: string | null
+    reversalRef: string | null
     _count: JournalEntryCountAggregateOutputType | null
     _min: JournalEntryMinAggregateOutputType | null
     _max: JournalEntryMaxAggregateOutputType | null
@@ -19970,6 +20003,9 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    isReversed?: boolean
+    reversedById?: boolean
+    reversalRef?: boolean
     project?: boolean | JournalEntry$projectArgs<ExtArgs>
     lines?: boolean | JournalEntry$linesArgs<ExtArgs>
     _count?: boolean | JournalEntryCountOutputTypeDefaultArgs<ExtArgs>
@@ -19987,6 +20023,9 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    isReversed?: boolean
+    reversedById?: boolean
+    reversalRef?: boolean
     project?: boolean | JournalEntry$projectArgs<ExtArgs>
   }, ExtArgs["result"]["journalEntry"]>
 
@@ -20002,6 +20041,9 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
+    isReversed?: boolean
+    reversedById?: boolean
+    reversalRef?: boolean
   }
 
   export type JournalEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20031,6 +20073,9 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
+      isReversed: boolean
+      reversedById: string | null
+      reversalRef: string | null
     }, ExtArgs["result"]["journalEntry"]>
     composites: {}
   }
@@ -20437,6 +20482,9 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"JournalEntry", 'DateTime'>
     readonly updatedAt: FieldRef<"JournalEntry", 'DateTime'>
     readonly deletedAt: FieldRef<"JournalEntry", 'DateTime'>
+    readonly isReversed: FieldRef<"JournalEntry", 'Boolean'>
+    readonly reversedById: FieldRef<"JournalEntry", 'String'>
+    readonly reversalRef: FieldRef<"JournalEntry", 'String'>
   }
     
 
@@ -58184,6 +58232,7 @@ export namespace Prisma {
     deletedAt: 'deletedAt',
     deletedById: 'deletedById',
     approvalStatus: 'approvalStatus',
+    workflowStatus: 'workflowStatus',
     vatRate: 'vatRate',
     vatAmount: 'vatAmount',
     retentionRate: 'retentionRate',
@@ -58308,7 +58357,10 @@ export namespace Prisma {
     isPosted: 'isPosted',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    deletedAt: 'deletedAt'
+    deletedAt: 'deletedAt',
+    isReversed: 'isReversed',
+    reversedById: 'reversedById',
+    reversalRef: 'reversalRef'
   };
 
   export type JournalEntryScalarFieldEnum = (typeof JournalEntryScalarFieldEnum)[keyof typeof JournalEntryScalarFieldEnum]
@@ -59836,6 +59888,7 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"CostRecord"> | Date | string | null
     deletedById?: StringNullableFilter<"CostRecord"> | string | null
     approvalStatus?: EnumApprovalStatusFilter<"CostRecord"> | $Enums.ApprovalStatus
+    workflowStatus?: StringFilter<"CostRecord"> | string
     vatRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
@@ -59872,6 +59925,7 @@ export namespace Prisma {
     deletedAt?: SortOrderInput | SortOrder
     deletedById?: SortOrderInput | SortOrder
     approvalStatus?: SortOrder
+    workflowStatus?: SortOrder
     vatRate?: SortOrder
     vatAmount?: SortOrder
     retentionRate?: SortOrder
@@ -59911,6 +59965,7 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"CostRecord"> | Date | string | null
     deletedById?: StringNullableFilter<"CostRecord"> | string | null
     approvalStatus?: EnumApprovalStatusFilter<"CostRecord"> | $Enums.ApprovalStatus
+    workflowStatus?: StringFilter<"CostRecord"> | string
     vatRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
@@ -59947,6 +60002,7 @@ export namespace Prisma {
     deletedAt?: SortOrderInput | SortOrder
     deletedById?: SortOrderInput | SortOrder
     approvalStatus?: SortOrder
+    workflowStatus?: SortOrder
     vatRate?: SortOrder
     vatAmount?: SortOrder
     retentionRate?: SortOrder
@@ -59985,6 +60041,7 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableWithAggregatesFilter<"CostRecord"> | Date | string | null
     deletedById?: StringNullableWithAggregatesFilter<"CostRecord"> | string | null
     approvalStatus?: EnumApprovalStatusWithAggregatesFilter<"CostRecord"> | $Enums.ApprovalStatus
+    workflowStatus?: StringWithAggregatesFilter<"CostRecord"> | string
     vatRate?: DecimalWithAggregatesFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalWithAggregatesFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalWithAggregatesFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
@@ -60555,6 +60612,9 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"JournalEntry"> | Date | string
     updatedAt?: DateTimeFilter<"JournalEntry"> | Date | string
     deletedAt?: DateTimeNullableFilter<"JournalEntry"> | Date | string | null
+    isReversed?: BoolFilter<"JournalEntry"> | boolean
+    reversedById?: StringNullableFilter<"JournalEntry"> | string | null
+    reversalRef?: StringNullableFilter<"JournalEntry"> | string | null
     project?: XOR<ProjectNullableRelationFilter, ProjectWhereInput> | null
     lines?: TransactionLineListRelationFilter
   }
@@ -60571,6 +60631,9 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    isReversed?: SortOrder
+    reversedById?: SortOrderInput | SortOrder
+    reversalRef?: SortOrderInput | SortOrder
     project?: ProjectOrderByWithRelationInput
     lines?: TransactionLineOrderByRelationAggregateInput
   }
@@ -60590,6 +60653,9 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"JournalEntry"> | Date | string
     updatedAt?: DateTimeFilter<"JournalEntry"> | Date | string
     deletedAt?: DateTimeNullableFilter<"JournalEntry"> | Date | string | null
+    isReversed?: BoolFilter<"JournalEntry"> | boolean
+    reversedById?: StringNullableFilter<"JournalEntry"> | string | null
+    reversalRef?: StringNullableFilter<"JournalEntry"> | string | null
     project?: XOR<ProjectNullableRelationFilter, ProjectWhereInput> | null
     lines?: TransactionLineListRelationFilter
   }, "id">
@@ -60606,6 +60672,9 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    isReversed?: SortOrder
+    reversedById?: SortOrderInput | SortOrder
+    reversalRef?: SortOrderInput | SortOrder
     _count?: JournalEntryCountOrderByAggregateInput
     _max?: JournalEntryMaxOrderByAggregateInput
     _min?: JournalEntryMinOrderByAggregateInput
@@ -60626,6 +60695,9 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"JournalEntry"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"JournalEntry"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"JournalEntry"> | Date | string | null
+    isReversed?: BoolWithAggregatesFilter<"JournalEntry"> | boolean
+    reversedById?: StringNullableWithAggregatesFilter<"JournalEntry"> | string | null
+    reversalRef?: StringNullableWithAggregatesFilter<"JournalEntry"> | string | null
   }
 
   export type TransactionLineWhereInput = {
@@ -64344,6 +64416,7 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -64378,6 +64451,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -64404,6 +64478,7 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -64438,6 +64513,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -64468,6 +64544,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -64494,6 +64571,7 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -64522,6 +64600,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -65143,6 +65222,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    isReversed?: boolean
+    reversedById?: string | null
+    reversalRef?: string | null
     project?: ProjectCreateNestedOneWithoutJournalEntriesInput
     lines?: TransactionLineCreateNestedManyWithoutJournalEntryInput
   }
@@ -65159,6 +65241,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    isReversed?: boolean
+    reversedById?: string | null
+    reversalRef?: string | null
     lines?: TransactionLineUncheckedCreateNestedManyWithoutJournalEntryInput
   }
 
@@ -65173,6 +65258,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isReversed?: BoolFieldUpdateOperationsInput | boolean
+    reversedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reversalRef?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneWithoutJournalEntriesNestedInput
     lines?: TransactionLineUpdateManyWithoutJournalEntryNestedInput
   }
@@ -65189,6 +65277,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isReversed?: BoolFieldUpdateOperationsInput | boolean
+    reversedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reversalRef?: NullableStringFieldUpdateOperationsInput | string | null
     lines?: TransactionLineUncheckedUpdateManyWithoutJournalEntryNestedInput
   }
 
@@ -65204,6 +65295,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    isReversed?: boolean
+    reversedById?: string | null
+    reversalRef?: string | null
   }
 
   export type JournalEntryUpdateManyMutationInput = {
@@ -65217,6 +65311,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isReversed?: BoolFieldUpdateOperationsInput | boolean
+    reversedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reversalRef?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type JournalEntryUncheckedUpdateManyInput = {
@@ -65231,6 +65328,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isReversed?: BoolFieldUpdateOperationsInput | boolean
+    reversedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reversalRef?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TransactionLineCreateInput = {
@@ -69383,6 +69483,7 @@ export namespace Prisma {
     deletedAt?: SortOrder
     deletedById?: SortOrder
     approvalStatus?: SortOrder
+    workflowStatus?: SortOrder
     vatRate?: SortOrder
     vatAmount?: SortOrder
     retentionRate?: SortOrder
@@ -69425,6 +69526,7 @@ export namespace Prisma {
     deletedAt?: SortOrder
     deletedById?: SortOrder
     approvalStatus?: SortOrder
+    workflowStatus?: SortOrder
     vatRate?: SortOrder
     vatAmount?: SortOrder
     retentionRate?: SortOrder
@@ -69455,6 +69557,7 @@ export namespace Prisma {
     deletedAt?: SortOrder
     deletedById?: SortOrder
     approvalStatus?: SortOrder
+    workflowStatus?: SortOrder
     vatRate?: SortOrder
     vatAmount?: SortOrder
     retentionRate?: SortOrder
@@ -69905,6 +70008,9 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    isReversed?: SortOrder
+    reversedById?: SortOrder
+    reversalRef?: SortOrder
   }
 
   export type JournalEntryMaxOrderByAggregateInput = {
@@ -69919,6 +70025,9 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    isReversed?: SortOrder
+    reversedById?: SortOrder
+    reversalRef?: SortOrder
   }
 
   export type JournalEntryMinOrderByAggregateInput = {
@@ -69933,6 +70042,9 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    isReversed?: SortOrder
+    reversedById?: SortOrder
+    reversalRef?: SortOrder
   }
 
   export type EnumTransactionTypeFilter<$PrismaModel = never> = {
@@ -77368,6 +77480,7 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -77400,6 +77513,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -78125,6 +78239,7 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -78157,6 +78272,7 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -78592,6 +78708,7 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"CostRecord"> | Date | string | null
     deletedById?: StringNullableFilter<"CostRecord"> | string | null
     approvalStatus?: EnumApprovalStatusFilter<"CostRecord"> | $Enums.ApprovalStatus
+    workflowStatus?: StringFilter<"CostRecord"> | string
     vatRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFilter<"CostRecord"> | Decimal | DecimalJsLike | number | string
@@ -79596,6 +79713,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    isReversed?: boolean
+    reversedById?: string | null
+    reversalRef?: string | null
     lines?: TransactionLineCreateNestedManyWithoutJournalEntryInput
   }
 
@@ -79610,6 +79730,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    isReversed?: boolean
+    reversedById?: string | null
+    reversalRef?: string | null
     lines?: TransactionLineUncheckedCreateNestedManyWithoutJournalEntryInput
   }
 
@@ -80328,6 +80451,9 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"JournalEntry"> | Date | string
     updatedAt?: DateTimeFilter<"JournalEntry"> | Date | string
     deletedAt?: DateTimeNullableFilter<"JournalEntry"> | Date | string | null
+    isReversed?: BoolFilter<"JournalEntry"> | boolean
+    reversedById?: StringNullableFilter<"JournalEntry"> | string | null
+    reversalRef?: StringNullableFilter<"JournalEntry"> | string | null
   }
 
   export type UserUpsertWithoutProjectsOwnedInput = {
@@ -81199,6 +81325,7 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -81231,6 +81358,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -84819,6 +84947,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    isReversed?: boolean
+    reversedById?: string | null
+    reversalRef?: string | null
     project?: ProjectCreateNestedOneWithoutJournalEntriesInput
   }
 
@@ -84834,6 +84965,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    isReversed?: boolean
+    reversedById?: string | null
+    reversalRef?: string | null
   }
 
   export type JournalEntryCreateOrConnectWithoutLinesInput = {
@@ -84898,6 +85032,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isReversed?: BoolFieldUpdateOperationsInput | boolean
+    reversedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reversalRef?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneWithoutJournalEntriesNestedInput
   }
 
@@ -84913,6 +85050,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isReversed?: BoolFieldUpdateOperationsInput | boolean
+    reversedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reversalRef?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PurchaseOrderCreateWithoutPurchaseRequestInput = {
@@ -85222,6 +85362,7 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -85254,6 +85395,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -91857,6 +91999,7 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -91890,6 +92033,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -92253,6 +92397,7 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -92286,6 +92431,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -92574,6 +92720,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -92818,6 +92965,7 @@ export namespace Prisma {
     requestId?: string | null
     deletedAt?: Date | string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -93162,6 +93310,7 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -93194,6 +93343,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -93223,6 +93373,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -93990,6 +94141,7 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -94022,6 +94174,7 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -94051,6 +94204,7 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -94358,6 +94512,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
+    isReversed?: boolean
+    reversedById?: string | null
+    reversalRef?: string | null
   }
 
   export type PurchaseOrderCreateManyProjectInput = {
@@ -94751,6 +94908,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isReversed?: BoolFieldUpdateOperationsInput | boolean
+    reversedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reversalRef?: NullableStringFieldUpdateOperationsInput | string | null
     lines?: TransactionLineUpdateManyWithoutJournalEntryNestedInput
   }
 
@@ -94765,6 +94925,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isReversed?: BoolFieldUpdateOperationsInput | boolean
+    reversedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reversalRef?: NullableStringFieldUpdateOperationsInput | string | null
     lines?: TransactionLineUncheckedUpdateManyWithoutJournalEntryNestedInput
   }
 
@@ -94779,6 +94942,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isReversed?: BoolFieldUpdateOperationsInput | boolean
+    reversedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reversalRef?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PurchaseOrderUpdateWithoutProjectInput = {
@@ -95145,6 +95311,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -95355,6 +95522,7 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -95387,6 +95555,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -95416,6 +95585,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -96089,6 +96259,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -96139,6 +96310,7 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -96171,6 +96343,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -96200,6 +96373,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -96848,6 +97022,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -97084,6 +97259,7 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -97117,6 +97293,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -97146,6 +97323,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -97322,6 +97500,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     deletedById?: string | null
     approvalStatus?: $Enums.ApprovalStatus
+    workflowStatus?: string
     vatRate?: Decimal | DecimalJsLike | number | string
     vatAmount?: Decimal | DecimalJsLike | number | string
     retentionRate?: Decimal | DecimalJsLike | number | string
@@ -97467,6 +97646,7 @@ export namespace Prisma {
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -97500,6 +97680,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -97529,6 +97710,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvalStatus?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    workflowStatus?: StringFieldUpdateOperationsInput | string
     vatRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vatAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retentionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string

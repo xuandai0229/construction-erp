@@ -17,7 +17,7 @@ export default function SystemPage() {
   const [backupJson, setBackupJson] = useState('');
   const [status, setStatus] = useState({ message: '', type: '' });
 
-  if (userRole !== 'ADMIN') {
+  if (userRole !== 'SUPER_ADMIN') {
     return (
       <div className="erp-page">
         <Sidebar activeItem="system" />
@@ -33,7 +33,7 @@ export default function SystemPage() {
             </div>
             <div>
               <h1 className="text-2xl font-black text-[var(--text-primary)] mb-2">Truy cập bị từ chối</h1>
-              <p className="text-[13px] text-[var(--text-secondary)]">Bạn không có quyền quản trị để truy cập trang cấu hình hệ thống.</p>
+              <p className="text-[13px] text-[var(--text-secondary)]">Trang này chỉ dành cho SUPER_ADMIN do chứa các công cụ nguy hiểm.</p>
             </div>
           </div>
         </main>
@@ -93,40 +93,7 @@ export default function SystemPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Role Management */}
-            <section className="card-elevation p-6 space-y-4">
-              <div className="flex items-center gap-2 mb-5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-500/10 text-blue-500">
-                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 11V7a4 4 0 0 1 8 0v4M8 11h12a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-[12px] font-black text-[var(--text-primary)] uppercase tracking-widest">Quyền truy cập (Role)</h3>
-                  <p className="text-[10px] text-[var(--text-muted)] mt-0.5">Thay đổi vai trò để kiểm tra phân quyền</p>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                {roles.map((role) => (
-                  <button
-                    key={role}
-                    onClick={() => setUserRole(role)}
-                    className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 transition-all text-left ${
-                      userRole === role
-                        ? 'border-blue-500/40 bg-blue-500/10 text-[var(--text-primary)]'
-                        : 'border-[var(--border)] bg-[var(--secondary)] text-[var(--text-secondary)] hover:border-blue-500/30 hover:text-[var(--text-primary)]'
-                    }`}
-                  >
-                    <div>
-                      <div className="text-[12px] font-bold uppercase tracking-wider">{role}</div>
-                      <div className="text-[10px] text-[var(--text-muted)] mt-0.5">{roleDescriptions[role]}</div>
-                    </div>
-                    {userRole === role && <span className="h-2 w-2 rounded-full bg-blue-500 shrink-0" />}
-                  </button>
-                ))}
-              </div>
-            </section>
+            {/* Role Management REMOVED for security */}
 
             {/* Backup & Restore */}
             <section className="card-elevation p-6 space-y-5">

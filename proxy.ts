@@ -25,7 +25,7 @@ export function proxy(request: NextRequest) {
   // 1. Role-based protection for the /system route
   if (pathname.startsWith('/system')) {
     const role = request.headers.get('x-user-role');
-    if (role && role !== 'ADMIN') {
+    if (role && role !== 'SUPER_ADMIN') {
       console.warn(`[Security] Unauthorized access attempt to /system by role: ${role}`);
       return NextResponse.redirect(new URL('/', request.url));
     }
@@ -46,8 +46,8 @@ export function proxy(request: NextRequest) {
     }
 
     // Special check for /api/system
-    if (pathname.startsWith('/api/system') && role !== 'ADMIN') {
-      return new NextResponse(JSON.stringify({ success: false, error: 'Chỉ ADMIN mới được truy cập cấu hình hệ thống.' }), {
+    if (pathname.startsWith('/api/system') && role !== 'SUPER_ADMIN') {
+      return new NextResponse(JSON.stringify({ success: false, error: 'Chỉ SUPER_ADMIN mới được truy cập cấu hình hệ thống.' }), {
         status: 403,
         headers: { 'Content-Type': 'application/json' },
       });

@@ -14,14 +14,15 @@ interface Props {
 export default function AddRevenueModal({ isOpen, onClose }: Props) {
   const currentProjectId = useERPStore(state => state.currentProjectId);
 
-  const { data: projects = [] } = useProjectsQuery();
+  const { data: projectsData } = useProjectsQuery();
+  const projects = projectsData || [];
   const { data: wbsData } = useWBSQuery(currentProjectId);
   const wbsItems = wbsData?.flat || [];
 
   const { mutateAsync: createRevenue } = useCreateRevenueMutation(currentProjectId);
 
   const [form, setForm] = useState({
-    projectId: currentProjectId || (projects.length > 0 ? projects[0].id : ''),
+    projectId: currentProjectId || '',
     wbsId: '',
     amount: '',
     status: 'unpaid' as 'paid' | 'unpaid',
@@ -30,10 +31,12 @@ export default function AddRevenueModal({ isOpen, onClose }: Props) {
   });
 
   useEffect(() => {
+    if (!isOpen) return;
+
     if (!form.projectId && projects.length > 0) {
       setForm(prev => ({ ...prev, projectId: currentProjectId || projects[0].id }));
     }
-  }, [projects, currentProjectId, form.projectId]);
+  }, [projectsData, currentProjectId, form.projectId, isOpen]);
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
 import { useInvoicesQuery, useCreatePaymentMutation } from '@/services/queries/useRevenues';
 
@@ -21,6 +21,14 @@ export default function AddPaymentModal({ isOpen, onClose, invoiceId }: Props) {
     date: new Date().toISOString().split('T')[0],
     description: '',
   });
+  
+  const [requestId, setRequestId] = useState(() => crypto.randomUUID());
+
+  useEffect(() => {
+    if (!isOpen) {
+      setRequestId(crypto.randomUUID());
+    }
+  }, [isOpen]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -42,6 +50,7 @@ export default function AddPaymentModal({ isOpen, onClose, invoiceId }: Props) {
         amount,
         date: form.date,
         description: form.description,
+        requestId,
       });
       onClose();
     } catch (err: any) {

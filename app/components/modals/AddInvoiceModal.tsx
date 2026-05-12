@@ -14,24 +14,37 @@ interface Props {
 export default function AddInvoiceModal({ isOpen, onClose }: Props) {
   const currentProjectId = useERPStore(state => state.currentProjectId);
 
-  const { data: projects = [] } = useProjectsQuery();
+  const { data: projectsData } = useProjectsQuery();
+  const projects = projectsData || [];
   const { data: wbsData } = useWBSQuery(currentProjectId);
   const wbs = wbsData?.flat || [];
 
   const { mutateAsync: createInvoice } = useCreateInvoiceMutation(currentProjectId);
 
   const [form, setForm] = useState({
-    projectId: currentProjectId || (projects.length > 0 ? projects[0].id : ''),
+    projectId: currentProjectId || '',
     wbsId: '',
     amount: '',
     issuedDate: new Date().toISOString().split('T')[0],
   });
 
+  const [requestId, setRequestId] = useState(() => crypto.randomUUID());
+
   useEffect(() => {
+    if (!isOpen) return;
+
     if (!form.projectId && projects.length > 0) {
       setForm(prev => ({ ...prev, projectId: currentProjectId || projects[0].id }));
     }
-  }, [projects, currentProjectId, form.projectId]);
+    // Only reset requestId when modal opens for the first time or after submit
+  }, [projectsData, currentProjectId, form.projectId, isOpen]);
+
+  // Reset requestId only when modal CLOSES to prepare for next open
+  useEffect(() => {
+    if (!isOpen) {
+      setRequestId(crypto.randomUUID());
+    }
+  }, [isOpen]);
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -52,6 +65,7 @@ export default function AddInvoiceModal({ isOpen, onClose }: Props) {
         wbsId: form.wbsId,
         amount: amount,
         issuedDate: form.issuedDate,
+        requestId,
       });
       onClose();
     } catch (err: any) {

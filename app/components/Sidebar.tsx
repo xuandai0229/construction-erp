@@ -36,8 +36,8 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
   };
 
   const filteredItems = menuItems.filter(item => {
-    if (item.id === 'system')  return userRole === 'ADMIN';
-    if (item.id === 'budget' || item.id === 'costs') return ['ADMIN', 'ACCOUNTANT', 'MANAGER'].includes(userRole);
+    if (item.id === 'system')  return userRole === 'SUPER_ADMIN';
+    if (item.id === 'budget' || item.id === 'costs') return ['SUPER_ADMIN', 'ADMIN', 'ACCOUNTANT', 'MANAGER'].includes(userRole);
     return true;
   });
 

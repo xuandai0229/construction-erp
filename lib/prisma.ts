@@ -8,9 +8,14 @@ const prismaClientSingleton = () => {
     query: {
       $allModels: {
         async $allOperations({ model, operation, args, query }) {
+          const isSoftDeleteModel = model && SOFT_DELETE_MODELS.has(model.toLowerCase());
+          
+          if (isSoftDeleteModel && (operation === 'delete' || operation === 'deleteMany')) {
+            throw new Error(`CRITICAL SECURITY ALERT: Hard delete is blocked for model ${model}. Use update with deletedAt instead.`);
+          }
+
           if (
-            model &&
-            SOFT_DELETE_MODELS.has(model.toLowerCase()) &&
+            isSoftDeleteModel &&
             (
               operation === 'findUnique' ||
               operation === 'findFirst' ||

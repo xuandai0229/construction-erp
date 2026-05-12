@@ -16,7 +16,8 @@ interface Props {
 export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
   const { currentProjectId, setCurrentProject } = useERPStore();
 
-  const { data: projects = [] } = useProjectsQuery();
+  const { data: projectsData } = useProjectsQuery();
+  const projects = projectsData || [];
   const { data: wbsData } = useWBSQuery(currentProjectId);
   const wbsItems = wbsData?.flat || [];
 
@@ -37,7 +38,12 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Generate idempotency key
+  const [requestId, setRequestId] = useState(() => crypto.randomUUID());
+
   useEffect(() => {
+    if (!isOpen) return;
+
     if (costRecord) {
       setForm({
         projectId: costRecord.projectId,
@@ -51,7 +57,7 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
       });
     } else {
       setForm({
-        projectId: currentProjectId || projects[0]?.id || '',
+        projectId: currentProjectId || (projectsData && projectsData.length > 0 ? projectsData[0].id : ''),
         wbsId: '',
         costType: 'material',
         quantity: '',
@@ -60,8 +66,9 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
         supplier: '',
         date: new Date().toISOString().split('T')[0],
       });
+      setRequestId(crypto.randomUUID()); 
     }
-  }, [costRecord, isOpen, currentProjectId, projects]);
+  }, [isOpen, costRecord]); // Only depend on isOpen and costRecord
 
   const amount = (parseFloat(form.quantity) || 0) * (parseFloat(form.unitPrice) || 0);
 
@@ -102,6 +109,7 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
         note: form.note,
         supplier: form.supplier,
         date: form.date,
+        requestId: costRecord ? undefined : requestId,
       };
 
       if (costRecord) {
