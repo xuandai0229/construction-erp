@@ -74,13 +74,15 @@ export const useERPStore = create<ERPState>((set, get) => ({
             user: {
               name: dbUser.name || session.user.user_metadata?.name || 'User',
               email: dbUser.email || session.user.email || '',
-              role: dbUser.role as UserRole,
+              role: dbUser.role as UserRole,  // ← CANONICAL: from /api/auth/sync (DB source of truth)
               createdAt: session.user.created_at
             },
             userRole: dbUser.role as UserRole
           });
         } catch (syncErr) {
           console.error('[Store] Sync failed, falling back to metadata:', syncErr);
+          // FALLBACK ONLY: user_metadata is writable by user (not ideal)
+          // This only happens if /api/auth/sync fails - should be rare
           set({ 
             user: {
               name: session.user.user_metadata?.name || 'User',
@@ -127,23 +129,21 @@ export const useERPStore = create<ERPState>((set, get) => ({
               email: session.user.email,
               name: session.user.user_metadata?.name
             })
-          }).then(res => {
-            if (!res.ok) throw new Error('Sync failed');
-            return res.json();
           }).then(dbUser => {
             console.log('[Store] Auth Sync Success:', dbUser.email, dbUser.role);
             set({ 
               user: {
                 name: dbUser.name || session.user?.user_metadata?.name || 'User',
                 email: dbUser.email || session.user?.email || '',
-                role: dbUser.role as UserRole,
+                role: dbUser.role as UserRole,  // ← CANONICAL: from /api/auth/sync (DB source of truth)
                 createdAt: session.user?.created_at || ''
               },
               userRole: dbUser.role as UserRole
             });
           }).catch(err => {
             console.error('[Store] Auth Sync Error:', err);
-            // Fallback to metadata if sync fails
+            // FALLBACK ONLY: user_metadata is writable by user (not ideal)
+            // This only happens if /api/auth/sync fails - should be rare
             set({
               user: {
                 name: session.user?.user_metadata?.name || 'User',
