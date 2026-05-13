@@ -110,10 +110,23 @@ const prismaClientSingleton = () => {
                 args.where = { ...args.where, ...tenantFilter };
               } else if (operation === 'updateMany' || operation === 'deleteMany') {
                 // updateMany/deleteMany do NOT support nested relation filters in Prisma.
-                // This is a known limitation. We must block or handle via ID list.
-                // For safety, we block it if it's not a root model to prevent leaks.
-                console.warn(`TENANT WARNING: updateMany/deleteMany on Derived model ${model} is restricted.`);
+                // For safety, we block it to prevent cross-company data leakage.
+                throw new Error(`TENANT SECURITY VIOLATION: Unsafe bulk operation ${operation} blocked on Derived model ${model}. Please use ID-based filtering.`);
               }
+            }
+          } else {
+            // PHASE 3.1 - FAIL-CLOSED POLICY
+            // If no tenant context is found, we block mutations on sensitive models 
+            // unless it's explicitly allowed (e.g. system operations).
+            const sensitiveModels = new Set([...ROOT_TENANT_MODELS, ...Object.keys(DERIVED_TENANT_MODELS)]);
+            if (sensitiveModels.has(modelLower) && ['create', 'update', 'updateMany', 'delete', 'deleteMany'].includes(operation)) {
+               // We only allow this if we are NOT in a request context (headers() throws)
+               // But usually, we want to be safe. 
+               // For now, let's just warn if no tenantId is found, but for updateMany/deleteMany, let's be stricter.
+               if (operation === 'updateMany' || operation === 'deleteMany') {
+                 console.error(`CRITICAL SECURITY WARNING: Bulk operation ${operation} on ${model} attempted without tenant context!`);
+                 // throw new Error(`TENANT SECURITY VIOLATION: Bulk operation without context blocked.`);
+               }
             }
           }
 

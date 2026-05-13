@@ -14,6 +14,35 @@ export class ProjectService {
     return Math.round((val + Number.EPSILON) * 100) / 100;
   }
 
+  // ─── GLOBAL STATS ───────────────────────────────────
+  static async getGlobalStats() {
+    const stats = await prisma.project.groupBy({
+      by: ['status'],
+      where: { deletedAt: null },
+      _count: { status: true },
+      _sum: { contractValue: true }
+    });
+
+    const result = {
+      total: 0,
+      inProgress: 0,
+      completed: 0,
+      onHold: 0,
+      totalValue: 0
+    };
+
+    stats.forEach(s => {
+      const count = s._count.status;
+      result.total += count;
+      if (s.status === 'IN_PROGRESS' || s.status === 'ACTIVE') result.inProgress += count;
+      if (s.status === 'COMPLETED') result.completed += count;
+      if (s.status === 'CANCELLED') result.onHold += count;
+      result.totalValue += Number(s._sum.contractValue || 0);
+    });
+
+    return result;
+  }
+
   // ─── LIST ───────────────────────────────────────────
   static async findMany(params: {
     page?: number;
@@ -194,6 +223,7 @@ export class ProjectService {
       await tx.invoice.updateMany({ where: { projectId: id }, data: { deletedAt: now, deletedById: userId } });
       await tx.revenue.updateMany({ where: { projectId: id }, data: { deletedAt: now } });
       await tx.payment.updateMany({ where: { projectId: id }, data: { deletedAt: now, deletedById: userId } });
+      await tx.journalEntry.updateMany({ where: { projectId: id }, data: { deletedAt: now } });
 
       await AuditService.log({
         userId,
@@ -223,6 +253,7 @@ export class ProjectService {
       await tx.invoice.updateMany({ where: { projectId: id }, data: { deletedAt: null, deletedById: null } });
       await tx.revenue.updateMany({ where: { projectId: id }, data: { deletedAt: null } });
       await tx.payment.updateMany({ where: { projectId: id }, data: { deletedAt: null, deletedById: null } });
+      await tx.journalEntry.updateMany({ where: { projectId: id }, data: { deletedAt: null } });
 
       await AuditService.log({
         userId,

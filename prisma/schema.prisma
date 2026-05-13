@@ -334,9 +334,9 @@ model JournalEntry {
   project      Project?          @relation(fields: [projectId], references: [id])
   lines        TransactionLine[]
 
+  @@unique([sourceType, sourceId, deletedAt])
   @@index([projectId, deletedAt, date])
   @@index([date])
-  @@index([sourceType, sourceId])
 }
 
 model TransactionLine {
@@ -664,18 +664,23 @@ model Document {
 }
 
 model FiscalPeriod {
-  id             String    @id
-  month          String    @unique
+  id             String    @id @default(uuid())
+  companyId      String
+  name           String    // e.g. "January 2026"
+  startDate      DateTime
+  endDate        DateTime
   isLocked       Boolean   @default(false)
   lockedAt       DateTime?
   lockedById     String?
   closingBalance Decimal?  @db.Decimal(18, 2)
   reconciledAt   DateTime?
   createdAt      DateTime  @default(now())
-  updatedAt      DateTime
-  User           User?     @relation(fields: [lockedById], references: [id])
+  updatedAt      DateTime  @updatedAt
+  company        Company   @relation(fields: [companyId], references: [id])
+  lockedBy       User?     @relation(fields: [lockedById], references: [id])
 
-  @@index([month])
+  @@unique([companyId, startDate, endDate])
+  @@index([companyId, isLocked])
 }
 
 model Job {
@@ -941,7 +946,8 @@ model Company {
   costs     CostRecord[]
   invoices  Invoice[]
   projects  Project[]
-  users     User[]
+  users          User[]
+  FiscalPeriod   FiscalPeriod[]
 }
 
 model Branch {
@@ -1003,6 +1009,7 @@ enum AccountType {
   INCOME
   EXPENSE
 }
+
 
 enum TransactionType {
   DEBIT

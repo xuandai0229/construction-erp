@@ -153,7 +153,22 @@ async function main() {
 
   const finalMemory = process.memoryUsage().heapUsed / 1024 / 1024;
   console.log(`[METRIC] Heap Growth: ${(finalMemory - initialMemory).toFixed(2)} MB`);
-  console.log("=== STRESS TEST COMPLETED ===");
+  // VERIFY ACCOUNTING INTEGRITY
+  console.log("\n--- PHASE 5: VERIFYING ACCOUNTING INTEGRITY ---");
+  const dups: any[] = await prisma.$queryRaw`
+    SELECT "sourceType", "sourceId", COUNT(*) 
+    FROM "JournalEntry" 
+    WHERE "deletedAt" IS NULL 
+    GROUP BY "sourceType", "sourceId" 
+    HAVING COUNT(*) > 1
+  `;
+  if (dups.length > 0) {
+    console.error("!!! CRITICAL FAILURE: Duplicate Journal Entries found!", dups);
+  } else {
+    console.log("✅ No duplicate Journal Entries detected.");
+  }
+
+  console.log("\n=== STRESS TEST COMPLETED ===");
 }
 
 main().catch(console.error).finally(() => prisma.$disconnect());

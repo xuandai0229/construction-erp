@@ -14,6 +14,17 @@ export function useProjectsQuery(params: any = {}) {
   });
 }
 
+export function useGlobalProjectsStatsQuery() {
+  return useQuery({
+    queryKey: [...queryKeys.projects.all(), 'global-stats'],
+    queryFn: async () => {
+      const res = await projectApi.getGlobalStats();
+      if (!res.success) throw new Error(res.error || 'Failed to fetch global stats');
+      return res.data;
+    },
+  });
+}
+
 export function useProjectStatsQuery(projectId: string) {
   return useQuery({
     queryKey: [...queryKeys.projects.detail(projectId), 'stats'],
@@ -38,6 +49,7 @@ export function useCreateProjectMutation() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.lists() });
+      queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.all(), 'global-stats'] });
     },
   });
 }
@@ -53,6 +65,7 @@ export function useUpdateProjectMutation() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.lists() });
+      queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.all(), 'global-stats'] });
     },
   });
 }
@@ -68,6 +81,7 @@ export function useDeleteProjectMutation() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.lists() });
+      queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.all(), 'global-stats'] });
     },
   });
 }
