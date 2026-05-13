@@ -49,7 +49,7 @@ async function stressSeed() {
         projectId: p.id,
         wbsId: wbsItems[k % 10].id,
         amount,
-        costType: costTypes[k % 5],
+        costType: costTypes[k % 5] as any,
         supplier: suppliers[k % 5],
         date: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1),
         status: k % 3 === 0 ? 'unpaid' : 'paid',

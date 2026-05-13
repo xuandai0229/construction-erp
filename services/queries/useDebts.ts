@@ -1,3 +1,4 @@
+import { CacheInvalidator } from '@/lib/cache-invalidation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { revenueApi } from '@/services/api/revenue.api';
 import { queryKeys } from '@/lib/query-keys';

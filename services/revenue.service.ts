@@ -67,9 +67,20 @@ export class RevenueService {
     
     if (data.amount <= 0) throw new ApiError(400, "Số tiền thanh toán phải lớn hơn 0");
     const amount = round(data.amount);
+    const requestId = data.requestId;
     await assertPeriodNotLocked(data.date || new Date());
 
+    if (requestId) {
+      const existing = await prisma.payment.findUnique({ where: { requestId } });
+      if (existing) return existing;
+    }
+
     return prisma.$transaction(async (tx) => {
+      if (requestId) {
+        const existing = await tx.payment.findUnique({ where: { requestId } });
+        if (existing) return existing;
+      }
+
       const invoice = await tx.invoice.findUnique({ where: { id: data.invoiceId } });
       if (!invoice) throw new ApiError(404, "Không tìm thấy hóa đơn");
 
@@ -85,6 +96,7 @@ export class RevenueService {
 
       const payment = await tx.payment.create({
         data: {
+          requestId,
           projectId: invoice.projectId,
           invoiceId: data.invoiceId,
           amount: amount,
@@ -94,14 +106,19 @@ export class RevenueService {
         },
       });
 
-      await tx.invoice.update({
-        where: { id: data.invoiceId },
+            const updatedInvoice = await tx.invoice.updateMany({
+        where: { id: data.invoiceId, version: invoice.version },
         data: {
           paidAmount: newPaidAmount,
           remainingAmount: newRemainingAmount,
           status: newStatus,
+          version: { increment: 1 }
         },
       });
+
+      if (updatedInvoice.count === 0) {
+        throw new ApiError(409, "Hóa đơn đã bị thay đổi bởi giao dịch khác (Concurrency). Vui lòng thử lại.");
+      }
 
       // Create a revenue record for project tracking
       await tx.revenue.create({

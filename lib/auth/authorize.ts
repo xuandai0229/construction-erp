@@ -1,4 +1,4 @@
-import { RoleKey } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 import { Permission } from "./permissions";
 import { hasPermission as checkPermission } from "./rbac";
 import { ApiError } from "@/lib/api-error";
@@ -25,13 +25,13 @@ export class Authorizer {
       }
     });
 
-    let role: RoleKey | undefined = dbUser?.role as RoleKey;
+    let role: UserRole | undefined = dbUser?.role as UserRole;
 
     // 2. Fallback to Supabase Metadata (For new/un-synced users)
     if (!role) {
       const { data: { user } } = await supabase.auth.admin.getUserById(userId);
       if (user) {
-        role = user.user_metadata?.role as RoleKey;
+        role = user.user_metadata?.role as UserRole;
       }
     }
     
@@ -49,7 +49,7 @@ export class Authorizer {
   /**
    * Helper for role-based checks
    */
-  static async requireRole(userId: string, allowedRoles: RoleKey[]) {
+  static async requireRole(userId: string, allowedRoles: UserRole[]) {
     let dbUser = await prisma.user.findFirst({
       where: {
         OR: [
@@ -59,11 +59,11 @@ export class Authorizer {
       }
     });
 
-    let role: RoleKey | undefined = dbUser?.role as RoleKey;
+    let role: UserRole | undefined = dbUser?.role as UserRole;
 
     if (!role) {
       const { data: { user } } = await supabase.auth.admin.getUserById(userId);
-      role = user?.user_metadata?.role as RoleKey;
+      role = user?.user_metadata?.role as UserRole;
     }
     
     if (!role || !allowedRoles.includes(role)) {

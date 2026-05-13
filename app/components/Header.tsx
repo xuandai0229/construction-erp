@@ -211,7 +211,7 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
                 <div className="absolute right-0 mt-2 w-52 rounded-2xl border border-[var(--border)] bg-[var(--popover)] py-2 shadow-2xl backdrop-blur-xl animate-scale-up z-[60]" style={{boxShadow: '0 20px 60px -10px rgba(0,0,0,0.4)'}}>
                   <div className="px-4 py-2.5 border-b border-[var(--divider)] mb-1">
                     <div className="text-[9.5px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-0.5">Đăng nhập bởi</div>
-                    <div className="text-[11.5px] font-bold text-[var(--text-accent)] truncate">{user?.email || 'admin@erp.com'}</div>
+                    <div className="text-[11.5px] font-bold text-[var(--text-accent)] truncate">{user?.email || 'Chưa đăng nhập'}</div>
                   </div>
 
                   <button className="flex w-full items-center gap-3 px-4 py-2.5 text-[12px] font-bold text-[var(--text-secondary)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)] transition-colors">

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { TransactionType, CostType } from "@prisma/client";
 import { ApiError } from "@/lib/api-error";
+import { seedChartOfAccounts } from "@/lib/accounting/chartOfAccounts";
 
 /**
  * The Posting Engine automatically generates Double-Entry Journal Entries
@@ -122,7 +123,22 @@ export class PostingEngine {
       throw new ApiError(500, `Lỗi kế toán: Debit (${debits}) không bằng Credit (${credits})`);
     }
 
-    // 2. Resolve account IDs
+    // 2. Ensure the standard chart of accounts exists before posting.
+    await seedChartOfAccounts(tx);
+
+    const existingEntry = await tx.journalEntry.findFirst({
+      where: {
+        sourceType: params.sourceType,
+        sourceId: params.sourceId,
+        deletedAt: null,
+      },
+      select: { id: true },
+    });
+    if (existingEntry) {
+      throw new ApiError(409, `Journal already posted for ${params.sourceType}:${params.sourceId}`);
+    }
+
+    // 3. Resolve account IDs
     const codes = params.lines.map(l => l.accountCode);
     const accounts = await tx.ledgerAccount.findMany({
       where: { code: { in: codes } }
@@ -130,7 +146,13 @@ export class PostingEngine {
 
     const accountMap = new Map(accounts.map((a: any) => [a.code, a.id]));
 
-    // 3. Create Journal Entry
+    if (accounts.length !== new Set(codes).size) {
+      const foundCodes = new Set(accounts.map((a: any) => a.code));
+      const missing = codes.filter(code => !foundCodes.has(code));
+      throw new ApiError(500, `Missing ledger account(s): ${missing.join(", ")}`);
+    }
+
+    // 4. Create Journal Entry
     const entry = await tx.journalEntry.create({
       data: {
         projectId: params.projectId,
@@ -142,7 +164,7 @@ export class PostingEngine {
       }
     });
 
-    // 4. Create Transaction Lines
+    // 5. Create Transaction Lines
     for (const line of params.lines) {
       const accountId = accountMap.get(line.accountCode);
       if (!accountId) throw new ApiError(500, `Account code not found: ${line.accountCode}`);

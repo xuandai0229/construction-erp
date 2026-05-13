@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { costApi } from '@/services/api/cost.api';
 import { queryKeys } from '@/lib/query-keys';
 import { CostRecord } from '@/app/types';
+import { CacheInvalidator } from '@/lib/cache-invalidation';
 
 export function useCostsQuery(projectId: string) {
   return useQuery({
@@ -26,7 +27,7 @@ export function useCreateCostMutation() {
       return res.data;
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(variables.projectId) });
+      CacheInvalidator.invalidateCost(queryClient, variables.projectId);
     },
   });
 }
@@ -41,7 +42,7 @@ export function useUpdateCostMutation(projectId: string) {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
+      CacheInvalidator.invalidateCost(queryClient, projectId);
     },
   });
 }
@@ -56,7 +57,7 @@ export function useDeleteCostMutation(projectId: string) {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
+      CacheInvalidator.invalidateCost(queryClient, projectId);
     },
   });
 }

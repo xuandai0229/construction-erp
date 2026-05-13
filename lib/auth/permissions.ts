@@ -28,6 +28,7 @@ export const Permissions = {
 
   // User & System Management
   USERS_MANAGE: 'users.manage',
+  USERS_VIEW: 'users.view',
   SYSTEM_RESTORE: 'system.restore',
   REPORTS_FINANCIAL: 'reports.financial',
 } as const;

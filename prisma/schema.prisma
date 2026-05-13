@@ -45,6 +45,7 @@ model User {
   wbsDeleted                                         WBSItem[]          @relation("WBSDeletedBy")
 
   @@index([createdAt])
+  @@index([companyId])
 }
 
 model Category {
@@ -98,7 +99,7 @@ model Project {
   wbsItems             WBSItem[]
 
   @@index([status])
-  @@index([createdAt])
+  @@index([companyId, deletedAt, createdAt])
   @@index([ownerId])
 }
 
@@ -119,7 +120,7 @@ model Task {
   category    Category?  @relation(fields: [categoryId], references: [id])
   project     Project    @relation(fields: [projectId], references: [id])
 
-  @@index([projectId])
+  @@index([projectId, deletedAt])
   @@index([status])
   @@index([assigneeId])
   @@index([categoryId])
@@ -153,7 +154,7 @@ model WBSItem {
   children           WBSItem[]           @relation("WBSChildren")
   project            Project             @relation(fields: [projectId], references: [id])
 
-  @@index([projectId])
+  @@index([projectId, deletedAt])
   @@index([parentId])
 }
 
@@ -193,8 +194,8 @@ model CostRecord {
   purchaseOrder   PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
   wbs             WBSItem        @relation(fields: [wbsId], references: [id])
 
-  @@index([projectId])
-  @@index([wbsId])
+  @@index([projectId, deletedAt, date])
+  @@index([wbsId, deletedAt])
   @@index([date])
 }
 
@@ -211,8 +212,8 @@ model BudgetRecord {
   createdBy       User?     @relation("BudgetCreatedBy", fields: [createdById], references: [id])
   wbs             WBSItem   @relation(fields: [wbsId], references: [id])
 
-  @@index([projectId])
-  @@index([wbsId])
+  @@index([projectId, deletedAt])
+  @@index([wbsId, deletedAt])
 }
 
 model Revenue {
@@ -232,8 +233,8 @@ model Revenue {
   invoice     Invoice?      @relation(fields: [invoiceId], references: [id])
   wbs         WBSItem       @relation(fields: [wbsId], references: [id])
 
-  @@index([projectId])
-  @@index([wbsId])
+  @@index([projectId, deletedAt, date])
+  @@index([wbsId, deletedAt])
 }
 
 model Invoice {
@@ -274,8 +275,8 @@ model Invoice {
   payments          Payment[]
   revenues          Revenue[]
 
-  @@index([projectId])
-  @@index([wbsId])
+  @@index([projectId, deletedAt, issuedDate])
+  @@index([wbsId, deletedAt])
 }
 
 model Payment {
@@ -295,8 +296,8 @@ model Payment {
   deletedBy      User?          @relation("PaymentDeletedBy", fields: [deletedById], references: [id])
   invoice        Invoice        @relation(fields: [invoiceId], references: [id])
 
-  @@index([invoiceId])
-  @@index([projectId])
+  @@index([invoiceId, deletedAt])
+  @@index([projectId, deletedAt, date])
 }
 
 model LedgerAccount {
@@ -333,7 +334,7 @@ model JournalEntry {
   project      Project?          @relation(fields: [projectId], references: [id])
   lines        TransactionLine[]
 
-  @@index([projectId])
+  @@index([projectId, deletedAt, date])
   @@index([date])
   @@index([sourceType, sourceId])
 }

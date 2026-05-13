@@ -50,11 +50,18 @@ export const useERPStore = create<ERPState>((set, get) => ({
       const { data: { session } } = await Promise.race([sessionPromise, timeoutPromise]) as any;
       
       if (session?.user) {
+        // Sync token to cookie for Middleware
+        if (typeof document !== 'undefined') {
+          document.cookie = `sb-access-token=${session.access_token}; path=/; max-age=${session.expires_in}; SameSite=Lax; Secure`;
+        }
         // Sync with DB
         try {
           const syncRes = await fetch('/api/auth/sync', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${session.access_token}`
+            },
             body: JSON.stringify({
               id: session.user.id,
               email: session.user.email,
@@ -98,11 +105,23 @@ export const useERPStore = create<ERPState>((set, get) => ({
 
       // Listen to auth changes — only set up once via initialized guard
       const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        // Sync token to cookie for Middleware
+        if (typeof document !== 'undefined') {
+          if (session) {
+            document.cookie = `sb-access-token=${session.access_token}; path=/; max-age=${session.expires_in}; SameSite=Lax; Secure`;
+          } else {
+            document.cookie = `sb-access-token=; path=/; max-age=0; SameSite=Lax; Secure`;
+          }
+        }
+
         if (session?.user) {
           // Trigger sync in background or wait
           fetch('/api/auth/sync', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${session.access_token}`
+            },
             body: JSON.stringify({
               id: session.user.id,
               email: session.user.email,

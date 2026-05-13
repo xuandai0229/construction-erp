@@ -18,10 +18,12 @@ interface ERPUser {
 
 const ROLE_OPTIONS: UserRole[] = [
   'SUPER_ADMIN',
-  'DIRECTOR',
-  'CHIEF_ACCOUNTANT',
+  'ADMIN',
+  'GROUP_DIRECTOR',
+  'BRANCH_DIRECTOR',
+  'CFO',
+  'MANAGER',
   'ACCOUNTANT',
-  'PROJECT_MANAGER',
   'VIEWER'
 ];
 

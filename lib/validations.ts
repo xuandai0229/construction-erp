@@ -134,6 +134,7 @@ export const createInvoiceSchema = z.object({
   projectId: z.string().uuid("Dự án là bắt buộc"),
   wbsId: z.string().uuid("Hạng mục WBS là bắt buộc"),
   invoiceNumber: z.string().max(100).optional(),
+  requestId: z.string().uuid("Idempotency key must be a UUID").optional(),
   amount: z.number().positive("Giá trị hóa đơn phải lớn hơn 0"),
   issuedDate: z.string().optional(),
   dueDate: z.string().optional(),
@@ -152,6 +153,7 @@ export const createPaymentSchema = z.object({
   projectId: z.string().uuid("Dự án là bắt buộc"),
   invoiceId: z.string().uuid("Hóa đơn là bắt buộc"),
   amount: z.number().positive("Số tiền thanh toán phải lớn hơn 0"),
+  requestId: z.string().uuid("Idempotency key must be a UUID").optional(),
   date: z.string().optional(),
   description: z.string().max(500).optional(),
 });

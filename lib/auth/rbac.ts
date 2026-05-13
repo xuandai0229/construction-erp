@@ -1,4 +1,4 @@
-import { RoleKey } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 import { Permission, Permissions } from "./permissions";
 
 /**
@@ -67,7 +67,7 @@ export const RolePermissions: Record<string, Permission[]> = {
 /**
  * Checks if a role has a specific permission.
  */
-export function hasPermission(role: RoleKey, permission: Permission): boolean {
+export function hasPermission(role: UserRole, permission: Permission): boolean {
   const allowed = RolePermissions[role] || [];
   return allowed.includes(permission);
 }

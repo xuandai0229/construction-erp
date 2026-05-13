@@ -44,7 +44,16 @@ export class ProjectService {
         skip,
         take: limit,
         orderBy: { [orderBy]: orderDir },
-        include: {
+        select: {
+          id: true,
+          name: true,
+          status: true,
+          contractValue: true,
+          totalBudget: true,
+          startDate: true,
+          endDate: true,
+          createdAt: true,
+          version: true,
           owner: { select: { id: true, name: true, email: true } },
           _count: { select: { tasks: true, wbsItems: true } },
         },
@@ -76,10 +85,6 @@ export class ProjectService {
           },
         },
         wbsItems: {
-          include: {
-            budgets: true,
-            costs: true,
-          },
           orderBy: { sortOrder: "asc" },
         },
       },
@@ -171,56 +176,65 @@ export class ProjectService {
   }
 
   static async delete(id: string, userId?: string) {
-    // Financial Safety Check: Don't delete if there are invoices or costs
-    const [invoiceCount, costCount] = await Promise.all([
-      prisma.invoice.count({ where: { projectId: id } }),
-      prisma.costRecord.count({ where: { projectId: id } })
-    ]);
-
-    if (invoiceCount > 0 || costCount > 0) {
-      throw new ApiError(400, "Không thể xóa dự án đã có dữ liệu tài chính (Hóa đơn hoặc Chi phí).");
-    }
-
     const oldProject = await this.findById(id);
 
-    const project = await prisma.project.update({
-      where: { id },
-      data: { 
-        deletedAt: new Date(),
-        deletedById: userId,
-      }
-    });
+    return prisma.$transaction(async (tx) => {
+      const now = new Date();
+      
+      const project = await tx.project.update({
+        where: { id },
+        data: { deletedAt: now, deletedById: userId }
+      });
 
-    await AuditService.log({
-      userId,
-      action: "DELETE",
-      entity: "Project",
-      entityId: id,
-      oldData: oldProject,
-      reason: "User requested soft delete",
-    });
+      // Phase 4: Centralized Soft Delete Hardening - Cascade
+      await tx.wBSItem.updateMany({ where: { projectId: id }, data: { deletedAt: now, deletedById: userId } });
+      await tx.task.updateMany({ where: { projectId: id }, data: { deletedAt: now } });
+      await tx.budgetRecord.updateMany({ where: { projectId: id }, data: { deletedAt: now } });
+      await tx.costRecord.updateMany({ where: { projectId: id }, data: { deletedAt: now, deletedById: userId } });
+      await tx.invoice.updateMany({ where: { projectId: id }, data: { deletedAt: now, deletedById: userId } });
+      await tx.revenue.updateMany({ where: { projectId: id }, data: { deletedAt: now } });
+      await tx.payment.updateMany({ where: { projectId: id }, data: { deletedAt: now, deletedById: userId } });
 
-    return project;
+      await AuditService.log({
+        userId,
+        action: "DELETE",
+        entity: "Project",
+        entityId: id,
+        oldData: oldProject,
+        reason: "User requested soft delete with FULL CASCADE",
+      });
+
+      return project;
+    });
   }
 
   static async restore(id: string, userId?: string) {
-    const project = await prisma.project.update({
-      where: { id },
-      data: { 
-        deletedAt: null,
-        deletedById: null,
-      }
-    });
+    return prisma.$transaction(async (tx) => {
+      const project = await tx.project.update({
+        where: { id },
+        data: { deletedAt: null, deletedById: null }
+      });
 
-    await AuditService.log({
-      userId,
-      action: "RESTORE",
-      entity: "Project",
-      entityId: id,
-      newData: project,
-    });
+      // Phase 4: Restore Consistency
+      await tx.wBSItem.updateMany({ where: { projectId: id }, data: { deletedAt: null, deletedById: null } });
+      await tx.task.updateMany({ where: { projectId: id }, data: { deletedAt: null } });
+      await tx.budgetRecord.updateMany({ where: { projectId: id }, data: { deletedAt: null } });
+      await tx.costRecord.updateMany({ where: { projectId: id }, data: { deletedAt: null, deletedById: null } });
+      await tx.invoice.updateMany({ where: { projectId: id }, data: { deletedAt: null, deletedById: null } });
+      await tx.revenue.updateMany({ where: { projectId: id }, data: { deletedAt: null } });
+      await tx.payment.updateMany({ where: { projectId: id }, data: { deletedAt: null, deletedById: null } });
 
-    return project;
+      await AuditService.log({
+        userId,
+        action: "RESTORE",
+        entity: "Project",
+        entityId: id,
+        newData: project,
+        reason: "User requested restore with FULL CASCADE",
+      });
+
+      return project;
+    });
   }
 
   static async getAccountingSummary(projectId: string) {

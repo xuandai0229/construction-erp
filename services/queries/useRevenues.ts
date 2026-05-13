@@ -1,3 +1,4 @@
+import { CacheInvalidator } from '@/lib/cache-invalidation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { revenueApi } from '@/services/api/revenue.api';
 import { queryKeys } from '@/lib/query-keys';
@@ -57,7 +58,7 @@ export function useCreateInvoiceMutation(projectId: string) {
   return useMutation({
     mutationFn: (data: any) => revenueApi.createInvoice(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.invoices.byProject(projectId) });
+      CacheInvalidator.invalidateInvoice(queryClient, projectId);
       queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(projectId), 'stats'] });
     },
   });
@@ -82,8 +83,8 @@ export function useCreatePaymentMutation(projectId: string) {
   return useMutation({
     mutationFn: (data: any) => revenueApi.createPayment(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.payments.byProject(projectId) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.invoices.byProject(projectId) });
+      CacheInvalidator.invalidatePayment(queryClient, projectId);
+      CacheInvalidator.invalidateInvoice(queryClient, projectId);
       queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(projectId), 'stats'] });
     },
   });
@@ -95,8 +96,8 @@ export function useDeletePaymentMutation(projectId: string) {
   return useMutation({
     mutationFn: (id: string) => revenueApi.deletePayment(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.payments.byProject(projectId) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.invoices.byProject(projectId) });
+      CacheInvalidator.invalidatePayment(queryClient, projectId);
+      CacheInvalidator.invalidateInvoice(queryClient, projectId);
       queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(projectId), 'stats'] });
     },
   });

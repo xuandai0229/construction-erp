@@ -15,6 +15,7 @@ export const supabase = globalForSupabase.supabase || createClient(supabaseUrl, 
     autoRefreshToken: true,
     detectSessionInUrl: true,
     // CRITICAL: Disable locking to prevent "stole it" errors and hangs in dev/HMR
+    // @ts-ignore
     lockType: 'null' 
   }
 });

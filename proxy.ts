@@ -1,53 +1,81 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
-export function proxy(request: NextRequest) {
-  // We can't directly read Zustand store here because middleware runs on Edge.
-  // Instead, in a real app, we'd check a JWT cookie. 
-  // For this safe patch without major architectural changes, we will let the frontend handle the hard block (which we already did).
-  // However, we can add a basic security header check if we wanted.
-  
-  // As a simulation of a secure middleware for the 'SAFE PATCH':
-  // If there's an API request attempting to modify data, we should verify auth.
-  // We'll trust the client state for now as requested by the "NO MAJOR REFACTOR" rule,
-  // but we enforce route protection on /system.
-  
+/**
+ * Enterprise Runtime Security Gateway (Proxy)
+ * Enforces:
+ * 1. Token Verification (Trust No Header)
+ * 2. Header Cleansing (Strip Spoofable Headers)
+ * 3. Route Protection (Admin-only routes)
+ * 4. Mutation Protection (Role-based)
+ */
+export async function proxy(request: NextRequest) {
   const requestId = crypto.randomUUID();
   const requestHeaders = new Headers(request.headers);
+  
+  // 1. STRIP spoofable headers from the client
+  requestHeaders.delete('x-user-id');
+  requestHeaders.delete('x-user-role');
+  requestHeaders.delete('x-company-id');
   requestHeaders.set('x-request-id', requestId);
   
   const pathname = request.nextUrl.pathname;
   const method = request.method;
 
-  // Track start time
-  const startTime = Date.now();
+  // 2. Auth Verification via Cookie
+  const token = request.cookies.get('sb-access-token')?.value;
+  let user: any = null;
+  
+  if (token && process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    try {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.SUPABASE_SERVICE_ROLE_KEY,
+        { auth: { persistSession: false } }
+      );
+      const { data } = await supabase.auth.getUser(token);
+      user = data.user;
+    } catch (e) {
+      console.error('[Middleware] Token verification failed:', e);
+    }
+  }
 
-  // 1. Role-based protection for the /system route
-  if (pathname.startsWith('/system')) {
-    const role = request.headers.get('x-user-role');
-    if (role && role !== 'SUPER_ADMIN') {
-      console.warn(`[Security] Unauthorized access attempt to /system by role: ${role}`);
+  // 3. Inject Verified Headers
+  if (user) {
+    requestHeaders.set('x-user-id', user.id);
+    const role = user.user_metadata?.role || 'VIEWER';
+    const companyId = user.user_metadata?.companyId || '';
+    requestHeaders.set('x-user-role', role);
+    if (companyId) {
+      requestHeaders.set('x-company-id', companyId);
+    }
+  }
+
+  // 4. Protection Logic
+  const role = requestHeaders.get('x-user-role') || 'ANONYMOUS';
+
+  // Protect /system and /api/system
+  if (pathname.startsWith('/system') || pathname.startsWith('/api/system')) {
+    if (role !== 'SUPER_ADMIN') {
+      console.warn(`[Security] Unauthorized access attempt to ${pathname} by role: ${role}`);
+      if (pathname.startsWith('/api')) {
+        return new NextResponse(JSON.stringify({ error: 'Chỉ SUPER_ADMIN mới được phép.' }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
       return NextResponse.redirect(new URL('/', request.url));
     }
   }
 
-  // 2. Protect sensitive API mutations
-  const mutationMethods = ['POST', 'PUT', 'DELETE'];
+  // Protect sensitive API mutations
+  const mutationMethods = ['POST', 'PUT', 'PATCH', 'DELETE'];
   if (pathname.startsWith('/api') && mutationMethods.includes(method)) {
-    const role = request.headers.get('x-user-role');
-    
-    // Block VIEWERS from any mutations
-    if (role === 'VIEWER') {
-      console.warn(`[Security] Mutation attempt blocked for VIEWERR role on ${pathname}`);
-      return new NextResponse(JSON.stringify({ success: false, error: 'Quyền VIEWER không được phép thực hiện thao tác này.' }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    // Special check for /api/system
-    if (pathname.startsWith('/api/system') && role !== 'SUPER_ADMIN') {
-      return new NextResponse(JSON.stringify({ success: false, error: 'Chỉ SUPER_ADMIN mới được truy cập cấu hình hệ thống.' }), {
+    // Basic catch-all: No mutations for VIEWERS or ANONYMOUS
+    if (role === 'VIEWER' || role === 'ANONYMOUS') {
+      console.warn(`[Security] Mutation attempt blocked for ${role} on ${pathname}`);
+      return new NextResponse(JSON.stringify({ error: 'Bạn không có quyền thực hiện thao tác này.' }), {
         status: 403,
         headers: { 'Content-Type': 'application/json' },
       });

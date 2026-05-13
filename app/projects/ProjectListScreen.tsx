@@ -23,7 +23,9 @@ export default function ProjectListScreen() {
 
   useEffect(() => { init(); }, [init]);
 
-  const { data: projects = [] } = useProjectsQuery();
+  const { data } = useProjectsQuery({ page, limit: 10 });
+  const projects = data?.data || [];
+  const metadata = data?.metadata || { totalPages: 1 };
 
   if (!isInitialized) {
     return (
@@ -59,7 +61,7 @@ export default function ProjectListScreen() {
           {/* Pagination */}
           <div className="flex items-center justify-between border-t border-[var(--border)] pt-4">
             <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
-              Trang {page}
+              Trang {page} / {metadata.totalPages}
             </div>
             <div className="flex gap-2">
               <button
@@ -71,7 +73,8 @@ export default function ProjectListScreen() {
               </button>
               <button
                 onClick={() => setPage(p => p + 1)}
-                className="erp-btn h-8 px-4 bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text-primary)]"
+                disabled={page >= metadata.totalPages}
+                className="erp-btn h-8 px-4 bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text-primary)] disabled:opacity-40"
               >
                 Trang sau
               </button>
