@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { TransactionType, CostType } from "@prisma/client";
 import { ApiError } from "@/lib/api-error";
 import { seedChartOfAccounts } from "@/lib/accounting/chartOfAccounts";
+import { areEqualMoney, roundMoney } from "@/lib/math";
 
 /**
  * The Posting Engine automatically generates Double-Entry Journal Entries
@@ -115,12 +116,15 @@ export class PostingEngine {
     sourceId: string;
     lines: { accountCode: string, amount: number, type: TransactionType }[];
   }) {
+    // 0. Fiscal Period Check
+    await this.assertPeriodNotLocked(new Date());
+
     // 1. Verify Debit = Credit
     const debits = params.lines.filter(l => l.type === TransactionType.DEBIT).reduce((s, l) => s + l.amount, 0);
     const credits = params.lines.filter(l => l.type === TransactionType.CREDIT).reduce((s, l) => s + l.amount, 0);
 
-    if (Math.abs(debits - credits) > 0.01) {
-      throw new ApiError(500, `Lỗi kế toán: Debit (${debits}) không bằng Credit (${credits})`);
+    if (!areEqualMoney(debits, credits)) {
+      throw new ApiError(500, `Lỗi kế toán: Debit (${roundMoney(debits)}) không bằng Credit (${roundMoney(credits)})`);
     }
 
     // 2. Ensure the standard chart of accounts exists before posting.
@@ -193,6 +197,9 @@ export class PostingEngine {
     if (!oldEntry) return; // Nothing to reverse
     if (oldEntry.isReversed) throw new Error("Giao dịch đã được hủy trước đó.");
 
+    // 0. Fiscal Period Check
+    await this.assertPeriodNotLocked(oldEntry.date);
+
     // Mark old entry as reversed
     await tx.journalEntry.update({
       where: { id: oldEntry.id },
@@ -227,7 +234,16 @@ export class PostingEngine {
   }
 
   static async assertPeriodNotLocked(date: Date) {
-    // Implement fiscal period lock check here
-    // throw new PeriodLockedError() if locked
+    const period = await prisma.fiscalPeriod.findFirst({
+      where: {
+        startDate: { lte: date },
+        endDate: { gte: date },
+        isLocked: true,
+      }
+    });
+    
+    if (period) {
+      throw new ApiError(403, `Kỳ kế toán từ ${period.startDate.toLocaleDateString()} đến ${period.endDate.toLocaleDateString()} đã bị khóa. Không thể thực hiện thay đổi.`);
+    }
   }
 }

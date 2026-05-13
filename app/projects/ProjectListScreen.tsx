@@ -10,7 +10,7 @@ import { Project } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
 import AddProjectModal from '@/app/components/modals/AddProjectModal';
 
-import { useProjectsQuery } from '@/services/queries/useProjects';
+import { useProjectsQuery, useGlobalProjectsStatsQuery } from '@/services/queries/useProjects';
 
 export default function ProjectListScreen() {
   const init             = useERPStore(state => state.init);
@@ -23,9 +23,11 @@ export default function ProjectListScreen() {
 
   useEffect(() => { init(); }, [init]);
 
+  const { data: globalStats } = useGlobalProjectsStatsQuery();
   const { data } = useProjectsQuery({ page, limit: 10 });
   const projects = data?.data || [];
-  const metadata = data?.metadata || { totalPages: 1 };
+  const metadata = data?.metadata || { total: 0, page: 1, limit: 10, totalPages: 1 };
+  const totalItems = metadata.total || (globalStats?.total ?? 0);
 
   if (!isInitialized) {
     return (
@@ -54,29 +56,44 @@ export default function ProjectListScreen() {
         <ProjectsHeader onAdd={() => setIsAddingProject(true)} />
 
         <div className="p-6 md:p-8 space-y-6 animate-fade-in">
-          <ProjectCardStats projects={projects} />
+          <ProjectCardStats stats={globalStats} />
           <ProjectFilters />
-          <ProjectTable projects={projects} onEdit={setEditingProject} />
+          <ProjectTable projects={projects} onEdit={setEditingProject} page={page} limit={10} />
 
           {/* Pagination */}
           <div className="flex items-center justify-between border-t border-[var(--border)] pt-4">
             <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
-              Trang {page} / {metadata.totalPages}
+              Hiển thị {Math.min(totalItems, (page - 1) * 10 + 1)}-{Math.min(page * 10, totalItems)} trong {totalItems} dự án
             </div>
-            <div className="flex gap-2">
+            <div className="flex items-center gap-1.5">
               <button
-                onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="erp-btn h-8 px-4 bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text-primary)] disabled:opacity-40"
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors disabled:opacity-30"
               >
-                Trang trước
+                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6" /></svg>
               </button>
+              
+              {Array.from({ length: metadata.totalPages }, (_, i) => i + 1).map(p => (
+                <button
+                  key={p}
+                  onClick={() => setPage(p)}
+                  className={`h-8 w-8 rounded-lg text-[12px] font-bold transition-all ${
+                    page === p 
+                      ? 'bg-blue-600 text-white shadow-sm shadow-blue-900/20' 
+                      : 'border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+
               <button
-                onClick={() => setPage(p => p + 1)}
                 disabled={page >= metadata.totalPages}
-                className="erp-btn h-8 px-4 bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text-primary)] disabled:opacity-40"
+                onClick={() => setPage(p => p + 1)}
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors disabled:opacity-30"
               >
-                Trang sau
+                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6" /></svg>
               </button>
             </div>
           </div>

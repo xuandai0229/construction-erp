@@ -14,8 +14,8 @@ interface Props {
 export default function AddRevenueModal({ isOpen, onClose }: Props) {
   const currentProjectId = useERPStore(state => state.currentProjectId);
 
-  const { data: projectsData } = useProjectsQuery();
-  const projects = projectsData || [];
+  const { data: projectsData } = useProjectsQuery({ limit: 1000 });
+  const projects = projectsData?.data || [];
   const { data: wbsData } = useWBSQuery(currentProjectId);
   const wbsItems = wbsData?.flat || [];
 

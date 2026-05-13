@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { Authorizer } from "@/lib/auth/authorize";
 import { Permissions } from "@/lib/auth/permissions";
 import { headers } from "next/headers";
+import { handleApiError, successResponse } from "@/lib/api-error";
 
 export async function GET() {
   try {
@@ -10,7 +11,7 @@ export async function GET() {
     const userId = head.get("x-user-id");
 
     if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      throw new Error("Unauthorized");
     }
 
     // Security Guard: Only SUPER_ADMIN or those with USERS_VIEW can see list
@@ -27,9 +28,9 @@ export async function GET() {
       }
     });
 
-    return NextResponse.json(users);
+    return successResponse(users);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: error.status || 500 });
+    return handleApiError(error);
   }
 }
 
@@ -39,7 +40,7 @@ export async function PATCH(req: Request) {
     const userId = head.get("x-user-id");
     const { id, role } = await req.json();
 
-    if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!userId) throw new Error("Unauthorized");
 
     // Security Guard
     await Authorizer.requirePermission(userId, Permissions.USERS_MANAGE);
@@ -49,8 +50,8 @@ export async function PATCH(req: Request) {
       data: { role }
     });
 
-    return NextResponse.json(updatedUser);
+    return successResponse(updatedUser);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: error.status || 500 });
+    return handleApiError(error);
   }
 }

@@ -58,5 +58,15 @@ export const projectApi = {
       };
     }
     return json;
+  },
+
+  async getGlobalStats(): Promise<ServiceResponse<any>> {
+    const res = await fetch('/api/projects/stats');
+    const json = await res.json();
+    return {
+      success: json.success,
+      data: json.data,
+      error: json.error
+    };
   }
 };

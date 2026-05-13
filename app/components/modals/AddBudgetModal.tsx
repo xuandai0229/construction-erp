@@ -15,7 +15,8 @@ interface Props {
 export default function AddBudgetModal({ isOpen, onClose }: Props) {
   const { currentProjectId, setCurrentProject } = useERPStore();
   
-  const { data: projects = [] } = useProjectsQuery();
+  const { data: projectsData } = useProjectsQuery({ limit: 1000 });
+  const projects = projectsData?.data || [];
   const { data: wbsData } = useWBSQuery(currentProjectId);
   const wbsItems = wbsData?.flat || [];
 
