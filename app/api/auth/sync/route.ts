@@ -46,12 +46,14 @@ export async function POST(req: Request) {
 
     if (!user) {
       // 2. Provision new user
+      // SEC-003 FIX: No hardcoded email whitelist.
+      // SUPER_ADMIN is only granted to the very first user (bootstrap),
+      // or to the email designated via INITIAL_ADMIN_EMAIL env var.
       const userCount = await prisma.user.count();
-      
-      const isInitialAdmin = userCount === 0 || 
-                             email === 'admin@construction.com' || 
-                             email === 'amin123@gmail.com' || 
-                             email === 'xuandai0229@gmail.com';
+      const initialAdminEmail = process.env.INITIAL_ADMIN_EMAIL || '';
+
+      const isInitialAdmin = userCount === 0 ||
+                             (initialAdminEmail !== '' && email === initialAdminEmail);
 
       const initialRole: UserRole = isInitialAdmin ? 'SUPER_ADMIN' : 'VIEWER';
 
@@ -72,6 +74,17 @@ export async function POST(req: Request) {
         }
       });
     }
+
+    // SEC-001 FIX: Sync canonical role + companyId into Supabase app_metadata.
+    // app_metadata is ADMIN-ONLY writable (requires service role key).
+    // The proxy middleware reads from app_metadata — this ensures role cannot be
+    // spoofed via user-writable user_metadata.
+    await supabase.auth.admin.updateUserById(authUser.id, {
+      app_metadata: {
+        role: user.role,
+        companyId: user.companyId || null,
+      }
+    });
 
     return successResponse(user);
   } catch (error: any) {

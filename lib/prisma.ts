@@ -107,7 +107,7 @@ const prismaClientSingleton = () => {
                 for (let i = pathParts.length - 1; i >= 0; i--) {
                   tenantFilter = { [pathParts[i]]: tenantFilter };
                 }
-                args.where = { ...args.where, ...tenantFilter };
+                (args as any).where = { ...(args as any).where, ...tenantFilter };
               } else if (operation === 'updateMany' || operation === 'deleteMany') {
                 // updateMany/deleteMany do NOT support nested relation filters in Prisma.
                 // For safety, we block it to prevent cross-company data leakage.

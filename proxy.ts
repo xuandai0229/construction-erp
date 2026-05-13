@@ -41,16 +41,36 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // 3. Inject Verified Headers
+  // 3. Inject Verified Headers — Role and companyId come from DB, NOT user_metadata
+  // SEC-001 FIX: user_metadata is writable by the user; app_metadata requires admin.
+  // We look up the user's role and companyId from the ERP database via the
+  // Supabase admin client (service role key), which cannot be spoofed by clients.
   if (user) {
     requestHeaders.set('x-user-id', user.id);
-    const role = user.user_metadata?.role || 'VIEWER';
-    const companyId = user.user_metadata?.companyId || '';
-    requestHeaders.set('x-user-role', role);
-    if (companyId) {
-      requestHeaders.set('x-company-id', companyId);
+
+    try {
+      const supabaseAdmin = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        { auth: { persistSession: false } }
+      );
+      // getUserById returns the full user row including app_metadata (admin-only writable)
+      const { data: { user: fullUser } } = await supabaseAdmin.auth.admin.getUserById(user.id);
+      // app_metadata.role and app_metadata.companyId are set by our /api/auth/sync route
+      // using the service role key — clients cannot modify app_metadata themselves
+      const role = fullUser?.app_metadata?.role || 'VIEWER';
+      const companyId = fullUser?.app_metadata?.companyId || '';
+      requestHeaders.set('x-user-role', role);
+      if (companyId) {
+        requestHeaders.set('x-company-id', companyId);
+      }
+    } catch (e) {
+      // Fail closed: if DB lookup fails, treat as unauthenticated VIEWER
+      console.error('[Security] Role DB lookup failed — defaulting to VIEWER:', e);
+      requestHeaders.set('x-user-role', 'VIEWER');
     }
   }
+
 
   // 4. Protection Logic
   const role = requestHeaders.get('x-user-role') || 'ANONYMOUS';

@@ -57,7 +57,7 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
       });
     } else {
       setForm({
-        projectId: currentProjectId || (projectsData && projectsData.length > 0 ? projectsData[0].id : ''),
+        projectId: currentProjectId || (projectsData?.data && projectsData.data.length > 0 ? projectsData.data[0].id : ''),
         wbsId: '',
         costType: 'material',
         quantity: '',
