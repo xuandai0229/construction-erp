@@ -285,7 +285,7 @@ export class CostService {
           }
         })
       },
-      take: limit ? Number(limit) : 500,
+      take: limit ? Number(limit) : 10000,
       skip: skip ? Number(skip) : 0,
       orderBy: { date: "desc" },
       include: {

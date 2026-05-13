@@ -25,7 +25,8 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
     userRole, user, logout, setMobileMenuOpen,
   } = useERPStore();
 
-  const { data: projects = [] } = useProjectsQuery();
+  const { data: projectsData } = useProjectsQuery({ limit: 100 });
+  const projects = projectsData?.data || [];
   const currentProject = projects.find((p: any) => p.id === currentProjectId);
 
   const stats = [

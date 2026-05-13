@@ -571,7 +571,10 @@ exports.Prisma.DocumentScalarFieldEnum = {
 
 exports.Prisma.FiscalPeriodScalarFieldEnum = {
   id: 'id',
-  month: 'month',
+  companyId: 'companyId',
+  name: 'name',
+  startDate: 'startDate',
+  endDate: 'endDate',
   isLocked: 'isLocked',
   lockedAt: 'lockedAt',
   lockedById: 'lockedById',

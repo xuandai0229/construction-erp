@@ -13,7 +13,8 @@ interface WBSTreeProps {
 }
 
 export default function WBSTree({ projectId }: WBSTreeProps) {
-  const { data: projects = [] } = useProjectsQuery();
+  const { data: projectsData } = useProjectsQuery({ limit: 1000 });
+  const projects = projectsData?.data || [];
   const currentProjectId = useERPStore(state => state.currentProjectId);
   const setCurrentProject = useERPStore(state => state.setCurrentProject);
 

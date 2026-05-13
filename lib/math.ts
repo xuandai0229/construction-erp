@@ -16,6 +16,20 @@ export function round(val: number, precision: number = 2): number {
 }
 
 /**
+ * Standard rounding for all monetary values in the system.
+ */
+export function roundMoney(val: number): number {
+  return round(val, 2);
+}
+
+/**
+ * Compares two monetary values for equality within accounting precision.
+ */
+export function areEqualMoney(a: number, b: number): boolean {
+  return Math.abs(roundMoney(a) - roundMoney(b)) < 0.001;
+}
+
+/**
  * Safely parses a value into a number, defaulting to 0 if invalid.
  * 
  * @param val Value to parse

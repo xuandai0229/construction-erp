@@ -1,19 +1,18 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
 import { UserRole } from "@/app/types";
 import { createClient } from "@supabase/supabase-js";
+import { ApiError, handleApiError, successResponse } from "@/lib/api-error";
 
 /**
  * AUTH SYNC ENGINE
  * Synchronizes Supabase Auth User with ERP Database User.
- * This allows managing Roles and Permissions in our DB instead of Supabase metadata.
  */
 export async function POST(req: Request) {
   try {
     const { email, name, id } = await req.json();
 
     if (!email) {
-      return NextResponse.json({ error: "Missing email" }, { status: 400 });
+      throw new ApiError(400, "Missing email");
     }
 
     // SECURITY: Verify Supabase Token
@@ -21,8 +20,7 @@ export async function POST(req: Request) {
     const token = authHeader?.split(" ")[1];
 
     if (!token) {
-      console.error("[AuthSync] Missing Authorization header");
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      throw new ApiError(401, "Unauthorized");
     }
 
     const supabase = createClient(
@@ -34,13 +32,11 @@ export async function POST(req: Request) {
     const { data: { user: authUser }, error: authError } = await supabase.auth.getUser(token);
     
     if (authError || !authUser) {
-      console.error("[AuthSync] Token verification failed:", authError?.message);
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+      throw new ApiError(401, "Invalid token");
     }
 
     if (authUser.email !== email) {
-      console.error("[AuthSync] Identity mismatch:", { authEmail: authUser.email, reqEmail: email });
-      return NextResponse.json({ error: "Identity mismatch" }, { status: 403 });
+      throw new ApiError(403, "Identity mismatch");
     }
 
     // 1. Find user in DB
@@ -52,7 +48,6 @@ export async function POST(req: Request) {
       // 2. Provision new user
       const userCount = await prisma.user.count();
       
-      // Automatic SUPER_ADMIN for the first user or specific emails
       const isInitialAdmin = userCount === 0 || 
                              email === 'admin@construction.com' || 
                              email === 'amin123@gmail.com' || 
@@ -60,30 +55,26 @@ export async function POST(req: Request) {
 
       const initialRole: UserRole = isInitialAdmin ? 'SUPER_ADMIN' : 'VIEWER';
 
-      console.log(`[AuthSync] Provisioning new user: ${email} with role ${initialRole}`);
-
       user = await prisma.user.create({
         data: {
-          id: id, // Sync with Supabase UID
+          id: id, 
           email,
           name: name || email.split('@')[0],
           role: initialRole,
         },
       });
     } else {
-      // Update name or id if changed
       user = await prisma.user.update({
         where: { email },
         data: { 
           name: name || user.name,
-          id: id // Ensure ID is synced
+          id: id 
         }
       });
     }
 
-    return NextResponse.json(user);
+    return successResponse(user);
   } catch (error: any) {
-    console.error("[AuthSync] Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return handleApiError(error);
   }
 }

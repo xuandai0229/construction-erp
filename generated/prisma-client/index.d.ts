@@ -6073,6 +6073,7 @@ export namespace Prisma {
     invoices: number
     projects: number
     users: number
+    FiscalPeriod: number
   }
 
   export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6081,6 +6082,7 @@ export namespace Prisma {
     invoices?: boolean | CompanyCountOutputTypeCountInvoicesArgs
     projects?: boolean | CompanyCountOutputTypeCountProjectsArgs
     users?: boolean | CompanyCountOutputTypeCountUsersArgs
+    FiscalPeriod?: boolean | CompanyCountOutputTypeCountFiscalPeriodArgs
   }
 
   // Custom InputTypes
@@ -6127,6 +6129,13 @@ export namespace Prisma {
    */
   export type CompanyCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountFiscalPeriodArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FiscalPeriodWhereInput
   }
 
 
@@ -39510,7 +39519,10 @@ export namespace Prisma {
 
   export type FiscalPeriodMinAggregateOutputType = {
     id: string | null
-    month: string | null
+    companyId: string | null
+    name: string | null
+    startDate: Date | null
+    endDate: Date | null
     isLocked: boolean | null
     lockedAt: Date | null
     lockedById: string | null
@@ -39522,7 +39534,10 @@ export namespace Prisma {
 
   export type FiscalPeriodMaxAggregateOutputType = {
     id: string | null
-    month: string | null
+    companyId: string | null
+    name: string | null
+    startDate: Date | null
+    endDate: Date | null
     isLocked: boolean | null
     lockedAt: Date | null
     lockedById: string | null
@@ -39534,7 +39549,10 @@ export namespace Prisma {
 
   export type FiscalPeriodCountAggregateOutputType = {
     id: number
-    month: number
+    companyId: number
+    name: number
+    startDate: number
+    endDate: number
     isLocked: number
     lockedAt: number
     lockedById: number
@@ -39556,7 +39574,10 @@ export namespace Prisma {
 
   export type FiscalPeriodMinAggregateInputType = {
     id?: true
-    month?: true
+    companyId?: true
+    name?: true
+    startDate?: true
+    endDate?: true
     isLocked?: true
     lockedAt?: true
     lockedById?: true
@@ -39568,7 +39589,10 @@ export namespace Prisma {
 
   export type FiscalPeriodMaxAggregateInputType = {
     id?: true
-    month?: true
+    companyId?: true
+    name?: true
+    startDate?: true
+    endDate?: true
     isLocked?: true
     lockedAt?: true
     lockedById?: true
@@ -39580,7 +39604,10 @@ export namespace Prisma {
 
   export type FiscalPeriodCountAggregateInputType = {
     id?: true
-    month?: true
+    companyId?: true
+    name?: true
+    startDate?: true
+    endDate?: true
     isLocked?: true
     lockedAt?: true
     lockedById?: true
@@ -39679,7 +39706,10 @@ export namespace Prisma {
 
   export type FiscalPeriodGroupByOutputType = {
     id: string
-    month: string
+    companyId: string
+    name: string
+    startDate: Date
+    endDate: Date
     isLocked: boolean
     lockedAt: Date | null
     lockedById: string | null
@@ -39710,7 +39740,10 @@ export namespace Prisma {
 
   export type FiscalPeriodSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    month?: boolean
+    companyId?: boolean
+    name?: boolean
+    startDate?: boolean
+    endDate?: boolean
     isLocked?: boolean
     lockedAt?: boolean
     lockedById?: boolean
@@ -39718,12 +39751,16 @@ export namespace Prisma {
     reconciledAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    User?: boolean | FiscalPeriod$UserArgs<ExtArgs>
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    lockedBy?: boolean | FiscalPeriod$lockedByArgs<ExtArgs>
   }, ExtArgs["result"]["fiscalPeriod"]>
 
   export type FiscalPeriodSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    month?: boolean
+    companyId?: boolean
+    name?: boolean
+    startDate?: boolean
+    endDate?: boolean
     isLocked?: boolean
     lockedAt?: boolean
     lockedById?: boolean
@@ -39731,12 +39768,16 @@ export namespace Prisma {
     reconciledAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    User?: boolean | FiscalPeriod$UserArgs<ExtArgs>
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    lockedBy?: boolean | FiscalPeriod$lockedByArgs<ExtArgs>
   }, ExtArgs["result"]["fiscalPeriod"]>
 
   export type FiscalPeriodSelectScalar = {
     id?: boolean
-    month?: boolean
+    companyId?: boolean
+    name?: boolean
+    startDate?: boolean
+    endDate?: boolean
     isLocked?: boolean
     lockedAt?: boolean
     lockedById?: boolean
@@ -39747,20 +39788,26 @@ export namespace Prisma {
   }
 
   export type FiscalPeriodInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    User?: boolean | FiscalPeriod$UserArgs<ExtArgs>
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    lockedBy?: boolean | FiscalPeriod$lockedByArgs<ExtArgs>
   }
   export type FiscalPeriodIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    User?: boolean | FiscalPeriod$UserArgs<ExtArgs>
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    lockedBy?: boolean | FiscalPeriod$lockedByArgs<ExtArgs>
   }
 
   export type $FiscalPeriodPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "FiscalPeriod"
     objects: {
-      User: Prisma.$UserPayload<ExtArgs> | null
+      company: Prisma.$CompanyPayload<ExtArgs>
+      lockedBy: Prisma.$UserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      month: string
+      companyId: string
+      name: string
+      startDate: Date
+      endDate: Date
       isLocked: boolean
       lockedAt: Date | null
       lockedById: string | null
@@ -40132,7 +40179,8 @@ export namespace Prisma {
    */
   export interface Prisma__FiscalPeriodClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    User<T extends FiscalPeriod$UserArgs<ExtArgs> = {}>(args?: Subset<T, FiscalPeriod$UserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    lockedBy<T extends FiscalPeriod$lockedByArgs<ExtArgs> = {}>(args?: Subset<T, FiscalPeriod$lockedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -40163,7 +40211,10 @@ export namespace Prisma {
    */ 
   interface FiscalPeriodFieldRefs {
     readonly id: FieldRef<"FiscalPeriod", 'String'>
-    readonly month: FieldRef<"FiscalPeriod", 'String'>
+    readonly companyId: FieldRef<"FiscalPeriod", 'String'>
+    readonly name: FieldRef<"FiscalPeriod", 'String'>
+    readonly startDate: FieldRef<"FiscalPeriod", 'DateTime'>
+    readonly endDate: FieldRef<"FiscalPeriod", 'DateTime'>
     readonly isLocked: FieldRef<"FiscalPeriod", 'Boolean'>
     readonly lockedAt: FieldRef<"FiscalPeriod", 'DateTime'>
     readonly lockedById: FieldRef<"FiscalPeriod", 'String'>
@@ -40489,9 +40540,9 @@ export namespace Prisma {
   }
 
   /**
-   * FiscalPeriod.User
+   * FiscalPeriod.lockedBy
    */
-  export type FiscalPeriod$UserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type FiscalPeriod$lockedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
@@ -56198,6 +56249,7 @@ export namespace Prisma {
     invoices?: boolean | Company$invoicesArgs<ExtArgs>
     projects?: boolean | Company$projectsArgs<ExtArgs>
     users?: boolean | Company$usersArgs<ExtArgs>
+    FiscalPeriod?: boolean | Company$FiscalPeriodArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
@@ -56227,6 +56279,7 @@ export namespace Prisma {
     invoices?: boolean | Company$invoicesArgs<ExtArgs>
     projects?: boolean | Company$projectsArgs<ExtArgs>
     users?: boolean | Company$usersArgs<ExtArgs>
+    FiscalPeriod?: boolean | Company$FiscalPeriodArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -56239,6 +56292,7 @@ export namespace Prisma {
       invoices: Prisma.$InvoicePayload<ExtArgs>[]
       projects: Prisma.$ProjectPayload<ExtArgs>[]
       users: Prisma.$UserPayload<ExtArgs>[]
+      FiscalPeriod: Prisma.$FiscalPeriodPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -56617,6 +56671,7 @@ export namespace Prisma {
     invoices<T extends Company$invoicesArgs<ExtArgs> = {}>(args?: Subset<T, Company$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany"> | Null>
     projects<T extends Company$projectsArgs<ExtArgs> = {}>(args?: Subset<T, Company$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
     users<T extends Company$usersArgs<ExtArgs> = {}>(args?: Subset<T, Company$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany"> | Null>
+    FiscalPeriod<T extends Company$FiscalPeriodArgs<ExtArgs> = {}>(args?: Subset<T, Company$FiscalPeriodArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FiscalPeriodPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -57064,6 +57119,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * Company.FiscalPeriod
+   */
+  export type Company$FiscalPeriodArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FiscalPeriod
+     */
+    select?: FiscalPeriodSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FiscalPeriodInclude<ExtArgs> | null
+    where?: FiscalPeriodWhereInput
+    orderBy?: FiscalPeriodOrderByWithRelationInput | FiscalPeriodOrderByWithRelationInput[]
+    cursor?: FiscalPeriodWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FiscalPeriodScalarFieldEnum | FiscalPeriodScalarFieldEnum[]
   }
 
   /**
@@ -58665,7 +58740,10 @@ export namespace Prisma {
 
   export const FiscalPeriodScalarFieldEnum: {
     id: 'id',
-    month: 'month',
+    companyId: 'companyId',
+    name: 'name',
+    startDate: 'startDate',
+    endDate: 'endDate',
     isLocked: 'isLocked',
     lockedAt: 'lockedAt',
     lockedById: 'lockedById',
@@ -60640,6 +60718,7 @@ export namespace Prisma {
 
   export type JournalEntryWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    sourceType_sourceId_deletedAt?: JournalEntrySourceTypeSourceIdDeletedAtCompoundUniqueInput
     AND?: JournalEntryWhereInput | JournalEntryWhereInput[]
     OR?: JournalEntryWhereInput[]
     NOT?: JournalEntryWhereInput | JournalEntryWhereInput[]
@@ -60658,7 +60737,7 @@ export namespace Prisma {
     reversedById?: StringNullableFilter<"JournalEntry"> | string | null
     project?: XOR<ProjectNullableRelationFilter, ProjectWhereInput> | null
     lines?: TransactionLineListRelationFilter
-  }, "id">
+  }, "id" | "sourceType_sourceId_deletedAt">
 
   export type JournalEntryOrderByWithAggregationInput = {
     id?: SortOrder
@@ -62266,7 +62345,10 @@ export namespace Prisma {
     OR?: FiscalPeriodWhereInput[]
     NOT?: FiscalPeriodWhereInput | FiscalPeriodWhereInput[]
     id?: StringFilter<"FiscalPeriod"> | string
-    month?: StringFilter<"FiscalPeriod"> | string
+    companyId?: StringFilter<"FiscalPeriod"> | string
+    name?: StringFilter<"FiscalPeriod"> | string
+    startDate?: DateTimeFilter<"FiscalPeriod"> | Date | string
+    endDate?: DateTimeFilter<"FiscalPeriod"> | Date | string
     isLocked?: BoolFilter<"FiscalPeriod"> | boolean
     lockedAt?: DateTimeNullableFilter<"FiscalPeriod"> | Date | string | null
     lockedById?: StringNullableFilter<"FiscalPeriod"> | string | null
@@ -62274,12 +62356,16 @@ export namespace Prisma {
     reconciledAt?: DateTimeNullableFilter<"FiscalPeriod"> | Date | string | null
     createdAt?: DateTimeFilter<"FiscalPeriod"> | Date | string
     updatedAt?: DateTimeFilter<"FiscalPeriod"> | Date | string
-    User?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    company?: XOR<CompanyRelationFilter, CompanyWhereInput>
+    lockedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }
 
   export type FiscalPeriodOrderByWithRelationInput = {
     id?: SortOrder
-    month?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isLocked?: SortOrder
     lockedAt?: SortOrderInput | SortOrder
     lockedById?: SortOrderInput | SortOrder
@@ -62287,15 +62373,20 @@ export namespace Prisma {
     reconciledAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    User?: UserOrderByWithRelationInput
+    company?: CompanyOrderByWithRelationInput
+    lockedBy?: UserOrderByWithRelationInput
   }
 
   export type FiscalPeriodWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    month?: string
+    companyId_startDate_endDate?: FiscalPeriodCompanyIdStartDateEndDateCompoundUniqueInput
     AND?: FiscalPeriodWhereInput | FiscalPeriodWhereInput[]
     OR?: FiscalPeriodWhereInput[]
     NOT?: FiscalPeriodWhereInput | FiscalPeriodWhereInput[]
+    companyId?: StringFilter<"FiscalPeriod"> | string
+    name?: StringFilter<"FiscalPeriod"> | string
+    startDate?: DateTimeFilter<"FiscalPeriod"> | Date | string
+    endDate?: DateTimeFilter<"FiscalPeriod"> | Date | string
     isLocked?: BoolFilter<"FiscalPeriod"> | boolean
     lockedAt?: DateTimeNullableFilter<"FiscalPeriod"> | Date | string | null
     lockedById?: StringNullableFilter<"FiscalPeriod"> | string | null
@@ -62303,12 +62394,16 @@ export namespace Prisma {
     reconciledAt?: DateTimeNullableFilter<"FiscalPeriod"> | Date | string | null
     createdAt?: DateTimeFilter<"FiscalPeriod"> | Date | string
     updatedAt?: DateTimeFilter<"FiscalPeriod"> | Date | string
-    User?: XOR<UserNullableRelationFilter, UserWhereInput> | null
-  }, "id" | "month">
+    company?: XOR<CompanyRelationFilter, CompanyWhereInput>
+    lockedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+  }, "id" | "companyId_startDate_endDate">
 
   export type FiscalPeriodOrderByWithAggregationInput = {
     id?: SortOrder
-    month?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isLocked?: SortOrder
     lockedAt?: SortOrderInput | SortOrder
     lockedById?: SortOrderInput | SortOrder
@@ -62328,7 +62423,10 @@ export namespace Prisma {
     OR?: FiscalPeriodScalarWhereWithAggregatesInput[]
     NOT?: FiscalPeriodScalarWhereWithAggregatesInput | FiscalPeriodScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"FiscalPeriod"> | string
-    month?: StringWithAggregatesFilter<"FiscalPeriod"> | string
+    companyId?: StringWithAggregatesFilter<"FiscalPeriod"> | string
+    name?: StringWithAggregatesFilter<"FiscalPeriod"> | string
+    startDate?: DateTimeWithAggregatesFilter<"FiscalPeriod"> | Date | string
+    endDate?: DateTimeWithAggregatesFilter<"FiscalPeriod"> | Date | string
     isLocked?: BoolWithAggregatesFilter<"FiscalPeriod"> | boolean
     lockedAt?: DateTimeNullableWithAggregatesFilter<"FiscalPeriod"> | Date | string | null
     lockedById?: StringNullableWithAggregatesFilter<"FiscalPeriod"> | string | null
@@ -63577,6 +63675,7 @@ export namespace Prisma {
     invoices?: InvoiceListRelationFilter
     projects?: ProjectListRelationFilter
     users?: UserListRelationFilter
+    FiscalPeriod?: FiscalPeriodListRelationFilter
   }
 
   export type CompanyOrderByWithRelationInput = {
@@ -63592,6 +63691,7 @@ export namespace Prisma {
     invoices?: InvoiceOrderByRelationAggregateInput
     projects?: ProjectOrderByRelationAggregateInput
     users?: UserOrderByRelationAggregateInput
+    FiscalPeriod?: FiscalPeriodOrderByRelationAggregateInput
   }
 
   export type CompanyWhereUniqueInput = Prisma.AtLeast<{
@@ -63610,6 +63710,7 @@ export namespace Prisma {
     invoices?: InvoiceListRelationFilter
     projects?: ProjectListRelationFilter
     users?: UserListRelationFilter
+    FiscalPeriod?: FiscalPeriodListRelationFilter
   }, "id" | "code">
 
   export type CompanyOrderByWithAggregationInput = {
@@ -63732,7 +63833,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -63770,7 +63871,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -63806,7 +63907,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -63844,7 +63945,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -67044,44 +67145,56 @@ export namespace Prisma {
   }
 
   export type FiscalPeriodCreateInput = {
-    id: string
-    month: string
+    id?: string
+    name: string
+    startDate: Date | string
+    endDate: Date | string
     isLocked?: boolean
     lockedAt?: Date | string | null
     closingBalance?: Decimal | DecimalJsLike | number | string | null
     reconciledAt?: Date | string | null
     createdAt?: Date | string
-    updatedAt: Date | string
-    User?: UserCreateNestedOneWithoutFiscalPeriodInput
+    updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutFiscalPeriodInput
+    lockedBy?: UserCreateNestedOneWithoutFiscalPeriodInput
   }
 
   export type FiscalPeriodUncheckedCreateInput = {
-    id: string
-    month: string
+    id?: string
+    companyId: string
+    name: string
+    startDate: Date | string
+    endDate: Date | string
     isLocked?: boolean
     lockedAt?: Date | string | null
     lockedById?: string | null
     closingBalance?: Decimal | DecimalJsLike | number | string | null
     reconciledAt?: Date | string | null
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
   }
 
   export type FiscalPeriodUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    month?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closingBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    User?: UserUpdateOneWithoutFiscalPeriodNestedInput
+    company?: CompanyUpdateOneRequiredWithoutFiscalPeriodNestedInput
+    lockedBy?: UserUpdateOneWithoutFiscalPeriodNestedInput
   }
 
   export type FiscalPeriodUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    month?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lockedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67092,20 +67205,25 @@ export namespace Prisma {
   }
 
   export type FiscalPeriodCreateManyInput = {
-    id: string
-    month: string
+    id?: string
+    companyId: string
+    name: string
+    startDate: Date | string
+    endDate: Date | string
     isLocked?: boolean
     lockedAt?: Date | string | null
     lockedById?: string | null
     closingBalance?: Decimal | DecimalJsLike | number | string | null
     reconciledAt?: Date | string | null
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
   }
 
   export type FiscalPeriodUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    month?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closingBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -67116,7 +67234,10 @@ export namespace Prisma {
 
   export type FiscalPeriodUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    month?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lockedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68460,6 +68581,7 @@ export namespace Prisma {
     invoices?: InvoiceCreateNestedManyWithoutCompanyInput
     projects?: ProjectCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompanyInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateInput = {
@@ -68475,6 +68597,7 @@ export namespace Prisma {
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCompanyInput
     projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUpdateInput = {
@@ -68490,6 +68613,7 @@ export namespace Prisma {
     invoices?: InvoiceUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompanyNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateInput = {
@@ -68505,6 +68629,7 @@ export namespace Prisma {
     invoices?: InvoiceUncheckedUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateManyInput = {
@@ -69996,6 +70121,12 @@ export namespace Prisma {
     isNot?: ProjectWhereInput | null
   }
 
+  export type JournalEntrySourceTypeSourceIdDeletedAtCompoundUniqueInput = {
+    sourceType: string
+    sourceId: string
+    deletedAt: Date | string
+  }
+
   export type JournalEntryCountOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
@@ -71116,9 +71247,23 @@ export namespace Prisma {
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
+  export type CompanyRelationFilter = {
+    is?: CompanyWhereInput
+    isNot?: CompanyWhereInput
+  }
+
+  export type FiscalPeriodCompanyIdStartDateEndDateCompoundUniqueInput = {
+    companyId: string
+    startDate: Date | string
+    endDate: Date | string
+  }
+
   export type FiscalPeriodCountOrderByAggregateInput = {
     id?: SortOrder
-    month?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isLocked?: SortOrder
     lockedAt?: SortOrder
     lockedById?: SortOrder
@@ -71134,7 +71279,10 @@ export namespace Prisma {
 
   export type FiscalPeriodMaxOrderByAggregateInput = {
     id?: SortOrder
-    month?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isLocked?: SortOrder
     lockedAt?: SortOrder
     lockedById?: SortOrder
@@ -71146,7 +71294,10 @@ export namespace Prisma {
 
   export type FiscalPeriodMinOrderByAggregateInput = {
     id?: SortOrder
-    month?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
     isLocked?: SortOrder
     lockedAt?: SortOrder
     lockedById?: SortOrder
@@ -72046,11 +72197,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type CompanyRelationFilter = {
-    is?: CompanyWhereInput
-    isNot?: CompanyWhereInput
-  }
-
   export type BranchCountOrderByAggregateInput = {
     id?: SortOrder
     companyId?: SortOrder
@@ -72165,10 +72311,10 @@ export namespace Prisma {
     connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
   }
 
-  export type FiscalPeriodCreateNestedManyWithoutUserInput = {
-    create?: XOR<FiscalPeriodCreateWithoutUserInput, FiscalPeriodUncheckedCreateWithoutUserInput> | FiscalPeriodCreateWithoutUserInput[] | FiscalPeriodUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: FiscalPeriodCreateOrConnectWithoutUserInput | FiscalPeriodCreateOrConnectWithoutUserInput[]
-    createMany?: FiscalPeriodCreateManyUserInputEnvelope
+  export type FiscalPeriodCreateNestedManyWithoutLockedByInput = {
+    create?: XOR<FiscalPeriodCreateWithoutLockedByInput, FiscalPeriodUncheckedCreateWithoutLockedByInput> | FiscalPeriodCreateWithoutLockedByInput[] | FiscalPeriodUncheckedCreateWithoutLockedByInput[]
+    connectOrCreate?: FiscalPeriodCreateOrConnectWithoutLockedByInput | FiscalPeriodCreateOrConnectWithoutLockedByInput[]
+    createMany?: FiscalPeriodCreateManyLockedByInputEnvelope
     connect?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
   }
 
@@ -72352,10 +72498,10 @@ export namespace Prisma {
     connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
   }
 
-  export type FiscalPeriodUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<FiscalPeriodCreateWithoutUserInput, FiscalPeriodUncheckedCreateWithoutUserInput> | FiscalPeriodCreateWithoutUserInput[] | FiscalPeriodUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: FiscalPeriodCreateOrConnectWithoutUserInput | FiscalPeriodCreateOrConnectWithoutUserInput[]
-    createMany?: FiscalPeriodCreateManyUserInputEnvelope
+  export type FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput = {
+    create?: XOR<FiscalPeriodCreateWithoutLockedByInput, FiscalPeriodUncheckedCreateWithoutLockedByInput> | FiscalPeriodCreateWithoutLockedByInput[] | FiscalPeriodUncheckedCreateWithoutLockedByInput[]
+    connectOrCreate?: FiscalPeriodCreateOrConnectWithoutLockedByInput | FiscalPeriodCreateOrConnectWithoutLockedByInput[]
+    createMany?: FiscalPeriodCreateManyLockedByInputEnvelope
     connect?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
   }
 
@@ -72637,17 +72783,17 @@ export namespace Prisma {
     deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
   }
 
-  export type FiscalPeriodUpdateManyWithoutUserNestedInput = {
-    create?: XOR<FiscalPeriodCreateWithoutUserInput, FiscalPeriodUncheckedCreateWithoutUserInput> | FiscalPeriodCreateWithoutUserInput[] | FiscalPeriodUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: FiscalPeriodCreateOrConnectWithoutUserInput | FiscalPeriodCreateOrConnectWithoutUserInput[]
-    upsert?: FiscalPeriodUpsertWithWhereUniqueWithoutUserInput | FiscalPeriodUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: FiscalPeriodCreateManyUserInputEnvelope
+  export type FiscalPeriodUpdateManyWithoutLockedByNestedInput = {
+    create?: XOR<FiscalPeriodCreateWithoutLockedByInput, FiscalPeriodUncheckedCreateWithoutLockedByInput> | FiscalPeriodCreateWithoutLockedByInput[] | FiscalPeriodUncheckedCreateWithoutLockedByInput[]
+    connectOrCreate?: FiscalPeriodCreateOrConnectWithoutLockedByInput | FiscalPeriodCreateOrConnectWithoutLockedByInput[]
+    upsert?: FiscalPeriodUpsertWithWhereUniqueWithoutLockedByInput | FiscalPeriodUpsertWithWhereUniqueWithoutLockedByInput[]
+    createMany?: FiscalPeriodCreateManyLockedByInputEnvelope
     set?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
     disconnect?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
     delete?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
     connect?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
-    update?: FiscalPeriodUpdateWithWhereUniqueWithoutUserInput | FiscalPeriodUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: FiscalPeriodUpdateManyWithWhereWithoutUserInput | FiscalPeriodUpdateManyWithWhereWithoutUserInput[]
+    update?: FiscalPeriodUpdateWithWhereUniqueWithoutLockedByInput | FiscalPeriodUpdateWithWhereUniqueWithoutLockedByInput[]
+    updateMany?: FiscalPeriodUpdateManyWithWhereWithoutLockedByInput | FiscalPeriodUpdateManyWithWhereWithoutLockedByInput[]
     deleteMany?: FiscalPeriodScalarWhereInput | FiscalPeriodScalarWhereInput[]
   }
 
@@ -73007,17 +73153,17 @@ export namespace Prisma {
     deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
   }
 
-  export type FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<FiscalPeriodCreateWithoutUserInput, FiscalPeriodUncheckedCreateWithoutUserInput> | FiscalPeriodCreateWithoutUserInput[] | FiscalPeriodUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: FiscalPeriodCreateOrConnectWithoutUserInput | FiscalPeriodCreateOrConnectWithoutUserInput[]
-    upsert?: FiscalPeriodUpsertWithWhereUniqueWithoutUserInput | FiscalPeriodUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: FiscalPeriodCreateManyUserInputEnvelope
+  export type FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput = {
+    create?: XOR<FiscalPeriodCreateWithoutLockedByInput, FiscalPeriodUncheckedCreateWithoutLockedByInput> | FiscalPeriodCreateWithoutLockedByInput[] | FiscalPeriodUncheckedCreateWithoutLockedByInput[]
+    connectOrCreate?: FiscalPeriodCreateOrConnectWithoutLockedByInput | FiscalPeriodCreateOrConnectWithoutLockedByInput[]
+    upsert?: FiscalPeriodUpsertWithWhereUniqueWithoutLockedByInput | FiscalPeriodUpsertWithWhereUniqueWithoutLockedByInput[]
+    createMany?: FiscalPeriodCreateManyLockedByInputEnvelope
     set?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
     disconnect?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
     delete?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
     connect?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
-    update?: FiscalPeriodUpdateWithWhereUniqueWithoutUserInput | FiscalPeriodUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: FiscalPeriodUpdateManyWithWhereWithoutUserInput | FiscalPeriodUpdateManyWithWhereWithoutUserInput[]
+    update?: FiscalPeriodUpdateWithWhereUniqueWithoutLockedByInput | FiscalPeriodUpdateWithWhereUniqueWithoutLockedByInput[]
+    updateMany?: FiscalPeriodUpdateManyWithWhereWithoutLockedByInput | FiscalPeriodUpdateManyWithWhereWithoutLockedByInput[]
     deleteMany?: FiscalPeriodScalarWhereInput | FiscalPeriodScalarWhereInput[]
   }
 
@@ -75761,6 +75907,12 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDocumentInput, UserUpdateWithoutDocumentInput>, UserUncheckedUpdateWithoutDocumentInput>
   }
 
+  export type CompanyCreateNestedOneWithoutFiscalPeriodInput = {
+    create?: XOR<CompanyCreateWithoutFiscalPeriodInput, CompanyUncheckedCreateWithoutFiscalPeriodInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutFiscalPeriodInput
+    connect?: CompanyWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutFiscalPeriodInput = {
     create?: XOR<UserCreateWithoutFiscalPeriodInput, UserUncheckedCreateWithoutFiscalPeriodInput>
     connectOrCreate?: UserCreateOrConnectWithoutFiscalPeriodInput
@@ -75773,6 +75925,14 @@ export namespace Prisma {
     decrement?: Decimal | DecimalJsLike | number | string
     multiply?: Decimal | DecimalJsLike | number | string
     divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type CompanyUpdateOneRequiredWithoutFiscalPeriodNestedInput = {
+    create?: XOR<CompanyCreateWithoutFiscalPeriodInput, CompanyUncheckedCreateWithoutFiscalPeriodInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutFiscalPeriodInput
+    upsert?: CompanyUpsertWithoutFiscalPeriodInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutFiscalPeriodInput, CompanyUpdateWithoutFiscalPeriodInput>, CompanyUncheckedUpdateWithoutFiscalPeriodInput>
   }
 
   export type UserUpdateOneWithoutFiscalPeriodNestedInput = {
@@ -76358,6 +76518,13 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
+  export type FiscalPeriodCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<FiscalPeriodCreateWithoutCompanyInput, FiscalPeriodUncheckedCreateWithoutCompanyInput> | FiscalPeriodCreateWithoutCompanyInput[] | FiscalPeriodUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: FiscalPeriodCreateOrConnectWithoutCompanyInput | FiscalPeriodCreateOrConnectWithoutCompanyInput[]
+    createMany?: FiscalPeriodCreateManyCompanyInputEnvelope
+    connect?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
+  }
+
   export type BranchUncheckedCreateNestedManyWithoutCompanyInput = {
     create?: XOR<BranchCreateWithoutCompanyInput, BranchUncheckedCreateWithoutCompanyInput> | BranchCreateWithoutCompanyInput[] | BranchUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: BranchCreateOrConnectWithoutCompanyInput | BranchCreateOrConnectWithoutCompanyInput[]
@@ -76391,6 +76558,13 @@ export namespace Prisma {
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
     createMany?: UserCreateManyCompanyInputEnvelope
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type FiscalPeriodUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<FiscalPeriodCreateWithoutCompanyInput, FiscalPeriodUncheckedCreateWithoutCompanyInput> | FiscalPeriodCreateWithoutCompanyInput[] | FiscalPeriodUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: FiscalPeriodCreateOrConnectWithoutCompanyInput | FiscalPeriodCreateOrConnectWithoutCompanyInput[]
+    createMany?: FiscalPeriodCreateManyCompanyInputEnvelope
+    connect?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
   }
 
   export type BranchUpdateManyWithoutCompanyNestedInput = {
@@ -76463,6 +76637,20 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
+  export type FiscalPeriodUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<FiscalPeriodCreateWithoutCompanyInput, FiscalPeriodUncheckedCreateWithoutCompanyInput> | FiscalPeriodCreateWithoutCompanyInput[] | FiscalPeriodUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: FiscalPeriodCreateOrConnectWithoutCompanyInput | FiscalPeriodCreateOrConnectWithoutCompanyInput[]
+    upsert?: FiscalPeriodUpsertWithWhereUniqueWithoutCompanyInput | FiscalPeriodUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: FiscalPeriodCreateManyCompanyInputEnvelope
+    set?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
+    disconnect?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
+    delete?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
+    connect?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
+    update?: FiscalPeriodUpdateWithWhereUniqueWithoutCompanyInput | FiscalPeriodUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: FiscalPeriodUpdateManyWithWhereWithoutCompanyInput | FiscalPeriodUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: FiscalPeriodScalarWhereInput | FiscalPeriodScalarWhereInput[]
+  }
+
   export type BranchUncheckedUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<BranchCreateWithoutCompanyInput, BranchUncheckedCreateWithoutCompanyInput> | BranchCreateWithoutCompanyInput[] | BranchUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: BranchCreateOrConnectWithoutCompanyInput | BranchCreateOrConnectWithoutCompanyInput[]
@@ -76531,6 +76719,20 @@ export namespace Prisma {
     update?: UserUpdateWithWhereUniqueWithoutCompanyInput | UserUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: UserUpdateManyWithWhereWithoutCompanyInput | UserUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type FiscalPeriodUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<FiscalPeriodCreateWithoutCompanyInput, FiscalPeriodUncheckedCreateWithoutCompanyInput> | FiscalPeriodCreateWithoutCompanyInput[] | FiscalPeriodUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: FiscalPeriodCreateOrConnectWithoutCompanyInput | FiscalPeriodCreateOrConnectWithoutCompanyInput[]
+    upsert?: FiscalPeriodUpsertWithWhereUniqueWithoutCompanyInput | FiscalPeriodUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: FiscalPeriodCreateManyCompanyInputEnvelope
+    set?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
+    disconnect?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
+    delete?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
+    connect?: FiscalPeriodWhereUniqueInput | FiscalPeriodWhereUniqueInput[]
+    update?: FiscalPeriodUpdateWithWhereUniqueWithoutCompanyInput | FiscalPeriodUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: FiscalPeriodUpdateManyWithWhereWithoutCompanyInput | FiscalPeriodUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: FiscalPeriodScalarWhereInput | FiscalPeriodScalarWhereInput[]
   }
 
   export type CompanyCreateNestedOneWithoutBranchesInput = {
@@ -77707,35 +77909,41 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type FiscalPeriodCreateWithoutUserInput = {
-    id: string
-    month: string
+  export type FiscalPeriodCreateWithoutLockedByInput = {
+    id?: string
+    name: string
+    startDate: Date | string
+    endDate: Date | string
     isLocked?: boolean
     lockedAt?: Date | string | null
     closingBalance?: Decimal | DecimalJsLike | number | string | null
     reconciledAt?: Date | string | null
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutFiscalPeriodInput
   }
 
-  export type FiscalPeriodUncheckedCreateWithoutUserInput = {
-    id: string
-    month: string
+  export type FiscalPeriodUncheckedCreateWithoutLockedByInput = {
+    id?: string
+    companyId: string
+    name: string
+    startDate: Date | string
+    endDate: Date | string
     isLocked?: boolean
     lockedAt?: Date | string | null
     closingBalance?: Decimal | DecimalJsLike | number | string | null
     reconciledAt?: Date | string | null
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
   }
 
-  export type FiscalPeriodCreateOrConnectWithoutUserInput = {
+  export type FiscalPeriodCreateOrConnectWithoutLockedByInput = {
     where: FiscalPeriodWhereUniqueInput
-    create: XOR<FiscalPeriodCreateWithoutUserInput, FiscalPeriodUncheckedCreateWithoutUserInput>
+    create: XOR<FiscalPeriodCreateWithoutLockedByInput, FiscalPeriodUncheckedCreateWithoutLockedByInput>
   }
 
-  export type FiscalPeriodCreateManyUserInputEnvelope = {
-    data: FiscalPeriodCreateManyUserInput | FiscalPeriodCreateManyUserInput[]
+  export type FiscalPeriodCreateManyLockedByInputEnvelope = {
+    data: FiscalPeriodCreateManyLockedByInput | FiscalPeriodCreateManyLockedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -78337,6 +78545,7 @@ export namespace Prisma {
     costs?: CostRecordCreateNestedManyWithoutCompanyInput
     invoices?: InvoiceCreateNestedManyWithoutCompanyInput
     projects?: ProjectCreateNestedManyWithoutCompanyInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutUsersInput = {
@@ -78351,6 +78560,7 @@ export namespace Prisma {
     costs?: CostRecordUncheckedCreateNestedManyWithoutCompanyInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCompanyInput
     projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutUsersInput = {
@@ -78816,20 +79026,20 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Document"> | Date | string | null
   }
 
-  export type FiscalPeriodUpsertWithWhereUniqueWithoutUserInput = {
+  export type FiscalPeriodUpsertWithWhereUniqueWithoutLockedByInput = {
     where: FiscalPeriodWhereUniqueInput
-    update: XOR<FiscalPeriodUpdateWithoutUserInput, FiscalPeriodUncheckedUpdateWithoutUserInput>
-    create: XOR<FiscalPeriodCreateWithoutUserInput, FiscalPeriodUncheckedCreateWithoutUserInput>
+    update: XOR<FiscalPeriodUpdateWithoutLockedByInput, FiscalPeriodUncheckedUpdateWithoutLockedByInput>
+    create: XOR<FiscalPeriodCreateWithoutLockedByInput, FiscalPeriodUncheckedCreateWithoutLockedByInput>
   }
 
-  export type FiscalPeriodUpdateWithWhereUniqueWithoutUserInput = {
+  export type FiscalPeriodUpdateWithWhereUniqueWithoutLockedByInput = {
     where: FiscalPeriodWhereUniqueInput
-    data: XOR<FiscalPeriodUpdateWithoutUserInput, FiscalPeriodUncheckedUpdateWithoutUserInput>
+    data: XOR<FiscalPeriodUpdateWithoutLockedByInput, FiscalPeriodUncheckedUpdateWithoutLockedByInput>
   }
 
-  export type FiscalPeriodUpdateManyWithWhereWithoutUserInput = {
+  export type FiscalPeriodUpdateManyWithWhereWithoutLockedByInput = {
     where: FiscalPeriodScalarWhereInput
-    data: XOR<FiscalPeriodUpdateManyMutationInput, FiscalPeriodUncheckedUpdateManyWithoutUserInput>
+    data: XOR<FiscalPeriodUpdateManyMutationInput, FiscalPeriodUncheckedUpdateManyWithoutLockedByInput>
   }
 
   export type FiscalPeriodScalarWhereInput = {
@@ -78837,7 +79047,10 @@ export namespace Prisma {
     OR?: FiscalPeriodScalarWhereInput[]
     NOT?: FiscalPeriodScalarWhereInput | FiscalPeriodScalarWhereInput[]
     id?: StringFilter<"FiscalPeriod"> | string
-    month?: StringFilter<"FiscalPeriod"> | string
+    companyId?: StringFilter<"FiscalPeriod"> | string
+    name?: StringFilter<"FiscalPeriod"> | string
+    startDate?: DateTimeFilter<"FiscalPeriod"> | Date | string
+    endDate?: DateTimeFilter<"FiscalPeriod"> | Date | string
     isLocked?: BoolFilter<"FiscalPeriod"> | boolean
     lockedAt?: DateTimeNullableFilter<"FiscalPeriod"> | Date | string | null
     lockedById?: StringNullableFilter<"FiscalPeriod"> | string | null
@@ -79230,6 +79443,7 @@ export namespace Prisma {
     costs?: CostRecordUpdateManyWithoutCompanyNestedInput
     invoices?: InvoiceUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutUsersInput = {
@@ -79244,6 +79458,7 @@ export namespace Prisma {
     costs?: CostRecordUncheckedUpdateManyWithoutCompanyNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserMaturityUpsertWithoutUserInput = {
@@ -79710,6 +79925,7 @@ export namespace Prisma {
     costs?: CostRecordCreateNestedManyWithoutCompanyInput
     invoices?: InvoiceCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompanyInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutProjectsInput = {
@@ -79724,6 +79940,7 @@ export namespace Prisma {
     costs?: CostRecordUncheckedCreateNestedManyWithoutCompanyInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutProjectsInput = {
@@ -79751,7 +79968,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -79788,7 +80005,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -79828,7 +80045,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -79865,7 +80082,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -80431,6 +80648,7 @@ export namespace Prisma {
     costs?: CostRecordUpdateManyWithoutCompanyNestedInput
     invoices?: InvoiceUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompanyNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutProjectsInput = {
@@ -80445,6 +80663,7 @@ export namespace Prisma {
     costs?: CostRecordUncheckedUpdateManyWithoutCompanyNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserUpsertWithoutProjectsDeletedInput = {
@@ -80478,7 +80697,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -80515,7 +80734,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -80561,7 +80780,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -80598,7 +80817,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -80813,7 +81032,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -80850,7 +81069,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -80997,7 +81216,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -81034,7 +81253,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -81567,7 +81786,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -81604,7 +81823,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -82016,7 +82235,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -82053,7 +82272,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -82265,6 +82484,7 @@ export namespace Prisma {
     invoices?: InvoiceCreateNestedManyWithoutCompanyInput
     projects?: ProjectCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompanyInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCostsInput = {
@@ -82279,6 +82499,7 @@ export namespace Prisma {
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCompanyInput
     projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCostsInput = {
@@ -82305,7 +82526,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -82342,7 +82563,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -82382,7 +82603,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -82419,7 +82640,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -82594,6 +82815,7 @@ export namespace Prisma {
     invoices?: InvoiceUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompanyNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCostsInput = {
@@ -82608,6 +82830,7 @@ export namespace Prisma {
     invoices?: InvoiceUncheckedUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserUpsertWithoutCostsCreatedInput = {
@@ -82640,7 +82863,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -82677,7 +82900,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -82723,7 +82946,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -82760,7 +82983,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -82903,7 +83126,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -82940,7 +83163,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -83044,7 +83267,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -83081,7 +83304,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -83176,7 +83399,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -83213,7 +83436,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -83386,7 +83609,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -83423,7 +83646,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -83613,6 +83836,7 @@ export namespace Prisma {
     costs?: CostRecordCreateNestedManyWithoutCompanyInput
     projects?: ProjectCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompanyInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutInvoicesInput = {
@@ -83627,6 +83851,7 @@ export namespace Prisma {
     costs?: CostRecordUncheckedCreateNestedManyWithoutCompanyInput
     projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutInvoicesInput = {
@@ -83699,7 +83924,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
     ProgressEntry?: ProgressEntryCreateNestedManyWithoutUserInput
@@ -83736,7 +83961,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
     ProgressEntry?: ProgressEntryUncheckedCreateNestedManyWithoutUserInput
@@ -83776,7 +84001,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
     ProgressEntry?: ProgressEntryCreateNestedManyWithoutUserInput
@@ -83813,7 +84038,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
     ProgressEntry?: ProgressEntryUncheckedCreateNestedManyWithoutUserInput
@@ -84022,6 +84247,7 @@ export namespace Prisma {
     costs?: CostRecordUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompanyNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutInvoicesInput = {
@@ -84036,6 +84262,7 @@ export namespace Prisma {
     costs?: CostRecordUncheckedUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type ContractUpsertWithoutInvoicesInput = {
@@ -84120,7 +84347,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
     ProgressEntry?: ProgressEntryUpdateManyWithoutUserNestedInput
@@ -84157,7 +84384,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
     ProgressEntry?: ProgressEntryUncheckedUpdateManyWithoutUserNestedInput
@@ -84203,7 +84430,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
     ProgressEntry?: ProgressEntryUpdateManyWithoutUserNestedInput
@@ -84240,7 +84467,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
     ProgressEntry?: ProgressEntryUncheckedUpdateManyWithoutUserNestedInput
@@ -84366,7 +84593,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     ProgressEntry?: ProgressEntryCreateNestedManyWithoutUserInput
@@ -84403,7 +84630,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     ProgressEntry?: ProgressEntryUncheckedCreateNestedManyWithoutUserInput
@@ -84523,7 +84750,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     ProgressEntry?: ProgressEntryUpdateManyWithoutUserNestedInput
@@ -84560,7 +84787,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     ProgressEntry?: ProgressEntryUncheckedUpdateManyWithoutUserNestedInput
@@ -85123,7 +85350,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -85160,7 +85387,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -85261,7 +85488,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -85298,7 +85525,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -85467,7 +85694,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -85504,7 +85731,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -85754,7 +85981,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -85791,7 +86018,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -86265,7 +86492,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -86302,7 +86529,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -86538,7 +86765,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -86575,7 +86802,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -86836,7 +87063,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -86873,7 +87100,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -86924,7 +87151,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -86961,7 +87188,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -87071,7 +87298,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -87108,7 +87335,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -87240,7 +87467,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -87277,7 +87504,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -87387,7 +87614,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -87424,7 +87651,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -87588,7 +87815,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -87625,7 +87852,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -87707,7 +87934,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -87744,7 +87971,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -87832,7 +88059,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -87869,7 +88096,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -88380,7 +88607,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -88417,7 +88644,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -88468,7 +88695,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -88505,7 +88732,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -88540,7 +88767,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -88577,7 +88804,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -88617,7 +88844,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -88654,7 +88881,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -88705,7 +88932,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -88742,7 +88969,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -88788,7 +89015,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -88825,7 +89052,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -88935,7 +89162,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordCreateNestedManyWithoutDeletedByInput
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -88972,7 +89199,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUncheckedCreateNestedManyWithoutDeletedByInput
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -89104,7 +89331,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUpdateManyWithoutDeletedByNestedInput
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -89141,7 +89368,7 @@ export namespace Prisma {
     costsDeleted?: CostRecordUncheckedUpdateManyWithoutDeletedByNestedInput
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -89155,6 +89382,41 @@ export namespace Prisma {
     TrainingRecord?: TrainingRecordUncheckedUpdateManyWithoutUserNestedInput
     UserMaturity?: UserMaturityUncheckedUpdateOneWithoutUserNestedInput
     wbsDeleted?: WBSItemUncheckedUpdateManyWithoutDeletedByNestedInput
+  }
+
+  export type CompanyCreateWithoutFiscalPeriodInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branches?: BranchCreateNestedManyWithoutCompanyInput
+    costs?: CostRecordCreateNestedManyWithoutCompanyInput
+    invoices?: InvoiceCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    users?: UserCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutFiscalPeriodInput = {
+    id?: string
+    name: string
+    code: string
+    taxCode?: string | null
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branches?: BranchUncheckedCreateNestedManyWithoutCompanyInput
+    costs?: CostRecordUncheckedCreateNestedManyWithoutCompanyInput
+    invoices?: InvoiceUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutFiscalPeriodInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutFiscalPeriodInput, CompanyUncheckedCreateWithoutFiscalPeriodInput>
   }
 
   export type UserCreateWithoutFiscalPeriodInput = {
@@ -89232,6 +89494,47 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutFiscalPeriodInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutFiscalPeriodInput, UserUncheckedCreateWithoutFiscalPeriodInput>
+  }
+
+  export type CompanyUpsertWithoutFiscalPeriodInput = {
+    update: XOR<CompanyUpdateWithoutFiscalPeriodInput, CompanyUncheckedUpdateWithoutFiscalPeriodInput>
+    create: XOR<CompanyCreateWithoutFiscalPeriodInput, CompanyUncheckedCreateWithoutFiscalPeriodInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutFiscalPeriodInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutFiscalPeriodInput, CompanyUncheckedUpdateWithoutFiscalPeriodInput>
+  }
+
+  export type CompanyUpdateWithoutFiscalPeriodInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branches?: BranchUpdateManyWithoutCompanyNestedInput
+    costs?: CostRecordUpdateManyWithoutCompanyNestedInput
+    invoices?: InvoiceUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    users?: UserUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutFiscalPeriodInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    taxCode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branches?: BranchUncheckedUpdateManyWithoutCompanyNestedInput
+    costs?: CostRecordUncheckedUpdateManyWithoutCompanyNestedInput
+    invoices?: InvoiceUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserUpsertWithoutFiscalPeriodInput = {
@@ -89780,7 +90083,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -89817,7 +90120,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -89941,7 +90244,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -89978,7 +90281,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -91008,7 +91311,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -91045,7 +91348,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -91096,7 +91399,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -91133,7 +91436,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -91168,7 +91471,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -91205,7 +91508,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -91256,7 +91559,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -91293,7 +91596,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -92098,7 +92401,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentCreateNestedManyWithoutDeletedByInput
@@ -92134,7 +92437,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_delegateIdToUserInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedCreateNestedManyWithoutUser_DelegationWindow_ownerIdToUserInput
     Document?: DocumentUncheckedCreateNestedManyWithoutUserInput
-    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutUserInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutLockedByInput
     invoicesCreated?: InvoiceUncheckedCreateNestedManyWithoutCreatedByInput
     invoicesDeleted?: InvoiceUncheckedCreateNestedManyWithoutDeletedByInput
     paymentsDeleted?: PaymentUncheckedCreateNestedManyWithoutDeletedByInput
@@ -92157,6 +92460,44 @@ export namespace Prisma {
 
   export type UserCreateManyCompanyInputEnvelope = {
     data: UserCreateManyCompanyInput | UserCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FiscalPeriodCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    startDate: Date | string
+    endDate: Date | string
+    isLocked?: boolean
+    lockedAt?: Date | string | null
+    closingBalance?: Decimal | DecimalJsLike | number | string | null
+    reconciledAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lockedBy?: UserCreateNestedOneWithoutFiscalPeriodInput
+  }
+
+  export type FiscalPeriodUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    startDate: Date | string
+    endDate: Date | string
+    isLocked?: boolean
+    lockedAt?: Date | string | null
+    lockedById?: string | null
+    closingBalance?: Decimal | DecimalJsLike | number | string | null
+    reconciledAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FiscalPeriodCreateOrConnectWithoutCompanyInput = {
+    where: FiscalPeriodWhereUniqueInput
+    create: XOR<FiscalPeriodCreateWithoutCompanyInput, FiscalPeriodUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type FiscalPeriodCreateManyCompanyInputEnvelope = {
+    data: FiscalPeriodCreateManyCompanyInput | FiscalPeriodCreateManyCompanyInput[]
     skipDuplicates?: boolean
   }
 
@@ -92267,6 +92608,22 @@ export namespace Prisma {
     companyId?: StringNullableFilter<"User"> | string | null
   }
 
+  export type FiscalPeriodUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: FiscalPeriodWhereUniqueInput
+    update: XOR<FiscalPeriodUpdateWithoutCompanyInput, FiscalPeriodUncheckedUpdateWithoutCompanyInput>
+    create: XOR<FiscalPeriodCreateWithoutCompanyInput, FiscalPeriodUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type FiscalPeriodUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: FiscalPeriodWhereUniqueInput
+    data: XOR<FiscalPeriodUpdateWithoutCompanyInput, FiscalPeriodUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type FiscalPeriodUpdateManyWithWhereWithoutCompanyInput = {
+    where: FiscalPeriodScalarWhereInput
+    data: XOR<FiscalPeriodUpdateManyMutationInput, FiscalPeriodUncheckedUpdateManyWithoutCompanyInput>
+  }
+
   export type CompanyCreateWithoutBranchesInput = {
     id?: string
     name: string
@@ -92279,6 +92636,7 @@ export namespace Prisma {
     invoices?: InvoiceCreateNestedManyWithoutCompanyInput
     projects?: ProjectCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompanyInput
+    FiscalPeriod?: FiscalPeriodCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutBranchesInput = {
@@ -92293,6 +92651,7 @@ export namespace Prisma {
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCompanyInput
     projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    FiscalPeriod?: FiscalPeriodUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutBranchesInput = {
@@ -92547,6 +92906,7 @@ export namespace Prisma {
     invoices?: InvoiceUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompanyNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutBranchesInput = {
@@ -92561,6 +92921,7 @@ export namespace Prisma {
     invoices?: InvoiceUncheckedUpdateManyWithoutCompanyNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CostRecordUpsertWithWhereUniqueWithoutBranchInput = {
@@ -92797,15 +93158,18 @@ export namespace Prisma {
     deletedAt?: Date | string | null
   }
 
-  export type FiscalPeriodCreateManyUserInput = {
-    id: string
-    month: string
+  export type FiscalPeriodCreateManyLockedByInput = {
+    id?: string
+    companyId: string
+    name: string
+    startDate: Date | string
+    endDate: Date | string
     isLocked?: boolean
     lockedAt?: Date | string | null
     closingBalance?: Decimal | DecimalJsLike | number | string | null
     reconciledAt?: Date | string | null
     createdAt?: Date | string
-    updatedAt: Date | string
+    updatedAt?: Date | string
   }
 
   export type InvoiceCreateManyCreatedByInput = {
@@ -93584,9 +93948,26 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type FiscalPeriodUpdateWithoutUserInput = {
+  export type FiscalPeriodUpdateWithoutLockedByInput = {
     id?: StringFieldUpdateOperationsInput | string
-    month?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    isLocked?: BoolFieldUpdateOperationsInput | boolean
+    lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closingBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutFiscalPeriodNestedInput
+  }
+
+  export type FiscalPeriodUncheckedUpdateWithoutLockedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closingBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -93595,20 +93976,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FiscalPeriodUncheckedUpdateWithoutUserInput = {
+  export type FiscalPeriodUncheckedUpdateManyWithoutLockedByInput = {
     id?: StringFieldUpdateOperationsInput | string
-    month?: StringFieldUpdateOperationsInput | string
-    isLocked?: BoolFieldUpdateOperationsInput | boolean
-    lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    closingBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FiscalPeriodUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    month?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closingBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -97070,6 +97443,20 @@ export namespace Prisma {
     role?: $Enums.UserRole
   }
 
+  export type FiscalPeriodCreateManyCompanyInput = {
+    id?: string
+    name: string
+    startDate: Date | string
+    endDate: Date | string
+    isLocked?: boolean
+    lockedAt?: Date | string | null
+    lockedById?: string | null
+    closingBalance?: Decimal | DecimalJsLike | number | string | null
+    reconciledAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type BranchUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -97397,7 +97784,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUpdateManyWithoutDeletedByNestedInput
@@ -97433,7 +97820,7 @@ export namespace Prisma {
     DelegationWindow_DelegationWindow_delegateIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_delegateIdToUserNestedInput
     DelegationWindow_DelegationWindow_ownerIdToUser?: DelegationWindowUncheckedUpdateManyWithoutUser_DelegationWindow_ownerIdToUserNestedInput
     Document?: DocumentUncheckedUpdateManyWithoutUserNestedInput
-    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutUserNestedInput
+    FiscalPeriod?: FiscalPeriodUncheckedUpdateManyWithoutLockedByNestedInput
     invoicesCreated?: InvoiceUncheckedUpdateManyWithoutCreatedByNestedInput
     invoicesDeleted?: InvoiceUncheckedUpdateManyWithoutDeletedByNestedInput
     paymentsDeleted?: PaymentUncheckedUpdateManyWithoutDeletedByNestedInput
@@ -97457,6 +97844,48 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  }
+
+  export type FiscalPeriodUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    isLocked?: BoolFieldUpdateOperationsInput | boolean
+    lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closingBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lockedBy?: UserUpdateOneWithoutFiscalPeriodNestedInput
+  }
+
+  export type FiscalPeriodUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    isLocked?: BoolFieldUpdateOperationsInput | boolean
+    lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lockedById?: NullableStringFieldUpdateOperationsInput | string | null
+    closingBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FiscalPeriodUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    isLocked?: BoolFieldUpdateOperationsInput | boolean
+    lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lockedById?: NullableStringFieldUpdateOperationsInput | string | null
+    closingBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    reconciledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CostRecordCreateManyBranchInput = {
