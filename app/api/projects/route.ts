@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     const validatedData = createProjectSchema.parse(body);
     assertValidEntity(validatedData, "CreateProjectDTO");
     
-    const userId = request.headers.get("x-user-id") || undefined;
+    const userId = "system_internal_admin";
     const project = await ProjectService.create(validatedData, userId);
     return successResponse(project, null, 201);
   } catch (error) {

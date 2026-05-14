@@ -146,20 +146,20 @@ exports.Prisma.ProjectScalarFieldEnum = {
   name: 'name',
   createdAt: 'createdAt',
   deletedAt: 'deletedAt',
-  deletedById: 'deletedById',
   description: 'description',
   ownerId: 'ownerId',
   status: 'status',
   updatedAt: 'updatedAt',
-  version: 'version',
   contractValue: 'contractValue',
-  investor: 'investor',
-  projectType: 'projectType',
   endDate: 'endDate',
   startDate: 'startDate',
   totalBudget: 'totalBudget',
+  deletedById: 'deletedById',
+  version: 'version',
+  branchId: 'branchId',
   companyId: 'companyId',
-  branchId: 'branchId'
+  investor: 'investor',
+  projectType: 'projectType'
 };
 
 exports.Prisma.TaskScalarFieldEnum = {
@@ -206,21 +206,21 @@ exports.Prisma.CostRecordScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  version: 'version',
   createdById: 'createdById',
   purchaseOrderId: 'purchaseOrderId',
   requestId: 'requestId',
   deletedAt: 'deletedAt',
-  deletedById: 'deletedById',
   approvalStatus: 'approvalStatus',
-  workflowStatus: 'workflowStatus',
-  vatRate: 'vatRate',
-  vatAmount: 'vatAmount',
-  retentionRate: 'retentionRate',
-  retentionAmount: 'retentionAmount',
+  deletedById: 'deletedById',
+  version: 'version',
   netAmount: 'netAmount',
+  retentionAmount: 'retentionAmount',
+  retentionRate: 'retentionRate',
+  vatAmount: 'vatAmount',
+  vatRate: 'vatRate',
+  branchId: 'branchId',
   companyId: 'companyId',
-  branchId: 'branchId'
+  workflowStatus: 'workflowStatus'
 };
 
 exports.Prisma.BudgetRecordScalarFieldEnum = {
@@ -268,17 +268,17 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   contractId: 'contractId',
   requestId: 'requestId',
   deletedAt: 'deletedAt',
-  deletedById: 'deletedById',
-  approvalStatus: 'approvalStatus',
   version: 'version',
   certifiedProgress: 'certifiedProgress',
-  vatRate: 'vatRate',
-  vatAmount: 'vatAmount',
-  retentionRate: 'retentionRate',
   retentionAmount: 'retentionAmount',
+  approvalStatus: 'approvalStatus',
+  deletedById: 'deletedById',
   netAmount: 'netAmount',
-  companyId: 'companyId',
-  branchId: 'branchId'
+  retentionRate: 'retentionRate',
+  vatAmount: 'vatAmount',
+  vatRate: 'vatRate',
+  branchId: 'branchId',
+  companyId: 'companyId'
 };
 
 exports.Prisma.PaymentScalarFieldEnum = {
@@ -290,11 +290,11 @@ exports.Prisma.PaymentScalarFieldEnum = {
   description: 'description',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  version: 'version',
   requestId: 'requestId',
   deletedAt: 'deletedAt',
+  approvalStatus: 'approvalStatus',
   deletedById: 'deletedById',
-  approvalStatus: 'approvalStatus'
+  version: 'version'
 };
 
 exports.Prisma.LedgerAccountScalarFieldEnum = {
@@ -322,8 +322,8 @@ exports.Prisma.JournalEntryScalarFieldEnum = {
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
   isReversed: 'isReversed',
-  reversedById: 'reversedById',
-  reversalRef: 'reversalRef'
+  reversalRef: 'reversalRef',
+  reversedById: 'reversedById'
 };
 
 exports.Prisma.TransactionLineScalarFieldEnum = {
@@ -503,11 +503,11 @@ exports.Prisma.BOQItemScalarFieldEnum = {
   quantity: 'quantity',
   unitRate: 'unitRate',
   totalAmount: 'totalAmount',
-  status: 'status',
-  version: 'version',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  status: 'status',
+  version: 'version'
 };
 
 exports.Prisma.BudgetVersionScalarFieldEnum = {
@@ -578,7 +578,11 @@ exports.Prisma.FiscalPeriodScalarFieldEnum = {
   closingBalance: 'closingBalance',
   reconciledAt: 'reconciledAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  companyId: 'companyId',
+  endDate: 'endDate',
+  name: 'name',
+  startDate: 'startDate'
 };
 
 exports.Prisma.JobScalarFieldEnum = {
@@ -820,13 +824,13 @@ exports.Prisma.JsonNullValueFilter = {
 };
 exports.UserRole = exports.$Enums.UserRole = {
   ADMIN: 'ADMIN',
+  MANAGER: 'MANAGER',
+  ACCOUNTANT: 'ACCOUNTANT',
+  VIEWER: 'VIEWER',
   SUPER_ADMIN: 'SUPER_ADMIN',
   GROUP_DIRECTOR: 'GROUP_DIRECTOR',
   CFO: 'CFO',
   BRANCH_DIRECTOR: 'BRANCH_DIRECTOR',
-  MANAGER: 'MANAGER',
-  ACCOUNTANT: 'ACCOUNTANT',
-  VIEWER: 'VIEWER',
   AUDITOR: 'AUDITOR'
 };
 
@@ -861,11 +865,11 @@ exports.PaymentStatus = exports.$Enums.PaymentStatus = {
 };
 
 exports.ApprovalStatus = exports.$Enums.ApprovalStatus = {
-  DRAFT: 'DRAFT',
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
   REJECTED: 'REJECTED',
-  CANCELLED: 'CANCELLED'
+  CANCELLED: 'CANCELLED',
+  DRAFT: 'DRAFT'
 };
 
 exports.InvoiceStatus = exports.$Enums.InvoiceStatus = {

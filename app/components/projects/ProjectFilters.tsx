@@ -6,7 +6,8 @@ import AddProjectModal from '@/app/components/modals/AddProjectModal';
 
 export default function ProjectFilters() {
   const [showAddModal, setShowAddModal] = useState(false);
-  const { data: projects = [] } = useProjectsQuery();
+  const { data: paginatedData } = useProjectsQuery();
+  const projects = paginatedData?.data || [];
 
   const handleExportExcel = () => {
     if (projects.length === 0) return;

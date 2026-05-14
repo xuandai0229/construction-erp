@@ -20,7 +20,8 @@ const STATUS_LABELS: Record<TaskStatus, string> = {
 
 export default function AddTaskModal({ isOpen, onClose }: Props) {
   const currentProjectId = useERPStore(state => state.currentProjectId);
-  const { data: projects = [] } = useProjectsQuery();
+  const { data: paginatedData } = useProjectsQuery();
+  const projects = paginatedData?.data || [];
   const { mutateAsync: createTask } = useCreateTaskMutation(currentProjectId);
 
   const [form, setForm] = useState({

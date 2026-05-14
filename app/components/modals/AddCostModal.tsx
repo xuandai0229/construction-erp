@@ -17,7 +17,7 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
   const { currentProjectId, setCurrentProject } = useERPStore();
 
   const { data: projectsData } = useProjectsQuery();
-  const projects = projectsData || [];
+  const projects = projectsData?.data || [];
   const { data: wbsData } = useWBSQuery(currentProjectId);
   const wbsItems = wbsData?.flat || [];
 
@@ -57,7 +57,7 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
       });
     } else {
       setForm({
-        projectId: currentProjectId || (projectsData && projectsData.length > 0 ? projectsData[0].id : ''),
+        projectId: currentProjectId || (projects.length > 0 ? projects[0].id : ''),
         wbsId: '',
         costType: 'material',
         quantity: '',

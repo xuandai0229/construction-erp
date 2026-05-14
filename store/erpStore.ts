@@ -38,74 +38,29 @@ export const useERPStore = create<ERPState>((set, get) => ({
 
   init: async () => {
     if (get().initialized) return;
-    set({ initialized: true }); // Guard immediately to prevent concurrent calls
     
+    // STABILIZATION MODE: Fixed Internal Admin
+    const internalUser: UserProfile = {
+      name: 'Hệ thống Quản trị (Internal Admin)',
+      email: 'admin@erp.internal',
+      role: 'SUPER_ADMIN',
+      createdAt: new Date().toISOString()
+    };
+
+    set({ 
+      user: internalUser, 
+      userRole: 'SUPER_ADMIN',
+      initialized: true 
+    });
+
+    // Load saved project if any
     try {
-      // Add a 5s timeout to prevent hanging the whole app on startup
-      const sessionPromise = supabase.auth.getSession();
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Auth Timeout')), 5000)
-      );
-
-      const { data: { session } } = await Promise.race([sessionPromise, timeoutPromise]) as any;
-      
-      if (session?.user) {
-        set({ 
-          user: {
-            name: session.user.user_metadata?.name || 'User',
-            email: session.user.email || '',
-            role: (session.user.user_metadata?.role as UserRole) || 'VIEWER',
-            createdAt: session.user.created_at
-          },
-          userRole: (session.user.user_metadata?.role as UserRole) || 'VIEWER'
-        });
-      } else {
-        try {
-          const savedUser = typeof window !== 'undefined' ? localStorage.getItem('erp-user') : null;
-          if (savedUser) {
-            const userData = JSON.parse(savedUser);
-            set({ user: userData, userRole: userData.role });
-          }
-        } catch (e) {
-          console.warn('[Store] Failed to parse saved user:', e);
-        }
+      const savedProjectId = typeof window !== 'undefined' ? localStorage.getItem('erp-project-id') : null;
+      if (savedProjectId) {
+        set({ currentProjectId: savedProjectId });
       }
-      
-      try {
-        const savedProjectId = typeof window !== 'undefined' ? localStorage.getItem('erp-project-id') : null;
-        if (savedProjectId) {
-          set({ currentProjectId: savedProjectId });
-        }
-      } catch (e) {
-        console.warn('[Store] Failed to read saved project:', e);
-      }
-
-      // Listen to auth changes — only set up once via initialized guard
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-        if (session?.user) {
-          set({ 
-            user: {
-              name: session.user.user_metadata?.name || 'User',
-              email: session.user.email || '',
-              role: (session.user.user_metadata?.role as UserRole) || 'VIEWER',
-              createdAt: session.user.created_at
-            },
-            userRole: (session.user.user_metadata?.role as UserRole) || 'VIEWER'
-          });
-        } else {
-          set({ user: null, userRole: 'VIEWER' });
-        }
-      });
-
-      // Store subscription for potential cleanup (guarded by initialized flag)
-      if (typeof window !== 'undefined') {
-        (window as any).__erpAuthSubscription = subscription;
-      }
-
-      set({ initialized: true });
     } catch (e) {
-      console.error('init error:', e);
-      set({ initialized: true });
+      console.warn('[Store] Failed to read saved project:', e);
     }
   },
 

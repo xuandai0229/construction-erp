@@ -24,7 +24,8 @@ const statusColors: Record<string, string> = {
 };
 
 export default function ProjectList({ onSelectProject }: ProjectListProps) {
-  const { data: projects = [] } = useProjectsQuery();
+  const { data: paginatedData } = useProjectsQuery();
+  const projects = paginatedData?.data || [];
   const { mutateAsync: addProject } = useCreateProjectMutation();
   const { mutateAsync: updateProject } = useUpdateProjectMutation();
   const { mutateAsync: deleteProject } = useDeleteProjectMutation();

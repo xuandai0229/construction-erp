@@ -9,7 +9,7 @@ export function useProjectsQuery(params: any = {}) {
     queryFn: async () => {
       const res = await projectApi.getAll(params);
       if (!res.success) throw new Error(res.error || 'Failed to fetch projects');
-      return res.data?.data || [];
+      return res.data; // Return { data, metadata }
     },
   });
 }

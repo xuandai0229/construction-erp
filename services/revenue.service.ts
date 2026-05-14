@@ -139,7 +139,7 @@ export class RevenueService {
   static async findInvoicesByProject(projectId: string, filters: any = {}) {
     const { limit, skip } = filters;
     return prisma.invoice.findMany({
-      where: { projectId },
+      where: { projectId, deletedAt: null },
       include: {
         payments: true,
         wbs: { select: { name: true } }
@@ -153,7 +153,7 @@ export class RevenueService {
   static async findRevenuesByProject(projectId: string, filters: any = {}) {
     const { limit, skip } = filters;
     return prisma.revenue.findMany({
-      where: { projectId },
+      where: { projectId, deletedAt: null },
       take: limit ? Number(limit) : 500,
       skip: skip ? Number(skip) : 0,
       orderBy: { date: "desc" }
@@ -163,7 +163,7 @@ export class RevenueService {
   static async findPaymentsByProject(projectId: string, filters: any = {}) {
     const { limit, skip } = filters;
     return prisma.payment.findMany({
-      where: { projectId },
+      where: { projectId, deletedAt: null },
       take: limit ? Number(limit) : 500,
       skip: skip ? Number(skip) : 0,
       orderBy: { date: "desc" }
@@ -224,6 +224,25 @@ export class RevenueService {
           deletedById: userId,
         }
       });
+
+      // 1. Soft delete payments
+      const payments = await tx.payment.findMany({ where: { invoiceId: id, deletedAt: null } });
+      for (const pay of payments) {
+        await tx.payment.update({
+          where: { id: pay.id },
+          data: { deletedAt: new Date(), deletedById: userId }
+        });
+        await PostingEngine.reverseJournal(tx, pay.id, "PAYMENT", userId || "SYSTEM");
+      }
+
+      // 2. Soft delete related revenue records
+      await tx.revenue.updateMany({
+        where: { invoiceId: id, deletedAt: null },
+        data: { deletedAt: new Date() }
+      });
+
+      // 3. Reverse Journal for Invoice
+      await PostingEngine.reverseJournal(tx, id, "INVOICE", userId || "SYSTEM");
 
       await AuditService.log({
         userId,

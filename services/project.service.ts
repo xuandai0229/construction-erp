@@ -226,29 +226,29 @@ export class ProjectService {
   static async getAccountingSummary(projectId: string) {
     const [costsAgg, budgetsAgg, revenuesAgg, invoicesAgg, wbsCount, taskStats, purchaseOrdersAgg] = await Promise.all([
       prisma.costRecord.aggregate({
-        where: { projectId },
+        where: { projectId, deletedAt: null },
         _sum: { amount: true },
       }),
       prisma.budgetRecord.aggregate({
-        where: { projectId },
+        where: { projectId, deletedAt: null },
         _sum: { estimatedAmount: true },
       }),
       prisma.revenue.aggregate({
-        where: { projectId },
+        where: { projectId, deletedAt: null },
         _sum: { amount: true },
       }),
       prisma.invoice.aggregate({
-        where: { projectId },
+        where: { projectId, deletedAt: null },
         _sum: { amount: true, paidAmount: true, remainingAmount: true },
       }),
-      prisma.wBSItem.count({ where: { projectId } }),
+      prisma.wBSItem.count({ where: { projectId, deletedAt: null } }),
       prisma.task.groupBy({
         by: ["status"],
         where: { projectId, deletedAt: null },
         _count: { status: true },
       }),
       prisma.purchaseOrder.aggregate({
-        where: { projectId, status: { in: ["ORDERED", "PARTIALLY_RECEIVED"] } },
+        where: { projectId, status: { in: ["ORDERED", "PARTIALLY_RECEIVED"] }, deletedAt: null },
         _sum: { totalAmount: true }
       })
     ]);
@@ -257,32 +257,32 @@ export class ProjectService {
     const [costsByType, budgetsByType, paidCostsAgg, paidRevenuesAgg] = await Promise.all([
       prisma.costRecord.groupBy({
         by: ["costType"],
-        where: { projectId },
+        where: { projectId, deletedAt: null },
         _sum: { amount: true }
       }),
       prisma.budgetRecord.groupBy({
         by: ["costType"],
-        where: { projectId },
+        where: { projectId, deletedAt: null },
         _sum: { estimatedAmount: true }
       }),
       prisma.costRecord.aggregate({
-        where: { projectId, status: "paid" },
+        where: { projectId, status: "paid", deletedAt: null },
         _sum: { amount: true }
       }),
       prisma.revenue.aggregate({
-        where: { projectId, status: "paid" },
+        where: { projectId, status: "paid", deletedAt: null },
         _sum: { amount: true }
       })
     ]);
 
     const overdueCount = await prisma.invoice.count({
-      where: { projectId, status: "OVERDUE" }
+      where: { projectId, status: "OVERDUE", deletedAt: null }
     });
 
     const totalCost = Number(costsAgg._sum?.amount || 0);
     const totalBudget = Number(budgetsAgg._sum?.estimatedAmount || 0);
-    const totalRevenue = Number(revenuesAgg._sum?.amount || 0);
     const totalInvoiced = Number(invoicesAgg._sum?.amount || 0);
+    const totalRevenue = totalInvoiced; // Accrual Revenue
     const totalPaidInvoice = Number(invoicesAgg._sum?.paidAmount || 0);
     const totalRemainingInvoice = Number(invoicesAgg._sum?.remainingAmount || 0);
     const committedCost = Number(purchaseOrdersAgg._sum?.totalAmount || 0);

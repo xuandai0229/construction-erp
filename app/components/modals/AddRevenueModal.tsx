@@ -15,7 +15,7 @@ export default function AddRevenueModal({ isOpen, onClose }: Props) {
   const currentProjectId = useERPStore(state => state.currentProjectId);
 
   const { data: projectsData } = useProjectsQuery();
-  const projects = projectsData || [];
+  const projects = projectsData?.data || [];
   const { data: wbsData } = useWBSQuery(currentProjectId);
   const wbsItems = wbsData?.flat || [];
 

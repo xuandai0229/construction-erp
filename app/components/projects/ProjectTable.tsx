@@ -16,38 +16,13 @@ const statusLabels: Record<string, { text: string; class: string }> = {
 };
 
 // Mock extending data for visual completeness to match the screenshot exactly
-const enrichProject = (p: Project, index: number) => {
-  const codes = [
-    'PRJ-2024-001', 'PRJ-2024-002', 'PRJ-2024-003', 'PRJ-2024-004', 'PRJ-2024-005', 
-    'PRJ-2024-006', 'PRJ-2024-007', 'PRJ-2024-008', 'PRJ-2024-009', 'PRJ-2024-010'
-  ];
-  
-  const types = [
-    'Cao ốc văn phòng', 'Khu căn hộ', 'Nhà máy', 'Trường học', 'Trung tâm TM', 
-    'Khu nghỉ dưỡng', 'Nhà máy', 'Khu đô thị', 'Bệnh viện', 'Cải tạo'
-  ];
-  
-  const typeColors = [
-    'border-blue-500/30 text-blue-600 bg-blue-500/10',
-    'border-purple-500/30 text-purple-600 bg-purple-500/10',
-    'border-yellow-600/30 text-yellow-700 bg-yellow-500/10',
-    'border-cyan-500/30 text-cyan-600 bg-cyan-500/10',
-    'border-pink-500/30 text-pink-600 bg-pink-500/10',
-    'border-emerald-500/30 text-emerald-600 bg-emerald-500/10',
-    'border-yellow-600/30 text-yellow-700 bg-yellow-500/10',
-    'border-purple-500/30 text-purple-600 bg-purple-500/10',
-    'border-red-500/30 text-red-600 bg-red-500/10',
-    'border-[var(--border)] text-[var(--text-muted)] bg-[var(--secondary)]',
-  ];
-  
-  const progressMap = [56, 32, 68, 100, 25, 40, 45, 18, 100, 60];
-
+const enrichProject = (p: Project) => {
   return {
     ...p,
-    code: codes[index % codes.length],
-    type: types[index % types.length],
-    typeColor: typeColors[index % typeColors.length],
-    progress: progressMap[index % progressMap.length],
+    code: `PROJ-${p.id.substring(0, 4).toUpperCase()}`,
+    type: p.projectType || 'Dự án',
+    typeColor: 'border-[var(--border)] text-[var(--text-muted)] bg-[var(--secondary)]',
+    progress: 0, // Should be calculated or 0 if unknown
     thumbnail: `https://picsum.photos/seed/${p.id}/80/80`
   };
 };

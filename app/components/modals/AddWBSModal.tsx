@@ -15,7 +15,8 @@ interface Props {
 export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
   const { currentProjectId, setCurrentProject } = useERPStore();
   
-  const { data: projects = [] } = useProjectsQuery();
+  const { data: paginatedData } = useProjectsQuery();
+  const projects = paginatedData?.data || [];
   const { data: wbsData } = useWBSQuery(currentProjectId);
   const wbsItems = wbsData?.flat || [];
 

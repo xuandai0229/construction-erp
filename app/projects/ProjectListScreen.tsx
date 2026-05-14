@@ -20,10 +20,14 @@ export default function ProjectListScreen() {
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [page, setPage] = useState(1);
+  const limit = 10;
 
   useEffect(() => { init(); }, [init]);
 
-  const { data: projects = [] } = useProjectsQuery();
+  const { data: paginatedData, isLoading } = useProjectsQuery({ page, limit });
+  const projects = paginatedData?.data || [];
+  const metadata = paginatedData?.metadata;
+  const totalPages = metadata?.totalPages || 1;
 
   if (!isInitialized) {
     return (
@@ -59,19 +63,20 @@ export default function ProjectListScreen() {
           {/* Pagination */}
           <div className="flex items-center justify-between border-t border-[var(--border)] pt-4">
             <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
-              Trang {page}
+              Trang {page} / {totalPages} (Tổng {metadata?.total || 0} dự án)
             </div>
             <div className="flex gap-2">
               <button
                 onClick={() => setPage(p => Math.max(1, p - 1))}
-                disabled={page === 1}
+                disabled={page === 1 || isLoading}
                 className="erp-btn h-8 px-4 bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text-primary)] disabled:opacity-40"
               >
                 Trang trước
               </button>
               <button
                 onClick={() => setPage(p => p + 1)}
-                className="erp-btn h-8 px-4 bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text-primary)]"
+                disabled={page >= totalPages || isLoading}
+                className="erp-btn h-8 px-4 bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text-primary)] disabled:opacity-40"
               >
                 Trang sau
               </button>

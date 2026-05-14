@@ -18,25 +18,24 @@ export async function GET(request: Request) {
     const [projectCount, activeProjectCount, costAgg, budgetAgg, revenueAgg, invoiceAgg, costsByType] = await Promise.all([
       prisma.project.count({ where: { deletedAt: null } }),
       prisma.project.count({ where: { deletedAt: null, status: { in: ['ACTIVE', 'IN_PROGRESS'] } } }),
-      prisma.costRecord.aggregate({ _sum: { amount: true } }),
-      prisma.budgetRecord.aggregate({ _sum: { estimatedAmount: true } }),
-      prisma.revenue.aggregate({ _sum: { amount: true } }),
-      prisma.invoice.aggregate({ _sum: { amount: true, paidAmount: true, remainingAmount: true } }),
-      prisma.costRecord.groupBy({ by: ["costType"], _sum: { amount: true } })
+      prisma.costRecord.aggregate({ where: { deletedAt: null }, _sum: { amount: true } }),
+      prisma.budgetRecord.aggregate({ where: { deletedAt: null }, _sum: { estimatedAmount: true } }),
+      prisma.revenue.aggregate({ where: { deletedAt: null }, _sum: { amount: true } }),
+      prisma.invoice.aggregate({ where: { deletedAt: null }, _sum: { amount: true, paidAmount: true, remainingAmount: true } }),
+      prisma.costRecord.groupBy({ by: ["costType"], where: { deletedAt: null }, _sum: { amount: true } })
     ]);
 
-    const totalRevenue = Number(revenueAgg._sum?.amount || 0);
+    const totalInvoiced = Number(invoiceAgg._sum?.amount || 0);
+    const totalRevenue = totalInvoiced; // Accrual Revenue
     const totalCost = Number(costAgg._sum?.amount || 0);
     const totalBudget = Number(budgetAgg._sum?.estimatedAmount || 0);
+    const totalCollected = Number(invoiceAgg._sum?.paidAmount || 0);
+    const totalReceivable = Number(invoiceAgg._sum?.remainingAmount || 0);
     
     const costByType: Record<string, number> = {};
     costsByType.forEach(c => {
       costByType[c.costType] = Number(c._sum?.amount || 0);
     });
-
-    const totalInvoiced = Number(invoiceAgg._sum?.amount || 0);
-    const totalCollected = Number(invoiceAgg._sum?.paidAmount || 0);
-    const totalReceivable = Number(invoiceAgg._sum?.remainingAmount || 0);
 
     return successResponse({
       global: {

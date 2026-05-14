@@ -46,6 +46,7 @@ model User {
   wbsDeleted                                         WBSItem[]          @relation("WBSDeletedBy")
 
   @@index([createdAt])
+  @@index([companyId])
 }
 
 model Category {
@@ -99,8 +100,8 @@ model Project {
   wbsItems             WBSItem[]
 
   @@index([status])
-  @@index([createdAt])
   @@index([ownerId])
+  @@index([companyId, deletedAt, createdAt])
 }
 
 model Task {
@@ -120,11 +121,11 @@ model Task {
   category    Category?  @relation(fields: [categoryId], references: [id])
   project     Project    @relation(fields: [projectId], references: [id])
 
-  @@index([projectId])
   @@index([status])
   @@index([assigneeId])
   @@index([categoryId])
   @@index([createdAt])
+  @@index([projectId, deletedAt])
 }
 
 model WBSItem {
@@ -154,8 +155,8 @@ model WBSItem {
   children           WBSItem[]           @relation("WBSChildren")
   project            Project             @relation(fields: [projectId], references: [id])
 
-  @@index([projectId])
   @@index([parentId])
+  @@index([projectId, deletedAt])
 }
 
 model CostRecord {
@@ -194,9 +195,9 @@ model CostRecord {
   purchaseOrder   PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
   wbs             WBSItem        @relation(fields: [wbsId], references: [id])
 
-  @@index([projectId])
-  @@index([wbsId])
   @@index([date])
+  @@index([projectId, deletedAt, date])
+  @@index([wbsId, deletedAt])
 }
 
 model BudgetRecord {
@@ -212,8 +213,8 @@ model BudgetRecord {
   createdBy       User?     @relation("BudgetCreatedBy", fields: [createdById], references: [id])
   wbs             WBSItem   @relation(fields: [wbsId], references: [id])
 
-  @@index([projectId])
-  @@index([wbsId])
+  @@index([projectId, deletedAt])
+  @@index([wbsId, deletedAt])
 }
 
 model Revenue {
@@ -233,8 +234,8 @@ model Revenue {
   invoice     Invoice?      @relation(fields: [invoiceId], references: [id])
   wbs         WBSItem       @relation(fields: [wbsId], references: [id])
 
-  @@index([projectId])
-  @@index([wbsId])
+  @@index([projectId, deletedAt, date])
+  @@index([wbsId, deletedAt])
 }
 
 model Invoice {
@@ -275,8 +276,8 @@ model Invoice {
   payments          Payment[]
   revenues          Revenue[]
 
-  @@index([projectId])
-  @@index([wbsId])
+  @@index([projectId, deletedAt, issuedDate])
+  @@index([wbsId, deletedAt])
 }
 
 model Payment {
@@ -296,8 +297,8 @@ model Payment {
   deletedBy      User?          @relation("PaymentDeletedBy", fields: [deletedById], references: [id])
   invoice        Invoice        @relation(fields: [invoiceId], references: [id])
 
-  @@index([invoiceId])
-  @@index([projectId])
+  @@index([invoiceId, deletedAt])
+  @@index([projectId, deletedAt, date])
 }
 
 model LedgerAccount {
@@ -334,9 +335,9 @@ model JournalEntry {
   project      Project?          @relation(fields: [projectId], references: [id])
   lines        TransactionLine[]
 
-  @@index([projectId])
+  @@unique([sourceType, sourceId, deletedAt])
   @@index([date])
-  @@index([sourceType, sourceId])
+  @@index([projectId, deletedAt, date])
 }
 
 model TransactionLine {
@@ -664,7 +665,7 @@ model Document {
 }
 
 model FiscalPeriod {
-  id             String    @id
+  id             String    @id @default(uuid())
   month          String    @unique
   isLocked       Boolean   @default(false)
   lockedAt       DateTime?
@@ -672,7 +673,12 @@ model FiscalPeriod {
   closingBalance Decimal?  @db.Decimal(18, 2)
   reconciledAt   DateTime?
   createdAt      DateTime  @default(now())
-  updatedAt      DateTime
+  updatedAt      DateTime  @updatedAt
+  companyId      String?
+  endDate        DateTime?
+  name           String?
+  startDate      DateTime?
+  Company        Company?  @relation(fields: [companyId], references: [id])
   User           User?     @relation(fields: [lockedById], references: [id])
 
   @@index([month])
@@ -930,18 +936,19 @@ model Quotation {
 }
 
 model Company {
-  id        String       @id @default(uuid())
-  name      String
-  code      String       @unique
-  taxCode   String?
-  address   String?
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  branches  Branch[]
-  costs     CostRecord[]
-  invoices  Invoice[]
-  projects  Project[]
-  users     User[]
+  id           String         @id @default(uuid())
+  name         String
+  code         String         @unique
+  taxCode      String?
+  address      String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  branches     Branch[]
+  costs        CostRecord[]
+  FiscalPeriod FiscalPeriod[]
+  invoices     Invoice[]
+  projects     Project[]
+  users        User[]
 }
 
 model Branch {

@@ -13,7 +13,8 @@ interface WBSTreeProps {
 }
 
 export default function WBSTree({ projectId }: WBSTreeProps) {
-  const { data: projects = [] } = useProjectsQuery();
+  const { data: paginatedData } = useProjectsQuery();
+  const projects = paginatedData?.data || [];
   const currentProjectId = useERPStore(state => state.currentProjectId);
   const setCurrentProject = useERPStore(state => state.setCurrentProject);
 

@@ -276,6 +276,7 @@ export class CostService {
     return prisma.costRecord.findMany({
       where: {
         projectId,
+        deletedAt: null,
         ...(costType && { costType }),
         ...(status && { status }),
         ...(startDate && endDate && {

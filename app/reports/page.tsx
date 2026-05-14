@@ -25,7 +25,8 @@ const generateMockAgingReport = (projectId: string) => {
 
 export default function ReportsPage() {
   const currentProjectId  = useERPStore(state => state.currentProjectId);
-  const { data: projects = [] } = useProjectsQuery();
+  const { data: paginatedData } = useProjectsQuery();
+  const projects = paginatedData?.data || [];
   const setCurrentProject = useERPStore(state => state.setCurrentProject);
   const sidebarCollapsed  = useERPStore(state => state.sidebarCollapsed);
 

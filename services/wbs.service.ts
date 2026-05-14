@@ -9,17 +9,17 @@ export class WBSService {
   static async findByProject(projectId: string) {
     const [items, costsAgg, budgetsAgg] = await Promise.all([
       prisma.wBSItem.findMany({
-        where: { projectId },
+        where: { projectId, deletedAt: null },
         orderBy: [{ level: "asc" }, { sortOrder: "asc" }],
       }),
       prisma.costRecord.groupBy({
         by: ["wbsId"],
-        where: { projectId },
+        where: { projectId, deletedAt: null },
         _sum: { amount: true },
       }),
       prisma.budgetRecord.groupBy({
         by: ["wbsId"],
-        where: { projectId },
+        where: { projectId, deletedAt: null },
         _sum: { estimatedAmount: true },
       }),
     ]);
