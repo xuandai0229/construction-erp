@@ -10,6 +10,7 @@ import AddRevenueModal from '@/app/components/modals/AddRevenueModal';
 import { TableVirtuoso } from 'react-virtuoso';
 import { useRevenuesQuery, useUpdateRevenueMutation } from '@/services/queries/useRevenues';
 import { useWBSQuery } from '@/services/queries/useWBS';
+import { exportToCsv } from '@/app/services/export.service';
 
 // Stable references to prevent re-render loops with TableVirtuoso
 const StableTableComponents = {
@@ -53,10 +54,28 @@ export default function RevenueListPage() {
               <h1 className="erp-section-title">Doanh thu</h1>
               <p className="erp-section-subtitle">Quản lý các khoản thu và trạng thái thanh toán</p>
             </div>
-            <button 
-              onClick={() => setShowAddModal(true)}
-              className="erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-900/20 gap-2 px-5"
-            >
+              <button 
+                onClick={() => {
+                  if (revenues.length === 0) return;
+                  const headers = ['Ngày', 'Hạng mục', 'Diễn giải', 'Số tiền', 'Trạng thái'];
+                  const rows = revenues.map(rev => [
+                    formatDate(rev.date),
+                    getWbsName(rev.wbsId),
+                    rev.description || '',
+                    rev.amount,
+                    rev.status === 'paid' ? 'Đã thu' : 'Chưa thu'
+                  ]);
+                  exportToCsv('ERP_Revenue', headers, rows);
+                }}
+                className="erp-btn bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--hover-bg)] gap-2 px-5"
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1m-4-4-4 4-4-4m4 4V4" /></svg>
+                Xuất Excel
+              </button>
+              <button 
+                onClick={() => setShowAddModal(true)}
+                className="erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-900/20 gap-2 px-5"
+              >
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M12 5v14M5 12h14" />
               </svg>

@@ -13,6 +13,7 @@ import { useProjectsQuery } from '@/services/queries/useProjects';
 import { useNotificationsQuery, useNotificationMutation } from '@/services/queries/useWorkspace';
 import { USER_ROLE_LABELS } from '@/app/types';
 import NotificationCenter from './workspace/NotificationCenter';
+import ProjectSwitcher from './workspace/ProjectSwitcher';
 
 export default function Header({ data: propData }: { data?: DashboardData }) {
   const [showCostModal, setShowCostModal]       = useState(false);
@@ -53,58 +54,36 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
       <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--header-bg)] backdrop-blur-xl">
         <div className="flex h-[var(--erp-header-height)] items-center justify-between gap-4 px-4 md:px-6">
 
-          {/* ── Left: Mobile Toggle + Project Selector ── */}
-          <div className="flex shrink-0 items-center gap-3 min-w-0">
+          {/* ── Left: Mobile Toggle + Project Switcher ── */}
+          <div className="flex shrink-0 items-center gap-4 min-w-0">
             {/* Mobile Hamburger */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--border)] text-[var(--text-muted)] md:hidden hover:bg-[var(--secondary)] hover:text-[var(--text-primary)] transition-all"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] text-[var(--text-muted)] md:hidden hover:bg-[var(--secondary)] hover:text-[var(--text-primary)] transition-all"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
 
-            {/* Project Selector */}
-            <div className="flex min-w-0 flex-col">
-              <div className="flex items-center gap-2">
-                <select
-                  value={currentProjectId}
-                  onChange={(e) => setCurrentProject(e.target.value)}
-                  className="max-w-[180px] truncate bg-transparent text-[15px] font-extrabold text-[var(--text-primary)] focus:outline-none cursor-pointer hover:text-blue-400 transition-colors md:max-w-[240px]"
-                >
-                  {projects.map(p => (
-                    <option key={p.id} value={p.id} className="bg-slate-900 text-slate-100 font-bold">
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex items-center gap-2 mt-0.5">
-                <div className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.18em] truncate max-w-[80px] sm:max-w-none">
-                  Mã: {currentProjectId ? currentProjectId.slice(0, 8).toUpperCase() : '--------'}
-                </div>
-                <span className="shrink-0 rounded-full bg-blue-500/10 px-2 py-0.5 text-[9px] font-black text-blue-500 ring-1 ring-blue-500/30 tracking-tight flex items-center">
-                  ĐANG HOẠT ĐỘNG
-                </span>
-              </div>
-            </div>
+            {/* Scalable Project Switcher */}
+            <ProjectSwitcher />
           </div>
 
           {/* ── Center: Project Stats (xl only) ── */}
-          <div className="hidden xl:flex flex-1 items-center justify-center gap-8">
+          <div className="hidden xl:flex flex-1 items-center justify-center gap-10">
             {stats.map((s, i) => (
-              <div key={i} className="flex items-center gap-3 group">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] group-hover:border-blue-500/25 group-hover:bg-blue-600/10 group-hover:text-blue-500 transition-all duration-200">
-                  <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <div key={i} className="flex items-center gap-3.5 group">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--secondary)]/40 text-[var(--text-muted)] group-hover:text-blue-500 transition-all">
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d={s.icon} />
                   </svg>
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-[9.5px] font-black uppercase tracking-[0.18em] text-[var(--text-secondary)] leading-none mb-0.5">
+                  <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-[var(--text-muted)] leading-none mb-1 opacity-60 group-hover:opacity-100 transition-opacity">
                     {s.label}
                   </span>
-                  <span className="text-[12px] font-extrabold text-[var(--text-primary)] truncate max-w-[140px] group-hover:text-blue-500 transition-colors">
+                  <span className="text-[12.5px] font-semibold text-[var(--text-primary)] truncate max-w-[160px] group-hover:text-blue-500 transition-colors">
                     {s.value}
                   </span>
                 </div>
@@ -119,8 +98,8 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
             <div className="hidden lg:flex items-center gap-2">
               <button
                 onClick={() => setShowCostModal(true)}
-                className="erp-btn h-9 border border-amber-600/20 bg-amber-600/10 text-amber-400 hover:bg-amber-600 hover:text-white hover:border-amber-600 hover:shadow-[0_0_16px_-4px_rgba(217,119,6,0.5)] transition-all"
-                title="Thêm chi phí"
+                className="flex items-center gap-2 h-8 px-3 rounded-lg border border-amber-600/10 bg-amber-600/5 text-amber-500/80 hover:bg-amber-600/10 hover:text-amber-500 transition-all text-[11px] font-bold uppercase tracking-wider"
+                title="Ghi nhận chi phí"
               >
                 <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M12 5v14M5 12h14" />
@@ -133,17 +112,17 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
             <div className="relative">
               <button
                 onClick={() => setNotifOpen(!notifOpen)}
-                className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-all ${
+                className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-all ${
                   notifOpen
-                    ? 'bg-blue-600 border-blue-500 text-white shadow-[0_0_20px_-5px_rgba(59,130,246,0.5)]'
-                    : 'border-[var(--border)] text-[var(--text-muted)] hover:bg-[var(--secondary)] hover:border-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                    ? 'bg-blue-600 border-blue-500 text-white'
+                    : 'border-[var(--border)] text-[var(--text-muted)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
-                <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
                 </svg>
                 {unreadCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[9px] font-black text-white ring-2 ring-[#0f172a] shadow-lg animate-bounce">
+                  <span className="absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-rose-500 text-[8px] font-bold text-white ring-2 ring-[var(--background)]">
                     {unreadCount}
                   </span>
                 )}
@@ -161,29 +140,29 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
             </div>
 
             {/* Divider */}
-            <div className="h-7 w-px bg-slate-800/60" />
+            <div className="h-6 w-px bg-[var(--border)] opacity-50" />
 
             {/* User Menu */}
             <div className={`relative ${userMenuOpen ? 'z-[70]' : 'z-[10]'}`}>
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className={`flex items-center gap-2.5 rounded-xl border px-2 py-1 transition-all ${
+                className={`flex items-center gap-2.5 rounded-lg border px-2 py-1 transition-all ${
                   userMenuOpen
-                    ? 'bg-[var(--secondary)] border-[var(--primary)]'
-                    : 'border-[var(--border)] bg-[var(--secondary)] hover:bg-[var(--secondary)] hover:border-[var(--text-muted)]'
+                    ? 'bg-[var(--secondary)] border-blue-500/50'
+                    : 'border-[var(--border)] hover:bg-[var(--secondary)]'
                 }`}
               >
                 {/* Avatar */}
-                <div className="h-7 w-7 shrink-0 overflow-hidden rounded-lg bg-gradient-to-br from-blue-600 to-indigo-700 grid place-items-center font-black text-[12px] text-white shadow-md shadow-blue-600/20">
+                <div className="h-7 w-7 shrink-0 overflow-hidden rounded-md bg-blue-600/10 border border-blue-500/20 grid place-items-center font-bold text-[10px] text-blue-500">
                   {user?.name ? user.name.substring(0, 2).toUpperCase() : 'AD'}
                 </div>
 
                 {/* Name + Role */}
                 <div className="hidden flex-col items-start md:flex">
-                  <span className="text-[12.5px] font-bold text-[var(--text-primary)] leading-none">
+                  <span className="text-[12.5px] font-semibold text-[var(--text-primary)] leading-none">
                     {user?.name || 'Quản trị viên'}
                   </span>
-                  <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest mt-0.5">
+                  <span className="text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-wider mt-1 opacity-60">
                     {(USER_ROLE_LABELS as any)[user?.role || (userRole as any)] || userRole}
                   </span>
                 </div>

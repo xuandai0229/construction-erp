@@ -63,7 +63,13 @@ export class DashboardService {
           ...r,
           ux: OperationalService.getProjectRiskGuidance(r)
         })),
-        actionCenter: (await ActionCenterService.getUserTasks("system_internal_admin")).slice(0, 5)
+        actionCenter: (await ActionCenterService.getUserTasks("system_internal_admin")).slice(0, 5),
+        recentActivities: await prisma.activityFeed.findMany({
+          where: { ...(projectId && { projectId }) },
+          take: 10,
+          orderBy: { createdAt: 'desc' },
+          include: { User: { select: { name: true } } }
+        })
       },
       agingReport: aging
     };

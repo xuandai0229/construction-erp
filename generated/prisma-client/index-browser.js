@@ -854,7 +854,8 @@ exports.ProjectStatus = exports.$Enums.ProjectStatus = {
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED',
   ACTIVE: 'ACTIVE',
-  CLOSED: 'CLOSED'
+  CLOSED: 'CLOSED',
+  ARCHIVED: 'ARCHIVED'
 };
 
 exports.TaskStatus = exports.$Enums.TaskStatus = {

@@ -171,36 +171,47 @@ export class ProjectService {
   }
 
   static async delete(id: string, userId?: string) {
-    // Financial Safety Check: Don't delete if there are invoices or costs
-    const [invoiceCount, costCount] = await Promise.all([
-      prisma.invoice.count({ where: { projectId: id } }),
-      prisma.costRecord.count({ where: { projectId: id } })
-    ]);
-
-    if (invoiceCount > 0 || costCount > 0) {
-      throw new ApiError(400, "Không thể xóa dự án đã có dữ liệu tài chính (Hóa đơn hoặc Chi phí).");
-    }
-
     const oldProject = await this.findById(id);
 
-    const project = await prisma.project.update({
-      where: { id },
-      data: { 
-        deletedAt: new Date(),
-        deletedById: userId,
-      }
-    });
+    // Financial Safety Check
+    const [invoiceCount, costCount, revenueCount] = await Promise.all([
+      prisma.invoice.count({ where: { projectId: id } }),
+      prisma.costRecord.count({ where: { projectId: id } }),
+      prisma.revenue.count({ where: { projectId: id } })
+    ]);
+
+    const hasFinancialData = invoiceCount > 0 || costCount > 0 || revenueCount > 0;
+
+    if (hasFinancialData) {
+      // B. DATA GOVERNANCE: Prevent Hard Delete, return structured metadata
+      throw new ApiError(400, "Không thể xóa dự án đã phát sinh dữ liệu tài chính (Hóa đơn, Chi phí, Doanh thu).", {
+        isFinancialLocked: true,
+        counts: { invoices: invoiceCount, costs: costCount, revenues: revenueCount },
+        actionSuggested: "ARCHIVE"
+      });
+    }
+
+    // A. HARD DELETE: Project is empty, clean it completely from DB
+    await prisma.$transaction([
+      // Clean up children first
+      prisma.task.deleteMany({ where: { projectId: id } }),
+      prisma.budgetRecord.deleteMany({ where: { projectId: id } }),
+      prisma.costRecord.deleteMany({ where: { projectId: id } }),
+      prisma.wBSItem.deleteMany({ where: { projectId: id } }),
+      // Finally delete the project
+      prisma.project.delete({ where: { id } })
+    ]);
 
     await AuditService.log({
       userId,
-      action: "DELETE",
+      action: "HARD_DELETE",
       entity: "Project",
       entityId: id,
       oldData: oldProject,
-      reason: "Người dùng yêu cầu xóa tạm thời",
+      reason: "Xóa vĩnh viễn dự án (Hard Delete) do chưa phát sinh nghiệp vụ.",
     });
 
-    return project;
+    return { ...oldProject, deletedAt: new Date() }; // Return standard shape for frontend success handlers
   }
 
   static async restore(id: string, userId?: string) {

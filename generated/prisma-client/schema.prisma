@@ -16,6 +16,7 @@ model User {
   updatedAt                                          DateTime           @updatedAt
   deletedAt                                          DateTime?
   role                                               UserRole           @default(VIEWER)
+  companyId                                          String?
   ActivityFeed                                       ActivityFeed[]
   ApprovalRequest                                    ApprovalRequest[]
   ApprovalStep                                       ApprovalStep[]
@@ -24,29 +25,29 @@ model User {
   Comment                                            Comment[]
   contractsCreated                                   Contract[]         @relation("ContractCreatedBy")
   costsCreated                                       CostRecord[]       @relation("CostCreatedBy")
+  costsDeleted                                       CostRecord[]       @relation("CostDeletedBy")
   DelegationWindow_DelegationWindow_delegateIdToUser DelegationWindow[] @relation("DelegationWindow_delegateIdToUser")
   DelegationWindow_DelegationWindow_ownerIdToUser    DelegationWindow[] @relation("DelegationWindow_ownerIdToUser")
   Document                                           Document[]
   FiscalPeriod                                       FiscalPeriod[]
   invoicesCreated                                    Invoice[]          @relation("InvoiceCreatedBy")
+  invoicesDeleted                                    Invoice[]          @relation("InvoiceDeletedBy")
+  paymentsDeleted                                    Payment[]          @relation("PaymentDeletedBy")
   ProgressEntry                                      ProgressEntry[]
+  projectsDeleted                                    Project[]          @relation("ProjectDeletedBy")
   projectsOwned                                      Project[]          @relation("ProjectOwner")
   purchaseOrdersCreated                              PurchaseOrder[]    @relation("POCreatedBy")
   purchaseRequestsCreated                            PurchaseRequest[]  @relation("PRCreatedBy")
   revenuesCreated                                    Revenue[]          @relation("RevenueCreatedBy")
   tasksAssigned                                      Task[]
   TrainingRecord                                     TrainingRecord[]
+  company                                            Company?           @relation(fields: [companyId], references: [id])
   UserMaturity                                       UserMaturity?
-
-  projectsDeleted Project[]    @relation("ProjectDeletedBy")
-  wbsDeleted      WBSItem[]    @relation("WBSDeletedBy")
-  costsDeleted    CostRecord[] @relation("CostDeletedBy")
-  invoicesDeleted Invoice[]    @relation("InvoiceDeletedBy")
-  paymentsDeleted Payment[]    @relation("PaymentDeletedBy")
-  companyId       String?
-  company         Company?     @relation(fields: [companyId], references: [id])
+  wbsDeleted                                         WBSItem[]          @relation("WBSDeletedBy")
+  notifications                                      Notification[]
 
   @@index([createdAt])
+  @@index([companyId])
 }
 
 model Category {
@@ -65,19 +66,20 @@ model Project {
   name                 String
   createdAt            DateTime               @default(now())
   deletedAt            DateTime?
-  deletedById          String?
-  deletedBy            User?                  @relation("ProjectDeletedBy", fields: [deletedById], references: [id])
   description          String?
   ownerId              String?
   status               ProjectStatus          @default(PLANNED)
   updatedAt            DateTime               @updatedAt
-  version              Int                    @default(1)
   contractValue        Decimal                @default(0) @db.Decimal(18, 2)
-  investor             String?
-  projectType          String?
   endDate              DateTime?
   startDate            DateTime?
   totalBudget          Decimal                @default(0) @db.Decimal(18, 2)
+  deletedById          String?
+  version              Int                    @default(1)
+  branchId             String?
+  companyId            String?
+  investor             String?
+  projectType          String?
   ActivityFeed         ActivityFeed[]
   ApprovalRequest      ApprovalRequest[]
   BOQItem              BOQItem[]
@@ -86,22 +88,21 @@ model Project {
   Document             Document[]
   InventoryTransaction InventoryTransaction[]
   journalEntries       JournalEntry[]
+  branch               Branch?                @relation(fields: [branchId], references: [id])
+  company              Company?               @relation(fields: [companyId], references: [id])
+  deletedBy            User?                  @relation("ProjectDeletedBy", fields: [deletedById], references: [id])
   owner                User?                  @relation("ProjectOwner", fields: [ownerId], references: [id])
   purchaseOrders       PurchaseOrder[]
   SiteConsumption      SiteConsumption[]
-  Subcontract          Subcontract[]
-  VariationOrder       VariationOrder[]
   SiteLog              SiteLog[]
+  Subcontract          Subcontract[]
   tasks                Task[]
+  VariationOrder       VariationOrder[]
   wbsItems             WBSItem[]
-  companyId            String?
-  branchId             String?
-  company              Company?               @relation(fields: [companyId], references: [id])
-  branch               Branch?                @relation(fields: [branchId], references: [id])
 
   @@index([status])
-  @@index([createdAt])
   @@index([ownerId])
+  @@index([companyId, deletedAt, createdAt])
 }
 
 model Task {
@@ -121,11 +122,11 @@ model Task {
   category    Category?  @relation(fields: [categoryId], references: [id])
   project     Project    @relation(fields: [projectId], references: [id])
 
-  @@index([projectId])
   @@index([status])
   @@index([assigneeId])
   @@index([categoryId])
   @@index([createdAt])
+  @@index([projectId, deletedAt])
 }
 
 model WBSItem {
@@ -141,7 +142,6 @@ model WBSItem {
   sortOrder          Int                 @default(0)
   deletedAt          DateTime?
   deletedById        String?
-  deletedBy          User?               @relation("WBSDeletedBy", fields: [deletedById], references: [id])
   BOQItem            BOQItem[]
   budgets            BudgetRecord[]
   costs              CostRecord[]
@@ -151,12 +151,13 @@ model WBSItem {
   SiteConsumption    SiteConsumption[]
   SubcontractItem    SubcontractItem[]
   VariationOrder     VariationOrder[]
+  deletedBy          User?               @relation("WBSDeletedBy", fields: [deletedById], references: [id])
   parent             WBSItem?            @relation("WBSChildren", fields: [parentId], references: [id])
   children           WBSItem[]           @relation("WBSChildren")
   project            Project             @relation(fields: [projectId], references: [id])
 
-  @@index([projectId])
   @@index([parentId])
+  @@index([projectId, deletedAt])
 }
 
 model CostRecord {
@@ -173,30 +174,31 @@ model CostRecord {
   status          PaymentStatus  @default(unpaid)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
-  version         Int            @default(1)
   createdById     String?
   purchaseOrderId String?
   requestId       String?        @unique
   deletedAt       DateTime?
-  deletedById     String?
   approvalStatus  ApprovalStatus @default(DRAFT)
-  vatRate         Decimal        @default(10) @db.Decimal(5, 2)
-  vatAmount       Decimal        @default(0) @db.Decimal(18, 2)
-  retentionRate   Decimal        @default(0) @db.Decimal(5, 2)
-  retentionAmount Decimal        @default(0) @db.Decimal(18, 2)
+  deletedById     String?
+  version         Int            @default(1)
   netAmount       Decimal        @default(0) @db.Decimal(18, 2)
-  deletedBy       User?          @relation("CostDeletedBy", fields: [deletedById], references: [id])
+  retentionAmount Decimal        @default(0) @db.Decimal(18, 2)
+  retentionRate   Decimal        @default(0) @db.Decimal(5, 2)
+  vatAmount       Decimal        @default(0) @db.Decimal(18, 2)
+  vatRate         Decimal        @default(10) @db.Decimal(5, 2)
+  branchId        String?
+  companyId       String?
+  workflowStatus  String         @default("DRAFT")
+  branch          Branch?        @relation(fields: [branchId], references: [id])
+  company         Company?       @relation(fields: [companyId], references: [id])
   createdBy       User?          @relation("CostCreatedBy", fields: [createdById], references: [id])
+  deletedBy       User?          @relation("CostDeletedBy", fields: [deletedById], references: [id])
   purchaseOrder   PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
   wbs             WBSItem        @relation(fields: [wbsId], references: [id])
-  companyId       String?
-  branchId        String?
-  company         Company?       @relation(fields: [companyId], references: [id])
-  branch          Branch?        @relation(fields: [branchId], references: [id])
 
-  @@index([projectId])
-  @@index([wbsId])
   @@index([date])
+  @@index([projectId, deletedAt, date])
+  @@index([wbsId, deletedAt])
 }
 
 model BudgetRecord {
@@ -212,8 +214,8 @@ model BudgetRecord {
   createdBy       User?     @relation("BudgetCreatedBy", fields: [createdById], references: [id])
   wbs             WBSItem   @relation(fields: [wbsId], references: [id])
 
-  @@index([projectId])
-  @@index([wbsId])
+  @@index([projectId, deletedAt])
+  @@index([wbsId, deletedAt])
 }
 
 model Revenue {
@@ -233,8 +235,8 @@ model Revenue {
   invoice     Invoice?      @relation(fields: [invoiceId], references: [id])
   wbs         WBSItem       @relation(fields: [wbsId], references: [id])
 
-  @@index([projectId])
-  @@index([wbsId])
+  @@index([projectId, deletedAt, date])
+  @@index([wbsId, deletedAt])
 }
 
 model Invoice {
@@ -255,28 +257,28 @@ model Invoice {
   contractId        String?
   requestId         String?        @unique
   deletedAt         DateTime?
-  deletedById       String?
-  approvalStatus    ApprovalStatus @default(DRAFT)
-  deletedBy         User?          @relation("InvoiceDeletedBy", fields: [deletedById], references: [id])
   version           Int            @default(1)
   certifiedProgress Decimal        @default(0) @db.Decimal(18, 2)
-  vatRate           Decimal        @default(10) @db.Decimal(5, 2)
-  vatAmount         Decimal        @default(0) @db.Decimal(18, 2)
-  retentionRate     Decimal        @default(0) @db.Decimal(5, 2)
   retentionAmount   Decimal        @default(0) @db.Decimal(18, 2)
+  approvalStatus    ApprovalStatus @default(DRAFT)
+  deletedById       String?
   netAmount         Decimal        @default(0) @db.Decimal(18, 2)
+  retentionRate     Decimal        @default(0) @db.Decimal(5, 2)
+  vatAmount         Decimal        @default(0) @db.Decimal(18, 2)
+  vatRate           Decimal        @default(10) @db.Decimal(5, 2)
+  branchId          String?
+  companyId         String?
+  branch            Branch?        @relation(fields: [branchId], references: [id])
+  company           Company?       @relation(fields: [companyId], references: [id])
   contract          Contract?      @relation(fields: [contractId], references: [id])
   createdBy         User?          @relation("InvoiceCreatedBy", fields: [createdById], references: [id])
+  deletedBy         User?          @relation("InvoiceDeletedBy", fields: [deletedById], references: [id])
   wbs               WBSItem        @relation(fields: [wbsId], references: [id])
   payments          Payment[]
   revenues          Revenue[]
-  companyId         String?
-  branchId          String?
-  company           Company?       @relation(fields: [companyId], references: [id])
-  branch            Branch?        @relation(fields: [branchId], references: [id])
 
-  @@index([projectId])
-  @@index([wbsId])
+  @@index([projectId, deletedAt, issuedDate])
+  @@index([wbsId, deletedAt])
 }
 
 model Payment {
@@ -288,16 +290,16 @@ model Payment {
   description    String?
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
-  version        Int            @default(1)
   requestId      String?        @unique
   deletedAt      DateTime?
-  deletedById    String?
   approvalStatus ApprovalStatus @default(DRAFT)
+  deletedById    String?
+  version        Int            @default(1)
   deletedBy      User?          @relation("PaymentDeletedBy", fields: [deletedById], references: [id])
   invoice        Invoice        @relation(fields: [invoiceId], references: [id])
 
-  @@index([invoiceId])
-  @@index([projectId])
+  @@index([invoiceId, deletedAt])
+  @@index([projectId, deletedAt, date])
 }
 
 model LedgerAccount {
@@ -317,23 +319,27 @@ model LedgerAccount {
 }
 
 model JournalEntry {
-  id          String            @id @default(uuid())
-  projectId   String?
-  date        DateTime          @default(now())
-  description String
-  reference   String?
-  sourceType  String?
-  sourceId    String?
-  isPosted    Boolean           @default(true)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  deletedAt   DateTime?
-  project     Project?          @relation(fields: [projectId], references: [id])
-  lines       TransactionLine[]
+  id           String            @id @default(uuid())
+  projectId    String?
+  date         DateTime          @default(now())
+  description  String
+  reference    String?
+  sourceType   String?
+  sourceId     String?
+  isPosted     Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  deletedAt    DateTime?
+  isReversed   Boolean           @default(false)
+  reversalRef  String?
+  reversedById String?
+  project      Project?          @relation(fields: [projectId], references: [id])
+  lines        TransactionLine[]
 
-  @@index([projectId])
+  @@unique([sourceType, sourceId, deletedAt])
   @@index([date])
-  @@index([sourceType, sourceId])
+  @@index([projectId, deletedAt, date])
+  @@index([isReversed, projectId])
 }
 
 model TransactionLine {
@@ -367,8 +373,8 @@ model PurchaseRequest {
   updatedAt      DateTime          @updatedAt
   deletedAt      DateTime?
   purchaseOrders PurchaseOrder[]
-  quotations     Quotation[]
   createdBy      User?             @relation("PRCreatedBy", fields: [createdById], references: [id])
+  quotations     Quotation[]
 
   @@index([projectId])
   @@index([status])
@@ -575,11 +581,11 @@ model BOQItem {
   quantity      Decimal         @db.Decimal(18, 3)
   unitRate      Decimal         @db.Decimal(18, 2)
   totalAmount   Decimal         @db.Decimal(18, 2)
-  status        String          @default("ACTIVE")
-  version       Int             @default(1)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   deletedAt     DateTime?
+  status        String          @default("ACTIVE")
+  version       Int             @default(1)
   Project       Project         @relation(fields: [projectId], references: [id])
   WBSItem       WBSItem         @relation(fields: [wbsId], references: [id])
   ProgressEntry ProgressEntry[]
@@ -661,7 +667,7 @@ model Document {
 }
 
 model FiscalPeriod {
-  id             String    @id
+  id             String    @id @default(uuid())
   month          String    @unique
   isLocked       Boolean   @default(false)
   lockedAt       DateTime?
@@ -669,7 +675,12 @@ model FiscalPeriod {
   closingBalance Decimal?  @db.Decimal(18, 2)
   reconciledAt   DateTime?
   createdAt      DateTime  @default(now())
-  updatedAt      DateTime
+  updatedAt      DateTime  @updatedAt
+  companyId      String?
+  endDate        DateTime?
+  name           String?
+  startDate      DateTime?
+  Company        Company?  @relation(fields: [companyId], references: [id])
   User           User?     @relation(fields: [lockedById], references: [id])
 
   @@index([month])
@@ -677,8 +688,8 @@ model FiscalPeriod {
 
 model Job {
   id          String    @id @default(uuid())
-  type        String // e.g. BACKUP, EXPORT, REPORT
-  status      String    @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  type        String
+  status      String    @default("PENDING")
   payload     Json?
   result      Json?
   error       String?
@@ -871,15 +882,100 @@ model UserMaturity {
   User           User     @relation(fields: [userId], references: [id])
 }
 
+model VariationOrder {
+  id          String         @id @default(uuid())
+  projectId   String
+  boqItemId   String?
+  wbsId       String?
+  title       String
+  description String?
+  amount      Decimal        @db.Decimal(18, 2)
+  status      ApprovalStatus @default(DRAFT)
+  type        String         @default("ADDITION")
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  createdById String?
+  project     Project        @relation(fields: [projectId], references: [id])
+  wbs         WBSItem?       @relation(fields: [wbsId], references: [id])
+
+  @@index([projectId])
+  @@index([status])
+}
+
+model SiteLog {
+  id          String   @id @default(uuid())
+  projectId   String
+  date        DateTime @default(now())
+  weather     String?
+  temperature Float?
+  manpower    Int      @default(0)
+  equipment   String?
+  progress    String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdById String?
+  project     Project  @relation(fields: [projectId], references: [id])
+
+  @@index([projectId])
+  @@index([date])
+}
+
+model Quotation {
+  id                String           @id @default(uuid())
+  purchaseRequestId String?
+  vendor            String
+  totalAmount       Decimal          @db.Decimal(18, 2)
+  leadTimeDays      Int?
+  validUntil        DateTime?
+  status            String           @default("PENDING")
+  notes             String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  purchaseRequest   PurchaseRequest? @relation(fields: [purchaseRequestId], references: [id])
+
+  @@index([purchaseRequestId])
+}
+
+model Company {
+  id           String         @id @default(uuid())
+  name         String
+  code         String         @unique
+  taxCode      String?
+  address      String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  branches     Branch[]
+  costs        CostRecord[]
+  FiscalPeriod FiscalPeriod[]
+  invoices     Invoice[]
+  projects     Project[]
+  users        User[]
+}
+
+model Branch {
+  id        String       @id @default(uuid())
+  companyId String
+  name      String
+  code      String       @unique
+  address   String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  company   Company      @relation(fields: [companyId], references: [id])
+  costs     CostRecord[]
+  invoices  Invoice[]
+  projects  Project[]
+}
+
 enum UserRole {
   ADMIN
+  MANAGER
+  ACCOUNTANT
+  VIEWER
   SUPER_ADMIN
   GROUP_DIRECTOR
   CFO
   BRANCH_DIRECTOR
-  MANAGER
-  ACCOUNTANT
-  VIEWER
   AUDITOR
 }
 
@@ -890,6 +986,7 @@ enum ProjectStatus {
   CANCELLED
   ACTIVE
   CLOSED
+  ARCHIVED
 }
 
 enum TaskStatus {
@@ -954,11 +1051,11 @@ enum ContractStatus {
 }
 
 enum ApprovalStatus {
-  DRAFT
   PENDING
   APPROVED
   REJECTED
   CANCELLED
+  DRAFT
 }
 
 enum InventoryTransactionType {
@@ -976,86 +1073,20 @@ enum SubcontractStatus {
   TERMINATED
 }
 
-model VariationOrder {
-  id          String         @id @default(uuid())
-  projectId   String
-  boqItemId   String?
-  wbsId       String?
-  title       String
-  description String?
-  amount      Decimal        @db.Decimal(18, 2)
-  status      ApprovalStatus @default(DRAFT)
-  type        String         @default("ADDITION") // ADDITION, OMISSION, SUBSTITUTION
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  createdById String?
-  project     Project        @relation(fields: [projectId], references: [id])
-  wbs         WBSItem?       @relation(fields: [wbsId], references: [id])
+model Notification {
+  id         String   @id @default(uuid())
+  userId     String
+  title      String
+  message    String
+  type       String // OVERDUE, APPROVAL, RISK, GOVERNANCE
+  severity   String // INFO, WARNING, ERROR, CRITICAL
+  priority   Int      @default(0)
+  entityType String?
+  entityId   String?
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
 
-  @@index([projectId])
-  @@index([status])
-}
-
-model SiteLog {
-  id          String   @id @default(uuid())
-  projectId   String
-  date        DateTime @default(now())
-  weather     String? // Sunny, Rainy, Stormy
-  temperature Float?
-  manpower    Int      @default(0)
-  equipment   String?
-  progress    String?
-  notes       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  createdById String?
-  project     Project  @relation(fields: [projectId], references: [id])
-
-  @@index([projectId])
-  @@index([date])
-}
-
-model Quotation {
-  id                String           @id @default(uuid())
-  purchaseRequestId String?
-  vendor            String
-  totalAmount       Decimal          @db.Decimal(18, 2)
-  leadTimeDays      Int?
-  validUntil        DateTime?
-  status            String           @default("PENDING") // PENDING, SELECTED, REJECTED
-  notes             String?
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  purchaseRequest   PurchaseRequest? @relation(fields: [purchaseRequestId], references: [id])
-
-  @@index([purchaseRequestId])
-}
-
-model Company {
-  id        String       @id @default(uuid())
-  name      String
-  code      String       @unique
-  taxCode   String?
-  address   String?
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  projects  Project[]
-  users     User[]
-  costs     CostRecord[]
-  invoices  Invoice[]
-  branches  Branch[]
-}
-
-model Branch {
-  id        String       @id @default(uuid())
-  companyId String
-  name      String
-  code      String       @unique
-  address   String?
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  company   Company      @relation(fields: [companyId], references: [id])
-  projects  Project[]
-  costs     CostRecord[]
-  invoices  Invoice[]
+  @@index([userId, isRead])
+  @@index([createdAt])
 }

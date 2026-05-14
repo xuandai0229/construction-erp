@@ -139,30 +139,36 @@ export class WBSService {
     const existing = await prisma.wBSItem.findUnique({ where: { id } });
     if (!existing) throw new ApiError(404, "Không tìm thấy hạng mục");
 
-    const childCount = await prisma.wBSItem.count({ where: { parentId: id } });
+    const [childCount, costCount, budgetCount] = await Promise.all([
+      prisma.wBSItem.count({ where: { parentId: id } }),
+      prisma.costRecord.count({ where: { wbsId: id } }),
+      prisma.budgetRecord.count({ where: { wbsId: id } })
+    ]);
+
     if (childCount > 0) {
-      throw new ApiError(400, "Không thể xóa hạng mục có hạng mục con");
+      throw new ApiError(400, "Không thể xóa hạng mục có hạng mục con. Vui lòng xóa các hạng mục con trước.");
     }
 
-    const oldItem = await prisma.wBSItem.findUnique({ where: { id } });
+    if (costCount > 0 || budgetCount > 0) {
+      throw new ApiError(400, "LỖI NGHIỆP VỤ: Không thể xóa hạng mục WBS đã phát sinh dữ liệu tài chính (Chi phí hoặc Dự toán).", {
+        isFinancialLocked: true,
+        counts: { costs: costCount, budgets: budgetCount },
+        actionSuggested: "ARCHIVE"
+      });
+    }
 
-    const item = await prisma.wBSItem.update({ 
-      where: { id },
-      data: { 
-        deletedAt: new Date(),
-        deletedById: userId,
-      }
-    });
+    // A. HARD DELETE: WBS node is completely empty
+    await prisma.wBSItem.delete({ where: { id } });
 
     await AuditService.log({
       userId,
-      action: "DELETE",
+      action: "HARD_DELETE",
       entity: "WBSItem",
       entityId: id,
-      oldData: oldItem,
-      reason: "User requested soft delete",
+      oldData: existing,
+      reason: "Xóa vĩnh viễn (Hard Delete) hạng mục WBS trống.",
     });
 
-    return item;
+    return { ...existing, deletedAt: new Date() }; // Standardized return for React Query
   }
 }

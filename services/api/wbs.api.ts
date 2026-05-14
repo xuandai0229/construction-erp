@@ -40,6 +40,6 @@ export const wbsApi = {
   async delete(id: string, headers: any = {}): Promise<ServiceResponse<void>> {
     const res = await fetch(`/api/wbs/${id}`, { method: 'DELETE', headers });
     const json = await res.json();
-    return { success: json.success, error: json.error };
+    return { success: json.success, error: json.error, metadata: json.metadata };
   }
 };

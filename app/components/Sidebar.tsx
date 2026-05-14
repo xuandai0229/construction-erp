@@ -48,7 +48,11 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') document.documentElement.classList.add('light');
+    if (savedTheme === 'light') {
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.remove('light');
+    }
   }, []);
 
   return (
@@ -61,31 +65,31 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
         />
       )}
 
-      <aside className={`erp-sidebar fixed inset-y-0 left-0 z-[70] flex flex-col border-r shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] md:translate-x-0 ${
+      <aside className={`erp-sidebar fixed inset-y-0 left-0 z-[70] flex flex-col border-r border-[var(--sidebar-border)] shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] md:translate-x-0 ${
         sidebarCollapsed ? 'w-[var(--erp-sidebar-collapsed)]' : 'w-[var(--erp-sidebar-width)]'
       } ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
 
         {/* Logo */}
-        <div className="flex h-[var(--erp-header-height)] items-center gap-3.5 border-b border-slate-800/30 px-5 overflow-hidden">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-blue-500/25 bg-blue-600/10 text-blue-400 shadow-[0_0_16px_-4px_rgba(59,130,246,0.5)]">
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <div className="flex h-[var(--erp-header-height)] items-center gap-3.5 px-5 overflow-hidden">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-blue-500/10 bg-blue-600/5 text-blue-500">
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 21V8l5-3 5 3v13M14 21V11l6 3v7M7 11h2M7 15h2" />
             </svg>
           </div>
           {!sidebarCollapsed && (
             <div className="animate-fade-in whitespace-nowrap min-w-0">
-              <div className="text-[13px] font-black text-white tracking-tight leading-tight">CONSTRUCTION ERP</div>
-              <div className="text-[9px] font-black uppercase tracking-[0.22em] text-blue-500/80 mt-0.5">PHIÊN BẢN PRO v2</div>
+              <div className="text-[12px] font-semibold text-[var(--foreground)] tracking-tight leading-tight uppercase">Construction ERP</div>
+              <div className="text-[8px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)] mt-0.5 opacity-60">Enterprise Suite</div>
             </div>
           )}
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto px-3 py-5 scrollbar-hide">
+        <nav className="flex-1 overflow-y-auto px-2.5 py-4 scrollbar-hide">
           <div className="space-y-0.5">
             {!sidebarCollapsed && (
-              <div className="px-3 mb-3 text-[9.5px] font-black text-slate-600 uppercase tracking-widest">
-                Điều hướng
+              <div className="px-3 mb-2 text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] opacity-50">
+                Menu vận hành
               </div>
             )}
 
@@ -96,39 +100,31 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
                   key={item.id}
                   onClick={() => { router.push(item.href); setMobileMenuOpen(false); }}
                   title={sidebarCollapsed ? item.label : ''}
-                  className={`relative flex h-[42px] w-full items-center gap-3.5 rounded-xl px-3 text-left transition-all duration-200 group overflow-hidden ${
+                  className={`relative flex h-10 w-full items-center gap-3 rounded-lg px-3 text-left transition-all duration-200 group overflow-hidden ${
                     active
-                      ? 'bg-blue-600/12 text-white'
-                      : 'text-slate-400 hover:bg-slate-800/40 hover:text-slate-100'
+                      ? 'bg-blue-600/15 text-blue-400'
+                      : 'text-[var(--text-secondary)] hover:bg-[var(--secondary)] hover:text-[var(--foreground)]'
                   }`}
                 >
                   {/* Active accent line */}
                   {active && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.7)]" />
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[2px] rounded-full bg-blue-500" />
                   )}
 
                   {/* Icon */}
                   <div className={`shrink-0 transition-all duration-200 group-hover:scale-110 ${
-                    active ? 'text-blue-400' : 'text-slate-500 group-hover:text-blue-400'
+                    active ? 'text-blue-400' : 'text-[var(--text-muted)] group-hover:text-blue-400'
                   }`}>
                     <NavIcon path={item.icon} />
                   </div>
 
                   {/* Label */}
                   {!sidebarCollapsed && (
-                    <span className={`truncate text-[12.5px] font-bold tracking-tight transition-colors duration-200 ${
-                      active ? 'text-white' : 'text-slate-400 group-hover:text-white'
+                    <span className={`truncate text-[12.5px] font-semibold tracking-tight transition-colors duration-200 ${
+                      active ? 'text-blue-500' : 'text-[var(--text-secondary)] group-hover:text-[var(--foreground)]'
                     }`}>
                       {item.label}
                     </span>
-                  )}
-
-                  {/* Hover glow overlay */}
-                  <div className="absolute inset-0 rounded-xl bg-blue-500/0 group-hover:bg-blue-500/[0.04] transition-colors pointer-events-none" />
-
-                  {/* Active indicator bg */}
-                  {active && (
-                    <div className="absolute inset-0 rounded-xl bg-blue-500/[0.07] pointer-events-none" />
                   )}
                 </button>
               );
@@ -137,29 +133,29 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-slate-800/30 p-3 space-y-0.5 bg-slate-950/20">
+        <div className="p-2 space-y-0.5">
           <button
             onClick={toggleTheme}
-            className="flex h-[42px] w-full items-center gap-3.5 rounded-xl px-3 text-[12.5px] font-bold text-slate-500 hover:bg-slate-800/50 hover:text-slate-200 transition-all group"
+            className="flex h-9 w-full items-center gap-3 rounded-lg px-3 text-[12px] font-semibold text-[var(--text-secondary)] hover:bg-[var(--secondary)] hover:text-[var(--foreground)] transition-all group"
           >
-            <div className="shrink-0 group-hover:rotate-45 transition-transform duration-500">
+            <div className="shrink-0 opacity-60 group-hover:opacity-100 group-hover:rotate-45 transition-all duration-500">
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-11.314l.707.707m11.314 11.314l.707.707M12 5a7 7 0 1 0 0 14 7 7 0 0 0 0-14z" />
               </svg>
             </div>
-            {!sidebarCollapsed && <span>Giao diện</span>}
+            {!sidebarCollapsed && <span className="opacity-70 group-hover:opacity-100">Chế độ hiển thị</span>}
           </button>
 
           <button
             onClick={toggleSidebar}
-            className="hidden md:flex h-[42px] w-full items-center gap-3.5 rounded-xl px-3 text-[12.5px] font-bold text-slate-500 hover:bg-slate-800/50 hover:text-slate-200 transition-all group"
+            className="hidden md:flex h-9 w-full items-center gap-3 rounded-lg px-3 text-[12px] font-semibold text-[var(--text-secondary)] hover:bg-[var(--secondary)] hover:text-[var(--foreground)] transition-all group"
           >
-            <div className={`shrink-0 transition-transform duration-500 ${sidebarCollapsed ? 'rotate-180' : ''} group-hover:scale-125`}>
+            <div className={`shrink-0 opacity-60 group-hover:opacity-100 transition-all duration-500 ${sidebarCollapsed ? 'rotate-180' : ''}`}>
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="m15 18-6-6 6-6" />
               </svg>
             </div>
-            {!sidebarCollapsed && <span>Thu gọn</span>}
+            {!sidebarCollapsed && <span className="opacity-70 group-hover:opacity-100">Thu gọn</span>}
           </button>
         </div>
       </aside>

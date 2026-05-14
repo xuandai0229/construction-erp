@@ -6,7 +6,7 @@ import {
   ProjectStatus, TaskStatus, CostType as PrismaCostType, 
   PaymentStatus as PrismaPaymentStatus, InvoiceStatus as PrismaInvoiceStatus,
   UserRole as PrismaUserRole 
-} from "@prisma/client";
+} from "../../generated/prisma-client";
 
 export { ProjectStatus, TaskStatus };
 

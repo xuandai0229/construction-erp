@@ -13,6 +13,7 @@ import { useWBSQuery } from '@/services/queries/useWBS';
 import { TableVirtuoso } from 'react-virtuoso';
 import { useProjectStatsQuery } from '@/services/queries/useProjects';
 import { queryKeys } from '@/lib/query-keys';
+import { exportToCsv } from '@/app/services/export.service';
 
 const costTypes = Object.keys(costType_LABELS) as CostType[];
 
@@ -82,22 +83,13 @@ export default function CostsPage() {
                   const headers = ['Ngày', 'Nội dung', 'Hạng mục', 'Loại', 'Số tiền', 'Trạng thái'];
                   const rows = filteredCosts.map(c => [
                     formatDate(c.date),
-                    `"${c.note?.replace(/"/g, '""') || ''}"`,
-                    `"${(wbsList.find(w => w.id === c.wbsId)?.name || '').replace(/"/g, '""')}"`,
-                    c.costType,
+                    c.note || '',
+                    wbsList.find(w => w.id === c.wbsId)?.name || '',
+                    costType_LABELS[c.costType] || c.costType,
                     c.amount,
                     c.status === 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán'
                   ]);
-                  const csvContent = "\uFEFF" + headers.join(',') + '\n' + rows.map(e => e.join(',')).join('\n');
-                  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                  const url = URL.createObjectURL(blob);
-                  const link = document.createElement('a');
-                  link.href = url;
-                  link.setAttribute('download', `ERP_Costs_${new Date().toISOString().split('T')[0]}.csv`);
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-                  URL.revokeObjectURL(url);
+                  exportToCsv('ERP_Costs', headers, rows);
                 }}
                 className="erp-btn bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--hover-bg)]"
               >
@@ -176,7 +168,7 @@ export default function CostsPage() {
                       <th className="bg-[var(--table-head-bg)] w-[100px]">Ngày</th>
                       <th className="bg-[var(--table-head-bg)] min-w-[200px]">Nhà cung cấp & Nội dung</th>
                       <th className="bg-[var(--table-head-bg)] min-w-[150px]">Hạng mục (WBS)</th>
-                      <th className="bg-[var(--table-head-bg)] w-[100px]">Loại</th>
+                      <th className="bg-[var(--table-head-bg)] w-[110px]">Loại</th>
                       <th className="bg-[var(--table-head-bg)] w-[100px] text-right">Số lượng</th>
                       <th className="bg-[var(--table-head-bg)] w-[150px] text-right">Thành tiền (VNĐ)</th>
                       <th className="bg-[var(--table-head-bg)] w-[120px] text-center">Trạng thái</th>
@@ -194,7 +186,7 @@ export default function CostsPage() {
                         <div className="text-[12px] font-bold text-[var(--text-secondary)]">{wbsList.find(w => w.id === c.wbsId)?.name || 'N/A'}</div>
                       </td>
                       <td>
-                        <span className="rounded px-2 py-0.5 text-[10px] font-black uppercase tracking-tighter bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)]">
+                        <span className="inline-flex items-center whitespace-nowrap rounded px-2 py-0.5 text-[10px] font-black uppercase tracking-tighter bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)]">
                           {costType_LABELS[c.costType] || c.costType}
                         </span>
                       </td>

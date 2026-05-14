@@ -10,9 +10,10 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   wbsItem?: WBSItem | null;
+  initialParentId?: string | null;
 }
 
-export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
+export default function AddWBSModal({ isOpen, onClose, wbsItem, initialParentId }: Props) {
   const { currentProjectId, setCurrentProject } = useERPStore();
   
   const { data: paginatedData } = useProjectsQuery();
@@ -26,12 +27,14 @@ export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
   const [form, setForm] = useState({
     projectId: currentProjectId || projects[0]?.id || '',
     name: '',
-    parentId: '',
+    parentId: initialParentId || '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!isOpen) return;
+
     if (wbsItem) {
       setForm({
         projectId: wbsItem.projectId,
@@ -39,13 +42,22 @@ export default function AddWBSModal({ isOpen, onClose, wbsItem }: Props) {
         parentId: wbsItem.parentId || '',
       });
     } else {
-      setForm({
-        projectId: currentProjectId || projects[0]?.id || '',
-        name: '',
-        parentId: '',
+      setForm(prev => {
+        const targetProjectId = currentProjectId || projects[0]?.id || '';
+        const targetParentId = initialParentId || '';
+        // Only update if we really need to, preventing unnecessary re-renders
+        if (prev.projectId === targetProjectId && prev.name === '' && prev.parentId === targetParentId) {
+          return prev;
+        }
+        return {
+          projectId: targetProjectId,
+          name: '',
+          parentId: targetParentId,
+        };
       });
     }
-  }, [wbsItem, isOpen, currentProjectId, projects]);
+    // Safe dependencies: explicitly exclude `projects` to avoid reference loops.
+  }, [isOpen, wbsItem, currentProjectId, initialParentId]);
 
   if (!isOpen) return null;
 

@@ -284,7 +284,8 @@ export const ProjectStatus: {
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED',
   ACTIVE: 'ACTIVE',
-  CLOSED: 'CLOSED'
+  CLOSED: 'CLOSED',
+  ARCHIVED: 'ARCHIVED'
 };
 
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]

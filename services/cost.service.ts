@@ -183,36 +183,30 @@ export class CostService {
 
     await assertPeriodNotLocked(existing.date);
 
-    return prisma.$transaction(async (tx) => {
-      // 1. Soft Delete
-      const item = await tx.costRecord.update({ 
-        where: { id, version: existing.version },
-        data: { 
-          deletedAt: new Date(),
-          deletedById: userId,
-          workflowStatus: "REVERSED",
-          version: { increment: 1 }
-        }
+    if (existing.workflowStatus === "POSTED" || existing.workflowStatus === "APPROVED" || existing.approvalStatus === "APPROVED") {
+      throw new ApiError(400, "LỖI NGHIỆP VỤ: Không thể xóa chi phí đã được duyệt hoặc ghi sổ kế toán.", {
+        isFinancialLocked: true,
+        actionSuggested: "REVERSE"
       });
+    }
 
-      // 2. Reverse Journal if it was POSTED
-      if (existing.workflowStatus === "POSTED" || existing.approvalStatus === "APPROVED") {
-        await PostingEngine.reverseJournal(tx, id, "COST", userId || "SYSTEM");
-      }
+    return prisma.$transaction(async (tx) => {
+      // A. HARD DELETE for DRAFT/REJECTED items
+      const item = await tx.costRecord.delete({ where: { id } });
 
       await AuditService.log({
         userId,
-        action: "DELETE",
+        action: "HARD_DELETE",
         entity: "CostRecord",
         entityId: id,
         oldData: existing,
-        reason: "User requested soft delete with reverse journal",
+        reason: "Xóa vĩnh viễn chi phí nháp (Hard Delete).",
         correlationId,
         ipAddress: options.ipAddress,
         userAgent: options.userAgent
       });
 
-      return item;
+      return { ...existing, deletedAt: new Date() };
     });
   }
 
@@ -252,6 +246,8 @@ export class CostService {
           costType: item.costType,
           description: item.note || `Chi phí ${item.costType} cho ${existing.wbs?.name || id}`
         });
+      } else if (nextStatus === "REVERSED" && (existing.workflowStatus === "POSTED" || existing.approvalStatus === "APPROVED")) {
+        await PostingEngine.reverseJournal(tx, id, "COST", userId || "SYSTEM");
       }
 
       // 4. Audit

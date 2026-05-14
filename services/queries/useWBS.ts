@@ -52,7 +52,11 @@ export function useDeleteWBSMutation(projectId: string) {
   return useMutation({
     mutationFn: async (id: string) => {
       const res = await wbsApi.delete(id);
-      if (!res.success) throw new Error(res.error || 'Failed to delete WBS');
+      if (!res.success) {
+        const err: any = new Error(res.error || 'Failed to delete WBS');
+        err.metadata = res.metadata;
+        throw err;
+      }
       return res.data;
     },
     onSuccess: () => {

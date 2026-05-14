@@ -33,48 +33,49 @@
   --radius: 0.5rem;
 }
 
-/* ─── Dark Mode (Default Executive Look) ─────────────────── */
+/* ─── Dark Mode (Premium Cinematic Look) ──────────────────── */
 :root:not(.light) {
   --background:       #020617;
-  --foreground:       #f1f5f9;
-  --card:             #0d1526;
-  --card-foreground:  #f1f5f9;
+  --foreground:       #f8fafc;
+  --card:             rgba(15,23,42,0.92);
+  --card-foreground:  #f8fafc;
   --popover:          #0f172a;
-  --popover-foreground:#f1f5f9;
-  --primary:          #3b82f6;
+  --popover-foreground:#f8fafc;
+  --primary:          #60a5fa;
   --primary-foreground:#ffffff;
-  --secondary:        #1e293b;
-  --secondary-foreground:#f1f5f9;
-  --muted:            #1e293b;
+  --secondary:        rgba(30,41,59,0.5);
+  --secondary-foreground:#f8fafc;
+  --muted:            rgba(30,41,59,0.6);
   --muted-foreground: #94a3b8;
-  --accent:           #1e293b;
-  --accent-foreground:#f1f5f9;
-  --destructive:      #ef4444;
+  --accent:           rgba(59,130,246,0.12);
+  --accent-foreground:#f8fafc;
+  --destructive:      #f87171;
   --destructive-foreground:#f8fafc;
-  --border:           rgba(30,41,59,0.8);
-  --input:            #1e293b;
-  --ring:             #3b82f6;
-  --header-bg:        rgba(2, 6, 23, 0.88);
+  --border:           rgba(51,65,85,0.25);
+  --divider:          rgba(51,65,85,0.15);
+  --input:            rgba(15,23,42,0.6);
+  --ring:             rgba(59,130,246,0.5);
+  --header-bg:        rgba(2, 6, 23, 0.9);
   --sidebar-bg:       #020617;
-  --sidebar-border:   rgba(30,41,59,0.5);
-  --table-head-bg:    rgba(9,15,30,0.97);
-  --table-row-hover:  rgba(59,130,246,0.05);
-  --erp-card-shadow:  0 4px 24px -4px rgba(0,0,0,0.6);
-  --erp-hover-shadow: 0 8px 32px -4px rgba(59,130,246,0.15);
-  --text-primary:     #f1f5f9;
+  --sidebar-border:   rgba(51,65,85,0.2);
+  --table-head-bg:    rgba(15,23,42,0.6);
+  --table-row-hover:  rgba(255,255,255,0.04);
+  --erp-card-shadow:  0 4px 24px -4px rgba(0,0,0,0.5);
+  --erp-hover-shadow: 0 8px 32px -4px rgba(0,0,0,0.6);
+  --text-primary:     #f8fafc;
   --text-secondary:   #94a3b8;
-  --text-muted:       #475569;
-  --text-accent:      #3b82f6;
-  --badge-bg:         rgba(30,41,59,0.8);
-  --badge-border:     rgba(51,65,85,0.6);
-  --input-bg:         rgba(2,6,23,0.5);
-  --input-border:     #1e293b;
-  --divider:          rgba(30,41,59,0.6);
+  --text-muted:       #64748b;
+  --text-tertiary:    #475569;
+  --text-accent:      #60a5fa;
+  --badge-bg:         rgba(30,41,59,0.7);
+  --badge-border:     rgba(51,65,85,0.3);
+  --input-bg:         rgba(15,23,42,0.5);
+  --input-border:     rgba(51,65,85,0.3);
 }
 
-/* ─── Light Mode ─────────────────────────────────────────── */
+/* ─── Light Mode (Elegant Enterprise Look) ───────────────── */
 .light {
-  --background:       #f8fafc;
+  --background:       #f8f9fa;
   --foreground:       #0f172a;
   --card:             #ffffff;
   --card-foreground:  #0f172a;
@@ -84,32 +85,32 @@
   --primary-foreground:#ffffff;
   --secondary:        #f1f5f9;
   --secondary-foreground:#0f172a;
-  --muted:            #f1f5f9;
-  --muted-foreground: #475569; /* Strengthened from 64748b */
+  --muted:            #f8fafc;
+  --muted-foreground: #64748b;
   --accent:           #eff6ff;
   --accent-foreground:#1e40af;
-  --destructive:      #ef4444;
-  --destructive-foreground:#f8fafc;
-  --border:           #cbd5e1; /* Strengthened from e2e8f0 */
-  --input:            #cbd5e1;
-  --ring:             #3b82f6;
-  --header-bg:        rgba(255,255,255,0.9);
+  --destructive:      #dc2626;
+  --destructive-foreground:#ffffff;
+  --border:           rgba(226,232,240,0.8);
+  --divider:          rgba(226,232,240,0.5);
+  --input:            #ffffff;
+  --ring:             rgba(37,99,235,0.2);
+  --header-bg:        rgba(255, 255, 255, 0.9);
   --sidebar-bg:       #0f172a;
-  --sidebar-border:   rgba(30,41,59,0.5);
-  --table-head-bg:    #f1f5f9; /* Strengthened from f8fafc */
-  --table-row-hover:  rgba(59,130,246,0.04);
-  --erp-card-shadow:  0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1);
-  --erp-hover-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
-  --text-primary:     #0f172a;
-  --text-secondary:   #334155; /* Strengthened from 475569 */
-  --text-tertiary:    #475569; /* New: for sub-labels */
-  --text-muted:       #64748b; /* Strengthened from 94a3b8 */
+  --sidebar-border:   rgba(255,255,255,0.05);
+  --table-head-bg:    #f9fafb;
+  --table-row-hover:  rgba(241,245,249,0.5);
+  --erp-card-shadow:  0 2px 4px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.03);
+  --erp-hover-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05);
+  --text-primary:     #1e293b;
+  --text-secondary:   #475569;
+  --text-muted:       #94a3b8;
+  --text-tertiary:    #64748b;
   --text-accent:      #2563eb;
   --badge-bg:         #f1f5f9;
-  --badge-border:     #cbd5e1;
+  --badge-border:     #e2e8f0;
   --input-bg:         #ffffff;
-  --input-border:     #94a3b8; /* Strengthened from cbd5e1 */
-  --divider:          #e2e8f0;
+  --input-border:     #e2e8f0;
 }
 
 /* ─── Base ────────────────────────────────────────────────── */
@@ -121,6 +122,23 @@ body {
   line-height: 1.5;
 }
 
+/* ─── Datepicker Styling ──────────────────────────────────── */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: var(--calendar-filter);
+  transition: opacity 0.2s;
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 0.8;
+}
+
+:root:not(.light) {
+  --calendar-filter: invert(1);
+}
+.light {
+  --calendar-filter: invert(0) opacity(0.6);
+}
+
 /* ─── Scrollbar ───────────────────────────────────────────── */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
@@ -129,7 +147,14 @@ body {
 ::-webkit-scrollbar-thumb { border-radius: 9999px; background-color: rgba(51,65,85,0.6); }
 ::-webkit-scrollbar-thumb:hover { background-color: rgba(71,85,105,0.8); }
 
-/* ─── Sidebar ─────────────────────────────────────────────── */
+/* ─── Global Utility Classes ─────────────────────────────── */
+.erp-badge {
+  @apply inline-flex items-center justify-center whitespace-nowrap min-w-[max-content] transition-all;
+}
+
+.erp-card {
+  @apply rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-[var(--erp-card-shadow)] transition-all;
+}
 .erp-sidebar {
   background-color: var(--sidebar-bg);
   border-right-color: var(--sidebar-border);
@@ -137,19 +162,24 @@ body {
 
 /* ─── Card Elevation ──────────────────────────────────────── */
 .card-elevation {
-  border-radius: 0.75rem;
+  border-radius: 1rem;
   border: 1px solid var(--border);
   background-color: var(--card);
   box-shadow: var(--erp-card-shadow);
-  backdrop-filter: blur(8px);
-  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1),
-              box-shadow 0.25s cubic-bezier(0.4,0,0.2,1),
-              border-color 0.25s;
+  transition: transform 0.2s cubic-bezier(0.4,0,0.2,1),
+              box-shadow 0.2s, border-color 0.2s;
 }
 .card-elevation:hover {
-  border-color: var(--primary);
+  border-color: rgba(59,130,246,0.25);
   box-shadow: var(--erp-hover-shadow);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
+}
+
+/* ─── Disabled States ─────────────────────────────────────── */
+.erp-btn:disabled, .erp-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(1);
 }
 
 /* ─── KPI Card ────────────────────────────────────────────── */
@@ -189,12 +219,12 @@ body {
 }
 .erp-table th {
   position: sticky; top: 0; z-index: 10;
-  height: 44px;
+  height: 40px;
   padding: 0 1rem;
-  font-size: 0.6875rem;
-  font-weight: 700;
+  font-size: 0.625rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   color: var(--text-secondary);
   border-bottom: 1px solid var(--border);
   background-color: var(--table-head-bg);
@@ -202,8 +232,8 @@ body {
   backdrop-filter: blur(12px);
 }
 .erp-table td {
-  height: 48px;
-  padding: 0 1rem;
+  height: 44px;
+  padding: 0.5rem 1rem;
   border-bottom: 1px solid var(--border);
   color: var(--text-primary);
   transition: background-color 0.15s;
@@ -211,13 +241,21 @@ body {
 .erp-table tr:last-child td { border-bottom: none; }
 .erp-table tr:hover td { background-color: var(--table-row-hover); }
 
+/* ─── Unified Row Interaction ────────────────────────────── */
+.erp-table-row {
+  @apply transition-colors duration-150;
+}
+.erp-table-row:hover {
+  background-color: var(--table-row-hover);
+}
+.erp-table-row.active {
+  background-color: var(--accent);
+}
+
 /* ─── Button ──────────────────────────────────────────────── */
 .erp-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  height: 2.25rem;
+  @apply inline-flex items-center justify-center gap-2 transition-all duration-200;
+  height: 2.25rem; /* 36px */
   padding: 0 1rem;
   font-size: 0.8125rem;
   font-weight: 700;
@@ -225,7 +263,6 @@ body {
   cursor: pointer;
   white-space: nowrap;
   border: 1px solid transparent;
-  transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
 }
 .erp-btn:hover { filter: brightness(1.08); }
 .erp-btn:active { transform: scale(0.96); }
@@ -257,13 +294,13 @@ body {
   margin-bottom: 0.25rem;
 }
 .erp-input {
-  height: 2.75rem;
+  height: 2.25rem; /* 36px synchronized with .erp-btn */
   width: 100%;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   border: 1px solid var(--input-border);
   background-color: var(--input-bg);
-  padding: 0 1rem;
-  font-size: 0.875rem;
+  padding: 0 0.875rem;
+  font-size: 0.8125rem;
   color: var(--foreground);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -271,7 +308,7 @@ body {
 .erp-input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
 }
 
 /* ─── Page Layout Helper ──────────────────────────────────── */
@@ -323,9 +360,9 @@ body {
 }
 
 /* ─── Badge ───────────────────────────────────────────────── */
-.badge-paid    { background-color: rgba(16,185,129,0.12); color: #10b981; box-shadow: 0 0 0 1px rgba(16,185,129,0.3); border-radius: 9999px; padding: 2px 10px; font-size: 0.625rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
-.badge-unpaid  { background-color: rgba(245,158,11,0.12); color: #f59e0b; box-shadow: 0 0 0 1px rgba(245,158,11,0.3); border-radius: 9999px; padding: 2px 10px; font-size: 0.625rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
-.badge-overdue { background-color: rgba(239, 68, 68, 0.12); color: #ef4444; box-shadow: 0 0 0 1px rgba(239,68,68,0.3); border-radius: 9999px; padding: 2px 10px; font-size: 0.625rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
+.badge-paid    { @apply whitespace-nowrap; background-color: rgba(16,185,129,0.12); color: #10b981; box-shadow: 0 0 0 1px rgba(16,185,129,0.3); border-radius: 9999px; padding: 2px 10px; font-size: 0.625rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
+.badge-unpaid  { @apply whitespace-nowrap; background-color: rgba(245,158,11,0.12); color: #f59e0b; box-shadow: 0 0 0 1px rgba(245,158,11,0.3); border-radius: 9999px; padding: 2px 10px; font-size: 0.625rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
+.badge-overdue { @apply whitespace-nowrap; background-color: rgba(239, 68, 68, 0.12); color: #ef4444; box-shadow: 0 0 0 1px rgba(239,68,68,0.3); border-radius: 9999px; padding: 2px 10px; font-size: 0.625rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
 
 /* ─── Input/Select/Button focus ───────────────────────────── */
 input:focus, select:focus, textarea:focus, button:focus { outline: none; }

@@ -8,12 +8,19 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     
-    const page = searchParams.has("page") ? Number(searchParams.get("page") ?? 1) : undefined;
-    const limit = searchParams.has("limit") ? Number(searchParams.get("limit") ?? 10) : undefined;
-    const search = searchParams.get("search") || undefined;
-    const status = (searchParams.get("status") as ProjectStatus) || undefined;
-    const orderBy = (searchParams.get("orderBy") as any) || undefined;
-    const orderDir = (searchParams.get("orderDir") as any) || undefined;
+    const pageParam = searchParams.get("page");
+    const limitParam = searchParams.get("limit");
+    const statusParam = searchParams.get("status");
+    const searchParam = searchParams.get("search");
+    const orderByParam = searchParams.get("orderBy");
+    const orderDirParam = searchParams.get("orderDir");
+
+    const page = (pageParam && pageParam !== "undefined") ? Number(pageParam) : 1;
+    const limit = (limitParam && limitParam !== "undefined") ? Number(limitParam) : 10;
+    const search = (searchParam && searchParam !== "undefined" && searchParam !== "") ? searchParam : undefined;
+    const status = (statusParam && statusParam !== "undefined" && statusParam !== "") ? (statusParam as ProjectStatus) : undefined;
+    const orderBy = (orderByParam && orderByParam !== "undefined") ? (orderByParam as any) : "createdAt";
+    const orderDir = (orderDirParam && orderDirParam !== "undefined") ? (orderDirParam as any) : "desc";
 
     const { data, metadata } = await ProjectService.findMany({ 
       page, limit, search, status, orderBy, orderDir 

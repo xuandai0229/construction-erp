@@ -6,10 +6,12 @@ import { headers } from "next/headers";
 
 export class ApiError extends Error {
   statusCode: number;
+  metadata?: any;
 
-  constructor(statusCode: number, message: string) {
+  constructor(statusCode: number, message: string, metadata?: any) {
     super(message);
     this.statusCode = statusCode;
+    this.metadata = metadata;
     this.name = "ApiError";
   }
 }
@@ -27,7 +29,7 @@ export async function handleApiError(error: unknown) {
   const userId = head.get("x-user-id") || undefined;
 
   if (error instanceof ZodError) {
-    const errorMessages = error.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join(", ");
+    const errorMessages = error.issues?.map((e) => `${e.path.join('.')}: ${e.message}`).join(", ") || "Lỗi validation không xác định";
     LoggerService.warn("Validation Error", { requestId, userId, error: errorMessages });
     return NextResponse.json(
       { success: false, error: `Lỗi dữ liệu: ${errorMessages}` },
@@ -36,9 +38,9 @@ export async function handleApiError(error: unknown) {
   }
 
   if (error instanceof ApiError) {
-    LoggerService.warn(error.message, { requestId, userId, statusCode: error.statusCode });
+    LoggerService.warn(error.message, { requestId, userId, statusCode: error.statusCode, metadata: error.metadata });
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: error.message, metadata: error.metadata },
       { status: error.statusCode }
     );
   }

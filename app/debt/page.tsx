@@ -10,6 +10,7 @@ import PaymentHistoryModal from '@/app/components/modals/PaymentHistoryModal';
 import { TableVirtuoso } from 'react-virtuoso';
 import { useInvoicesQuery, useDeleteInvoiceMutation } from '@/services/queries/useDebts';
 import { useCostsQuery, useUpdateCostMutation } from '@/services/queries/useCosts';
+import { exportToCsv } from '@/app/services/export.service';
 
 // Stable references for TableVirtuoso — prevents re-render loops
 const InvoiceTableComponents = {
@@ -60,6 +61,23 @@ export default function DebtPage() {
               <h2 className="text-[13px] font-black text-[var(--text-primary)] uppercase tracking-widest">
                 Phải thu khách hàng
               </h2>
+              <button 
+                onClick={() => {
+                  if (invoices.length === 0) return;
+                  const data = invoices.map(inv => ({
+                    'Mã HĐ': inv.id.substring(0,8).toUpperCase(),
+                    'Ngày': formatDate(inv.issuedDate),
+                    'Tổng tiền': inv.amount,
+                    'Đã thu': inv.paidAmount,
+                    'Còn nợ': inv.remainingAmount,
+                    'Trạng thái': inv.remainingAmount === 0 ? 'Hoàn tất' : 'Còn nợ'
+                  }));
+                  exportToCsv('Cong_No_Phai_Thu.csv', data);
+                }}
+                className="erp-btn h-7 px-3 bg-[var(--secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] border border-[var(--border)] text-[10px]"
+              >
+                Xuất Excel
+              </button>
               <span className="ml-auto text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
                 {invoices.length} hóa đơn
               </span>
@@ -164,6 +182,22 @@ export default function DebtPage() {
               <h2 className="text-[13px] font-black text-[var(--text-primary)] uppercase tracking-widest">
                 Phải trả nhà cung cấp
               </h2>
+              <button 
+                onClick={() => {
+                  if (unpaidCosts.length === 0) return;
+                  const data = unpaidCosts.map(cost => ({
+                    'Ngày': formatDate(cost.date),
+                    'Nhà cung cấp': cost.supplier || 'Không rõ',
+                    'Loại': cost.costType,
+                    'Số tiền': cost.amount,
+                    'Trạng thái': 'Chưa trả'
+                  }));
+                  exportToCsv('Cong_No_Phai_Tra.csv', data);
+                }}
+                className="erp-btn h-7 px-3 bg-[var(--secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] border border-[var(--border)] text-[10px]"
+              >
+                Xuất Excel
+              </button>
               <span className="ml-auto text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
                 {unpaidCosts.length} khoản
               </span>
@@ -188,7 +222,7 @@ export default function DebtPage() {
                       <tr>
                         <th className="w-[100px] bg-[var(--table-head-bg)]">Ngày</th>
                         <th className="min-w-[160px] bg-[var(--table-head-bg)]">Nhà cung cấp</th>
-                        <th className="w-[80px] bg-[var(--table-head-bg)]">Loại</th>
+                        <th className="w-[100px] bg-[var(--table-head-bg)]">Loại</th>
                         <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Số tiền</th>
                         <th className="w-[100px] text-center bg-[var(--table-head-bg)]">Trạng thái</th>
                         <th className="w-[140px] text-center bg-[var(--table-head-bg)]">Thao tác</th>
@@ -203,7 +237,7 @@ export default function DebtPage() {
                           {cost.supplier || 'Không rõ'}
                         </td>
                         <td>
-                          <span className="inline-flex items-center rounded-md px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)] group-hover:text-[var(--text-accent)] transition-colors">
+                          <span className="inline-flex items-center whitespace-nowrap rounded-md px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)] group-hover:text-[var(--text-accent)] transition-colors">
                             {cost.costType}
                           </span>
                         </td>

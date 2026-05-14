@@ -2,8 +2,7 @@
 import React from 'react';
 import { Project } from '@/app/types';
 
-export default function ProjectCardStats({ projects }: { projects: Project[] }) {
-  const total      = projects.length;
+export default function ProjectCardStats({ projects, totalCount }: { projects: Project[], totalCount: number }) {
   const inProgress = projects.filter(p => p.status === 'IN_PROGRESS').length;
   const completed  = projects.filter(p => p.status === 'COMPLETED').length;
   const onHold     = projects.filter(p => p.status === 'CANCELLED').length;
@@ -11,7 +10,7 @@ export default function ProjectCardStats({ projects }: { projects: Project[] }) 
 
   const kpis = [
     {
-      title: 'Tổng số dự án', value: total.toString(), label: 'Dự án',
+      title: 'Tổng số dự án', value: totalCount.toString(), label: 'Dự án',
       accent: 'text-blue-500',
       icon: <><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></>,
     },

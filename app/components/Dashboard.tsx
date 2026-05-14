@@ -18,6 +18,7 @@ import { useExecutiveSummaryQuery } from '@/services/queries/useWorkspace';
 import ExecutiveCockpit from './workspace/ExecutiveCockpit';
 import ActionCenter from './workspace/ActionCenter';
 import GuidanceBanner from './workspace/GuidanceBanner';
+import ActivityStream from './workspace/ActivityStream';
 
 const costType_LABELS: Record<string, string> = {
   material: 'Vật tư',
@@ -224,11 +225,11 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* ─── LEVEL 2: Operational Health Row (Compact) ─── */}
+          {/* ─── LEVEL 2: Operational Status Row (Compact) ─── */}
           {executiveData && (
             <div className="flex flex-wrap items-center gap-4 p-3 bg-blue-600/5 rounded-xl border border-blue-500/10 backdrop-blur-sm">
               <div className="flex items-center gap-2 px-3 border-r border-gray-300/30">
-                <div className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Sức khỏe HT</div>
+                <div className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Tình trạng vận hành</div>
                 <div className="text-lg font-black text-blue-600">{executiveData.governance.healthScore}%</div>
               </div>
               <div className="flex items-center gap-2 px-3 border-r border-gray-300/30">
@@ -238,53 +239,57 @@ export default function Dashboard() {
               <div className="flex-1 min-w-[300px]">
                 {executiveData?.executiveSummary.topRisks?.[0]?.riskScore > 60 ? (
                   <GuidanceBanner 
-                    title="Cảnh báo vận hành"
+                    title="Cảnh báo vận hành hệ thống"
                     message={executiveData.executiveSummary.topRisks[0].ux.guidance}
                     severity="error"
-                    actions={[{ label: 'Xử lý ngay', onClick: () => {}, primary: true }]}
+                    actions={[{ label: 'Xử lý nghiệp vụ', onClick: () => {}, primary: true }]}
                   />
                 ) : (
                   <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-600 px-3 py-1 bg-emerald-50 rounded-lg border border-emerald-100">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    Tính nhất quán tài chính dự án đạt tiêu chuẩn. Không có rủi ro khẩn cấp.
+                    Tính nhất quán tài chính đạt tiêu chuẩn. Không có rủi ro vận hành khẩn cấp.
                   </div>
                 )}
               </div>
             </div>
           )}
 
-          {/* ─── LEVEL 3: Main Operational Workspace ─── */}
+          {/* ─── LEVEL 3: Primary Operational Workspace ─── */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             {/* LEFT: Execution & Progress (8 cols) */}
             <div className="lg:col-span-8 space-y-6">
               {/* Construction Progress Table */}
-              <section className="card-elevation p-5 md:p-6 bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden">
+              <section className="card-elevation p-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden">
                 <div className="mb-4 flex items-center justify-between">
                   <div className="accent-line border-l-4 border-blue-500 pl-4">
                     <h3 className="text-xs font-black text-[var(--text-primary)] tracking-widest uppercase">Tiến độ thi công & Khối lượng (WBS)</h3>
                   </div>
-                  <div className="text-[10px] font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded">Cập nhật: {new Date().toLocaleDateString('vi-VN')}</div>
+                  <div className="text-[10px] font-bold text-[var(--text-muted)] bg-[var(--secondary)] px-2 py-1 rounded">Cập nhật: {new Date().toLocaleDateString('vi-VN')}</div>
                 </div>
                 <div className="overflow-hidden rounded-xl border border-[var(--border)]">
                   <WBSTable data={data.wbsRows} />
                 </div>
               </section>
 
-              {/* Construction Cost Journal */}
-              <section className="card-elevation p-5 md:p-6 bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden">
+              {/* Construction Cost Journal (Full Width of column) */}
+              <section className="card-elevation p-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden">
                 <div className="mb-4 flex items-center justify-between">
                   <div className="accent-line border-l-4 border-rose-500 pl-4">
-                    <h3 className="text-xs font-black text-[var(--text-primary)] tracking-widest uppercase">Nhật ký chi phí thi công gần nhất</h3>
+                    <h3 className="text-xs font-black text-[var(--text-primary)] tracking-widest uppercase">Nhật ký chi phí & nghiệm thu</h3>
                   </div>
-                  <button onClick={() => router.push('/costs')} className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline flex items-center gap-1">
-                    Xem tất cả sổ chi phí
-                    <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-                  </button>
+                  <button onClick={() => router.push('/costs')} className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">Sổ chi phí</button>
                 </div>
                 <div className="overflow-hidden rounded-xl border border-[var(--border)]">
-                  <CostTable costs={data.costs.slice(0, 8)} onEdit={setEditingCost} />
+                  <CostTable costs={data.costs.slice(0, 12)} onEdit={setEditingCost} />
                 </div>
               </section>
+
+              {/* Operational Activity Stream (Full Width of column) */}
+              {executiveData?.executiveSummary.recentActivities && (
+                <div className="h-auto min-h-[400px]">
+                  <ActivityStream activities={executiveData.executiveSummary.recentActivities} />
+                </div>
+              )}
             </div>
 
             {/* RIGHT: Coordination & Financial Health (4 cols) */}
@@ -297,22 +302,25 @@ export default function Dashboard() {
                 />
               )}
 
-              {/* Financial Health Grouping (Consolidated to sync height) */}
-              <div className="card-elevation p-5 bg-slate-50/50 border border-gray-200 rounded-2xl space-y-6">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-1 h-3.5 bg-slate-800 rounded-full" />
-                  <h3 className="text-[11px] font-black text-gray-800 uppercase tracking-widest">Sức khỏe tài chính dự án</h3>
+              {/* Financial Health Grouping (Consolidated & Compact) */}
+              <div className="card-elevation p-5 bg-[var(--secondary)] border border-[var(--border)] rounded-2xl space-y-5">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-1 h-3.5 bg-[var(--text-primary)] rounded-full" />
+                  <h3 className="text-[11px] font-black text-[var(--text-primary)] uppercase tracking-widest">Tình trạng tài chính dự án</h3>
                 </div>
                 
-                {/* Compact Financial Panels */}
-                <div className="space-y-6">
-                  <DebtPanel receivable={data.receivable} payable={data.payable} />
-                  <div className="h-px bg-gray-100" />
-                  <ProfitPanel 
-                    revenue={data.revenue} 
-                    cost={data.payable.total} 
-                    margin={data.progress} 
-                  />
+                <div className="space-y-5">
+                  <div className="scale-95 origin-top">
+                    <DebtPanel receivable={data.receivable} payable={data.payable} />
+                  </div>
+                  <div className="h-px bg-[var(--divider)]" />
+                  <div className="scale-95 origin-top -mt-2">
+                    <ProfitPanel 
+                      revenue={data.revenue} 
+                      cost={data.payable.total} 
+                      margin={data.progress} 
+                    />
+                  </div>
                 </div>
               </div>
             </div>

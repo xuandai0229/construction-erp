@@ -23,6 +23,7 @@ export default function WBSListScreen() {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [editingWBS,  setEditingWBS]  = useState<WBSItem | null>(null);
   const [isAddingWBS, setIsAddingWBS] = useState(false);
+  const [initialParentId, setInitialParentId] = useState<string | null>(null);
 
   const stats = useMemo(() => {
     let totalBudget = 0;
@@ -60,6 +61,11 @@ export default function WBSListScreen() {
       else next.add(id);
       return next;
     });
+  };
+
+  const handleAddChild = (parentId: string) => {
+    setInitialParentId(parentId);
+    setIsAddingWBS(true);
   };
 
   const handleExport = () => {
@@ -113,12 +119,13 @@ export default function WBSListScreen() {
                 variance={stats.variance}
                 progress={stats.progress}
               />
-              <WBSActions onAdd={() => setIsAddingWBS(true)} onExport={handleExport} />
+              <WBSActions onAdd={() => { setInitialParentId(null); setIsAddingWBS(true); }} onExport={handleExport} />
               <div className="card-elevation overflow-hidden border border-[var(--border)] rounded-lg">
                 <WBSTable
                   nodes={tree}
                   onToggleExpand={handleToggleExpand}
                   onEdit={setEditingWBS}
+                  onAddChild={handleAddChild}
                   totalBudget={stats.totalBudget}
                   totalActual={stats.totalActual}
                   variance={stats.variance}
@@ -132,8 +139,9 @@ export default function WBSListScreen() {
 
       <AddWBSModal
         isOpen={isAddingWBS || !!editingWBS}
-        onClose={() => { setIsAddingWBS(false); setEditingWBS(null); }}
+        onClose={() => { setIsAddingWBS(false); setEditingWBS(null); setInitialParentId(null); }}
         wbsItem={editingWBS}
+        initialParentId={initialParentId}
       />
     </div>
   );

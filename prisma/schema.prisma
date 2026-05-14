@@ -986,6 +986,7 @@ enum ProjectStatus {
   CANCELLED
   ACTIVE
   CLOSED
+  ARCHIVED
 }
 
 enum TaskStatus {

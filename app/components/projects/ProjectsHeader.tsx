@@ -10,8 +10,8 @@ export default function ProjectsHeader({ onAdd }: { onAdd: () => void }) {
       <Header />
       <div className="flex items-center justify-between px-6 py-4 md:px-8 border-b border-[var(--border)] bg-[var(--card)]">
         <div className="accent-line border-l-4 border-[var(--text-accent)] pl-4">
-          <h1 className="erp-section-title">Danh sách dự án</h1>
-          <p className="erp-section-subtitle">Quản lý toàn bộ vòng đời các công trình xây dựng</p>
+          <h1 className="erp-section-title">Quản lý dự án thi công</h1>
+          <p className="erp-section-subtitle">Danh sách dự án và điều phối thi công toàn hệ thống</p>
         </div>
         <button
           onClick={onAdd}

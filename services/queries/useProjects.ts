@@ -63,7 +63,11 @@ export function useDeleteProjectMutation() {
   return useMutation({
     mutationFn: async (id: string) => {
       const res = await projectApi.delete(id);
-      if (!res.success) throw new Error(res.error || 'Failed to delete project');
+      if (!res.success) {
+        const err: any = new Error(res.error || 'Failed to delete project');
+        err.metadata = res.metadata;
+        throw err;
+      }
       return res.data;
     },
     onSuccess: () => {

@@ -20,14 +20,27 @@ export default function ProjectListScreen() {
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState<{ status?: string; search?: string }>({});
   const limit = 10;
 
   useEffect(() => { init(); }, [init]);
 
-  const { data: paginatedData, isLoading } = useProjectsQuery({ page, limit });
+  const { data: paginatedData, isLoading } = useProjectsQuery({ 
+    page, 
+    limit,
+    status: filters.status,
+    search: filters.search
+  });
   const projects = paginatedData?.data || [];
   const metadata = paginatedData?.metadata;
   const totalPages = metadata?.totalPages || 1;
+
+  // Bug 5: Auto-navigate back if page is empty after delete
+  useEffect(() => {
+    if (page > totalPages && totalPages > 0) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
 
   if (!isInitialized) {
     return (
@@ -56,27 +69,56 @@ export default function ProjectListScreen() {
         <ProjectsHeader onAdd={() => setIsAddingProject(true)} />
 
         <div className="p-6 md:p-8 space-y-6 animate-fade-in">
-          <ProjectCardStats projects={projects} />
-          <ProjectFilters />
-          <ProjectTable projects={projects} onEdit={setEditingProject} />
+          <ProjectCardStats projects={projects} totalCount={metadata?.total || 0} />
+          <ProjectFilters 
+            filters={filters} 
+            onFilterChange={(f) => {
+              setFilters(f);
+              setPage(1); // Reset to page 1 on filter change
+            }} 
+          />
+          <ProjectTable projects={projects} totalGlobal={metadata?.total || 0} onEdit={setEditingProject} />
 
-          {/* Pagination */}
-          <div className="flex items-center justify-between border-t border-[var(--border)] pt-4">
-            <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
-              Trang {page} / {totalPages} (Tổng {metadata?.total || 0} dự án)
+          {/* Enterprise Pagination System */}
+          <div className="flex items-center justify-between pt-8 border-t border-[var(--border)]">
+            <div className="flex flex-col gap-1">
+              <div className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] opacity-40">Hệ thống phân trang</div>
+              <div className="text-[12px] font-bold text-[var(--text-secondary)] flex items-center gap-2">
+                Tổng cộng <span className="text-[var(--text-primary)] text-[14px] font-black tabular-nums">{metadata?.total || 0}</span> hồ sơ dự án
+                <span className="h-3 w-[1px] bg-[var(--border)] mx-1" />
+                Trang <span className="text-[var(--text-primary)] tabular-nums">{page}</span> / <span className="tabular-nums">{totalPages}</span>
+              </div>
             </div>
-            <div className="flex gap-2">
+
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1 || isLoading}
-                className="erp-btn h-8 px-4 bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text-primary)] disabled:opacity-40"
+                className="h-9 px-5 flex items-center justify-center rounded-xl bg-[var(--secondary)] border border-[var(--border)] text-[11px] font-black text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--text-muted)] transition-all disabled:opacity-20 disabled:cursor-not-allowed uppercase tracking-widest"
               >
                 Trang trước
               </button>
+              
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }).map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setPage(i + 1)}
+                    className={`h-9 w-9 flex items-center justify-center rounded-xl text-[11px] font-black transition-all ${
+                      page === i + 1 
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 scale-110' 
+                        : 'text-[var(--text-muted)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)]'
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+
               <button
                 onClick={() => setPage(p => p + 1)}
                 disabled={page >= totalPages || isLoading}
-                className="erp-btn h-8 px-4 bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text-primary)] disabled:opacity-40"
+                className="h-9 px-5 flex items-center justify-center rounded-xl bg-blue-600 text-white text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
               >
                 Trang sau
               </button>

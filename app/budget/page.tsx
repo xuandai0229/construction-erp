@@ -11,6 +11,7 @@ function formatVnd(n: number) {
 
 import { useBudgetsQuery } from '@/services/queries/useBudgets';
 import { useCostsQuery } from '@/services/queries/useCosts';
+import { exportToCsv } from '@/app/services/export.service';
 
 export default function BudgetPage() {
   const sidebarCollapsed = useERPStore(state => state.sidebarCollapsed);
@@ -79,12 +80,30 @@ export default function BudgetPage() {
           <section className="card-elevation overflow-hidden">
             <div className="flex items-center justify-between p-5 border-b border-[var(--border)]">
               <h3 className="text-[11px] font-black text-[var(--text-primary)] uppercase tracking-widest">Chi tiết dự toán theo hạng mục</h3>
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={() => {
+                  if (budgets.length === 0) return;
+                  const dataToExport = budgets.map((b: any) => ({
+                    'Hạng mục': b.wbsId || 'Chung',
+                    'Ngân sách (VNĐ)': b.estimatedAmount,
+                    'Đã dùng (VNĐ)': 0, // Placeholder
+                    'Còn lại (VNĐ)': b.estimatedAmount
+                  }));
+                  exportToCsv(`ERP_Budget_${currentProjectId.slice(0,8)}.csv`, dataToExport);
+                }}
+                className="erp-btn bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--hover-bg)] gap-1.5"
+              >
+                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1m-4-4-4 4-4-4m4 4V4" /></svg>
+                Xuất Excel
+              </button>
               <button className="erp-btn bg-blue-600 text-white hover:bg-blue-500 shadow-sm gap-1.5">
                 <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M12 5v14M5 12h14" />
                 </svg>
                 Thêm dự toán
               </button>
+            </div>
             </div>
             <div className="overflow-x-auto">
               <table className="erp-table">

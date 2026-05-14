@@ -12,10 +12,10 @@ interface GuidanceProps {
 
 export default function GuidanceBanner({ title, message, severity, actions }: GuidanceProps) {
   const styles = {
-    info: 'bg-blue-50 border-blue-200 text-blue-800',
-    warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
-    error: 'bg-red-50 border-red-200 text-red-800',
-    success: 'bg-green-50 border-green-200 text-green-800'
+    info: 'bg-blue-500/10 border-blue-500/20 text-blue-600',
+    warning: 'bg-amber-500/10 border-amber-500/20 text-amber-600',
+    error: 'bg-rose-500/10 border-rose-500/20 text-rose-600',
+    success: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600'
   };
 
   const icons = {
@@ -26,25 +26,25 @@ export default function GuidanceBanner({ title, message, severity, actions }: Gu
   };
 
   return (
-    <div className={`p-4 rounded-xl border ${styles[severity]} flex flex-col md:flex-row gap-4 items-start md:items-center animate-in slide-in-from-top-4 duration-500`}>
-      <div className="flex gap-3 flex-1">
-        <span className="text-xl shrink-0">{icons[severity]}</span>
+    <div className={`px-3 py-2 rounded-lg border ${styles[severity]} flex flex-col md:flex-row gap-3 items-start md:items-center animate-in slide-in-from-top-4 duration-500 hover:shadow-sm transition-all backdrop-blur-sm`}>
+      <div className="flex gap-2.5 flex-1">
+        <span className="text-lg shrink-0 mt-0.5">{icons[severity]}</span>
         <div>
-          <h4 className="text-sm font-bold uppercase tracking-tight">{title}</h4>
-          <p className="text-xs mt-0.5 opacity-90 leading-relaxed font-medium">{message}</p>
+          <h4 className="text-[10px] font-black uppercase tracking-widest opacity-80">{title}</h4>
+          <p className="text-[10px] mt-0.5 opacity-95 leading-tight font-black">{message}</p>
         </div>
       </div>
       
       {actions && actions.length > 0 && (
-        <div className="flex gap-2 shrink-0">
+        <div className="flex gap-1.5 shrink-0">
           {actions.map((action, idx) => (
             <button
               key={idx}
               onClick={action.onClick}
-              className={`text-[11px] font-black px-4 py-2 rounded-lg uppercase tracking-widest transition-all ${
+              className={`text-[9px] font-black px-2.5 py-1.5 rounded-md uppercase tracking-widest transition-all ${
                 action.primary 
-                  ? 'bg-current text-white invert shadow-lg' 
-                  : 'bg-transparent border border-current opacity-80 hover:opacity-100'
+                  ? 'bg-blue-600 text-white shadow-sm hover:bg-blue-700' 
+                  : 'bg-[var(--card)] border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)]'
               }`}
             >
               {action.label}

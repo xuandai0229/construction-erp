@@ -48,10 +48,20 @@ export const costApi = {
     return { success: json.success, error: json.error };
   },
 
+  async transitionCost(id: string, status: string, headers: any = {}): Promise<ServiceResponse<void>> {
+    const res = await fetch(`/api/costs/${id}/approve`, {
+      method: 'POST',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+    const json = await res.json();
+    return { success: json.success, error: json.error, metadata: json.metadata };
+  },
+
   async deleteCost(id: string, headers: any = {}): Promise<ServiceResponse<void>> {
     const res = await fetch(`/api/costs/${id}`, { method: 'DELETE', headers });
     const json = await res.json();
-    return { success: json.success, error: json.error };
+    return { success: json.success, error: json.error, metadata: json.metadata };
   },
 
   async createBudget(data: any, headers: any = {}): Promise<ServiceResponse<BudgetRecord>> {
@@ -67,6 +77,6 @@ export const costApi = {
   async deleteBudget(id: string, headers: any = {}): Promise<ServiceResponse<void>> {
     const res = await fetch(`/api/budgets/${id}`, { method: 'DELETE', headers });
     const json = await res.json();
-    return { success: json.success, error: json.error };
+    return { success: json.success, error: json.error, metadata: json.metadata };
   }
 };

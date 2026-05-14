@@ -46,13 +46,36 @@ export function useUpdateCostMutation(projectId: string) {
   });
 }
 
+export function useTransitionCostMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      const res = await costApi.transitionCost(id, status);
+      if (!res.success) {
+        const err: any = new Error(res.error || 'Failed to transition cost');
+        err.metadata = res.metadata;
+        throw err;
+      }
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
+    },
+  });
+}
+
 export function useDeleteCostMutation(projectId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
       const res = await costApi.deleteCost(id);
-      if (!res.success) throw new Error(res.error || 'Failed to delete cost');
+      if (!res.success) {
+        const err: any = new Error(res.error || 'Failed to delete cost');
+        err.metadata = res.metadata;
+        throw err;
+      }
       return res.data;
     },
     onSuccess: () => {
