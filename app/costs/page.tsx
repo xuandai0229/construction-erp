@@ -136,7 +136,7 @@ export default function CostsPage() {
               <label className="erp-label">Loại chi phí</label>
               <select className="erp-input" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
                 <option value="ALL">Tất cả loại</option>
-                {costTypes.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
+                {costTypes.map(t => <option key={t} value={t}>{costType_LABELS[t]}</option>)}
               </select>
             </div>
             <div>
@@ -195,7 +195,7 @@ export default function CostsPage() {
                       </td>
                       <td>
                         <span className="rounded px-2 py-0.5 text-[10px] font-black uppercase tracking-tighter bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)]">
-                          {c.costType}
+                          {costType_LABELS[c.costType] || c.costType}
                         </span>
                       </td>
                       <td className="text-right tabular-nums font-bold text-[var(--text-secondary)]">{c.quantity || 1}</td>
@@ -260,7 +260,7 @@ export default function CostsPage() {
               </div>
               <div>
                 <label className="erp-label">Loại chi phí</label>
-                <div className="text-[13px] font-bold text-[var(--text-primary)] uppercase">{selectedCost.costType}</div>
+                <div className="text-[13px] font-bold text-[var(--text-primary)] uppercase">{costType_LABELS[selectedCost.costType] || selectedCost.costType}</div>
               </div>
               <div>
                 <label className="erp-label">Số lượng</label>
@@ -278,7 +278,9 @@ export default function CostsPage() {
                   selectedCost.workflowStatus === 'POSTED' ? 'bg-emerald-500/20 text-emerald-500' : 
                   selectedCost.workflowStatus === 'REVERSED' ? 'bg-rose-500/20 text-rose-500' : 'bg-amber-500/20 text-amber-500'
                 }`}>
-                  {selectedCost.workflowStatus}
+                  {selectedCost.workflowStatus === 'POSTED' ? 'Đã ghi sổ' : 
+                   selectedCost.workflowStatus === 'REVERSED' ? 'Đã hoàn nhập' : 
+                   selectedCost.workflowStatus === 'DRAFT' ? 'Bản nháp' : 'Chờ duyệt'}
                 </span>
               </div>
               <label className="erp-label">Tổng cộng</label>

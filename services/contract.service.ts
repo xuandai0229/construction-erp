@@ -61,7 +61,7 @@ export class ContractService {
         where: { id: data.contractId }
       });
 
-      if (!contract) throw new ApiError(404, "Contract not found");
+      if (!contract) throw new ApiError(404, "Không tìm thấy hợp đồng");
 
       const vo = await tx.contractChange.create({
         data: {

@@ -75,7 +75,7 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
                 {/* Cost Type Badge */}
                 <td>
                   <span className="inline-flex items-center rounded-md px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)] group-hover:border-[var(--text-accent)]/20 group-hover:text-[var(--text-accent)] transition-all">
-                    {cost.costType}
+                    {costType_LABELS[cost.costType] || cost.costType}
                   </span>
                 </td>
 

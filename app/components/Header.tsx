@@ -10,6 +10,9 @@ import AddTaskModal from '@/app/components/modals/AddTaskModal';
 
 import { useERPStore } from '@/store/erpStore';
 import { useProjectsQuery } from '@/services/queries/useProjects';
+import { useNotificationsQuery, useNotificationMutation } from '@/services/queries/useWorkspace';
+import { USER_ROLE_LABELS } from '@/app/types';
+import NotificationCenter from './workspace/NotificationCenter';
 
 export default function Header({ data: propData }: { data?: DashboardData }) {
   const [showCostModal, setShowCostModal]       = useState(false);
@@ -28,6 +31,10 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
   const { data: paginatedData } = useProjectsQuery();
   const projects = paginatedData?.data || [];
   const currentProject = projects.find((p: any) => p.id === currentProjectId);
+
+  const { data: notifications = [] } = useNotificationsQuery();
+  const { mutate: markNotif } = useNotificationMutation();
+  const unreadCount = notifications.filter((n: any) => !n.isRead).length;
 
   const stats = [
     { label: 'Chủ đầu tư',      value: currentProject?.investor || '—',              icon: 'M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2' },
@@ -122,51 +129,33 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
               </button>
             </div>
 
-            {/* Notification Bell */}
-            <div className={`relative ${notifOpen ? 'z-[70]' : 'z-[10]'}`}>
+            {/* Notifications */}
+            <div className="relative">
               <button
                 onClick={() => setNotifOpen(!notifOpen)}
                 className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-all ${
                   notifOpen
-                    ? 'bg-[var(--secondary)] border-[var(--primary)] text-[var(--primary)] shadow-[0_0_20px_-5px_rgba(59,130,246,0.5)]'
+                    ? 'bg-blue-600 border-blue-500 text-white shadow-[0_0_20px_-5px_rgba(59,130,246,0.5)]'
                     : 'border-[var(--border)] text-[var(--text-muted)] hover:bg-[var(--secondary)] hover:border-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
                 <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
                 </svg>
-                <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-blue-500 ring-2 ring-[var(--background)] shadow-[0_0_6px_rgba(59,130,246,0.8)]" />
+                {unreadCount > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[9px] font-black text-white ring-2 ring-[#0f172a] shadow-lg animate-bounce">
+                    {unreadCount}
+                  </span>
+                )}
               </button>
 
               {notifOpen && (
-                <div className="absolute right-0 mt-2 w-72 rounded-2xl border border-[var(--border)] bg-[var(--popover)] p-4 shadow-2xl backdrop-blur-xl animate-scale-up z-[60]" style={{boxShadow: '0 20px 60px -10px rgba(0,0,0,0.4)'}}>
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Thông báo</h4>
-                    <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-                  </div>
-                  <div className="space-y-3">
-                    <div className="cursor-pointer group">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <div className="h-1.5 w-1.5 rounded-full bg-blue-500 shrink-0" />
-                        <span className="text-[11px] font-bold text-[var(--text-primary)]">Hệ thống cập nhật</span>
-                      </div>
-                      <p className="pl-3.5 text-[11px] text-[var(--text-secondary)] leading-relaxed group-hover:text-[var(--text-primary)] transition-colors">
-                        &quot;{currentProject?.name}&quot; vừa có cập nhật chi phí mới.
-                      </p>
-                      <span className="pl-3.5 text-[9px] font-bold text-[var(--text-muted)] mt-0.5 block">2 PHÚT TRƯỚC</span>
-                    </div>
-                    <div className="h-px bg-[var(--border)]" />
-                    <div className="cursor-pointer group">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <div className="h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0" />
-                        <span className="text-[11px] font-bold text-[var(--text-primary)]">Công nợ quá hạn</span>
-                      </div>
-                      <p className="pl-3.5 text-[11px] text-[var(--text-secondary)] leading-relaxed group-hover:text-[var(--text-primary)] transition-colors">
-                        Hóa đơn #INV-2024-001 quá hạn 3 ngày.
-                      </p>
-                      <span className="pl-3.5 text-[9px] font-bold text-[var(--text-muted)] mt-0.5 block">1 GIỜ TRƯỚC</span>
-                    </div>
-                  </div>
+                <div className="absolute right-0 mt-3 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                  <NotificationCenter 
+                    notifications={notifications}
+                    onRead={(id) => markNotif({ action: 'READ', id })}
+                    onReadAll={() => markNotif({ action: 'READ_ALL' })}
+                  />
                 </div>
               )}
             </div>
@@ -195,7 +184,7 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
                     {user?.name || 'Quản trị viên'}
                   </span>
                   <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest mt-0.5">
-                    {user?.role || userRole}
+                    {(USER_ROLE_LABELS as any)[user?.role || (userRole as any)] || userRole}
                   </span>
                 </div>
 

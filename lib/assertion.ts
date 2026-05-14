@@ -10,11 +10,11 @@ export function assertValidEntity<T extends object>(data: T, entityName: string)
   for (const [key, value] of entries) {
     // 1. Check for undefined/NaN in required fields
     if (value === undefined) {
-      throw new ApiError(400, `Field "${key}" in ${entityName} is undefined`);
+      throw new ApiError(400, `Trường dữ liệu "${key}" trong ${entityName} bị thiếu (undefined)`);
     }
     
     if (typeof value === 'number' && isNaN(value)) {
-      throw new ApiError(400, `Field "${key}" in ${entityName} is NaN`);
+      throw new ApiError(400, `Trường dữ liệu "${key}" trong ${entityName} không phải là số hợp lệ (NaN)`);
     }
 
     // 2. Deep validation for nested objects (if needed)

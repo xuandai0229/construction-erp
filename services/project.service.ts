@@ -85,7 +85,7 @@ export class ProjectService {
       },
     });
 
-    if (!project) throw new ApiError(404, "Project not found");
+    if (!project) throw new ApiError(404, "Không tìm thấy dự án");
     return project;
   }
 
@@ -94,7 +94,7 @@ export class ProjectService {
 
     if (data.ownerId) {
       const user = await prisma.user.findUnique({ where: { id: data.ownerId } });
-      if (!user) throw new ApiError(404, "Owner (User) not found");
+      if (!user) throw new ApiError(404, "Không tìm thấy người phụ trách dự án");
     }
 
     const project = await prisma.project.create({
@@ -129,7 +129,7 @@ export class ProjectService {
 
     if (data.ownerId) {
       const user = await prisma.user.findUnique({ where: { id: data.ownerId } });
-      if (!user) throw new ApiError(404, "Owner (User) not found");
+      if (!user) throw new ApiError(404, "Không tìm thấy người phụ trách dự án");
     }
 
     const oldProject = await this.findById(id);
@@ -197,7 +197,7 @@ export class ProjectService {
       entity: "Project",
       entityId: id,
       oldData: oldProject,
-      reason: "User requested soft delete",
+      reason: "Người dùng yêu cầu xóa tạm thời",
     });
 
     return project;

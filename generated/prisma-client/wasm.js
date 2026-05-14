@@ -793,6 +793,20 @@ exports.Prisma.BranchScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  message: 'message',
+  type: 'type',
+  severity: 'severity',
+  priority: 'priority',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  isRead: 'isRead',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -975,7 +989,8 @@ exports.Prisma.ModelName = {
   SiteLog: 'SiteLog',
   Quotation: 'Quotation',
   Company: 'Company',
-  Branch: 'Branch'
+  Branch: 'Branch',
+  Notification: 'Notification'
 };
 
 /**

@@ -230,3 +230,63 @@ export const PAYMENT_STATUS_LABELS: Record<PrismaPaymentStatus, string> = {
   paid: 'Đã thanh toán',
   unpaid: 'Chưa thanh toán',
 };
+
+export const PROJECT_STATUS_LABELS: Record<ProjectStatus, string> = {
+  PLANNED: 'Đang lập kế hoạch',
+  IN_PROGRESS: 'Đang thực hiện',
+  COMPLETED: 'Đã hoàn thành',
+  CANCELLED: 'Đã hủy',
+  ACTIVE: 'Đang hoạt động',
+  CLOSED: 'Đã đóng',
+};
+
+export const TASK_STATUS_LABELS: Record<TaskStatus, string> = {
+  TODO: 'Cần làm',
+  IN_PROGRESS: 'Đang thực hiện',
+  REVIEW: 'Đang kiểm tra',
+  DONE: 'Hoàn thành',
+};
+
+export const INVOICE_STATUS_LABELS: Record<PrismaInvoiceStatus, string> = {
+  DRAFT: 'Bản nháp',
+  SENT: 'Đã gửi',
+  PARTIAL: 'Thanh toán một phần',
+  PAID: 'Đã thanh toán',
+  OVERDUE: 'Quá hạn',
+};
+
+export const USER_ROLE_LABELS: Record<PrismaUserRole, string> = {
+  SUPER_ADMIN: 'Quản trị viên hệ thống',
+  ADMIN: 'Quản trị viên',
+  MANAGER: 'Quản lý dự án',
+  ACCOUNTANT: 'Kế toán',
+  VIEWER: 'Người xem',
+  GROUP_DIRECTOR: 'Giám đốc khối',
+  CFO: 'Giám đốc tài chính',
+  BRANCH_DIRECTOR: 'Giám đốc chi nhánh',
+  AUDITOR: 'Kiểm toán viên',
+};
+
+export const AUDIT_ACTION_LABELS: Record<string, string> = {
+  CREATE: 'Khởi tạo',
+  UPDATE: 'Cập nhật',
+  DELETE: 'Xóa',
+  RESTORE: 'Khôi phục',
+  APPROVE: 'Phê duyệt',
+  REJECT: 'Từ chối',
+  LOCK: 'Khóa',
+  UNLOCK: 'Mở khóa',
+};
+
+export const ENTITY_LABELS: Record<string, string> = {
+  Project: 'Dự án',
+  Task: 'Công việc',
+  Cost: 'Chi phí',
+  Invoice: 'Hóa đơn',
+  Payment: 'Thanh toán',
+  Budget: 'Dự toán',
+  Category: 'Danh mục',
+  User: 'Người dùng',
+  WBS: 'Hạng mục thi công',
+  SYSTEM: 'Hệ thống',
+};

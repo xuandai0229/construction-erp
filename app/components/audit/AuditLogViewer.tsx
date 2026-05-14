@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { AUDIT_ACTION_LABELS, ENTITY_LABELS } from '@/app/types';
 
 interface AuditLog {
   id: string;
@@ -85,7 +86,7 @@ export function AuditLogViewer({ entity, entityId }: { entity: string, entityId:
                 </div>
                 <div>
                   <div className="text-sm font-medium text-slate-200">
-                    {log.action} - {log.entity}
+                    {AUDIT_ACTION_LABELS[log.action] || log.action} - {ENTITY_LABELS[log.entity] || log.entity}
                   </div>
                   <div className="text-xs text-slate-500 flex items-center gap-2">
                     <IconPath path="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 7a4 4 0 100-8 4 4 0 000 8z" />

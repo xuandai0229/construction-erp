@@ -57,8 +57,8 @@ export function formatVnd(value: number) {
 }
 
 export function formatShortVnd(value: number) {
-  if (value >= 1000000000) return `${formatVnd(value / 1000000000)}B`;
-  if (value >= 1000000) return `${formatVnd(value / 1000000)}M`;
+  if (value >= 1000000000) return `${formatVnd(value / 1000000000)} Tỷ`;
+  if (value >= 1000000) return `${formatVnd(value / 1000000)} Tr`;
   return formatVnd(value);
 }
 

@@ -67,7 +67,7 @@ export class TaskService {
     });
 
     if (!task) {
-      throw new ApiError(404, "Task not found");
+      throw new ApiError(404, "Không tìm thấy công việc");
     }
 
     return task;
@@ -81,9 +81,9 @@ export class TaskService {
       data.assigneeId ? prisma.user.findUnique({ where: { id: data.assigneeId } }) : Promise.resolve(null),
     ]);
 
-    if (!project) throw new ApiError(404, "Project not found");
-    if (data.categoryId && !category) throw new ApiError(404, "Category not found");
-    if (data.assigneeId && !assignee) throw new ApiError(404, "Assignee (User) not found");
+    if (!project) throw new ApiError(404, "Không tìm thấy dự án");
+    if (data.categoryId && !category) throw new ApiError(404, "Không tìm thấy danh mục công việc");
+    if (data.assigneeId && !assignee) throw new ApiError(404, "Không tìm thấy người thực hiện");
 
     const createData: Prisma.TaskCreateInput = {
       title: data.title,
@@ -108,21 +108,21 @@ export class TaskService {
     if (data.projectId) {
       promises.push(
         prisma.project.findUnique({ where: { id: data.projectId } }).then(p => {
-          if (!p) throw new ApiError(404, "Project not found");
+          if (!p) throw new ApiError(404, "Không tìm thấy dự án");
         })
       );
     }
     if (data.categoryId) {
       promises.push(
         prisma.category.findUnique({ where: { id: data.categoryId } }).then(c => {
-          if (!c) throw new ApiError(404, "Category not found");
+          if (!c) throw new ApiError(404, "Không tìm thấy danh mục công việc");
         })
       );
     }
     if (data.assigneeId) {
       promises.push(
         prisma.user.findUnique({ where: { id: data.assigneeId } }).then(u => {
-          if (!u) throw new ApiError(404, "Assignee (User) not found");
+          if (!u) throw new ApiError(404, "Không tìm thấy người thực hiện");
         })
       );
     }

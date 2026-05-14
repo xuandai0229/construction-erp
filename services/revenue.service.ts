@@ -6,6 +6,8 @@ import { round } from "@/lib/math";
 import { PostingEngine } from "@/lib/accounting/postingEngine";
 import { AuditService } from "./audit.service";
 import { assertPeriodNotLocked } from "@/lib/period";
+import { LoggerService } from "./logger.service";
+import { OperationalService } from "./operational.service";
 
 export class RevenueService {
   
@@ -21,7 +23,14 @@ export class RevenueService {
     if (wbs.projectId !== data.projectId) throw new ApiError(400, "Hạng mục WBS không thuộc về dự án đã chọn");
 
     const amount = round(data.amount);
+    if (amount <= 0) throw new ApiError(400, "Số tiền hóa đơn phải lớn hơn 0");
     await assertPeriodNotLocked(data.issuedDate || new Date());
+
+    const { requestId } = data;
+    if (requestId) {
+      const existing = await prisma.invoice.findUnique({ where: { requestId } });
+      if (existing) return existing;
+    }
 
     return prisma.$transaction(async (tx) => {
       const invoice = await tx.invoice.create({
@@ -36,7 +45,8 @@ export class RevenueService {
           status: "DRAFT",
           note: data.note,
           createdById: data.createdById,
-          approvalStatus: "DRAFT"
+          approvalStatus: "DRAFT",
+          requestId: requestId
         }
       });
 
@@ -54,7 +64,15 @@ export class RevenueService {
         action: "CREATE",
         entity: "Invoice",
         entityId: invoice.id,
-        newData: invoice
+        newData: invoice,
+        requestId
+      });
+
+      await LoggerService.info(`InvoiceCreated: ${invoice.invoiceNumber || invoice.id}`, { 
+        requestId, 
+        userId: data.createdById, 
+        projectId: invoice.projectId,
+        amount: invoice.amount 
       });
 
       return invoice;
@@ -68,6 +86,12 @@ export class RevenueService {
     if (data.amount <= 0) throw new ApiError(400, "Số tiền thanh toán phải lớn hơn 0");
     const amount = round(data.amount);
     await assertPeriodNotLocked(data.date || new Date());
+
+    const { requestId } = data;
+    if (requestId) {
+      const existing = await prisma.payment.findUnique({ where: { requestId } });
+      if (existing) return existing;
+    }
 
     return prisma.$transaction(async (tx) => {
       const invoice = await tx.invoice.findUnique({ where: { id: data.invoiceId } });
@@ -90,16 +114,18 @@ export class RevenueService {
           amount: amount,
           date: data.date ? new Date(data.date) : new Date(),
           description: data.description,
-          approvalStatus: "DRAFT"
+          approvalStatus: "DRAFT",
+          requestId: requestId
         },
       });
 
       await tx.invoice.update({
-        where: { id: data.invoiceId },
+        where: { id: data.invoiceId, version: invoice.version }, // Optimistic Locking
         data: {
           paidAmount: newPaidAmount,
           remainingAmount: newRemainingAmount,
           status: newStatus,
+          version: { increment: 1 }
         },
       });
 
@@ -129,7 +155,15 @@ export class RevenueService {
         action: "CREATE",
         entity: "Payment",
         entityId: payment.id,
-        newData: payment
+        newData: payment,
+        requestId
+      });
+
+      await LoggerService.info(`PaymentCreated: ${payment.id} for Invoice ${invoice.id}`, { 
+        requestId, 
+        projectId: invoice.projectId,
+        invoiceId: invoice.id,
+        amount: amount 
       });
 
       return payment;
@@ -144,10 +178,12 @@ export class RevenueService {
         payments: true,
         wbs: { select: { name: true } }
       },
-      take: limit ? Number(limit) : 500,
       skip: skip ? Number(skip) : 0,
       orderBy: { issuedDate: "desc" }
-    });
+    }).then(items => items.map(inv => ({
+      ...inv,
+      ux: OperationalService.getInvoiceGuidance(inv)
+    })));
   }
 
   static async findRevenuesByProject(projectId: string, filters: any = {}) {
@@ -175,9 +211,17 @@ export class RevenueService {
     if (!existing) throw new ApiError(404, "Không tìm thấy hóa đơn");
     
     return prisma.$transaction(async (tx) => {
+      // GOVERNANCE: Block update if invoice is already POSTED or PAID
+      if (existing.status !== "DRAFT") {
+        throw new ApiError(400, `Không thể sửa hóa đơn đã ${existing.status}. Vui lòng sử dụng quy trình điều chỉnh.`);
+      }
+
       const updated = await tx.invoice.update({
-        where: { id },
-        data: updates
+        where: { id, version: existing.version },
+        data: {
+          ...updates,
+          version: { increment: 1 }
+        }
       });
       await AuditService.log({
         action: "UPDATE",
@@ -195,22 +239,13 @@ export class RevenueService {
     if (!existing) throw new ApiError(404, "Không tìm thấy thanh toán");
     
     return prisma.$transaction(async (tx) => {
-      const updated = await tx.payment.update({
-        where: { id },
-        data: updates
-      });
-      await AuditService.log({
-        action: "UPDATE",
-        entity: "Payment",
-        entityId: id,
-        oldData: existing,
-        newData: updated
-      });
-      return updated;
+      // GOVERNANCE: Payments are immutable once created.
+      throw new ApiError(400, "Thanh toán là chứng từ không thể sửa đổi sau khi phát hành. Vui lòng hủy và tạo lại nếu cần.");
     });
   }
 
-  static async deleteInvoice(id: string, userId?: string) {
+  static async deleteInvoice(id: string, userId: string, reason: string) {
+    if (!reason) throw new ApiError(400, "Lý do hủy hóa đơn là bắt buộc cho mục đích kiểm soát.");
     const existing = await prisma.invoice.findUnique({ where: { id } });
     if (!existing) throw new ApiError(404, "Không tìm thấy hóa đơn");
 
@@ -218,10 +253,11 @@ export class RevenueService {
 
     return prisma.$transaction(async (tx) => {
       const item = await tx.invoice.update({
-        where: { id },
+        where: { id, version: existing.version }, // Optimistic Locking
         data: { 
           deletedAt: new Date(),
           deletedById: userId,
+          version: { increment: 1 }
         }
       });
 
@@ -250,8 +286,11 @@ export class RevenueService {
         entity: "Invoice",
         entityId: id,
         oldData: existing,
-        reason: "User requested soft delete",
+        reason: `Hủy hóa đơn: ${reason}`,
       });
+
+      await LoggerService.info(`InvoiceDeleted: ${id}`, { userId, invoiceId: id, reason });
+
       return item;
     });
   }
@@ -317,6 +356,87 @@ export class RevenueService {
         results.push(inv);
       }
       return results;
+    });
+  }
+
+  static async restoreInvoice(id: string, userId: string, reason: string) {
+    if (!reason) throw new ApiError(400, "Lý do khôi phục hóa đơn là bắt buộc.");
+    
+    // We must use raw query to bypass the soft-delete filter in lib/prisma.ts
+    const existing: any[] = await prisma.$queryRawUnsafe(`SELECT * FROM "Invoice" WHERE id = $1`, id);
+    if (!existing || existing.length === 0) throw new ApiError(404, "Không tìm thấy hóa đơn");
+    const invoice = existing[0];
+    // console.log("DEBUG: Restoring invoice", invoice);
+    
+    return prisma.$transaction(async (tx) => {
+      // 1. Restore the record
+      const item = await tx.invoice.update({
+        where: { id, version: Number(invoice.version) },
+        data: { 
+          deletedAt: null,
+          version: { increment: 1 }
+        }
+      });
+
+      // 2. Repost to Ledger
+      await PostingEngine.postInvoice(tx, {
+        invoiceId: id,
+        projectId: invoice.projectId,
+        amount: Number(invoice.amount),
+        description: `Khôi phục hóa đơn: ${invoice.invoiceNumber || id}`
+      });
+
+      await AuditService.log({
+        userId,
+        action: "UPDATE",
+        entity: "Invoice",
+        entityId: id,
+        newData: item,
+        reason: `Khôi phục hóa đơn: ${reason}`
+      });
+
+      await LoggerService.info(`InvoiceRestored: ${id}`, { userId, invoiceId: id, reason });
+
+      return item;
+    });
+  }
+
+  static async restorePayment(id: string, userId: string, reason: string) {
+    if (!reason) throw new ApiError(400, "Lý do khôi phục thanh toán là bắt buộc.");
+    const existing: any[] = await prisma.$queryRawUnsafe(`SELECT * FROM "Payment" WHERE id = $1`, id);
+    if (!existing || existing.length === 0) throw new ApiError(404, "Không tìm thấy thanh toán");
+    const payment = existing[0];
+
+    return prisma.$transaction(async (tx) => {
+      // 1. Restore the record
+      const item = await tx.payment.update({
+        where: { id, version: Number(payment.version) },
+        data: { 
+          deletedAt: null,
+          version: { increment: 1 }
+        }
+      });
+
+      // 2. Repost to Ledger
+      await PostingEngine.postPayment(tx, {
+        paymentId: id,
+        projectId: payment.projectId,
+        amount: Number(payment.amount),
+        description: `Khôi phục thanh toán hóa đơn ${id}`
+      });
+
+      await AuditService.log({
+        userId,
+        action: "UPDATE",
+        entity: "Payment",
+        entityId: id,
+        newData: item,
+        reason: `Khôi phục thanh toán: ${reason}`
+      });
+
+      await LoggerService.info(`PaymentRestored: ${id}`, { userId, paymentId: id, reason });
+
+      return item;
     });
   }
 }

@@ -23,6 +23,7 @@ export class CostService {
    */
   static async create(data: CreateCostDTO, options: ServiceOptions = {}) {
     assertValidEntity(data, "CreateCostDTO");
+    if (data.amount <= 0) throw new ApiError(400, "Số tiền chi phí phải lớn hơn 0");
     await assertPeriodNotLocked(data.date || new Date());
 
     const { userId, correlationId } = options;

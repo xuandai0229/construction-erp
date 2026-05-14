@@ -44,6 +44,7 @@ model User {
   company                                            Company?           @relation(fields: [companyId], references: [id])
   UserMaturity                                       UserMaturity?
   wbsDeleted                                         WBSItem[]          @relation("WBSDeletedBy")
+  notifications                                      Notification[]
 
   @@index([createdAt])
   @@index([companyId])
@@ -338,6 +339,7 @@ model JournalEntry {
   @@unique([sourceType, sourceId, deletedAt])
   @@index([date])
   @@index([projectId, deletedAt, date])
+  @@index([isReversed, projectId])
 }
 
 model TransactionLine {
@@ -1068,4 +1070,22 @@ enum SubcontractStatus {
   SUSPENDED
   COMPLETED
   TERMINATED
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  type      String   // OVERDUE, APPROVAL, RISK, GOVERNANCE
+  severity  String   // INFO, WARNING, ERROR, CRITICAL
+  priority  Int      @default(0)
+  entityType String?
+  entityId   String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, isRead])
+  @@index([createdAt])
 }

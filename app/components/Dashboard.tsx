@@ -14,6 +14,18 @@ import { formatVnd } from './dashboard-data';
 import { useProjectsQuery, useProjectStatsQuery } from '@/services/queries/useProjects';
 import { useCostsQuery } from '@/services/queries/useCosts';
 import { useWBSQuery } from '@/services/queries/useWBS';
+import { useExecutiveSummaryQuery } from '@/services/queries/useWorkspace';
+import ExecutiveCockpit from './workspace/ExecutiveCockpit';
+import ActionCenter from './workspace/ActionCenter';
+import GuidanceBanner from './workspace/GuidanceBanner';
+
+const costType_LABELS: Record<string, string> = {
+  material: 'Vật tư',
+  labor: 'Nhân công',
+  equipment: 'Máy thi công',
+  subcontract: 'Thầu phụ',
+  other: 'Khác'
+};
 
 export default function Dashboard() {
   const { currentProjectId, sidebarCollapsed, setCurrentProject } = useERPStore();
@@ -25,6 +37,7 @@ export default function Dashboard() {
   const { data: stats, isLoading: isLoadingStats, isError: isErrorStats, refetch: refetchStats } = useProjectStatsQuery(currentProjectId);
   const { data: costs = [], isLoading: isLoadingCosts, isError: isErrorCosts, refetch: refetchCosts } = useCostsQuery(currentProjectId);
   const { data: wbsData, isLoading: isLoadingWBS, isError: isErrorWBS, refetch: refetchWBS } = useWBSQuery(currentProjectId);
+  const { data: executiveData, isLoading: isLoadingExec } = useExecutiveSummaryQuery(currentProjectId);
 
   const [editingCost, setEditingCost] = useState<CostRecord | null>(null);
 
@@ -71,7 +84,7 @@ export default function Dashboard() {
 
     const costByTypeArr = Object.entries(stats.costByType || {}).map(([type, value]) => ({
       type: type as CostType,
-      label: type.charAt(0).toUpperCase() + type.slice(1),
+      label: costType_LABELS[type as CostType] || type.charAt(0).toUpperCase() + type.slice(1),
       value: value as number,
       color: type === 'material' ? '#3b82f6' : type === 'labor' ? '#10b981' : '#f59e0b'
     }));
@@ -173,10 +186,11 @@ export default function Dashboard() {
   }
 
   const kpis = [
-    { label: 'Doanh thu (Hợp đồng)', value: data.revenue, color: 'text-blue-400', icon: 'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
-    { label: 'Tổng chi phí thực tế', value: data.payable.total, color: 'text-rose-400', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.407 2.67 1M12 17c-1.12 0-2.1-.425-2.69-1.041' },
-    { label: 'Phải thu khách hàng', value: data.receivable.total, color: 'text-emerald-400', icon: 'M17 9V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2m2 4h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2z' },
-    { label: 'Phải trả nhà thầu/NCC', value: data.payable.remaining, color: 'text-amber-400', icon: 'M3 10h18M7 15h1m4 0h1m4 0h1' },
+    { label: 'Giá trị Hợp đồng', value: data.revenue, color: 'text-blue-400', icon: 'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
+    { label: 'Chi phí thực hiện', value: data.payable.total, color: 'text-rose-400', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.407 2.67 1M12 17c-1.12 0-2.1-.425-2.69-1.041' },
+    { label: 'Lợi nhuận dự kiến', value: data.revenue - data.payable.total, color: 'text-emerald-400', icon: 'M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 3c1.72 0 3.347.433 4.774 1.2m0 0a9.96 9.96 0 013.186 3.645m-9.214 6.42a3 3 0 11-4.243-4.243 3 3 0 014.243 4.243z' },
+    { label: 'Công nợ Phải thu', value: data.receivable.total, color: 'text-sky-400', icon: 'M17 9V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2m2 4h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2z' },
+    { label: 'Công nợ Phải trả', value: data.payable.remaining, color: 'text-amber-400', icon: 'M3 10h18M7 15h1m4 0h1m4 0h1' },
   ];
 
   return (
@@ -186,23 +200,23 @@ export default function Dashboard() {
       <main className={`flex-1 flex flex-col min-w-0 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${sidebarCollapsed ? 'md:ml-[var(--erp-sidebar-collapsed)]' : 'md:ml-[var(--erp-sidebar-width)]'}`}>
         <Header data={data} />
         
-        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8 space-y-8 animate-fade-in scrollbar-hide">
-          {/* KPI Section */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 space-y-6 animate-fade-in scrollbar-hide">
+          {/* ─── LEVEL 1: Financial KPIs (Construction Logic) ─── */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {kpis.map((kpi, i) => (
-              <div key={i} className="erp-kpi-card group cursor-default inner-border glow-primary bg-[var(--card)]">
+              <div key={i} className="erp-kpi-card group cursor-default inner-border glow-primary bg-[var(--card)] p-4">
                 <div className="relative z-10 flex flex-col h-full">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--secondary)] ring-1 ring-[var(--border)] ${kpi.color} group-hover:scale-110 group-hover:brightness-110 transition-all duration-300`}>
-                      <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2"><path d={kpi.icon} /></svg>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className={`flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--secondary)] ring-1 ring-[var(--border)] ${kpi.color} group-hover:scale-110 transition-all duration-300`}>
+                      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2"><path d={kpi.icon} /></svg>
                     </div>
-                    <div className="text-[10px] font-bold text-[var(--text-muted)]">Thời gian thực</div>
+                    <div className="text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Tài chính dự án</div>
                   </div>
                   <div className="mt-auto">
-                    <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--text-secondary)] mb-1">{kpi.label}</div>
-                    <div className="flex items-baseline gap-2">
-                      <div className="text-2xl font-black text-[var(--text-primary)] tabular-nums tracking-tight animate-count-up truncate min-w-0">{formatVnd(kpi.value)}</div>
-                      <div className="text-[10px] font-bold text-[var(--text-muted)] shrink-0">VNĐ</div>
+                    <div className="text-[10px] font-black uppercase tracking-[0.1em] text-[var(--text-secondary)] mb-0.5">{kpi.label}</div>
+                    <div className="flex items-baseline gap-1.5">
+                      <div className="text-xl font-black text-[var(--text-primary)] tabular-nums tracking-tight truncate">{formatVnd(kpi.value)}</div>
+                      <div className="text-[9px] font-bold text-[var(--text-muted)] shrink-0">VNĐ</div>
                     </div>
                   </div>
                 </div>
@@ -210,52 +224,97 @@ export default function Dashboard() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-8">
-              {/* Financial Progress */}
-              <section className="card-elevation p-6 md:p-8">
-                <div className="mb-6 flex items-center justify-between">
-                  <div className="accent-line border-l-4 border-[var(--text-accent)] pl-4">
-                    <h3 className="text-[13px] font-black text-[var(--text-primary)] tracking-tight uppercase">Tiến độ dòng tiền & Hạng mục</h3>
-                    <p className="text-[9.5px] font-bold text-[var(--text-secondary)] tracking-wider mt-0.5">Tổng hợp WBS thời gian thực</p>
+          {/* ─── LEVEL 2: Operational Health Row (Compact) ─── */}
+          {executiveData && (
+            <div className="flex flex-wrap items-center gap-4 p-3 bg-blue-600/5 rounded-xl border border-blue-500/10 backdrop-blur-sm">
+              <div className="flex items-center gap-2 px-3 border-r border-gray-300/30">
+                <div className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Sức khỏe HT</div>
+                <div className="text-lg font-black text-blue-600">{executiveData.governance.healthScore}%</div>
+              </div>
+              <div className="flex items-center gap-2 px-3 border-r border-gray-300/30">
+                <div className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Rủi ro thi công</div>
+                <div className="text-lg font-black text-orange-500">{executiveData.portfolio.atRiskProjects}</div>
+              </div>
+              <div className="flex-1 min-w-[300px]">
+                {executiveData?.executiveSummary.topRisks?.[0]?.riskScore > 60 ? (
+                  <GuidanceBanner 
+                    title="Cảnh báo vận hành"
+                    message={executiveData.executiveSummary.topRisks[0].ux.guidance}
+                    severity="error"
+                    actions={[{ label: 'Xử lý ngay', onClick: () => {}, primary: true }]}
+                  />
+                ) : (
+                  <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-600 px-3 py-1 bg-emerald-50 rounded-lg border border-emerald-100">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Tính nhất quán tài chính dự án đạt tiêu chuẩn. Không có rủi ro khẩn cấp.
                   </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ─── LEVEL 3: Main Operational Workspace ─── */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* LEFT: Execution & Progress (8 cols) */}
+            <div className="lg:col-span-8 space-y-6">
+              {/* Construction Progress Table */}
+              <section className="card-elevation p-5 md:p-6 bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden">
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="accent-line border-l-4 border-blue-500 pl-4">
+                    <h3 className="text-xs font-black text-[var(--text-primary)] tracking-widest uppercase">Tiến độ thi công & Khối lượng (WBS)</h3>
+                  </div>
+                  <div className="text-[10px] font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded">Cập nhật: {new Date().toLocaleDateString('vi-VN')}</div>
                 </div>
                 <div className="overflow-hidden rounded-xl border border-[var(--border)]">
                   <WBSTable data={data.wbsRows} />
                 </div>
               </section>
 
-              {/* Recent Costs */}
-              <section className="card-elevation p-6 md:p-8">
-                <div className="mb-6 flex items-center justify-between">
-                  <div className="accent-line border-l-4 border-[var(--text-accent)] pl-4">
-                    <h3 className="text-[13px] font-black text-[var(--text-primary)] tracking-tight uppercase">Chi phí ghi nhận gần nhất</h3>
-                    <p className="text-[9.5px] font-bold text-[var(--text-secondary)] tracking-wider mt-0.5">Hóa đơn chi phí mới nhất</p>
+              {/* Construction Cost Journal */}
+              <section className="card-elevation p-5 md:p-6 bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden">
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="accent-line border-l-4 border-rose-500 pl-4">
+                    <h3 className="text-xs font-black text-[var(--text-primary)] tracking-widest uppercase">Nhật ký chi phí thi công gần nhất</h3>
                   </div>
-                  <button
-                    onClick={() => router.push('/costs')}
-                    className="group flex items-center gap-2 rounded-lg px-3 py-1.5 text-[11px] font-black text-blue-600 hover:bg-blue-600/10 transition-all uppercase tracking-widest"
-                  >
-                    Xem tất cả
-                    <svg viewBox="0 0 24 24" className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                  <button onClick={() => router.push('/costs')} className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline flex items-center gap-1">
+                    Xem tất cả sổ chi phí
+                    <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                   </button>
                 </div>
                 <div className="overflow-hidden rounded-xl border border-[var(--border)]">
-                  <CostTable costs={data.costs.slice(0, 5)} onEdit={setEditingCost} />
+                  <CostTable costs={data.costs.slice(0, 8)} onEdit={setEditingCost} />
                 </div>
               </section>
             </div>
 
-            <div className="space-y-8">
-              {/* Debt Panels */}
-              <DebtPanel receivable={data.receivable} payable={data.payable} />
-              
-              {/* Profit Section */}
-              <ProfitPanel 
-                revenue={data.revenue} 
-                cost={data.payable.total} 
-                margin={data.progress} 
-              />
+            {/* RIGHT: Coordination & Financial Health (4 cols) */}
+            <div className="lg:col-span-4 space-y-6">
+              {/* Action Center (Operational Coordination) */}
+              {executiveData?.executiveSummary.actionCenter && (
+                <ActionCenter 
+                  tasks={executiveData.executiveSummary.actionCenter}
+                  onAction={(id, action) => console.log(`Action ${action} on ${id}`)}
+                />
+              )}
+
+              {/* Financial Health Grouping (Consolidated to sync height) */}
+              <div className="card-elevation p-5 bg-slate-50/50 border border-gray-200 rounded-2xl space-y-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-1 h-3.5 bg-slate-800 rounded-full" />
+                  <h3 className="text-[11px] font-black text-gray-800 uppercase tracking-widest">Sức khỏe tài chính dự án</h3>
+                </div>
+                
+                {/* Compact Financial Panels */}
+                <div className="space-y-6">
+                  <DebtPanel receivable={data.receivable} payable={data.payable} />
+                  <div className="h-px bg-gray-100" />
+                  <ProfitPanel 
+                    revenue={data.revenue} 
+                    cost={data.payable.total} 
+                    margin={data.progress} 
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

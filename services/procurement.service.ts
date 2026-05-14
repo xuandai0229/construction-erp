@@ -62,7 +62,7 @@ export class ProcurementService {
         include: { items: true }
       });
 
-      if (!po) throw new ApiError(404, "Purchase Order not found");
+      if (!po) throw new ApiError(404, "Không tìm thấy Đơn mua hàng (PO)");
 
       const gr = await tx.goodsReceipt.create({
         data: {

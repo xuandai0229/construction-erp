@@ -46,19 +46,19 @@ export async function handleApiError(error: unknown) {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     LoggerService.error("Prisma Error", { requestId, userId, errorCode: error.code, error: error.message });
     if (error.code === 'P2002') {
-      return NextResponse.json({ success: false, error: 'Dữ liệu đã tồn tại (Duplicate entry)' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Dữ liệu đã tồn tại trong hệ thống' }, { status: 400 });
     }
     if (error.code === 'P2003') {
-      return NextResponse.json({ success: false, error: 'Vi phạm ràng buộc dữ liệu (Foreign key violation)' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Vi phạm ràng buộc dữ liệu liên kết' }, { status: 400 });
     }
     if (error.code === 'P2025') {
-      return NextResponse.json({ success: false, error: 'Không tìm thấy dữ liệu liên quan' }, { status: 404 });
+      return NextResponse.json({ success: false, error: 'Không tìm thấy dữ liệu yêu cầu' }, { status: 404 });
     }
   }
 
   LoggerService.error("Unhandled Internal Server Error", { requestId, userId, error: (error as any)?.message || error });
   return NextResponse.json(
-    { success: false, error: "Internal Server Error" },
+    { success: false, error: "Lỗi máy chủ nội bộ. Vui lòng thử lại sau hoặc liên hệ quản trị viên." },
     { status: 500 }
   );
 }
