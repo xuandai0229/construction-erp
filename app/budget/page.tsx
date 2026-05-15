@@ -105,8 +105,8 @@ export default function BudgetPage() {
               { label: 'Tỷ lệ sử dụng', value: `${pct.toFixed(1)}%`, unit: '', accent: pct > 90 ? 'text-rose-500' : pct > 70 ? 'text-amber-500' : 'text-emerald-500' },
             ].map(kpi => (
               <div key={kpi.label} className="card-elevation p-5">
-                <div className="text-[9.5px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2">{kpi.label}</div>
-                <div className={`text-2xl font-black tabular-nums ${kpi.accent}`}>{kpi.value}</div>
+                <div className="text-[9.5px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-2">{kpi.label}</div>
+                <div className={`text-2xl font-bold tabular-nums ${kpi.accent}`}>{kpi.value}</div>
                 {kpi.unit && <div className="text-[9px] font-bold text-[var(--text-muted)] mt-0.5">{kpi.unit}</div>}
               </div>
             ))}
@@ -115,8 +115,8 @@ export default function BudgetPage() {
           {/* Progress bar */}
           <section className="card-elevation p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[11px] font-black text-[var(--text-primary)] uppercase tracking-widest">Tiến độ sử dụng ngân sách</h3>
-              <span className={`text-[13px] font-black tabular-nums ${pct > 90 ? 'text-rose-500' : pct > 70 ? 'text-amber-500' : 'text-emerald-500'}`}>
+              <h3 className="text-[11px] font-bold text-[var(--text-primary)] uppercase tracking-widest">Tiến độ sử dụng ngân sách</h3>
+              <span className={`text-[13px] font-bold tabular-nums ${pct > 90 ? 'text-rose-500' : pct > 70 ? 'text-amber-500' : 'text-emerald-500'}`}>
                 {pct.toFixed(1)}%
               </span>
             </div>
@@ -135,7 +135,7 @@ export default function BudgetPage() {
           {/* Budget Items Table */}
           <section className="card-elevation overflow-hidden border border-[var(--border)] rounded-lg">
             <div className="flex items-center justify-between p-5 border-b border-[var(--border)] bg-[var(--secondary)]/30">
-              <h3 className="text-[11px] font-black text-[var(--text-primary)] uppercase tracking-widest">Chi tiết dự toán theo hạng mục</h3>
+              <h3 className="text-[11px] font-bold text-[var(--text-primary)] uppercase tracking-widest">Chi tiết dự toán theo hạng mục</h3>
               <div className="flex items-center gap-3">
                 <button 
                   onClick={() => {
@@ -217,7 +217,7 @@ export default function BudgetPage() {
                   )}
                 </tbody>
                 {/* FOOTER TOTALS - Guaranteed Alignment */}
-                <tfoot className="border-t-2 border-[var(--border)] bg-[var(--secondary)]/30 font-black">
+                <tfoot className="border-t-2 border-[var(--border)] bg-[var(--secondary)]/30 font-bold">
                   <tr>
                     <td className={`${COL_WIDTHS.INDEX} text-center border-r border-[var(--border)]`}></td>
                     <td className={`${COL_WIDTHS.NAME_WBS} px-4 py-3 text-[11px] uppercase tracking-wider text-[var(--text-primary)] border-r border-[var(--border)]`}>

@@ -25,7 +25,7 @@ function BudgetPie({ data }: { data: DashboardData }) {
       <div className="grid grid-cols-[210px_1fr] items-center gap-6">
         <div className="relative h-[210px] w-[210px]">
           <svg viewBox="0 0 42 42" className="-rotate-90">
-            <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#0f172a" strokeWidth="7" />
+            <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="var(--secondary)" strokeWidth="7" />
             {segments.map((row) => (
               <circle key={row.type} cx="21" cy="21" r="15.915" fill="transparent" stroke={row.color} strokeWidth="7" strokeDasharray={`${row.pct} ${100 - row.pct}`} strokeDashoffset={row.offset} />
             ))}
@@ -117,7 +117,7 @@ function ProgressCard({ data }: { data: DashboardData }) {
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <article className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-5 card-elevation">
-      <h3 className="mb-4 text-[13px] font-black text-[var(--text-primary)] uppercase tracking-wider">{title}</h3>
+      <h3 className="mb-4 text-[13px] font-bold text-[var(--text-primary)] uppercase tracking-wider">{title}</h3>
       {children}
     </article>
   );

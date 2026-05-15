@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { projectApi } from '@/services/api/project.api';
 import { queryKeys } from '@/lib/query-keys';
 import { Project } from '@/app/types';
@@ -11,6 +11,7 @@ export function useProjectsQuery(params: any = {}) {
       if (!res.success) throw new Error(res.error || 'Failed to fetch projects');
       return res.data; // Return { data, metadata }
     },
+    placeholderData: keepPreviousData,
   });
 }
 

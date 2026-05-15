@@ -65,7 +65,7 @@ export default function Dashboard() {
   const data = useMemo(() => {
     const project = projects.find((p: Project) => p.id === currentProjectId) || projects[0] || { id: '', name: 'No Project', contractValue: 0, status: 'PLANNED' };
     const wbsTree = wbsData?.tree || [];
-    
+
     const fallbackData = {
       project,
       budget: [],
@@ -117,17 +117,17 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#020617] flex">
+      <div className="min-h-screen bg-[var(--background)] flex">
         <Sidebar activeItem="overview" />
         <div className="flex-1">
-          <div className="h-[74px] border-b border-slate-800/50 bg-[#0f172a] animate-pulse" />
+          <div className="h-[74px] border-b border-[var(--border)] bg-[var(--header-bg)] animate-pulse" />
           <div className="p-8 space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[1, 2, 3, 4].map(i => <div key={i} className="h-32 rounded-2xl bg-slate-900 animate-pulse" />)}
+              {[1, 2, 3, 4].map(i => <div key={i} className="h-32 rounded-2xl bg-[var(--secondary)] animate-pulse" />)}
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 h-96 rounded-2xl bg-slate-900 animate-pulse" />
-              <div className="h-96 rounded-2xl bg-slate-900 animate-pulse" />
+              <div className="lg:col-span-2 h-96 rounded-2xl bg-[var(--secondary)] animate-pulse" />
+              <div className="h-96 rounded-2xl bg-[var(--secondary)] animate-pulse" />
             </div>
           </div>
         </div>
@@ -137,16 +137,16 @@ export default function Dashboard() {
 
   if (isError) {
     return (
-      <div className="min-h-screen bg-[#020617] flex">
+      <div className="min-h-screen bg-[var(--background)] flex">
         <Sidebar activeItem="overview" />
         <main className="flex-1 flex flex-col items-center justify-center p-8">
           <div className="max-w-md text-center">
             <div className="mb-6 mx-auto h-20 w-20 rounded-2xl bg-rose-500/10 border border-rose-500/20 grid place-items-center">
               <svg viewBox="0 0 24 24" className="h-10 w-10 text-rose-500" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
             </div>
-            <h2 className="text-xl font-bold text-white mb-2">Lỗi kết nối dữ liệu</h2>
-            <p className="text-sm text-slate-400 mb-8">Không thể kết nối tới máy chủ API. Vui lòng kiểm tra lại đường truyền mạng hoặc liên hệ quản trị viên.</p>
-            <button 
+            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-2">Lỗi kết nối dữ liệu</h2>
+            <p className="text-sm text-[var(--text-muted)] mb-8">Không thể kết nối tới máy chủ API. Vui lòng kiểm tra lại đường truyền mạng hoặc liên hệ quản trị viên.</p>
+            <button
               onClick={handleRetry}
               className="erp-btn bg-slate-800 text-white px-8 py-3 hover:bg-slate-700"
             >
@@ -172,9 +172,9 @@ export default function Dashboard() {
                   <path d="M4 21V8l5-3 5 3v13M14 21V11l6 3v7M7 11h2M7 15h2" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-black text-[var(--text-primary)] mb-2">Chưa có dự án nào</h2>
+              <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Chưa có dự án nào</h2>
               <p className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-widest mb-8 leading-relaxed">Hãy khởi tạo dự án đầu tiên để bắt đầu quản lý chi phí & tiến độ.</p>
-              <button 
+              <button
                 onClick={() => router.push('/projects')}
                 className="erp-btn bg-blue-600 text-white px-8 py-3 hover:bg-blue-500 shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)]"
               >
@@ -198,10 +198,10 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background text-foreground flex overflow-hidden">
       <Sidebar activeItem="overview" />
-      
+
       <main className={`erp-page-main ${sidebarCollapsed ? 'with-sidebar-collapsed' : 'with-sidebar-expanded'}`}>
         <Header data={data} />
-        
+
         <div className="erp-content-container animate-fade-in space-y-6">
           {/* ─── LEVEL 1: Financial KPIs (Construction Logic) ─── */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -215,9 +215,9 @@ export default function Dashboard() {
                     <div className="text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Tài chính dự án</div>
                   </div>
                   <div className="mt-auto">
-                    <div className="text-[10px] font-black uppercase tracking-[0.1em] text-[var(--text-secondary)] mb-0.5">{kpi.label}</div>
+                    <div className="text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--text-secondary)] mb-0.5">{kpi.label}</div>
                     <div className="flex items-baseline gap-1.5">
-                      <div className="text-xl font-black text-[var(--text-primary)] tabular-nums tracking-tight truncate">{formatVnd(kpi.value)}</div>
+                      <div className="text-xl font-bold text-[var(--text-primary)] tabular-nums tracking-tight truncate">{formatVnd(kpi.value)}</div>
                       <div className="text-[9px] font-bold text-[var(--text-muted)] shrink-0">VNĐ</div>
                     </div>
                   </div>
@@ -230,20 +230,20 @@ export default function Dashboard() {
           {executiveData && (
             <div className="flex flex-wrap items-center gap-4 p-3 bg-blue-600/5 rounded-xl border border-blue-500/10 backdrop-blur-sm">
               <div className="flex items-center gap-2 px-3 border-r border-gray-300/30">
-                <div className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Tình trạng vận hành</div>
-                <div className="text-lg font-black text-blue-600">{executiveData.governance.healthScore}%</div>
+                <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Tình trạng vận hành</div>
+                <div className="text-lg font-bold text-blue-600">{executiveData.governance.healthScore}%</div>
               </div>
               <div className="flex items-center gap-2 px-3 border-r border-gray-300/30">
-                <div className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Rủi ro thi công</div>
-                <div className="text-lg font-black text-orange-500">{executiveData.portfolio.atRiskProjects}</div>
+                <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Rủi ro thi công</div>
+                <div className="text-lg font-bold text-orange-500">{executiveData.portfolio.atRiskProjects}</div>
               </div>
               <div className="flex-1 min-w-[300px]">
                 {executiveData?.executiveSummary.topRisks?.[0]?.riskScore > 60 ? (
-                  <GuidanceBanner 
+                  <GuidanceBanner
                     title="Cảnh báo vận hành hệ thống"
                     message={executiveData.executiveSummary.topRisks[0].ux.guidance}
                     severity="error"
-                    actions={[{ label: 'Xử lý nghiệp vụ', onClick: () => {}, primary: true }]}
+                    actions={[{ label: 'Xử lý nghiệp vụ', onClick: () => { }, primary: true }]}
                   />
                 ) : (
                   <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-600 px-3 py-1 bg-emerald-50 rounded-lg border border-emerald-100">
@@ -263,7 +263,7 @@ export default function Dashboard() {
               <section className="card-elevation p-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden">
                 <div className="mb-4 flex items-center justify-between">
                   <div className="accent-line border-l-4 border-blue-500 pl-4">
-                    <h3 className="text-xs font-black text-[var(--text-primary)] tracking-widest uppercase">Tiến độ thi công & Khối lượng (WBS)</h3>
+                    <h3 className="text-xs font-bold text-[var(--text-primary)] tracking-widest uppercase">Tiến độ thi công & Khối lượng (WBS)</h3>
                   </div>
                   <div className="text-[10px] font-bold text-[var(--text-muted)] bg-[var(--secondary)] px-2 py-1 rounded">Cập nhật: {new Date().toLocaleDateString('vi-VN')}</div>
                 </div>
@@ -276,12 +276,12 @@ export default function Dashboard() {
               <section className="card-elevation p-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden">
                 <div className="mb-4 flex items-center justify-between">
                   <div className="accent-line border-l-4 border-rose-500 pl-4">
-                    <h3 className="text-xs font-black text-[var(--text-primary)] tracking-widest uppercase">Nhật ký chi phí & nghiệm thu</h3>
+                    <h3 className="text-xs font-bold text-[var(--text-primary)] tracking-widest uppercase">Nhật ký chi phí & nghiệm thu</h3>
                   </div>
-                  <button onClick={() => router.push('/costs')} className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">Sổ chi phí</button>
+                  <button onClick={() => router.push('/costs')} className="text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:underline">Sổ chi phí</button>
                 </div>
                 <div className="overflow-hidden rounded-xl border border-[var(--border)]">
-                  <CostTable costs={data.costs.slice(0, 12)} onEdit={setEditingCost} />
+                  <CostTable costs={data.costs} onEdit={setEditingCost} />
                 </div>
               </section>
 
@@ -297,7 +297,7 @@ export default function Dashboard() {
             <div className="lg:col-span-4 space-y-6">
               {/* Action Center (Operational Coordination) */}
               {executiveData?.executiveSummary.actionCenter && (
-                <ActionCenter 
+                <ActionCenter
                   tasks={executiveData.executiveSummary.actionCenter}
                   onAction={(id, action) => console.log(`Action ${action} on ${id}`)}
                 />
@@ -307,19 +307,19 @@ export default function Dashboard() {
               <div className="card-elevation p-5 bg-[var(--secondary)] border border-[var(--border)] rounded-2xl space-y-5">
                 <div className="flex items-center gap-2 mb-1">
                   <div className="w-1 h-3.5 bg-[var(--text-primary)] rounded-full" />
-                  <h3 className="text-[11px] font-black text-[var(--text-primary)] uppercase tracking-widest">Tình trạng tài chính dự án</h3>
+                  <h3 className="text-[11px] font-bold text-[var(--text-primary)] uppercase tracking-widest">Tình trạng tài chính dự án</h3>
                 </div>
-                
+
                 <div className="space-y-5">
                   <div className="scale-95 origin-top">
                     <DebtPanel receivable={data.receivable} payable={data.payable} />
                   </div>
                   <div className="h-px bg-[var(--divider)]" />
                   <div className="scale-95 origin-top -mt-2">
-                    <ProfitPanel 
-                      revenue={data.revenue} 
-                      cost={data.payable.total} 
-                      margin={data.progress} 
+                    <ProfitPanel
+                      revenue={data.revenue}
+                      cost={data.payable.total}
+                      margin={data.progress}
                     />
                   </div>
                 </div>
@@ -328,11 +328,11 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
-      
+
       {editingCost && (
-        <AddCostModal 
-          isOpen={!!editingCost} 
-          onClose={() => setEditingCost(null)} 
+        <AddCostModal
+          isOpen={!!editingCost}
+          onClose={() => setEditingCost(null)}
           costRecord={editingCost.id ? editingCost : undefined}
         />
       )}

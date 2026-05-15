@@ -5,15 +5,15 @@ import { useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
 
 const menuItems = [
-  { id: 'overview',  label: 'Tổng quan',                    href: '/',        icon: 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
-  { id: 'projects',  label: 'Dự án',                        href: '/projects', icon: 'M4 7h16M7 7V5h10v2M6 10h12v10H6z' },
-  { id: 'wbs',       label: 'Hạng mục (WBS)',               href: '/wbs',      icon: 'M12 3v5m-6 4h12M6 12v5m12-5v5M4 17h4v4H4zm8 0h4v4h-4zm8 0h-4v4h4z' },
-  { id: 'budget',    label: 'Dự toán',                      href: '/budget',   icon: 'M7 3h10v18H7zM10 7h4M10 11h4M10 15h2' },
-  { id: 'costs',     label: 'Chi phí',                      href: '/costs',    icon: 'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
-  { id: 'revenue',   label: 'Doanh thu',                    href: '/revenue',  icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.407 2.63 1m-2.63-1c-.74 0-1.4.194-1.92.512' },
-  { id: 'debt',      label: 'Công nợ',                      href: '/debt',     icon: 'M7 4h10a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V6a2 2 0 0 1 2-2zM10 9h4M10 13h4' },
-  { id: 'reports',   label: 'Báo cáo',                      href: '/reports',  icon: 'M5 19V5m0 14h14M9 16V9m4 7V7m4 9v-5' },
-  { id: 'system',    label: 'Hệ thống',                     href: '/system',   icon: 'M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83' },
+  { id: 'overview', label: 'Tổng quan', href: '/', icon: 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
+  { id: 'projects', label: 'Dự án', href: '/projects', icon: 'M4 7h16M7 7V5h10v2M6 10h12v10H6z' },
+  { id: 'wbs', label: 'Hạng mục (WBS)', href: '/wbs', icon: 'M12 3v5m-6 4h12M6 12v5m12-5v5M4 17h4v4H4zm8 0h4v4h-4zm8 0h-4v4h4z' },
+  { id: 'budget', label: 'Dự toán', href: '/budget', icon: 'M7 3h10v18H7zM10 7h4M10 11h4M10 15h2' },
+  { id: 'costs', label: 'Chi phí', href: '/costs', icon: 'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
+  { id: 'revenue', label: 'Doanh thu', href: '/revenue', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.407 2.63 1m-2.63-1c-.74 0-1.4.194-1.92.512' },
+  { id: 'debt', label: 'Công nợ', href: '/debt', icon: 'M7 4h10a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V6a2 2 0 0 1 2-2zM10 9h4M10 13h4' },
+  { id: 'reports', label: 'Báo cáo', href: '/reports', icon: 'M5 19V5m0 14h14M9 16V9m4 7V7m4 9v-5' },
+  { id: 'system', label: 'Hệ thống', href: '/system', icon: 'M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83' },
 ];
 
 function NavIcon({ path }: { path: string }) {
@@ -25,7 +25,7 @@ function NavIcon({ path }: { path: string }) {
 }
 
 export default function Sidebar({ activeItem }: { activeItem?: string }) {
-  const router   = useRouter();
+  const router = useRouter();
   const pathname = usePathname();
   const { sidebarCollapsed, toggleSidebar, mobileMenuOpen, setMobileMenuOpen, userRole } = useERPStore();
 
@@ -36,7 +36,7 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
   };
 
   const filteredItems = menuItems.filter(item => {
-    if (item.id === 'system')  return userRole === 'SUPER_ADMIN';
+    if (item.id === 'system') return userRole === 'SUPER_ADMIN';
     if (item.id === 'budget' || item.id === 'costs') return ['SUPER_ADMIN', 'ADMIN', 'ACCOUNTANT', 'MANAGER'].includes(userRole);
     return true;
   });
@@ -65,9 +65,8 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
         />
       )}
 
-      <aside className={`erp-sidebar fixed inset-y-0 left-0 z-[70] flex flex-col border-r border-[var(--sidebar-border)] shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] md:translate-x-0 ${
-        sidebarCollapsed ? 'w-[var(--erp-sidebar-collapsed)]' : 'w-[var(--erp-sidebar-width)]'
-      } ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`erp-sidebar fixed inset-y-0 left-0 z-[70] flex flex-col border-r border-[var(--sidebar-border)] shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] md:translate-x-0 ${sidebarCollapsed ? 'w-[var(--erp-sidebar-collapsed)]' : 'w-[var(--erp-sidebar-width)]'
+        } ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
 
         {/* Logo */}
         <div className="flex h-[var(--erp-header-height)] items-center gap-3.5 px-5 overflow-hidden">
@@ -78,8 +77,8 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
           </div>
           {!sidebarCollapsed && (
             <div className="animate-fade-in whitespace-nowrap min-w-0">
-              <div className="text-[12px] font-semibold text-[var(--foreground)] tracking-tight leading-tight uppercase">Construction ERP</div>
-              <div className="text-[8px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)] mt-0.5 opacity-60">Enterprise Suite</div>
+              <div className="text-[12px] font-bold text-slate-100 tracking-tight leading-tight uppercase">Construction ERP</div>
+              <div className="text-[8px] font-bold uppercase tracking-[0.2em] text-slate-400 mt-0.5 opacity-60">Enterprise Suite</div>
             </div>
           )}
         </div>
@@ -100,11 +99,10 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
                   key={item.id}
                   onClick={() => { router.push(item.href); setMobileMenuOpen(false); }}
                   title={sidebarCollapsed ? item.label : ''}
-                  className={`relative flex h-10 w-full items-center gap-3 rounded-lg px-3 text-left transition-all duration-200 group overflow-hidden ${
-                    active
+                  className={`relative flex h-10 w-full items-center gap-3 rounded-lg px-3 text-left transition-all duration-200 group overflow-hidden ${active
                       ? 'bg-blue-600/15 text-blue-400'
                       : 'text-[var(--text-secondary)] hover:bg-[var(--secondary)] hover:text-[var(--foreground)]'
-                  }`}
+                    }`}
                 >
                   {/* Active accent line */}
                   {active && (
@@ -112,17 +110,15 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
                   )}
 
                   {/* Icon */}
-                  <div className={`shrink-0 transition-all duration-200 group-hover:scale-110 ${
-                    active ? 'text-blue-400' : 'text-[var(--text-muted)] group-hover:text-blue-400'
-                  }`}>
+                  <div className={`shrink-0 transition-all duration-200 group-hover:scale-110 ${active ? 'text-blue-400' : 'text-[var(--text-muted)] group-hover:text-blue-400'
+                    }`}>
                     <NavIcon path={item.icon} />
                   </div>
 
                   {/* Label */}
                   {!sidebarCollapsed && (
-                    <span className={`truncate text-[12.5px] font-semibold tracking-tight transition-colors duration-200 ${
-                      active ? 'text-blue-500' : 'text-[var(--text-secondary)] group-hover:text-[var(--foreground)]'
-                    }`}>
+                    <span className={`truncate text-[12.5px] font-semibold tracking-tight transition-colors duration-200 ${active ? 'text-blue-500' : 'text-[var(--text-secondary)] group-hover:text-[var(--foreground)]'
+                      }`}>
                       {item.label}
                     </span>
                   )}

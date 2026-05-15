@@ -90,7 +90,7 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-white">Dự án</h1>
+        <h1 className="text-2xl font-bold text-[var(--text-primary)]">Dự án</h1>
         <button
           onClick={() => setShowForm(!showForm)}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -100,49 +100,49 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
       </div>
 
       {showForm && (
-        <div className="bg-slate-800 rounded-lg p-6 mb-6 border border-slate-700">
-          <h2 className="text-xl font-semibold text-white mb-4">
+        <div className="bg-[var(--card)] rounded-lg p-6 mb-6 border border-[var(--border)] card-elevation">
+          <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">
             {editingId ? 'Sửa dự án' : 'Thêm dự án mới'}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-slate-400 mb-1">Tên dự án *</label>
+                <label className="block text-[var(--text-muted)] mb-1 text-[11px] font-bold uppercase tracking-wider">Tên dự án *</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  className="w-full px-4 py-2 bg-slate-700 text-white border border-slate-600 rounded-lg"
+                  className="w-full px-4 py-2 bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] rounded-lg text-[13px] focus:ring-1 focus:ring-blue-500/30 outline-none"
                   placeholder="Nhập tên dự án"
                 />
               </div>
               <div>
-                <label className="block text-slate-400 mb-1">Chủ đầu tư</label>
+                <label className="block text-[var(--text-muted)] mb-1 text-[11px] font-bold uppercase tracking-wider">Chủ đầu tư</label>
                 <input
                   type="text"
                   value={investor}
                   onChange={(e) => setInvestor(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-700 text-white border border-slate-600 rounded-lg"
+                  className="w-full px-4 py-2 bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] rounded-lg text-[13px] focus:ring-1 focus:ring-blue-500/30 outline-none"
                   placeholder="Nhập tên chủ đầu tư"
                 />
               </div>
               <div>
-                <label className="block text-slate-400 mb-1">Giá trị (VNĐ)</label>
+                <label className="block text-[var(--text-muted)] mb-1 text-[11px] font-bold uppercase tracking-wider">Giá trị (VNĐ)</label>
                 <input
                   type="text"
                   value={totalValue}
                   onChange={(e) => setTotalValue(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-700 text-white border border-slate-600 rounded-lg"
+                  className="w-full px-4 py-2 bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] rounded-lg text-[13px] focus:ring-1 focus:ring-blue-500/30 outline-none tabular-nums"
                   placeholder="Nhập giá trị"
                 />
               </div>
               <div>
-                <label className="block text-slate-400 mb-1">Trạng thái</label>
+                <label className="block text-[var(--text-muted)] mb-1 text-[11px] font-bold uppercase tracking-wider">Trạng thái</label>
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as ProjectStatus)}
-                  className="w-full px-4 py-2 bg-slate-700 text-white border border-slate-600 rounded-lg"
+                  className="w-full px-4 py-2 bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] rounded-lg text-[13px] focus:ring-1 focus:ring-blue-500/30 outline-none"
                 >
                   <option value="PLANNED">Quy hoạch</option>
                   <option value="IN_PROGRESS">Đang thi công</option>
@@ -152,10 +152,10 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
               </div>
             </div>
             <div className="flex gap-2">
-              <button type="submit" className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              <button type="submit" className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 font-bold transition-colors">
                 {editingId ? 'Lưu' : 'Thêm'}
               </button>
-              <button type="button" onClick={resetForm} className="px-6 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700">
+              <button type="button" onClick={resetForm} className="px-6 py-2 bg-[var(--secondary)] text-[var(--text-primary)] rounded-lg border border-[var(--border)] hover:bg-[var(--hover-bg)] font-bold transition-colors">
                 Hủy
               </button>
             </div>
@@ -173,39 +173,39 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="bg-slate-800 rounded-lg p-4 border border-slate-700 hover:border-blue-500 cursor-pointer"
+              className="bg-[var(--card)] rounded-lg p-4 border border-[var(--border)] hover:border-blue-500/50 cursor-pointer card-elevation group transition-all"
               onClick={() => onSelectProject?.(project)}
             >
               <div className="flex items-start justify-between mb-3">
-                <h3 className="text-lg font-semibold text-white truncate flex-1">{project.name}</h3>
+                <h3 className="text-lg font-bold text-[var(--text-primary)] truncate flex-1 group-hover:text-blue-500 transition-colors">{project.name}</h3>
                 <span className={`px-2 py-0.5 rounded text-xs text-white ${statusColors[project.status]}`}>
                   {statusLabels[project.status]}
                 </span>
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Chủ đầu tư:</span>
-                  <span className="text-white truncate ml-2">{project.investor || '-'}</span>
+                  <span className="text-[var(--text-muted)] font-medium">Chủ đầu tư:</span>
+                  <span className="text-[var(--text-primary)] font-bold truncate ml-2">{project.investor || '-'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Giá trị:</span>
-                  <span className="text-green-400 font-medium">{formatCurrency(project.totalValue ?? 0)}</span>
+                  <span className="text-[var(--text-muted)] font-medium">Giá trị:</span>
+                  <span className="text-blue-500 font-bold tabular-nums">{formatCurrency(project.totalValue ?? 0)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Ngày tạo:</span>
-                  <span className="text-white">{formatDate(project.createdAt)}</span>
+                  <span className="text-[var(--text-muted)] font-medium">Ngày tạo:</span>
+                  <span className="text-[var(--text-secondary)] font-bold tabular-nums">{formatDate(project.createdAt)}</span>
                 </div>
               </div>
-              <div className="flex gap-2 mt-4 pt-3 border-t border-slate-700">
+              <div className="flex gap-2 mt-4 pt-3 border-t border-[var(--border)]">
                 <button
                   onClick={(e) => { e.stopPropagation(); handleEdit(project); }}
-                  className="flex-1 px-3 py-1.5 bg-slate-700 text-white text-sm rounded hover:bg-slate-600"
+                  className="flex-1 px-3 py-1.5 bg-[var(--secondary)] text-[var(--text-primary)] text-xs font-bold rounded hover:bg-[var(--hover-bg)] transition-colors"
                 >
                   Sửa
                 </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); handleDelete(project.id); }}
-                  className="flex-1 px-3 py-1.5 bg-red-600/20 text-red-400 text-sm rounded hover:bg-red-600/30"
+                  className="flex-1 px-3 py-1.5 bg-rose-500/10 text-rose-500 text-xs font-bold rounded hover:bg-rose-500/20 transition-colors"
                 >
                   Xóa
                 </button>
@@ -215,7 +215,7 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
         </div>
       )}
 
-      <div className="mt-6 text-slate-500 text-sm">Tổng số: {projects.length} dự án</div>
+      <div className="mt-6 text-[var(--text-muted)] text-[11px] font-bold uppercase tracking-widest opacity-60">Tổng số: {projects.length} dự án</div>
     </div>
   );
 }

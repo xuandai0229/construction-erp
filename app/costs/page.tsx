@@ -164,36 +164,37 @@ export default function CostsPage() {
                   useWindowScroll
                   data={filteredCosts}
                   components={virtuosoComponents}
-                  fixedHeaderContent={() => (                    <tr>
-                      <th className="bg-[var(--table-head-bg)] w-[100px]">Ngày</th>
-                      <th className="bg-[var(--table-head-bg)] min-w-[200px]">Nhà cung cấp & Nội dung</th>
-                      <th className="bg-[var(--table-head-bg)] min-w-[150px]">Hạng mục (WBS)</th>
-                      <th className="bg-[var(--table-head-bg)] w-[110px]">Loại</th>
-                      <th className="bg-[var(--table-head-bg)] w-[100px] text-right">Số lượng</th>
-                      <th className="bg-[var(--table-head-bg)] w-[150px] text-right">Thành tiền (VNĐ)</th>
-                      <th className="bg-[var(--table-head-bg)] w-[120px] text-center">Trạng thái</th>
-                      <th className="bg-[var(--table-head-bg)] w-[80px] text-center">Thao tác</th>
+                  fixedHeaderContent={() => (
+                    <tr className="bg-[var(--table-head-bg)]">
+                      <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[100px]">Ngày</th>
+                      <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] min-w-[200px]">Nhà cung cấp & Nội dung</th>
+                      <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] min-w-[150px]">Hạng mục (WBS)</th>
+                      <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[110px]">Loại</th>
+                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[100px]">Số lượng</th>
+                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[150px]">Thành tiền (VNĐ)</th>
+                      <th className="py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[120px]">Trạng thái</th>
+                      <th className="py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-[var(--border)] w-[80px]">Thao tác</th>
                     </tr>
                   )}
                   itemContent={(i, c) => (
                     <>
-                      <td className="whitespace-nowrap font-bold text-[var(--text-muted)] group-hover:text-[var(--text-accent)] transition-colors">{formatDate(c.date)}</td>
-                      <td>
+                      <td className="py-3 px-4 whitespace-nowrap font-bold text-[var(--text-muted)] border-r border-[var(--border)]">{formatDate(c.date)}</td>
+                      <td className="py-3 px-4 border-r border-[var(--border)]">
                         <div className="font-bold text-[var(--text-primary)]">{c.supplier || 'Nhiều nhà CC'}</div>
                         <div className="text-[11px] text-[var(--text-muted)] font-medium truncate max-w-[200px] mt-0.5">{c.note}</div>
                       </td>
-                      <td>
+                      <td className="py-3 px-4 border-r border-[var(--border)]">
                         <div className="text-[12px] font-bold text-[var(--text-secondary)]">{wbsList.find(w => w.id === c.wbsId)?.name || 'N/A'}</div>
                       </td>
-                      <td>
-                        <span className="inline-flex items-center whitespace-nowrap rounded px-2 py-0.5 text-[10px] font-black uppercase tracking-tighter bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)]">
+                      <td className="py-3 px-4 border-r border-[var(--border)]">
+                        <span className="inline-flex items-center whitespace-nowrap rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-tighter bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)]">
                           {costType_LABELS[c.costType] || c.costType}
                         </span>
                       </td>
-                      <td className="text-right tabular-nums font-bold text-[var(--text-secondary)]">{c.quantity || 1}</td>
-                      <td className="text-right tabular-nums font-black text-[var(--text-primary)] group-hover:text-[var(--text-accent)] transition-colors">{formatVnd(c.amount)}</td>
-                      <td className="text-center">
-                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-widest ${
+                      <td className="py-3 px-4 text-right tabular-nums font-bold text-[var(--text-secondary)] border-r border-[var(--border)]">{c.quantity || 1}</td>
+                      <td className="py-3 px-4 text-right tabular-nums font-bold text-[var(--text-primary)] border-r border-[var(--border)]">{formatVnd(c.amount)}</td>
+                      <td className="py-3 px-4 text-center border-r border-[var(--border)]">
+                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest ${
                           c.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/30' : 'bg-rose-500/10 text-rose-500 ring-1 ring-rose-500/30'
                         }`}>
                           <span className={`h-1.5 w-1.5 rounded-full ${c.status === 'paid' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]' : 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]'}`}></span>
@@ -218,7 +219,7 @@ export default function CostsPage() {
             
             {/* Pagination */}
             <div className="h-14 border-t border-[var(--border)] flex items-center justify-between px-6 bg-[var(--table-head-bg)]">
-              <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Hiển thị <span className="text-[var(--text-primary)] font-black">{filteredCosts.length}</span> / {costs.length} bản ghi</div>
+              <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Hiển thị <span className="text-[var(--text-primary)] font-bold">{filteredCosts.length}</span> / {costs.length} bản ghi</div>
               <div className="flex items-center gap-2">
                 <button disabled className="h-8 w-8 rounded-lg border border-[var(--border)] bg-[var(--secondary)] flex items-center justify-center text-[var(--text-muted)] disabled:opacity-30"><svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6" /></svg></button>
                 <button className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-xs shadow-sm shadow-blue-900/20">1</button>
@@ -237,12 +238,12 @@ export default function CostsPage() {
               <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 18 18 6M6 6l12 12" /></svg>
             </button>
             <div className="mb-8">
-              <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest mb-4 ${
+              <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest mb-4 ${
                 selectedCost.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/30' : 'bg-rose-500/10 text-rose-500 ring-1 ring-rose-500/30'
               }`}>
                 {selectedCost.status === 'paid' ? 'Đã thanh toán' : 'Công nợ'}
               </span>
-              <h2 className="text-2xl font-black text-[var(--text-primary)]">{selectedCost.supplier || 'Nhiều nhà CC'}</h2>
+              <h2 className="text-2xl font-bold text-[var(--text-primary)]">{selectedCost.supplier || 'Nhiều nhà CC'}</h2>
               <p className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-1">Mã: {selectedCost.id.slice(0, 12).toUpperCase()}</p>
             </div>
             <div className="grid grid-cols-2 gap-6 mb-8">
@@ -266,7 +267,7 @@ export default function CostsPage() {
             <div className="mb-8 p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
               <div className="flex items-center justify-between mb-2">
                 <label className="erp-label mb-0">Trạng thái sổ cái</label>
-                <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${
+                <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded ${
                   selectedCost.workflowStatus === 'POSTED' ? 'bg-emerald-500/20 text-emerald-500' : 
                   selectedCost.workflowStatus === 'REVERSED' ? 'bg-rose-500/20 text-rose-500' : 'bg-amber-500/20 text-amber-500'
                 }`}>
@@ -276,7 +277,7 @@ export default function CostsPage() {
                 </span>
               </div>
               <label className="erp-label">Tổng cộng</label>
-              <div className="text-3xl font-black text-[var(--text-accent)] tabular-nums">{selectedCost.amount.toLocaleString('vi-VN')} <span className="text-[11px] text-[var(--text-muted)] uppercase">VNĐ</span></div>
+              <div className="text-3xl font-bold text-[var(--text-accent)] tabular-nums">{selectedCost.amount.toLocaleString('vi-VN')} <span className="text-[11px] text-[var(--text-muted)] uppercase">VNĐ</span></div>
             </div>
 
             <div className="flex flex-col gap-4 mt-8 pt-6 border-t border-[var(--border)]">

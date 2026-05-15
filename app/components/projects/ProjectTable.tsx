@@ -3,7 +3,7 @@
 import { Project } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TableVirtuoso } from 'react-virtuoso';
 import { useDeleteProjectMutation, useUpdateProjectMutation } from '@/services/queries/useProjects';
 import { formatVnd } from '../dashboard-data';
@@ -11,13 +11,13 @@ import { COL_WIDTHS, FINANCIAL_CELL_CLASS, ERP_TERMINOLOGY } from '@/app/utils/t
 import ConfirmModal from '@/app/components/modals/ConfirmModal';
 
 const statusLabels: Record<string, { text: string; class: string }> = {
-  PLANNED:     { text: 'Lập kế hoạch', class: 'bg-slate-500/5 text-slate-500 border-slate-500/10' },
+  PLANNED: { text: 'Lập kế hoạch', class: 'bg-slate-500/5 text-slate-500 border-slate-500/10' },
   IN_PROGRESS: { text: 'Đang thi công', class: 'bg-blue-500/5 text-blue-500 border-blue-500/10' },
-  ACTIVE:      { text: 'Đang vận hành', class: 'bg-emerald-500/5 text-emerald-500 border-emerald-500/10' },
-  COMPLETED:   { text: 'Hoàn thành', class: 'bg-emerald-500/5 text-emerald-500 border-emerald-500/10' },
-  CLOSED:      { text: 'Đã đóng', class: 'bg-rose-500/5 text-rose-500 border-rose-500/10' },
-  CANCELLED:   { text: 'Tạm dừng', class: 'bg-amber-500/5 text-amber-500 border-amber-500/10' },
-  ARCHIVED:    { text: 'Lưu trữ', class: 'bg-slate-800 text-slate-400 border-slate-700' },
+  ACTIVE: { text: 'Đang vận hành', class: 'bg-emerald-500/5 text-emerald-500 border-emerald-500/10' },
+  COMPLETED: { text: 'Hoàn thành', class: 'bg-emerald-500/5 text-emerald-500 border-emerald-500/10' },
+  CLOSED: { text: 'Đã đóng', class: 'bg-rose-500/5 text-rose-500 border-rose-500/10' },
+  CANCELLED: { text: 'Tạm dừng', class: 'bg-amber-500/5 text-amber-500 border-amber-500/10' },
+  ARCHIVED: { text: 'Lưu trữ', class: 'bg-slate-800 text-slate-400 border-slate-700' },
 };
 
 // Rule 2 & 6: Technical Construction Imagery with Base64 Fallback
@@ -45,15 +45,17 @@ function ProjectThumbnail({ src }: { src: string }) {
   const [error, setError] = useState(false);
   return (
     <div className="h-9 w-9 rounded-lg bg-[var(--secondary)] border border-[var(--border)] overflow-hidden shrink-0">
-      <img 
-        src={error ? PLACEHOLDER_SVG : src} 
-        alt="" 
+      <img
+        src={error ? PLACEHOLDER_SVG : src}
+        alt=""
         className={`h-full w-full object-cover transition-opacity duration-300 ${error ? 'p-2 opacity-40' : 'opacity-80 group-hover:opacity-100'}`}
         onError={() => setError(true)}
       />
     </div>
   );
 }
+
+import { useTableUX } from '@/app/hooks/useTableUX';
 
 export default function ProjectTable({ projects, onEdit, totalGlobal }: { projects: Project[], onEdit: (p: Project) => void, totalGlobal: number }) {
   const enrichedProjects = projects.map((p, i) => enrichProject(p, i));
@@ -62,9 +64,27 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
   const { mutateAsync: updateProject } = useUpdateProjectMutation();
   const router = useRouter();
 
-  const [confirmAction, setConfirmAction] = useState<{ 
-    id: string, 
-    name: string, 
+  const { scrollContainerRef, showScrollHint, dragCursorClass } = useTableUX();
+
+  // Micro-nudge animation for scroll discoverability
+  useEffect(() => {
+    let t1: any, t2: any;
+    if (scrollContainerRef.current) {
+      t1 = setTimeout(() => {
+        scrollContainerRef.current?.scrollTo({ left: 40, behavior: 'smooth' });
+        t2 = setTimeout(() => {
+          scrollContainerRef.current?.scrollTo({ left: 0, behavior: 'smooth' });
+        }, 600);
+      }, 800);
+    }
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, []);
+  const [confirmAction, setConfirmAction] = useState<{
+    id: string,
+    name: string,
     type: 'DELETE' | 'ARCHIVE' | 'CLOSE' | 'LOCKED_BY_FINANCE',
     counts?: { invoices: number, costs: number, revenues: number }
   } | null>(null);
@@ -94,10 +114,10 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
     } catch (err: any) {
       if (err.metadata?.isFinancialLocked) {
         // Morph the modal into a Locked Warning with CTA
-        setConfirmAction(prev => prev ? { 
-          ...prev, 
-          type: 'LOCKED_BY_FINANCE', 
-          counts: err.metadata.counts 
+        setConfirmAction(prev => prev ? {
+          ...prev,
+          type: 'LOCKED_BY_FINANCE',
+          counts: err.metadata.counts
         } : null);
       } else {
         setError(err.message || "Không thể thực hiện thao tác. Vui lòng kiểm tra lại hệ thống.");
@@ -123,7 +143,7 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
               </svg>
             </div>
             <div>
-              <div className="text-[10px] font-black text-amber-600 uppercase tracking-widest">Quy tắc nghiệp vụ</div>
+              <div className="text-[10px] font-bold text-amber-600 uppercase tracking-widest">Quy tắc nghiệp vụ</div>
               <div className="text-[12.5px] font-bold text-[var(--text-primary)]">{error}</div>
             </div>
           </div>
@@ -135,8 +155,21 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
         </div>
       )}
 
-      <div className="overflow-hidden bg-[var(--card)] rounded-xl border border-[var(--border)] shadow-sm">
-        <div className="overflow-x-auto scrollbar-hide">
+      <div className="overflow-hidden bg-[var(--card)] rounded-xl border border-[var(--border)] shadow-sm relative">
+        <div
+          ref={scrollContainerRef}
+          className={`overflow-x-auto scrollbar-thin ${dragCursorClass}`}
+          style={{ scrollBehavior: 'smooth' }}
+        >
+          {/* Gradient fade hint - subtle theme-aware style */}
+          {showScrollHint && (
+            <div className="absolute right-0 top-0 bottom-0 w-12 pointer-events-none z-20"
+              style={{
+                background: 'linear-gradient(to left, var(--card) 0%, transparent 100%)',
+                opacity: 0.9
+              }}
+            />
+          )}
           {enrichedProjects.length === 0 ? (
             <div className="h-48 flex items-center justify-center text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-widest opacity-40 italic">
               Không tìm thấy hồ sơ công trình
@@ -146,66 +179,70 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
               useWindowScroll
               data={enrichedProjects}
               components={{
-                Table: (props) => <table {...props} className="w-full border-collapse" />,
-                TableHead: (props) => <thead {...props} className="bg-[var(--table-head-bg)] border-b border-[var(--border)] z-10 sticky top-0" />,
+                Table: (props) => <table {...props} className="erp-table w-full table-fixed" />,
+                TableHead: (props) => <thead {...props} className="bg-[var(--table-head-bg)] z-30 sticky top-0" />,
                 TableRow: (props) => {
                   const project = props.item as any;
                   return (
-                    <tr 
-                      {...props} 
+                    <tr
+                      {...props}
                       onClick={() => handleRowClick(project.id)}
-                      className="group cursor-pointer hover:bg-[var(--table-row-hover)] transition-colors border-b border-[var(--divider)] last:border-0" 
+                      className="group cursor-pointer erp-table-row border-b border-[var(--border)] last:border-0"
                     />
                   );
                 }
               }}
               fixedHeaderContent={() => (
-                <tr className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)]">
-                  <th className={`py-4 px-4 text-center text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.CHECKBOX}`}>STT</th>
-                  <th className={`py-4 px-4 text-left text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.PROJECT_PROFILE}`}>{ERP_TERMINOLOGY.PROJECT.COL_PROFILE}</th>
-                  <th className={`py-4 px-4 text-left text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.INVESTOR}`}>{ERP_TERMINOLOGY.PROJECT.COL_INVESTOR}</th>
-                  <th className={`py-4 px-4 text-center text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.DATE}`}>{ERP_TERMINOLOGY.PROJECT.START_DATE}</th>
-                  <th className={`py-4 px-4 text-center text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.DATE}`}>{ERP_TERMINOLOGY.PROJECT.END_DATE}</th>
-                  <th className={`py-4 px-4 text-right text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.FINANCIAL}`}>{ERP_TERMINOLOGY.FINANCE.BUDGET}</th>
-                  <th className={`py-4 px-4 text-right text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.FINANCIAL}`}>{ERP_TERMINOLOGY.FINANCE.ACTUAL}</th>
-                  <th className={`py-4 px-4 text-center text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.PROGRESS}`}>Tiến độ %</th>
-                  <th className={`py-4 px-4 text-center text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.STATUS}`}>{ERP_TERMINOLOGY.STATUS.TITLE}</th>
-                  <th className={`py-4 px-4 text-center text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.ACTIONS}`}>{ERP_TERMINOLOGY.ACTIONS.TITLE}</th>
+                <tr className="bg-[var(--table-head-bg)]">
+                  <th className={`py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.CHECKBOX}`}>STT</th>
+                  <th className={`py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.PROJECT_PROFILE}`}>{ERP_TERMINOLOGY.PROJECT.COL_PROFILE}</th>
+                  <th className={`py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.INVESTOR}`}>{ERP_TERMINOLOGY.PROJECT.COL_INVESTOR}</th>
+                  <th className={`py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.DATE}`}>{ERP_TERMINOLOGY.PROJECT.START_DATE}</th>
+                  <th className={`py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.DATE}`}>{ERP_TERMINOLOGY.PROJECT.END_DATE}</th>
+                  <th className={`py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.FINANCIAL}`}>{ERP_TERMINOLOGY.FINANCE.BUDGET}</th>
+                  <th className={`py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.FINANCIAL}`}>{ERP_TERMINOLOGY.FINANCE.ACTUAL}</th>
+                  <th className={`py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.PROGRESS}`}>Tiến độ %</th>
+                  <th className={`py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.STATUS}`}>{ERP_TERMINOLOGY.STATUS.TITLE}</th>
+                  <th className={`py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-[var(--border)] ${COL_WIDTHS.ACTIONS}`}>{ERP_TERMINOLOGY.ACTIONS.TITLE}</th>
                 </tr>
               )}
               itemContent={(i, p) => (
                 <>
-                  <td className={`${COL_WIDTHS.CHECKBOX} py-4 px-4 text-center text-[12px] font-medium text-[var(--text-muted)] tabular-nums`}>{i + 1}</td>
-                  <td className={`${COL_WIDTHS.PROJECT_PROFILE} py-4 px-4`}>
+                  <td className={`${COL_WIDTHS.CHECKBOX} py-3 px-4 text-center text-[12px] font-medium text-[var(--text-muted)] tabular-nums border-r border-[var(--border)]`}>{i + 1}</td>
+                  <td className={`${COL_WIDTHS.PROJECT_PROFILE} py-3 px-4 border-r border-[var(--border)]`}>
                     <div className="flex items-center gap-3 min-w-0">
                       <ProjectThumbnail src={p.thumbnail} />
                       <div className="flex flex-col min-w-0">
-                        <span className="text-[13.5px] font-semibold text-[var(--text-primary)] truncate group-hover:text-blue-500 transition-colors">{p.name}</span>
-                        <span className="text-[9px] font-medium text-[var(--text-muted)] uppercase tracking-widest mt-0.5 opacity-50">{p.code}</span>
+                        <span className="text-[13px] font-semibold text-[var(--text-primary)] line-clamp-2 whitespace-normal leading-tight break-words group-hover:text-blue-500 transition-colors">
+                          {p.name}
+                        </span>
+                        <span className="text-[8.5px] font-medium text-[var(--text-muted)] uppercase tracking-widest mt-1 opacity-40">
+                          {p.code}
+                        </span>
                       </div>
                     </div>
                   </td>
-                  <td className={`${COL_WIDTHS.INVESTOR} py-4 px-4 text-[12px] font-medium text-[var(--text-secondary)] truncate`}>{p.investor || '---'}</td>
-                  <td className={`${COL_WIDTHS.DATE} py-4 px-4 text-center text-[12px] font-bold text-[var(--text-muted)] tabular-nums`}>
+                  <td className={`${COL_WIDTHS.INVESTOR} py-3 px-4 text-[12px] font-medium text-[var(--text-secondary)] truncate border-r border-[var(--border)]`}>{p.investor || '---'}</td>
+                  <td className={`${COL_WIDTHS.DATE} py-3 px-4 text-center text-[11px] font-bold text-[var(--text-muted)] tabular-nums border-r border-[var(--border)]`}>
                     {p.startDate ? new Date(p.startDate).toLocaleDateString('vi-VN') : '---'}
                   </td>
-                  <td className={`${COL_WIDTHS.DATE} py-4 px-4 text-center text-[12px] font-bold text-[var(--text-muted)] tabular-nums`}>
+                  <td className={`${COL_WIDTHS.DATE} py-3 px-4 text-center text-[11px] font-bold text-[var(--text-muted)] tabular-nums border-r border-[var(--border)]`}>
                     {p.endDate ? new Date(p.endDate).toLocaleDateString('vi-VN') : '---'}
                   </td>
-                  <td className={`${COL_WIDTHS.FINANCIAL} py-4 px-4 text-right`}>
+                  <td className={`${COL_WIDTHS.FINANCIAL} py-3 px-4 text-right border-r border-[var(--border)]`}>
                     <div className="flex items-baseline gap-1 justify-end whitespace-nowrap">
-                      <span className="text-[12.5px] font-bold text-[var(--text-primary)] tabular-nums">{(p.totalValue ?? 0).toLocaleString()}</span>
+                      <span className="text-[12px] font-bold text-[var(--text-primary)] tabular-nums">{(p.totalValue ?? 0).toLocaleString()}</span>
                       <span className="text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-widest opacity-60">VND</span>
                     </div>
                   </td>
-                  <td className={`${COL_WIDTHS.FINANCIAL} py-4 px-4 text-right`}>
+                  <td className={`${COL_WIDTHS.FINANCIAL} py-3 px-4 text-right border-r border-[var(--border)]`}>
                     <div className="flex items-baseline gap-1 justify-end whitespace-nowrap">
-                      <span className="text-[12.5px] font-bold text-blue-500 tabular-nums">{(p.totalValue ?? 0).toLocaleString()}</span>
+                      <span className="text-[12px] font-bold text-blue-500 tabular-nums">{(p.totalValue ?? 0).toLocaleString()}</span>
                       <span className="text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-widest opacity-60">VND</span>
                     </div>
                   </td>
-                  <td className={`${COL_WIDTHS.PROGRESS} py-4 px-4 text-center`}>
-                    <div className="flex flex-col gap-1.5 w-full">
+                  <td className={`${COL_WIDTHS.PROGRESS} py-3 px-4 text-center border-r border-[var(--border)]`}>
+                    <div className="flex flex-col gap-1 w-full">
                       <div className="flex items-center justify-between text-[9px] font-bold tabular-nums opacity-60">
                         <span>{p.progress}%</span>
                       </div>
@@ -214,13 +251,12 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
                       </div>
                     </div>
                   </td>
-                  <td className={`${COL_WIDTHS.STATUS} py-4 px-4 text-center`}>
+                  <td className={`${COL_WIDTHS.STATUS} py-3 px-4 text-center border-r border-[var(--border)]`}>
                     <span className={`erp-badge whitespace-nowrap px-2.5 py-0.5 rounded-full text-[9px] font-bold border uppercase tracking-wider ${statusLabels[p.status]?.class || ''}`}>
                       {statusLabels[p.status]?.text || p.status}
                     </span>
                   </td>
-                  <td className={`${COL_WIDTHS.ACTIONS} py-4 px-4 text-center`}>
-                    {/* Bug 2 & 3: Discoverable actions with enough width */}
+                  <td className={`${COL_WIDTHS.ACTIONS} py-3 px-4 text-center`}>
                     <div className="flex items-center justify-center gap-1.5 opacity-70 group-hover:opacity-100 transition-all duration-300">
                       <button
                         onClick={(e) => { e.stopPropagation(); router.push(`/projects/${p.id}`); }}
@@ -266,33 +302,33 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
         isLoading={isLoading}
         title={
           confirmAction?.type === 'LOCKED_BY_FINANCE' ? "KHÔNG THỂ XÓA VĨNH VIỄN" :
-          confirmAction?.type === 'DELETE' ? "Xác nhận xóa vĩnh viễn" :
-          confirmAction?.type === 'ARCHIVE' ? "Chuyển vào lưu trữ" : "Đóng hồ sơ dự án"
+            confirmAction?.type === 'DELETE' ? "Xác nhận xóa vĩnh viễn" :
+              confirmAction?.type === 'ARCHIVE' ? "Chuyển vào lưu trữ" : "Đóng hồ sơ dự án"
         }
         message={
-          confirmAction?.type === 'LOCKED_BY_FINANCE' ? 
-          `Hệ thống phát hiện hồ sơ dự án "${confirmAction?.name}" đã phát sinh dữ liệu tài chính (Hóa đơn: ${confirmAction.counts?.invoices || 0}, Chi phí: ${confirmAction.counts?.costs || 0}). Để đảm bảo tính toàn vẹn kế toán và phục vụ kiểm toán, hệ thống không cho phép xóa vĩnh viễn hồ sơ này. Bạn có muốn chuyển hồ sơ sang trạng thái Lưu Trữ?` :
-          `Bạn có chắc chắn muốn ${confirmAction?.type === 'DELETE' ? 'xóa vĩnh viễn' : confirmAction?.type === 'ARCHIVE' ? 'lưu trữ' : 'đóng'} hồ sơ "${confirmAction?.name}"?`
+          confirmAction?.type === 'LOCKED_BY_FINANCE' ?
+            `Hệ thống phát hiện hồ sơ dự án "${confirmAction?.name}" đã phát sinh dữ liệu tài chính (Hóa đơn: ${confirmAction.counts?.invoices || 0}, Chi phí: ${confirmAction.counts?.costs || 0}). Để đảm bảo tính toàn vẹn kế toán và phục vụ kiểm toán, hệ thống không cho phép xóa vĩnh viễn hồ sơ này. Bạn có muốn chuyển hồ sơ sang trạng thái Lưu Trữ?` :
+            `Bạn có chắc chắn muốn ${confirmAction?.type === 'DELETE' ? 'xóa vĩnh viễn' : confirmAction?.type === 'ARCHIVE' ? 'lưu trữ' : 'đóng'} hồ sơ "${confirmAction?.name}"?`
         }
         variant={confirmAction?.type === 'LOCKED_BY_FINANCE' ? 'archive' : confirmAction?.type === 'DELETE' ? 'danger' : 'close'}
         confirmLabel={
           confirmAction?.type === 'LOCKED_BY_FINANCE' ? "Chuyển vào lưu trữ" :
-          confirmAction?.type === 'DELETE' ? "Xóa vĩnh viễn" : 
-          confirmAction?.type === 'ARCHIVE' ? "Lưu trữ" : "Đóng hồ sơ"
+            confirmAction?.type === 'DELETE' ? "Xóa vĩnh viễn" :
+              confirmAction?.type === 'ARCHIVE' ? "Lưu trữ" : "Đóng hồ sơ"
         }
         businessContext={
           confirmAction?.type === 'LOCKED_BY_FINANCE' ? "Dữ liệu kế toán đã phát sinh. Lưu trữ là phương thức an toàn nhất để bảo toàn lịch sử audit hệ thống." :
-          "Lưu ý: Hành động này có thể ảnh hưởng đến khả năng truy xuất dữ liệu vận hành trong tương lai."
+            "Lưu ý: Hành động này có thể ảnh hưởng đến khả năng truy xuất dữ liệu vận hành trong tương lai."
         }
       />
 
       <div className="mt-4 flex items-center justify-between px-2">
         <div className="flex items-center gap-6">
-          <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] opacity-60">
-            Tổng <span className="text-[var(--text-primary)] font-black tabular-nums">{totalGlobal}</span> hồ sơ dự án
+          <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] opacity-60">
+            Tổng <span className="text-[var(--text-primary)] font-bold tabular-nums">{totalGlobal}</span> hồ sơ dự án
           </p>
-          <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] opacity-60">
-            Hiển thị <span className="text-[var(--text-primary)] font-black tabular-nums">{enrichedProjects.length}</span> hồ sơ
+          <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] opacity-60">
+            Hiển thị <span className="text-[var(--text-primary)] font-bold tabular-nums">{enrichedProjects.length}</span> hồ sơ
           </p>
         </div>
       </div>

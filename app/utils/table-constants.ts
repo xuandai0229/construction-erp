@@ -6,31 +6,31 @@
 export const COL_WIDTHS = {
   INDEX: 'w-16',           // 64px
   INDEX_NUM: 64,
-  
+
   NAME_WBS: 'w-[320px]',
   NAME_WBS_NUM: 320,
-  
-  FINANCIAL: 'w-[140px]',  // 140px (Budget, Actual, Variance, etc.)
-  FINANCIAL_NUM: 140,
-  
+
+  FINANCIAL: 'w-[160px]',  // Increased from 140px to prevent header clipping
+  FINANCIAL_NUM: 160,
+
   PROGRESS: 'w-[120px]',   // 120px
   PROGRESS_NUM: 120,
-  
-  STATUS: 'w-[120px]',     // 120px
-  STATUS_NUM: 120,
-  
-  ACTIONS: 'w-[120px]',    // 120px
-  ACTIONS_NUM: 120,
-  
-  DATE: 'w-[100px]',       // 100px
-  DATE_NUM: 100,
-  
-  PROJECT_PROFILE: 'min-w-[280px]',
-  PROJECT_PROFILE_NUM: 280,
-  
-  INVESTOR: 'min-w-[160px]',
-  INVESTOR_NUM: 160,
-  
+
+  STATUS: 'w-[125px]',     // Increased from 110px to prevent header clipping
+  STATUS_NUM: 125,
+
+  ACTIONS: 'w-[110px]',    // Increased from 100px to prevent icon clipping
+  ACTIONS_NUM: 110,
+
+  DATE: 'w-[130px]',       // Significantly increased from 95px to fit "NGÀY KHỞI CÔNG"
+  DATE_NUM: 130,
+
+  PROJECT_PROFILE: 'w-[380px]', // Increased from 360px for better text wrapping
+  PROJECT_PROFILE_NUM: 380,
+
+  INVESTOR: 'w-[240px]',        // Increased from 220px
+  INVESTOR_NUM: 240,
+
   CHECKBOX: 'w-10',         // 40px
   CHECKBOX_NUM: 40,
 };
@@ -77,4 +77,4 @@ export const ERP_TERMINOLOGY = {
 /**
  * Shared Tailwind class for financial data cells
  */
-export const FINANCIAL_CELL_CLASS = "text-right tabular-nums font-black pr-2";
+export const FINANCIAL_CELL_CLASS = "text-right tabular-nums font-bold pr-2";

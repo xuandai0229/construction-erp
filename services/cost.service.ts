@@ -124,7 +124,7 @@ export class CostService {
           const { ProjectService } = require("./project.service");
           await ProjectService.getAccountingSummary(data.projectId);
         } catch (e) {
-          LoggerService.error("Failed to sync project stats after cost create", e);
+          LoggerService.error("Failed to sync project stats after cost create", { error: e });
         }
 
         return item;
@@ -222,7 +222,7 @@ export class CostService {
         const { ProjectService } = require("./project.service");
         await ProjectService.getAccountingSummary(existing.projectId);
       } catch (e) {
-        LoggerService.error("Failed to sync project stats after cost delete", e);
+        LoggerService.error("Failed to sync project stats after cost delete", { error: e });
       }
 
       return { ...existing, deletedAt: new Date() };

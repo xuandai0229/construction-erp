@@ -35,12 +35,13 @@ export default function ProjectListScreen() {
   const metadata = paginatedData?.metadata;
   const totalPages = metadata?.totalPages || 1;
 
-  // Bug 5: Auto-navigate back if page is empty after delete
+  // Bug Fix: Auto-navigate back ONLY when data is fully loaded and actually empty
+  // This prevents the "click 2 times" bug where the page rolls back to 1 during loading
   useEffect(() => {
-    if (page > totalPages && totalPages > 0) {
+    if (!isLoading && paginatedData && page > totalPages && totalPages > 0) {
       setPage(totalPages);
     }
-  }, [page, totalPages]);
+  }, [page, totalPages, isLoading, paginatedData]);
 
   if (!isInitialized) {
     return (
@@ -81,9 +82,9 @@ export default function ProjectListScreen() {
           {/* Enterprise Pagination System */}
           <div className="flex items-center justify-between pt-8 border-t border-[var(--border)]">
             <div className="flex flex-col gap-1">
-              <div className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] opacity-40">Hệ thống phân trang</div>
+              <div className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] opacity-40">Hệ thống phân trang</div>
               <div className="text-[12px] font-bold text-[var(--text-secondary)] flex items-center gap-2">
-                Tổng cộng <span className="text-[var(--text-primary)] text-[14px] font-black tabular-nums">{metadata?.total || 0}</span> hồ sơ dự án
+                Tổng cộng <span className="text-[var(--text-primary)] text-[14px] font-bold tabular-nums">{metadata?.total || 0}</span> hồ sơ dự án
                 <span className="h-3 w-[1px] bg-[var(--border)] mx-1" />
                 Trang <span className="text-[var(--text-primary)] tabular-nums">{page}</span> / <span className="tabular-nums">{totalPages}</span>
               </div>
@@ -93,7 +94,7 @@ export default function ProjectListScreen() {
               <button
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1 || isLoading}
-                className="h-9 px-5 flex items-center justify-center rounded-xl bg-[var(--secondary)] border border-[var(--border)] text-[11px] font-black text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--text-muted)] transition-all disabled:opacity-20 disabled:cursor-not-allowed uppercase tracking-widest"
+                className="h-9 px-5 flex items-center justify-center rounded-xl bg-[var(--secondary)] border border-[var(--border)] text-[11px] font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--text-muted)] transition-all disabled:opacity-20 disabled:cursor-not-allowed uppercase tracking-widest"
               >
                 Trang trước
               </button>
@@ -103,7 +104,7 @@ export default function ProjectListScreen() {
                   <button
                     key={i}
                     onClick={() => setPage(i + 1)}
-                    className={`h-9 w-9 flex items-center justify-center rounded-xl text-[11px] font-black transition-all ${
+                    className={`h-9 w-9 flex items-center justify-center rounded-xl text-[11px] font-bold transition-all ${
                       page === i + 1 
                         ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 scale-110' 
                         : 'text-[var(--text-muted)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)]'
@@ -117,7 +118,7 @@ export default function ProjectListScreen() {
               <button
                 onClick={() => setPage(p => p + 1)}
                 disabled={page >= totalPages || isLoading}
-                className="h-9 px-5 flex items-center justify-center rounded-xl bg-blue-600 text-white text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+                className="h-9 px-5 flex items-center justify-center rounded-xl bg-blue-600 text-white text-[11px] font-bold uppercase tracking-widest shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
               >
                 Trang sau
               </button>

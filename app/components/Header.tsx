@@ -16,13 +16,13 @@ import NotificationCenter from './workspace/NotificationCenter';
 import ProjectSwitcher from './workspace/ProjectSwitcher';
 
 export default function Header({ data: propData }: { data?: DashboardData }) {
-  const [showCostModal, setShowCostModal]       = useState(false);
-  const [showBudgetModal, setShowBudgetModal]   = useState(false);
+  const [showCostModal, setShowCostModal] = useState(false);
+  const [showBudgetModal, setShowBudgetModal] = useState(false);
   const [showRevenueModal, setShowRevenueModal] = useState(false);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
-  const [showTaskModal, setShowTaskModal]       = useState(false);
-  const [userMenuOpen, setUserMenuOpen]         = useState(false);
-  const [notifOpen, setNotifOpen]               = useState(false);
+  const [showTaskModal, setShowTaskModal] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
 
   const {
     currentProjectId, setCurrentProject,
@@ -38,18 +38,18 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
   const unreadCount = notifications.filter((n: any) => !n.isRead).length;
 
   const stats = [
-    { label: 'Chủ đầu tư / Đối tác', value: currentProject?.investor || '—',              icon: 'M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2' },
-    { label: 'Giá trị HĐ',      value: formatVnd(propData?.revenue || currentProject?.contractValue || 0), icon: 'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
-    { label: 'Loại công trình',  value: currentProject?.projectType || 'Dân dụng',    icon: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
+    { label: 'Chủ đầu tư / Đối tác', value: currentProject?.investor || '—', icon: 'M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2' },
+    { label: 'Giá trị HĐ', value: formatVnd(propData?.revenue || currentProject?.contractValue || 0), icon: 'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
+    { label: 'Loại công trình', value: currentProject?.projectType || 'Dân dụng', icon: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
   ];
 
   return (
     <>
-      <AddCostModal    isOpen={showCostModal}    onClose={() => setShowCostModal(false)} />
-      <AddBudgetModal  isOpen={showBudgetModal}  onClose={() => setShowBudgetModal(false)} />
+      <AddCostModal isOpen={showCostModal} onClose={() => setShowCostModal(false)} />
+      <AddBudgetModal isOpen={showBudgetModal} onClose={() => setShowBudgetModal(false)} />
       <AddRevenueModal isOpen={showRevenueModal} onClose={() => setShowRevenueModal(false)} />
       <AddInvoiceModal isOpen={showInvoiceModal} onClose={() => setShowInvoiceModal(false)} />
-      <AddTaskModal    isOpen={showTaskModal}    onClose={() => setShowTaskModal(false)} />
+      <AddTaskModal isOpen={showTaskModal} onClose={() => setShowTaskModal(false)} />
 
       <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--header-bg)] backdrop-blur-xl">
         <div className="max-w-[1600px] mx-auto flex h-[var(--erp-header-height)] items-center justify-between gap-4 px-4 md:px-6">
@@ -112,11 +112,10 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
             <div className="relative">
               <button
                 onClick={() => setNotifOpen(!notifOpen)}
-                className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-all ${
-                  notifOpen
+                className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-all ${notifOpen
                     ? 'bg-blue-600 border-blue-500 text-white'
                     : 'border-[var(--border)] text-[var(--text-muted)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)]'
-                }`}
+                  }`}
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
@@ -130,7 +129,7 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
 
               {notifOpen && (
                 <div className="absolute right-0 mt-3 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
-                  <NotificationCenter 
+                  <NotificationCenter
                     notifications={notifications}
                     onRead={(id) => markNotif({ action: 'READ', id })}
                     onReadAll={() => markNotif({ action: 'READ_ALL' })}
@@ -146,11 +145,10 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
             <div className={`relative ${userMenuOpen ? 'z-[70]' : 'z-[10]'}`}>
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className={`flex items-center gap-2.5 rounded-lg border px-2 py-1 transition-all ${
-                  userMenuOpen
+                className={`flex items-center gap-2.5 rounded-lg border px-2 py-1 transition-all ${userMenuOpen
                     ? 'bg-[var(--secondary)] border-blue-500/50'
                     : 'border-[var(--border)] hover:bg-[var(--secondary)]'
-                }`}
+                  }`}
               >
                 {/* Avatar */}
                 <div className="h-7 w-7 shrink-0 overflow-hidden rounded-md bg-blue-600/10 border border-blue-500/20 grid place-items-center font-bold text-[10px] text-blue-500">
@@ -177,9 +175,9 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
               </button>
 
               {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-52 rounded-2xl border border-[var(--border)] bg-[var(--popover)] py-2 shadow-2xl backdrop-blur-xl animate-scale-up z-[60]" style={{boxShadow: '0 20px 60px -10px rgba(0,0,0,0.4)'}}>
+                <div className="absolute right-0 mt-2 w-52 rounded-2xl border border-[var(--border)] bg-[var(--popover)] py-2 shadow-2xl backdrop-blur-xl animate-scale-up z-[60]" style={{ boxShadow: '0 20px 60px -10px rgba(0,0,0,0.4)' }}>
                   <div className="px-4 py-2.5 border-b border-[var(--divider)] mb-1">
-                    <div className="text-[9.5px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-0.5">Đăng nhập bởi</div>
+                    <div className="text-[9.5px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-0.5">Đăng nhập bởi</div>
                     <div className="text-[11.5px] font-bold text-[var(--text-accent)] truncate">{user?.email || 'admin@erp.com'}</div>
                   </div>
 
@@ -204,7 +202,7 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
 
                   <button
                     onClick={logout}
-                    className="flex w-full items-center gap-3 px-4 py-2.5 text-[12px] font-black text-rose-500 hover:bg-rose-500/10 hover:text-rose-400 transition-colors"
+                    className="flex w-full items-center gap-3 px-4 py-2.5 text-[12px] font-bold text-rose-500 hover:bg-rose-500/10 hover:text-rose-400 transition-colors"
                   >
                     <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />

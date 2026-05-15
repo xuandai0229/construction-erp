@@ -20,11 +20,13 @@ const WBSStableTableComponents = {
     return (
       <tr 
         {...props} 
-        className={`transition-colors hover:bg-[var(--secondary)] ${isParent && node.level === 0 ? 'bg-[var(--secondary)]/50' : ''}`} 
+        className={`transition-colors hover:bg-[var(--secondary)] select-none ${isParent && node.level === 0 ? 'bg-[var(--secondary)]/50' : ''}`} 
       />
     );
   }
 };
+
+import { useTableUX } from '@/app/hooks/useTableUX';
 
 interface WBSTableProps {
   nodes: EnrichedWBSNode[];
@@ -57,6 +59,7 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
 
   const flattenedNodes = useMemo(() => flattenWBS(nodes), [nodes]);
 
+  const { scrollContainerRef, showScrollHint, dragCursorClass } = useTableUX();
   const [confirmAction, setConfirmAction] = useState<{ id: string, name: string, type: 'DELETE' | 'LOCKED' } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -124,13 +127,26 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
 
   return (
     <>
-      <div className="overflow-x-auto scrollbar-hide border border-[var(--border)] rounded-lg">
-        {flattenedNodes.length === 0 ? (
-          <div className="h-32 flex items-center justify-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest bg-[var(--table-head-bg)]">
-            Không có dữ liệu hạng mục
-          </div>
-        ) : (
-          <TableVirtuoso
+      <div className="scroll-hint-container">
+        <div 
+          ref={scrollContainerRef}
+          className={`overflow-x-auto scrollbar-thin border border-[var(--border)] rounded-lg ${dragCursorClass} relative`}
+        >
+          {/* Gradient fade hint - subtle theme-aware style */}
+          {showScrollHint && (
+            <div className="absolute right-0 top-0 bottom-0 w-12 pointer-events-none z-20"
+              style={{
+                background: 'linear-gradient(to left, var(--card) 0%, transparent 100%)',
+                opacity: 0.9
+              }}
+            />
+          )}
+          {flattenedNodes.length === 0 ? (
+            <div className="h-32 flex items-center justify-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest bg-[var(--table-head-bg)]">
+              Không có dữ liệu hạng mục
+            </div>
+          ) : (
+            <TableVirtuoso
             useWindowScroll
             data={flattenedNodes}
             components={WBSStableTableComponents}
@@ -185,16 +201,16 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                   <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right text-[13px] font-bold text-[var(--text-tertiary)] border-r border-[var(--border)] tabular-nums`}>
                     {node.budget === 0 ? <span className="text-rose-500/50">0</span> : node.budget.toLocaleString()}
                   </td>
-                  <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right text-[13px] font-black text-[var(--text-primary)] border-r border-[var(--border)] tabular-nums`}>
+                  <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right text-[13px] font-bold text-[var(--text-primary)] border-r border-[var(--border)] tabular-nums`}>
                     {node.actual.toLocaleString()}
                   </td>
-                  <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right text-[13px] font-black border-r border-[var(--border)] tabular-nums ${isOverBudget ? 'text-rose-500' : 'text-emerald-500'}`}>
+                  <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right text-[13px] font-bold border-r border-[var(--border)] tabular-nums ${isOverBudget ? 'text-rose-500' : 'text-emerald-500'}`}>
                     {isOverBudget ? '' : '+'}{node.profit.toLocaleString()}
                   </td>
                   <td className={`${COL_WIDTHS.PROGRESS} px-4 py-3 border-r border-[var(--border)]`}>
                     <div className="flex flex-col gap-1">
                       <div className="flex items-center justify-between">
-                        <span className={`text-[10px] font-black ${isOverBudget ? 'text-rose-500' : 'text-[var(--text-muted)]'}`}>
+                        <span className={`text-[10px] font-bold ${isOverBudget ? 'text-rose-500' : 'text-[var(--text-muted)]'}`}>
                           {node.percentage.toFixed(0)}%
                         </span>
                       </div>
@@ -249,14 +265,14 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
           />
         )}
         
-        {/* TFOOT implementation */}
-        <div className="border-t-2 border-[var(--border)] bg-[var(--table-head-bg)] sticky bottom-0 z-20 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+        {/* TFOOT implementation - Perfectly aligned with Header/Body */}
+        <div className="border-t-2 border-[var(--border)] bg-[var(--table-head-bg)] sticky bottom-0 z-20 shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
           <table className="erp-table w-full table-fixed min-w-max">
             <tbody>
               <tr className="group">
                 <td className={`${COL_WIDTHS.CHECKBOX} border-r border-[var(--border)]`}></td>
                 <td className={`${COL_WIDTHS.INDEX} border-r border-[var(--border)]`}></td>
-                <td className={`${COL_WIDTHS.NAME_WBS} px-4 py-3 text-[11px] font-black uppercase tracking-[0.15em] text-[var(--text-primary)] border-r border-[var(--border)]`}>
+                <td className={`${COL_WIDTHS.NAME_WBS} px-4 py-3 text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--text-primary)] border-r border-[var(--border)]`}>
                   TỔNG CỘNG DỰ TOÁN DỰ ÁN
                 </td>
                 <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right ${FINANCIAL_CELL_CLASS} text-[13px] text-[var(--text-primary)] border-r border-[var(--border)]`}>
@@ -269,7 +285,7 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                   {variance < 0 ? '' : '+'}{variance.toLocaleString()}
                 </td>
                 <td className={`${COL_WIDTHS.PROGRESS} px-4 py-3 text-center border-r border-[var(--border)]`}>
-                  <span className="text-[12px] font-black text-blue-500 tabular-nums">{progress.toFixed(1)}%</span>
+                  <span className="text-[12px] font-bold text-blue-500 tabular-nums">{progress.toFixed(1)}%</span>
                 </td>
                 <td className={`${COL_WIDTHS.STATUS} border-r border-[var(--border)]`}></td>
                 <td className={`${COL_WIDTHS.ACTIONS}`}></td>
@@ -294,7 +310,9 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
         confirmLabel={confirmAction?.type === 'LOCKED' ? "Đã hiểu" : "Xóa vĩnh viễn"}
         businessContext={confirmAction?.type === 'LOCKED' ? "Vui lòng điều chỉnh lại chứng từ tài chính (nếu nhập sai) trước khi xóa hạng mục này." : undefined}
       />
+      </div>
     </>
   );
 }
+
 
