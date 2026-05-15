@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Budget } from '@/app/types';
+import { queryKeys } from '@/lib/query-keys';
 
 export function useBudgetsQuery(projectId: string) {
   return useQuery({
@@ -31,6 +32,8 @@ export function useCreateBudgetMutation(projectId: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['budgets', projectId] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
     },
   });
 }

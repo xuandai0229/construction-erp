@@ -41,13 +41,10 @@ export default function SettingsPage() {
   return (
     <div className="erp-page">
       <Sidebar activeItem="system" />
-      <main
-        className="erp-page-main"
-        style={{ marginLeft: sidebarCollapsed ? 'var(--erp-sidebar-collapsed)' : 'var(--erp-sidebar-width)' }}
-      >
+      <main className={`erp-page-main ${sidebarCollapsed ? 'with-sidebar-collapsed' : 'with-sidebar-expanded'}`}>
         <Header />
 
-        <div className="mx-auto max-w-4xl p-6 md:p-8 space-y-8 animate-fade-in">
+        <div className="erp-content-container animate-fade-in space-y-8">
           <div className="accent-line">
             <h1 className="erp-section-title">Cài đặt hệ thống</h1>
             <p className="erp-section-subtitle">Cấu hình trải nghiệm ERP cá nhân hóa</p>

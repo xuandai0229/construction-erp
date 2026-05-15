@@ -28,7 +28,7 @@ export default function KPISection({ data }: { data: DashboardData }) {
   ];
 
   return (
-    <section className="grid grid-cols-5 gap-4">
+    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
       {cards.map((card) => (
         <article key={card.title} className="rounded-lg border border-slate-800 bg-slate-900/70 p-5 shadow-lg shadow-black/10">
           <div className="flex items-start gap-4">

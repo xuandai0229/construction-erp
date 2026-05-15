@@ -11,6 +11,7 @@ import { TableVirtuoso } from 'react-virtuoso';
 import { useInvoicesQuery, useDeleteInvoiceMutation } from '@/services/queries/useDebts';
 import { useCostsQuery, useUpdateCostMutation } from '@/services/queries/useCosts';
 import { exportToCsv } from '@/app/services/export.service';
+import { COL_WIDTHS, ERP_TERMINOLOGY } from '@/app/utils/table-constants';
 
 // Stable references for TableVirtuoso — prevents re-render loops
 const InvoiceTableComponents = {
@@ -43,11 +44,10 @@ export default function DebtPage() {
     <div className="erp-page">
       <Sidebar activeItem="debt" />
       <main
-        className={`erp-page-main transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${sidebarCollapsed ? 'md:ml-[var(--erp-sidebar-collapsed)]' : 'md:ml-[var(--erp-sidebar-width)]'}`}
+        className={`erp-page-main ${sidebarCollapsed ? 'with-sidebar-collapsed' : 'with-sidebar-expanded'}`}
       >
         <Header />
-
-        <div className="p-6 md:p-8 space-y-8 animate-fade-in">
+        <div className="erp-content-container animate-fade-in space-y-8">
           {/* Page Header */}
           <div className="accent-line border-l-4 border-[var(--text-accent)] pl-4">
             <h1 className="erp-section-title">Công nợ & Thanh toán</h1>
@@ -100,18 +100,18 @@ export default function DebtPage() {
                     components={InvoiceTableComponents}
                     fixedHeaderContent={() => (
                       <tr>
-                        <th className="w-[110px] bg-[var(--table-head-bg)]">Mã HĐ</th>
-                        <th className="w-[110px] bg-[var(--table-head-bg)]">Ngày phát hành</th>
-                        <th className="w-[130px] text-right bg-[var(--table-head-bg)]">Tổng tiền</th>
-                        <th className="w-[130px] text-right bg-[var(--table-head-bg)]">Đã thu</th>
-                        <th className="w-[130px] text-right bg-[var(--table-head-bg)]">Còn nợ</th>
-                        <th className="w-[100px] text-center bg-[var(--table-head-bg)]">Trạng thái</th>
-                        <th className="w-[150px] text-center bg-[var(--table-head-bg)]">Thao tác</th>
+                        <th className={`${COL_WIDTHS.DATE} bg-[var(--table-head-bg)] text-center`}>Mã HĐ</th>
+                        <th className={`${COL_WIDTHS.DATE} bg-[var(--table-head-bg)] text-center`}>Ngày phát hành</th>
+                        <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)]`}>{ERP_TERMINOLOGY.FINANCE.BUDGET}</th>
+                        <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)]`}>Đã thu</th>
+                        <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)]`}>Còn nợ</th>
+                        <th className={`${COL_WIDTHS.STATUS} text-center bg-[var(--table-head-bg)]`}>{ERP_TERMINOLOGY.STATUS.TITLE}</th>
+                        <th className={`${COL_WIDTHS.ACTIONS} text-center bg-[var(--table-head-bg)]`}>{ERP_TERMINOLOGY.ACTIONS.TITLE}</th>
                       </tr>
                     )}
                     itemContent={(i, inv) => (
                       <>
-                        <td>
+                        <td className={`${COL_WIDTHS.DATE} text-center`}>
                           <button
                             onClick={() => setHistoryInvoice(inv.id)}
                             className="text-[12px] font-bold text-[var(--text-muted)] hover:text-[var(--text-accent)] transition-colors font-mono"
@@ -119,24 +119,24 @@ export default function DebtPage() {
                             {inv.id.substring(0, 8).toUpperCase()}
                           </button>
                         </td>
-                        <td className="text-[12px] text-[var(--text-secondary)] whitespace-nowrap">
+                        <td className={`${COL_WIDTHS.DATE} text-center text-[12px] text-[var(--text-secondary)] whitespace-nowrap tabular-nums`}>
                           {formatDate(inv.issuedDate)}
                         </td>
-                        <td className="text-right tabular-nums font-bold text-[var(--text-primary)] whitespace-nowrap">
+                        <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums font-bold text-[var(--text-primary)] whitespace-nowrap`}>
                           {formatVnd(inv.amount)}
                         </td>
-                        <td className="text-right tabular-nums font-bold text-emerald-500 whitespace-nowrap">
+                        <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums font-bold text-emerald-500 whitespace-nowrap`}>
                           {formatVnd(inv.paidAmount)}
                         </td>
-                        <td className="text-right tabular-nums font-extrabold text-rose-500 whitespace-nowrap">
+                        <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums font-extrabold text-rose-500 whitespace-nowrap`}>
                           {formatVnd(inv.remainingAmount)}
                         </td>
-                        <td className="text-center">
+                        <td className={`${COL_WIDTHS.STATUS} text-center`}>
                           <span className={inv.remainingAmount === 0 ? 'badge-paid' : 'badge-overdue'}>
                             {inv.remainingAmount === 0 ? 'Hoàn tất' : 'Còn nợ'}
                           </span>
                         </td>
-                        <td>
+                        <td className={`${COL_WIDTHS.ACTIONS}`}>
                           <div className="flex items-center justify-center gap-2">
                             {inv.remainingAmount > 0 && (
                               <button
@@ -220,34 +220,34 @@ export default function DebtPage() {
                     components={CostTableComponents}
                     fixedHeaderContent={() => (
                       <tr>
-                        <th className="w-[100px] bg-[var(--table-head-bg)]">Ngày</th>
-                        <th className="min-w-[160px] bg-[var(--table-head-bg)]">Nhà cung cấp</th>
-                        <th className="w-[100px] bg-[var(--table-head-bg)]">Loại</th>
-                        <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Số tiền</th>
-                        <th className="w-[100px] text-center bg-[var(--table-head-bg)]">Trạng thái</th>
-                        <th className="w-[140px] text-center bg-[var(--table-head-bg)]">Thao tác</th>
+                        <th className={`${COL_WIDTHS.DATE} bg-[var(--table-head-bg)] text-center`}>Ngày</th>
+                        <th className={`min-w-[160px] bg-[var(--table-head-bg)] text-left px-4`}>Nhà cung cấp</th>
+                        <th className={`${COL_WIDTHS.DATE} bg-[var(--table-head-bg)] text-center`}>Loại</th>
+                        <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)]`}>Số tiền</th>
+                        <th className={`${COL_WIDTHS.STATUS} text-center bg-[var(--table-head-bg)]`}>Tình trạng</th>
+                        <th className={`${COL_WIDTHS.ACTIONS} text-center bg-[var(--table-head-bg)]`}>{ERP_TERMINOLOGY.ACTIONS.TITLE}</th>
                       </tr>
                     )}
                     itemContent={(i, cost) => (
                       <>
-                        <td className="whitespace-nowrap text-[12px] font-semibold text-[var(--text-muted)] group-hover:text-[var(--text-accent)] transition-colors">
+                        <td className={`${COL_WIDTHS.DATE} text-center whitespace-nowrap text-[12px] font-semibold text-[var(--text-muted)] tabular-nums`}>
                           {formatDate(cost.date)}
                         </td>
-                        <td className="font-bold text-[var(--text-primary)]">
+                        <td className="min-w-[160px] px-4 font-bold text-[var(--text-primary)]">
                           {cost.supplier || 'Không rõ'}
                         </td>
-                        <td>
-                          <span className="inline-flex items-center whitespace-nowrap rounded-md px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)] group-hover:text-[var(--text-accent)] transition-colors">
-                            {cost.costType}
+                        <td className={`${COL_WIDTHS.DATE} text-center`}>
+                          <span className="inline-flex items-center whitespace-nowrap rounded-md px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)]">
+                            {cost.costType === 'material' ? 'VẬT TƯ' : cost.costType === 'labor' ? 'NHÂN CÔNG' : 'DỊCH VỤ'}
                           </span>
                         </td>
-                        <td className="text-right tabular-nums font-black text-rose-500 whitespace-nowrap group-hover:text-rose-400 transition-colors">
+                        <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums font-black text-rose-500 whitespace-nowrap`}>
                           {formatVnd(cost.amount)}
                         </td>
-                        <td className="text-center">
+                        <td className={`${COL_WIDTHS.STATUS} text-center`}>
                           <span className="badge-overdue">Chưa trả</span>
                         </td>
-                        <td className="text-center">
+                        <td className={`${COL_WIDTHS.ACTIONS} text-center`}>
                           <button
                             onClick={() => updateCost({ id: cost.id, updates: { status: 'paid' } })}
                             className="erp-btn h-7 px-3 bg-blue-600 text-white text-[10px] hover:bg-blue-500 shadow-sm shadow-blue-900/20"

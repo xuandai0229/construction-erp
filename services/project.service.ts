@@ -236,12 +236,21 @@ export class ProjectService {
 
   static async getAccountingSummary(projectId: string) {
     const [costsAgg, budgetsAgg, revenuesAgg, invoicesAgg, wbsCount, taskStats, purchaseOrdersAgg] = await Promise.all([
-      prisma.costRecord.aggregate({
-        where: { projectId, deletedAt: null },
+       prisma.costRecord.aggregate({
+        where: { 
+          projectId, 
+          deletedAt: null,
+          approvalStatus: "APPROVED", // Construction Semantic: Realized cost once approved
+          wbs: { deletedAt: null } 
+        },
         _sum: { amount: true },
       }),
-      prisma.budgetRecord.aggregate({
-        where: { projectId, deletedAt: null },
+       prisma.budgetRecord.aggregate({
+        where: { 
+          projectId, 
+          deletedAt: null,
+          wbs: { deletedAt: null } // SME Rule: Exclude orphans
+        },
         _sum: { estimatedAmount: true },
       }),
       prisma.revenue.aggregate({
@@ -299,6 +308,15 @@ export class ProjectService {
     const committedCost = Number(purchaseOrdersAgg._sum?.totalAmount || 0);
     const paidCost = Number(paidCostsAgg._sum?.amount || 0);
     const paidRevenue = Number(paidRevenuesAgg._sum?.amount || 0);
+
+    // [INTEGRITY FIX]: Sync Project.totalBudget if drift detected
+    const prj = await prisma.project.findUnique({ where: { id: projectId }, select: { totalBudget: true } });
+    if (prj && Math.abs(Number(prj.totalBudget || 0) - totalBudget) > 0.01) {
+      await prisma.project.update({
+        where: { id: projectId },
+        data: { totalBudget: totalBudget }
+      });
+    }
 
     const costByType: Record<string, number> = {};
     costsByType.forEach(c => costByType[c.costType] = Number(c._sum.amount || 0));

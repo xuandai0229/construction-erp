@@ -5,7 +5,51 @@ import { useERPStore } from '@/store/erpStore';
 import { useState } from 'react';
 import ConfirmModal from '@/app/components/modals/ConfirmModal';
 
-// ... (existing WBSTableProps, FlattenedNode, flattenWBS) ...
+import { TableVirtuoso } from 'react-virtuoso';
+import { useMemo } from 'react';
+import { useDeleteWBSMutation } from '@/services/queries/useWBS';
+import { COL_WIDTHS, FINANCIAL_CELL_CLASS, ERP_TERMINOLOGY } from '@/app/utils/table-constants';
+
+// Stable references to prevent re-render loops with TableVirtuoso
+const WBSStableTableComponents = {
+  Table: (props: any) => <table {...props} className="erp-table w-full min-w-max table-fixed" />,
+  TableHead: (props: any) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
+  TableRow: (props: any) => {
+    const node = props.item as FlattenedNode;
+    const isParent = node.children && node.children.length > 0;
+    return (
+      <tr 
+        {...props} 
+        className={`transition-colors hover:bg-[var(--secondary)] ${isParent && node.level === 0 ? 'bg-[var(--secondary)]/50' : ''}`} 
+      />
+    );
+  }
+};
+
+interface WBSTableProps {
+  nodes: EnrichedWBSNode[];
+  onToggleExpand: (id: string) => void;
+  onEdit: (w: WBSItem) => void;
+  onAddChild?: (parentId: string) => void;
+  totalBudget: number;
+  totalActual: number;
+  variance: number;
+  progress: number;
+}
+
+type FlattenedNode = EnrichedWBSNode & { rowIndex: string };
+
+const flattenWBS = (nodes: EnrichedWBSNode[], indexPrefix: string = ''): FlattenedNode[] => {
+  let result: FlattenedNode[] = [];
+  nodes.forEach((node, idx) => {
+    const currentIndex = indexPrefix ? `${indexPrefix}.${idx + 1}` : `${idx + 1}`;
+    result.push({ ...node, rowIndex: currentIndex });
+    if (node.isExpanded && node.children && node.children.length > 0) {
+      result = result.concat(flattenWBS(node.children, currentIndex));
+    }
+  });
+  return result;
+};
 
 export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, totalBudget, totalActual, variance, progress }: WBSTableProps) {
   const currentProjectId = useERPStore(state => state.currentProjectId);
@@ -92,17 +136,17 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
             components={WBSStableTableComponents}
             fixedHeaderContent={() => (
               <tr>
-                <th className="w-10 text-center bg-[var(--table-head-bg)]">
+                <th className={`${COL_WIDTHS.CHECKBOX} text-center bg-[var(--table-head-bg)] border-r border-[var(--border)]`}>
                   <input type="checkbox" className="rounded border-[var(--border)] bg-[var(--secondary)] text-blue-600 focus:ring-blue-500/20 focus:ring-offset-0" />
                 </th>
-                <th className="w-16 text-center bg-[var(--table-head-bg)]">Mã số</th>
-                <th className="min-w-[250px] bg-[var(--table-head-bg)]">Tên hạng mục (WBS)</th>
-                <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Dự toán (VNĐ)</th>
-                <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Thực tế (VNĐ)</th>
-                <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Chênh lệch</th>
-                <th className="w-[120px] text-center bg-[var(--table-head-bg)]">% HT</th>
-                <th className="w-[120px] text-center bg-[var(--table-head-bg)]">Trạng thái</th>
-                <th className="w-[120px] text-center bg-[var(--table-head-bg)]">Thao tác</th>
+                <th className={`${COL_WIDTHS.INDEX} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>Mã WBS</th>
+                <th className={`${COL_WIDTHS.NAME_WBS} bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)] text-left px-4 border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.WBS.COL_NAME}</th>
+                <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.BUDGET}</th>
+                <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.ACTUAL}</th>
+                <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.VARIANCE}</th>
+                <th className={`${COL_WIDTHS.PROGRESS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>Tiến độ %</th>
+                <th className={`${COL_WIDTHS.STATUS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.STATUS.TITLE}</th>
+                <th className={`${COL_WIDTHS.ACTIONS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)]`}>{ERP_TERMINOLOGY.ACTIONS.TITLE}</th>
               </tr>
             )}
             itemContent={(i, node) => {
@@ -112,13 +156,13 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
 
               return (
                 <>
-                  <td className="px-4 py-3 text-center border-r border-[var(--border)]">
+                  <td className={`${COL_WIDTHS.CHECKBOX} px-4 py-3 text-center border-r border-[var(--border)]`}>
                     <input type="checkbox" className="rounded border-[var(--border)] bg-[var(--secondary)] text-blue-600 focus:ring-blue-500/20 focus:ring-offset-0" />
                   </td>
-                  <td className="px-4 py-3 text-center text-[12px] font-bold text-[var(--text-accent)] border-r border-[var(--border)] bg-[var(--accent)]">
+                  <td className={`${COL_WIDTHS.INDEX} px-4 py-3 text-center text-[12px] font-bold text-[var(--text-accent)] border-r border-[var(--border)] bg-[var(--accent)]`}>
                     {node.rowIndex}
                   </td>
-                  <td className="px-4 py-3 border-r border-[var(--border)]">
+                  <td className={`${COL_WIDTHS.NAME_WBS} px-4 py-3 border-r border-[var(--border)]`}>
                     <div className="flex items-center" style={{ paddingLeft: `${node.level * 20}px` }}>
                       {isParent ? (
                         <button onClick={() => onToggleExpand(node.id)} className="mr-2 flex h-5 w-5 items-center justify-center rounded text-[var(--text-muted)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)] transition-colors">
@@ -129,21 +173,25 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                       ) : (
                         <div className="mr-2 w-5 flex justify-center text-[var(--text-muted)] opacity-30 text-[10px]">●</div>
                       )}
-                      <span className={`text-[13px] ${isParent ? 'font-bold text-[var(--text-primary)]' : 'font-medium text-[var(--text-secondary)]'}`}>
-                        {node.name}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-right text-[13px] font-bold text-[var(--text-tertiary)] border-r border-[var(--border)]">
+                    <span className={`text-[13px] ${isParent ? 'font-bold text-[var(--text-primary)]' : 'font-medium text-[var(--text-secondary)]'}`}>
+                      {node.name === 'Foundation' ? 'Hầm & Móng' : 
+                       node.name === 'Structure' ? 'Kết cấu thân' : 
+                       node.name === 'Electrical' ? 'Cơ điện (MEP)' : 
+                       node.name === 'Finishing' ? 'Hoàn thiện' : 
+                       node.name}
+                    </span>
+                  </div>
+                </td>
+                  <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right text-[13px] font-bold text-[var(--text-tertiary)] border-r border-[var(--border)] tabular-nums`}>
                     {node.budget === 0 ? <span className="text-rose-500/50">0</span> : node.budget.toLocaleString()}
                   </td>
-                  <td className="px-4 py-3 text-right text-[13px] font-black text-[var(--text-primary)] border-r border-[var(--border)]">
+                  <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right text-[13px] font-black text-[var(--text-primary)] border-r border-[var(--border)] tabular-nums`}>
                     {node.actual.toLocaleString()}
                   </td>
-                  <td className={`px-4 py-3 text-right text-[13px] font-black border-r border-[var(--border)] ${isOverBudget ? 'text-rose-500' : 'text-emerald-500'}`}>
+                  <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right text-[13px] font-black border-r border-[var(--border)] tabular-nums ${isOverBudget ? 'text-rose-500' : 'text-emerald-500'}`}>
                     {isOverBudget ? '' : '+'}{node.profit.toLocaleString()}
                   </td>
-                  <td className="px-4 py-3 border-r border-[var(--border)]">
+                  <td className={`${COL_WIDTHS.PROGRESS} px-4 py-3 border-r border-[var(--border)]`}>
                     <div className="flex flex-col gap-1">
                       <div className="flex items-center justify-between">
                         <span className={`text-[10px] font-black ${isOverBudget ? 'text-rose-500' : 'text-[var(--text-muted)]'}`}>
@@ -158,12 +206,12 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-center border-r border-[var(--border)]">
+                  <td className={`${COL_WIDTHS.STATUS} px-4 py-3 text-center border-r border-[var(--border)]`}>
                     <span className={`erp-badge whitespace-nowrap inline-flex items-center justify-center rounded border px-2.5 py-1 text-[10px] font-bold shadow-sm ${statusMap[semanticStatus]}`}>
                       {semanticStatus}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-center">
+                  <td className={`${COL_WIDTHS.ACTIONS} px-4 py-3 text-center`}>
                     <div className="flex items-center justify-center gap-1">
                       <button 
                         onClick={() => handleEdit(node)}
@@ -202,17 +250,32 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
         )}
         
         {/* TFOOT implementation */}
-        <div className="border-t-2 border-[var(--border)] bg-[var(--table-head-bg)] flex justify-between px-4 py-3 min-w-[1200px] sticky bottom-0 z-20 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
-           <div className="w-[330px] text-[12px] font-black uppercase tracking-widest text-[var(--text-primary)]">Tổng cộng dự án</div>
-           <div className="w-[140px] text-right text-[14px] font-black text-[var(--text-primary)] tabular-nums">{totalBudget.toLocaleString()}</div>
-           <div className="w-[140px] text-right text-[14px] font-black text-[var(--text-primary)] tabular-nums">{totalActual.toLocaleString()}</div>
-           <div className={`w-[140px] text-right text-[14px] font-black tabular-nums ${variance < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
-              {variance < 0 ? '' : '+'}{variance.toLocaleString()}
-           </div>
-           <div className="w-[120px] flex items-center justify-center px-4">
-              <span className="text-[13px] font-black text-blue-500 tabular-nums">{progress.toFixed(1)}%</span>
-           </div>
-           <div className="w-[240px]"></div>
+        <div className="border-t-2 border-[var(--border)] bg-[var(--table-head-bg)] sticky bottom-0 z-20 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+          <table className="erp-table w-full table-fixed min-w-max">
+            <tbody>
+              <tr className="group">
+                <td className={`${COL_WIDTHS.CHECKBOX} border-r border-[var(--border)]`}></td>
+                <td className={`${COL_WIDTHS.INDEX} border-r border-[var(--border)]`}></td>
+                <td className={`${COL_WIDTHS.NAME_WBS} px-4 py-3 text-[11px] font-black uppercase tracking-[0.15em] text-[var(--text-primary)] border-r border-[var(--border)]`}>
+                  TỔNG CỘNG DỰ TOÁN DỰ ÁN
+                </td>
+                <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right ${FINANCIAL_CELL_CLASS} text-[13px] text-[var(--text-primary)] border-r border-[var(--border)]`}>
+                  {totalBudget.toLocaleString()}
+                </td>
+                <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right ${FINANCIAL_CELL_CLASS} text-[13px] text-[var(--text-primary)] border-r border-[var(--border)]`}>
+                  {totalActual.toLocaleString()}
+                </td>
+                <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right ${FINANCIAL_CELL_CLASS} text-[13px] border-r border-[var(--border)] ${variance < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
+                  {variance < 0 ? '' : '+'}{variance.toLocaleString()}
+                </td>
+                <td className={`${COL_WIDTHS.PROGRESS} px-4 py-3 text-center border-r border-[var(--border)]`}>
+                  <span className="text-[12px] font-black text-blue-500 tabular-nums">{progress.toFixed(1)}%</span>
+                </td>
+                <td className={`${COL_WIDTHS.STATUS} border-r border-[var(--border)]`}></td>
+                <td className={`${COL_WIDTHS.ACTIONS}`}></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 

@@ -2,20 +2,13 @@
 
 import { costType_LABELS, CostRecord } from '@/app/types';
 import { formatDate, formatVnd } from './dashboard-data';
+import { COL_WIDTHS, FINANCIAL_CELL_CLASS } from '@/app/utils/table-constants';
 import { useERPStore } from '@/store/erpStore';
 import { TableVirtuoso } from 'react-virtuoso';
-import { useDeleteCostMutation } from '@/services/queries/useCosts';
+import { useDeleteCostMutation, useTransitionCostMutation } from '@/services/queries/useCosts';
 import { useWBSQuery } from '@/services/queries/useWBS';
-
-export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEdit: (c: CostRecord) => void }) {
-  const currentProjectId = useERPStore(state => state.currentProjectId);
-  const { data: wbsData } = useWBSQuery(currentProjectId);
-  const wbs = wbsData?.flat || [];
-  const { mutate: deleteCost } = useDeleteCostMutation(currentProjectId);
-
 import { useState } from 'react';
 import ConfirmModal from '@/app/components/modals/ConfirmModal';
-import { useTransitionCostMutation } from '@/services/queries/useCosts';
 
 export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEdit: (c: CostRecord) => void }) {
   const currentProjectId = useERPStore(state => state.currentProjectId);
@@ -70,20 +63,19 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
                 TableRow: (props) => <tr {...props} className="group erp-table-row" />
               }}
               fixedHeaderContent={() => (
-                <tr>
-                  <th className="w-[90px] bg-[var(--table-head-bg)]">Ngày</th>
-                  <th className="min-w-[180px] bg-[var(--table-head-bg)]">Nội dung</th>
-                  <th className="min-w-[130px] bg-[var(--table-head-bg)]">Hạng mục</th>
-                  <th className="w-[100px] bg-[var(--table-head-bg)]">Loại</th>
-                  <th className="w-[130px] text-right bg-[var(--table-head-bg)]">Số tiền</th>
-                  <th className="w-[90px] text-center bg-[var(--table-head-bg)]">Trạng thái</th>
-                  <th className="w-[80px] text-center bg-[var(--table-head-bg)]">Thao tác</th>
+                <tr className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)]">
+                  <th className={`${COL_WIDTHS.DATE} py-2 text-left bg-[var(--table-head-bg)] whitespace-nowrap`}>Ngày</th>
+                  <th className={`${COL_WIDTHS.NAME_WBS} py-2 text-left bg-[var(--table-head-bg)] whitespace-nowrap`}>Mô tả / Đội CC</th>
+                  <th className={`${COL_WIDTHS.NAME_WBS} py-2 text-left bg-[var(--table-head-bg)] whitespace-nowrap`}>Hạng mục WBS</th>
+                  <th className={`${COL_WIDTHS.STATUS} py-2 text-left bg-[var(--table-head-bg)] whitespace-nowrap`}>Loại</th>
+                  <th className={`${COL_WIDTHS.FINANCIAL} py-2 text-right bg-[var(--table-head-bg)] whitespace-nowrap`}>Số tiền</th>
+                  <th className="w-[100px] py-2 text-center bg-[var(--table-head-bg)] whitespace-nowrap">Thao tác</th>
                 </tr>
               )}
               itemContent={(i, cost) => (
                 <>
                   {/* Date */}
-                  <td className="whitespace-nowrap py-2 text-[11px] font-bold text-[var(--text-muted)] group-hover:text-[var(--text-accent)] transition-colors">
+                  <td className={`whitespace-nowrap py-2 text-[11px] font-bold text-[var(--text-muted)] group-hover:text-[var(--text-accent)] transition-colors ${COL_WIDTHS.DATE}`}>
                     {formatDate(cost.date)}
                   </td>
 

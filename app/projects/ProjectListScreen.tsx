@@ -63,12 +63,11 @@ export default function ProjectListScreen() {
     <div className="erp-page">
       <Sidebar activeItem="projects" />
       <main
-        className="erp-page-main"
-        style={{ marginLeft: sidebarCollapsed ? 'var(--erp-sidebar-collapsed)' : 'var(--erp-sidebar-width)' }}
+        className={`erp-page-main ${sidebarCollapsed ? 'with-sidebar-collapsed' : 'with-sidebar-expanded'}`}
       >
         <ProjectsHeader onAdd={() => setIsAddingProject(true)} />
 
-        <div className="p-6 md:p-8 space-y-6 animate-fade-in">
+        <div className="erp-content-container animate-fade-in space-y-6">
           <ProjectCardStats projects={projects} totalCount={metadata?.total || 0} />
           <ProjectFilters 
             filters={filters} 

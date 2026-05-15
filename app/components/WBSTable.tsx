@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { WBSBudgetRow, formatVnd } from './dashboard-data';
+import { COL_WIDTHS, FINANCIAL_CELL_CLASS, ERP_TERMINOLOGY } from '@/app/utils/table-constants';
 
 export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
   const renderRows = (items: WBSBudgetRow[], level = 0): React.ReactNode => {
@@ -13,7 +14,7 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
         <React.Fragment key={item.id}>
           <tr className="group erp-table-row">
             {/* WBS Name */}
-            <td className="whitespace-nowrap py-1.5">
+            <td className={`${COL_WIDTHS.NAME_WBS} whitespace-nowrap py-1.5 px-4`}>
               <div className="flex items-center gap-2" style={{ paddingLeft: `${level * 14}px` }}>
                 {item.children.length > 0 && (
                   <svg viewBox="0 0 24 24" className="h-3 w-3 shrink-0 text-[var(--text-muted)]" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -26,23 +27,18 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
               </div>
             </td>
 
-            {/* Budget */}
-            <td className="text-right py-1.5 tabular-nums text-[11px] font-bold text-[var(--text-tertiary)] whitespace-nowrap">
+            <td className={`${COL_WIDTHS.FINANCIAL} text-right py-1.5 ${FINANCIAL_CELL_CLASS} text-[11px] text-[var(--text-tertiary)] whitespace-nowrap`}>
               {formatVnd(item.budget)}
             </td>
-
-            {/* Actual */}
-            <td className="text-right py-1.5 tabular-nums text-[11px] font-black text-[var(--text-primary)] group-hover:text-blue-500 transition-colors whitespace-nowrap">
+            <td className={`${COL_WIDTHS.FINANCIAL} text-right py-1.5 ${FINANCIAL_CELL_CLASS} text-[11px] text-[var(--text-primary)] group-hover:text-blue-500 transition-colors whitespace-nowrap`}>
               {formatVnd(item.actual)}
             </td>
-
-            {/* Variance */}
-            <td className={`text-right py-1.5 tabular-nums text-[11px] font-black whitespace-nowrap ${item.profit >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+            <td className={`${COL_WIDTHS.FINANCIAL} text-right py-1.5 ${FINANCIAL_CELL_CLASS} text-[11px] whitespace-nowrap ${item.profit >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
               {item.profit >= 0 ? '+' : ''}{formatVnd(item.profit)}
             </td>
 
             {/* Progress bar */}
-            <td className="text-center py-1.5 w-[110px]">
+            <td className={`${COL_WIDTHS.PROGRESS} text-center py-1.5`}>
               <div className="flex flex-col items-center gap-0.5 px-2">
                 <div className="h-1 w-full overflow-hidden rounded-full bg-[var(--secondary)]">
                   <div
@@ -67,15 +63,15 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
   };
 
   return (
-    <div className="overflow-x-auto scrollbar-hide">
-      <table className="erp-table">
+    <div className="overflow-x-auto scrollbar-hide border border-[var(--border)] rounded-lg">
+      <table className="erp-table w-full table-fixed min-w-max">
         <thead>
           <tr>
-            <th className="min-w-[220px]">Hạng mục thi công (WBS)</th>
-            <th className="text-right w-[130px]">Ngân sách</th>
-            <th className="text-right w-[130px]">Thực tế</th>
-            <th className="text-right w-[130px]">Chênh lệch</th>
-            <th className="text-center w-[120px]">Tiến độ</th>
+            <th className={`${COL_WIDTHS.NAME_WBS} bg-[var(--table-head-bg)] text-left px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black`}>Hạng mục thi công (WBS)</th>
+            <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black`}>{ERP_TERMINOLOGY.FINANCE.BUDGET}</th>
+            <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black`}>{ERP_TERMINOLOGY.FINANCE.ACTUAL}</th>
+            <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black`}>{ERP_TERMINOLOGY.FINANCE.VARIANCE}</th>
+            <th className={`${COL_WIDTHS.PROGRESS} text-center bg-[var(--table-head-bg)] py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black`}>Tiến độ %</th>
           </tr>
         </thead>
         <tbody>

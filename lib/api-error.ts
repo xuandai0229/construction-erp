@@ -51,7 +51,7 @@ export async function handleApiError(error: unknown) {
       return NextResponse.json({ success: false, error: 'Dữ liệu đã tồn tại trong hệ thống' }, { status: 400 });
     }
     if (error.code === 'P2003') {
-      return NextResponse.json({ success: false, error: 'Vi phạm ràng buộc dữ liệu liên kết' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Không thể xóa do đã có dữ liệu liên kết' }, { status: 400 });
     }
     if (error.code === 'P2025') {
       return NextResponse.json({ success: false, error: 'Không tìm thấy dữ liệu yêu cầu' }, { status: 404 });

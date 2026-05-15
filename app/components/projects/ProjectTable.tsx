@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { TableVirtuoso } from 'react-virtuoso';
 import { useDeleteProjectMutation, useUpdateProjectMutation } from '@/services/queries/useProjects';
+import { formatVnd } from '../dashboard-data';
+import { COL_WIDTHS, FINANCIAL_CELL_CLASS, ERP_TERMINOLOGY } from '@/app/utils/table-constants';
 import ConfirmModal from '@/app/components/modals/ConfirmModal';
 
 const statusLabels: Record<string, { text: string; class: string }> = {
@@ -158,23 +160,23 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
                 }
               }}
               fixedHeaderContent={() => (
-                <tr>
-                  <th className="w-12 py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">#</th>
-                  <th className="min-w-[280px] py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Hồ sơ dự án</th>
-                  <th className="min-w-[160px] py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Chủ đầu tư</th>
-                  <th className="w-[120px] py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Phân loại</th>
-                  <th className="w-[160px] py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Giá trị HĐ</th>
-                  <th className="w-[110px] py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Khởi công</th>
-                  <th className="w-[110px] py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Bàn giao</th>
-                  <th className="w-[130px] py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Trạng thái</th>
-                  <th className="w-[140px] py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Tiến độ</th>
-                  <th className="w-[120px] py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Thao tác</th>
+                <tr className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)]">
+                  <th className={`py-4 px-4 text-center text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.CHECKBOX}`}>STT</th>
+                  <th className={`py-4 px-4 text-left text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.PROJECT_PROFILE}`}>{ERP_TERMINOLOGY.PROJECT.COL_PROFILE}</th>
+                  <th className={`py-4 px-4 text-left text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.INVESTOR}`}>{ERP_TERMINOLOGY.PROJECT.COL_INVESTOR}</th>
+                  <th className={`py-4 px-4 text-center text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.DATE}`}>{ERP_TERMINOLOGY.PROJECT.START_DATE}</th>
+                  <th className={`py-4 px-4 text-center text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.DATE}`}>{ERP_TERMINOLOGY.PROJECT.END_DATE}</th>
+                  <th className={`py-4 px-4 text-right text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.FINANCIAL}`}>{ERP_TERMINOLOGY.FINANCE.BUDGET}</th>
+                  <th className={`py-4 px-4 text-right text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.FINANCIAL}`}>{ERP_TERMINOLOGY.FINANCE.ACTUAL}</th>
+                  <th className={`py-4 px-4 text-center text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.PROGRESS}`}>Tiến độ %</th>
+                  <th className={`py-4 px-4 text-center text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.STATUS}`}>{ERP_TERMINOLOGY.STATUS.TITLE}</th>
+                  <th className={`py-4 px-4 text-center text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.15em] bg-[var(--table-head-bg)] whitespace-nowrap ${COL_WIDTHS.ACTIONS}`}>{ERP_TERMINOLOGY.ACTIONS.TITLE}</th>
                 </tr>
               )}
               itemContent={(i, p) => (
                 <>
-                  <td className="py-4 px-4 text-center text-[12px] font-medium text-[var(--text-muted)] tabular-nums">{i + 1}</td>
-                  <td className="py-4 px-4">
+                  <td className={`${COL_WIDTHS.CHECKBOX} py-4 px-4 text-center text-[12px] font-medium text-[var(--text-muted)] tabular-nums`}>{i + 1}</td>
+                  <td className={`${COL_WIDTHS.PROJECT_PROFILE} py-4 px-4`}>
                     <div className="flex items-center gap-3 min-w-0">
                       <ProjectThumbnail src={p.thumbnail} />
                       <div className="flex flex-col min-w-0">
@@ -183,29 +185,27 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
                       </div>
                     </div>
                   </td>
-                  <td className="py-4 px-4 text-[12px] font-medium text-[var(--text-secondary)] truncate max-w-[160px]">{p.investor || '---'}</td>
-                  <td className="py-4 px-4 text-center">
-                    <span className="erp-badge whitespace-nowrap px-2 py-0.5 rounded text-[9px] font-bold bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)] uppercase tracking-wider">
-                      {p.type}
-                    </span>
-                  </td>
-                  <td className="py-4 px-4 text-right">
-                    <div className="text-[12.5px] font-bold text-[var(--text-primary)] tabular-nums">{(p.totalValue ?? 0).toLocaleString()}</div>
-                    <div className="text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-0.5 opacity-60">VND</div>
-                  </td>
-                  <td className="py-4 px-4 text-center text-[11px] font-medium text-[var(--text-secondary)] tabular-nums">
+                  <td className={`${COL_WIDTHS.INVESTOR} py-4 px-4 text-[12px] font-medium text-[var(--text-secondary)] truncate`}>{p.investor || '---'}</td>
+                  <td className={`${COL_WIDTHS.DATE} py-4 px-4 text-center text-[12px] font-bold text-[var(--text-muted)] tabular-nums`}>
                     {p.startDate ? new Date(p.startDate).toLocaleDateString('vi-VN') : '---'}
                   </td>
-                  <td className="py-4 px-4 text-center text-[11px] font-medium text-[var(--text-secondary)] tabular-nums">
+                  <td className={`${COL_WIDTHS.DATE} py-4 px-4 text-center text-[12px] font-bold text-[var(--text-muted)] tabular-nums`}>
                     {p.endDate ? new Date(p.endDate).toLocaleDateString('vi-VN') : '---'}
                   </td>
-                  <td className="py-4 px-4 text-center">
-                    <span className={`erp-badge whitespace-nowrap px-2.5 py-0.5 rounded-full text-[9px] font-bold border uppercase tracking-wider ${statusLabels[p.status]?.class || ''}`}>
-                      {statusLabels[p.status]?.text || p.status}
-                    </span>
+                  <td className={`${COL_WIDTHS.FINANCIAL} py-4 px-4 text-right`}>
+                    <div className="flex items-baseline gap-1 justify-end whitespace-nowrap">
+                      <span className="text-[12.5px] font-bold text-[var(--text-primary)] tabular-nums">{(p.totalValue ?? 0).toLocaleString()}</span>
+                      <span className="text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-widest opacity-60">VND</span>
+                    </div>
                   </td>
-                  <td className="py-4 px-4">
-                    <div className="flex flex-col gap-1.5 w-full max-w-[100px]">
+                  <td className={`${COL_WIDTHS.FINANCIAL} py-4 px-4 text-right`}>
+                    <div className="flex items-baseline gap-1 justify-end whitespace-nowrap">
+                      <span className="text-[12.5px] font-bold text-blue-500 tabular-nums">{(p.totalValue ?? 0).toLocaleString()}</span>
+                      <span className="text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-widest opacity-60">VND</span>
+                    </div>
+                  </td>
+                  <td className={`${COL_WIDTHS.PROGRESS} py-4 px-4 text-center`}>
+                    <div className="flex flex-col gap-1.5 w-full">
                       <div className="flex items-center justify-between text-[9px] font-bold tabular-nums opacity-60">
                         <span>{p.progress}%</span>
                       </div>
@@ -214,7 +214,12 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
                       </div>
                     </div>
                   </td>
-                  <td className="py-4 px-4 text-center">
+                  <td className={`${COL_WIDTHS.STATUS} py-4 px-4 text-center`}>
+                    <span className={`erp-badge whitespace-nowrap px-2.5 py-0.5 rounded-full text-[9px] font-bold border uppercase tracking-wider ${statusLabels[p.status]?.class || ''}`}>
+                      {statusLabels[p.status]?.text || p.status}
+                    </span>
+                  </td>
+                  <td className={`${COL_WIDTHS.ACTIONS} py-4 px-4 text-center`}>
                     {/* Bug 2 & 3: Discoverable actions with enough width */}
                     <div className="flex items-center justify-center gap-1.5 opacity-70 group-hover:opacity-100 transition-all duration-300">
                       <button

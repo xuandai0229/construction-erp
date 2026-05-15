@@ -52,14 +52,18 @@ export function ensureDashboardData() {
   // Logic removed to ensure real data only
 }
 
-export function formatVnd(value: number) {
-  return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(value);
+export function formatVnd(value: any) {
+  const num = typeof value === 'number' ? value : parseFloat(value);
+  if (isNaN(num)) return '0';
+  return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(num);
 }
 
-export function formatShortVnd(value: number) {
-  if (value >= 1000000000) return `${formatVnd(value / 1000000000)} Tỷ`;
-  if (value >= 1000000) return `${formatVnd(value / 1000000)} Tr`;
-  return formatVnd(value);
+export function formatShortVnd(value: any) {
+  const num = typeof value === 'number' ? value : parseFloat(value);
+  if (isNaN(num)) return '0';
+  if (num >= 1000000000) return `${formatVnd(num / 1000000000)} Tỷ`;
+  if (num >= 1000000) return `${formatVnd(num / 1000000)} Tr`;
+  return formatVnd(num);
 }
 
 export function formatDate(value?: string | null) {

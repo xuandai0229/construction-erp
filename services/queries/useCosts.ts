@@ -27,6 +27,7 @@ export function useCreateCostMutation() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(variables.projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(variables.projectId) });
     },
   });
 }
@@ -42,6 +43,7 @@ export function useUpdateCostMutation(projectId: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
     },
   });
 }
@@ -61,6 +63,7 @@ export function useTransitionCostMutation(projectId: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
     },
   });
 }
@@ -80,6 +83,7 @@ export function useDeleteCostMutation(projectId: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
     },
   });
 }

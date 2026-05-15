@@ -16,7 +16,7 @@ export class BudgetService {
 
     const amount = Math.round((data.estimatedAmount + Number.EPSILON) * 100) / 100;
 
-    return prisma.budgetRecord.create({
+    const budget = await prisma.budgetRecord.create({
       data: {
         projectId: data.projectId,
         wbsId: data.wbsId,
@@ -25,6 +25,12 @@ export class BudgetService {
         createdById: data.createdById,
       },
     });
+
+    // Trigger self-healing sync in ProjectService
+    const { ProjectService } = require("./project.service");
+    await ProjectService.getAccountingSummary(data.projectId);
+
+    return budget;
   }
 
   static async findByProject(projectId: string) {
@@ -37,6 +43,15 @@ export class BudgetService {
   static async delete(id: string) {
     const existing = await prisma.budgetRecord.findUnique({ where: { id } });
     if (!existing) throw new ApiError(404, "Không tìm thấy dự toán");
-    return prisma.budgetRecord.delete({ where: { id } });
+    const deleted = await prisma.budgetRecord.update({ 
+      where: { id },
+      data: { deletedAt: new Date() }
+    });
+    
+    // Trigger self-healing sync in ProjectService
+    const { ProjectService } = require("./project.service");
+    await ProjectService.getAccountingSummary(existing.projectId);
+    
+    return deleted;
   }
 }

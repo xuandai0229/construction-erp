@@ -24,12 +24,10 @@ export class WBSService {
       }),
     ]);
 
-    // Map aggregated data back to a shape ProjectFinance can use (or just calculate here)
+    // 2. Map aggregated data back to a shape ProjectFinance can use
     const costsMap = new Map(costsAgg.map(c => [c.wbsId, Number(c._sum.amount || 0)]));
     const budgetsMap = new Map(budgetsAgg.map(b => [b.wbsId, Number(b._sum.estimatedAmount || 0)]));
 
-    // Convert to a simplified form for calculateWBSTree if possible, 
-    // or just pass mock records to satisfy the existing engine without refactoring it.
     const mockCosts = Array.from(costsMap.entries()).map(([wbsId, amount]) => ({ wbsId, amount } as any));
     const mockBudgets = Array.from(budgetsMap.entries()).map(([wbsId, amount]) => ({ wbsId, estimatedAmount: amount } as any));
 
@@ -39,12 +37,19 @@ export class WBSService {
       mockBudgets as unknown as BudgetRecord[]
     );
 
+    // FIX: Attach aggregated numbers to the flat list so exports work correctly
+    const enrichedFlat = items.map(item => ({
+      ...item,
+      budget: budgetsMap.get(item.id) || 0,
+      actual: costsMap.get(item.id) || 0,
+    }));
+
     const totalBudget = tree.reduce((s, n) => s + n.budget, 0);
     const totalActual = tree.reduce((s, n) => s + n.actual, 0);
 
     return {
       tree,
-      flat: items,
+      flat: enrichedFlat,
       stats: {
         totalItems: items.length,
         totalBudget,

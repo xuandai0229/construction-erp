@@ -7,6 +7,7 @@ import { useERPStore } from '@/store/erpStore';
 import { formatVnd } from '@/app/components/dashboard-data';
 import { exportToCsv } from '@/app/services/export.service';
 import { useProjectsQuery } from '@/services/queries/useProjects';
+import { COL_WIDTHS, ERP_TERMINOLOGY, FINANCIAL_CELL_CLASS } from '@/app/utils/table-constants';
 
 // Mock report generation since these are complex queries
 const generateMockMonthlyReport = (projectId: string) => {
@@ -46,11 +47,10 @@ export default function ReportsPage() {
     <div className="erp-page">
       <Sidebar activeItem="reports" />
       <main
-        className={`erp-page-main transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${sidebarCollapsed ? 'md:ml-[var(--erp-sidebar-collapsed)]' : 'md:ml-[var(--erp-sidebar-width)]'}`}
+        className={`erp-page-main ${sidebarCollapsed ? 'with-sidebar-collapsed' : 'with-sidebar-expanded'}`}
       >
         <Header />
-
-        <div className="p-6 md:p-8 space-y-8 animate-fade-in">
+        <div className="erp-content-container animate-fade-in space-y-8">
           {/* Page Header */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div className="accent-line">
@@ -73,7 +73,7 @@ export default function ReportsPage() {
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5 5 5 5-5m-5 5V3" />
                 </svg>
-                Xuất CSV
+                Xuất Excel
               </button>
             </div>
           </div>
@@ -93,14 +93,14 @@ export default function ReportsPage() {
               <table className="erp-table">
                 <thead>
                   <tr>
-                    <th className="min-w-[90px]">Tháng</th>
-                    <th className="text-right w-[120px]">Tổng thu</th>
-                    <th className="text-right w-[120px]">Tổng chi</th>
-                    <th className="text-right w-[120px]">Doanh thu</th>
-                    <th className="text-right w-[120px]">Chi phí</th>
-                    <th className="text-right w-[120px]">Lợi nhuận</th>
-                    <th className="text-right w-[120px]">Số dư</th>
-                    <th className="text-center w-[100px]">Khóa sổ</th>
+                    <th className={`${COL_WIDTHS.DATE} bg-[var(--table-head-bg)] text-center px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black`}>Tháng</th>
+                    <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black`}>Tổng thu</th>
+                    <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black`}>Tổng chi</th>
+                    <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black`}>{ERP_TERMINOLOGY.FINANCE.REVENUE}</th>
+                    <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black`}>Chi phí</th>
+                    <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black`}>Lợi nhuận</th>
+                    <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black`}>Số dư</th>
+                    <th className={`${COL_WIDTHS.STATUS} text-center bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black`}>Khóa sổ</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -108,8 +108,8 @@ export default function ReportsPage() {
                     const locked = locks.includes(row.month);
                     return (
                       <tr key={row.month} className={`group ${locked ? 'bg-rose-500/5' : ''}`}>
-                        <td className="font-bold text-[var(--text-primary)]">
-                          <div className="flex items-center gap-2">
+                        <td className={`${COL_WIDTHS.DATE} text-center font-bold text-[var(--text-primary)] border-r border-[var(--border)] tabular-nums`}>
+                          <div className="flex items-center justify-center gap-2">
                             {locked && (
                               <svg viewBox="0 0 24 24" className="h-3 w-3 text-rose-500 shrink-0" fill="currentColor">
                                 <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/>
@@ -118,17 +118,17 @@ export default function ReportsPage() {
                             {row.month}
                           </div>
                         </td>
-                        <td className="text-right tabular-nums font-semibold text-emerald-500 whitespace-nowrap">{formatVnd(row.cashIn)}</td>
-                        <td className="text-right tabular-nums font-semibold text-rose-500 whitespace-nowrap">{formatVnd(row.cashOut)}</td>
-                        <td className="text-right tabular-nums text-[var(--text-secondary)] whitespace-nowrap">{formatVnd(row.revenue)}</td>
-                        <td className="text-right tabular-nums text-[var(--text-secondary)] whitespace-nowrap">{formatVnd(row.cost)}</td>
-                        <td className={`text-right tabular-nums font-bold whitespace-nowrap ${row.profit >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                        <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums font-semibold text-emerald-500 whitespace-nowrap px-4 py-3 border-r border-[var(--border)]`}>{formatVnd(row.cashIn)}</td>
+                        <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums font-semibold text-rose-500 whitespace-nowrap px-4 py-3 border-r border-[var(--border)]`}>{formatVnd(row.cashOut)}</td>
+                        <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums text-[var(--text-secondary)] whitespace-nowrap px-4 py-3 border-r border-[var(--border)]`}>{formatVnd(row.revenue)}</td>
+                        <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums text-[var(--text-secondary)] whitespace-nowrap px-4 py-3 border-r border-[var(--border)]`}>{formatVnd(row.cost)}</td>
+                        <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums font-bold whitespace-nowrap px-4 py-3 border-r border-[var(--border)] ${row.profit >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                           {row.profit >= 0 ? '+' : ''}{formatVnd(row.profit)}
                         </td>
-                        <td className={`text-right tabular-nums font-extrabold whitespace-nowrap ${row.runningBalance >= 0 ? 'text-blue-500' : 'text-rose-500'}`}>
+                        <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums font-extrabold whitespace-nowrap px-4 py-3 border-r border-[var(--border)] ${row.runningBalance >= 0 ? 'text-blue-500' : 'text-rose-500'}`}>
                           {formatVnd(row.runningBalance)}
                         </td>
-                        <td className="text-center">
+                        <td className={`${COL_WIDTHS.STATUS} text-center px-4 py-3 border-r border-[var(--border)]`}>
                           <button
                             onClick={() => toggleLock(row.month)}
                             className={`erp-btn h-7 px-3 text-[10px] ${locked

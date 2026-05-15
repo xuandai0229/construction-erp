@@ -13,15 +13,19 @@ export async function GET(request: Request) {
       if (data.length === 0) return new Response("", { status: 200 });
       
       const headers = Object.keys(data[0]);
-      const csv = [
+      const csvContent = [
         headers.join(","),
         ...data.map(row => headers.map(h => `"${(row as any)[h]}"`).join(","))
       ].join("\n");
 
-      return new Response(csv, {
+      // Add UTF-8 BOM for Excel compatibility with Vietnamese characters
+      const BOM = "\uFEFF";
+      const csvWithBom = BOM + csvContent;
+
+      return new Response(csvWithBom, {
         headers: {
-          "Content-Type": "text/csv",
-          "Content-Disposition": `attachment; filename="financial_summary_${Date.now()}.csv"`
+          "Content-Type": "text/csv; charset=utf-8",
+          "Content-Disposition": `attachment; filename="Bao_cao_tai_chinh_${Date.now()}.csv"`
         }
       });
     }

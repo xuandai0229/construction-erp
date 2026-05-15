@@ -238,6 +238,7 @@ export const PROJECT_STATUS_LABELS: Record<ProjectStatus, string> = {
   CANCELLED: 'Đã hủy',
   ACTIVE: 'Đang hoạt động',
   CLOSED: 'Đã đóng',
+  ARCHIVED: 'Đã lưu trữ',
 };
 
 export const TASK_STATUS_LABELS: Record<TaskStatus, string> = {
@@ -276,6 +277,7 @@ export const AUDIT_ACTION_LABELS: Record<string, string> = {
   REJECT: 'Từ chối',
   LOCK: 'Khóa',
   UNLOCK: 'Mở khóa',
+  HARD_DELETE: 'Xóa vĩnh viễn',
 };
 
 export const ENTITY_LABELS: Record<string, string> = {

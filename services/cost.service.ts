@@ -119,6 +119,14 @@ export class CostService {
           userAgent: options.userAgent
         });
 
+        // [SYNC HOOK]: Update Dashboard Stats
+        try {
+          const { ProjectService } = require("./project.service");
+          await ProjectService.getAccountingSummary(data.projectId);
+        } catch (e) {
+          LoggerService.error("Failed to sync project stats after cost create", e);
+        }
+
         return item;
       });
     } catch (error: any) {
@@ -191,8 +199,11 @@ export class CostService {
     }
 
     return prisma.$transaction(async (tx) => {
-      // A. HARD DELETE for DRAFT/REJECTED items
-      const item = await tx.costRecord.delete({ where: { id } });
+      // A. SOFT DELETE for DRAFT/REJECTED items (Aligning with lib/prisma.ts security policy)
+      const item = await tx.costRecord.update({ 
+        where: { id },
+        data: { deletedAt: new Date(), version: { increment: 1 } }
+      });
 
       await AuditService.log({
         userId,
@@ -205,6 +216,14 @@ export class CostService {
         ipAddress: options.ipAddress,
         userAgent: options.userAgent
       });
+
+      // [SYNC HOOK]: Update Dashboard Stats
+      try {
+        const { ProjectService } = require("./project.service");
+        await ProjectService.getAccountingSummary(existing.projectId);
+      } catch (e) {
+        LoggerService.error("Failed to sync project stats after cost delete", e);
+      }
 
       return { ...existing, deletedAt: new Date() };
     });

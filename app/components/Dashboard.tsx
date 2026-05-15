@@ -11,6 +11,7 @@ import { DebtPanel, ProfitPanel } from './DebtPanel';
 import AddCostModal from './modals/AddCostModal';
 import { CostRecord, CostType, Project } from '../types';
 import { formatVnd } from './dashboard-data';
+import { ERP_TERMINOLOGY } from '@/app/utils/table-constants';
 import { useProjectsQuery, useProjectStatsQuery } from '@/services/queries/useProjects';
 import { useCostsQuery } from '@/services/queries/useCosts';
 import { useWBSQuery } from '@/services/queries/useWBS';
@@ -177,7 +178,7 @@ export default function Dashboard() {
                 onClick={() => router.push('/projects')}
                 className="erp-btn bg-blue-600 text-white px-8 py-3 hover:bg-blue-500 shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)]"
               >
-                Khởi tạo Dự án mới
+                Tạo hồ sơ dự án
               </button>
             </div>
           </div>
@@ -187,9 +188,9 @@ export default function Dashboard() {
   }
 
   const kpis = [
-    { label: 'Giá trị Hợp đồng', value: data.revenue, color: 'text-blue-400', icon: 'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
-    { label: 'Chi phí thực hiện', value: data.payable.total, color: 'text-rose-400', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.407 2.67 1M12 17c-1.12 0-2.1-.425-2.69-1.041' },
-    { label: 'Lợi nhuận dự kiến', value: data.revenue - data.payable.total, color: 'text-emerald-400', icon: 'M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 3c1.72 0 3.347.433 4.774 1.2m0 0a9.96 9.96 0 013.186 3.645m-9.214 6.42a3 3 0 11-4.243-4.243 3 3 0 014.243 4.243z' },
+    { label: ERP_TERMINOLOGY.FINANCE.REVENUE, value: data.revenue, color: 'text-blue-400', icon: 'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
+    { label: 'Giá trị đã thực hiện', value: data.payable.total, color: 'text-rose-400', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.407 2.67 1M12 17c-1.12 0-2.1-.425-2.69-1.041' },
+    { label: 'Lợi nhuận gộp', value: data.revenue - data.payable.total, color: 'text-emerald-400', icon: 'M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 3c1.72 0 3.347.433 4.774 1.2m0 0a9.96 9.96 0 013.186 3.645m-9.214 6.42a3 3 0 11-4.243-4.243 3 3 0 014.243 4.243z' },
     { label: 'Công nợ Phải thu', value: data.receivable.total, color: 'text-sky-400', icon: 'M17 9V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2m2 4h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2z' },
     { label: 'Công nợ Phải trả', value: data.payable.remaining, color: 'text-amber-400', icon: 'M3 10h18M7 15h1m4 0h1m4 0h1' },
   ];
@@ -198,10 +199,10 @@ export default function Dashboard() {
     <div className="min-h-screen bg-background text-foreground flex overflow-hidden">
       <Sidebar activeItem="overview" />
       
-      <main className={`flex-1 flex flex-col min-w-0 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${sidebarCollapsed ? 'md:ml-[var(--erp-sidebar-collapsed)]' : 'md:ml-[var(--erp-sidebar-width)]'}`}>
+      <main className={`erp-page-main ${sidebarCollapsed ? 'with-sidebar-collapsed' : 'with-sidebar-expanded'}`}>
         <Header data={data} />
         
-        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 space-y-6 animate-fade-in scrollbar-hide">
+        <div className="erp-content-container animate-fade-in space-y-6">
           {/* ─── LEVEL 1: Financial KPIs (Construction Logic) ─── */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {kpis.map((kpi, i) => (

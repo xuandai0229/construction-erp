@@ -41,7 +41,7 @@ export const useERPStore = create<ERPState>((set, get) => ({
     
     // STABILIZATION MODE: Fixed Internal Admin
     const internalUser: UserProfile = {
-      name: 'Hệ thống Quản trị (Internal Admin)',
+      name: 'Quản trị viên hệ thống',
       email: 'admin@erp.internal',
       role: 'SUPER_ADMIN',
       createdAt: new Date().toISOString()

@@ -71,14 +71,20 @@ export default function WBSListScreen() {
   const handleExport = () => {
     if (flatWbs.length === 0) return;
     const headers = ['Mã', 'Tên hạng mục', 'Ngân sách', 'Thực tế', 'Chênh lệch', 'Tiến độ (%)'];
-    const rows = flatWbs.map(w => [
-      `"${w.code || ''}"`,
-      `"${w.name.replace(/"/g, '""')}"`,
-      w.budgetAmount,
-      0, // Placeholder for actual if not in flat list
-      w.budgetAmount,
-      0
-    ]);
+    const rows = flatWbs.map((w: any) => {
+      const budget = w.budget || 0;
+      const actual = w.actual || 0;
+      const variance = budget - actual;
+      const progress = budget > 0 ? (actual / budget) * 100 : (actual > 0 ? 100 : 0);
+      return [
+        `"${w.code || ''}"`,
+        `"${w.name.replace(/"/g, '""')}"`,
+        budget,
+        actual,
+        variance,
+        `${progress.toFixed(1)}%`
+      ];
+    });
     const csvContent = "\uFEFF" + headers.join(',') + '\n' + rows.map(e => e.join(',')).join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -95,11 +101,10 @@ export default function WBSListScreen() {
     <div className="erp-page">
       <Sidebar activeItem="wbs" />
       <main
-        className="erp-page-main"
-        style={{ marginLeft: sidebarCollapsed ? 'var(--erp-sidebar-collapsed)' : 'var(--erp-sidebar-width)' }}
+        className={`erp-page-main ${sidebarCollapsed ? 'with-sidebar-collapsed' : 'with-sidebar-expanded'}`}
       >
         <Header />
-        <div className="p-6 md:p-8 space-y-6 animate-fade-in">
+        <div className="erp-content-container animate-fade-in space-y-6">
           <div className="accent-line border-l-4 border-[var(--text-accent)] pl-4">
             <h1 className="erp-section-title">Hạng mục thi công (WBS)</h1>
             <p className="erp-section-subtitle">Phân tích ngân sách vs thực tế theo từng hạng mục</p>

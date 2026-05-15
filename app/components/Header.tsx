@@ -38,8 +38,8 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
   const unreadCount = notifications.filter((n: any) => !n.isRead).length;
 
   const stats = [
-    { label: 'Chủ đầu tư',      value: currentProject?.investor || '—',              icon: 'M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2' },
-    { label: 'Giá trị HĐ',      value: formatVnd(currentProject?.contractValue || 0), icon: 'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
+    { label: 'Chủ đầu tư / Đối tác', value: currentProject?.investor || '—',              icon: 'M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2' },
+    { label: 'Giá trị HĐ',      value: formatVnd(propData?.revenue || currentProject?.contractValue || 0), icon: 'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
     { label: 'Loại công trình',  value: currentProject?.projectType || 'Dân dụng',    icon: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
   ];
 
@@ -52,7 +52,7 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
       <AddTaskModal    isOpen={showTaskModal}    onClose={() => setShowTaskModal(false)} />
 
       <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--header-bg)] backdrop-blur-xl">
-        <div className="flex h-[var(--erp-header-height)] items-center justify-between gap-4 px-4 md:px-6">
+        <div className="max-w-[1600px] mx-auto flex h-[var(--erp-header-height)] items-center justify-between gap-4 px-4 md:px-6">
 
           {/* ── Left: Mobile Toggle + Project Switcher ── */}
           <div className="flex shrink-0 items-center gap-4 min-w-0">

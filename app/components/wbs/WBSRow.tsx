@@ -4,6 +4,7 @@ import { EnrichedWBSNode, WBSItem } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
 
 import { useDeleteWBSMutation } from '@/services/queries/useWBS';
+import { COL_WIDTHS, ERP_TERMINOLOGY } from '@/app/utils/table-constants';
 
 export default function WBSRow({ node, onToggleExpand, onEdit, index }: { node: EnrichedWBSNode, onToggleExpand: (id: string) => void, onEdit: (w: WBSItem) => void, index: string }) {
   const currentProjectId = useERPStore(state => state.currentProjectId);
@@ -44,12 +45,11 @@ export default function WBSRow({ node, onToggleExpand, onEdit, index }: { node: 
   return (
     <>
       <tr className={`transition-colors hover:bg-[var(--secondary)]/50 ${isParent && node.level === 0 ? 'bg-[var(--secondary)]/30' : ''}`}>
-        <td className="px-5 py-3 text-center border-r border-[var(--border)]">
+        <td className={`${COL_WIDTHS.CHECKBOX} px-4 py-3 text-center border-r border-[var(--border)]`}>
           <input type="checkbox" className="rounded border-[var(--border)] bg-[var(--background)] text-blue-600 focus:ring-blue-500/20 focus:ring-offset-0" />
         </td>
-        <td className="px-5 py-3 text-center text-[12px] font-medium text-[var(--text-muted)] border-r border-[var(--border)]">{index}</td>
-        <td className="px-5 py-3 text-[13px] font-medium text-[var(--text-tertiary)] border-r border-[var(--border)]">{node.code}</td>
-        <td className="px-5 py-3 border-r border-[var(--border)]">
+        <td className={`${COL_WIDTHS.INDEX} px-4 py-3 text-center text-[12px] font-medium text-[var(--text-muted)] border-r border-[var(--border)] tabular-nums`}>{index}</td>
+        <td className={`${COL_WIDTHS.NAME_WBS} px-4 py-3 border-r border-[var(--border)]`}>
           <div className="flex items-center" style={{ paddingLeft: `${node.level * 24}px` }}>
             {isParent ? (
               <button onClick={() => onToggleExpand(node.id)} className="mr-2 flex h-5 w-5 items-center justify-center rounded text-[var(--text-muted)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)] transition-colors">
@@ -72,12 +72,12 @@ export default function WBSRow({ node, onToggleExpand, onEdit, index }: { node: 
             </span>
           </div>
         </td>
-        <td className="px-5 py-3 text-right text-[13px] font-bold text-[var(--text-secondary)] border-r border-[var(--border)]">{node.budget.toLocaleString()}</td>
-        <td className="px-5 py-3 text-right text-[13px] font-bold text-[var(--text-secondary)] border-r border-[var(--border)]">{node.actual.toLocaleString()}</td>
-        <td className={`px-5 py-3 text-right text-[13px] font-bold border-r border-[var(--border)] ${node.profit < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
+        <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right text-[13px] font-bold text-[var(--text-secondary)] border-r border-[var(--border)] tabular-nums`}>{node.budget.toLocaleString()}</td>
+        <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right text-[13px] font-bold text-[var(--text-secondary)] border-r border-[var(--border)] tabular-nums`}>{node.actual.toLocaleString()}</td>
+        <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right text-[13px] font-bold border-r border-[var(--border)] tabular-nums ${node.profit < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
           {node.profit.toLocaleString()}
         </td>
-        <td className="px-5 py-3 w-32 border-r border-[var(--border)]">
+        <td className={`${COL_WIDTHS.PROGRESS} px-4 py-3 border-r border-[var(--border)]`}>
           <div className="flex items-center gap-2">
             <span className="text-[12px] font-bold text-[var(--text-secondary)] w-10 text-right">{node.percentage.toFixed(isParent ? 0 : 1)}%</span>
             <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--secondary)]">
@@ -88,12 +88,12 @@ export default function WBSRow({ node, onToggleExpand, onEdit, index }: { node: 
             </div>
           </div>
         </td>
-        <td className="px-5 py-3 text-center border-r border-[var(--border)]">
+        <td className={`${COL_WIDTHS.STATUS} px-4 py-3 text-center border-r border-[var(--border)]`}>
           <span className={`inline-flex items-center justify-center rounded border px-2 py-0.5 text-[11px] font-medium shadow-sm ${statusMap[node.status] || statusMap['Chưa triển khai']}`}>
             {node.status}
           </span>
         </td>
-        <td className="px-5 py-3">
+        <td className={`${COL_WIDTHS.ACTIONS} px-4 py-3`}>
           <div className="flex items-center justify-center gap-1.5">
             <button className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] transition-colors hover:bg-blue-600 hover:text-white" title="Xem chi tiết">
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">

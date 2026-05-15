@@ -20,18 +20,23 @@ export class ProjectFinance {
     costs: CostRecord[], 
     budgets: BudgetRecord[]
   ): EnrichedWBSNode[] {
-    // 1. Create a map of WBS items for quick lookup
+    // 1. Pre-aggregate budgets and costs by wbsId for O(1) lookup
+    const budgetMap = new Map<string, number>();
+    budgets.forEach(b => {
+      budgetMap.set(b.wbsId, this.round((budgetMap.get(b.wbsId) ?? 0) + b.estimatedAmount));
+    });
+
+    const costMap = new Map<string, number>();
+    costs.forEach(c => {
+      costMap.set(c.wbsId, this.round((costMap.get(c.wbsId) ?? 0) + c.amount));
+    });
+
+    // 2. Create nodes with initial direct totals
     const itemMap = new Map<string, EnrichedWBSNode>();
     
-    // 2. Initialize nodes with direct totals
     wbs.forEach(w => {
-      const wbsBudget = this.round(budgets
-        .filter(b => b.wbsId === w.id)
-        .reduce((s, b) => s + b.estimatedAmount, 0));
-        
-      const wbsActual = this.round(costs
-        .filter(c => c.wbsId === w.id)
-        .reduce((s, c) => s + c.amount, 0));
+      const wbsBudget = budgetMap.get(w.id) ?? 0;
+      const wbsActual = costMap.get(w.id) ?? 0;
 
       itemMap.set(w.id, {
         ...w,
@@ -44,14 +49,15 @@ export class ProjectFinance {
         revenue: 0,
         profit: this.round(wbsBudget - wbsActual),
         variance: this.round(wbsBudget - wbsActual),
-        percentage: wbsBudget > 0 ? this.round((wbsActual / wbsBudget) * 100) : 0,
+        // ACCURACY FIX: If budget is 0 but actual > 0, it's 100% overrun
+        percentage: wbsBudget > 0 
+          ? this.round((wbsActual / wbsBudget) * 100) 
+          : (wbsActual > 0 ? 100 : 0),
         status: 'ok',
       });
     });
 
-    // 3. Build tree and roll up totals (Bottom-up approach would be better, but we'll use recursion for clarity)
-    const tree: EnrichedWBSNode[] = [];
-    
+    // 3. Build tree and roll up totals using post-order traversal logic
     const assemble = (parentId: string | null = null, level = 0): EnrichedWBSNode[] => {
       const children: EnrichedWBSNode[] = [];
       
@@ -70,7 +76,12 @@ export class ProjectFinance {
           node.actual = this.round(node.actual + childActual);
           node.variance = this.round(node.budget - node.actual);
           node.profit = node.variance;
-          node.percentage = node.budget > 0 ? this.round((node.actual / node.budget) * 100) : 0;
+          
+          // RE-CALCULATE percentage after rollup
+          node.percentage = node.budget > 0 
+            ? this.round((node.actual / node.budget) * 100) 
+            : (node.actual > 0 ? 100 : 0);
+            
           node.status = node.percentage > 100 ? 'over' : 'ok';
           
           children.push(node);
