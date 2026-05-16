@@ -80,8 +80,13 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
                   </svg>
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--text-tertiary)] leading-none mb-2 opacity-60">
+                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--text-tertiary)] leading-none mb-2 opacity-60 flex items-center gap-2">
                     {s.label}
+                    {i === 1 && propData?.version && (
+                      <span className="bg-blue-500/10 text-blue-500 px-1.5 py-0.5 rounded text-[8px] border border-blue-500/20">
+                        {propData.version}
+                      </span>
+                    )}
                   </span>
                   <span className="text-[12.5px] font-black text-[var(--text-primary)] truncate max-w-[200px] group-hover:text-blue-500 transition-colors tracking-tight">
                     {s.value}

@@ -34,7 +34,8 @@ function Row({ label, value }: { label: string; value: string }) {
 }
 
 function BudgetPie({ data }: { data: DashboardData }) {
-  const total = data.costByType.reduce((sum, row) => sum + row.value, 0);
+  // Authoritative total from backend
+  const total = data.totalCost;
   const segments = data.costByType.map((row, index, rows) => {
     const pct = total > 0 ? (row.value / total) * 100 : 0;
     const previous = rows.slice(0, index).reduce((sum, item) => sum + (total > 0 ? (item.value / total) * 100 : 0), 0);

@@ -7,10 +7,10 @@ export function useWBSQuery(projectId: string) {
   return useQuery({
     queryKey: queryKeys.wbs.byProject(projectId),
     queryFn: async () => {
-      if (!projectId) return { flat: [], tree: [] };
+      if (!projectId) return { flat: [], tree: [], stats: {} };
       const res = await wbsApi.getByProject(projectId);
       if (!res.success) throw new Error(res.error || 'Failed to fetch WBS');
-      return res.data || { flat: [], tree: [] };
+      return res.data || { flat: [], tree: [], stats: {} };
     },
     enabled: !!projectId,
   });

@@ -70,7 +70,10 @@ export default function ProjectListScreen() {
         <ProjectsHeader onAdd={() => setIsAddingProject(true)} />
 
         <div className="erp-content-container animate-fade-in space-y-6">
-          <ProjectCardStats projects={projects} totalCount={metadata?.total || 0} />
+          <ProjectCardStats 
+            stats={metadata?.stats} 
+            totalCount={metadata?.total || 0} 
+          />
           <ProjectFilters 
             filters={filters} 
             onFilterChange={(f) => {

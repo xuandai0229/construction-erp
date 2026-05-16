@@ -13,7 +13,15 @@ async function run() {
   const promises = [];
   for(let i = 0; i < 10; i++) {
     promises.push(CostService.create({
-      projectId, wbsId, costType: "material" as any, amount: 500000, requestId: duplicateId, note: "Spam submit " + i, status: "unpaid"
+      projectId, 
+      wbsId, 
+      costType: "material" as any, 
+      amount: 500000, 
+      requestId: duplicateId, 
+      note: "Spam submit " + i, 
+      status: "unpaid",
+      vatRate: 10,
+      retentionRate: 0
     }));
   }
   
@@ -36,6 +44,8 @@ async function run() {
       amount: Math.floor(Math.random() * 1000000) + 100000,
       quantity: 1,
       unitPrice: 0,
+      vatRate: 10,
+      retentionRate: 0,
       supplier: "Nhà cung cấp " + (i*batchSize + j),
       note: "Auto generated cost",
       status: "unpaid",

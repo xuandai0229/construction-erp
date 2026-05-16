@@ -807,6 +807,27 @@ exports.Prisma.NotificationScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.DomainEventScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  payload: 'payload',
+  metadata: 'metadata',
+  status: 'status',
+  error: 'error',
+  projectId: 'projectId',
+  timestamp: 'timestamp',
+  processedAt: 'processedAt'
+};
+
+exports.Prisma.FinancialSnapshotScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  version: 'version',
+  data: 'data',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -991,7 +1012,9 @@ exports.Prisma.ModelName = {
   Quotation: 'Quotation',
   Company: 'Company',
   Branch: 'Branch',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  DomainEvent: 'DomainEvent',
+  FinancialSnapshot: 'FinancialSnapshot'
 };
 
 /**

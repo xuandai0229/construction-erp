@@ -41,45 +41,36 @@ export default function BudgetPage() {
     return map;
   }, [costs]);
 
-  // 2. Aggregate Global KPIs
-  const { totalBudget, totalUsed, remaining, pct } = useMemo(() => {
-    const b = budgets.reduce((sum: number, b: any) => sum + (Number(b.estimatedAmount) || 0), 0);
-    const u = costs.reduce((sum: number, c: any) => sum + (Number(c.amount) || 0), 0);
+  // Construction Semantic: All financial aggregations MUST come from the backend.
+  // We use wbsData.stats and wbsData.tree as the authoritative source.
+  const { totalBudget, totalUsed, remaining, pct, unifiedData } = useMemo(() => {
+    const stats = wbsData?.stats || {};
+    const b = Number(stats.totalBudget || 0);
+    const u = Number(stats.totalActual || 0);
     const r = b - u;
-    const p = b > 0 ? (u / b) * 100 : (u > 0 ? 100 : 0);
-    return { totalBudget: b, totalUsed: u, remaining: r, pct: p };
-  }, [budgets, costs]);
+    const p = Number(stats.progress || 0);
+    
+    // Flatten tree for the budget table view (or use tree directly if preferred)
+    // Here we use the backend tree nodes which already have rolled-up totals.
+    const tree = wbsData?.tree || [];
+    const flattened = tree.map((node: any) => ({
+      id: node.id,
+      name: node.name,
+      budget: node.budget,
+      actual: node.actual,
+      variance: node.variance,
+      progress: node.percentage,
+      status: node.status === 'over' ? 'OVERRUN' : (node.actual > 0 ? 'EXECUTING' : 'NORMAL')
+    }));
 
-  // 3. Unified Financial View (Construction Accounting Standard)
-  const unifiedData = useMemo(() => {
-    // Map WBS items and inject their financials
-    return wbsItems.map(wbs => {
-      // Aggregate all budget records for this WBS
-      const wbsBudget = budgets
-        .filter((b: any) => b.wbsId === wbs.id)
-        .reduce((sum: number, b: any) => sum + (Number(b.estimatedAmount) || 0), 0);
-      
-      // Aggregate all costs for this WBS
-      const wbsActual = costByWbsMap.get(wbs.id) ?? 0;
-      const variance = wbsBudget - wbsActual;
-      const progress = wbsBudget > 0 ? (wbsActual / wbsBudget) * 100 : (wbsActual > 0 ? 100 : 0);
-      
-      let status = "NORMAL";
-      if (wbsBudget === 0 && wbsActual > 0) status = "UNBUDGETED";
-      else if (wbsActual > wbsBudget) status = "OVERRUN";
-      else if (wbsActual > 0) status = "EXECUTING";
-
-      return {
-        id: wbs.id,
-        name: wbs.name,
-        budget: wbsBudget,
-        actual: wbsActual,
-        variance,
-        progress,
-        status
-      };
-    }).filter(item => item.budget >= 0); // Show all WBS items so PMs can see what needs budgeting
-  }, [wbsItems, budgets, costByWbsMap]);
+    return { 
+      totalBudget: b, 
+      totalUsed: u, 
+      remaining: r, 
+      pct: p,
+      unifiedData: flattened
+    };
+  }, [wbsData]);
 
   return (
     <div className="erp-page">

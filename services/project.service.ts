@@ -39,7 +39,7 @@ export class ProjectService {
     const orderBy = params.orderBy ?? "createdAt";
     const orderDir = params.orderDir ?? "desc";
 
-    const [projects, total] = await Promise.all([
+    const [projects, total, summary] = await Promise.all([
       prisma.project.findMany({
         where,
         skip,
@@ -51,7 +51,22 @@ export class ProjectService {
         },
       }),
       prisma.project.count({ where }),
+      prisma.project.groupBy({
+        by: ['status'],
+        where,
+        _count: { _all: true },
+        _sum: { contractValue: true }
+      })
     ]);
+
+    // Flatten summary stats
+    const stats = {
+      totalValue: summary.reduce((acc, s) => acc + Number(s._sum.contractValue || 0), 0),
+      inProgress: summary.find(s => s.status === 'IN_PROGRESS')?._count._all || 0,
+      completed: summary.find(s => s.status === 'COMPLETED')?._count._all || 0,
+      cancelled: summary.find(s => s.status === 'CANCELLED')?._count._all || 0,
+      planned: summary.find(s => s.status === 'PLANNED')?._count._all || 0,
+    };
 
     return {
       data: projects,
@@ -60,6 +75,7 @@ export class ProjectService {
         page,
         limit,
         totalPages: Math.ceil(total / limit),
+        stats // Consumed by ProjectCardStats
       },
     };
   }
@@ -236,6 +252,8 @@ export class ProjectService {
   }
 
   static async getAccountingSummary(projectId: string) {
+    // const snapshot = await FinancialAggregationService.getProjectSnapshot(projectId);
+    
     const [costsAgg, budgetsAgg, revenuesAgg, invoicesAgg, wbsCount, taskStats, purchaseOrdersAgg] = await Promise.all([
        prisma.costRecord.aggregate({
         where: { 
@@ -367,7 +385,8 @@ export class ProjectService {
       totalExposure,
       budgetRemaining,
       // Integration metadata
-      integrity: snapshot.integrity
+      integrity: snapshot.integrity,
+      version: snapshot.version
     };
   }
 }

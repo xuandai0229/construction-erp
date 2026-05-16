@@ -8,6 +8,7 @@ import { AuditService } from "./audit.service";
 import { assertPeriodNotLocked } from "@/lib/period";
 import { LoggerService } from "./logger.service";
 import { OperationalService } from "./operational.service";
+import { eventBus } from "@/lib/event-bus";
 
 export class RevenueService {
   
@@ -65,6 +66,12 @@ export class RevenueService {
         userId: data.createdById, 
         projectId: invoice.projectId,
         amount: invoice.amount 
+      });
+
+      eventBus.publish({
+        type: 'INVOICE_CREATED',
+        payload: invoice,
+        metadata: { userId: data.createdById, projectId: invoice.projectId }
       });
 
       return invoice;
@@ -158,6 +165,12 @@ export class RevenueService {
         amount: amount 
       });
 
+      eventBus.publish({
+        type: 'PAYMENT_CREATED',
+        payload: payment,
+        metadata: { userId, projectId: invoice.projectId }
+      });
+
       return payment;
     });
   }
@@ -198,7 +211,7 @@ export class RevenueService {
     });
   }
 
-  static async updateInvoice(id: string, updates: any) {
+  static async updateInvoice(id: string, updates: any, userId?: string) {
     const existing = await prisma.invoice.findUnique({ where: { id } });
     if (!existing) throw new ApiError(404, "Không tìm thấy hóa đơn");
     
@@ -222,6 +235,13 @@ export class RevenueService {
         oldData: existing,
         newData: updated
       });
+
+      eventBus.publish({
+        type: 'INVOICE_UPDATED',
+        payload: updated,
+        metadata: { userId, projectId: updated.projectId }
+      });
+
       return updated;
     });
   }
@@ -283,6 +303,12 @@ export class RevenueService {
 
       await LoggerService.info(`InvoiceDeleted: ${id}`, { userId, invoiceId: id, reason });
 
+      eventBus.publish({
+        type: 'INVOICE_DELETED',
+        payload: { id, projectId: existing.projectId },
+        metadata: { userId, projectId: existing.projectId }
+      });
+
       return item;
     });
   }
@@ -320,6 +346,12 @@ export class RevenueService {
         newData: item,
       });
 
+      eventBus.publish({
+        type: status === "APPROVED" ? 'INVOICE_APPROVED' : 'INVOICE_UPDATED',
+        payload: item,
+        metadata: { userId, projectId: item.projectId }
+      });
+
       return item;
     });
   }
@@ -342,6 +374,12 @@ export class RevenueService {
       newData: item,
     });
 
+    eventBus.publish({
+      type: status === "APPROVED" ? 'PAYMENT_APPROVED' : 'PAYMENT_UPDATED',
+      payload: item,
+      metadata: { userId, projectId: item.projectId }
+    });
+
     return item;
   }
 
@@ -361,6 +399,13 @@ export class RevenueService {
           entityId: inv.id,
           newData: inv
         });
+
+        eventBus.publish({
+          type: status === "APPROVED" ? 'INVOICE_APPROVED' : 'INVOICE_UPDATED',
+          payload: inv,
+          metadata: { userId, projectId: inv.projectId }
+        });
+
         results.push(inv);
       }
       return results;
@@ -374,7 +419,6 @@ export class RevenueService {
     const existing: any[] = await prisma.$queryRawUnsafe(`SELECT * FROM "Invoice" WHERE id = $1`, id);
     if (!existing || existing.length === 0) throw new ApiError(404, "Không tìm thấy hóa đơn");
     const invoice = existing[0];
-    // console.log("DEBUG: Restoring invoice", invoice);
     
     return prisma.$transaction(async (tx) => {
       // 1. Restore the record
@@ -404,6 +448,12 @@ export class RevenueService {
       });
 
       await LoggerService.info(`InvoiceRestored: ${id}`, { userId, invoiceId: id, reason });
+
+      eventBus.publish({
+        type: 'INVOICE_CREATED', // Restoring is like re-creating
+        payload: item,
+        metadata: { userId, projectId: item.projectId }
+      });
 
       return item;
     });
@@ -443,6 +493,12 @@ export class RevenueService {
       });
 
       await LoggerService.info(`PaymentRestored: ${id}`, { userId, paymentId: id, reason });
+
+      eventBus.publish({
+        type: 'PAYMENT_CREATED',
+        payload: item,
+        metadata: { userId, projectId: item.projectId }
+      });
 
       return item;
     });

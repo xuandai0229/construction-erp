@@ -13,6 +13,8 @@ async function run() {
     wbsId: "73533917-034d-4a2a-ba6d-968b783ba55b",     // Valid WBS
     costType: "material" as any,
     amount: 5000000,
+    vatRate: 10,
+    retentionRate: 5,
     requestId,
     note: "E2E Test Cost",
     status: "unpaid"

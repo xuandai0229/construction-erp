@@ -2,7 +2,7 @@ import { WBSItem, ServiceResponse, WBSTreeNode } from '@/app/types';
 import { mapWBSFromApi, mapWBSToApi } from '@/lib/mappers/wbs.mapper';
 
 export const wbsApi = {
-  async getByProject(projectId: string, headers: any = {}): Promise<ServiceResponse<{ flat: WBSItem[]; tree: WBSTreeNode[] }>> {
+  async getByProject(projectId: string, headers: any = {}): Promise<ServiceResponse<{ flat: WBSItem[]; tree: WBSTreeNode[]; stats: any }>> {
     const res = await fetch(`/api/wbs?projectId=${projectId}`, { headers });
     const json = await res.json();
     if (json.success) {
@@ -10,7 +10,8 @@ export const wbsApi = {
         success: true,
         data: {
           flat: json.data.flat.map(mapWBSFromApi),
-          tree: json.data.tree
+          tree: json.data.tree,
+          stats: json.data.stats
         }
       };
     }

@@ -4,7 +4,7 @@ import { queryKeys } from '@/lib/query-keys';
 
 export function useBudgetsQuery(projectId: string) {
   return useQuery({
-    queryKey: ['budgets', projectId],
+    queryKey: queryKeys.budgets.byProject(projectId),
     queryFn: async () => {
       if (!projectId) return [];
       const res = await fetch(`/api/budgets?projectId=${projectId}`);
@@ -31,7 +31,8 @@ export function useCreateBudgetMutation(projectId: string) {
       return json.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['budgets', projectId] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.budgets.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
     },

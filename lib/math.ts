@@ -1,18 +1,25 @@
+import { Decimal } from 'decimal.js';
+
 /**
  * Centralized financial math utilities for the ERP system.
  * Ensures consistent rounding and precision across all modules.
+ * Uses Decimal.js for authoritative financial calculations.
  */
 
+// Configure Decimal for financial standards
+Decimal.set({ precision: 20, rounding: Decimal.ROUND_HALF_UP });
+
 /**
- * Rounds a number to exactly 2 decimal places using Number.EPSILON 
+ * Rounds a number to exactly 2 decimal places using Decimal.js
  * to avoid floating point inaccuracies.
  */
-export function round(val: number | any, precision: number = 2): number {
-  const num = typeof val === 'number' ? val : Number(val || 0);
-  if (isNaN(num) || !isFinite(num)) return 0;
-  
-  const factor = Math.pow(10, precision);
-  return Math.round((num + Number.EPSILON) * factor) / factor;
+export function round(val: number | string | any, precision: number = 2): number {
+  try {
+    if (val === null || val === undefined) return 0;
+    return new Decimal(val).toDecimalPlaces(precision).toNumber();
+  } catch {
+    return 0;
+  }
 }
 
 /**
@@ -22,18 +29,44 @@ export function round(val: number | any, precision: number = 2): number {
  */
 export function safeMoney(val: any): number {
   if (val === null || val === undefined) return 0;
-  const num = typeof val === 'number' ? val : Number(val);
-  return (isNaN(num) || !isFinite(num)) ? 0 : num;
+  try {
+    const d = new Decimal(val);
+    return d.isNaN() || !d.isFinite() ? 0 : d.toNumber();
+  } catch {
+    return 0;
+  }
+}
+
+/**
+ * SAFE DECIMAL:
+ * Returns a Decimal instance for arithmetic operations.
+ * Guaranteed to never be NaN or Infinity.
+ */
+export function safeDecimal(val: any): Decimal {
+  try {
+    if (val === null || val === undefined) return new Decimal(0);
+    const d = new Decimal(val);
+    return d.isNaN() || !d.isFinite() ? new Decimal(0) : d;
+  } catch {
+    return new Decimal(0);
+  }
 }
 
 /**
  * SAFE DIVISION:
- * Prevents divide-by-zero and Infinity.
+ * Prevents divide-by-zero and Infinity using Decimal.js.
  */
-export function safeDivide(numerator: number, denominator: number): number {
-  if (!denominator || denominator === 0) return 0;
-  const result = numerator / denominator;
-  return (isNaN(result) || !isFinite(result)) ? 0 : result;
+export function safeDivide(numerator: any, denominator: any): number {
+  const d1 = safeDecimal(numerator);
+  const d2 = safeDecimal(denominator);
+  
+  if (d2.isZero()) return 0;
+  
+  try {
+    return d1.dividedBy(d2).toNumber();
+  } catch {
+    return 0;
+  }
 }
 
 /**
@@ -41,9 +74,17 @@ export function safeDivide(numerator: number, denominator: number): number {
  * Standardized calculation for utilization, margin, etc.
  * Always returns a 2-decimal rounded number.
  */
-export function safePercent(part: number, total: number): number {
-  const ratio = safeDivide(part, total);
-  return round(ratio * 100, 2);
+export function safePercent(part: any, total: any): number {
+  const d1 = safeDecimal(part);
+  const d2 = safeDecimal(total);
+  
+  if (d2.isZero()) return 0;
+  
+  try {
+    return d1.dividedBy(d2).times(100).toDecimalPlaces(2).toNumber();
+  } catch {
+    return 0;
+  }
 }
 
 /**
@@ -56,9 +97,10 @@ export function safeNumber(val: any): number {
 /**
  * Formats a number as VND currency.
  */
-export function formatCurrency(amount: number): string {
+export function formatCurrency(amount: number | any): string {
+  const value = safeMoney(amount);
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
     currency: 'VND',
-  }).format(amount);
+  }).format(value);
 }

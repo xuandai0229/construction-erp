@@ -1,54 +1,30 @@
-
 import { prisma } from "../lib/prisma";
 import { round } from "../lib/math";
 import { ProjectService } from "./project.service";
 import { CacheService } from "./cache.service";
-
-export interface AgingBucket {
-  bucket: string;
-  amount: number;
-  count: number;
-}
+import { FinancialAggregationService } from "./financial-aggregation.service";
+import { AgingBucket } from "@/app/types/financial";
 
 export class ReportingService {
   /**
    * Generates a Receivable Aging Report for a project or the entire company
    */
   static async getReceivableAging(projectId?: string): Promise<AgingBucket[]> {
-    const today = new Date();
-    // [CONSISTENCY FIX]: Only include approved/posted invoices in aging
-    const invoices = await prisma.invoice.findMany({
-      where: {
-        deletedAt: null,
-        remainingAmount: { gt: 0 },
-        status: { in: ["SENT", "PAID", "PARTIAL", "OVERDUE"] },
-        ...(projectId && { projectId })
-      }
-    });
+    return FinancialAggregationService.getReceivableAging(projectId);
+  }
 
-    const buckets = [
-      { bucket: "0-30 days", amount: 0, count: 0, minDays: 0, maxDays: 30 },
-      { bucket: "31-60 days", amount: 0, count: 0, minDays: 31, maxDays: 60 },
-      { bucket: "61-90 days", amount: 0, count: 0, minDays: 61, maxDays: 90 },
-      { bucket: "90+ days", amount: 0, count: 0, minDays: 91, maxDays: 9999 }
-    ];
+  /**
+   * Generates a Payable Aging Report
+   */
+  static async getPayableAging(projectId?: string): Promise<AgingBucket[]> {
+    return FinancialAggregationService.getPayableAging(projectId);
+  }
 
-    for (const inv of invoices) {
-      const dueDate = inv.dueDate || inv.issuedDate;
-      const diffTime = Math.abs(today.getTime() - dueDate.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      const isOverdue = today > dueDate;
-
-      if (!isOverdue) continue; 
-
-      const bucket = buckets.find(b => diffDays >= b.minDays && diffDays <= b.maxDays);
-      if (bucket) {
-        bucket.amount += Number(inv.remainingAmount);
-        bucket.count++;
-      }
-    }
-
-    return buckets.map(({ bucket, amount, count }) => ({ bucket, amount: round(amount), count }));
+  /**
+   * Generates a Monthly Performance Report for a project
+   */
+  static async getProjectMonthlyReport(projectId: string) {
+    return FinancialAggregationService.getProjectMonthlyReport(projectId);
   }
 
   /**
@@ -111,26 +87,7 @@ export class ReportingService {
    * Cash Flow Forecast
    */
   static async getCashFlowForecast(projectId?: string) {
-    const invoices = await prisma.invoice.findMany({
-      where: { 
-        deletedAt: null, 
-        remainingAmount: { gt: 0 }, 
-        status: { in: ["SENT", "PAID", "PARTIAL", "OVERDUE"] },
-        ...(projectId && { projectId }) 
-      },
-      orderBy: { dueDate: 'asc' }
-    });
-
-    const forecast = {
-      expectedCollections: invoices.map(i => ({
-        date: i.dueDate || i.issuedDate,
-        amount: Number(i.remainingAmount),
-        source: i.invoiceNumber || i.id
-      })),
-      totalExpected: invoices.reduce((s, i) => s + Number(i.remainingAmount), 0)
-    };
-
-    return forecast;
+    return FinancialAggregationService.getCashFlowForecast(projectId);
   }
 
   /**

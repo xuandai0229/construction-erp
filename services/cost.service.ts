@@ -2,13 +2,14 @@ import { prisma } from "@/lib/prisma";
 import { ApiError } from "@/lib/api-error";
 import { CreateCostDTO, UpdateCostDTO } from "@/lib/validations";
 import { assertValidEntity } from "@/lib/assertion";
-import { round } from "@/lib/math";
+import { round, safeDecimal } from "@/lib/math";
 import { PostingEngine } from "@/lib/accounting/postingEngine";
 import { AuditService } from "./audit.service";
 import { assertPeriodNotLocked } from "@/lib/period";
 import { LoggerService } from "./logger.service";
 import { CostWorkflow, CostWorkflowState } from "@/lib/workflow/costWorkflow";
 import { DuplicateRequestError } from "@/lib/errors";
+import { eventBus } from "@/lib/event-bus";
 
 export interface ServiceOptions {
   userId?: string;
@@ -48,7 +49,17 @@ export class CostService {
       throw new ApiError(400, "Hạng mục WBS không thuộc về dự án đã chọn");
     }
 
-    const roundedAmount = round(data.amount);
+    const amountD = safeDecimal(data.amount);
+    const vatRateD = safeDecimal(data.vatRate || 0);
+    const retentionRateD = safeDecimal(data.retentionRate || 0);
+
+    // If netAmount is provided, use it as the base. Otherwise, back-calculate from total amount.
+    let netAmountD = data.netAmount ? safeDecimal(data.netAmount) : amountD.div(vatRateD.div(100).add(1));
+    let vatAmountD = data.vatAmount ? safeDecimal(data.vatAmount) : amountD.sub(netAmountD);
+    
+    // Final Reconciliation: amount = net + vat (to prevent rounding drift)
+    const finalAmountD = netAmountD.add(vatAmountD);
+    const retentionAmountD = finalAmountD.mul(retentionRateD.div(100));
 
     try {
       return await prisma.$transaction(async (tx) => {
@@ -74,13 +85,13 @@ export class CostService {
 
         const totalBOQ = Number(boqAgg._sum?.totalAmount || 0);
         const currentCosts = Number(existingCosts._sum?.amount || 0);
-        const totalCostsAfter = round(currentCosts + roundedAmount);
+        const totalCostsAfter = round(currentCosts + finalAmountD.toNumber());
 
         if (totalBOQ > 0 && totalCostsAfter > totalBOQ) {
           LoggerService.warn(`Cost Overrun detected for WBS ${data.wbsId}`, {
             totalBOQ,
             currentCosts,
-            requestedAmount: roundedAmount,
+            requestedAmount: finalAmountD.toNumber(),
             totalCostsAfter,
             correlationId
           });
@@ -93,7 +104,12 @@ export class CostService {
             projectId: data.projectId,
             wbsId: data.wbsId,
             costType: data.costType,
-            amount: roundedAmount,
+            amount: finalAmountD.toNumber(),
+            netAmount: netAmountD.toNumber(),
+            vatAmount: vatAmountD.toNumber(),
+            vatRate: vatRateD.toNumber(),
+            retentionAmount: retentionAmountD.toNumber(),
+            retentionRate: retentionRateD.toNumber(),
             quantity: data.quantity ?? 1,
             unitPrice: data.unitPrice ?? 0,
             supplier: data.supplier,
@@ -126,6 +142,12 @@ export class CostService {
         } catch (e) {
           LoggerService.error("Failed to sync project stats after cost create", { error: e });
         }
+
+        eventBus.publish({
+          type: 'COST_CREATED',
+          payload: item,
+          metadata: { userId, projectId: data.projectId }
+        });
 
         return item;
       });
@@ -269,7 +291,15 @@ export class CostService {
         await PostingEngine.reverseJournal(tx, id, "COST", userId || "SYSTEM");
       }
 
-      // 4. Audit
+      // 4. Audit & Event
+      eventBus.publish({
+        type: nextStatus === "APPROVED" ? 'COST_APPROVED' : 
+              nextStatus === "POSTED" ? 'COST_POSTED' : 
+              nextStatus === "REJECTED" ? 'COST_REJECTED' : 'COST_UPDATED',
+        payload: item,
+        metadata: { userId, projectId: item.projectId }
+      });
+
       await AuditService.log({
         userId,
         action: nextStatus === "APPROVED" ? "APPROVE" : nextStatus === "REJECTED" ? "REJECT" : "UPDATE",

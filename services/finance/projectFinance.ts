@@ -2,35 +2,38 @@ import {
   WBSItem, CostRecord, BudgetRecord, EnrichedWBSNode, 
   RevenueRecord, InvoiceRecord, DashboardStats
 } from '@/app/types';
-import { round, safeMoney, safePercent } from '@/lib/math';
+import { round, safeMoney, safePercent, safeDecimal } from '@/lib/math';
 
 export class ProjectFinance {
   /**
    * Optimized WBS tree calculation with rolled-up financial totals.
    * O(N) complexity using Map lookups.
+   * Uses explicit Decimal arithmetic for safety.
    */
   static calculateWBSTree(
     wbs: WBSItem[], 
     costs: CostRecord[], 
     budgets: BudgetRecord[]
   ): EnrichedWBSNode[] {
-    // 1. Pre-aggregate budgets and costs by wbsId for O(1) lookup
+    // 1. Pre-aggregate budgets and costs by wbsId
     const budgetMap = new Map<string, number>();
     budgets.forEach(b => {
-      budgetMap.set(b.wbsId, round((budgetMap.get(b.wbsId) ?? 0) + safeMoney(b.estimatedAmount)));
+      const current = safeDecimal(budgetMap.get(b.wbsId));
+      budgetMap.set(b.wbsId, current.add(safeDecimal(b.estimatedAmount)).toNumber());
     });
 
     const costMap = new Map<string, number>();
     costs.forEach(c => {
-      costMap.set(c.wbsId, round((costMap.get(c.wbsId) ?? 0) + safeMoney(c.amount)));
+      const current = safeDecimal(costMap.get(c.wbsId));
+      costMap.set(c.wbsId, current.add(safeDecimal(c.amount)).toNumber());
     });
 
     // 2. Create nodes with initial direct totals
     const itemMap = new Map<string, EnrichedWBSNode>();
     
     wbs.forEach(w => {
-      const wbsBudget = budgetMap.get(w.id) ?? 0;
-      const wbsActual = costMap.get(w.id) ?? 0;
+      const wbsBudget = safeDecimal(budgetMap.get(w.id));
+      const wbsActual = safeDecimal(costMap.get(w.id));
 
       itemMap.set(w.id, {
         ...w,
@@ -38,17 +41,17 @@ export class ProjectFinance {
         level: 0,
         isExpanded: false,
         code: (w as any).code || "",
-        budget: wbsBudget,
-        actual: wbsActual,
+        budget: wbsBudget.toNumber(),
+        actual: wbsActual.toNumber(),
         revenue: 0,
-        profit: round(wbsBudget - wbsActual),
-        variance: round(wbsBudget - wbsActual),
+        profit: wbsBudget.sub(wbsActual).toNumber(),
+        variance: wbsBudget.sub(wbsActual).toNumber(),
         percentage: safePercent(wbsActual, wbsBudget),
         status: 'ok',
       });
     });
 
-    // 3. Build tree and roll up totals using post-order traversal logic
+    // 3. Build tree and roll up totals
     const assemble = (parentId: string | null = null, level = 0): EnrichedWBSNode[] => {
       const children: EnrichedWBSNode[] = [];
       
@@ -56,21 +59,25 @@ export class ProjectFinance {
         if (node.parentId === parentId) {
           const assembledChildren = assemble(node.id, level + 1);
           
-          // Roll-up children totals into this node
-          const childBudget = assembledChildren.reduce((s, c) => s + c.budget, 0);
-          const childActual = assembledChildren.reduce((s, c) => s + c.actual, 0);
+          // Roll-up children totals using explicit Decimal logic
+          const childBudget = assembledChildren.reduce((s, c) => s.add(safeDecimal(c.budget)), safeDecimal(0));
+          const childActual = assembledChildren.reduce((s, c) => s.add(safeDecimal(c.actual)), safeDecimal(0));
           
           node.level = level;
           node.children = assembledChildren;
           node.isExpanded = level === 0;
-          node.budget = round(node.budget + childBudget);
-          node.actual = round(node.actual + childActual);
-          node.variance = round(node.budget - node.actual);
+          
+          const nodeBudget = safeDecimal(node.budget).add(childBudget);
+          const nodeActual = safeDecimal(node.actual).add(childActual);
+          const variance = nodeBudget.sub(nodeActual);
+
+          node.budget = nodeBudget.toNumber();
+          node.actual = nodeActual.toNumber();
+          node.variance = variance.toNumber();
           node.profit = node.variance;
           
           // RE-CALCULATE percentage after rollup
           node.percentage = safePercent(node.actual, node.budget);
-            
           node.status = node.percentage > 100 ? 'over' : 'ok';
           
           children.push(node);
@@ -86,15 +93,15 @@ export class ProjectFinance {
    * Aggregates stats from a WBS tree for the store.
    */
   static calculateStats(tree: EnrichedWBSNode[]) {
-    const totalBudget = round(tree.reduce((s, n) => s + n.budget, 0));
-    const totalActual = round(tree.reduce((s, n) => s + n.actual, 0));
-    const variance = round(totalBudget - totalActual);
+    const totalBudget = tree.reduce((s, n) => s.add(safeDecimal(n.budget)), safeDecimal(0));
+    const totalActual = tree.reduce((s, n) => s.add(safeDecimal(n.actual)), safeDecimal(0));
+    const variance = totalBudget.sub(totalActual);
     const progress = safePercent(totalActual, totalBudget);
 
     return {
-      totalBudget,
-      totalActual,
-      variance,
+      totalBudget: totalBudget.toNumber(),
+      totalActual: totalActual.toNumber(),
+      variance: variance.toNumber(),
       progress
     };
   }
@@ -114,44 +121,50 @@ export class ProjectFinance {
   }): DashboardStats {
     const { costs, budgets, revenues, invoices, wbsCount, taskStats } = params;
 
-    // 1. Costs
-    const totalCost = round(costs.reduce((s, c) => s + safeMoney(c.amount), 0));
-    const paidCost = round(costs.filter(c => c.status === "paid").reduce((s, c) => s + safeMoney(c.amount), 0));
-    const unpaidCost = round(totalCost - paidCost);
+    // 1. Costs (Explicit Decimal Arithmetic)
+    const totalCostD = costs.reduce((s, c) => s.add(safeDecimal(c.amount)), safeDecimal(0));
+    const paidCostD = costs.filter(c => c.status === "paid").reduce((s, c) => s.add(safeDecimal(c.amount)), safeDecimal(0));
+    const unpaidCostD = totalCostD.sub(paidCostD);
 
-    const costByType: Record<string, number> = {};
+    const costByTypeMap = new Map<string, any>();
     for (const c of costs) {
-      costByType[c.costType] = round((costByType[c.costType] ?? 0) + safeMoney(c.amount));
+      const current = safeDecimal(costByTypeMap.get(c.costType));
+      costByTypeMap.set(c.costType, current.add(safeDecimal(c.amount)));
     }
+    const costByType: Record<string, number> = {};
+    costByTypeMap.forEach((val, key) => costByType[key] = val.toNumber());
 
     // 2. Budgets
-    const totalBudget = round(budgets.reduce((s, b) => s + safeMoney(b.estimatedAmount), 0));
-    const budgetByType: Record<string, number> = {};
+    const totalBudgetD = budgets.reduce((s, b) => s.add(safeDecimal(b.estimatedAmount)), safeDecimal(0));
+    const budgetByTypeMap = new Map<string, any>();
     for (const b of budgets) {
-      budgetByType[b.costType] = round((budgetByType[b.costType] ?? 0) + safeMoney(b.estimatedAmount));
+      const current = safeDecimal(budgetByTypeMap.get(b.costType));
+      budgetByTypeMap.set(b.costType, current.add(safeDecimal(b.estimatedAmount)));
     }
+    const budgetByType: Record<string, number> = {};
+    budgetByTypeMap.forEach((val, key) => budgetByType[key] = val.toNumber());
 
     // 3. Revenues
-    const totalRevenue = round(revenues.reduce((s, r) => s + safeMoney(r.amount), 0));
-    const paidRevenue = round(revenues.filter(r => r.status === "paid").reduce((s, r) => s + safeMoney(r.amount), 0));
-    const unpaidRevenue = round(totalRevenue - paidRevenue);
+    const totalRevenueD = revenues.reduce((s, r) => s.add(safeDecimal(r.amount)), safeDecimal(0));
+    const paidRevenueD = revenues.filter(r => r.status === "paid").reduce((s, r) => s.add(safeDecimal(r.amount)), safeDecimal(0));
+    const unpaidRevenueD = totalRevenueD.sub(paidRevenueD);
 
     // 4. Invoices
-    const totalInvoiced = round(invoices.reduce((s, i) => s + safeMoney(i.amount), 0));
-    const totalPaidInvoice = round(invoices.reduce((s, i) => s + safeMoney(i.paidAmount), 0));
-    const totalRemainingInvoice = round(invoices.reduce((s, i) => s + safeMoney(i.remainingAmount), 0));
+    const totalInvoicedD = invoices.reduce((s, i) => s.add(safeDecimal(i.amount)), safeDecimal(0));
+    const totalPaidInvoiceD = invoices.reduce((s, i) => s.add(safeDecimal(i.paidAmount)), safeDecimal(0));
+    const totalRemainingInvoiceD = invoices.reduce((s, i) => s.add(safeDecimal(i.remainingAmount)), safeDecimal(0));
     const overdueCount = invoices.filter(i => i.status === "OVERDUE").length;
 
     // 5. Computed Metrics
-    const profit = round(totalRevenue - totalCost);
-    const profitMargin = safePercent(profit, totalRevenue);
-    const costVariance = round(totalBudget - totalCost);
-    const costOverrunPct = safePercent(totalCost, totalBudget);
+    const profitD = totalRevenueD.sub(totalCostD);
+    const profitMargin = safePercent(profitD, totalRevenueD);
+    const costVarianceD = totalBudgetD.sub(totalCostD);
+    const costOverrunPct = safePercent(totalCostD, totalBudgetD);
 
-    // 6. NEW: ERP Core Metrics
-    const committedCost = round(params.committedCosts?.reduce((s, c) => s + safeMoney(c.amount), 0) || 0);
-    const totalExposure = round(totalCost + committedCost);
-    const budgetRemaining = round(totalBudget - totalExposure);
+    // 6. ERP Core Metrics
+    const committedCostD = (params.committedCosts || []).reduce((s, c) => s.add(safeDecimal(c.amount)), safeDecimal(0));
+    const totalExposureD = totalCostD.add(committedCostD);
+    const budgetRemainingD = totalBudgetD.sub(totalExposureD);
 
     // 7. Tasks
     const taskBreakdown: Record<string, number> = {};
@@ -163,31 +176,31 @@ export class ProjectFinance {
     const taskProgress = safePercent(doneTasks, totalTasks);
 
     return {
-      totalCost,
-      paidCost,
-      unpaidCost,
+      totalCost: totalCostD.toNumber(),
+      paidCost: paidCostD.toNumber(),
+      unpaidCost: unpaidCostD.toNumber(),
       costByType,
-      totalBudget,
+      totalBudget: totalBudgetD.toNumber(),
       budgetByType,
-      costVariance,
+      costVariance: costVarianceD.toNumber(),
       costOverrunPct,
-      isCostOverrun: totalCost > totalBudget && totalBudget > 0,
-      totalRevenue,
-      paidRevenue,
-      unpaidRevenue,
-      totalInvoiced,
-      totalPaidInvoice,
-      totalRemainingInvoice,
+      isCostOverrun: totalCostD.gt(totalBudgetD) && totalBudgetD.gt(0),
+      totalRevenue: totalRevenueD.toNumber(),
+      paidRevenue: paidRevenueD.toNumber(),
+      unpaidRevenue: unpaidRevenueD.toNumber(),
+      totalInvoiced: totalInvoicedD.toNumber(),
+      totalPaidInvoice: totalPaidInvoiceD.toNumber(),
+      totalRemainingInvoice: totalRemainingInvoiceD.toNumber(),
       overdueInvoices: overdueCount,
-      profit,
+      profit: profitD.toNumber(),
       profitMargin,
       taskProgress,
       taskBreakdown,
       wbsCount,
       // ERP CORE
-      committedCost,
-      totalExposure,
-      budgetRemaining,
+      committedCost: committedCostD.toNumber(),
+      totalExposure: totalExposureD.toNumber(),
+      budgetRemaining: budgetRemainingD.toNumber(),
     };
   }
 }

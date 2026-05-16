@@ -79,6 +79,11 @@ export const createCostSchema = z.object({
   date: z.string().optional(),
   status: z.nativeEnum(PaymentStatus).optional().default(PaymentStatus.unpaid),
   createdById: z.string().uuid().optional(),
+  vatRate: z.number().nonnegative().optional().default(10),
+  vatAmount: z.number().nonnegative().optional(),
+  netAmount: z.number().nonnegative().optional(),
+  retentionRate: z.number().nonnegative().optional().default(0),
+  retentionAmount: z.number().nonnegative().optional(),
 });
 
 export type CreateCostDTO = z.infer<typeof createCostSchema>;

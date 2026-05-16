@@ -48,6 +48,7 @@ export type DashboardData = {
   progress: number;
   daysElapsed: number;
   durationDays: number;
+  version?: string;
 };
 
 export function ensureDashboardData() {

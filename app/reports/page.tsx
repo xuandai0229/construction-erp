@@ -5,24 +5,18 @@ import Sidebar from '@/app/components/Sidebar';
 import Header from '@/app/components/Header';
 import { useERPStore } from '@/store/erpStore';
 import { formatVnd } from '@/app/components/dashboard-data';
+import { round } from '@/lib/math';
 import { exportToCsv } from '@/app/services/export.service';
 import { useProjectsQuery } from '@/services/queries/useProjects';
 import { COL_WIDTHS, ERP_TERMINOLOGY, FINANCIAL_CELL_CLASS } from '@/app/utils/table-constants';
 
-// Mock report generation since these are complex queries
-const generateMockMonthlyReport = (projectId: string) => {
-  return [
-    { month: '2024-01', cashIn: 1000000, cashOut: 500000, revenue: 1200000, cost: 600000, profit: 600000, runningBalance: 500000 },
-    { month: '2024-02', cashIn: 2000000, cashOut: 1500000, revenue: 2500000, cost: 1800000, profit: 700000, runningBalance: 1000000 },
-  ];
-};
-
-const generateMockAgingReport = (projectId: string) => {
-  return [
-    { id: '1', type: 'receivable', entityName: 'Khách hàng A', amount: 500000, date: '2024-01-01', daysOverdue: 15, category: '0-30' },
-    { id: '2', type: 'payable', entityName: 'Nhà cung cấp B', amount: 300000, date: '2024-01-01', daysOverdue: 45, category: '31-60' },
-  ];
-};
+import { 
+  useMonthlyReportQuery, 
+  useAgingReportQuery,
+  useFiscalPeriodsQuery,
+  useToggleFiscalPeriodMutation
+} from '@/services/queries/useReports';
+import { MonthlyReportRow } from '@/app/types/financial';
 
 export default function ReportsPage() {
   const currentProjectId  = useERPStore(state => state.currentProjectId);
@@ -31,11 +25,17 @@ export default function ReportsPage() {
   const setCurrentProject = useERPStore(state => state.setCurrentProject);
   const sidebarCollapsed  = useERPStore(state => state.sidebarCollapsed);
 
-  const monthlyData = useMemo(() => generateMockMonthlyReport(currentProjectId), [currentProjectId]);
-  const agingData   = useMemo(() => generateMockAgingReport(currentProjectId),  [currentProjectId]);
-  const locks: string[] = [];
-  const toggleLock = (month: string) => {};
-  const agingCats   = ['0-30', '31-60', '61-90', '90+'];
+  const { data: monthlyData = [], isLoading: loadingMonthly } = useMonthlyReportQuery(currentProjectId);
+  const { data: arAging = [] } = useAgingReportQuery(currentProjectId, 'receivable');
+  const { data: apAging = [] } = useAgingReportQuery(currentProjectId, 'payable');
+  const { data: locks = [] } = useFiscalPeriodsQuery();
+  const toggleLockMutation = useToggleFiscalPeriodMutation();
+
+  const toggleLock = (month: string) => {
+    toggleLockMutation.mutate(month);
+  };
+  
+  const agingCats   = ['0-30 days', '31-60 days', '61-90 days', '90+ days'];
 
   const handleExport = () => {
     const project  = projects.find(p => p.id === currentProjectId);
@@ -104,7 +104,7 @@ export default function ReportsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {monthlyData.map(row => {
+                  {monthlyData?.map((row: MonthlyReportRow) => {
                     const locked = locks.includes(row.month);
                     return (
                       <tr key={row.month} className={`group ${locked ? 'bg-rose-500/5' : ''}`}>
@@ -115,7 +115,7 @@ export default function ReportsPage() {
                                 <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/>
                               </svg>
                             )}
-                            {row.month}
+                            {row.month} 
                           </div>
                         </td>
                         <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums font-semibold text-emerald-500 whitespace-nowrap px-4 py-3 border-r border-[var(--border)]`}>{formatVnd(row.cashIn)}</td>
@@ -166,15 +166,16 @@ export default function ReportsPage() {
               </div>
               <div className="p-5 space-y-3">
                 {agingCats.map(cat => {
-                  const items = agingData.filter((i: any) => i.type === 'receivable' && i.category === cat);
-                  const total = items.reduce((s: number, i: any) => s + i.amount, 0);
+                  const bucket = arAging.find((b: any) => b.bucket === cat);
+                  const total = bucket?.amount || 0;
+                  const count = bucket?.count || 0;
                   return (
                     <div key={cat} className="flex items-center justify-between p-3 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
                       <div>
-                        <div className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-wider">{cat} ngày</div>
+                        <div className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-wider">{cat}</div>
                         <div className="text-[14px] font-black text-[var(--text-primary)] tabular-nums mt-0.5">{formatVnd(total)}</div>
                       </div>
-                      <div className="text-[11px] text-[var(--text-muted)]">{items.length} khoản</div>
+                      <div className="text-[11px] text-[var(--text-muted)]">{count} khoản</div>
                     </div>
                   );
                 })}
@@ -191,15 +192,16 @@ export default function ReportsPage() {
               </div>
               <div className="p-5 space-y-3">
                 {agingCats.map(cat => {
-                  const items = agingData.filter((i: any) => i.type === 'payable' && i.category === cat);
-                  const total = items.reduce((s: number, i: any) => s + i.amount, 0);
+                  const bucket = apAging.find((b: any) => b.bucket === cat);
+                  const total = bucket?.amount || 0;
+                  const count = bucket?.count || 0;
                   return (
                     <div key={cat} className="flex items-center justify-between p-3 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
                       <div>
-                        <div className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-wider">{cat} ngày</div>
+                        <div className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-wider">{cat}</div>
                         <div className="text-[14px] font-black text-[var(--text-primary)] tabular-nums mt-0.5">{formatVnd(total)}</div>
                       </div>
-                      <div className="text-[11px] text-[var(--text-muted)]">{items.length} khoản</div>
+                      <div className="text-[11px] text-[var(--text-muted)]">{count} khoản</div>
                     </div>
                   );
                 })}

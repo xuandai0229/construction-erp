@@ -2,11 +2,11 @@
 import React from 'react';
 import { Project } from '@/app/types';
 
-export default function ProjectCardStats({ projects, totalCount }: { projects: Project[], totalCount: number }) {
-  const inProgress = projects.filter(p => p.status === 'IN_PROGRESS').length;
-  const completed  = projects.filter(p => p.status === 'COMPLETED').length;
-  const onHold     = projects.filter(p => p.status === 'CANCELLED').length;
-  const totalValue = projects.reduce((sum, p) => sum + (p.totalValue ?? 0), 0);
+export default function ProjectCardStats({ stats, totalCount }: { stats: any, totalCount: number }) {
+  const inProgress = stats?.inProgress || 0;
+  const completed  = stats?.completed || 0;
+  const onHold     = stats?.cancelled || 0;
+  const totalValue = stats?.totalValue || 0;
 
   const kpis = [
     {

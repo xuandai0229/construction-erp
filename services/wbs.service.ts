@@ -3,8 +3,7 @@ import { FinancialAggregationService } from "./financial-aggregation.service";
 import { ApiError } from "@/lib/api-error";
 import { CreateWBSDTO, UpdateWBSDTO } from "@/lib/validations";
 import { AuditService } from "./audit.service";
-import { ProjectFinance } from "./finance/projectFinance";
-import { CostRecord, BudgetRecord, WBSItem } from "@/app/types";
+import { eventBus } from "@/lib/event-bus";
 
 export class WBSService {
   static async findByProject(projectId: string) {
@@ -19,14 +18,9 @@ export class WBSService {
 
     return {
       tree,
-      flat: items, // Simplified flat list
+      flat: items,
       stats: {
         totalItems: items.length,
-        totalBudget: stats.totalApproved > 0 ? stats.totalApproved : 0, // Adjusted context
-        totalActual: stats.totalApproved,
-        variance: 0, 
-        progress: stats.healthScore,
-        isCostOverrun: stats.orphanTotal > 0,
         ...stats
       },
     };
@@ -68,6 +62,12 @@ export class WBSService {
       newData: item,
     });
 
+    eventBus.publish({
+      type: 'WBS_CREATED',
+      payload: item,
+      metadata: { userId, projectId: data.projectId }
+    });
+
     return item;
   }
 
@@ -86,8 +86,6 @@ export class WBSService {
       }
     }
 
-    const oldItem = await prisma.wBSItem.findUnique({ where: { id } });
-
     const item = await prisma.wBSItem.update({
       where: { id },
       data: {
@@ -104,8 +102,14 @@ export class WBSService {
       action: "UPDATE",
       entity: "WBSItem",
       entityId: item.id,
-      oldData: oldItem,
+      oldData: existing,
       newData: item,
+    });
+
+    eventBus.publish({
+      type: 'WBS_UPDATED',
+      payload: item,
+      metadata: { userId, projectId: item.projectId }
     });
 
     return item;
@@ -143,6 +147,12 @@ export class WBSService {
       entityId: id,
       oldData: existing,
       reason: "Xóa vĩnh viễn (Hard Delete) hạng mục WBS trống.",
+    });
+
+    eventBus.publish({
+      type: 'WBS_DELETED',
+      payload: { id, projectId: existing.projectId },
+      metadata: { userId, projectId: existing.projectId }
     });
 
     return { ...existing, deletedAt: new Date() }; // Standardized return for React Query

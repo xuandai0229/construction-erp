@@ -11,28 +11,29 @@ function calculateBudgetKPIs(budgets, costs) {
 console.log("=== BUDGET CALCULATION QA ===");
 
 // CASE A: Budget > Cost
-const caseA = calculateBudgetKPIs([{estimatedAmount: 1000}], [{amount: 400}]);
+const caseA = calculateBudgetKPIs([{ estimatedAmount: 1000 }], [{ amount: 400 }]);
 console.log("CASE A (Normal):", caseA);
-if(caseA.totalBudget === 1000 && caseA.totalUsed === 400 && caseA.remaining === 600 && caseA.pct === 40) console.log("PASS");
+if (caseA.totalBudget === 1000 && caseA.totalUsed === 400 && caseA.remaining === 600 && caseA.pct === 40) console.log("PASS");
 
 // CASE B: Budget = Cost
-const caseB = calculateBudgetKPIs([{estimatedAmount: 1000}], [{amount: 1000}]);
+const caseB = calculateBudgetKPIs([{ estimatedAmount: 1000 }], [{ amount: 1000 }]);
 console.log("CASE B (Full):", caseB);
-if(caseB.pct === 100) console.log("PASS");
+if (caseB.pct === 100) console.log("PASS");
 
 // CASE C: Cost > Budget
-const caseC = calculateBudgetKPIs([{estimatedAmount: 1000}], [{amount: 1500}]);
+const caseC = calculateBudgetKPIs([{ estimatedAmount: 1000 }], [{ amount: 1500 }]);
 console.log("CASE C (Over):", caseC);
-if(caseC.pct === 150) console.log("PASS");
+if (caseC.pct === 150) console.log("PASS");
 
 // CASE D: Budget = 0, Cost > 0
-const caseD = calculateBudgetKPIs([{estimatedAmount: 0}], [{amount: 500}]);
+const caseD = calculateBudgetKPIs([{ estimatedAmount: 0 }], [{ amount: 500 }]);
 console.log("CASE D (No Budget, Has Cost):", caseD);
-if(caseD.pct === 100) console.log("PASS (Capped/Warned)");
+if (caseD.pct === 100) console.log("PASS (Capped/Warned)");
 
 // CASE E: Budget = 0, Cost = 0
-const caseE = calculateBudgetKPIs([{estimatedAmount: 0}], [{amount: 0}]);
+const caseE = calculateBudgetKPIs([{ estimatedAmount: 0 }], [{ amount: 0 }]);
 console.log("CASE E (Zero):", caseE);
-if(caseE.pct === 0) console.log("PASS");
+if (caseE.pct === 0) console.log("PASS");
 
 console.log("=== CALCULATION QA COMPLETE ===");
+

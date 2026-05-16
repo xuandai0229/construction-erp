@@ -3,9 +3,11 @@
 import { DashboardData, formatVnd } from './dashboard-data';
 
 export default function ProfitPanel({ data }: { data: DashboardData }) {
-  const cost = data.costs.reduce((sum, row) => sum + row.amount, 0);
+  // Authoritative financial totals from backend
+  const cost = data.totalCost;
   const profit = data.revenue - cost;
   const profitRate = data.revenue > 0 ? (profit / data.revenue) * 100 : 0;
+  
   const total = Math.max(1, data.revenue + cost);
   const profitSlice = Math.max(0, profit) / total * 100;
   const costSlice = cost / total * 100;

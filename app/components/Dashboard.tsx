@@ -13,6 +13,9 @@ import { CostRecord, CostType, Project } from '../types';
 import { formatVnd, WBSBudgetRow } from './dashboard-data';
 import { ERP_TERMINOLOGY } from '@/app/utils/table-constants';
 import { useProjectsQuery, useProjectStatsQuery } from '@/services/queries/useProjects';
+import { useIntelligenceQuery } from '@/services/queries/useIntelligence';
+import ExecutiveActionCockpit from './ExecutiveActionCockpit';
+import KPISection from './KPISection';
 import { useCostsQuery } from '@/services/queries/useCosts';
 import { useWBSQuery } from '@/services/queries/useWBS';
 import { useExecutiveSummaryQuery } from '@/services/queries/useWorkspace';
@@ -36,6 +39,7 @@ export default function Dashboard() {
   const { data: paginatedData, isLoading: isLoadingProjects, isError: isErrorProjects, refetch: refetchProjects } = useProjectsQuery();
   const projects = paginatedData?.data || [];
   const { data: stats, isLoading: isLoadingStats, isError: isErrorStats, refetch: refetchStats } = useProjectStatsQuery(currentProjectId);
+  const { data: intelligence, isLoading: isLoadingIntel } = useIntelligenceQuery(currentProjectId);
   const { data: costs = [], isLoading: isLoadingCosts, isError: isErrorCosts, refetch: refetchCosts } = useCostsQuery(currentProjectId);
   const { data: wbsData, isLoading: isLoadingWBS, isError: isErrorWBS, refetch: refetchWBS } = useWBSQuery(currentProjectId);
   const { data: executiveData } = useExecutiveSummaryQuery(currentProjectId);
@@ -115,6 +119,7 @@ export default function Dashboard() {
       totalCost: stats.totalCost,
       costByType: costByTypeArr,
       progress: stats.taskProgress,
+      version: stats.version,
     };
   }, [currentProjectId, projects, stats, costs, wbsData]);
 
@@ -275,6 +280,20 @@ export default function Dashboard() {
                   </div>
                   <div className="text-[10px] font-bold text-[var(--text-tertiary)] bg-[var(--secondary)] px-3 py-1 rounded-lg border border-[var(--border)]">Cập nhật: {new Date().toLocaleDateString('vi-VN')}</div>
                 </div>
+                {/* Executive Decision Layer */}
+            {intelligence && (
+              <div className="mb-8">
+                <ExecutiveActionCockpit 
+                  data={intelligence} 
+                  onAction={(action) => console.log('Action Executed:', action)}
+                  onAcknowledge={(id) => console.log('Anomaly Acknowledged:', id)}
+                />
+              </div>
+            )}
+
+            <div className="mb-8">
+              <KPISection data={stats} />
+            </div>
                 <div className="p-6">
                   <WBSTable data={data.wbsRows} />
                 </div>
