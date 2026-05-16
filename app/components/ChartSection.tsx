@@ -34,10 +34,12 @@ function Row({ label, value }: { label: string; value: string }) {
 }
 
 function BudgetPie({ data }: { data: DashboardData }) {
-  const total = data.costByType.reduce((sum, row) => sum + row.value, 0);
-  const segments = data.costByType.map((row, index, rows) => {
-    const pct = total > 0 ? (row.value / total) * 100 : 0;
-    const previous = rows.slice(0, index).reduce((sum, item) => sum + (total > 0 ? (item.value / total) * 100 : 0), 0);
+  // DEFENSIVE: Safe array access with fallback to empty array
+  const costByType = data?.costByType ?? [];
+  const total = costByType.reduce((sum, row) => sum + (row?.value ?? 0), 0);
+  const segments = costByType.map((row, index, rows) => {
+    const pct = total > 0 ? ((row?.value ?? 0) / total) * 100 : 0;
+    const previous = rows.slice(0, index).reduce((sum, item) => sum + (total > 0 ? ((item?.value ?? 0) / total) * 100 : 0), 0);
     return { ...row, pct, offset: 25 - previous };
   });
 
@@ -93,10 +95,18 @@ function BudgetPie({ data }: { data: DashboardData }) {
 function CashFlow({ data }: { data: DashboardData }) {
   const width = 500;
   const height = 200;
-  const max = Math.max(...data.cashFlow.flatMap((point) => [point.income, point.expense]));
-  const x = (index: number) => 32 + (index * (width - 64)) / (data.cashFlow.length - 1);
-  const y = (value: number) => height - 32 - (value / max) * (height - 64);
-  const line = (key: 'income' | 'expense') => data.cashFlow.map((point, index) => `${x(index)},${y(point[key])}`).join(' ');
+  const cashFlow = data?.cashFlow ?? [];
+  
+  // DEFENSIVE: Safe max calculation with empty array fallback
+  const maxValue = cashFlow.length > 0 
+    ? Math.max(...cashFlow.flatMap((point) => [point?.income ?? 0, point?.expense ?? 0]))
+    : 100;
+  const max = maxValue > 0 ? maxValue : 100;
+  
+  const x = (index: number) => 32 + (index * (width - 64)) / Math.max(cashFlow.length - 1, 1);
+  const y = (value: number) => height - 32 - ((value ?? 0) / max) * (height - 64);
+  const line = (key: 'income' | 'expense') => 
+    cashFlow.map((point, index) => `${x(index)},${y(point?.[key] ?? 0)}`).join(' ');
 
   return (
     <Panel title="DÒNG TIỀN (TRIỆU VND)">
@@ -117,11 +127,11 @@ function CashFlow({ data }: { data: DashboardData }) {
         })}
         <polyline points={line('income')} fill="none" stroke="#10b981" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-md" />
         <polyline points={line('expense')} fill="none" stroke="#f43f5e" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-md" />
-        {data.cashFlow.map((point, index) => (
-          <g key={point.month} className="group/dot">
-            <circle cx={x(index)} cy={y(point.income)} r="5" fill="#10b981" stroke="var(--card)" strokeWidth="2" className="drop-shadow-sm" />
-            <circle cx={x(index)} cy={y(point.expense)} r="5" fill="#f43f5e" stroke="var(--card)" strokeWidth="2" className="drop-shadow-sm" />
-            <text x={x(index)} y={height - 4} fill="var(--text-tertiary)" fontSize="10" fontWeight="900" textAnchor="middle" className="uppercase tracking-tighter">{point.month}</text>
+        {cashFlow.map((point, index) => (
+          <g key={point?.month ?? `point-${index}`} className="group/dot">
+            <circle cx={x(index)} cy={y(point?.income ?? 0)} r="5" fill="#10b981" stroke="var(--card)" strokeWidth="2" className="drop-shadow-sm" />
+            <circle cx={x(index)} cy={y(point?.expense ?? 0)} r="5" fill="#f43f5e" stroke="var(--card)" strokeWidth="2" className="drop-shadow-sm" />
+            <text x={x(index)} y={height - 4} fill="var(--text-tertiary)" fontSize="10" fontWeight="900" textAnchor="middle" className="uppercase tracking-tighter">{point?.month ?? ''}</text>
           </g>
         ))}
       </svg>
@@ -131,17 +141,18 @@ function CashFlow({ data }: { data: DashboardData }) {
 
 function ProgressCard({ data }: { data: DashboardData }) {
   const circumference = 2 * Math.PI * 66;
+  const progress = data?.progress ?? 0;
   return (
     <Panel title="TIẾN ĐỘ TỔNG THỂ">
       <div className="grid place-items-center py-4">
         <div className="relative h-[160px] w-[160px]">
           <svg viewBox="0 0 160 160" className="-rotate-90 drop-shadow-xl">
             <circle cx="80" cy="80" r="66" fill="none" stroke="var(--secondary)" strokeWidth="16" strokeDasharray={`${circumference * 0.5} ${circumference}`} strokeLinecap="round" />
-            <circle cx="80" cy="80" r="66" fill="none" stroke="#10b981" strokeWidth="16" strokeDasharray={`${circumference * (data.progress / 100) * 0.5} ${circumference}`} strokeLinecap="round" className="transition-all duration-1000 ease-out" />
+            <circle cx="80" cy="80" r="66" fill="none" stroke="#10b981" strokeWidth="16" strokeDasharray={`${circumference * (progress / 100) * 0.5} ${circumference}`} strokeLinecap="round" className="transition-all duration-1000 ease-out" />
           </svg>
           <div className="absolute inset-0 grid place-items-center">
             <div className="text-center">
-              <div className="text-3xl font-black text-[var(--text-primary)] leading-none mb-1">{data.progress}%</div>
+              <div className="text-3xl font-black text-[var(--text-primary)] leading-none mb-1">{progress}%</div>
               <div className="text-[9px] font-black text-[var(--text-tertiary)] uppercase tracking-widest">HOÀN THÀNH</div>
             </div>
           </div>

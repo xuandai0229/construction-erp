@@ -11,17 +11,18 @@ const icons = {
 };
 
 export default function KPISection({ data }: { data: DashboardData }) {
-  const profit = data.revenue - data.totalCost;
-  const budgetDelta = data.totalBudget > 0 ? ((data.totalBudget - data.totalCost) / data.totalBudget) * 100 : 0;
-  const margin = data.revenue > 0 ? (profit / data.revenue) * 100 : 0;
-  const budgetVsContract = (data.project.totalValue ?? 0) > 0 ? (data.totalBudget / (data.project.totalValue ?? 0)) * 100 : 0;
-  const revenueVsContract = (data.project.totalValue ?? 0) > 0 ? (data.revenue / (data.project.totalValue ?? 0)) * 100 : 0;
+  // DEFENSIVE: Safe calculations with optional chaining
+  const profit = (data?.revenue ?? 0) - (data?.totalCost ?? 0);
+  const budgetDelta = (data?.totalBudget ?? 0) > 0 ? (((data?.totalBudget ?? 0) - (data?.totalCost ?? 0)) / (data?.totalBudget ?? 0)) * 100 : 0;
+  const margin = (data?.revenue ?? 0) > 0 ? (profit / (data?.revenue ?? 0)) * 100 : 0;
+  const budgetVsContract = (data?.project?.totalValue ?? 0) > 0 ? ((data?.totalBudget ?? 0) / (data?.project?.totalValue ?? 0)) * 100 : 0;
+  const revenueVsContract = (data?.project?.totalValue ?? 0) > 0 ? ((data?.revenue ?? 0) / (data?.project?.totalValue ?? 0)) * 100 : 0;
 
   const cards = [
-    { title: 'Tổng giá trị hợp đồng', value: data.project.totalValue, change: 'Giá trị gốc dự án', tone: 'blue', icon: icons.contract },
-    { title: 'Tổng dự toán (BOQ)', value: data.totalBudget, change: `${budgetVsContract.toFixed(1)}% so với HĐ`, tone: 'blue', icon: icons.budget },
-    { title: 'Chi phí thực tế', value: data.totalCost, change: `${budgetDelta >= 0 ? '-' : '+'} ${Math.abs(budgetDelta).toFixed(1)}% dự toán`, tone: budgetDelta >= 0 ? 'green' : 'red', icon: icons.cost },
-    { title: 'Doanh thu nghiệm thu', value: data.revenue, change: `${revenueVsContract.toFixed(1)}% tiến độ`, tone: 'blue', icon: icons.revenue },
+    { title: 'Tổng giá trị hợp đồng', value: data?.project?.totalValue, change: 'Giá trị gốc dự án', tone: 'blue', icon: icons.contract },
+    { title: 'Tổng dự toán (BOQ)', value: data?.totalBudget, change: `${budgetVsContract.toFixed(1)}% so với HĐ`, tone: 'blue', icon: icons.budget },
+    { title: 'Chi phí thực tế', value: data?.totalCost, change: `${budgetDelta >= 0 ? '-' : '+'} ${Math.abs(budgetDelta).toFixed(1)}% dự toán`, tone: budgetDelta >= 0 ? 'green' : 'red', icon: icons.cost },
+    { title: 'Doanh thu nghiệm thu', value: data?.revenue, change: `${revenueVsContract.toFixed(1)}% tiến độ`, tone: 'blue', icon: icons.revenue },
     { title: 'Lợi nhuận dự kiến', value: profit, change: `${margin.toFixed(1)}% biên lợi nhuận`, tone: profit >= 0 ? 'green' : 'red', icon: icons.profit },
   ];
 

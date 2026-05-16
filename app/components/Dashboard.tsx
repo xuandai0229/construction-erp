@@ -19,6 +19,7 @@ import { useExecutiveSummaryQuery } from '@/services/queries/useWorkspace';
 import ActionCenter from './workspace/ActionCenter';
 import GuidanceBanner from './workspace/GuidanceBanner';
 import ActivityStream from './workspace/ActivityStream';
+import EmptyProjectState from './EmptyProjectState';
 
 const costType_LABELS: Record<string, string> = {
   material: 'Vật tư',
@@ -62,15 +63,35 @@ export default function Dashboard() {
   };
 
   const data = useMemo(() => {
-    const project = projects.find((p: Project) => p.id === currentProjectId) || projects[0] || { id: '', name: 'No Project', contractValue: 0, status: 'PLANNED' };
+    const project = projects.find((p: Project) => p.id === currentProjectId) || projects[0];
     const wbsTree = wbsData?.tree || [];
 
+    // ROOT CAUSE FIX: Create fallback project with COMPLETE Project contract
+    // This ensures data.project always has all required fields including totalValue
+    const createFallbackProject = (): Project => ({
+      id: '',
+      name: 'No Project',
+      description: null,
+      status: 'PLANNED' as const,
+      contractValue: 0,
+      totalBudget: 0,
+      totalValue: 0, // ← FIX: Now includes totalValue
+      ownerId: null,
+      investor: null,
+      startDate: null,
+      endDate: null,
+      projectType: null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      deletedAt: null,
+    });
+
     const fallbackData = {
-      project,
+      project: project || createFallbackProject(),
       budget: [],
       costs,
       wbsTree,
-      revenue: Number(project.contractValue || 0),
+      revenue: Number(project?.contractValue || 0),
       receivable: { total: 0, paid: 0, remaining: 0, overdue: 0 },
       payable: { total: 0, paid: 0, remaining: 0, overdue: 0 },
       costByType: [],
@@ -95,10 +116,10 @@ export default function Dashboard() {
     return {
       ...fallbackData,
       project: {
-        ...project,
-        totalValue: Number(project.contractValue || stats.totalRevenue || 0),
+        ...fallbackData.project,
+        totalValue: Number(project?.contractValue || stats.totalRevenue || 0),
       },
-      revenue: Number(stats.totalRevenue || project.contractValue || 0),
+      revenue: Number(stats.totalRevenue || project?.contractValue || 0),
       receivable: {
         total: stats.totalInvoiced,
         paid: stats.totalPaidInvoice,
@@ -161,30 +182,16 @@ export default function Dashboard() {
     );
   }
 
-  // Handle Empty State
-  if (projects.length === 0) {
+  // Handle Empty State - DEFENSIVE: Ensure we don't render dashboard without project
+  if (projects.length === 0 || !data.project.id) {
     return (
-      <div className="min-h-screen bg-background text-foreground flex overflow-hidden">
+      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex overflow-hidden">
         <Sidebar activeItem="overview" />
         <main className="flex-1 flex flex-col">
-          <Header data={data} />
-          <div className="flex-1 grid place-items-center p-8 text-center animate-fade-in">
-            <div className="max-w-md">
-              <div className="mb-6 mx-auto h-24 w-24 rounded-full bg-[var(--secondary)] grid place-items-center border border-[var(--border)] shadow-2xl">
-                <svg viewBox="0 0 24 24" className="h-10 w-10 text-[var(--text-muted)]" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M4 21V8l5-3 5 3v13M14 21V11l6 3v7M7 11h2M7 15h2" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Chưa có dự án nào</h2>
-              <p className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-widest mb-8 leading-relaxed">Hãy khởi tạo dự án đầu tiên để bắt đầu quản lý chi phí & tiến độ.</p>
-              <button
-                onClick={() => router.push('/projects')}
-                className="erp-btn bg-blue-600 text-white px-8 py-3 hover:bg-blue-500 shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)]"
-              >
-                Tạo hồ sơ dự án
-              </button>
-            </div>
-          </div>
+          <EmptyProjectState 
+            reason="no-projects"
+            onCreateProject={() => router.push('/projects')}
+          />
         </main>
       </div>
     );

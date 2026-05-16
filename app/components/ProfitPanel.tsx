@@ -3,10 +3,11 @@
 import { DashboardData, formatVnd } from './dashboard-data';
 
 export default function ProfitPanel({ data }: { data: DashboardData }) {
-  const cost = data.costs.reduce((sum, row) => sum + row.amount, 0);
-  const profit = data.revenue - cost;
-  const profitRate = data.revenue > 0 ? (profit / data.revenue) * 100 : 0;
-  const total = Math.max(1, data.revenue + cost);
+  // DEFENSIVE: Safe calculations with optional chaining
+  const cost = (data?.costs ?? []).reduce((sum, row) => sum + (row?.amount ?? 0), 0);
+  const profit = (data?.revenue ?? 0) - cost;
+  const profitRate = (data?.revenue ?? 0) > 0 ? (profit / (data?.revenue ?? 0)) * 100 : 0;
+  const total = Math.max(1, (data?.revenue ?? 0) + cost);
   const profitSlice = Math.max(0, profit) / total * 100;
   const costSlice = cost / total * 100;
 
@@ -20,7 +21,7 @@ export default function ProfitPanel({ data }: { data: DashboardData }) {
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_140px] gap-6">
         <div className="space-y-3.5 tabular-nums">
-          <Metric label="Tổng doanh thu" value={data.revenue} />
+          <Metric label="Tổng doanh thu" value={data?.revenue} />
           <Metric label="Tổng chi phí" value={cost} />
           <div className="h-px bg-slate-800/50 my-1" />
           <Metric label="Lợi nhuận" value={profit} accent={profit >= 0 ? 'text-green-400' : 'text-red-400'} />
