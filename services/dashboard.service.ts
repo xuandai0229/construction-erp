@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { FinancialAggregationService } from "./financial-aggregation.service";
 import { round } from "@/lib/math";
 import { ReportingService } from "./reporting.service";
 import { ProjectService } from "./project.service";
@@ -19,8 +20,12 @@ export class DashboardService {
         ReportingService.getProjectRiskProfiles()
       ]);
 
-    const totalInvoiced = invoices.reduce((s, i) => s + Number(i.amount), 0);
-    const totalCost = costs.reduce((s, c) => s + Number(c.amount), 0);
+    const snapshot = projectId 
+      ? await FinancialAggregationService.getProjectSnapshot(projectId)
+      : null;
+
+    const totalInvoiced = snapshot ? snapshot.reality.totalRevenue : invoices.reduce((s, i) => s + (["APPROVED", "POSTED", "PAID", "PARTIAL"].includes(i.status) ? Number(i.amount) : 0), 0);
+    const totalCost = snapshot ? snapshot.reality.actualCost : costs.reduce((s, c) => s + (["APPROVED", "POSTED", "LOCKED"].includes(c.workflowStatus || c.approvalStatus) ? Number(c.amount) : 0), 0);
     const grossMargin = totalInvoiced > 0 ? ((totalInvoiced - totalCost) / totalInvoiced) * 100 : 0;
 
     // Aging & Collection Intelligence

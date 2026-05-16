@@ -16,8 +16,8 @@ export default function ActivityStream({ activities }: { activities: any[] }) {
   return (
     <section className="card-elevation p-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl h-full">
       <div className="mb-5 flex items-center justify-between">
-        <div className="accent-line border-l-4 border-slate-400 pl-4">
-          <h3 className="text-[10px] font-black text-[var(--text-primary)] tracking-widest uppercase">Nhật ký nghiệp vụ dự án</h3>
+        <div className="accent-line border-l-4 border-slate-500 pl-4">
+          <h3 className="text-[10px] font-black text-[var(--text-primary)] tracking-widest uppercase">LỊCH SỬ HOẠT ĐỘNG</h3>
         </div>
       </div>
       
@@ -30,22 +30,22 @@ export default function ActivityStream({ activities }: { activities: any[] }) {
           activities.map((act) => (
             <div key={act.id} className="flex gap-4 group cursor-default">
               <div className="flex flex-col items-center">
-                <div className="w-2 h-2 rounded-full bg-[var(--border)] group-hover:bg-blue-400 transition-colors mt-1.5" />
+                <div className="w-2 h-2 rounded-full bg-[var(--border)] group-hover:bg-blue-400 transition-colors mt-1.5 shadow-sm" />
                 <div className="w-px flex-1 bg-[var(--divider)] mt-1" />
               </div>
               <div className="pb-5 flex-1 min-w-0">
                 <div className="flex justify-between items-start mb-0.5">
-                  <span className="text-[9px] font-black text-blue-600 uppercase tracking-widest opacity-80">
+                  <span className="text-[9px] font-black text-blue-600 uppercase tracking-widest">
                     {act.action} • {act.entityType}
                   </span>
-                  <span className="text-[9px] font-bold text-[var(--text-muted)] tabular-nums">
+                  <span className="text-[9px] font-bold text-[var(--text-tertiary)] tabular-nums">
                     {new Date(act.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
-                <p className="text-[11px] text-[var(--text-primary)] leading-snug font-bold group-hover:text-blue-700 transition-colors truncate">
-                   Nghiệp vụ: <span className="font-black text-[var(--text-secondary)]">#{act.entityId.slice(0, 8)}</span> bởi {act.User?.name || 'Hệ thống'}
+                <p className="text-[11px] text-[var(--text-primary)] leading-snug font-black group-hover:text-blue-500 transition-colors truncate">
+                   {act.action} bởi <span className="text-[var(--text-secondary)]">{act.User?.name || 'Hệ thống'}</span>
                 </p>
-                <div className="mt-1 text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-widest">
+                <div className="mt-1 text-[9px] font-bold text-[var(--text-tertiary)] uppercase tracking-widest">
                   {new Date(act.createdAt).toLocaleDateString('vi-VN')}
                 </div>
               </div>

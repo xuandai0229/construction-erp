@@ -26,56 +26,59 @@
 
 /* ─── ERP Design Tokens ──────────────────────────────────── */
 :root {
-  --erp-header-height: 74px;
-  --erp-sidebar-width: 258px;
-  --erp-sidebar-collapsed: 74px;
-  --erp-row-height: 44px;
-  --radius: 0.5rem;
+  --erp-header-height: 72px;
+  --erp-sidebar-width: 260px;
+  --erp-sidebar-collapsed: 72px;
+  --erp-row-height: 42px;
+  --radius: 0.625rem;
+  --radius-sm: 0.375rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
 }
 
 /* ─── Dark Mode (Premium Cinematic Look) ──────────────────── */
 :root:not(.light) {
   --background: #020617;
   --foreground: #f8fafc;
-  --card: rgba(15, 23, 42, 0.92);
+  --card: rgba(15, 23, 42, 0.7);
   --card-foreground: #f8fafc;
   --popover: #0f172a;
   --popover-foreground: #f8fafc;
-  --primary: #60a5fa;
+  --primary: #3b82f6;
   --primary-foreground: #ffffff;
-  --secondary: rgba(30, 41, 59, 0.5);
-  --secondary-foreground: #f8fafc;
-  --muted: rgba(30, 41, 59, 0.6);
+  --secondary: rgba(30, 41, 59, 0.4);
+  --secondary-foreground: #f1f5f9;
+  --muted: rgba(30, 41, 59, 0.5);
   --muted-foreground: #94a3b8;
-  --accent: rgba(59, 130, 246, 0.12);
-  --accent-foreground: #f8fafc;
-  --destructive: #f87171;
-  --destructive-foreground: #f8fafc;
-  --border: rgba(51, 65, 85, 0.25);
-  --divider: rgba(51, 65, 85, 0.15);
-  --input: rgba(15, 23, 42, 0.6);
-  --ring: rgba(59, 130, 246, 0.5);
-  --header-bg: rgba(2, 6, 23, 0.9);
+  --accent: rgba(59, 130, 246, 0.1);
+  --accent-foreground: #60a5fa;
+  --destructive: #f43f5e;
+  --destructive-foreground: #ffffff;
+  --border: rgba(51, 65, 85, 0.3);
+  --divider: rgba(51, 65, 85, 0.2);
+  --input: rgba(15, 23, 42, 0.4);
+  --ring: rgba(59, 130, 246, 0.4);
+  --header-bg: rgba(2, 6, 23, 0.85);
   --sidebar-bg: #020617;
-  --sidebar-border: rgba(51, 65, 85, 0.2);
-  --table-head-bg: rgba(15, 23, 42, 0.6);
-  --table-row-hover: rgba(255, 255, 255, 0.04);
-  --erp-card-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.5);
-  --erp-hover-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.6);
+  --sidebar-border: rgba(51, 65, 85, 0.35);
+  --table-head-bg: rgba(15, 23, 42, 0.7);
+  --table-row-hover: rgba(255, 255, 255, 0.03);
+  --erp-card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  --erp-hover-shadow: 0 12px 40px -4px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
   --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-tertiary: #475569;
+  --text-secondary: #e2e8f0;
+  --text-muted: #cbd5e1;
+  --text-tertiary: #94a3b8;
   --text-accent: #60a5fa;
-  --badge-bg: rgba(30, 41, 59, 0.7);
-  --badge-border: rgba(51, 65, 85, 0.3);
-  --input-bg: rgba(15, 23, 42, 0.5);
-  --input-border: rgba(51, 65, 85, 0.3);
+  --badge-bg: rgba(30, 41, 59, 0.6);
+  --badge-border: rgba(51, 65, 85, 0.4);
+  --input-bg: rgba(15, 23, 42, 0.3);
+  --input-border: rgba(51, 65, 85, 0.4);
 }
 
 /* ─── Light Mode (Elegant Enterprise Look) ───────────────── */
 .light {
-  --background: #f8f9fa;
+  --background: #f8fafc;
   --foreground: #0f172a;
   --card: #ffffff;
   --card-foreground: #0f172a;
@@ -84,33 +87,33 @@
   --primary: #2563eb;
   --primary-foreground: #ffffff;
   --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
+  --secondary-foreground: #1e293b;
   --muted: #f8fafc;
-  --muted-foreground: #64748b;
+  --muted-foreground: #475569;
   --accent: #eff6ff;
-  --accent-foreground: #1e40af;
-  --destructive: #dc2626;
+  --accent-foreground: #1d4ed8;
+  --destructive: #e11d48;
   --destructive-foreground: #ffffff;
-  --border: rgba(226, 232, 240, 0.8);
-  --divider: rgba(226, 232, 240, 0.5);
+  --border: #e2e8f0;
+  --divider: #f1f5f9;
   --input: #ffffff;
-  --ring: rgba(37, 99, 235, 0.2);
-  --header-bg: rgba(255, 255, 255, 0.9);
+  --ring: rgba(37, 99, 235, 0.15);
+  --header-bg: rgba(255, 255, 255, 0.85);
   --sidebar-bg: #0f172a;
-  --sidebar-border: rgba(255, 255, 255, 0.05);
-  --table-head-bg: #f9fafb;
-  --table-row-hover: rgba(241, 245, 249, 0.5);
-  --erp-card-shadow: 0 2px 4px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.03);
-  --erp-hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --table-head-bg: #f8fafc;
+  --table-row-hover: #f1f5f9;
+  --erp-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.02), 0 0 0 1px rgba(0, 0, 0, 0.03);
+  --erp-hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02), 0 0 0 1px rgba(0, 0, 0, 0.04);
   --text-primary: #1e293b;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-  --text-tertiary: #71717a;
+  --text-secondary: #334155;
+  --text-muted: #475569;
+  --text-tertiary: #64748b;
   --text-accent: #2563eb;
-  --badge-bg: #f1f5f9;
+  --badge-bg: #f8fafc;
   --badge-border: #e2e8f0;
   --input-bg: #ffffff;
-  --input-border: #e2e8f0;
+  --input-border: #cbd5e1;
 }
 
 /* ─── Base ────────────────────────────────────────────────── */
@@ -323,15 +326,29 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 /* ─── Table ───────────────────────────────────────────────── */
+.erp-kpi-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.glass-morphism {
+  @apply bg-white/5 backdrop-blur-md border border-white/10;
+}
+
+.inner-border {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
 .erp-table {
+  @apply border-collapse;
+  table-layout: fixed;
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  text-align: left;
-  font-size: 0.8125rem;
-  /* 13px */
-  font-variant-numeric: tabular-nums;
-  line-height: 1.4;
 }
 
 .erp-table th {

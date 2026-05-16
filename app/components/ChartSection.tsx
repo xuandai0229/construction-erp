@@ -1,6 +1,6 @@
 'use client';
 
-import { DashboardData, formatDate, formatShortVnd, formatVnd } from './dashboard-data';
+import { DashboardData, formatDate, formatShortVnd } from './dashboard-data';
 
 export default function ChartSection({ data }: { data: DashboardData }) {
   return (
@@ -9,6 +9,27 @@ export default function ChartSection({ data }: { data: DashboardData }) {
       <CashFlow data={data} />
       <ProgressCard data={data} />
     </section>
+  );
+}
+
+function Panel({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <article className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-[var(--erp-card-shadow)] hover:shadow-[var(--erp-hover-shadow)] transition-all duration-300">
+      <h3 className="mb-6 text-[10px] font-black text-[var(--text-tertiary)] uppercase tracking-[0.2em] flex items-center gap-2">
+        <span className="h-1.5 w-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+        {title}
+      </h3>
+      {children}
+    </article>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between py-2 border-b border-[var(--divider)] last:border-0">
+      <span className="text-[12px] font-bold text-[var(--text-secondary)]">{label}</span>
+      <span className="text-[12.5px] font-black text-[var(--text-primary)] tabular-nums">{value}</span>
+    </div>
   );
 }
 
@@ -22,31 +43,44 @@ function BudgetPie({ data }: { data: DashboardData }) {
 
   return (
     <Panel title="PHÂN BỔ NGÂN SÁCH">
-      <div className="grid grid-cols-[210px_1fr] items-center gap-6">
-        <div className="relative h-[210px] w-[210px]">
-          <svg viewBox="0 0 42 42" className="-rotate-90">
-            <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="var(--secondary)" strokeWidth="7" />
+      <div className="grid grid-cols-[180px_1fr] items-center gap-8">
+        <div className="relative h-[180px] w-[180px]">
+          <svg viewBox="0 0 42 42" className="-rotate-90 drop-shadow-lg">
+            <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="var(--secondary)" strokeWidth="6.5" />
             {segments.map((row) => (
-              <circle key={row.type} cx="21" cy="21" r="15.915" fill="transparent" stroke={row.color} strokeWidth="7" strokeDasharray={`${row.pct} ${100 - row.pct}`} strokeDashoffset={row.offset} />
+              <circle 
+                key={row.type} 
+                cx="21" 
+                cy="21" 
+                r="15.915" 
+                fill="transparent" 
+                stroke={row.color} 
+                strokeWidth="7" 
+                strokeDasharray={`${row.pct} ${100 - row.pct}`} 
+                strokeDashoffset={row.offset} 
+                className="transition-all duration-1000 ease-out"
+              />
             ))}
           </svg>
           <div className="absolute inset-0 grid place-items-center text-center">
             <div>
-              <div className="text-2xl font-extrabold text-[var(--text-primary)]">{formatShortVnd(total)}</div>
-              <div className="text-xs font-bold text-[var(--text-muted)]">VND</div>
+              <div className="text-xl font-black text-[var(--text-primary)] tracking-tight leading-none mb-1">{formatShortVnd(total)}</div>
+              <div className="text-[9px] font-black text-[var(--text-tertiary)] uppercase tracking-widest">TỔNG CỘNG</div>
             </div>
           </div>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           {segments.map((row) => {
             return (
-              <div key={row.type} className="grid grid-cols-[1fr_48px_108px] items-center gap-3 text-sm">
-                <div className="flex items-center gap-3 text-[var(--text-secondary)]">
-                  <span className="h-3 w-3 rounded-full" style={{ backgroundColor: row.color }} />
+              <div key={row.type} className="flex items-center justify-between text-[12px] group">
+                <div className="flex items-center gap-3 text-[var(--text-secondary)] font-bold group-hover:text-[var(--text-primary)] transition-colors">
+                  <span className="h-2 w-2 rounded-full shadow-sm" style={{ backgroundColor: row.color }} />
                   {row.label}
                 </div>
-                <div className="text-right font-bold text-[var(--text-primary)]">{row.pct.toFixed(0)}%</div>
-                <div className="text-right font-bold text-[var(--text-primary)]">{formatVnd(row.value)}</div>
+                <div className="flex gap-4 items-center">
+                   <div className="text-right font-black text-[var(--text-primary)] tabular-nums">{row.pct.toFixed(0)}%</div>
+                   <div className="text-right font-bold text-[var(--text-tertiary)] tabular-nums w-24">{formatShortVnd(row.value)}</div>
+                </div>
               </div>
             );
           })}
@@ -60,32 +94,35 @@ function CashFlow({ data }: { data: DashboardData }) {
   const width = 500;
   const height = 200;
   const max = Math.max(...data.cashFlow.flatMap((point) => [point.income, point.expense]));
-  const x = (index: number) => 28 + (index * (width - 52)) / (data.cashFlow.length - 1);
-  const y = (value: number) => height - 24 - (value / max) * (height - 42);
+  const x = (index: number) => 32 + (index * (width - 64)) / (data.cashFlow.length - 1);
+  const y = (value: number) => height - 32 - (value / max) * (height - 64);
   const line = (key: 'income' | 'expense') => data.cashFlow.map((point, index) => `${x(index)},${y(point[key])}`).join(' ');
 
   return (
     <Panel title="DÒNG TIỀN (TRIỆU VND)">
-      <div className="mb-2 flex items-center justify-center gap-8 text-sm font-semibold">
-        <span className="flex items-center gap-2 text-emerald-500"><i className="h-1.5 w-5 rounded-full bg-emerald-500" />Thu</span>
-        <span className="flex items-center gap-2 text-rose-500"><i className="h-1.5 w-5 rounded-full bg-rose-500" />Chi</span>
+      <div className="mb-6 flex items-center justify-center gap-10 text-[10px] font-black uppercase tracking-widest">
+        <span className="flex items-center gap-2.5 text-emerald-500">
+          <i className="h-1.5 w-6 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
+          Dòng thu
+        </span>
+        <span className="flex items-center gap-2.5 text-rose-500">
+          <i className="h-1.5 w-6 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.4)]" />
+          Dòng chi
+        </span>
       </div>
-      <svg viewBox={`0 0 ${width} ${height}`} className="h-[222px] w-full">
+      <svg viewBox={`0 0 ${width} ${height}`} className="h-[200px] w-full overflow-visible">
         {[0, 1, 2, 3, 4].map((tick) => {
-          const yy = 18 + tick * 38;
-          return <line key={tick} x1="28" x2={width - 10} y1={yy} y2={yy} stroke="var(--border)" strokeWidth="1" />;
+          const yy = 24 + tick * 36;
+          return <line key={tick} x1="32" x2={width - 32} y1={yy} y2={yy} stroke="var(--divider)" strokeWidth="1" strokeDasharray="4 4" />;
         })}
-        <polyline points={line('income')} fill="none" stroke="#22c55e" strokeWidth="3" />
-        <polyline points={line('expense')} fill="none" stroke="#ef4444" strokeWidth="3" />
+        <polyline points={line('income')} fill="none" stroke="#10b981" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-md" />
+        <polyline points={line('expense')} fill="none" stroke="#f43f5e" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-md" />
         {data.cashFlow.map((point, index) => (
-          <g key={point.month}>
-            <circle cx={x(index)} cy={y(point.income)} r="4" fill="#10b981" />
-            <circle cx={x(index)} cy={y(point.expense)} r="4" fill="#f43f5e" />
-            {index % 2 === 0 && <text x={x(index)} y={height - 4} fill="var(--text-muted)" fontSize="11" textAnchor="middle">{point.month}</text>}
+          <g key={point.month} className="group/dot">
+            <circle cx={x(index)} cy={y(point.income)} r="5" fill="#10b981" stroke="var(--card)" strokeWidth="2" className="drop-shadow-sm" />
+            <circle cx={x(index)} cy={y(point.expense)} r="5" fill="#f43f5e" stroke="var(--card)" strokeWidth="2" className="drop-shadow-sm" />
+            <text x={x(index)} y={height - 4} fill="var(--text-tertiary)" fontSize="10" fontWeight="900" textAnchor="middle" className="uppercase tracking-tighter">{point.month}</text>
           </g>
-        ))}
-        {[0, 10, 20, 30, 40].map((label, index) => (
-          <text key={label} x="0" y={height - 24 - index * 38} fill="var(--text-muted)" fontSize="11">{label}B</text>
         ))}
       </svg>
     </Panel>
@@ -96,39 +133,26 @@ function ProgressCard({ data }: { data: DashboardData }) {
   const circumference = 2 * Math.PI * 66;
   return (
     <Panel title="TIẾN ĐỘ TỔNG THỂ">
-      <div className="grid place-items-center py-2">
-        <div className="relative h-[190px] w-[190px]">
-          <svg viewBox="0 0 160 160" className="-rotate-90">
-            <circle cx="80" cy="80" r="66" fill="none" stroke="var(--secondary)" strokeWidth="18" strokeDasharray={`${circumference * 0.5} ${circumference}`} strokeLinecap="butt" />
-            <circle cx="80" cy="80" r="66" fill="none" stroke="#10b981" strokeWidth="18" strokeDasharray={`${circumference * (data.progress / 100) * 0.5} ${circumference}`} strokeLinecap="butt" />
+      <div className="grid place-items-center py-4">
+        <div className="relative h-[160px] w-[160px]">
+          <svg viewBox="0 0 160 160" className="-rotate-90 drop-shadow-xl">
+            <circle cx="80" cy="80" r="66" fill="none" stroke="var(--secondary)" strokeWidth="16" strokeDasharray={`${circumference * 0.5} ${circumference}`} strokeLinecap="round" />
+            <circle cx="80" cy="80" r="66" fill="none" stroke="#10b981" strokeWidth="16" strokeDasharray={`${circumference * (data.progress / 100) * 0.5} ${circumference}`} strokeLinecap="round" className="transition-all duration-1000 ease-out" />
           </svg>
-          <div className="absolute inset-0 grid place-items-center text-4xl font-extrabold text-[var(--text-primary)]">{data.progress}%</div>
+          <div className="absolute inset-0 grid place-items-center">
+            <div className="text-center">
+              <div className="text-3xl font-black text-[var(--text-primary)] leading-none mb-1">{data.progress}%</div>
+              <div className="text-[9px] font-black text-[var(--text-tertiary)] uppercase tracking-widest">HOÀN THÀNH</div>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="space-y-3 text-sm">
-        <Row label="Ngày bắt đầu" value={formatDate(data.project.startDate)} />
-        <Row label="Ngày kết thúc dự kiến" value={formatDate(data.project.endDate)} />
-        <Row label="Số ngày đã qua" value={`${data.daysElapsed} / ${data.durationDays} ngày`} />
+      <div className="mt-4 space-y-1">
+        <Row label="Bắt đầu" value={formatDate(data.project.startDate)} />
+        <Row label="Kết thúc" value={formatDate(data.project.endDate)} />
+        <Row label="Tiến độ thời gian" value={`${data.daysElapsed} / ${data.durationDays} ngày`} />
       </div>
     </Panel>
-  );
-}
-
-function Panel({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <article className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-5 card-elevation">
-      <h3 className="mb-4 text-[13px] font-bold text-[var(--text-primary)] uppercase tracking-wider">{title}</h3>
-      {children}
-    </article>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between">
-      <span className="text-[var(--text-secondary)]">{label}</span>
-      <span className="font-bold text-[var(--text-primary)]">{value}</span>
-    </div>
   );
 }
 

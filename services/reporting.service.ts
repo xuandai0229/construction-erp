@@ -16,10 +16,12 @@ export class ReportingService {
    */
   static async getReceivableAging(projectId?: string): Promise<AgingBucket[]> {
     const today = new Date();
+    // [CONSISTENCY FIX]: Only include approved/posted invoices in aging
     const invoices = await prisma.invoice.findMany({
       where: {
         deletedAt: null,
         remainingAmount: { gt: 0 },
+        status: { in: ["SENT", "PAID", "PARTIAL", "OVERDUE"] },
         ...(projectId && { projectId })
       }
     });
@@ -37,12 +39,7 @@ export class ReportingService {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       const isOverdue = today > dueDate;
 
-      if (!isOverdue) {
-        // Current receivables (not yet overdue) are in 0-30 bucket normally,
-        // but for an aging report, we only bucket overdue ones OR distinguish them.
-        // Let's bucket OVERDUE days.
-        continue; 
-      }
+      if (!isOverdue) continue; 
 
       const bucket = buckets.find(b => diffDays >= b.minDays && diffDays <= b.maxDays);
       if (bucket) {
@@ -62,51 +59,51 @@ export class ReportingService {
       const projects = await prisma.project.findMany({ where: { deletedAt: null } });
       const profiles = [];
 
-    for (const p of projects) {
-      const summary = await ProjectService.getAccountingSummary(p.id);
-      
-      let riskScore = 0;
-      const riskFlags: string[] = [];
+      for (const p of projects) {
+        const summary = await ProjectService.getAccountingSummary(p.id);
+        
+        let riskScore = 0;
+        const riskFlags: string[] = [];
 
-      // 1. Budget Risk
-      if (summary.isCostOverrun) {
-        riskScore += 40;
-        riskFlags.push(`Vượt ngân sách: ${round(summary.costOverrunPct - 100, 1)}%`);
-      } else if (summary.costOverrunPct > 90) {
-        riskScore += 15;
-        riskFlags.push("Sắp vượt ngân sách (>90%)");
-      }
-
-      // 2. Collection Risk
-      if (summary.overdueInvoices > 0) {
-        riskScore += 30;
-        riskFlags.push(`Có ${summary.overdueInvoices} hóa đơn quá hạn`);
-      }
-
-      // 3. Operational Risk (Reversals)
-      const reversalCount = await prisma.journalEntry.count({
-        where: { projectId: p.id, isReversed: true }
-      });
-      if (reversalCount > 5) {
-        riskScore += 20;
-        riskFlags.push(`Tần suất hủy chứng từ cao (${reversalCount})`);
-      }
-
-      profiles.push({
-        projectId: p.id,
-        projectName: p.name,
-        riskScore: Math.min(100, riskScore),
-        severity: riskScore > 70 ? "CRITICAL" : riskScore > 40 ? "HIGH" : riskScore > 20 ? "MEDIUM" : "LOW",
-        flags: riskFlags,
-        summary: {
-          profitMargin: summary.profitMargin,
-          costOverrunPct: summary.costOverrunPct,
-          receivables: summary.totalRemainingInvoice
+        // 1. Budget Risk
+        if (summary.isCostOverrun) {
+          riskScore += 40;
+          riskFlags.push(`Vượt ngân sách: ${round(summary.costOverrunPct - 100, 1)}%`);
+        } else if (summary.costOverrunPct > 90) {
+          riskScore += 15;
+          riskFlags.push("Sắp vượt ngân sách (>90%)");
         }
-      });
-    }
 
-    return profiles.sort((a, b) => b.riskScore - a.riskScore);
+        // 2. Collection Risk
+        if (summary.overdueInvoices > 0) {
+          riskScore += 30;
+          riskFlags.push(`Có ${summary.overdueInvoices} hóa đơn quá hạn`);
+        }
+
+        // 3. Operational Risk (Reversals)
+        const reversalCount = await prisma.journalEntry.count({
+          where: { projectId: p.id, isReversed: true }
+        });
+        if (reversalCount > 5) {
+          riskScore += 20;
+          riskFlags.push(`Tần suất hủy chứng từ cao (${reversalCount})`);
+        }
+
+        profiles.push({
+          projectId: p.id,
+          projectName: p.name,
+          riskScore: Math.min(100, riskScore),
+          severity: riskScore > 70 ? "CRITICAL" : riskScore > 40 ? "HIGH" : riskScore > 20 ? "MEDIUM" : "LOW",
+          flags: riskFlags,
+          summary: {
+            profitMargin: summary.profitMargin,
+            costOverrunPct: summary.costOverrunPct,
+            receivables: summary.totalRemainingInvoice
+          }
+        });
+      }
+
+      return profiles.sort((a, b) => b.riskScore - a.riskScore);
     }, 60000); // 1 min cache for risk profiles
   }
 
@@ -114,11 +111,13 @@ export class ReportingService {
    * Cash Flow Forecast
    */
   static async getCashFlowForecast(projectId?: string) {
-    const summary = await ProjectService.getAccountingSummary(projectId || ""); // If empty, gets all? No, ProjectService needs an ID.
-    // We'll aggregate across all projects if no ID.
-    
     const invoices = await prisma.invoice.findMany({
-      where: { deletedAt: null, remainingAmount: { gt: 0 }, ...(projectId && { projectId }) },
+      where: { 
+        deletedAt: null, 
+        remainingAmount: { gt: 0 }, 
+        status: { in: ["SENT", "PAID", "PARTIAL", "OVERDUE"] },
+        ...(projectId && { projectId }) 
+      },
       orderBy: { dueDate: 'asc' }
     });
 

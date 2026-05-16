@@ -52,15 +52,15 @@ export const ERP_TERMINOLOGY = {
   FINANCE: {
     BUDGET: 'Dự toán ngân sách',
     CONTRACT: 'Giá trị hợp đồng',
-    ACTUAL: 'Giá trị thực hiện',
+    ACTUAL: 'Chi phí thực tế',
     VARIANCE: 'Chênh lệch (Tiết kiệm/Vượt)',
     REVENUE: 'Doanh thu ghi nhận',
     DEBT: 'Công nợ tồn đọng',
     CURRENCY: 'VNĐ',
   },
   WBS: {
-    TITLE: 'Cấu trúc hạng mục (WBS)',
-    COL_NAME: 'Tên hạng mục thi công',
+    TITLE: 'Theo dõi hạng mục thi công (WBS)',
+    COL_NAME: 'Hạng mục thi công (WBS)',
   },
   ACTIONS: {
     TITLE: 'Nghiệp vụ',

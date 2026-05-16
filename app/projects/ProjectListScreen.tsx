@@ -25,7 +25,7 @@ export default function ProjectListScreen() {
 
   useEffect(() => { init(); }, [init]);
 
-  const { data: paginatedData, isLoading } = useProjectsQuery({ 
+  const { data: paginatedData, isLoading, isPlaceholderData } = useProjectsQuery({ 
     page, 
     limit,
     status: filters.status,
@@ -35,13 +35,14 @@ export default function ProjectListScreen() {
   const metadata = paginatedData?.metadata;
   const totalPages = metadata?.totalPages || 1;
 
-  // Bug Fix: Auto-navigate back ONLY when data is fully loaded and actually empty
-  // This prevents the "click 2 times" bug where the page rolls back to 1 during loading
+  // Bug Fix: Auto-navigate back ONLY when data is fully loaded, NOT placeholder, and actually empty
+  // This prevents the "click 2 times" bug where the page rolls back to 1 during loading because
+  // totalPages was still referring to the previous (possibly smaller) result set.
   useEffect(() => {
-    if (!isLoading && paginatedData && page > totalPages && totalPages > 0) {
+    if (!isLoading && !isPlaceholderData && paginatedData && page > totalPages && totalPages > 0) {
       setPage(totalPages);
     }
-  }, [page, totalPages, isLoading, paginatedData]);
+  }, [page, totalPages, isLoading, isPlaceholderData, paginatedData]);
 
   if (!isInitialized) {
     return (

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { FinancialAggregationService } from "./financial-aggregation.service";
 import { Prisma, ProjectStatus, ApprovalStatus } from "../generated/prisma-client";
 import { AuditService } from "./audit.service";
 import { ApiError } from "@/lib/api-error";
@@ -299,10 +300,12 @@ export class ProjectService {
       where: { projectId, status: "OVERDUE", deletedAt: null }
     });
 
-    const totalCost = Number(costsAgg._sum?.amount || 0);
+    const snapshot = await FinancialAggregationService.getProjectSnapshot(projectId);
+
+    const totalCost = snapshot.reality.actualCost;
     const totalBudget = Number(budgetsAgg._sum?.estimatedAmount || 0);
-    const totalInvoiced = Number(invoicesAgg._sum?.amount || 0);
-    const totalRevenue = totalInvoiced; // Accrual Revenue
+    const totalRevenue = snapshot.reality.totalRevenue;
+    const totalInvoiced = snapshot.reality.totalRevenue;
     const totalPaidInvoice = Number(invoicesAgg._sum?.paidAmount || 0);
     const totalRemainingInvoice = Number(invoicesAgg._sum?.remainingAmount || 0);
     const committedCost = Number(purchaseOrdersAgg._sum?.totalAmount || 0);
@@ -331,11 +334,11 @@ export class ProjectService {
     const doneTasks = taskBreakdown["DONE"] ?? 0;
     const taskProgress = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
 
-    const profit = totalRevenue - totalCost;
-    const profitMargin = totalRevenue > 0 ? (profit / totalRevenue) * 100 : 0;
+    const profit = snapshot.reality.grossProfit;
+    const profitMargin = snapshot.reality.grossMargin;
     const costVariance = totalBudget - totalCost;
     const costOverrunPct = totalBudget > 0 ? (totalCost / totalBudget) * 100 : 0;
-    const totalExposure = totalCost + committedCost;
+    const totalExposure = snapshot.exposure.totalCostExposure;
     const budgetRemaining = totalBudget - totalExposure;
 
     return {
@@ -347,7 +350,7 @@ export class ProjectService {
       budgetByType,
       costVariance,
       costOverrunPct,
-      isCostOverrun: totalCost > totalBudget && totalBudget > 0,
+      isCostOverrun: snapshot.exposure.isOverBudget,
       totalRevenue,
       paidRevenue,
       unpaidRevenue: totalRevenue - paidRevenue,
@@ -363,6 +366,8 @@ export class ProjectService {
       committedCost,
       totalExposure,
       budgetRemaining,
+      // Integration metadata
+      integrity: snapshot.integrity
     };
   }
 }

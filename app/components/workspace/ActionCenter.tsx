@@ -52,17 +52,17 @@ export default function ActionCenter({ tasks, onAction }: ActionCenterProps) {
       <div className="px-4 py-3 border-b border-[var(--border)] flex justify-between items-center bg-[var(--secondary)]">
         <h2 className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest flex items-center gap-2">
           <div className="w-1 h-3 bg-blue-600 rounded-full" />
-          Trung tâm điều phối nghiệp vụ
+          NGHIỆP VỤ CẦN XỬ LÝ
         </h2>
         <span className="text-[9px] font-black px-1.5 py-0.5 bg-blue-600/10 text-blue-600 rounded-md border border-blue-600/20">
-          {tasks.length} hạng mục
+          {tasks.length} cảnh báo
         </span>
       </div>
       
       <div className="divide-y divide-[var(--border)] max-h-[420px] overflow-y-auto scrollbar-hide flex-1">
         {tasks.length === 0 ? (
           <div className="p-8 text-center text-[var(--text-muted)] text-[10px] italic font-bold uppercase tracking-widest">
-            Hoàn tất điều phối nghiệp vụ
+            Hoàn tất xử lý cảnh báo
           </div>
         ) : (
           visibleTasks.map((task) => (
@@ -76,8 +76,8 @@ export default function ActionCenter({ tasks, onAction }: ActionCenterProps) {
                 
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-center mb-0.5">
-                    <span className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest">
-                      {getTypeLabel(task.type)} • #{task.id.slice(0, 6)}
+                    <span className="text-[8px] font-black text-[var(--text-tertiary)] uppercase tracking-widest">
+                      {getTypeLabel(task.type)}
                     </span>
                     <span className="text-[8px] font-bold text-[var(--text-muted)] tabular-nums">
                       {new Date(task.createdAt).toLocaleDateString('vi-VN')}
@@ -96,7 +96,7 @@ export default function ActionCenter({ tasks, onAction }: ActionCenterProps) {
                       onClick={() => onAction(task.id, 'PROCESS')}
                       className="text-[9px] font-black text-blue-600 hover:text-blue-700 uppercase tracking-widest border-b border-blue-600/30 pb-0.5"
                     >
-                      Xử lý nghiệp vụ
+                      Tiến hành xử lý
                     </button>
                     <button 
                       onClick={() => onAction(task.id, 'DISMISS')}
@@ -117,7 +117,7 @@ export default function ActionCenter({ tasks, onAction }: ActionCenterProps) {
           onClick={() => setShowAll(!showAll)}
           className="w-full py-2.5 bg-[var(--secondary)] border-t border-[var(--border)] text-[9px] font-black text-[var(--text-secondary)] hover:text-blue-600 hover:bg-[var(--accent)] uppercase tracking-widest transition-all"
         >
-          {showAll ? 'Thu gọn danh sách' : `Xem tất cả ${tasks.length} nghiệp vụ`}
+          {showAll ? 'Thu gọn danh sách' : `Xem tất cả ${tasks.length} cảnh báo`}
         </button>
       )}
     </div>

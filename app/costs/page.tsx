@@ -15,13 +15,17 @@ import { useProjectStatsQuery } from '@/services/queries/useProjects';
 import { queryKeys } from '@/lib/query-keys';
 import { exportToCsv } from '@/app/services/export.service';
 
+import { useDebounce } from '@/app/hooks/useDebounce';
+
 const costTypes = Object.keys(costType_LABELS) as CostType[];
 
 // Define Table Components outside to ensure stability and avoid infinite loops
 const TableComponents = {
-  Table: (props: any) => <table {...props} className="erp-table w-full min-w-[1000px]" />,
-  TableHead: (props: any) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
+  Table: (props: any) => <table {...props} className="erp-table w-full min-w-[1000px] table-fixed" />,
+  TableHead: (props: any) => <thead {...props} className="bg-[var(--table-head-bg)] z-30 sticky top-0" />,
 };
+
+import { COL_WIDTHS } from '@/app/utils/table-constants';
 
 export default function CostsPage() {
   const currentProjectId = useERPStore(state => state.currentProjectId);
@@ -37,6 +41,7 @@ export default function CostsPage() {
 
   // Filters & State
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 400);
   const [typeFilter, setTypeFilter] = useState<string>('ALL');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [selectedCost, setSelectedCost] = useState<CostRecord | null>(null);
@@ -44,19 +49,19 @@ export default function CostsPage() {
 
   const filteredCosts = useMemo(() => {
     return costs.filter(c => {
-      const matchesSearch = c.note?.toLowerCase().includes(search.toLowerCase()) || 
-                           c.supplier?.toLowerCase().includes(search.toLowerCase());
+      const matchesSearch = c.note?.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
+                           c.supplier?.toLowerCase().includes(debouncedSearch.toLowerCase());
       const matchesType = typeFilter === 'ALL' || c.costType === typeFilter;
       const matchesStatus = statusFilter === 'ALL' || c.status === statusFilter;
       return matchesSearch && matchesType && matchesStatus;
     });
-  }, [costs, search, typeFilter, statusFilter]);
+  }, [costs, debouncedSearch, typeFilter, statusFilter]);
 
   const virtuosoComponents = useMemo(() => ({
     ...TableComponents,
     TableRow: (props: any) => {
       const { item, ...rest } = props;
-      return <tr {...rest} className="group hover:bg-[var(--secondary)] transition-colors cursor-pointer" onClick={() => setSelectedCost(item)} />;
+      return <tr {...rest} className="group erp-table-row cursor-pointer" onClick={() => setSelectedCost(item)} />;
     }
   }), []);
 
@@ -146,7 +151,7 @@ export default function CostsPage() {
 
           {/* Costs Table with Virtualization */}
           <div className="card-elevation overflow-hidden border border-[var(--border)] rounded-lg">
-            <div className="overflow-x-auto scrollbar-hide">
+            <div className="overflow-x-auto scrollbar-thin">
               {isLoadingCosts ? (
                 <div className="h-64 flex flex-col items-center justify-center">
                   <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
@@ -165,35 +170,35 @@ export default function CostsPage() {
                   data={filteredCosts}
                   components={virtuosoComponents}
                   fixedHeaderContent={() => (
-                    <tr className="bg-[var(--table-head-bg)]">
-                      <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[100px]">Ngày</th>
-                      <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] min-w-[200px]">Nhà cung cấp & Nội dung</th>
-                      <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] min-w-[150px]">Hạng mục (WBS)</th>
-                      <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[110px]">Loại</th>
-                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[100px]">Số lượng</th>
-                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[150px]">Thành tiền (VNĐ)</th>
-                      <th className="py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[120px]">Trạng thái</th>
-                      <th className="py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-[var(--border)] w-[80px]">Thao tác</th>
+                    <tr className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)]">
+                      <th className={`${COL_WIDTHS.DATE} py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)]`}>Ngày</th>
+                      <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[280px]">Nhà cung cấp & Nội dung</th>
+                      <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[200px]">Hạng mục (WBS)</th>
+                      <th className={`${COL_WIDTHS.STATUS} py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)]`}>Loại</th>
+                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[80px]">SL</th>
+                      <th className={`${COL_WIDTHS.FINANCIAL} py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)]`}>Số tiền</th>
+                      <th className={`${COL_WIDTHS.STATUS} py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)]`}>Trạng thái</th>
+                      <th className={`${COL_WIDTHS.ACTIONS} py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-[var(--border)]`}>Thao tác</th>
                     </tr>
                   )}
                   itemContent={(i, c) => (
                     <>
-                      <td className="py-3 px-4 whitespace-nowrap font-bold text-[var(--text-muted)] border-r border-[var(--border)]">{formatDate(c.date)}</td>
-                      <td className="py-3 px-4 border-r border-[var(--border)]">
-                        <div className="font-bold text-[var(--text-primary)]">{c.supplier || 'Nhiều nhà CC'}</div>
-                        <div className="text-[11px] text-[var(--text-muted)] font-medium truncate max-w-[200px] mt-0.5">{c.note}</div>
+                      <td className={`${COL_WIDTHS.DATE} py-3 px-4 whitespace-nowrap font-bold text-[var(--text-muted)] border-r border-[var(--border)]`}>{formatDate(c.date)}</td>
+                      <td className="py-3 px-4 border-r border-[var(--border)] w-[280px]">
+                        <div className="font-bold text-[var(--text-primary)] truncate">{c.supplier || 'Nhiều nhà CC'}</div>
+                        <div className="text-[11px] text-[var(--text-muted)] font-medium truncate mt-0.5">{c.note}</div>
                       </td>
-                      <td className="py-3 px-4 border-r border-[var(--border)]">
-                        <div className="text-[12px] font-bold text-[var(--text-secondary)]">{wbsList.find(w => w.id === c.wbsId)?.name || 'N/A'}</div>
+                      <td className="py-3 px-4 border-r border-[var(--border)] w-[200px]">
+                        <div className="text-[12px] font-bold text-[var(--text-secondary)] truncate">{wbsList.find(w => w.id === c.wbsId)?.name || 'N/A'}</div>
                       </td>
-                      <td className="py-3 px-4 border-r border-[var(--border)]">
+                      <td className={`${COL_WIDTHS.STATUS} py-3 px-4 border-r border(--border)`}>
                         <span className="inline-flex items-center whitespace-nowrap rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-tighter bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)]">
                           {costType_LABELS[c.costType] || c.costType}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-right tabular-nums font-bold text-[var(--text-secondary)] border-r border-[var(--border)]">{c.quantity || 1}</td>
-                      <td className="py-3 px-4 text-right tabular-nums font-bold text-[var(--text-primary)] border-r border-[var(--border)]">{formatVnd(c.amount)}</td>
-                      <td className="py-3 px-4 text-center border-r border-[var(--border)]">
+                      <td className="py-3 px-4 text-right tabular-nums font-bold text-[var(--text-secondary)] border-r border-[var(--border)] w-[80px]">{c.quantity || 1}</td>
+                      <td className={`${COL_WIDTHS.FINANCIAL} py-3 px-4 text-right tabular-nums font-bold text-[var(--text-primary)] border-r border-[var(--border)]`}>{formatVnd(c.amount)}</td>
+                      <td className={`${COL_WIDTHS.STATUS} py-3 px-4 text-center border-r border-[var(--border)]`}>
                         <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest ${
                           c.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/30' : 'bg-rose-500/10 text-rose-500 ring-1 ring-rose-500/30'
                         }`}>
@@ -201,7 +206,7 @@ export default function CostsPage() {
                           {c.status === 'paid' ? 'Đã trả' : 'Công nợ'}
                         </span>
                       </td>
-                      <td className="text-center">
+                      <td className={`${COL_WIDTHS.ACTIONS} text-center`}>
                         <div className="flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                           <button 
                             className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--text-primary)] transition-colors"

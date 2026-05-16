@@ -2,7 +2,7 @@
 
 import { costType_LABELS, CostRecord } from '@/app/types';
 import { formatDate, formatVnd } from './dashboard-data';
-import { COL_WIDTHS, FINANCIAL_CELL_CLASS } from '@/app/utils/table-constants';
+import { COL_WIDTHS } from '@/app/utils/table-constants';
 import { useERPStore } from '@/store/erpStore';
 import { TableVirtuoso } from 'react-virtuoso';
 import { useDeleteCostMutation, useTransitionCostMutation } from '@/services/queries/useCosts';
@@ -55,7 +55,7 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
   const [confirmAction, setConfirmAction] = useState<{ id: string, type: 'DELETE' | 'LOCKED' } | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const getWBSName = (id: string) => (wbs as any[]).find((w: any) => w.id === id)?.name || '—';
+  const getWBSName = (id: string) => wbs.find((w: { id: string, name: string }) => w.id === id)?.name || '—';
 
   const executeAction = async () => {
     if (!confirmAction) return;
@@ -67,11 +67,12 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
         await transitionCost({ id: confirmAction.id, status: 'REVERSED' });
       }
       setConfirmAction(null);
-    } catch (err: any) {
-      if (err.metadata?.isFinancialLocked) {
+    } catch (err: unknown) {
+      const error = err as { metadata?: { isFinancialLocked: boolean }, message?: string };
+      if (error.metadata?.isFinancialLocked) {
         setConfirmAction(prev => prev ? { ...prev, type: 'LOCKED' } : null);
       } else {
-        alert(err.message || "Lỗi thao tác chi phí.");
+        alert(error.message || "Lỗi thao tác chi phí.");
         setConfirmAction(null);
       }
     } finally {
@@ -115,88 +116,88 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
                   TableRow: (props) => <tr {...props} className="group erp-table-row select-none" />
                 }}
                 fixedHeaderContent={() => (
-                  <tr className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)]">
-                    <th className={`${COL_WIDTHS.DATE} py-2 px-4 text-left bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] font-bold tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>Ngày</th>
-                    <th className="w-[240px] py-2 px-4 text-left bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] font-bold tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]">Nội dung / Nhà cung cấp</th>
-                    <th className="w-[180px] py-2 px-4 text-left bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] font-bold tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]">Hạng mục WBS</th>
-                    <th className={`${COL_WIDTHS.STATUS} py-2 px-4 text-left bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] font-bold tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>Phân loại</th>
-                    <th className={`${COL_WIDTHS.FINANCIAL} py-2 px-4 text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] font-bold tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>Số tiền</th>
-                    <th className={`${COL_WIDTHS.STATUS} py-2 px-4 text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] font-bold tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>Trạng thái</th>
-                    <th className="w-[80px] py-2 px-4 text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] font-bold tracking-widest text-[var(--text-muted)]">Hành động</th>
+                  <tr className="bg-[var(--table-head-bg)]">
+                    <th className={`${COL_WIDTHS.DATE} py-3 px-5 text-left bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] font-black tracking-[0.2em] text-[var(--text-secondary)] border-r border-[var(--border)]`}>Ngày</th>
+                    <th className="w-[280px] py-3 px-5 text-left bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] font-black tracking-[0.2em] text-[var(--text-secondary)] border-r border-[var(--border)]">Nội dung / Nhà cung cấp</th>
+                    <th className="w-[200px] py-3 px-5 text-left bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] font-black tracking-[0.2em] text-[var(--text-secondary)] border-r border-[var(--border)]">Hạng mục WBS</th>
+                    <th className={`${COL_WIDTHS.STATUS} py-3 px-5 text-left bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] font-black tracking-[0.2em] text-[var(--text-secondary)] border-r border-[var(--border)]`}>Phân loại</th>
+                    <th className={`${COL_WIDTHS.FINANCIAL} py-3 px-5 text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] font-black tracking-[0.2em] text-[var(--text-secondary)] border-r border-[var(--border)]`}>Số tiền</th>
+                    <th className={`${COL_WIDTHS.STATUS} py-3 px-5 text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] font-black tracking-[0.2em] text-[var(--text-secondary)] border-r border-[var(--border)]`}>Trạng thái</th>
+                    <th className={`${COL_WIDTHS.ACTIONS} py-3 px-5 text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] font-black tracking-[0.2em] text-[var(--text-secondary)]`}>Nghiệp vụ</th>
                   </tr>
                 )}
                 itemContent={(i, cost) => (
                   <>
                     {/* Date */}
-                    <td className={`whitespace-nowrap py-2 px-4 text-[11px] font-bold text-[var(--text-muted)] group-hover:text-[var(--text-accent)] transition-colors border-r border-[var(--border)] ${COL_WIDTHS.DATE}`}>
+                    <td className={`whitespace-nowrap py-2.5 px-5 text-[11.5px] font-bold text-[var(--text-tertiary)] group-hover:text-blue-500 transition-colors border-r border-[var(--border)] ${COL_WIDTHS.DATE}`}>
                       {formatDate(cost.date)}
                     </td>
 
                     {/* Description + Supplier */}
-                    <td className="w-[240px] py-2 px-4 border-r border-[var(--border)]">
-                      <div className="font-bold text-[var(--text-primary)] text-[11px] truncate" title={cost.note ?? ''}>
+                    <td className="w-[280px] py-2.5 px-5 border-r border-[var(--border)]">
+                      <div className="font-bold text-[var(--text-primary)] text-[12px] truncate leading-tight mb-0.5" title={cost.note ?? ''}>
                         {cost.note ?? 'Chi phí không tên'}
                       </div>
-                      <div className="text-[9px] font-bold text-[var(--text-muted)] uppercase truncate">
+                      <div className="text-[9.5px] font-extrabold text-[var(--text-tertiary)] uppercase tracking-wider truncate opacity-70">
                         {cost.supplier || 'Nhiều nhà CC'}
                       </div>
                     </td>
 
                     {/* WBS */}
-                    <td className="w-[180px] py-2 px-4 border-r border-[var(--border)]">
-                      <div className="text-[11px] font-bold text-[var(--text-secondary)] truncate" title={getWBSName(cost.wbsId)}>
+                    <td className="w-[200px] py-2.5 px-5 border-r border-[var(--border)]">
+                      <div className="text-[11.5px] font-bold text-[var(--text-secondary)] truncate" title={getWBSName(cost.wbsId)}>
                         {getWBSName(cost.wbsId)}
                       </div>
                     </td>
 
                     {/* Cost Type Badge */}
-                    <td className={`${COL_WIDTHS.STATUS} py-2 px-4 border-r border-[var(--border)]`}>
-                      <span className="inline-flex items-center whitespace-nowrap rounded-md px-1.5 py-0 text-[8px] font-bold uppercase tracking-wider bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)] group-hover:border-[var(--text-accent)]/20 group-hover:text-[var(--text-accent)] transition-all">
+                    <td className={`${COL_WIDTHS.STATUS} py-2.5 px-5 border-r border-[var(--border)]`}>
+                      <span className="inline-flex items-center whitespace-nowrap rounded-lg px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-[var(--secondary)] text-[var(--text-tertiary)] border border-[var(--border)] group-hover:border-blue-500/20 group-hover:text-blue-500 transition-all">
                         {costType_LABELS[cost.costType] || cost.costType}
                       </span>
                     </td>
 
                     {/* Amount */}
-                    <td className={`${COL_WIDTHS.FINANCIAL} py-2 px-4 text-right tabular-nums font-bold text-[var(--text-primary)] text-[11px] group-hover:text-[var(--text-accent)] transition-colors whitespace-nowrap border-r border-[var(--border)]`}>
+                    <td className={`${COL_WIDTHS.FINANCIAL} py-2.5 px-5 text-right tabular-nums font-black text-[var(--text-primary)] text-[12px] group-hover:text-blue-500 transition-colors whitespace-nowrap border-r border-[var(--border)]`}>
                       {formatVnd(cost.amount)}
                     </td>
 
                     {/* Status Badge */}
-                    <td className={`${COL_WIDTHS.STATUS} py-2 px-4 text-center border-r border-[var(--border)]`}>
-                      <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide whitespace-nowrap transition-all ${cost.workflowStatus === 'POSTED' || cost.approvalStatus === 'APPROVED'
-                        ? 'bg-emerald-500/10 text-emerald-600 ring-1 ring-emerald-500/20'
+                    <td className={`${COL_WIDTHS.STATUS} py-2.5 px-5 text-center border-r border-[var(--border)]`}>
+                      <span className={`inline-flex items-center gap-2 rounded-xl px-3 py-1 text-[9.5px] font-black uppercase tracking-wider whitespace-nowrap transition-all border shadow-sm ${cost.workflowStatus === 'POSTED' || cost.approvalStatus === 'APPROVED'
+                        ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30 shadow-emerald-500/5'
                         : cost.workflowStatus === 'REVERSED' || cost.workflowStatus === 'REJECTED'
-                          ? 'bg-rose-500/10 text-rose-600 ring-1 ring-rose-500/20'
-                          : 'bg-amber-500/10 text-amber-600 ring-1 ring-amber-500/20'
+                          ? 'bg-rose-500/10 text-rose-500 border-rose-500/30 shadow-rose-500/5'
+                          : 'bg-amber-500/10 text-amber-500 border-amber-500/30 shadow-amber-500/5'
                         }`}>
-                        <span className={`h-1 w-1 rounded-full shrink-0 ${cost.workflowStatus === 'POSTED' || cost.approvalStatus === 'APPROVED'
-                          ? 'bg-emerald-500'
+                        <span className={`h-1.5 w-1.5 rounded-full shrink-0 shadow-sm ${cost.workflowStatus === 'POSTED' || cost.approvalStatus === 'APPROVED'
+                          ? 'bg-emerald-500 shadow-emerald-500/40'
                           : cost.workflowStatus === 'REVERSED' || cost.workflowStatus === 'REJECTED'
-                            ? 'bg-rose-500'
-                            : 'bg-amber-500'
+                            ? 'bg-rose-500 shadow-rose-500/40'
+                            : 'bg-amber-500 shadow-amber-500/40'
                           }`} />
                         {cost.workflowStatus === 'POSTED' ? 'Ghi sổ' : cost.approvalStatus === 'APPROVED' ? 'Đã duyệt' : cost.workflowStatus === 'REVERSED' ? 'Đã hủy' : 'Nháp'}
                       </span>
                     </td>
 
                     {/* Actions */}
-                    <td className="w-[80px] py-2 px-4 text-center">
-                      <div className="flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                    <td className={`${COL_WIDTHS.ACTIONS} py-2.5 px-5 text-center`}>
+                      <div className="flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300">
                         <button
                           onClick={() => onEdit(cost)}
-                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--text-muted)] hover:text-white hover:bg-blue-600 transition-all border border-[var(--border)]"
-                          title="Chỉnh sửa"
+                          className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--secondary)] text-[var(--text-tertiary)] hover:text-white hover:bg-blue-600 transition-all border border-[var(--border)] shadow-sm"
+                          title="Hiệu chỉnh"
                         >
-                          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                           </svg>
                         </button>
                         <button
                           onClick={() => setConfirmAction({ id: cost.id, type: 'DELETE' })}
-                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--text-muted)] hover:text-white hover:bg-rose-600 transition-all border border-[var(--border)]"
-                          title="Xóa / Hủy"
+                          className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--secondary)] text-[var(--text-tertiary)] hover:text-white hover:bg-rose-600 transition-all border border-[var(--border)] shadow-sm"
+                          title="Hủy / Xóa"
                         >
-                          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                             <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                           </svg>
                         </button>
@@ -210,20 +211,20 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
         </div>
 
         {hasMore && (
-          <div className="mt-3 flex justify-center">
+          <div className="flex justify-center border-t border-[var(--border)] bg-[var(--secondary)]/10">
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-[9px] font-bold uppercase tracking-widest text-[var(--text-muted)] hover:text-blue-500 hover:bg-blue-500/5 hover:border-blue-500/20 transition-all duration-200 border border-transparent hover:border-blue-500/30"
+              className="flex items-center gap-2 py-3.5 w-full justify-center text-[9px] font-black uppercase tracking-[0.25em] text-[var(--text-tertiary)] hover:text-blue-500 hover:bg-blue-500/5 transition-all duration-300 group"
             >
               {isExpanded ? (
                 <>
-                  <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth="3"><path d="m18 15-6-6-6 6" /></svg>
-                  Ẩn bớt
+                  <svg viewBox="0 0 24 24" className="h-3 w-3 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" strokeWidth="3.5"><path d="m18 15-6-6-6 6" /></svg>
+                  Thu gọn danh sách
                 </>
               ) : (
                 <>
-                  <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth="3"><path d="m6 9 12 0-6 6-6-6" /></svg>
-                  +{costs.length - INITIAL_VISIBLE_COUNT} Xem thêm
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" strokeWidth="3.5"><path d="m6 9 6 6 6-6" /></svg>
+                  + {costs.length - INITIAL_VISIBLE_COUNT} XEM THÊM
                 </>
               )}
             </button>

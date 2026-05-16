@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { projectApi } from '@/services/api/project.api';
 import AddProjectModal from '@/app/components/modals/AddProjectModal';
 import { exportToCsv } from '@/app/services/export.service';
+import { useDebounce } from '@/app/hooks/useDebounce';
 
 interface ProjectFiltersProps {
   filters: {
@@ -31,6 +32,20 @@ const reverseStatusMap: Record<string, string> = Object.entries(statusMap).reduc
 export default function ProjectFilters({ filters, onFilterChange }: ProjectFiltersProps) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(filters.search || '');
+  const debouncedSearch = useDebounce(searchTerm, 400);
+
+  // Sync debounced search back to parent state
+  useEffect(() => {
+    if (debouncedSearch !== filters.search) {
+      onFilterChange({ ...filters, search: debouncedSearch });
+    }
+  }, [debouncedSearch]);
+
+  // Sync external search updates back to local state (e.g. on clear)
+  useEffect(() => {
+    setSearchTerm(filters.search || '');
+  }, [filters.search]);
 
   const handleExportExcel = async () => {
     setIsExporting(true);
@@ -83,8 +98,8 @@ export default function ProjectFilters({ filters, onFilterChange }: ProjectFilte
               </div>
               <input 
                 type="text" 
-                value={filters.search || ''}
-                onChange={(e) => onFilterChange({ ...filters, search: e.target.value })}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Mã dự án, tên dự án, CĐT..." 
                 className="erp-input w-[340px] !pl-12 text-[13px] shadow-sm"
               />

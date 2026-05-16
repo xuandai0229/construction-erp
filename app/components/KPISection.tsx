@@ -11,36 +11,44 @@ const icons = {
 };
 
 export default function KPISection({ data }: { data: DashboardData }) {
-  const totalBudget = data.budget.reduce((sum, row) => sum + row.estimatedAmount, 0);
-  const totalCost = data.costs.reduce((sum, row) => sum + row.amount, 0);
-  const profit = data.revenue - totalCost;
-  const budgetDelta = totalBudget > 0 ? ((totalBudget - totalCost) / totalBudget) * 100 : 0;
+  const profit = data.revenue - data.totalCost;
+  const budgetDelta = data.totalBudget > 0 ? ((data.totalBudget - data.totalCost) / data.totalBudget) * 100 : 0;
   const margin = data.revenue > 0 ? (profit / data.revenue) * 100 : 0;
-  const budgetVsContract = (data.project.totalValue ?? 0) > 0 ? (totalBudget / (data.project.totalValue ?? 0)) * 100 : 0;
+  const budgetVsContract = (data.project.totalValue ?? 0) > 0 ? (data.totalBudget / (data.project.totalValue ?? 0)) * 100 : 0;
   const revenueVsContract = (data.project.totalValue ?? 0) > 0 ? (data.revenue / (data.project.totalValue ?? 0)) * 100 : 0;
 
   const cards = [
     { title: 'Tổng giá trị hợp đồng', value: data.project.totalValue, change: 'Giá trị gốc dự án', tone: 'blue', icon: icons.contract },
-    { title: 'Tổng dự toán', value: totalBudget, change: `${budgetVsContract.toFixed(1)}% so với hợp đồng`, tone: 'green', icon: icons.budget },
-    { title: 'Tổng chi phí thực tế', value: totalCost, change: `${budgetDelta >= 0 ? '-' : '+'} ${Math.abs(budgetDelta).toFixed(1)}% so với dự toán`, tone: budgetDelta >= 0 ? 'green' : 'red', icon: icons.cost },
-    { title: 'Tổng doanh thu', value: data.revenue, change: `${revenueVsContract.toFixed(1)}% tiến độ nghiệm thu`, tone: 'green', icon: icons.revenue },
-    { title: 'Lãi / Lỗ dự án', value: profit, change: `${margin.toFixed(1)}% biên lợi nhuận`, tone: profit >= 0 ? 'green' : 'red', icon: icons.profit },
+    { title: 'Tổng dự toán (BOQ)', value: data.totalBudget, change: `${budgetVsContract.toFixed(1)}% so với HĐ`, tone: 'blue', icon: icons.budget },
+    { title: 'Chi phí thực tế', value: data.totalCost, change: `${budgetDelta >= 0 ? '-' : '+'} ${Math.abs(budgetDelta).toFixed(1)}% dự toán`, tone: budgetDelta >= 0 ? 'green' : 'red', icon: icons.cost },
+    { title: 'Doanh thu nghiệm thu', value: data.revenue, change: `${revenueVsContract.toFixed(1)}% tiến độ`, tone: 'blue', icon: icons.revenue },
+    { title: 'Lợi nhuận dự kiến', value: profit, change: `${margin.toFixed(1)}% biên lợi nhuận`, tone: profit >= 0 ? 'green' : 'red', icon: icons.profit },
   ];
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+    <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-5">
       {cards.map((card) => (
-        <article key={card.title} className="rounded-lg border border-slate-800 bg-slate-900/70 p-5 shadow-lg shadow-black/10">
-          <div className="flex items-start gap-4">
-            <div className={`grid h-11 w-11 place-items-center rounded-md border ${iconTone(card.tone)}`}>
-              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d={card.icon} />
-              </svg>
+        <article key={card.title} className="erp-kpi-card group">
+          <div className="flex flex-col gap-5">
+            <div className="flex items-center justify-between">
+              <div className={`grid h-10 w-10 place-items-center rounded-xl border-2 transition-all duration-300 group-hover:scale-110 shadow-sm ${iconTone(card.tone)}`}>
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d={card.icon} />
+                </svg>
+              </div>
+              <div className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider border shadow-sm transition-colors ${card.tone === 'red' ? 'border-rose-500/20 bg-rose-500/10 text-rose-500' : 'border-emerald-500/20 bg-emerald-500/10 text-emerald-500'}`}>
+                {card.tone === 'red' ? 'Cảnh báo' : 'Ổn định'}
+              </div>
             </div>
-            <div className="min-w-0 flex-1">
-              <div className="text-[13px] font-bold text-slate-100">{card.title}</div>
-              <div className="mt-4 whitespace-nowrap text-[22px] font-extrabold tracking-tight text-white">{formatVnd(card.value ?? 0)}</div>
-              <div className={`mt-3 text-xs font-bold ${card.tone === 'red' ? 'text-red-400' : 'text-green-400'}`}>{card.change}</div>
+            
+            <div className="min-w-0">
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-tertiary)] mb-1.5">{card.title}</div>
+              <div className="text-[20px] font-black tracking-tight text-[var(--text-primary)] tabular-nums truncate leading-none mb-3">
+                {formatVnd(card.value ?? 0)}
+              </div>
+              <div className={`text-[10.5px] font-bold tracking-tight ${card.tone === 'red' ? 'text-rose-500' : 'text-emerald-500'} flex items-center gap-1`}>
+                <span className="opacity-70">{card.change}</span>
+              </div>
             </div>
           </div>
         </article>
@@ -50,8 +58,8 @@ export default function KPISection({ data }: { data: DashboardData }) {
 }
 
 function iconTone(tone: string) {
-  if (tone === 'red') return 'border-red-500/50 bg-red-500/10 text-red-400';
-  if (tone === 'green') return 'border-green-500/50 bg-green-500/10 text-green-400';
-  return 'border-blue-500/50 bg-blue-500/10 text-blue-400';
+  if (tone === 'red') return 'border-rose-500/30 bg-rose-500/10 text-rose-500 shadow-rose-500/5';
+  if (tone === 'green') return 'border-emerald-500/30 bg-emerald-500/10 text-emerald-500 shadow-emerald-500/5';
+  return 'border-blue-500/30 bg-blue-500/10 text-blue-500 shadow-blue-500/5';
 }
 

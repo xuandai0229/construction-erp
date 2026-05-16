@@ -33,7 +33,7 @@ export default function NotificationCenter({ notifications, onRead, onReadAll }:
     <div className="w-80 bg-[var(--card)] rounded-xl shadow-xl border border-[var(--border)] overflow-hidden flex flex-col">
       <div className="p-4 border-b border-[var(--border)] flex justify-between items-center bg-[var(--card)] sticky top-0">
         <h3 className="font-black text-[var(--text-primary)] text-[11px] uppercase tracking-widest">Thông báo</h3>
-        <button 
+        <button
           onClick={onReadAll}
           className="text-[10px] text-blue-600 hover:underline font-black uppercase tracking-widest"
         >
@@ -48,8 +48,8 @@ export default function NotificationCenter({ notifications, onRead, onReadAll }:
           </div>
         ) : (
           notifications.map((notif) => (
-            <div 
-              key={notif.id} 
+            <div
+              key={notif.id}
               className={`p-4 erp-table-row cursor-pointer relative ${!notif.isRead ? 'bg-blue-500/5' : ''}`}
               onClick={() => onRead(notif.id)}
             >

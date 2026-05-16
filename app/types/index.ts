@@ -2,10 +2,10 @@
 // CONSTRUCTION ERP - TYPE DEFINITIONS
 // ============================================
 
-import { 
-  ProjectStatus, TaskStatus, CostType as PrismaCostType, 
+import {
+  ProjectStatus, TaskStatus, CostType as PrismaCostType,
   PaymentStatus as PrismaPaymentStatus, InvoiceStatus as PrismaInvoiceStatus,
-  UserRole as PrismaUserRole 
+  UserRole as PrismaUserRole
 } from "../../generated/prisma-client";
 
 export { ProjectStatus, TaskStatus };
@@ -153,7 +153,7 @@ export interface MonthlyReport {
 export interface AgingReportItem {
   id: string;
   type: 'receivable' | 'payable';
-  entityName: string; 
+  entityName: string;
   amount: number;
   date: string;
   daysOverdue: number;

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { FinancialAggregationService } from "./financial-aggregation.service";
 import { ApiError } from "@/lib/api-error";
 import { CreateWBSDTO, UpdateWBSDTO } from "@/lib/validations";
 import { AuditService } from "./audit.service";
@@ -7,56 +8,26 @@ import { CostRecord, BudgetRecord, WBSItem } from "@/app/types";
 
 export class WBSService {
   static async findByProject(projectId: string) {
-    const [items, costsAgg, budgetsAgg] = await Promise.all([
-      prisma.wBSItem.findMany({
-        where: { projectId, deletedAt: null },
-        orderBy: [{ level: "asc" }, { sortOrder: "asc" }],
-      }),
-      prisma.costRecord.groupBy({
-        by: ["wbsId"],
-        where: { projectId, deletedAt: null },
-        _sum: { amount: true },
-      }),
-      prisma.budgetRecord.groupBy({
-        by: ["wbsId"],
-        where: { projectId, deletedAt: null },
-        _sum: { estimatedAmount: true },
-      }),
-    ]);
+    const result = await FinancialAggregationService.getWBSAggregation(projectId);
+    const { tree, stats } = result;
 
-    // 2. Map aggregated data back to a shape ProjectFinance can use
-    const costsMap = new Map(costsAgg.map(c => [c.wbsId, Number(c._sum.amount || 0)]));
-    const budgetsMap = new Map(budgetsAgg.map(b => [b.wbsId, Number(b._sum.estimatedAmount || 0)]));
-
-    const mockCosts = Array.from(costsMap.entries()).map(([wbsId, amount]) => ({ wbsId, amount } as any));
-    const mockBudgets = Array.from(budgetsMap.entries()).map(([wbsId, amount]) => ({ wbsId, estimatedAmount: amount } as any));
-
-    const tree = ProjectFinance.calculateWBSTree(
-      items as unknown as WBSItem[],
-      mockCosts as unknown as CostRecord[],
-      mockBudgets as unknown as BudgetRecord[]
-    );
-
-    // FIX: Attach aggregated numbers to the flat list so exports work correctly
-    const enrichedFlat = items.map(item => ({
-      ...item,
-      budget: budgetsMap.get(item.id) || 0,
-      actual: costsMap.get(item.id) || 0,
-    }));
-
-    const totalBudget = tree.reduce((s, n) => s + n.budget, 0);
-    const totalActual = tree.reduce((s, n) => s + n.actual, 0);
+    // Maintain flat list for exports/legacy use
+    const items = await prisma.wBSItem.findMany({
+      where: { projectId, deletedAt: null },
+      orderBy: [{ level: "asc" }, { sortOrder: "asc" }],
+    });
 
     return {
       tree,
-      flat: enrichedFlat,
+      flat: items, // Simplified flat list
       stats: {
         totalItems: items.length,
-        totalBudget,
-        totalActual,
-        variance: totalBudget - totalActual,
-        progress: totalBudget > 0 ? Math.round((totalActual / totalBudget) * 100) : 0,
-        isCostOverrun: totalActual > totalBudget && totalBudget > 0,
+        totalBudget: stats.totalApproved > 0 ? stats.totalApproved : 0, // Adjusted context
+        totalActual: stats.totalApproved,
+        variance: 0, 
+        progress: stats.healthScore,
+        isCostOverrun: stats.orphanTotal > 0,
+        ...stats
       },
     };
   }

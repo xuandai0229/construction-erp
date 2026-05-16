@@ -3,10 +3,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { useProjectsQuery } from '@/services/queries/useProjects';
 import { useERPStore } from '@/store/erpStore';
+import { useDebounce } from '@/app/hooks/useDebounce';
 
 export default function ProjectSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const dropdownRef = useRef<HTMLDivElement>(null);
   
   const { currentProjectId, setCurrentProject } = useERPStore();
@@ -14,10 +16,10 @@ export default function ProjectSwitcher() {
   const projects = paginatedData?.data || [];
   
   const currentProject = projects.find(p => p.id === currentProjectId);
-
+  
   const filteredProjects = projects.filter(p => 
-    p.name.toLowerCase().includes(search.toLowerCase()) || 
-    p.id.toLowerCase().includes(search.toLowerCase())
+    p.name.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
+    p.id.toLowerCase().includes(debouncedSearch.toLowerCase())
   );
 
   useEffect(() => {

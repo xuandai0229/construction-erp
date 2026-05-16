@@ -50,14 +50,6 @@ export class RevenueService {
         }
       });
 
-      // Posting to Ledger
-      await PostingEngine.postInvoice(tx, {
-        invoiceId: invoice.id,
-        projectId: invoice.projectId,
-        amount: amount,
-        description: `Hóa đơn ${invoice.invoiceNumber || invoice.id} cho ${project.name}`
-      });
-
       // Audit Logging
       await AuditService.log({
         userId: data.createdById,
@@ -299,21 +291,37 @@ export class RevenueService {
     const existing = await prisma.invoice.findUnique({ where: { id } });
     if (!existing) throw new ApiError(404, "Không tìm thấy hóa đơn");
 
-    const item = await prisma.invoice.update({
-      where: { id },
-      data: { approvalStatus: status }
-    });
+    return prisma.$transaction(async (tx) => {
+      const item = await tx.invoice.update({
+        where: { id },
+        data: { 
+          approvalStatus: status,
+          // Sync Invoice Status if approved
+          ...(status === "APPROVED" && existing.status === "DRAFT" && { status: "SENT" })
+        }
+      });
 
-    await AuditService.log({
-      userId,
-      action: status === "APPROVED" ? "APPROVE" : status === "REJECTED" ? "REJECT" : "UPDATE",
-      entity: "Invoice",
-      entityId: id,
-      oldData: existing,
-      newData: item,
-    });
+      // 1. Post to Ledger if Approved
+      if (status === "APPROVED") {
+        await PostingEngine.postInvoice(tx, {
+          invoiceId: item.id,
+          projectId: item.projectId,
+          amount: Number(item.amount),
+          description: `Phê duyệt hóa đơn ${item.invoiceNumber || item.id}`
+        });
+      }
 
-    return item;
+      await AuditService.log({
+        userId,
+        action: status === "APPROVED" ? "APPROVE" : status === "REJECTED" ? "REJECT" : "UPDATE",
+        entity: "Invoice",
+        entityId: id,
+        oldData: existing,
+        newData: item,
+      });
+
+      return item;
+    });
   }
 
   static async updatePaymentApproval(id: string, status: "APPROVED" | "REJECTED" | "PENDING", userId?: string) {

@@ -155,21 +155,12 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
         </div>
       )}
 
-      <div className="overflow-hidden bg-[var(--card)] rounded-xl border border-[var(--border)] shadow-sm relative">
+      <div className={`overflow-hidden bg-[var(--card)] rounded-xl border border-[var(--border)] shadow-sm relative ${showScrollHint ? 'erp-scroll-hint' : ''}`}>
         <div
           ref={scrollContainerRef}
           className={`overflow-x-auto scrollbar-thin ${dragCursorClass}`}
           style={{ scrollBehavior: 'smooth' }}
         >
-          {/* Gradient fade hint - subtle theme-aware style */}
-          {showScrollHint && (
-            <div className="absolute right-0 top-0 bottom-0 w-12 pointer-events-none z-20"
-              style={{
-                background: 'linear-gradient(to left, var(--card) 0%, transparent 100%)',
-                opacity: 0.9
-              }}
-            />
-          )}
           {enrichedProjects.length === 0 ? (
             <div className="h-48 flex items-center justify-center text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-widest opacity-40 italic">
               Không tìm thấy hồ sơ công trình
@@ -180,7 +171,7 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
               data={enrichedProjects}
               components={{
                 Table: (props) => <table {...props} className="erp-table w-full table-fixed" />,
-                TableHead: (props) => <thead {...props} className="bg-[var(--table-head-bg)] z-30 sticky top-0" />,
+                TableHead: (props) => <thead {...props} className="bg-[var(--table-head-bg)] z-40 sticky top-0" />,
                 TableRow: (props) => {
                   const project = props.item as any;
                   return (
@@ -193,17 +184,17 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
                 }
               }}
               fixedHeaderContent={() => (
-                <tr className="bg-[var(--table-head-bg)]">
-                  <th className={`py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.CHECKBOX}`}>STT</th>
-                  <th className={`py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.PROJECT_PROFILE}`}>{ERP_TERMINOLOGY.PROJECT.COL_PROFILE}</th>
-                  <th className={`py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.INVESTOR}`}>{ERP_TERMINOLOGY.PROJECT.COL_INVESTOR}</th>
-                  <th className={`py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.DATE}`}>{ERP_TERMINOLOGY.PROJECT.START_DATE}</th>
-                  <th className={`py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.DATE}`}>{ERP_TERMINOLOGY.PROJECT.END_DATE}</th>
-                  <th className={`py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.FINANCIAL}`}>{ERP_TERMINOLOGY.FINANCE.BUDGET}</th>
-                  <th className={`py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.FINANCIAL}`}>{ERP_TERMINOLOGY.FINANCE.ACTUAL}</th>
-                  <th className={`py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.PROGRESS}`}>Tiến độ %</th>
-                  <th className={`py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-r border-[var(--border)] ${COL_WIDTHS.STATUS}`}>{ERP_TERMINOLOGY.STATUS.TITLE}</th>
-                  <th className={`py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.05em] whitespace-nowrap border-b border-[var(--border)] ${COL_WIDTHS.ACTIONS}`}>{ERP_TERMINOLOGY.ACTIONS.TITLE}</th>
+                <tr className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)]">
+                  <th className={`text-center border-r border-[var(--border)] ${COL_WIDTHS.CHECKBOX}`}>STT</th>
+                  <th className={`text-left border-r border-[var(--border)] ${COL_WIDTHS.PROJECT_PROFILE}`}>{ERP_TERMINOLOGY.PROJECT.COL_PROFILE}</th>
+                  <th className={`text-left border-r border-[var(--border)] ${COL_WIDTHS.INVESTOR}`}>{ERP_TERMINOLOGY.PROJECT.COL_INVESTOR}</th>
+                  <th className={`text-center border-r border-[var(--border)] ${COL_WIDTHS.DATE}`}>{ERP_TERMINOLOGY.PROJECT.START_DATE}</th>
+                  <th className={`text-center border-r border-[var(--border)] ${COL_WIDTHS.DATE}`}>{ERP_TERMINOLOGY.PROJECT.END_DATE}</th>
+                  <th className={`text-right border-r border-[var(--border)] ${COL_WIDTHS.FINANCIAL}`}>{ERP_TERMINOLOGY.FINANCE.BUDGET}</th>
+                  <th className={`text-right border-r border-[var(--border)] ${COL_WIDTHS.FINANCIAL}`}>{ERP_TERMINOLOGY.FINANCE.ACTUAL}</th>
+                  <th className={`text-center border-r border-[var(--border)] ${COL_WIDTHS.PROGRESS}`}>Tiến độ %</th>
+                  <th className={`text-center border-r border-[var(--border)] ${COL_WIDTHS.STATUS}`}>{ERP_TERMINOLOGY.STATUS.TITLE}</th>
+                  <th className={`text-center ${COL_WIDTHS.ACTIONS}`}>{ERP_TERMINOLOGY.ACTIONS.TITLE}</th>
                 </tr>
               )}
               itemContent={(i, p) => (

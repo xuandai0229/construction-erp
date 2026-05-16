@@ -37,6 +37,8 @@ export type DashboardData = {
   budget: BudgetRecord[];
   costs: CostRecord[];
   wbsTree: WBSTreeNode[];
+  totalBudget: number;
+  totalCost: number;
   revenue: number;
   receivable: DebtSummary;
   payable: DebtSummary;
