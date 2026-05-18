@@ -834,6 +834,50 @@ exports.Prisma.FinancialSnapshotScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.WorkflowDefinitionScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  name: 'name',
+  entityType: 'entityType',
+  isActive: 'isActive',
+  version: 'version',
+  definition: 'definition',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SagaStateScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  sagaType: 'sagaType',
+  status: 'status',
+  steps: 'steps',
+  context: 'context',
+  currentStep: 'currentStep',
+  correlationId: 'correlationId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ReadModelScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  type: 'type',
+  data: 'data',
+  version: 'version',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OrganizationUnitScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  name: 'name',
+  type: 'type',
+  parentId: 'parentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1020,7 +1064,11 @@ exports.Prisma.ModelName = {
   Branch: 'Branch',
   Notification: 'Notification',
   DomainEvent: 'DomainEvent',
-  FinancialSnapshot: 'FinancialSnapshot'
+  FinancialSnapshot: 'FinancialSnapshot',
+  WorkflowDefinition: 'WorkflowDefinition',
+  SagaState: 'SagaState',
+  ReadModel: 'ReadModel',
+  OrganizationUnit: 'OrganizationUnit'
 };
 
 /**

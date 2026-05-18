@@ -1,7 +1,7 @@
 import { UserRole } from "@prisma/client";
 import { ApiError } from "@/lib/api-error";
 
-export type Module = "COST" | "REVENUE" | "INVOICE" | "LEDGER" | "PERIOD" | "AUDIT" | "REPORT";
+export type Module = "COST" | "REVENUE" | "INVOICE" | "LEDGER" | "PERIOD" | "AUDIT" | "REPORT" | "PROJECT";
 export type Action = "READ" | "CREATE" | "UPDATE" | "DELETE" | "APPROVE" | "POST" | "REVERSE" | "LOCK" | "UNLOCK" | "EXPORT";
 
 // Authoritative Centralized Permission Matrix
@@ -13,7 +13,8 @@ const PERMISSION_MATRIX: Record<UserRole, Partial<Record<Module, Action[]>>> = {
     LEDGER: ["READ", "CREATE", "UPDATE", "DELETE", "APPROVE", "POST", "REVERSE"],
     PERIOD: ["READ", "LOCK", "UNLOCK"],
     AUDIT: ["READ", "EXPORT"],
-    REPORT: ["READ", "EXPORT"]
+    REPORT: ["READ", "EXPORT"],
+    PROJECT: ["READ", "CREATE", "UPDATE", "DELETE"]
   },
   ADMIN: {
     COST: ["READ", "CREATE", "UPDATE", "DELETE", "APPROVE", "POST", "REVERSE"],
@@ -22,7 +23,8 @@ const PERMISSION_MATRIX: Record<UserRole, Partial<Record<Module, Action[]>>> = {
     LEDGER: ["READ", "CREATE", "UPDATE", "DELETE", "APPROVE", "POST", "REVERSE"],
     PERIOD: ["READ", "LOCK", "UNLOCK"],
     AUDIT: ["READ", "EXPORT"],
-    REPORT: ["READ", "EXPORT"]
+    REPORT: ["READ", "EXPORT"],
+    PROJECT: ["READ", "CREATE", "UPDATE", "DELETE"]
   },
   CFO: {
     COST: ["READ", "CREATE", "UPDATE", "APPROVE", "POST", "REVERSE"],
@@ -31,7 +33,8 @@ const PERMISSION_MATRIX: Record<UserRole, Partial<Record<Module, Action[]>>> = {
     LEDGER: ["READ", "POST", "REVERSE"],
     PERIOD: ["READ", "LOCK", "UNLOCK"],
     AUDIT: ["READ"],
-    REPORT: ["READ", "EXPORT"]
+    REPORT: ["READ", "EXPORT"],
+    PROJECT: ["READ", "CREATE", "UPDATE"]
   },
   ACCOUNTANT: {
     COST: ["READ", "CREATE", "UPDATE"],
@@ -40,7 +43,8 @@ const PERMISSION_MATRIX: Record<UserRole, Partial<Record<Module, Action[]>>> = {
     LEDGER: ["READ"],
     PERIOD: ["READ"],
     AUDIT: ["READ"],
-    REPORT: ["READ"]
+    REPORT: ["READ"],
+    PROJECT: ["READ"]
   },
   MANAGER: {
     COST: ["READ", "CREATE", "UPDATE", "APPROVE"],
@@ -49,7 +53,8 @@ const PERMISSION_MATRIX: Record<UserRole, Partial<Record<Module, Action[]>>> = {
     LEDGER: ["READ"],
     PERIOD: ["READ"],
     AUDIT: [],
-    REPORT: ["READ"]
+    REPORT: ["READ"],
+    PROJECT: ["READ", "CREATE", "UPDATE"]
   },
   BRANCH_DIRECTOR: {
     COST: ["READ", "APPROVE"],
@@ -58,7 +63,8 @@ const PERMISSION_MATRIX: Record<UserRole, Partial<Record<Module, Action[]>>> = {
     LEDGER: ["READ"],
     PERIOD: ["READ"],
     AUDIT: [],
-    REPORT: ["READ"]
+    REPORT: ["READ"],
+    PROJECT: ["READ", "CREATE", "UPDATE"]
   },
   GROUP_DIRECTOR: {
     COST: ["READ", "APPROVE"],
@@ -67,7 +73,8 @@ const PERMISSION_MATRIX: Record<UserRole, Partial<Record<Module, Action[]>>> = {
     LEDGER: ["READ"],
     PERIOD: ["READ"],
     AUDIT: ["READ"],
-    REPORT: ["READ", "EXPORT"]
+    REPORT: ["READ", "EXPORT"],
+    PROJECT: ["READ"]
   },
   AUDITOR: {
     COST: ["READ"],
@@ -76,7 +83,8 @@ const PERMISSION_MATRIX: Record<UserRole, Partial<Record<Module, Action[]>>> = {
     LEDGER: ["READ"],
     PERIOD: ["READ"],
     AUDIT: ["READ", "EXPORT"],
-    REPORT: ["READ", "EXPORT"]
+    REPORT: ["READ", "EXPORT"],
+    PROJECT: ["READ"]
   },
   VIEWER: {
     COST: ["READ"],
@@ -85,7 +93,8 @@ const PERMISSION_MATRIX: Record<UserRole, Partial<Record<Module, Action[]>>> = {
     LEDGER: ["READ"],
     PERIOD: ["READ"],
     AUDIT: [],
-    REPORT: ["READ"]
+    REPORT: ["READ"],
+    PROJECT: ["READ"]
   }
 };
 

@@ -23,7 +23,7 @@ export class ProjectService {
     status?: ProjectStatus;
     orderBy?: "createdAt" | "name";
     orderDir?: "asc" | "desc";
-  }) {
+  }, companyId?: string | null) {
     const page = Math.max(1, params.page ?? 1);
     const limit = Math.max(1, params.limit ?? 10);
     const skip = (page - 1) * limit;
@@ -33,6 +33,7 @@ export class ProjectService {
       ...(params.search && {
         name: { contains: params.search, mode: "insensitive" },
       }),
+      ...(companyId && { companyId }), // Enforce tenant boundary
       deletedAt: null,
     };
 
@@ -106,7 +107,7 @@ export class ProjectService {
     return project;
   }
 
-  static async create(data: CreateProjectDTO, userId?: string) {
+  static async create(data: CreateProjectDTO, userId?: string, companyId?: string | null) {
     assertValidEntity(data, "CreateProjectDTO");
 
     if (data.ownerId) {
@@ -125,7 +126,8 @@ export class ProjectService {
         projectType: data.projectType,
         startDate: data.startDate ? new Date(data.startDate) : null,
         endDate: data.endDate ? new Date(data.endDate) : null,
-        ...(data.ownerId && { owner: { connect: { id: data.ownerId } } }),
+        companyId: companyId ?? undefined,
+        ownerId: data.ownerId ?? undefined,
       },
       include: { owner: { select: { id: true, name: true, email: true } } },
     });

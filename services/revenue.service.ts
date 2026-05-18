@@ -46,6 +46,8 @@ export class RevenueService {
           status: "DRAFT",
           note: data.note,
           createdById: data.createdById,
+          companyId: project.companyId, // Propagate tenant context
+          branchId: project.branchId, // Propagate branch context
           approvalStatus: "DRAFT",
           requestId: requestId
         }
@@ -175,14 +177,19 @@ export class RevenueService {
     });
   }
 
-  static async findInvoicesByProject(projectId: string, filters: any = {}) {
+  static async findInvoicesByProject(projectId: string, filters: any = {}, companyId?: string | null) {
     const { limit, skip } = filters;
     return prisma.invoice.findMany({
-      where: { projectId, deletedAt: null },
+      where: {
+        projectId,
+        deletedAt: null,
+        ...(companyId && { companyId }) // Tenant isolation
+      },
       include: {
         payments: true,
         wbs: { select: { name: true } }
       },
+      take: limit ? Number(limit) : 500,
       skip: skip ? Number(skip) : 0,
       orderBy: { issuedDate: "desc" }
     }).then(items => items.map(inv => ({

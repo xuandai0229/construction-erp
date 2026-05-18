@@ -9,15 +9,15 @@ export class ReportingService {
   /**
    * Generates a Receivable Aging Report for a project or the entire company
    */
-  static async getReceivableAging(projectId?: string): Promise<AgingBucket[]> {
-    return FinancialAggregationService.getReceivableAging(projectId);
+  static async getReceivableAging(projectId?: string, companyId?: string | null): Promise<AgingBucket[]> {
+    return FinancialAggregationService.getReceivableAging(projectId, companyId);
   }
 
   /**
    * Generates a Payable Aging Report
    */
-  static async getPayableAging(projectId?: string): Promise<AgingBucket[]> {
-    return FinancialAggregationService.getPayableAging(projectId);
+  static async getPayableAging(projectId?: string, companyId?: string | null): Promise<AgingBucket[]> {
+    return FinancialAggregationService.getPayableAging(projectId, companyId);
   }
 
   /**
@@ -30,9 +30,15 @@ export class ReportingService {
   /**
    * Project Portfolio Risk Assessment
    */
-  static async getProjectRiskProfiles() {
-    return CacheService.wrap("reporting:risk_profiles", async () => {
-      const projects = await prisma.project.findMany({ where: { deletedAt: null } });
+  static async getProjectRiskProfiles(companyId?: string | null) {
+    const cacheKey = companyId ? `reporting:risk_profiles:${companyId}` : "reporting:risk_profiles:global";
+    return CacheService.wrap(cacheKey, async () => {
+      const projects = await prisma.project.findMany({
+        where: {
+          deletedAt: null,
+          ...(companyId && { companyId })
+        }
+      });
       const profiles = [];
 
       for (const p of projects) {
@@ -93,10 +99,10 @@ export class ReportingService {
   /**
    * Enterprise Management Scorecard
    */
-  static async getManagementScorecard() {
+  static async getManagementScorecard(companyId?: string | null) {
     const [riskProfiles, aging] = await Promise.all([
-      this.getProjectRiskProfiles(),
-      this.getReceivableAging()
+      this.getProjectRiskProfiles(companyId),
+      this.getReceivableAging(undefined, companyId)
     ]);
 
     const totalOverdue = aging.reduce((s, b) => s + b.amount, 0);
@@ -120,9 +126,9 @@ export class ReportingService {
   /**
    * Generates Executive Narrative for the Monthly Report
    */
-  static async getExecutiveNarrative(projectId?: string) {
+  static async getExecutiveNarrative(projectId?: string, companyId?: string | null) {
     const summary = projectId ? await ProjectService.getAccountingSummary(projectId) : null;
-    const risks = await this.getProjectRiskProfiles();
+    const risks = await this.getProjectRiskProfiles(companyId);
     const critical = risks.filter(p => p.severity === "CRITICAL" || p.severity === "HIGH");
 
     let narrative = "Hệ thống ERP ghi nhận tình trạng vận hành ổn định. ";

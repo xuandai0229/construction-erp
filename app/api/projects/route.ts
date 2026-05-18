@@ -1,11 +1,16 @@
 import { handleApiError, successResponse } from "@/lib/api-error";
 import { ProjectService } from "@/services/project.service";
-import { createProjectSchema, updateProjectSchema } from "@/lib/validations";
+import { createProjectSchema } from "@/lib/validations";
 import { assertValidEntity } from "@/lib/assertion";
 import { ProjectStatus } from "@prisma/client";
+import { assertAuthenticated } from "@/lib/auth-guard";
+import { RBAC } from "@/lib/rbac";
 
 export async function GET(request: Request) {
   try {
+    const user = await assertAuthenticated();
+    RBAC.assertPermission(user.role, "PROJECT", "READ");
+
     const { searchParams } = new URL(request.url);
     
     const pageParam = searchParams.get("page");
@@ -24,7 +29,7 @@ export async function GET(request: Request) {
 
     const { data, metadata } = await ProjectService.findMany({ 
       page, limit, search, status, orderBy, orderDir 
-    });
+    }, user.companyId);
     
     return successResponse(data, metadata);
   } catch (error) {
@@ -34,14 +39,17 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const user = await assertAuthenticated();
+    RBAC.assertPermission(user.role, "PROJECT", "CREATE");
+
     const body = await request.json();
     const validatedData = createProjectSchema.parse(body);
     assertValidEntity(validatedData, "CreateProjectDTO");
     
-    const userId = "system_internal_admin";
-    const project = await ProjectService.create(validatedData, userId);
+    const project = await ProjectService.create(validatedData, user.id, user.companyId);
     return successResponse(project, null, 201);
   } catch (error) {
     return handleApiError(error);
   }
 }
+

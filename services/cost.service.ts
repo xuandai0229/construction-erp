@@ -117,6 +117,8 @@ export class CostService {
             date: data.date ? new Date(data.date) : new Date(),
             status: data.status,
             createdById: userId || data.createdById,
+            companyId: project.companyId, // Enforce tenant propagation
+            branchId: project.branchId, // Enforce branch propagation
             approvalStatus: "DRAFT",
             workflowStatus: "DRAFT",
             version: 1
@@ -352,13 +354,14 @@ export class CostService {
     return item;
   }
 
-  static async findByProject(projectId: string, filters: any = {}) {
+  static async findByProject(projectId: string, filters: any = {}, companyId?: string | null) {
     const { costType, status, startDate, endDate, limit, skip } = filters;
     
     return prisma.costRecord.findMany({
       where: {
         projectId,
         deletedAt: null,
+        ...(companyId && { companyId }), // Enforce tenant isolation
         ...(costType && { costType }),
         ...(status && { status }),
         ...(startDate && endDate && {

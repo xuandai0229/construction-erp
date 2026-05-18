@@ -1123,3 +1123,58 @@ enum SubcontractStatus {
   COMPLETED
   TERMINATED
 }
+
+model WorkflowDefinition {
+  id         String   @id @default(uuid())
+  companyId  String
+  name       String
+  entityType String // e.g. "PROCUREMENT", "PAYMENT", "CONTRACT", "CHANGE_REQUEST", "PROJECT_PROGRESS"
+  isActive   Boolean  @default(true)
+  version    Int      @default(1)
+  definition Json // Full configuration of states, transitions, rules, SLA timeouts, escalations, approver roles
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([companyId, entityType])
+}
+
+model SagaState {
+  id            String   @id @default(uuid())
+  companyId     String
+  sagaType      String
+  status        String // PENDING, PROCESSING, COMPLETED, FAILED, ROLLED_BACK
+  steps         Json // Array of saga steps with compensation status
+  context       Json // Initial transaction payload
+  currentStep   Int      @default(0)
+  correlationId String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([companyId, sagaType])
+}
+
+model ReadModel {
+  id        String   @id // Formatted as "companyId:modelType:entityId"
+  companyId String
+  type      String // e.g. "CASHFLOW_SUMMARY", "PROJECT_INSIGHTS", "EXECUTIVE_KPI"
+  data      Json
+  version   Int      @default(1)
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, type])
+}
+
+model OrganizationUnit {
+  id        String             @id @default(uuid())
+  companyId String
+  name      String
+  type      String // "CORPORATION" | "REGION" | "BRANCH" | "DEPARTMENT" | "TEAM"
+  parentId  String?
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  parent    OrganizationUnit?  @relation("OrgHierarchy", fields: [parentId], references: [id])
+  children  OrganizationUnit[] @relation("OrgHierarchy")
+
+  @@index([companyId])
+  @@index([parentId])
+}

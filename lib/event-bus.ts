@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { MetricsCollector } from './metrics';
 
 export type EnterpriseEvent = {
   id: string;
@@ -26,6 +27,7 @@ class EnterpriseEventBus extends EventEmitter {
   }
 
   async publish(event: Omit<EnterpriseEvent, 'id' | 'timestamp'>) {
+    MetricsCollector.recordEventDispatched();
     const fullEvent: EnterpriseEvent = {
       ...event,
       id: `EV-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -71,12 +73,38 @@ class EnterpriseEventBus extends EventEmitter {
 
 export const eventBus = EnterpriseEventBus.getInstance();
 
-// Auto-initialize financial runtime listeners (Server-side)
 if (typeof window === 'undefined') {
+  // Auto-initialize financial runtime listeners (Server-side)
   try {
     const { initializeFinancialListeners } = require('../services/finance/financial-event-listener');
     initializeFinancialListeners();
   } catch (err) {
     console.warn('[EventBus] Failed to initialize financial listeners:', err);
   }
+
+  // Initialize CQRS Read Model Projectors (Server-side)
+  try {
+    const { ReadModelProjector } = require('../services/cqrs/read-model.projector');
+    ReadModelProjector.init();
+  } catch (err) {
+    console.warn('[EventBus] Failed to initialize CQRS read model projector:', err);
+  }
+
+  // Automatic Background Job Polling Worker (Runs every 3 seconds)
+  const POLLING_INTERVAL_MS = 3000;
+  let runCount = 0;
+  setInterval(async () => {
+    runCount++;
+    try {
+      const { ResilientQueueService } = require('../services/queue/resilient-queue.service');
+      await ResilientQueueService.pollAndProcess();
+      
+      // Sweep for stuck jobs every 30 seconds
+      if (runCount % 10 === 0) {
+        await ResilientQueueService.recoverStuckJobs();
+      }
+    } catch (err) {
+      // Quietly suppress to prevent server spam
+    }
+  }, POLLING_INTERVAL_MS);
 }

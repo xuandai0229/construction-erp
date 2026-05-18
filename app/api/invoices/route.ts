@@ -2,15 +2,31 @@ import { handleApiError, successResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
 import { createInvoiceSchema } from "@/lib/validations";
 import { RevenueService } from "@/services/revenue.service";
+import { assertAuthenticated } from "@/lib/auth-guard";
+import { RBAC } from "@/lib/rbac";
+import { ApiError } from "@/lib/api-error";
 
 export async function GET(request: Request) {
   try {
+    const user = await assertAuthenticated();
+    RBAC.assertPermission(user.role, "INVOICE", "READ");
+
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("projectId") || undefined;
 
     if (!projectId) return successResponse([]);
 
-    const items = await RevenueService.findInvoicesByProject(projectId);
+    // Check project tenant access
+    if (user.companyId) {
+      const project = await prisma.project.findFirst({
+        where: { id: projectId, companyId: user.companyId }
+      });
+      if (!project) {
+        throw new ApiError(403, "Từ chối truy cập: Dự án không thuộc công ty của bạn.");
+      }
+    }
+
+    const items = await RevenueService.findInvoicesByProject(projectId, {}, user.companyId);
 
     const mapped = items.map((inv) => ({
       id: inv.id,
@@ -32,10 +48,26 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const user = await assertAuthenticated();
+    RBAC.assertPermission(user.role, "INVOICE", "CREATE");
+
     const body = await request.json();
     const data = createInvoiceSchema.parse(body);
 
-    const item = await RevenueService.createInvoice(data);
+    // Verify project belongs to tenant
+    if (user.companyId) {
+      const project = await prisma.project.findFirst({
+        where: { id: data.projectId, companyId: user.companyId }
+      });
+      if (!project) {
+        throw new ApiError(403, "Từ chối truy cập: Dự án không thuộc công ty của bạn.");
+      }
+    }
+
+    const item = await RevenueService.createInvoice({
+      ...data,
+      createdById: user.id
+    });
 
     return successResponse({
       id: item.id,
@@ -52,5 +84,6 @@ export async function POST(request: Request) {
     return handleApiError(error);
   }
 }
+
 
 

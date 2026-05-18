@@ -7,6 +7,7 @@ const SESSION_EXPIRY_MS = 2 * 60 * 60 * 1000; // 2 hours session lifecycle (Batc
 export interface SecureSession {
   userId: string;
   role: string;
+  companyId?: string | null;
   expiresAt: number;
 }
 
@@ -14,9 +15,9 @@ export class SessionManager {
   /**
    * Cryptographically signs and generates a secure session token
    */
-  static createSession(userId: string, role: string): string {
+  static createSession(userId: string, role: string, companyId?: string | null): string {
     const expiresAt = Date.now() + SESSION_EXPIRY_MS;
-    const payload = JSON.stringify({ userId, role, expiresAt });
+    const payload = JSON.stringify({ userId, role, companyId: companyId || null, expiresAt });
     const payloadBase64 = Buffer.from(payload).toString("base64url");
     
     const signature = crypto

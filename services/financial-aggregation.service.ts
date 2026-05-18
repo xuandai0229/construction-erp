@@ -270,14 +270,15 @@ export class FinancialAggregationService {
   /**
    * AUTHORITATIVE AGING: Receivable Aging Report
    */
-  static async getReceivableAging(projectId?: string): Promise<AgingBucket[]> {
+  static async getReceivableAging(projectId?: string, companyId?: string | null): Promise<AgingBucket[]> {
     const today = new Date();
     const invoices = await prisma.invoice.findMany({
       where: {
         deletedAt: null,
         remainingAmount: { gt: 0 },
         status: { in: ["SENT", "PAID", "PARTIAL", "OVERDUE"] },
-        ...(projectId && { projectId })
+        ...(projectId && { projectId }),
+        ...(companyId && { companyId })
       }
     });
 
@@ -313,14 +314,15 @@ export class FinancialAggregationService {
   /**
    * AUTHORITATIVE AGING: Payable Aging Report
    */
-  static async getPayableAging(projectId?: string): Promise<AgingBucket[]> {
+  static async getPayableAging(projectId?: string, companyId?: string | null): Promise<AgingBucket[]> {
     const today = new Date();
     const costs = await prisma.costRecord.findMany({
       where: {
         deletedAt: null,
         status: "unpaid",
         approvalStatus: { not: "REJECTED" },
-        ...(projectId && { projectId })
+        ...(projectId && { projectId }),
+        ...(companyId && { companyId })
       }
     });
 
