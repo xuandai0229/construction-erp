@@ -14,6 +14,32 @@ export default function SettingsPage() {
   const [language, setLanguage] = useState('vi');
   const [saved, setSaved] = useState(false);
 
+  // Fiscal period state variables (Batch 5.3)
+  const [periods, setPeriods] = useState<any[]>([]);
+  const [loadingPeriods, setLoadingPeriods] = useState(false);
+  const [lockingMonth, setLockingMonth] = useState<string | null>(null);
+  const [reopenReason, setReopenReason] = useState('');
+  const [showReopenModal, setShowReopenModal] = useState<string | null>(null);
+
+  const fetchPeriods = () => {
+    setLoadingPeriods(true);
+    fetch('/api/fiscal-periods')
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          setPeriods(res.data || []);
+        }
+      })
+      .catch(err => console.error(err))
+      .finally(() => setLoadingPeriods(false));
+  };
+
+  useEffect(() => {
+    if (userRole === 'ADMIN') {
+      fetchPeriods();
+    }
+  }, [userRole]);
+
   // Read saved settings on mount (client-only) to avoid SSR/hydration mismatch
   useEffect(() => {
     setTheme(localStorage.getItem('theme') || 'dark');
@@ -29,6 +55,62 @@ export default function SettingsPage() {
       document.documentElement.classList.remove('light');
     }
     localStorage.setItem('theme', val);
+  };
+
+  const handleTogglePeriod = async (month: string, currentLockState: boolean) => {
+    if (currentLockState) {
+      // Reopening a locked period requires a reason for the Audit Trail! (Batch 5.3)
+      setShowReopenModal(month);
+    } else {
+      // Locking can be done directly with system notification
+      setLockingMonth(month);
+      try {
+        const res = await fetch('/api/fiscal-periods', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ month, isLocked: true, reason: 'Kỳ kế toán được đóng sổ thủ công bởi Admin.' })
+        });
+        const data = await res.json();
+        if (data.success) {
+          fetchPeriods();
+        } else {
+          alert('Lỗi: ' + data.error);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLockingMonth(null);
+      }
+    }
+  };
+
+  const handleReopenPeriodSubmit = async () => {
+    if (!showReopenModal) return;
+    if (!reopenReason.trim()) {
+      alert('Vui lòng nhập lý do mở lại kỳ kế toán để ghi nhận nhật ký kiểm toán (Audit Trail)!');
+      return;
+    }
+    const month = showReopenModal;
+    setLockingMonth(month);
+    try {
+      const res = await fetch('/api/fiscal-periods', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ month, isLocked: false, reason: reopenReason })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setShowReopenModal(null);
+        setReopenReason('');
+        fetchPeriods();
+      } else {
+        alert('Lỗi: ' + data.error);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLockingMonth(null);
+    }
   };
 
   const handleSave = () => {
@@ -62,7 +144,7 @@ export default function SettingsPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-3">
-                  <label className="erp-label">Chủ đề (Theme)</label>
+                  <label className="erp-label">Chủ đề</label>
                   <div className="flex p-1 bg-[var(--secondary)] rounded-xl border border-[var(--border)]">
                     <button
                       onClick={() => toggleTheme('dark')}
@@ -94,7 +176,7 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="space-y-3">
-                  <label className="erp-label">Mật độ dữ liệu (Density)</label>
+                  <label className="erp-label">Mật độ dữ liệu</label>
                   <div className="flex p-1 bg-[var(--secondary)] rounded-xl border border-[var(--border)]">
                     <button
                       onClick={() => setDensity('compact')}
@@ -151,36 +233,157 @@ export default function SettingsPage() {
 
             {/* Admin only */}
             {userRole === 'ADMIN' && (
-              <section className="card-elevation p-6 md:p-8 border-blue-500/20 bg-blue-600/5">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-[12px] font-black text-blue-500 uppercase tracking-widest flex items-center gap-2">
-                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M12 11V7a4 4 0 0 1 8 0v4M8 11h12a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z" />
-                    </svg>
-                    Quản trị viên (Admin Settings)
-                  </h3>
-                  <span className="rounded-full bg-blue-500/10 px-3 py-1 text-[9px] font-black text-blue-500 ring-1 ring-blue-500/30">
-                    QUYỀN TỐI CAO
-                  </span>
-                </div>
+              <div className="space-y-6">
+                <section className="card-elevation p-6 md:p-8 border-blue-500/20 bg-blue-600/5">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-[12px] font-black text-blue-500 uppercase tracking-widest flex items-center gap-2">
+                      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M12 11V7a4 4 0 0 1 8 0v4M8 11h12a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z" />
+                      </svg>
+                      Thiết lập quản trị viên
+                    </h3>
+                    <span className="rounded-full bg-blue-500/10 px-3 py-1 text-[9px] font-black text-blue-500 ring-1 ring-blue-500/30">
+                      QUYỀN TỐI CAO
+                    </span>
+                  </div>
 
-                <div className="space-y-3">
-                  {[
-                    { label: 'Tự động sao lưu dữ liệu', desc: 'Hệ thống sẽ backup vào 00:00 hàng ngày.' },
-                    { label: 'Chế độ Audit Log', desc: 'Ghi lại mọi thay đổi dữ liệu tài chính.' },
-                  ].map(item => (
-                    <div key={item.label} className="flex items-center justify-between p-4 rounded-xl border border-[var(--border)] bg-[var(--secondary)]">
-                      <div>
-                        <div className="text-[11px] font-bold text-[var(--text-primary)] uppercase tracking-tight">{item.label}</div>
-                        <div className="text-[10px] text-[var(--text-muted)] mt-0.5">{item.desc}</div>
+                  <div className="space-y-3">
+                    {[
+                      { label: 'Tự động sao lưu dữ liệu', desc: 'Hệ thống sẽ backup vào 00:00 hàng ngày.' },
+                      { label: 'Chế độ Audit Log', desc: 'Ghi lại mọi thay đổi dữ liệu tài chính.' },
+                    ].map(item => (
+                      <div key={item.label} className="flex items-center justify-between p-4 rounded-xl border border-[var(--border)] bg-[var(--secondary)]">
+                        <div>
+                          <div className="text-[11px] font-bold text-[var(--text-primary)] uppercase tracking-tight">{item.label}</div>
+                          <div className="text-[10px] text-[var(--text-muted)] mt-0.5">{item.desc}</div>
+                        </div>
+                        <div className="h-6 w-11 rounded-full bg-blue-600 relative p-1 cursor-pointer shrink-0">
+                          <div className="h-4 w-4 rounded-full bg-white absolute right-1 shadow" />
+                        </div>
                       </div>
-                      <div className="h-6 w-11 rounded-full bg-blue-600 relative p-1 cursor-pointer shrink-0">
-                        <div className="h-4 w-4 rounded-full bg-white absolute right-1 shadow" />
+                    ))}
+                  </div>
+                </section>
+
+                {/* Fiscal Period Locking Control (Batch 5.3) */}
+                <section className="card-elevation p-6 md:p-8 border-rose-500/20 bg-rose-950/5">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h3 className="text-[12px] font-black text-rose-500 uppercase tracking-widest flex items-center gap-2">
+                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                        Khóa sổ kỳ kế toán (Fiscal Period Safety)
+                      </h3>
+                      <p className="text-[10px] text-[var(--text-muted)] mt-1">Khi kỳ kế toán bị khóa sổ, mọi giao dịch chỉnh sửa, xóa chi phí hoặc hạch toán mới trong kỳ đó sẽ bị chặn tuyệt đối để bảo vệ tính toàn vẹn số liệu.</p>
+                    </div>
+                  </div>
+
+                  {loadingPeriods ? (
+                    <div className="text-[11px] text-[var(--text-muted)] italic py-4">Đang tải danh sách kỳ kế toán...</div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                      {periods.map((p: any) => {
+                        const isLocked = p.isLocked;
+                        const isProcessing = lockingMonth === p.month;
+
+                        return (
+                          <div
+                            key={p.id}
+                            className={`p-4 rounded-xl border flex items-center justify-between transition-colors ${
+                              isLocked
+                                ? 'bg-rose-500/5 border-rose-500/30'
+                                : 'bg-[var(--secondary)]/40 border-[var(--border)] hover:border-[var(--text-muted)]/30'
+                            }`}
+                          >
+                            <div>
+                              <div className="text-[11px] font-bold text-[var(--text-primary)]">{p.name || p.month}</div>
+                              <div className="text-[9px] text-[var(--text-muted)] mt-0.5">Mã kỳ: {p.month}</div>
+                              {isLocked && p.lockedAt && (
+                                <div className="text-[8px] text-rose-400 mt-1 italic">
+                                  Đã khóa: {new Date(p.lockedAt).toLocaleDateString('vi-VN')}
+                                </div>
+                              )}
+                            </div>
+
+                            <button
+                              disabled={isProcessing}
+                              onClick={() => handleTogglePeriod(p.month, isLocked)}
+                              className={`h-7 px-3 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all flex items-center gap-1 ${
+                                isLocked
+                                  ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40 hover:bg-rose-500/30'
+                                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20'
+                              }`}
+                            >
+                              {isProcessing ? (
+                                <span className="h-2 w-2 rounded-full bg-current animate-ping" />
+                              ) : isLocked ? (
+                                <>
+                                  <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+                                  Mở sổ
+                                </>
+                              ) : (
+                                <>
+                                  <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+                                  Khóa sổ
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </section>
+
+                {/* Audit Reopen Period Modal popover */}
+                {showReopenModal && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in">
+                    <div className="w-full max-w-md p-6 rounded-2xl bg-[var(--primary)] border border-[var(--border)] shadow-2xl space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-500 shrink-0">
+                          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                            <line x1="12" y1="9" x2="12" y2="13" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="text-[12px] font-black text-rose-500 uppercase tracking-widest">Yêu cầu xác thực kiểm toán</h4>
+                          <p className="text-[10px] text-[var(--text-muted)] mt-0.5">Mở lại kỳ kế toán đã khóa: {showReopenModal}</p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="erp-label text-rose-400">Lý do mở lại sổ kế toán (Bắt buộc)</label>
+                        <textarea
+                          rows={3}
+                          value={reopenReason}
+                          onChange={(e) => setReopenReason(e.target.value)}
+                          placeholder="Vui lòng nêu rõ lý do điều chỉnh số liệu (ví dụ: bổ sung chứng từ hoàn công thầu phụ)..."
+                          className="erp-input w-full min-h-[80px]"
+                        />
+                      </div>
+
+                      <div className="flex justify-end gap-3 pt-2">
+                        <button
+                          onClick={() => { setShowReopenModal(null); setReopenReason(''); }}
+                          className="erp-btn bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)] hover:bg-[var(--border)]/10"
+                        >
+                          Hủy bỏ
+                        </button>
+                        <button
+                          onClick={handleReopenPeriodSubmit}
+                          className="erp-btn bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-600/20"
+                        >
+                          Xác nhận mở sổ
+                        </button>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </section>
+                  </div>
+                )}
+              </div>
             )}
           </div>
 

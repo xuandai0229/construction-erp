@@ -62,7 +62,7 @@ export class CostService {
     const retentionAmountD = finalAmountD.mul(retentionRateD.div(100));
 
     try {
-      return await prisma.$transaction(async (tx) => {
+      const item = await prisma.$transaction(async (tx) => {
         // Double-check idempotency inside transaction for absolute safety
         if (requestId) {
           const locked = await tx.costRecord.findUnique({ 
@@ -135,22 +135,24 @@ export class CostService {
           userAgent: options.userAgent
         });
 
-        // [SYNC HOOK]: Update Dashboard Stats
-        try {
-          const { ProjectService } = require("./project.service");
-          await ProjectService.getAccountingSummary(data.projectId);
-        } catch (e) {
-          LoggerService.error("Failed to sync project stats after cost create", { error: e });
-        }
-
-        eventBus.publish({
-          type: 'COST_CREATED',
-          payload: item,
-          metadata: { userId, projectId: data.projectId }
-        });
-
         return item;
       });
+
+      // Run heavy aggregation and outbox event publishing OUTSIDE transaction to prevent deadlock & escalation locks
+      const { ProjectService } = require("./project.service");
+      ProjectService.getAccountingSummary(item.projectId).catch((e: any) => {
+        LoggerService.error("Failed to sync project stats after cost create", { error: e });
+      });
+
+      eventBus.publish({
+        type: 'COST_CREATED',
+        payload: item,
+        metadata: { userId, projectId: data.projectId }
+      }).catch((e) => {
+        LoggerService.error("Failed to publish COST_CREATED event", { error: e });
+      });
+
+      return item;
     } catch (error: any) {
       if (error.code === 'P2002' && error.meta?.target?.includes('requestId')) {
         const existing = await prisma.costRecord.findUnique({ where: { requestId } });
@@ -220,7 +222,7 @@ export class CostService {
       });
     }
 
-    return prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx) => {
       // A. SOFT DELETE for DRAFT/REJECTED items (Aligning with lib/prisma.ts security policy)
       const item = await tx.costRecord.update({ 
         where: { id },
@@ -239,16 +241,16 @@ export class CostService {
         userAgent: options.userAgent
       });
 
-      // [SYNC HOOK]: Update Dashboard Stats
-      try {
-        const { ProjectService } = require("./project.service");
-        await ProjectService.getAccountingSummary(existing.projectId);
-      } catch (e) {
-        LoggerService.error("Failed to sync project stats after cost delete", { error: e });
-      }
-
-      return { ...existing, deletedAt: new Date() };
+      return item;
     });
+
+    // Run heavy aggregation OUTSIDE transaction to prevent deadlock & escalation locks
+    const { ProjectService } = require("./project.service");
+    ProjectService.getAccountingSummary(existing.projectId).catch((e: any) => {
+      LoggerService.error("Failed to sync project stats after cost delete", { error: e });
+    });
+
+    return { ...existing, deletedAt: new Date() };
   }
 
   /**
@@ -263,10 +265,41 @@ export class CostService {
     });
     if (!existing) throw new ApiError(404, "Không tìm thấy chi phí");
 
-    // 1. Validate Transition
+    // 1. Enforce Segregation of Duties & RBAC Permissions (Batch 6.1 & 6.5)
+    if (userId && userId !== "system_internal_admin") {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (user) {
+        const { RBAC } = require("@/lib/rbac");
+        
+        // Segregation of Duties (SoD): Creator cannot approve or post their own transactions
+        if (nextStatus === "APPROVED" || nextStatus === "POSTED") {
+          RBAC.assertSegregationOfDuties(existing.createdById, user.id);
+        }
+
+        // Action-level permission check
+        let action: any = "UPDATE";
+        if (nextStatus === "APPROVED") action = "APPROVE";
+        else if (nextStatus === "POSTED") action = "POST";
+        else if (nextStatus === "REVERSED") action = "REVERSE";
+        
+        RBAC.assertPermission(user.role, "COST", action);
+
+        // Financial authority limit check
+        const limit = RBAC.getFinancialLimit(user.role);
+        const costAmount = Number(existing.amount);
+        if (costAmount > limit) {
+          throw new ApiError(
+            403,
+            `Lỗi hạn mức: Số tiền chứng từ (${costAmount.toLocaleString("vi-VN")} ₫) vượt hạn mức phê duyệt tối đa của vai trò ${user.role} (${limit.toLocaleString("vi-VN")} ₫).`
+          );
+        }
+      }
+    }
+
+    // 1.5. Validate Transition
     CostWorkflow.validateTransition(existing.workflowStatus, nextStatus);
 
-    return prisma.$transaction(async (tx) => {
+    const item = await prisma.$transaction(async (tx) => {
       // 2. Update Status
       const item = await tx.costRecord.update({
         where: { id, version: existing.version },
@@ -291,15 +324,6 @@ export class CostService {
         await PostingEngine.reverseJournal(tx, id, "COST", userId || "SYSTEM");
       }
 
-      // 4. Audit & Event
-      eventBus.publish({
-        type: nextStatus === "APPROVED" ? 'COST_APPROVED' : 
-              nextStatus === "POSTED" ? 'COST_POSTED' : 
-              nextStatus === "REJECTED" ? 'COST_REJECTED' : 'COST_UPDATED',
-        payload: item,
-        metadata: { userId, projectId: item.projectId }
-      });
-
       await AuditService.log({
         userId,
         action: nextStatus === "APPROVED" ? "APPROVE" : nextStatus === "REJECTED" ? "REJECT" : "UPDATE",
@@ -314,6 +338,18 @@ export class CostService {
 
       return item;
     });
+
+    eventBus.publish({
+      type: nextStatus === "APPROVED" ? 'COST_APPROVED' : 
+            nextStatus === "POSTED" ? 'COST_POSTED' : 
+            nextStatus === "REJECTED" ? 'COST_REJECTED' : 'COST_UPDATED',
+      payload: item,
+      metadata: { userId, projectId: item.projectId }
+    }).catch((e) => {
+      LoggerService.error("Failed to publish cost state transition event", { error: e });
+    });
+
+    return item;
   }
 
   static async findByProject(projectId: string, filters: any = {}) {

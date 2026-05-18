@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { AuditLog } from "../generated/prisma-client";
 
-export type AuditAction = "CREATE" | "UPDATE" | "DELETE" | "RESTORE" | "APPROVE" | "REJECT" | "LOCK" | "UNLOCK" | "HARD_DELETE";
+export type AuditAction = "CREATE" | "UPDATE" | "DELETE" | "RESTORE" | "APPROVE" | "REJECT" | "LOCK" | "UNLOCK" | "HARD_DELETE" | "SECURITY_ALERT" | "AUTH_FAILED";
 
 export class AuditService {
   static async log({

@@ -114,6 +114,17 @@ export class PostingEngine {
     sourceId: string;
     lines: { accountCode: string, amount: number, type: TransactionType }[];
   }) {
+    const startTime = Date.now();
+    // 0. Verify no duplicate posting for source record
+    if (params.sourceId && params.sourceType) {
+      const activeEntry = await tx.journalEntry.findFirst({
+        where: { sourceId: params.sourceId, sourceType: params.sourceType, deletedAt: null }
+      });
+      if (activeEntry) {
+        throw new ApiError(400, `Giao dịch đã được hạch toán vào Sổ cái trước đó (JournalEntry ID: ${activeEntry.id})`);
+      }
+    }
+
     // 1. Verify Debit = Credit
     const debits = params.lines.filter(l => l.type === TransactionType.DEBIT).reduce((s, l) => s + l.amount, 0);
     const credits = params.lines.filter(l => l.type === TransactionType.CREDIT).reduce((s, l) => s + l.amount, 0);
@@ -157,6 +168,9 @@ export class PostingEngine {
         }
       });
     }
+
+    const { MetricsCollector } = require("@/lib/metrics");
+    MetricsCollector.recordPostingDuration(Date.now() - startTime);
   }
 
   /**
@@ -205,7 +219,7 @@ export class PostingEngine {
   }
 
   static async assertPeriodNotLocked(date: Date) {
-    // Implement fiscal period lock check here
-    // throw new PeriodLockedError() if locked
+    const { assertPeriodNotLocked } = require("@/lib/period");
+    await assertPeriodNotLocked(date);
   }
 }

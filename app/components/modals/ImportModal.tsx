@@ -53,7 +53,7 @@ export function ImportModal({ title, onImport, onClose, templateUrl }: ImportMod
         <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
           <h3 className="text-lg font-semibold text-slate-100 flex items-center gap-2">
             <IconPath path="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242M12 12v9m-4-4l4 4 4-4" />
-            Import {title}
+            Nhập dữ liệu {title}
           </h3>
           <button onClick={onClose} className="text-slate-500 hover:text-slate-300">
             <IconPath path="M6 18L18 6M6 6l12 12" />
@@ -125,7 +125,7 @@ export function ImportModal({ title, onImport, onClose, templateUrl }: ImportMod
               className="px-8 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-500 text-white text-sm font-bold rounded-lg transition-all flex items-center gap-2"
             >
               {loading && <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>}
-              Bắt đầu Import
+              Bắt đầu nhập dữ liệu
             </button>
           )}
         </div>

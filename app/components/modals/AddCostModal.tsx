@@ -33,6 +33,8 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
     note: '',
     supplier: '',
     date: new Date().toISOString().split('T')[0],
+    vatRate: '10',
+    retentionRate: '0',
   });
   
   const [error, setError] = useState('');
@@ -54,6 +56,8 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
         note: costRecord.note || '',
         supplier: (costRecord as any).supplier || '',
         date: costRecord.date.split('T')[0],
+        vatRate: (costRecord as any).vatRate?.toString() || '10',
+        retentionRate: (costRecord as any).retentionRate?.toString() || '0',
       });
     } else {
       setForm({
@@ -65,12 +69,20 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
         note: '',
         supplier: '',
         date: new Date().toISOString().split('T')[0],
+        vatRate: '10',
+        retentionRate: '0',
       });
       setRequestId(crypto.randomUUID()); 
     }
   }, [isOpen, costRecord]); // Only depend on isOpen and costRecord
 
+  const vatRateNum = parseFloat(form.vatRate) || 0;
+  const retentionRateNum = parseFloat(form.retentionRate) || 0;
   const amount = (parseFloat(form.quantity) || 0) * (parseFloat(form.unitPrice) || 0);
+  const netAmount = amount / (1 + vatRateNum / 100);
+  const vatAmount = amount - netAmount;
+  const retentionAmount = amount * (retentionRateNum / 100);
+  const payableAmount = amount - retentionAmount;
 
   const filteredWbs = wbsItems.filter(w =>
     form.projectId ? w.projectId === form.projectId : true
@@ -110,6 +122,8 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
         supplier: form.supplier,
         date: form.date,
         requestId: costRecord ? undefined : requestId,
+        vatRate: vatRateNum,
+        retentionRate: retentionRateNum,
       };
 
       if (costRecord) {
@@ -231,11 +245,66 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
             </div>
           </div>
 
-          {/* Amount Preview */}
+          {/* VAT & Retention Settings */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="erp-label">Thuế suất VAT <span className="text-red-500">*</span></label>
+              <div className="relative">
+                <select
+                  value={form.vatRate}
+                  onChange={e => handleChange('vatRate', e.target.value)}
+                  className="erp-input w-full appearance-none pr-7"
+                >
+                  <option value="0">0% (Không chịu thuế)</option>
+                  <option value="5">5% (Thuế ưu đãi)</option>
+                  <option value="8">8% (Giảm thuế VAT)</option>
+                  <option value="10">10% (Tiêu chuẩn)</option>
+                </select>
+                <svg viewBox="0 0 24 24" className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--text-muted)]" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
+              </div>
+            </div>
+
+            <div>
+              <label className="erp-label">Giữ lại bảo hành (%)</label>
+              <div className="relative">
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="any"
+                  value={form.retentionRate}
+                  onChange={e => handleChange('retentionRate', e.target.value)}
+                  placeholder="VD: 5"
+                  className="erp-input w-full pr-8"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-bold text-[var(--text-muted)]">%</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Detailed Financial Breakdown Preview */}
           {amount > 0 && (
-            <div className="flex items-center justify-between rounded-lg border border-blue-500/30 bg-blue-500/10 px-4 py-3 shadow-inner">
-              <span className="text-[11px] font-bold uppercase tracking-widest text-blue-500/80">Thành tiền</span>
-              <span className="text-lg font-black text-blue-600 dark:text-blue-400 tabular-nums">{amount.toLocaleString('vi-VN')} đ</span>
+            <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4 space-y-2">
+              <div className="flex items-center justify-between text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
+                <span>Trước thuế:</span>
+                <span className="font-extrabold text-[var(--text-secondary)] tabular-nums">{Math.round(netAmount).toLocaleString('vi-VN')} đ</span>
+              </div>
+              <div className="flex items-center justify-between text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
+                <span>Thuế VAT ({form.vatRate}%):</span>
+                <span className="font-extrabold text-[var(--text-secondary)] tabular-nums">{Math.round(vatAmount).toLocaleString('vi-VN')} đ</span>
+              </div>
+              <div className="flex items-center justify-between text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider border-b border-[var(--border)] pb-2 mb-2">
+                <span>Giữ lại bảo hành ({form.retentionRate}%):</span>
+                <span className="font-extrabold text-amber-500 tabular-nums">-{Math.round(retentionAmount).toLocaleString('vi-VN')} đ</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-black uppercase tracking-widest text-blue-500">Tổng hạch toán:</span>
+                <span className="text-lg font-black text-blue-500 tabular-nums">{Math.round(amount).toLocaleString('vi-VN')} đ</span>
+              </div>
+              <div className="flex items-center justify-between border-t border-[var(--border)] pt-2 mt-1">
+                <span className="text-[11px] font-black uppercase tracking-widest text-emerald-500">Thực thanh toán đợt:</span>
+                <span className="text-md font-black text-emerald-500 tabular-nums">{Math.round(payableAmount).toLocaleString('vi-VN')} đ</span>
+              </div>
             </div>
           )}
 

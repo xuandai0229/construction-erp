@@ -11,17 +11,25 @@ const icons = {
 };
 
 export default function KPISection({ data }: { data: DashboardData }) {
-  const profit = data.revenue - data.totalCost;
-  const budgetDelta = data.totalBudget > 0 ? ((data.totalBudget - data.totalCost) / data.totalBudget) * 100 : 0;
-  const margin = data.revenue > 0 ? (profit / data.revenue) * 100 : 0;
-  const budgetVsContract = (data.project.totalValue ?? 0) > 0 ? (data.totalBudget / (data.project.totalValue ?? 0)) * 100 : 0;
-  const revenueVsContract = (data.project.totalValue ?? 0) > 0 ? (data.revenue / (data.project.totalValue ?? 0)) * 100 : 0;
+  if (!data) return null;
+
+  const project = data.project || { totalValue: 0, contractValue: 0 };
+  const totalValue = Number(project.totalValue ?? project.contractValue ?? 0);
+  const totalBudget = Number(data.totalBudget ?? 0);
+  const totalCost = Number(data.totalCost ?? 0);
+  const revenue = Number(data.revenue ?? 0);
+
+  const profit = revenue - totalCost;
+  const budgetDelta = totalBudget > 0 ? ((totalBudget - totalCost) / totalBudget) * 100 : 0;
+  const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
+  const budgetVsContract = totalValue > 0 ? (totalBudget / totalValue) * 100 : 0;
+  const revenueVsContract = totalValue > 0 ? (revenue / totalValue) * 100 : 0;
 
   const cards = [
-    { title: 'Tổng giá trị hợp đồng', value: data.project.totalValue, change: 'Giá trị gốc dự án', tone: 'blue', icon: icons.contract },
-    { title: 'Tổng dự toán (BOQ)', value: data.totalBudget, change: `${budgetVsContract.toFixed(1)}% so với HĐ`, tone: 'blue', icon: icons.budget },
-    { title: 'Chi phí thực tế', value: data.totalCost, change: `${budgetDelta >= 0 ? '-' : '+'} ${Math.abs(budgetDelta).toFixed(1)}% dự toán`, tone: budgetDelta >= 0 ? 'green' : 'red', icon: icons.cost },
-    { title: 'Doanh thu nghiệm thu', value: data.revenue, change: `${revenueVsContract.toFixed(1)}% tiến độ`, tone: 'blue', icon: icons.revenue },
+    { title: 'Tổng giá trị hợp đồng', value: totalValue, change: 'Giá trị gốc dự án', tone: 'blue', icon: icons.contract },
+    { title: 'Tổng dự toán (BOQ)', value: totalBudget, change: `${budgetVsContract.toFixed(1)}% so với HĐ`, tone: 'blue', icon: icons.budget },
+    { title: 'Chi phí thực tế', value: totalCost, change: `${budgetDelta >= 0 ? '-' : '+'} ${Math.abs(budgetDelta).toFixed(1)}% dự toán`, tone: budgetDelta >= 0 ? 'green' : 'red', icon: icons.cost },
+    { title: 'Doanh thu nghiệm thu', value: revenue, change: `${revenueVsContract.toFixed(1)}% tiến độ`, tone: 'blue', icon: icons.revenue },
     { title: 'Lợi nhuận dự kiến', value: profit, change: `${margin.toFixed(1)}% biên lợi nhuận`, tone: profit >= 0 ? 'green' : 'red', icon: icons.profit },
   ];
 
@@ -40,7 +48,7 @@ export default function KPISection({ data }: { data: DashboardData }) {
                 {card.tone === 'red' ? 'Cảnh báo' : 'Ổn định'}
               </div>
             </div>
-            
+
             <div className="min-w-0">
               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-tertiary)] mb-1.5">{card.title}</div>
               <div className="text-[20px] font-black tracking-tight text-[var(--text-primary)] tabular-nums truncate leading-none mb-3">

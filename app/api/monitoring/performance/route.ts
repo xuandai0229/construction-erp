@@ -1,30 +1,45 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { successResponse, handleApiError } from '@/lib/api-error';
+import { MetricsCollector } from '@/lib/metrics';
 
 export async function GET() {
   try {
     const stats = await prisma.$transaction([
       prisma.auditLog.count({ where: { severity: "CRITICAL" } }),
       prisma.auditLog.count({ where: { severity: "WARNING" } }),
-      prisma.job.count({ where: { status: "FAILED" } }),
       prisma.costRecord.count(),
       prisma.invoice.count()
     ]);
 
-    const [criticalLogs, warningLogs, failedJobs, totalCosts, totalInvoices] = stats;
+    const [criticalLogs, warningLogs, totalCosts, totalInvoices] = stats;
+    
+    // Retrieve authoritative in-memory system metrics
+    const collectorMetrics = MetricsCollector.getMetrics();
 
     return successResponse({
       systemHealth: criticalLogs === 0 ? "HEALTHY" : "CRITICAL",
-      metrics: {
+      databaseMetrics: {
         criticalLogs,
         warningLogs,
-        failedJobs,
         totalCosts,
         totalInvoices
       },
+      performanceMetrics: collectorMetrics,
       timestamp: new Date()
     });
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const { type } = await request.json();
+    if (type) {
+      MetricsCollector.recordExportUsage(type);
+    }
+    return successResponse({ success: true });
   } catch (error) {
     return handleApiError(error);
   }

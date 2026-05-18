@@ -17,23 +17,27 @@ export function initializeFinancialListeners() {
 
   financialEvents.forEach(type => {
     eventBus.subscribe(type, async (event: EnterpriseEvent) => {
-      const { projectId } = event.metadata;
-      
-      LoggerService.info(`[FinancialListener] Invalidate cache for ${type}`, { projectId });
+      try {
+        const { projectId } = event.metadata;
+        
+        LoggerService.info(`[FinancialListener] Invalidate cache for ${type}`, { projectId });
 
-      // 1. Invalidate Project Specific Caches
-      if (projectId) {
-        await CacheService.invalidatePrefix(`reporting:${projectId}`);
-        await CacheService.invalidatePrefix(`wbs:${projectId}`);
-        await CacheService.invalidatePrefix(`aggregation:${projectId}`);
+        // 1. Invalidate Project Specific Caches
+        if (projectId) {
+          await CacheService.invalidatePrefix(`reporting:${projectId}`);
+          await CacheService.invalidatePrefix(`wbs:${projectId}`);
+          await CacheService.invalidatePrefix(`aggregation:${projectId}`);
+        }
+
+        // 2. Invalidate Global Reporting Caches
+        await CacheService.invalidatePrefix('reporting:risk_profiles');
+        await CacheService.invalidatePrefix('reporting:management_scorecard');
+        
+        // 3. Mark for Reconciliation (In a real app, this might queue a job)
+        console.log(`[Reconciliation] Flagging project ${projectId || 'GLOBAL'} for verification.`);
+      } catch (err) {
+        LoggerService.error(`[FinancialListener] Failure in event subscriber for ${type}:`, { error: err, eventId: event.id });
       }
-
-      // 2. Invalidate Global Reporting Caches
-      await CacheService.invalidatePrefix('reporting:risk_profiles');
-      await CacheService.invalidatePrefix('reporting:management_scorecard');
-      
-      // 3. Mark for Reconciliation (In a real app, this might queue a job)
-      console.log(`[Reconciliation] Flagging project ${projectId || 'GLOBAL'} for verification.`);
     });
   });
 }

@@ -1,28 +1,16 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import os from 'os';
+import { StartupValidator } from '@/lib/startup-validator';
 
 export async function GET() {
-  const startTime = Date.now();
-  let dbStatus = 'UP';
-  
-  try {
-    await prisma.$queryRaw`SELECT 1`;
-  } catch (e) {
-    dbStatus = 'DOWN';
-  }
-
-  const duration = Date.now() - startTime;
+  const startup = await StartupValidator.validate();
   
   return NextResponse.json({
-    status: dbStatus === 'UP' ? 'healthy' : 'unhealthy',
+    status: startup.healthy ? 'healthy' : 'unhealthy',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     checks: {
-      database: {
-        status: dbStatus,
-        latency: `${duration}ms`
-      },
+      startup,
       memory: {
         free: os.freemem(),
         total: os.totalmem(),
@@ -35,6 +23,6 @@ export async function GET() {
       }
     }
   }, {
-    status: dbStatus === 'UP' ? 200 : 503
+    status: startup.healthy ? 200 : 503
   });
 }

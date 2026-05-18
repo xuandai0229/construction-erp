@@ -6,7 +6,7 @@ import { headers } from "next/headers";
 async function getServiceOptions() {
   const head = await headers();
   return {
-    userId: "system_internal_admin",
+    userId: head.get("x-user-id") || "system_internal_admin",
     correlationId: head.get("x-correlation-id") || crypto.randomUUID(),
     ipAddress: head.get("x-forwarded-for") || head.get("remote-addr") || undefined,
     userAgent: head.get("user-agent") || undefined,

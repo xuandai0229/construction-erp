@@ -57,8 +57,10 @@ export class FinancialIntelligenceService {
             operationalRisk: 'LOW',
             financialRisk: 'MEDIUM',
             confidenceLevel: 90,
+            confidenceReason: 'Phân tích tỷ trọng chi phí thầu phụ lớn hơn 45% tổng dự toán.',
             blockingSeverity: 'BLOCKER',
-            suggestedBy: 'MarginMonitor'
+            suggestedBy: 'MarginMonitor',
+            traceability: ['BOQ-CONTRACT-01']
           },
           {
             id: `${anomalyId}-REC2`,
@@ -70,8 +72,10 @@ export class FinancialIntelligenceService {
             operationalRisk: 'LOW',
             financialRisk: 'LOW',
             confidenceLevel: 80,
+            confidenceReason: 'Xác thực khối lượng hoàn thành đã ký biên bản nghiệm thu nhưng chưa xuất hóa đơn.',
             blockingSeverity: 'NON_BLOCKER',
-            suggestedBy: 'RevenueIntelligence'
+            suggestedBy: 'RevenueIntelligence',
+            traceability: ['REV-ACC-01']
           }
         ]
       });
@@ -112,8 +116,10 @@ export class FinancialIntelligenceService {
             operationalRisk: 'LOW',
             financialRisk: 'LOW',
             confidenceLevel: 95,
+            confidenceReason: 'Giao dịch vượt mức bình thường 2.5 lần và trên 2.000.000 VND.',
             blockingSeverity: 'NON_BLOCKER',
-            suggestedBy: 'SpikeDetector'
+            suggestedBy: 'SpikeDetector',
+            traceability: [c.id]
           }
         ]
       });
@@ -158,8 +164,10 @@ export class FinancialIntelligenceService {
               operationalRisk: 'MEDIUM',
               financialRisk: 'LOW',
               confidenceLevel: 85,
+              confidenceReason: 'Tỷ lệ chi tiêu cho nhà cung cấp vượt quá ngưỡng giới hạn an toàn 45%.',
               blockingSeverity: 'NON_BLOCKER',
-              suggestedBy: 'VendorIntel'
+              suggestedBy: 'VendorIntel',
+              traceability: []
             }
           ]
         });

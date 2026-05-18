@@ -90,7 +90,115 @@ export class ReconciliationService {
       });
     }
 
+    // 6. ORPHAN JOURNAL LINES & BALANCING CHECK (Batch 5.6)
+    const journalEntries = await prisma.journalEntry.findMany({
+      where: { projectId, deletedAt: null },
+      include: { lines: true }
+    });
+
+    for (const entry of journalEntries) {
+      if (entry.lines.length === 0) {
+        issues.push({
+          type: "ORPHAN_JOURNAL",
+          severity: "CRITICAL",
+          message: `JOURNAL BREACH: Journal entry ${entry.id} (${entry.reference}) has no debit/credit transaction lines.`,
+          expected: 2,
+          actual: 0
+        });
+        continue;
+      }
+
+      const debits = entry.lines.filter(l => l.type === "DEBIT").reduce((s, l) => s.add(safeDecimal(l.amount)), safeDecimal(0));
+      const credits = entry.lines.filter(l => l.type === "CREDIT").reduce((s, l) => s.add(safeDecimal(l.amount)), safeDecimal(0));
+
+      if (!debits.equals(credits)) {
+        issues.push({
+          type: "JOURNAL_IMBALANCE",
+          severity: "CRITICAL",
+          message: `LEDGER BREACH: Journal entry ${entry.id} (${entry.reference}) is imbalanced. Debit (${debits}) != Credit (${credits}).`,
+          diff: debits.sub(credits).toNumber(),
+          expected: debits.toNumber(),
+          actual: credits.toNumber()
+        });
+      }
+    }
+
+    // 7. ORPHAN POSTED COST RECORD CHECK
+    const postedCosts = await prisma.costRecord.findMany({
+      where: { projectId, workflowStatus: "POSTED", deletedAt: null }
+    });
+
+    for (const cost of postedCosts) {
+      const correspondingJournal = journalEntries.find(j => j.sourceId === cost.id && j.sourceType === "COST");
+      if (!correspondingJournal) {
+        issues.push({
+          type: "ORPHAN_POSTED_RECORD",
+          severity: "CRITICAL",
+          message: `INTEGRITY DRIFT: Cost ${cost.id} is marked POSTED but has no active JournalEntry in ledger.`,
+          expected: 1,
+          actual: 0
+        });
+      }
+    }
+
+    // 8. OVERPAYMENT & OVER-INVOICING CHECKS (Batch 5.1)
+    const invoices = await prisma.invoice.findMany({
+      where: { projectId, deletedAt: null },
+      include: { payments: { where: { deletedAt: null } } }
+    });
+
+    for (const inv of invoices) {
+      // Overpayment: Payment sum > Invoice amount
+      const totalPayments = inv.payments.reduce((s, p) => s.add(safeDecimal(p.amount)), safeDecimal(0));
+      const invoiceAmount = safeDecimal(inv.amount);
+
+      if (totalPayments.gt(invoiceAmount)) {
+        issues.push({
+          type: "OVERPAYMENT_DETECTED",
+          severity: "CRITICAL",
+          message: `OVERPAYMENT: Total payments (${totalPayments}) exceeds Invoice amount (${invoiceAmount}) for Invoice ${inv.id}.`,
+          diff: totalPayments.sub(invoiceAmount).toNumber(),
+          expected: invoiceAmount.toNumber(),
+          actual: totalPayments.toNumber()
+        });
+      }
+
+      // Negative Payment check
+      for (const p of inv.payments) {
+        if (Number(p.amount) < 0) {
+          issues.push({
+            type: "NEGATIVE_PAYABLE_PAYMENT",
+            severity: "CRITICAL",
+            message: `NEG PAYABLE: Negative payment amount detected: ${p.amount} in Payment ${p.id}.`,
+            diff: Number(p.amount)
+          });
+        }
+      }
+    }
+
+    // 9. VAT BREAKDOWN CONSISTENCY
+    const allCosts = await prisma.costRecord.findMany({
+      where: { projectId, deletedAt: null }
+    });
+
+    for (const cost of allCosts) {
+      const net = safeDecimal(cost.netAmount || 0);
+      const vat = safeDecimal(cost.vatAmount || 0);
+      const amount = safeDecimal(cost.amount);
+
+      if (net.gt(0) && !net.add(vat).equals(amount)) {
+        issues.push({
+          type: "VAT_DRIFT",
+          severity: "WARNING",
+          message: `VAT DRIFT: Cost ${cost.id} amounts are mathematically inconsistent: Net (${net}) + VAT (${vat}) != Gross (${amount}).`,
+          diff: net.add(vat).sub(amount).toNumber()
+        });
+      }
+    }
+
     if (issues.length > 0) {
+      const { MetricsCollector } = require("@/lib/metrics");
+      MetricsCollector.recordReconciliationFailure();
       await prisma.auditLog.create({
         data: {
           action: "RECONCILIATION_FAILURE",

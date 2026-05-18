@@ -51,7 +51,9 @@ export class FinancialAggregationService {
    * Hardened with persistent caching and collision-safe versioning.
    */
   static async getProjectSnapshot(projectId: string): Promise<ProjectFinancialSnapshot> {
-    return this.rebuildProjectSnapshot(projectId);
+    const cacheKey = `aggregation:${projectId}:snapshot`;
+    const { CacheService } = require("./cache.service");
+    return CacheService.wrap(cacheKey, () => this.rebuildProjectSnapshot(projectId), 15000);
   }
 
   static async rebuildProjectSnapshot(projectId: string): Promise<ProjectFinancialSnapshot> {
@@ -128,45 +130,49 @@ export class FinancialAggregationService {
    * Master entry point for the Decision Support Platform.
    */
   static async getIntelligenceSnapshot(projectId: string): Promise<IntelligenceSnapshot> {
-    const startTime = Date.now();
-    
-    // 1. Get Base Financial Snapshot
-    const snapshot = await this.getProjectSnapshot(projectId);
-    
-    // 2. Fetch Operational Context
-    const eventModel = (prisma as any).domainEvent;
-    const [costs, invoices, pendingEvents, failedEvents] = await Promise.all([
-      prisma.costRecord.findMany({ where: { projectId, deletedAt: null } }),
-      prisma.invoice.findMany({ where: { projectId, deletedAt: null } }),
-      eventModel ? eventModel.count({ where: { projectId, status: "PENDING" } }) : Promise.resolve(0),
-      eventModel ? eventModel.count({ where: { projectId, status: "FAILED" } }) : Promise.resolve(0)
-    ]);
+    const cacheKey = `aggregation:${projectId}:intelligence`;
+    const { CacheService } = require("./cache.service");
+    return CacheService.wrap(cacheKey, async () => {
+      const startTime = Date.now();
+      
+      // 1. Get Base Financial Snapshot
+      const snapshot = await this.getProjectSnapshot(projectId);
+      
+      // 2. Fetch Operational Context
+      const eventModel = (prisma as any).domainEvent;
+      const [costs, invoices, pendingEvents, failedEvents] = await Promise.all([
+        prisma.costRecord.findMany({ where: { projectId, deletedAt: null } }),
+        prisma.invoice.findMany({ where: { projectId, deletedAt: null } }),
+        eventModel ? eventModel.count({ where: { projectId, status: "PENDING" } }) : Promise.resolve(0),
+        eventModel ? eventModel.count({ where: { projectId, status: "FAILED" } }) : Promise.resolve(0)
+      ]);
 
-    // 3. Operational Performance Metrics
-    const metrics = MetricsService.getMetrics();
-    const operational: OperationalMetrics = {
-      rebuildDurationMs: Date.now() - startTime,
-      cacheHitRatio: metrics.cacheHitRatio,
-      pendingEventCount: pendingEvents,
-      failedEventCount: failedEvents,
-      lastSnapshotFreshness: 0,
-      reconciliationMismatchCount: 0
-    };
+      // 3. Operational Performance Metrics
+      const metrics = MetricsService.getMetrics();
+      const operational: OperationalMetrics = {
+        rebuildDurationMs: Date.now() - startTime,
+        cacheHitRatio: metrics.cacheHitRatio,
+        pendingEventCount: pendingEvents,
+        failedEventCount: failedEvents,
+        lastSnapshotFreshness: 0,
+        reconciliationMismatchCount: 0
+      };
 
-    // 4. Run Decision Intelligence Engine
-    const anomalies = FinancialIntelligenceService.detectAnomalies(snapshot, costs as any, invoices as any);
-    const insights = FinancialIntelligenceService.generateInsights(snapshot, costs as any);
-    const health = FinancialIntelligenceService.calculateHealthScore(snapshot, operational, anomalies);
-    const trends = FinancialIntelligenceService.generateTrends(snapshot);
+      // 4. Run Decision Intelligence Engine
+      const anomalies = FinancialIntelligenceService.detectAnomalies(snapshot, costs as any, invoices as any);
+      const insights = FinancialIntelligenceService.generateInsights(snapshot, costs as any);
+      const health = FinancialIntelligenceService.calculateHealthScore(snapshot, operational, anomalies);
+      const trends = FinancialIntelligenceService.generateTrends(snapshot);
 
-    return {
-      ...snapshot,
-      anomalies,
-      insights,
-      health,
-      operational,
-      trends
-    };
+      return {
+        ...snapshot,
+        anomalies,
+        insights,
+        health,
+        operational,
+        trends
+      };
+    }, 15000);
   }
 
   /**
@@ -507,67 +513,71 @@ export class FinancialAggregationService {
    * This guarantees Total WBS Actual == Accounting Reality Actual.
    */
   static async getWBSAggregation(projectId: string): Promise<WBSAggregationResult> {
-    const [items, costs, budgets] = await Promise.all([
-      prisma.wBSItem.findMany({ where: { projectId, deletedAt: null }, orderBy: { sortOrder: 'asc' } }),
-      prisma.costRecord.findMany({ where: { projectId, deletedAt: null } }),
-      prisma.budgetRecord.findMany({ where: { projectId, deletedAt: null } })
-    ]);
+    const cacheKey = `wbs:${projectId}:aggregation`;
+    const { CacheService } = require("./cache.service");
+    return CacheService.wrap(cacheKey, async () => {
+      const [items, costs, budgets] = await Promise.all([
+        prisma.wBSItem.findMany({ where: { projectId, deletedAt: null }, orderBy: { sortOrder: 'asc' } }),
+        prisma.costRecord.findMany({ where: { projectId, deletedAt: null } }),
+        prisma.budgetRecord.findMany({ where: { projectId, deletedAt: null } })
+      ]);
 
-    const wbsIds = new Set(items.map(i => i.id));
-    const approvedCosts = costs.filter(c => ["APPROVED", "POSTED", "LOCKED"].includes(c.workflowStatus || c.approvalStatus));
-    
-    // Find Orphans (Costs not linked to active WBS)
-    const orphanCosts = approvedCosts.filter(c => !c.wbsId || !wbsIds.has(c.wbsId));
-    const orphanTotalD = orphanCosts.reduce((s, c) => s.add(safeDecimal(c.amount)), safeDecimal(0));
+      const wbsIds = new Set(items.map(i => i.id));
+      const approvedCosts = costs.filter(c => ["APPROVED", "POSTED", "LOCKED"].includes(c.workflowStatus || c.approvalStatus));
+      
+      // Find Orphans (Costs not linked to active WBS)
+      const orphanCosts = approvedCosts.filter(c => !c.wbsId || !wbsIds.has(c.wbsId));
+      const orphanTotalD = orphanCosts.reduce((s, c) => s.add(safeDecimal(c.amount)), safeDecimal(0));
 
-    // Initial Tree (using legacy ProjectFinance for rollup)
-    const tree = ProjectFinance.calculateWBSTree(
-      items as unknown as WBSItem[], 
-      approvedCosts as unknown as CostRecord[], 
-      budgets as unknown as BudgetRecord[]
-    );
+      // Initial Tree (using legacy ProjectFinance for rollup)
+      const tree = ProjectFinance.calculateWBSTree(
+        items as unknown as WBSItem[], 
+        approvedCosts as unknown as CostRecord[], 
+        budgets as unknown as BudgetRecord[]
+      );
 
-    // Add Virtual Node if Orphans exist
-    if (orphanTotalD.gt(0)) {
-      tree.push({
-        id: "virtual-unallocated",
-        name: "⚠️ CHI PHÍ CHƯA PHÂN BỔ (ORPHANS)",
-        code: "UNALLOC",
-        budget: 0,
-        actual: orphanTotalD.toNumber(),
-        variance: orphanTotalD.negated().toNumber(),
-        percentage: 100,
-        revenue: 0,
-        profit: orphanTotalD.negated().toNumber(),
-        status: 'over',
-        level: 0,
-        children: [],
-        isExpanded: true,
-        projectId,
-        sortOrder: 999,
-        budgetAmount: 0,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        parentId: null
-      });
-    }
-
-    const approvedTotalD = approvedCosts.reduce((s, c) => s.add(safeDecimal(c.amount)), safeDecimal(0));
-    
-    // Authoritative totals from tree roots
-    const totalBudgetD = tree.filter(n => n.parentId === null).reduce((s, n) => s.add(safeDecimal(n.budget)), safeDecimal(0));
-    const totalActualD = tree.filter(n => n.parentId === null).reduce((s, n) => s.add(safeDecimal(n.actual)), safeDecimal(0));
-
-    return {
-      tree,
-      stats: {
-        totalBudget: totalBudgetD.toNumber(),
-        totalActual: totalActualD.toNumber(),
-        totalApproved: approvedTotalD.toNumber(),
-        orphanTotal: orphanTotalD.toNumber(),
-        healthScore: safePercent(approvedCosts.length - orphanCosts.length, approvedCosts.length),
-        progress: safePercent(totalActualD, totalBudgetD)
+      // Add Virtual Node if Orphans exist
+      if (orphanTotalD.gt(0)) {
+        tree.push({
+          id: "virtual-unallocated",
+          name: "⚠️ CHI PHÍ CHƯA PHÂN BỔ (ORPHANS)",
+          code: "UNALLOC",
+          budget: 0,
+          actual: orphanTotalD.toNumber(),
+          variance: orphanTotalD.negated().toNumber(),
+          percentage: 100,
+          revenue: 0,
+          profit: orphanTotalD.negated().toNumber(),
+          status: 'over',
+          level: 0,
+          children: [],
+          isExpanded: true,
+          projectId,
+          sortOrder: 999,
+          budgetAmount: 0,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          parentId: null
+        });
       }
-    };
+
+      const approvedTotalD = approvedCosts.reduce((s, c) => s.add(safeDecimal(c.amount)), safeDecimal(0));
+      
+      // Authoritative totals from tree roots
+      const totalBudgetD = tree.filter(n => n.parentId === null).reduce((s, n) => s.add(safeDecimal(n.budget)), safeDecimal(0));
+      const totalActualD = tree.filter(n => n.parentId === null).reduce((s, n) => s.add(safeDecimal(n.actual)), safeDecimal(0));
+
+      return {
+        tree,
+        stats: {
+          totalBudget: totalBudgetD.toNumber(),
+          totalActual: totalActualD.toNumber(),
+          totalApproved: approvedTotalD.toNumber(),
+          orphanTotal: orphanTotalD.toNumber(),
+          healthScore: safePercent(approvedCosts.length - orphanCosts.length, approvedCosts.length),
+          progress: safePercent(totalActualD, totalBudgetD)
+        }
+      };
+    }, 15000);
   }
 }

@@ -9,16 +9,68 @@ interface CacheEntry {
 export class CacheService {
   private static cache = new Map<string, CacheEntry>();
   private static DEFAULT_TTL = 300000; // 5 minutes
+  private static MAX_CACHE_SIZE = 5000; // Hard memory limit
+  private static sweepInterval: NodeJS.Timeout | null = null;
+
+  static {
+    // Principal-grade automatic memory management: Start background sweeper
+    if (typeof global !== 'undefined') {
+      this.startSweeper();
+    }
+  }
+
+  private static startSweeper() {
+    if (this.sweepInterval) return;
+    
+    // Sweep expired keys every 5 minutes to prevent memory leaks
+    this.sweepInterval = setInterval(() => {
+      this.sweepExpired();
+    }, 300000); // 5 minutes
+    
+    // Prevent the interval from keeping the Node process alive in tests/scripts
+    if (this.sweepInterval.unref) {
+      this.sweepInterval.unref();
+    }
+  }
+
+  /**
+   * Performs a sweep of all expired keys to prevent memory leaks
+   */
+  static sweepExpired() {
+    const now = Date.now();
+    let count = 0;
+    for (const [key, entry] of this.cache.entries()) {
+      if (now > entry.expiry) {
+        this.cache.delete(key);
+        count++;
+      }
+    }
+    if (count > 0) {
+      LoggerService.info(`[CacheService] Swept ${count} expired cache entries from memory.`);
+    }
+  }
 
   /**
    * Sets a value in cache
    */
   static async set(key: string, value: any, ttlMs: number = this.DEFAULT_TTL) {
+    // Eviction policy: If size exceeds limit, run sweep first
+    if (this.cache.size >= this.MAX_CACHE_SIZE) {
+      this.sweepExpired();
+      
+      // If still over limit, evict the oldest key (LRU fallback)
+      if (this.cache.size >= this.MAX_CACHE_SIZE) {
+        const oldestKey = this.cache.keys().next().value;
+        if (oldestKey !== undefined) {
+          this.cache.delete(oldestKey);
+        }
+      }
+    }
+
     this.cache.set(key, {
       value,
       expiry: Date.now() + ttlMs
     });
-    // In a real enterprise app, we might persist this to DB or Redis here.
   }
 
   /**

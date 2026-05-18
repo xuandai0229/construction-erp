@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useERPStore } from '@/store/erpStore';
 import Sidebar from '@/app/components/Sidebar';
@@ -21,7 +21,7 @@ const costTypes = Object.keys(costType_LABELS) as CostType[];
 
 // Define Table Components outside to ensure stability and avoid infinite loops
 const TableComponents = {
-  Table: (props: any) => <table {...props} className="erp-table w-full min-w-[1000px] table-fixed" />,
+  Table: (props: any) => <table {...props} className="erp-table w-full min-w-[1600px] table-fixed" />,
   TableHead: (props: any) => <thead {...props} className="bg-[var(--table-head-bg)] z-30 sticky top-0" />,
 };
 
@@ -46,6 +46,27 @@ export default function CostsPage() {
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [selectedCost, setSelectedCost] = useState<CostRecord | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
+
+  // Audit Trail states (Batch 5.2)
+  const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [loadingAudit, setLoadingAudit] = useState(false);
+
+  useEffect(() => {
+    if (selectedCost) {
+      setLoadingAudit(true);
+      fetch(`/api/audit?entity=CostRecord&entityId=${selectedCost.id}`)
+        .then(res => res.json())
+        .then(res => {
+          if (res.success) {
+            setAuditLogs(res.data || []);
+          }
+        })
+        .catch(err => console.warn('Failed to fetch audit logs', err))
+        .finally(() => setLoadingAudit(false));
+    } else {
+      setAuditLogs([]);
+    }
+  }, [selectedCost]);
 
   const filteredCosts = useMemo(() => {
     return costs.filter(c => {
@@ -175,49 +196,80 @@ export default function CostsPage() {
                       <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[280px]">Nhà cung cấp & Nội dung</th>
                       <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[200px]">Hạng mục (WBS)</th>
                       <th className={`${COL_WIDTHS.STATUS} py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)]`}>Loại</th>
-                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[80px]">SL</th>
-                      <th className={`${COL_WIDTHS.FINANCIAL} py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)]`}>Số tiền</th>
+                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[60px]">SL</th>
+                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[110px]">Đơn giá</th>
+                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[120px]">Chưa thuế</th>
+                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[100px]">Thuế VAT</th>
+                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[110px]">Bảo hành</th>
+                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[130px]">Hạch toán</th>
+                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] w-[130px]">Thực thanh toán</th>
                       <th className={`${COL_WIDTHS.STATUS} py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)]`}>Trạng thái</th>
                       <th className={`${COL_WIDTHS.ACTIONS} py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-[var(--border)]`}>Thao tác</th>
                     </tr>
                   )}
-                  itemContent={(i, c) => (
-                    <>
-                      <td className={`${COL_WIDTHS.DATE} py-3 px-4 whitespace-nowrap font-bold text-[var(--text-muted)] border-r border-[var(--border)]`}>{formatDate(c.date)}</td>
-                      <td className="py-3 px-4 border-r border-[var(--border)] w-[280px]">
-                        <div className="font-bold text-[var(--text-primary)] truncate">{c.supplier || 'Nhiều nhà CC'}</div>
-                        <div className="text-[11px] text-[var(--text-muted)] font-medium truncate mt-0.5">{c.note}</div>
-                      </td>
-                      <td className="py-3 px-4 border-r border-[var(--border)] w-[200px]">
-                        <div className="text-[12px] font-bold text-[var(--text-secondary)] truncate">{wbsList.find(w => w.id === c.wbsId)?.name || 'N/A'}</div>
-                      </td>
-                      <td className={`${COL_WIDTHS.STATUS} py-3 px-4 border-r border(--border)`}>
-                        <span className="inline-flex items-center whitespace-nowrap rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-tighter bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)]">
-                          {costType_LABELS[c.costType] || c.costType}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-right tabular-nums font-bold text-[var(--text-secondary)] border-r border-[var(--border)] w-[80px]">{c.quantity || 1}</td>
-                      <td className={`${COL_WIDTHS.FINANCIAL} py-3 px-4 text-right tabular-nums font-bold text-[var(--text-primary)] border-r border-[var(--border)]`}>{formatVnd(c.amount)}</td>
-                      <td className={`${COL_WIDTHS.STATUS} py-3 px-4 text-center border-r border-[var(--border)]`}>
-                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest ${
-                          c.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/30' : 'bg-rose-500/10 text-rose-500 ring-1 ring-rose-500/30'
-                        }`}>
-                          <span className={`h-1.5 w-1.5 rounded-full ${c.status === 'paid' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]' : 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]'}`}></span>
-                          {c.status === 'paid' ? 'Đã trả' : 'Công nợ'}
-                        </span>
-                      </td>
-                      <td className={`${COL_WIDTHS.ACTIONS} text-center`}>
-                        <div className="flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button 
-                            className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--text-primary)] transition-colors"
-                            onClick={(e) => { e.stopPropagation(); setSelectedCost(c); }}
-                          >
-                            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
-                          </button>
-                        </div>
-                      </td>
-                    </>
-                  )}
+                  itemContent={(i, c) => {
+                    const vatRate = c.vatRate !== undefined ? c.vatRate : 10;
+                    const retentionRate = c.retentionRate !== undefined ? c.retentionRate : 0;
+                    const net = Math.round(c.netAmount || c.amount / (1 + vatRate / 100));
+                    const vat = Math.round(c.vatAmount || (c.amount - net));
+                    const retention = Math.round(c.retentionAmount || (c.amount * (retentionRate / 100)));
+                    const payable = Math.round(c.amount - retention);
+
+                    return (
+                      <>
+                        <td className={`${COL_WIDTHS.DATE} py-3 px-4 whitespace-nowrap font-bold text-[var(--text-muted)] border-r border-[var(--border)]`}>{formatDate(c.date)}</td>
+                        <td className="py-3 px-4 border-r border-[var(--border)] w-[280px]">
+                          <div className="font-bold text-[var(--text-primary)] truncate">{c.supplier || 'Nhiều nhà CC'}</div>
+                          <div className="text-[11px] text-[var(--text-muted)] font-medium truncate mt-0.5">{c.note}</div>
+                        </td>
+                        <td className="py-3 px-4 border-r border-[var(--border)] w-[200px]">
+                          <div className="text-[12px] font-bold text-[var(--text-secondary)] truncate">{wbsList.find(w => w.id === c.wbsId)?.name || 'N/A'}</div>
+                        </td>
+                        <td className={`${COL_WIDTHS.STATUS} py-3 px-4 border-r border-[var(--border)]`}>
+                          <span className="inline-flex items-center whitespace-nowrap rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-tighter bg-[var(--secondary)] text-[var(--text-muted)] border border-[var(--border)]">
+                            {costType_LABELS[c.costType] || c.costType}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-right tabular-nums font-bold text-[var(--text-secondary)] border-r border-[var(--border)] w-[60px]">{c.quantity || 1}</td>
+                        <td className="py-3 px-4 text-right tabular-nums font-bold text-[var(--text-secondary)] border-r border-[var(--border)] w-[110px]">{formatVnd(c.unitPrice || c.amount)}</td>
+                        
+                        {/* VAT Breakdowns */}
+                        <td className="py-3 px-4 text-right tabular-nums font-medium text-[var(--text-secondary)] border-r border-[var(--border)] w-[120px]">{formatVnd(net)}</td>
+                        <td className="py-3 px-4 text-right tabular-nums font-medium text-[var(--text-secondary)] border-r border-[var(--border)] w-[100px]">
+                          <div className="text-[var(--text-primary)] font-bold">{formatVnd(vat)}</div>
+                          <div className="text-[9px] text-[var(--text-muted)] mt-0.5">{vatRate}% VAT</div>
+                        </td>
+                        
+                        {/* Subcontractor Retention */}
+                        <td className="py-3 px-4 text-right tabular-nums font-medium text-amber-500 border-r border-[var(--border)] w-[110px]">
+                          <div>-{formatVnd(retention)}</div>
+                          <div className="text-[9px] mt-0.5">{retentionRate}% Bảo hành</div>
+                        </td>
+
+                        <td className="py-3 px-4 text-right tabular-nums font-black text-[var(--text-primary)] border-r border-[var(--border)] w-[130px]">{formatVnd(c.amount)}</td>
+                        <td className="py-3 px-4 text-right tabular-nums font-black text-emerald-500 border-r border-[var(--border)] w-[130px]">{formatVnd(payable)}</td>
+
+                        <td className={`${COL_WIDTHS.STATUS} py-3 px-4 text-center border-r border-[var(--border)]`}>
+                          <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest ${
+                            c.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/30' : 'bg-rose-500/10 text-rose-500 ring-1 ring-rose-500/30'
+                          }`}>
+                            <span className={`h-1.5 w-1.5 rounded-full ${c.status === 'paid' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]' : 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]'}`}></span>
+                            {c.status === 'paid' ? 'Đã trả' : 'Công nợ'}
+                          </span>
+                        </td>
+                        <td className={`${COL_WIDTHS.ACTIONS} text-center`}>
+                          <div className="flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button 
+                              className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--text-primary)] transition-colors"
+                              onClick={(e) => { e.stopPropagation(); setSelectedCost(c); }}
+                            >
+                              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                            </button>
+                          </div>
+                        </td>
+                      </>
+                    );
+                  }}
                 />
               )}
             </div>
@@ -251,6 +303,61 @@ export default function CostsPage() {
               <h2 className="text-2xl font-bold text-[var(--text-primary)]">{selectedCost.supplier || 'Nhiều nhà CC'}</h2>
               <p className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-1">Mã: {selectedCost.id.slice(0, 12).toUpperCase()}</p>
             </div>
+
+            {/* Stepper Timeline Visualizer */}
+            <div className="mb-6 p-4 rounded-xl bg-[var(--secondary)]/40 border border-[var(--border)]">
+              <div className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] mb-3">Quy trình phê duyệt</div>
+              <div className="flex items-center justify-between relative">
+                {/* Stepper Line */}
+                <div className="absolute left-1 right-1 top-[13px] h-[2px] bg-[var(--border)] z-0" />
+                
+                {/* Steps */}
+                {[
+                  { key: "DRAFT", label: "Nháp" },
+                  { key: "PENDING_PM", label: "PM duyệt" },
+                  { key: "PENDING_FINANCE", label: "Kế toán" },
+                  { key: "APPROVED", label: "Đã duyệt" },
+                  { key: "POSTED", label: "Ghi sổ" }
+                ].map((step, idx) => {
+                  const states = ["DRAFT", "PENDING_PM", "PENDING_FINANCE", "APPROVED", "POSTED"];
+                  const currentIdx = states.indexOf(selectedCost.workflowStatus);
+                  const stepIdx = states.indexOf(step.key);
+                  const isCompleted = currentIdx >= stepIdx && selectedCost.workflowStatus !== "REJECTED" && selectedCost.workflowStatus !== "REVERSED";
+                  const isActive = selectedCost.workflowStatus === step.key;
+                  
+                  return (
+                    <div key={step.key} className="flex flex-col items-center z-10">
+                      <div className={`h-7 w-7 rounded-full flex items-center justify-center font-bold text-[10px] transition-all shadow-sm ${
+                        isActive 
+                          ? 'bg-blue-600 text-white ring-4 ring-blue-600/20' 
+                          : isCompleted 
+                            ? 'bg-emerald-600 text-white' 
+                            : 'bg-[var(--card)] border border-[var(--border)] text-[var(--text-muted)]'
+                      }`}>
+                        {isCompleted && !isActive ? (
+                          <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3.5"><polyline points="20 6 9 17 4 12" /></svg>
+                        ) : (
+                          idx + 1
+                        )}
+                      </div>
+                      <span className={`text-[8.5px] font-black uppercase tracking-wider mt-1.5 ${
+                        isActive ? 'text-blue-500' : isCompleted ? 'text-emerald-500' : 'text-[var(--text-muted)]'
+                      }`}>{step.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              
+              {/* Handle special states like REJECTED or REVERSED */}
+              {(selectedCost.workflowStatus === "REJECTED" || selectedCost.workflowStatus === "REVERSED") && (
+                <div className={`mt-3 p-2 rounded text-center text-[10px] font-black uppercase tracking-wider ${
+                  selectedCost.workflowStatus === "REJECTED" ? "bg-rose-500/10 text-rose-500" : "bg-purple-500/10 text-purple-500"
+                }`}>
+                  {selectedCost.workflowStatus === "REJECTED" ? "⚠️ Chứng từ bị từ chối / trả lại" : "🔄 Bút toán đảo / Hoàn bút toán"}
+                </div>
+              )}
+            </div>
+
             <div className="grid grid-cols-2 gap-6 mb-8">
               <div>
                 <label className="erp-label">Ngày ghi nhận</label>
@@ -269,8 +376,8 @@ export default function CostsPage() {
                 <div className="text-[13px] font-bold text-[var(--text-primary)] tabular-nums">{(selectedCost.unitPrice || selectedCost.amount).toLocaleString('vi-VN')} ₫</div>
               </div>
             </div>
-            <div className="mb-8 p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
-              <div className="flex items-center justify-between mb-2">
+            <div className="mb-8 p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)] space-y-3">
+              <div className="flex items-center justify-between mb-1">
                 <label className="erp-label mb-0">Trạng thái sổ cái</label>
                 <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded ${
                   selectedCost.workflowStatus === 'POSTED' ? 'bg-emerald-500/20 text-emerald-500' : 
@@ -281,80 +388,244 @@ export default function CostsPage() {
                    selectedCost.workflowStatus === 'DRAFT' ? 'Bản nháp' : 'Chờ duyệt'}
                 </span>
               </div>
-              <label className="erp-label">Tổng cộng</label>
-              <div className="text-3xl font-bold text-[var(--text-accent)] tabular-nums">{selectedCost.amount.toLocaleString('vi-VN')} <span className="text-[11px] text-[var(--text-muted)] uppercase">VNĐ</span></div>
-            </div>
-
-            <div className="flex flex-col gap-4 mt-8 pt-6 border-t border-[var(--border)]">
-              <div className="flex gap-4">
-                <button 
-                  onClick={() => setShowAddModal(true)}
-                  className="flex-1 erp-btn bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-600/20"
-                >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-                  Chỉnh sửa
-                </button>
-
-                <button 
-                  onClick={async () => {
-                    if (confirm('Bạn có chắc chắn muốn XÓA chi phí này? Hệ thống sẽ tạo bút toán đảo nếu đã post sổ cái.')) {
-                      try {
-                        const res = await fetch(`/api/costs/${selectedCost.id}`, {
-                          method: 'DELETE',
-                          headers: { 'x-user-id': 'admin' }
-                        });
-                        if (res.ok) {
-                          queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(currentProjectId) });
-                          queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(currentProjectId), 'stats'] });
-                          alert('Đã xóa thành công!');
-                          setSelectedCost(null);
-                        } else {
-                          const err = await res.json();
-                          alert('Lỗi: ' + err.error);
-                        }
-                      } catch (e) {
-                        alert('Lỗi kết nối');
-                      }
-                    }
-                  }}
-                  className="flex-1 erp-btn bg-red-600 text-white hover:bg-red-500 shadow-lg shadow-red-600/20"
-                >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
-                  Xóa bỏ
-                </button>
-              </div>
               
-              {selectedCost.workflowStatus === 'DRAFT' || selectedCost.workflowStatus === 'PENDING' ? (
-                <button 
-                  onClick={async () => {
-                    if (confirm('Bạn có chắc chắn muốn phê duyệt chi phí này và đẩy vào sổ cái?')) {
-                      try {
-                        const res = await fetch(`/api/costs/${selectedCost.id}/approve`, {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json', 'x-user-id': 'admin' },
-                          body: JSON.stringify({ status: 'POSTED' })
-                        });
-                        if (res.ok) {
-                          queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(currentProjectId) });
-                          queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(currentProjectId), 'stats'] });
-                          alert('Phê duyệt thành công!');
-                          setSelectedCost(null);
-                        } else {
-                          const err = await res.json();
-                          alert('Lỗi: ' + err.error);
-                        }
-                      } catch (e) {
-                        alert('Lỗi kết nối');
-                      }
-                    }
-                  }}
-                  className="w-full erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-600/20"
-                >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
-                  Duyệt & Post Sổ Cái
-                </button>
-              ) : null}
+              {/* Financial Breakdowns */}
+              <div className="border-t border-[var(--border)] pt-2 space-y-1.5 text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
+                <div className="flex justify-between">
+                  <span>Trước thuế:</span>
+                  <span className="font-extrabold text-[var(--text-secondary)] tabular-nums">{Math.round(selectedCost.netAmount || selectedCost.amount / (1 + (selectedCost.vatRate || 10) / 100)).toLocaleString('vi-VN')} ₫</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Thuế VAT ({selectedCost.vatRate || 10}%):</span>
+                  <span className="font-extrabold text-[var(--text-secondary)] tabular-nums">{Math.round(selectedCost.vatAmount || (selectedCost.amount - (selectedCost.netAmount || selectedCost.amount / (1 + (selectedCost.vatRate || 10) / 100)))).toLocaleString('vi-VN')} ₫</span>
+                </div>
+                <div className="flex justify-between border-b border-[var(--border)] pb-2 mb-2">
+                  <span>Giữ lại bảo hành ({selectedCost.retentionRate || 0}%):</span>
+                  <span className="font-extrabold text-amber-500 tabular-nums">-{Math.round(selectedCost.retentionAmount || 0).toLocaleString('vi-VN')} ₫</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="erp-label mb-0.5">Tổng hạch toán</label>
+                <div className="text-3xl font-black text-[var(--text-accent)] tabular-nums">{selectedCost.amount.toLocaleString('vi-VN')} <span className="text-[11px] text-[var(--text-muted)] uppercase">VNĐ</span></div>
+              </div>
+
+              <div className="flex justify-between border-t border-[var(--border)] pt-2 mt-1 text-xs">
+                <span className="text-emerald-500 font-extrabold uppercase tracking-widest text-[10px]">Thực thanh toán đợt:</span>
+                <span className="font-black text-emerald-500 tabular-nums">{Math.round(selectedCost.amount - (selectedCost.retentionAmount || 0)).toLocaleString('vi-VN')} ₫</span>
+              </div>
             </div>
+
+            {/* Audit Trail Section (Batch 5.2) */}
+            <div className="mt-6 border-t border-[var(--border)] pt-4">
+              <div className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] mb-3 flex items-center gap-1.5">
+                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                Nhật ký kiểm toán (Audit Trail)
+              </div>
+              {loadingAudit ? (
+                <div className="text-[11px] text-[var(--text-muted)] italic animate-pulse">Đang tải nhật ký...</div>
+              ) : auditLogs.length === 0 ? (
+                <div className="text-[11px] text-[var(--text-muted)] italic">Không có lịch sử thay đổi ghi nhận.</div>
+              ) : (
+                <div className="space-y-2 max-h-[140px] overflow-y-auto pr-1 scrollbar-thin">
+                  {auditLogs.map((log: any) => (
+                    <div key={log.id} className="text-[11px] p-2.5 rounded-lg bg-[var(--secondary)]/45 border border-[var(--border)]">
+                      <div className="flex justify-between font-bold text-[var(--text-secondary)]">
+                        <span className="uppercase text-[9px] tracking-wider text-blue-500">{log.action}</span>
+                        <span className="text-[10px] text-[var(--text-muted)] tabular-nums">{new Date(log.timestamp).toLocaleString('vi-VN')}</span>
+                      </div>
+                      <div className="text-[var(--text-primary)] font-semibold mt-1">
+                        Người thực hiện: <span className="font-bold text-blue-400">{log.user?.name || log.userId || 'Hệ thống'}</span>
+                      </div>
+                      {log.reason && (
+                        <div className="text-[10px] text-amber-500 italic mt-0.5">Lý do: {log.reason}</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Transition handler function inside UI markup to satisfy React lexical scoping */}
+            {(() => {
+              const handleTransition = async (nextStatus: string, actionLabel: string) => {
+                if (confirm(`Bạn có chắc chắn muốn thực hiện hành động "${actionLabel}"?`)) {
+                  try {
+                    const res = await fetch(`/api/costs/${selectedCost.id}/approve`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json', 'x-user-id': 'admin' },
+                      body: JSON.stringify({ status: nextStatus })
+                    });
+                    if (res.ok) {
+                      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(currentProjectId) });
+                      queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(currentProjectId), 'stats'] });
+                      alert(`${actionLabel} thành công!`);
+                      setSelectedCost(null);
+                    } else {
+                      const err = await res.json();
+                      alert('Lỗi: ' + err.error);
+                    }
+                  } catch (e) {
+                    alert('Lỗi kết nối');
+                  }
+                }
+              };
+
+              return (
+                <div className="flex flex-col gap-4 mt-8 pt-6 border-t border-[var(--border)]">
+                  <div className="flex gap-4">
+                    <button 
+                      disabled={selectedCost.workflowStatus !== 'DRAFT' && selectedCost.workflowStatus !== 'REJECTED'}
+                      onClick={() => setShowAddModal(true)}
+                      className="flex-1 erp-btn bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-600/20 disabled:opacity-30 disabled:pointer-events-none"
+                    >
+                      <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                      Chỉnh sửa
+                    </button>
+
+                    <button 
+                      disabled={selectedCost.workflowStatus !== 'DRAFT' && selectedCost.workflowStatus !== 'REJECTED'}
+                      onClick={async () => {
+                        if (confirm('Bạn có chắc chắn muốn XÓA chi phí này?')) {
+                          try {
+                            const res = await fetch(`/api/costs/${selectedCost.id}`, {
+                              method: 'DELETE',
+                              headers: { 'x-user-id': 'admin' }
+                            });
+                            if (res.ok) {
+                              queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(currentProjectId) });
+                              queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(currentProjectId), 'stats'] });
+                              alert('Đã xóa thành công!');
+                              setSelectedCost(null);
+                            } else {
+                              const err = await res.json();
+                              alert('Lỗi: ' + err.error);
+                            }
+                          } catch (e) {
+                            alert('Lỗi kết nối');
+                          }
+                        }
+                      }}
+                      className="flex-1 erp-btn bg-red-600 text-white hover:bg-red-500 shadow-lg shadow-red-600/20 disabled:opacity-30 disabled:pointer-events-none"
+                    >
+                      <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+                      Xóa bỏ
+                    </button>
+                  </div>
+
+                  {/* Action Buttons for Workflow Status Transitions */}
+                  <div className="flex flex-col gap-2 mt-2">
+                    <div className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] mb-1">Nghiệp vụ phê duyệt</div>
+                    
+                    {selectedCost.workflowStatus === 'DRAFT' && (
+                      <div className="flex gap-2">
+                        <button 
+                          onClick={() => handleTransition('PENDING_PM', 'Trình duyệt PM')}
+                          className="flex-1 erp-btn bg-blue-600 text-white hover:bg-blue-500 shadow-sm"
+                        >
+                          Trình duyệt PM
+                        </button>
+                        <button 
+                          onClick={() => handleTransition('PENDING_FINANCE', 'Gửi thẳng Kế toán')}
+                          className="flex-1 erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm"
+                        >
+                          Trình Kế Toán
+                        </button>
+                      </div>
+                    )}
+
+                    {selectedCost.workflowStatus === 'PENDING_PM' && (
+                      <div className="flex gap-2">
+                        <button 
+                          onClick={() => handleTransition('PENDING_FINANCE', 'Duyệt & Chuyển Kế toán')}
+                          className="flex-1 erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm"
+                        >
+                          Duyệt chuyển Kế toán
+                        </button>
+                        <button 
+                          onClick={() => handleTransition('REJECTED', 'Từ chối')}
+                          className="flex-1 erp-btn bg-rose-600 text-white hover:bg-rose-500 shadow-sm"
+                        >
+                          Từ chối
+                        </button>
+                      </div>
+                    )}
+
+                    {selectedCost.workflowStatus === 'PENDING_FINANCE' && (
+                      <div className="flex flex-col gap-2">
+                        <div className="flex gap-2">
+                          <button 
+                            onClick={() => handleTransition('APPROVED', 'Phê duyệt chi phí')}
+                            className="flex-1 erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm"
+                          >
+                            Phê duyệt
+                          </button>
+                          <button 
+                            onClick={() => handleTransition('PENDING_DIRECTOR', 'Trình Giám đốc phê duyệt')}
+                            className="flex-1 erp-btn bg-amber-600 text-white hover:bg-amber-500 shadow-sm"
+                          >
+                            Trình Giám Đốc
+                          </button>
+                        </div>
+                        <button 
+                          onClick={() => handleTransition('REJECTED', 'Từ chối')}
+                          className="w-full erp-btn bg-rose-600 text-white hover:bg-rose-500 shadow-sm"
+                        >
+                          Từ chối
+                        </button>
+                      </div>
+                    )}
+
+                    {selectedCost.workflowStatus === 'PENDING_DIRECTOR' && (
+                      <div className="flex gap-2">
+                        <button 
+                          onClick={() => handleTransition('APPROVED', 'Phê duyệt')}
+                          className="flex-1 erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm"
+                        >
+                          Phê duyệt
+                        </button>
+                        <button 
+                          onClick={() => handleTransition('REJECTED', 'Từ chối')}
+                          className="flex-1 erp-btn bg-rose-600 text-white hover:bg-rose-500 shadow-sm"
+                        >
+                          Từ chối
+                        </button>
+                      </div>
+                    )}
+
+                    {selectedCost.workflowStatus === 'APPROVED' && (
+                      <button 
+                        onClick={() => handleTransition('POSTED', 'Ghi sổ cái')}
+                        className="w-full erp-btn bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-500/20"
+                      >
+                        Ghi sổ cái kế toán
+                      </button>
+                    )}
+
+                    {selectedCost.workflowStatus === 'POSTED' && (
+                      <button 
+                        onClick={() => handleTransition('REVERSED', 'Hoàn bút toán')}
+                        className="w-full erp-btn bg-purple-600 text-white hover:bg-purple-500 shadow-sm"
+                      >
+                        Hoàn bút toán
+                      </button>
+                    )}
+
+                    {selectedCost.workflowStatus === 'REJECTED' && (
+                      <button 
+                        onClick={() => handleTransition('DRAFT', 'Đưa về Nháp')}
+                        className="w-full erp-btn bg-gray-600 text-white hover:bg-gray-500 shadow-sm"
+                      >
+                        Đưa về Nháp để chỉnh sửa
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}

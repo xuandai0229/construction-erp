@@ -79,6 +79,11 @@ export interface CostRecord {
   updatedAt: string;
   workflowStatus: string;
   approvalStatus: string;
+  vatRate?: number;
+  vatAmount?: number;
+  netAmount?: number;
+  retentionRate?: number;
+  retentionAmount?: number;
 }
 
 export interface BudgetRecord {
