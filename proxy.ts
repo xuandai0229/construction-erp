@@ -1,59 +1,109 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function proxy(request: NextRequest) {
-  // We can't directly read Zustand store here because middleware runs on Edge.
-  // Instead, in a real app, we'd check a JWT cookie. 
-  // For this safe patch without major architectural changes, we will let the frontend handle the hard block (which we already did).
-  // However, we can add a basic security header check if we wanted.
-  
-  // As a simulation of a secure middleware for the 'SAFE PATCH':
-  // If there's an API request attempting to modify data, we should verify auth.
-  // We'll trust the client state for now as requested by the "NO MAJOR REFACTOR" rule,
-  // but we enforce route protection on /system.
-  
+type Session = {
+  userId: string;
+  role: string;
+  expiresAt: number;
+};
+
+const MUTATION_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
+const PUBLIC_API_PREFIXES = ['/api/auth/session', '/api/health'];
+const WRITE_ROLES = new Set(['SUPER_ADMIN', 'ADMIN', 'CFO', 'ACCOUNTANT', 'MANAGER', 'BRANCH_DIRECTOR', 'GROUP_DIRECTOR']);
+const SYSTEM_ROLES = new Set(['SUPER_ADMIN']);
+
+function base64UrlToBytes(value: string) {
+  const normalized = value.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = normalized.padEnd(normalized.length + ((4 - (normalized.length % 4)) % 4), '=');
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}
+
+function bytesToBase64Url(bytes: ArrayBuffer) {
+  let binary = '';
+  const array = new Uint8Array(bytes);
+  for (let i = 0; i < array.length; i++) binary += String.fromCharCode(array[i]);
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+
+async function verifySessionToken(token: string | undefined): Promise<Session | null> {
+  if (!token) return null;
+  const [payloadBase64, signature] = token.split('.');
+  if (!payloadBase64 || !signature) return null;
+
+  const secret = process.env.SESSION_SECRET || 'erp-enterprise-vault-super-secure-signature-key-2026';
+  const key = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const expected = bytesToBase64Url(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payloadBase64)));
+  if (expected !== signature) return null;
+
+  try {
+    const payload = new TextDecoder().decode(base64UrlToBytes(payloadBase64));
+    const session = JSON.parse(payload) as Session;
+    if (!session.userId || !session.role || Date.now() > session.expiresAt) return null;
+    return session;
+  } catch {
+    return null;
+  }
+}
+
+function getSessionToken(request: NextRequest) {
+  const auth = request.headers.get('authorization');
+  if (auth?.startsWith('Bearer ')) return auth.slice(7);
+  return request.cookies.get('erp-session')?.value;
+}
+
+function jsonError(status: number, error: string, requestId: string) {
+  return new NextResponse(JSON.stringify({ success: false, error, requestId }), {
+    status,
+    headers: { 'Content-Type': 'application/json', 'x-request-id': requestId },
+  });
+}
+
+export async function proxy(request: NextRequest) {
   const requestId = crypto.randomUUID();
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-request-id', requestId);
-  
+
   const pathname = request.nextUrl.pathname;
-  const method = request.method;
+  const isPublicApi = PUBLIC_API_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+  const needsSession =
+    pathname.startsWith('/system') ||
+    pathname.startsWith('/api/system') ||
+    (pathname.startsWith('/api') && MUTATION_METHODS.has(request.method) && !isPublicApi);
 
-  // Track start time
-  const startTime = Date.now();
+  if (needsSession) {
+    const session = await verifySessionToken(getSessionToken(request));
 
-  // 1. Role-based protection for the /system route
-  if (pathname.startsWith('/system')) {
-    const role = request.headers.get('x-user-role');
-    if (role && role !== 'SUPER_ADMIN') {
-      console.warn(`[Security] Unauthorized access attempt to /system by role: ${role}`);
+    if (!session) {
+      if (pathname.startsWith('/api')) {
+        return jsonError(401, 'Authentication required: missing or invalid signed ERP session.', requestId);
+      }
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    const allowedRoles = pathname.startsWith('/system') || pathname.startsWith('/api/system')
+      ? SYSTEM_ROLES
+      : WRITE_ROLES;
+
+    if (!allowedRoles.has(session.role)) {
+      if (pathname.startsWith('/api')) {
+        return jsonError(403, `Role ${session.role} is not allowed to access ${pathname}.`, requestId);
+      }
       return NextResponse.redirect(new URL('/', request.url));
     }
+
+    requestHeaders.set('x-user-id', session.userId);
+    requestHeaders.set('x-user-role-verified', session.role);
   }
 
-  // 2. Protect sensitive API mutations
-  const mutationMethods = ['POST', 'PUT', 'DELETE'];
-  if (pathname.startsWith('/api') && mutationMethods.includes(method)) {
-    const role = request.headers.get('x-user-role');
-    
-    // Block VIEWERS from any mutations
-    if (role === 'VIEWER') {
-      console.warn(`[Security] Mutation attempt blocked for VIEWERR role on ${pathname}`);
-      return new NextResponse(JSON.stringify({ success: false, error: 'Quyền VIEWER không được phép thực hiện thao tác này.' }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    // Special check for /api/system
-    if (pathname.startsWith('/api/system') && role !== 'SUPER_ADMIN') {
-      return new NextResponse(JSON.stringify({ success: false, error: 'Chỉ SUPER_ADMIN mới được truy cập cấu hình hệ thống.' }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-  }
-  
   return NextResponse.next({
     request: {
       headers: requestHeaders,

@@ -21,23 +21,29 @@ export default function SettingsPage() {
   const [reopenReason, setReopenReason] = useState('');
   const [showReopenModal, setShowReopenModal] = useState<string | null>(null);
 
-  const fetchPeriods = () => {
+  const fetchPeriods = (signal?: AbortSignal) => {
     setLoadingPeriods(true);
-    fetch('/api/fiscal-periods')
+    fetch('/api/fiscal-periods', { signal })
       .then(res => res.json())
       .then(res => {
         if (res.success) {
           setPeriods(res.data || []);
         }
       })
-      .catch(err => console.error(err))
+      .catch(err => {
+        if (err?.name !== 'AbortError') {
+          console.warn('[Settings] Failed to load fiscal periods:', err);
+        }
+      })
       .finally(() => setLoadingPeriods(false));
   };
 
   useEffect(() => {
+    const controller = new AbortController();
     if (userRole === 'ADMIN') {
-      fetchPeriods();
+      fetchPeriods(controller.signal);
     }
+    return () => controller.abort();
   }, [userRole]);
 
   // Read saved settings on mount (client-only) to avoid SSR/hydration mismatch

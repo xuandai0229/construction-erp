@@ -12,9 +12,18 @@ export async function GET() {
       },
       orderBy: { timestamp: "desc" },
       take: 50,
-      include: {
+      select: {
+        id: true,
+        action: true,
+        entity: true,
+        entityId: true,
+        timestamp: true,
+        severity: true,
+        reason: true,
+        correlationId: true,
+        requestId: true,
         user: { select: { name: true, role: true } }
-      }
+      },
     });
 
     return NextResponse.json({

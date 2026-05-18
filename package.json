@@ -6,7 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "audit:seed": "node scripts/enterprise-audit-seed.js",
+    "audit:check": "node scripts/enterprise-audit-check.js",
+    "financial:harden": "node scripts/financial-hardening.js",
+    "financial-check": "node scripts/enterprise-audit-check.js",
+    "integrity-check": "node scripts/enterprise-audit-check.js",
+    "security-check": "tsx scripts/security_audit.ts",
+    "stress-test": "tsx scripts/stress_test.ts",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
@@ -22,6 +30,7 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -30,6 +39,7 @@
     "eslint-config-next": "16.2.4",
     "prisma": "^5.22.0",
     "tailwindcss": "^4",
+    "tsx": "^4.22.1",
     "typescript": "^5"
   }
 }

@@ -28,7 +28,9 @@ const fmtShort = (v: number) => {
 
 // ─── 1. BUDGET ALLOCATION (Donut + Legend) ──────────────────
 export function BudgetAllocationChart({ data }: { data: any }) {
-  const costByType = data?.costByType || [];
+  const costByType = (data?.costByType || [])
+    .map((item: any) => ({ ...item, value: Number(item?.value) || 0 }))
+    .filter((item: any) => item.value > 0);
   const total = costByType.reduce((s: number, c: any) => s + c.value, 0);
 
   if (costByType.length === 0 || total === 0) {
@@ -45,13 +47,12 @@ export function BudgetAllocationChart({ data }: { data: any }) {
     );
   }
 
-  let acc = 0;
-  const segs = costByType.map((c: any) => {
+  const segs = costByType.reduce((items: any[], c: any) => {
+    const acc = items.reduce((sum, item) => sum + item.pct, 0);
     const pct = total > 0 ? (c.value / total) * 100 : 0;
     const offset = 25 - acc;
-    acc += pct;
-    return { ...c, pct, offset };
-  });
+    return [...items, { ...c, pct, offset }];
+  }, []);
 
   return (
     <div>
