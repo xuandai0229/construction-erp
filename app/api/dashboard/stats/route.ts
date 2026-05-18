@@ -20,7 +20,7 @@ export async function GET(request: Request) {
       prisma.project.count({ where: { deletedAt: null } }),
       prisma.project.count({ where: { deletedAt: null, status: { in: ['ACTIVE', 'IN_PROGRESS'] } } }),
       prisma.costRecord.aggregate({ 
-        where: { deletedAt: null, approvalStatus: "APPROVED" }, 
+        where: { deletedAt: null, approvalStatus: { not: "REJECTED" } }, 
         _sum: { amount: true } 
       }),
       prisma.budgetRecord.aggregate({ 
@@ -28,12 +28,12 @@ export async function GET(request: Request) {
         _sum: { estimatedAmount: true } 
       }),
       prisma.invoice.aggregate({ 
-        where: { deletedAt: null, status: { in: ["SENT", "PAID", "PARTIAL", "OVERDUE"] } }, 
+        where: { deletedAt: null, status: { in: ["SENT", "PAID", "PARTIAL", "OVERDUE", "DRAFT"] }, approvalStatus: { not: "REJECTED" } }, 
         _sum: { amount: true, paidAmount: true, remainingAmount: true } 
       }),
       prisma.costRecord.groupBy({ 
         by: ["costType"], 
-        where: { deletedAt: null, approvalStatus: "APPROVED" }, 
+        where: { deletedAt: null, approvalStatus: { not: "REJECTED" } }, 
         _sum: { amount: true } 
       })
     ]);

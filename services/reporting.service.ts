@@ -150,7 +150,8 @@ export class ReportingService {
       report.push({
         "Mã Dự Án": p.id.slice(0, 8),
         "Tên Dự Án": p.name,
-        "Giá Trị Hợp Đồng": s.totalRevenue,
+        "Giá Trị Hợp Đồng": Number(p.contractValue || 0),
+        "Doanh Thu Ghi Nhận": s.totalRevenue,
         "Ngân Sách": s.totalBudget,
         "Chi Phí Thực Tế": s.totalCost,
         "Lợi Nhuận": s.profit,

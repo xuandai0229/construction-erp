@@ -1001,14 +1001,21 @@ model DomainEvent {
 }
 
 model FinancialSnapshot {
-  id        String   @id @default(uuid())
-  projectId String   @unique
-  version   String
-  data      Json
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
+  id           String   @id @default(uuid())
+  projectId    String?
+  companyId    String?  // Tenant isolation
+  periodId     String?  // FiscalPeriod relation
+  snapshotType String   @default("MONTHLY") // MONTHLY, QUARTERLY, ANNUAL, PROJECT_END
+  version      String
+  data         Json
+  isLocked     Boolean  @default(true) // Immutable by default
+  createdBy    String?
+  reason       String?
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
 
-  @@index([projectId, version])
+  @@index([projectId, snapshotType])
+  @@index([companyId, periodId])
 }
 
 enum UserRole {

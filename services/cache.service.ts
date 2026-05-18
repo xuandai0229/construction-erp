@@ -1,5 +1,5 @@
-
 import { LoggerService } from "./logger.service";
+import { redis } from "@/lib/redis";
 
 interface CacheEntry {
   value: any;
@@ -11,32 +11,40 @@ export class CacheService {
   private static DEFAULT_TTL = 300000; // 5 minutes
   private static MAX_CACHE_SIZE = 5000; // Hard memory limit
   private static sweepInterval: NodeJS.Timeout | null = null;
+  private static isRedisAvailable = false;
 
   static {
-    // Principal-grade automatic memory management: Start background sweeper
     if (typeof global !== 'undefined') {
       this.startSweeper();
+      this.checkRedis();
+    }
+  }
+
+  private static async checkRedis() {
+    try {
+      if (redis.status === 'ready' || redis.status === 'connecting') {
+        // Just ping to ensure
+        await redis.ping();
+        this.isRedisAvailable = true;
+      }
+    } catch (e) {
+      this.isRedisAvailable = false;
+      LoggerService.warn('[CacheService] Redis unavailable, falling back to memory cache.');
     }
   }
 
   private static startSweeper() {
     if (this.sweepInterval) return;
-    
-    // Sweep expired keys every 5 minutes to prevent memory leaks
     this.sweepInterval = setInterval(() => {
       this.sweepExpired();
-    }, 300000); // 5 minutes
-    
-    // Prevent the interval from keeping the Node process alive in tests/scripts
+    }, 300000);
     if (this.sweepInterval.unref) {
       this.sweepInterval.unref();
     }
   }
 
-  /**
-   * Performs a sweep of all expired keys to prevent memory leaks
-   */
   static sweepExpired() {
+    if (this.isRedisAvailable) return; // Redis handles its own expiry
     const now = Date.now();
     let count = 0;
     for (const [key, entry] of this.cache.entries()) {
@@ -50,20 +58,22 @@ export class CacheService {
     }
   }
 
-  /**
-   * Sets a value in cache
-   */
   static async set(key: string, value: any, ttlMs: number = this.DEFAULT_TTL) {
-    // Eviction policy: If size exceeds limit, run sweep first
+    if (this.isRedisAvailable) {
+      try {
+        await redis.set(key, JSON.stringify(value), 'PX', ttlMs);
+        return;
+      } catch (e) {
+        this.isRedisAvailable = false; // Fallback
+      }
+    }
+
+    // Memory fallback
     if (this.cache.size >= this.MAX_CACHE_SIZE) {
       this.sweepExpired();
-      
-      // If still over limit, evict the oldest key (LRU fallback)
       if (this.cache.size >= this.MAX_CACHE_SIZE) {
         const oldestKey = this.cache.keys().next().value;
-        if (oldestKey !== undefined) {
-          this.cache.delete(oldestKey);
-        }
+        if (oldestKey !== undefined) this.cache.delete(oldestKey);
       }
     }
 
@@ -73,32 +83,47 @@ export class CacheService {
     });
   }
 
-  /**
-   * Gets a value from cache
-   */
   static async get<T>(key: string): Promise<T | null> {
+    if (this.isRedisAvailable) {
+      try {
+        const val = await redis.get(key);
+        if (val) return JSON.parse(val) as T;
+        return null;
+      } catch (e) {
+        this.isRedisAvailable = false;
+      }
+    }
+
+    // Memory fallback
     const entry = this.cache.get(key);
     if (!entry) return null;
-
     if (Date.now() > entry.expiry) {
       this.cache.delete(key);
       return null;
     }
-
     return entry.value as T;
   }
 
-  /**
-   * Invalidates a cache key
-   */
   static async invalidate(key: string) {
+    if (this.isRedisAvailable) {
+      try {
+        await redis.del(key);
+        return;
+      } catch (e) {}
+    }
     this.cache.delete(key);
   }
 
-  /**
-   * Invalidates by pattern (prefix)
-   */
   static async invalidatePrefix(prefix: string) {
+    if (this.isRedisAvailable) {
+      try {
+        const keys = await redis.keys(`${prefix}*`);
+        if (keys.length > 0) {
+          await redis.del(...keys);
+        }
+        return;
+      } catch (e) {}
+    }
     for (const key of this.cache.keys()) {
       if (key.startsWith(prefix)) {
         this.cache.delete(key);
@@ -106,9 +131,6 @@ export class CacheService {
     }
   }
 
-  /**
-   * Wraps an expensive call with caching
-   */
   static async wrap<T>(key: string, fn: () => Promise<T>, ttlMs?: number): Promise<T> {
     const cached = await this.get<T>(key);
     if (cached !== null) {

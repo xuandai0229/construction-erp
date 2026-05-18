@@ -95,10 +95,12 @@ export function useTableUX() {
       isDraggingRef.current = false;
       el.style.removeProperty('cursor');
       el.style.removeProperty('user-select');
+    };
 
-      // If we dragged (not just a click), stop click from propagating
+    const onClickCapture = (e: MouseEvent) => {
       if (hasDraggedRef.current) {
         e.stopPropagation();
+        e.preventDefault();
         hasDraggedRef.current = false;
       }
     };
@@ -115,12 +117,14 @@ export function useTableUX() {
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
     el.addEventListener('mouseleave', onMouseLeave);
+    el.addEventListener('click', onClickCapture, true);
 
     return () => {
       el.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
       el.removeEventListener('mouseleave', onMouseLeave);
+      el.removeEventListener('click', onClickCapture, true);
     };
   }, []);
 

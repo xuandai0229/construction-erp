@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useERPStore } from '@/store/erpStore';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import WBSTable from './WBSTable';
@@ -30,11 +30,11 @@ import {
 
 // Strategic AI Chat Assistant & Executive Intelligence
 import AIChatBox from './AIChatBox';
-import ExecutiveActionCockpit from './ExecutiveActionCockpit';
 
 export default function Dashboard() {
   const { currentProjectId, sidebarCollapsed, setCurrentProject } = useERPStore();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   // Core Data Queries for Operational Core Tables
   const { data: paginatedData, isLoading: isLoadingProjects, isError: isErrorProjects, refetch: refetchProjects } = useProjectsQuery();
@@ -55,6 +55,18 @@ export default function Dashboard() {
     enabled: !!currentProjectId
   });
 
+  // Core Action Center Tasks Query
+  const { data: actionTasks = [], refetch: refetchActionTasks } = useQuery({
+    queryKey: ['actionTasks', currentProjectId],
+    queryFn: async () => {
+      if (!currentProjectId) return [];
+      const res = await fetch(`/api/workspace/action-center?projectId=${currentProjectId}`);
+      const json = await res.json();
+      return json.success ? json.data : [];
+    },
+    enabled: !!currentProjectId
+  });
+
   const [editingCost, setEditingCost] = useState<CostRecord | null>(null);
 
   // STABILITY FIX: Auto-select first project if none selected to prevent "idle loading"
@@ -64,12 +76,37 @@ export default function Dashboard() {
     }
   }, [projects, currentProjectId, setCurrentProject]);
 
+  // REAL-TIME SYNCHRONIZATION VIA SSE
+  useEffect(() => {
+    const eventSource = new EventSource(`/api/stream${currentProjectId ? `?projectId=${currentProjectId}` : ''}`);
+    
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        // Refresh React Query caches on any relevant financial event
+        console.log('[RealTime] Invalidate caches for event:', data.type);
+        queryClient.invalidateQueries({ queryKey: ['pythonAnalytics', currentProjectId] });
+        queryClient.invalidateQueries({ queryKey: ['projectStats', currentProjectId] });
+        queryClient.invalidateQueries({ queryKey: ['costs', currentProjectId] });
+        queryClient.invalidateQueries({ queryKey: ['wbs', currentProjectId] });
+        queryClient.invalidateQueries({ queryKey: ['actionTasks', currentProjectId] });
+      } catch (e) {
+        // Ignore parse errors from keep-alive or malformed data
+      }
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, [currentProjectId, queryClient]);
+
   const isLoading = isLoadingProjects || (currentProjectId && projects.length > 0 && (isLoadingStats || isLoadingCosts || isLoadingWBS || isLoadingAnalytics));
   const isError = isErrorProjects || (currentProjectId && (isErrorStats || isErrorCosts || isErrorWBS));
 
   const handleRetry = () => {
     refetchProjects();
     refetchAnalytics();
+    refetchActionTasks();
     if (currentProjectId) {
       refetchStats();
       refetchCosts();
@@ -130,79 +167,16 @@ export default function Dashboard() {
     };
   }, [currentProjectId, projects, stats, costs, wbsData]);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[var(--background)] flex">
-        <Sidebar activeItem="overview" />
-        <div className="flex-1">
-          <div className="h-[74px] border-b border-[var(--border)] bg-[var(--header-bg)] animate-pulse" />
-          <div className="p-8 space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[1, 2, 3, 4].map(idx => <div key={idx} className="h-32 rounded-2xl bg-[var(--secondary)] animate-pulse" />)}
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 h-96 rounded-2xl bg-[var(--secondary)] animate-pulse" />
-              <div className="h-96 rounded-2xl bg-[var(--secondary)] animate-pulse" />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
-  if (isError) {
-    return (
-      <div className="min-h-screen bg-[var(--background)] flex">
-        <Sidebar activeItem="overview" />
-        <main className="flex-1 flex flex-col items-center justify-center p-8">
-          <div className="max-w-md text-center">
-            <div className="mb-6 mx-auto h-20 w-20 rounded-2xl bg-rose-500/10 border border-rose-500/20 grid place-items-center">
-              <svg viewBox="0 0 24 24" className="h-10 w-10 text-rose-500" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-            </div>
-            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-2">Lỗi kết nối dữ liệu</h2>
-            <p className="text-sm text-[var(--text-muted)] mb-8">Không thể kết nối tới máy chủ API. Vui lòng kiểm tra lại đường truyền mạng hoặc liên hệ quản trị viên.</p>
-            <button
-              onClick={handleRetry}
-              className="erp-btn bg-slate-800 text-white px-8 py-3 hover:bg-slate-700"
-            >
-              Thử lại ngay
-            </button>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  if (projects.length === 0) {
-    return (
-      <div className="min-h-screen bg-background text-foreground flex overflow-hidden">
-        <Sidebar activeItem="overview" />
-        <main className="flex-1 flex flex-col">
-          <Header data={data as any} />
-          <div className="flex-1 grid place-items-center p-8 text-center animate-fade-in">
-            <div className="max-w-md">
-              <div className="mb-6 mx-auto h-24 w-24 rounded-full bg-[var(--secondary)] grid place-items-center border border-[var(--border)] shadow-2xl">
-                <svg viewBox="0 0 24 24" className="h-10 w-10 text-[var(--text-muted)]" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M4 21V8l5-3 5 3v13M14 21V11l6 3v7M7 11h2M7 15h2" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Chưa có dự án nào</h2>
-              <p className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-widest mb-8 leading-relaxed">Hãy khởi tạo dự án đầu tiên để bắt đầu quản lý chi phí & tiến độ.</p>
-              <button
-                onClick={() => router.push('/projects')}
-                className="erp-btn bg-blue-600 text-white px-8 py-3 hover:bg-blue-500 shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)]"
-              >
-                Tạo hồ sơ dự án
-              </button>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
 
   // Bind top KPI metrics directly to authoritative Python/JS analytics engine
   const activeKpis = analyticsData?.kpis || data;
+  const activeAnalytics = {
+    boq: analyticsData?.boq || { costByType: data.costByType || [] },
+    cashflow: analyticsData?.cashflow || { trend: data.cashFlow || [], forecast: [] },
+    kpis: activeKpis,
+    forecast: analyticsData?.forecast || []
+  };
   const kpiCards = [
     { label: ERP_TERMINOLOGY.FINANCE.REVENUE, value: activeKpis.totalRevenue, color: 'text-blue-400', tag: 'Tài chính', icon: 'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
     { label: 'Tổng dự toán BOQ', value: activeKpis.totalBudget, color: 'text-sky-400', tag: 'Tài chính', icon: 'M7 3h10v18H7zM10 7h4M10 11h4M10 15h2' },
@@ -262,6 +236,99 @@ export default function Dashboard() {
     } as any;
   }, [analyticsData, activeKpis]);
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[var(--background)] flex">
+        <Sidebar activeItem="overview" />
+        <div className="flex-1 flex flex-col h-screen overflow-hidden">
+          <div className="h-[74px] border-b border-[var(--border)] bg-[var(--header-bg)] flex items-center px-8">
+            <div className="w-48 h-6 bg-[var(--secondary)] rounded-md animate-pulse"></div>
+          </div>
+          <div className="flex-1 p-8 overflow-y-auto space-y-3">
+            {/* KPI Row - 6 columns to match actual UI */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-5">
+              {[1, 2, 3, 4, 5, 6].map(idx => (
+                <div key={idx} className="h-[120px] rounded-lg bg-[var(--card)] border border-[var(--border)] p-4 flex flex-col justify-between">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--secondary)] animate-pulse"></div>
+                  <div className="space-y-2">
+                    <div className="w-16 h-3 bg-[var(--secondary)] rounded animate-pulse"></div>
+                    <div className="w-24 h-6 bg-[var(--secondary)] rounded animate-pulse"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Analytics Triptych - seamless surface */}
+            <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] h-[320px] flex overflow-hidden">
+              <div className="flex-1 p-5"><div className="w-full h-full bg-[var(--secondary)] rounded-md animate-pulse"></div></div>
+              <div className="flex-1 p-5 border-l border-[var(--divider)]"><div className="w-full h-full bg-[var(--secondary)] rounded-md animate-pulse"></div></div>
+              <div className="flex-1 p-5 border-l border-[var(--divider)]"><div className="w-full h-full bg-[var(--secondary)] rounded-md animate-pulse"></div></div>
+            </div>
+
+            {/* WBS Table row */}
+            <div className="h-[400px] rounded-lg border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="w-48 h-4 bg-[var(--secondary)] rounded-md animate-pulse mb-6"></div>
+              <div className="space-y-3">
+                {[1, 2, 3, 4, 5].map(idx => <div key={idx} className="w-full h-10 bg-[var(--secondary)] rounded animate-pulse"></div>)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-[var(--background)] flex">
+        <Sidebar activeItem="overview" />
+        <main className="flex-1 flex flex-col items-center justify-center p-8">
+          <div className="max-w-md text-center">
+            <div className="mb-6 mx-auto h-20 w-20 rounded-2xl bg-rose-500/10 border border-rose-500/20 grid place-items-center">
+              <svg viewBox="0 0 24 24" className="h-10 w-10 text-rose-500" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            </div>
+            <h2 className="text-xl font-bold text-[var(--text-primary)] mb-2">Lỗi kết nối dữ liệu</h2>
+            <p className="text-sm text-[var(--text-muted)] mb-8">Không thể kết nối tới máy chủ API. Vui lòng kiểm tra lại đường truyền mạng hoặc liên hệ quản trị viên.</p>
+            <button
+              onClick={handleRetry}
+              className="erp-btn bg-slate-800 text-white px-8 py-3 hover:bg-slate-700"
+            >
+              Thử lại ngay
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (projects.length === 0) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex overflow-hidden">
+        <Sidebar activeItem="overview" />
+        <main className="flex-1 flex flex-col">
+          <Header data={data as any} />
+          <div className="flex-1 grid place-items-center p-8 text-center animate-fade-in">
+            <div className="max-w-md">
+              <div className="mb-6 mx-auto h-24 w-24 rounded-full bg-[var(--secondary)] grid place-items-center border border-[var(--border)] shadow-2xl">
+                <svg viewBox="0 0 24 24" className="h-10 w-10 text-[var(--text-muted)]" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M4 21V8l5-3 5 3v13M14 21V11l6 3v7M7 11h2M7 15h2" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Chưa có dự án nào</h2>
+              <p className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-widest mb-8 leading-relaxed">Hãy khởi tạo dự án đầu tiên để bắt đầu quản lý chi phí & tiến độ.</p>
+              <button
+                onClick={() => router.push('/projects')}
+                className="erp-btn bg-blue-600 text-white px-8 py-3 hover:bg-blue-500 shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)]"
+              >
+                Tạo hồ sơ dự án
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex overflow-hidden">
       <Sidebar activeItem="overview" />
@@ -302,29 +369,22 @@ export default function Dashboard() {
               • Section headers ultra-compact
               ═══════════════════════════════════════════════════════════ */}
 
-          {/* ROW 1: Executive Action Cockpit */}
-          {intelligenceSnapshot && (intelligenceSnapshot.anomalies.length > 0 || intelligenceSnapshot.insights.length > 0) && (
-            <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 transition-all duration-300 hover:border-[var(--primary)]/15">
-              <ExecutiveActionCockpit data={intelligenceSnapshot} />
-            </div>
-          )}
+
 
           {/* ROW 2: Analytics triptych — ONE seamless surface */}
-          {analyticsData && (
-            <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] overflow-hidden transition-all duration-300 hover:border-[var(--primary)]/15">
-              <div className="grid grid-cols-1 lg:grid-cols-3">
-                <div className="px-5 py-4">
-                  <BudgetAllocationChart data={analyticsData.boq} />
-                </div>
-                <div className="px-5 py-4 border-t lg:border-t-0 lg:border-l border-[var(--divider)]">
-                  <CashflowTrendChart data={analyticsData.cashflow} />
-                </div>
-                <div className="px-5 py-4 border-t lg:border-t-0 lg:border-l border-[var(--divider)]">
-                  <ProjectProgressChart data={analyticsData.kpis} timeline={analyticsData.forecast} />
-                </div>
+          <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] overflow-hidden transition-all duration-300 hover:border-[var(--primary)]/15">
+            <div className="grid grid-cols-1 lg:grid-cols-3">
+              <div className="px-5 py-4">
+                <BudgetAllocationChart data={activeAnalytics.boq} />
+              </div>
+              <div className="px-5 py-4 border-t lg:border-t-0 lg:border-l border-[var(--divider)]">
+                <CashflowTrendChart data={activeAnalytics.cashflow} />
+              </div>
+              <div className="px-5 py-4 border-t lg:border-t-0 lg:border-l border-[var(--divider)]">
+                <ProjectProgressChart data={activeAnalytics.kpis} timeline={activeAnalytics.forecast} />
               </div>
             </div>
-          )}
+          </div>
 
           {/* ROW 2: WBS + Cost Log (side-by-side, tight gap) */}
           <div className="grid grid-cols-1 xl:grid-cols-12 gap-3">
@@ -349,16 +409,14 @@ export default function Dashboard() {
           </div>
 
           {/* ROW 3: Debt + P&L (aligned to same column split as Row 2) */}
-          {analyticsData && (
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-3">
-              <div className="xl:col-span-7 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15">
-                <DebtPaymentChart kpis={analyticsData.kpis} />
-              </div>
-              <div className="xl:col-span-5 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15">
-                <ProfitabilityChart kpis={analyticsData.kpis} />
-              </div>
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-3">
+            <div className="xl:col-span-7 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15">
+              <DebtPaymentChart kpis={activeAnalytics.kpis} />
             </div>
-          )}
+            <div className="xl:col-span-5 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15">
+              <ProfitabilityChart kpis={activeAnalytics.kpis} />
+            </div>
+          </div>
 
         </div>
       </main>

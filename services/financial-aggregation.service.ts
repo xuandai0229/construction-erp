@@ -69,7 +69,7 @@ export class FinancialAggregationService {
 
     // KPI CONTRACT: COST_ACT (Accounting Reality)
     const costActualD = costs
-      .filter(c => c.approvalStatus === "APPROVED" || ["POSTED", "LOCKED"].includes(c.workflowStatus))
+      .filter(c => !["VOID", "REJECTED"].includes(c.workflowStatus) && c.approvalStatus !== "REJECTED")
       .reduce((s, c) => s.add(safeDecimal(c.amount)), safeDecimal(0));
 
     // KPI CONTRACT: COST_EXP (Management Exposure)
@@ -79,7 +79,7 @@ export class FinancialAggregationService {
 
     // KPI CONTRACT: REV_ACC (Accrual Revenue)
     const revenueAccrualD = invoices
-      .filter(i => i.approvalStatus === "APPROVED" && ["SENT", "PAID", "PARTIAL", "OVERDUE"].includes(i.status))
+      .filter(i => i.approvalStatus !== "REJECTED" && ["DRAFT", "SENT", "PAID", "PARTIAL", "OVERDUE"].includes(i.status))
       .reduce((s, i) => s.add(safeDecimal(i.amount)), safeDecimal(0));
 
     // KPI CONTRACT: ALLOCATION_HEALTH
@@ -319,7 +319,7 @@ export class FinancialAggregationService {
       where: {
         deletedAt: null,
         status: "unpaid",
-        approvalStatus: "APPROVED",
+        approvalStatus: { not: "REJECTED" },
         ...(projectId && { projectId })
       }
     });
@@ -360,9 +360,9 @@ export class FinancialAggregationService {
    */
   static async getProjectMonthlyReport(projectId: string): Promise<MonthlyReportRow[]> {
     const [costs, invoices, payments] = await Promise.all([
-      prisma.costRecord.findMany({ where: { projectId, deletedAt: null, approvalStatus: "APPROVED" } }),
-      prisma.invoice.findMany({ where: { projectId, deletedAt: null, approvalStatus: "APPROVED" } }),
-      prisma.payment.findMany({ where: { projectId, deletedAt: null, approvalStatus: "APPROVED" } }),
+      prisma.costRecord.findMany({ where: { projectId, deletedAt: null, approvalStatus: { not: "REJECTED" } } }),
+      prisma.invoice.findMany({ where: { projectId, deletedAt: null, approvalStatus: { not: "REJECTED" } } }),
+      prisma.payment.findMany({ where: { projectId, deletedAt: null, approvalStatus: { not: "REJECTED" } } }),
     ]);
 
     const months: Record<string, any> = {};
@@ -523,7 +523,7 @@ export class FinancialAggregationService {
       ]);
 
       const wbsIds = new Set(items.map(i => i.id));
-      const approvedCosts = costs.filter(c => ["APPROVED", "POSTED", "LOCKED"].includes(c.workflowStatus || c.approvalStatus));
+      const approvedCosts = costs.filter(c => c.approvalStatus !== "REJECTED" && !["VOID", "REJECTED"].includes(c.workflowStatus));
       
       // Find Orphans (Costs not linked to active WBS)
       const orphanCosts = approvedCosts.filter(c => !c.wbsId || !wbsIds.has(c.wbsId));

@@ -32,6 +32,7 @@ model User {
   FiscalPeriod                                       FiscalPeriod[]
   invoicesCreated                                    Invoice[]          @relation("InvoiceCreatedBy")
   invoicesDeleted                                    Invoice[]          @relation("InvoiceDeletedBy")
+  notifications                                      Notification[]
   paymentsDeleted                                    Payment[]          @relation("PaymentDeletedBy")
   ProgressEntry                                      ProgressEntry[]
   projectsDeleted                                    Project[]          @relation("ProjectDeletedBy")
@@ -44,7 +45,6 @@ model User {
   company                                            Company?           @relation(fields: [companyId], references: [id])
   UserMaturity                                       UserMaturity?
   wbsDeleted                                         WBSItem[]          @relation("WBSDeletedBy")
-  notifications                                      Notification[]
 
   @@index([createdAt])
   @@index([companyId])
@@ -668,7 +668,6 @@ model Document {
 
 model FiscalPeriod {
   id             String    @id @default(uuid())
-  month          String    @unique
   isLocked       Boolean   @default(false)
   lockedAt       DateTime?
   lockedById     String?
@@ -680,6 +679,7 @@ model FiscalPeriod {
   endDate        DateTime?
   name           String?
   startDate      DateTime?
+  month          String    @unique
   Company        Company?  @relation(fields: [companyId], references: [id])
   User           User?     @relation(fields: [lockedById], references: [id])
 
@@ -967,6 +967,57 @@ model Branch {
   projects  Project[]
 }
 
+model Notification {
+  id         String   @id @default(uuid())
+  userId     String
+  title      String
+  message    String
+  type       String
+  severity   String
+  priority   Int      @default(0)
+  entityType String?
+  entityId   String?
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, isRead])
+  @@index([createdAt])
+}
+
+model DomainEvent {
+  id          String    @id @default(uuid())
+  type        String
+  payload     Json
+  metadata    Json?
+  status      String    @default("PENDING")
+  error       String?
+  projectId   String?
+  timestamp   DateTime  @default(now())
+  processedAt DateTime?
+
+  @@index([status, timestamp])
+  @@index([projectId])
+}
+
+model FinancialSnapshot {
+  id           String   @id @default(uuid())
+  projectId    String?
+  companyId    String? // Tenant isolation
+  periodId     String? // FiscalPeriod relation
+  snapshotType String   @default("MONTHLY") // MONTHLY, QUARTERLY, ANNUAL, PROJECT_END
+  version      String
+  data         Json
+  isLocked     Boolean  @default(true) // Immutable by default
+  createdBy    String?
+  reason       String?
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+
+  @@index([projectId, snapshotType])
+  @@index([companyId, periodId])
+}
+
 enum UserRole {
   ADMIN
   MANAGER
@@ -1071,22 +1122,4 @@ enum SubcontractStatus {
   SUSPENDED
   COMPLETED
   TERMINATED
-}
-
-model Notification {
-  id         String   @id @default(uuid())
-  userId     String
-  title      String
-  message    String
-  type       String // OVERDUE, APPROVAL, RISK, GOVERNANCE
-  severity   String // INFO, WARNING, ERROR, CRITICAL
-  priority   Int      @default(0)
-  entityType String?
-  entityId   String?
-  isRead     Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id])
-
-  @@index([userId, isRead])
-  @@index([createdAt])
 }

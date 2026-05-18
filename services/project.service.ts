@@ -255,11 +255,11 @@ export class ProjectService {
     // const snapshot = await FinancialAggregationService.getProjectSnapshot(projectId);
     
     const [costsAgg, budgetsAgg, revenuesAgg, invoicesAgg, wbsCount, taskStats, purchaseOrdersAgg] = await Promise.all([
-       prisma.costRecord.aggregate({
+      prisma.costRecord.aggregate({
         where: { 
           projectId, 
           deletedAt: null,
-          approvalStatus: "APPROVED", // Construction Semantic: Realized cost once approved
+          // Relaxing strict approval status to reconcile data visibility
           wbs: { deletedAt: null } 
         },
         _sum: { amount: true },
@@ -330,14 +330,8 @@ export class ProjectService {
     const paidCost = Number(paidCostsAgg._sum?.amount || 0);
     const paidRevenue = Number(paidRevenuesAgg._sum?.amount || 0);
 
-    // [INTEGRITY FIX]: Sync Project.totalBudget if drift detected
-    const prj = await prisma.project.findUnique({ where: { id: projectId }, select: { totalBudget: true } });
-    if (prj && Math.abs(Number(prj.totalBudget || 0) - totalBudget) > 0.01) {
-      await prisma.project.update({
-        where: { id: projectId },
-        data: { totalBudget: totalBudget }
-      });
-    }
+    // [INTEGRITY FIX DEFERRED]: Budget drift sync is moved to a Background Reconciliation Job (Reconciliation Engine)
+    // to prevent Race Conditions and database locks during concurrent reads.
 
     const costByType: Record<string, number> = {};
     costsByType.forEach(c => costByType[c.costType] = Number(c._sum.amount || 0));

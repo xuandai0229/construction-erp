@@ -571,7 +571,6 @@ exports.Prisma.DocumentScalarFieldEnum = {
 
 exports.Prisma.FiscalPeriodScalarFieldEnum = {
   id: 'id',
-  month: 'month',
   isLocked: 'isLocked',
   lockedAt: 'lockedAt',
   lockedById: 'lockedById',
@@ -582,7 +581,8 @@ exports.Prisma.FiscalPeriodScalarFieldEnum = {
   companyId: 'companyId',
   endDate: 'endDate',
   name: 'name',
-  startDate: 'startDate'
+  startDate: 'startDate',
+  month: 'month'
 };
 
 exports.Prisma.JobScalarFieldEnum = {
@@ -822,8 +822,14 @@ exports.Prisma.DomainEventScalarFieldEnum = {
 exports.Prisma.FinancialSnapshotScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
+  companyId: 'companyId',
+  periodId: 'periodId',
+  snapshotType: 'snapshotType',
   version: 'version',
   data: 'data',
+  isLocked: 'isLocked',
+  createdBy: 'createdBy',
+  reason: 'reason',
   updatedAt: 'updatedAt',
   createdAt: 'createdAt'
 };

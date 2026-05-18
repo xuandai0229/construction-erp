@@ -20,12 +20,20 @@ export class ActionCenterService {
   /**
    * Retrieves the prioritized action center tasks for a specific user
    */
-  static async getUserTasks(userId: string): Promise<ActionTask[]> {
+  static async getUserTasks(userId: string, projectId?: string): Promise<ActionTask[]> {
     const tasks: ActionTask[] = [];
 
     // 1. Pending Approvals (High Priority if old)
     const approvals = await prisma.approvalStep.findMany({
-      where: { approverId: userId, status: "PENDING" },
+      where: { 
+        approverId: userId, 
+        status: "PENDING",
+        ...(projectId && {
+          ApprovalRequest: {
+            projectId: projectId
+          }
+        })
+      },
       include: { ApprovalRequest: true }
     });
 
@@ -46,7 +54,11 @@ export class ActionCenterService {
 
     // 2. Overdue Invoices (Financial Impact)
     const overdueInvoices = await prisma.invoice.findMany({
-      where: { status: "OVERDUE", deletedAt: null },
+      where: { 
+        status: "OVERDUE", 
+        deletedAt: null,
+        ...(projectId && { projectId })
+      },
       take: 20
     });
 
@@ -68,7 +80,7 @@ export class ActionCenterService {
 
     // 3. High Risk Projects (Management Intelligence)
     const riskProfiles = await ReportingService.getProjectRiskProfiles();
-    const criticalRisks = riskProfiles.filter(p => p.riskScore > 60);
+    const criticalRisks = riskProfiles.filter(p => p.riskScore > 60 && (!projectId || p.projectId === projectId));
 
     for (const risk of criticalRisks) {
       tasks.push({

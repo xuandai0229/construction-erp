@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { AuditLog } from "../generated/prisma-client";
 
-export type AuditAction = "CREATE" | "UPDATE" | "DELETE" | "RESTORE" | "APPROVE" | "REJECT" | "LOCK" | "UNLOCK" | "HARD_DELETE" | "SECURITY_ALERT" | "AUTH_FAILED";
+export type AuditAction = "CREATE" | "UPDATE" | "DELETE" | "RESTORE" | "APPROVE" | "REJECT" | "LOCK" | "UNLOCK" | "HARD_DELETE" | "SECURITY_ALERT" | "AUTH_FAILED" | "REVERSE";
 
 export class AuditService {
   static async log({
@@ -63,5 +63,33 @@ export class AuditService {
         user: { select: { id: true, name: true, email: true } },
       },
     });
+  }
+
+  /**
+   * Enterprise Feature: Timeline Reconstruction
+   * Replays the audit trail to reconstruct the exact state of an entity at a given historical timestamp.
+   */
+  static async reconstructTimeline(entity: string, entityId: string, upToTimestamp: Date) {
+    const logs = await prisma.auditLog.findMany({
+      where: { entity, entityId, timestamp: { lte: upToTimestamp } },
+      orderBy: { timestamp: "asc" } // Replay from oldest to newest
+    });
+
+    let state: any = {};
+    for (const log of logs) {
+      if (log.action === 'CREATE' || log.action === 'UPDATE') {
+        state = { ...state, ...(log.newData as any || {}) };
+      } else if (log.action === 'DELETE' || log.action === 'REVERSE') {
+        state = { ...state, _isDeletedOrReversed: true };
+      } else if (log.action === 'RESTORE') {
+        state._isDeletedOrReversed = false;
+      }
+    }
+    
+    return {
+      state,
+      reconstructedAt: upToTimestamp,
+      lastAction: logs.length > 0 ? logs[logs.length - 1] : null
+    };
   }
 }

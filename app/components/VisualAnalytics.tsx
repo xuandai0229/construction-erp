@@ -31,6 +31,20 @@ export function BudgetAllocationChart({ data }: { data: any }) {
   const costByType = data?.costByType || [];
   const total = costByType.reduce((s: number, c: any) => s + c.value, 0);
 
+  if (costByType.length === 0 || total === 0) {
+    return (
+      <div className="h-full flex flex-col justify-between">
+        <h4 className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-[0.15em] mb-4">Phân bổ ngân sách</h4>
+        <div className="flex-1 flex flex-col items-center justify-center py-6 border border-dashed border-[var(--border)] rounded-lg bg-[var(--card)]/30 min-h-[110px]">
+          <svg viewBox="0 0 24 24" className="h-6 w-6 text-[var(--text-tertiary)]/50 mb-1.5" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <span className="text-[10px] text-[var(--text-tertiary)] font-bold tracking-wide">No categorized budget data</span>
+        </div>
+      </div>
+    );
+  }
+
   let acc = 0;
   const segs = costByType.map((c: any) => {
     const pct = total > 0 ? (c.value / total) * 100 : 0;
@@ -138,12 +152,27 @@ export function CashflowTrendChart({ data }: { data: any }) {
 
 // ─── 3. PROJECT PROGRESS + EVM (Gauge + Details) ────────────
 export function ProjectProgressChart({ data, timeline }: { data: any; timeline: any }) {
+  const spi = data?.spi;
+  const cpi = data?.cpi;
+
+  if (spi === null || spi === undefined || cpi === null || cpi === undefined) {
+    return (
+      <div className="h-full flex flex-col justify-between">
+        <h4 className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-[0.15em] mb-3">Tiến độ tổng thể</h4>
+        <div className="flex-1 flex flex-col items-center justify-center py-6 border border-dashed border-[var(--border)] rounded-lg bg-[var(--card)]/30 min-h-[110px]">
+          <svg viewBox="0 0 24 24" className="h-6 w-6 text-[var(--text-tertiary)]/50 mb-1.5" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+          </svg>
+          <span className="text-[10px] text-[var(--text-tertiary)] font-bold tracking-wide">No approved baseline schedule</span>
+        </div>
+      </div>
+    );
+  }
+
   const progress = data?.actualProgress ?? data?.taskProgress ?? 0;
   const planned = data?.plannedProgress ?? data?.timeProgress ?? 0;
   const daysElapsed = data?.daysElapsed ?? 0;
   const durationDays = data?.durationDays ?? 365;
-  const spi = data?.spi ?? 1.0;
-  const cpi = data?.cpi ?? 1.0;
 
   const R = 50, C = 2 * Math.PI * R;
   const arc = (progress / 100) * C * 0.75;
