@@ -10,11 +10,12 @@ import WBSTable from './WBSTable';
 import CostTable from './CostTable';
 import AddCostModal from './modals/AddCostModal';
 import { CostRecord, Project } from '../types';
-import { formatVnd } from './dashboard-data';
+import { formatVnd, formatKpiValue } from './dashboard-data';
 import { ERP_TERMINOLOGY } from '@/app/utils/table-constants';
 import { useProjectsQuery, useProjectStatsQuery } from '@/services/queries/useProjects';
 import { useCostsQuery } from '@/services/queries/useCosts';
 import { useWBSQuery } from '@/services/queries/useWBS';
+import ExecutiveRiskCenter from './ExecutiveRiskCenter';
 
 // Visual Analytics Imports
 import {
@@ -79,7 +80,7 @@ export default function Dashboard() {
   // REAL-TIME SYNCHRONIZATION VIA SSE
   useEffect(() => {
     const eventSource = new EventSource(`/api/stream${currentProjectId ? `?projectId=${currentProjectId}` : ''}`);
-    
+
     eventSource.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
@@ -257,7 +258,7 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
-            
+
             {/* Analytics Triptych - seamless surface */}
             <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] h-[320px] flex overflow-hidden">
               <div className="flex-1 p-5"><div className="w-full h-full bg-[var(--secondary)] rounded-md animate-pulse"></div></div>
@@ -337,28 +338,57 @@ export default function Dashboard() {
         <Header data={data as any} />
 
         <div className="erp-content-container animate-fade-in space-y-3">
-          
+
           {/* ─── LEVEL 1: Financial KPIs (6 unified columns matching visual target) ─── */}
           <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-5">
-            {kpiCards.map((kpi, idx) => (
-              <div key={idx} className="erp-kpi-card group cursor-default">
-                <div className="relative z-10 flex flex-col h-full gap-5">
-                  <div className="flex items-center justify-between">
-                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--secondary)] border border-[var(--border)] ${kpi.color} group-hover:scale-110 transition-all duration-300 shadow-sm`}>
-                      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2"><path d={kpi.icon} /></svg>
-                    </div>
-                    <div className={`text-[9px] font-black uppercase tracking-[0.2em] ${kpi.tag === 'Lỗ' ? 'text-rose-400' : 'text-[var(--text-tertiary)]'}`}>{kpi.tag}</div>
+            {kpiCards.map((kpi, idx) => {
+              const { valueStr, unitStr } = formatKpiValue(kpi.value);
+              const sparklines = [
+                'M0,25 Q15,10 30,18 T60,8 T90,20 T120,5', 
+                'M0,15 Q15,15 30,22 T60,18 T90,12 T120,12', 
+                'M0,10 Q15,25 30,20 T60,28 T90,15 T120,25', 
+                'M0,28 Q15,20 30,25 T60,12 T90,15 T120,8', 
+                'M0,18 Q15,22 30,15 T60,20 T90,10 T120,18', 
+                'M0,20 Q15,10 30,25 T60,15 T90,22 T120,10', 
+              ];
+              const strokeColor = kpi.color === 'text-emerald-400' || kpi.color === 'text-emerald-500' 
+                ? '#10b981' 
+                : kpi.color === 'text-rose-400' 
+                  ? '#f43f5e' 
+                  : '#3b82f6';
+              return (
+                <div key={idx} className="erp-kpi-card group cursor-default relative overflow-hidden transition-all duration-[180ms] hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(59,130,246,0.1)] hover:border-blue-500/20">
+                  {/* Subtle Sparkline at base */}
+                  <div className="absolute bottom-0 left-0 right-0 h-6 overflow-hidden pointer-events-none opacity-20 group-hover:opacity-60 transition-opacity duration-300">
+                    <svg viewBox="0 0 120 30" className="w-full h-full" preserveAspectRatio="none">
+                      <path
+                        d={sparklines[idx % sparklines.length]}
+                        fill="none"
+                        stroke={strokeColor}
+                        strokeWidth="1.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </div>
-                  <div className="mt-auto">
-                    <div className="text-[10px] font-black uppercase tracking-[0.15em] text-[var(--text-tertiary)] mb-2">{kpi.label}</div>
-                    <div className="flex items-baseline gap-1.5">
-                      <div className="text-xl font-black text-[var(--text-primary)] tabular-nums tracking-tight truncate leading-none">{formatVnd(kpi.value)}</div>
-                      <div className="text-[10px] font-bold text-[var(--text-tertiary)] shrink-0">đ</div>
+                  <div className="relative z-10 flex flex-col h-full gap-5">
+                    <div className="flex items-center justify-between">
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--secondary)] border border-[var(--border)] ${kpi.color} group-hover:scale-110 transition-all duration-300 shadow-sm`}>
+                        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2"><path d={kpi.icon} /></svg>
+                      </div>
+                      <div className={`text-[9px] font-black uppercase tracking-[0.2em] ${kpi.tag === 'Lỗ' ? 'text-rose-400' : 'text-[var(--text-tertiary)]'}`}>{kpi.tag}</div>
+                    </div>
+                    <div className="mt-auto">
+                      <div className="text-[10px] font-black uppercase tracking-[0.15em] text-[var(--text-tertiary)] mb-2">{kpi.label}</div>
+                      <div className="flex items-baseline gap-1.5">
+                        <div className="text-xl font-black text-[var(--text-primary)] tabular-nums tracking-tight truncate leading-none">{valueStr}</div>
+                        <div className="text-[9.5px] font-black text-[var(--text-tertiary)] uppercase tracking-wider shrink-0">{unitStr}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* ═══ ANALYTICS — Pixel-matched to reference image ═══════════
@@ -410,11 +440,14 @@ export default function Dashboard() {
 
           {/* ROW 3: Debt + P&L (aligned to same column split as Row 2) */}
           <div className="grid grid-cols-1 xl:grid-cols-12 gap-3">
-            <div className="xl:col-span-7 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15">
+            <div className="xl:col-span-5 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15 animate-fade-in">
               <DebtPaymentChart kpis={activeAnalytics.kpis} />
             </div>
-            <div className="xl:col-span-5 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15">
+            <div className="xl:col-span-3 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15 animate-fade-in">
               <ProfitabilityChart kpis={activeAnalytics.kpis} />
+            </div>
+            <div className="xl:col-span-4 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15 animate-fade-in">
+              <ExecutiveRiskCenter risks={analyticsData?.risk?.risks} />
             </div>
           </div>
 

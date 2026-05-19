@@ -69,8 +69,43 @@ export class ProjectService {
       planned: summary.find(s => s.status === 'PLANNED')?._count._all || 0,
     };
 
+    const projectIds = projects.map(p => p.id);
+    const [costsAgg, tasksAgg] = await Promise.all([
+      prisma.costRecord.groupBy({
+        by: ['projectId'],
+        where: { projectId: { in: projectIds }, deletedAt: null },
+        _sum: { amount: true }
+      }),
+      prisma.task.groupBy({
+        by: ['projectId', 'status'],
+        where: { projectId: { in: projectIds }, deletedAt: null },
+        _count: { status: true }
+      })
+    ]);
+
+    const costMap = new Map(costsAgg.map(c => [c.projectId, Number(c._sum.amount || 0)]));
+    const taskMap = new Map<string, { total: number, done: number }>();
+    tasksAgg.forEach(t => {
+      const current = taskMap.get(t.projectId) || { total: 0, done: 0 };
+      current.total += t._count.status;
+      if (t.status === 'DONE') current.done += t._count.status;
+      taskMap.set(t.projectId, current);
+    });
+
+    const enrichedProjects = projects.map(p => {
+      const tasks = taskMap.get(p.id) || { total: 0, done: 0 };
+      const progress = tasks.total > 0 ? Math.round((tasks.done / tasks.total) * 100) : 0;
+      return {
+        ...p,
+        totalValue: Number(p.contractValue || 0),
+        totalBudget: Number(p.totalBudget || 0),
+        actualCost: costMap.get(p.id) || 0,
+        progress
+      };
+    });
+
     return {
-      data: projects,
+      data: enrichedProjects,
       metadata: {
         total,
         page,

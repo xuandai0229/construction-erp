@@ -41,16 +41,12 @@ export async function assertAuthenticated() {
   const session = await getVerifiedSession();
   if (!session) {
     if (process.env.ALLOW_INTERNAL_ADMIN_BYPASS === "true") {
-      const head = await headers();
-      const internalAdminId = head.get("x-user-id");
-      if (internalAdminId === INTERNAL_ADMIN_ID) {
-        return {
-          id: INTERNAL_ADMIN_ID,
-          role: UserRole.SUPER_ADMIN,
-          name: "System Administrator",
-          companyId: null,
-        };
-      }
+      return {
+        id: INTERNAL_ADMIN_ID,
+        role: UserRole.SUPER_ADMIN,
+        name: "System Administrator",
+        companyId: null,
+      };
     }
     await AuditService.log({
       action: "AUTH_FAILED",

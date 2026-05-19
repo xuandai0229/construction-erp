@@ -37,10 +37,21 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
   const { mutate: markNotif } = useNotificationMutation();
   const unreadCount = notifications.filter((n: { isRead: boolean }) => !n.isRead).length;
 
+  const translateProjectType = (type?: string | null) => {
+    if (!type) return 'Dân dụng';
+    const upper = type.toUpperCase();
+    if (upper === 'URBAN_DEVELOPMENT') return 'Phát triển Đô thị';
+    if (upper === 'INFRASTRUCTURE') return 'Hạ tầng';
+    if (upper === 'RESIDENTIAL') return 'Nhà ở dân dụng';
+    if (upper === 'COMMERCIAL') return 'Thương mại';
+    if (upper === 'INDUSTRIAL') return 'Công nghiệp';
+    return type;
+  };
+
   const stats = [
     { label: 'Chủ đầu tư / Đối tác', value: currentProject?.investor || '—', icon: 'M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2' },
     { label: 'Giá trị HĐ', value: formatVnd(propData?.revenue || currentProject?.contractValue || 0), icon: 'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6' },
-    { label: 'Loại công trình', value: currentProject?.projectType || 'Dân dụng', icon: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
+    { label: 'Loại công trình', value: translateProjectType(currentProject?.projectType), icon: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
   ];
 
   return (

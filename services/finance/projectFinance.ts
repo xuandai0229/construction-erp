@@ -32,7 +32,7 @@ export class ProjectFinance {
     const itemMap = new Map<string, EnrichedWBSNode>();
     
     wbs.forEach(w => {
-      const wbsBudget = safeDecimal(budgetMap.get(w.id));
+      const wbsBudget = safeDecimal(budgetMap.get(w.id)).add(safeDecimal((w as any).budgetAmount || 0));
       const wbsActual = safeDecimal(costMap.get(w.id));
 
       itemMap.set(w.id, {
@@ -67,7 +67,7 @@ export class ProjectFinance {
           node.children = assembledChildren;
           node.isExpanded = level === 0;
           
-          const nodeBudget = safeDecimal(node.budget).add(childBudget);
+          const nodeBudget = safeDecimal(node.budget).gt(childBudget) ? safeDecimal(node.budget) : safeDecimal(node.budget).add(childBudget);
           const nodeActual = safeDecimal(node.actual).add(childActual);
           const variance = nodeBudget.sub(nodeActual);
 

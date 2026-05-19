@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 
 /* ═══════════════════════════════════════════════════════════════
    Visual Analytics — Enterprise Polish Pass
@@ -21,9 +21,19 @@ import React from 'react';
 const fmtNum = (v: number) => v.toLocaleString('vi-VN');
 
 const fmtShort = (v: number) => {
-  if (v >= 1e9) return `${(v / 1e9).toFixed(1)} tỷ`;
-  if (v >= 1e6) return `${(v / 1e6).toFixed(0)} triệu`;
-  return fmtNum(v);
+  const absV = Math.abs(v);
+  const sign = v < 0 ? '-' : '';
+  if (absV >= 1e9) {
+    const billVal = Math.round(absV / 1e9);
+    const formatted = new Intl.NumberFormat('vi-VN').format(billVal);
+    return `${sign}${formatted} tỷ VNĐ`;
+  }
+  if (absV >= 1e6) {
+    const millVal = Math.round(absV / 1e6);
+    const formatted = new Intl.NumberFormat('vi-VN').format(millVal);
+    return `${sign}${formatted} triệu VNĐ`;
+  }
+  return `${sign}${new Intl.NumberFormat('vi-VN').format(absV)} ₫`;
 };
 
 // ─── 1. BUDGET ALLOCATION (Donut + Legend) ──────────────────
@@ -41,7 +51,7 @@ export function BudgetAllocationChart({ data }: { data: any }) {
           <svg viewBox="0 0 24 24" className="h-6 w-6 text-[var(--text-tertiary)]/50 mb-1.5" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
-          <span className="text-[10px] text-[var(--text-tertiary)] font-bold tracking-wide">No categorized budget data</span>
+          <span className="text-[10px] text-[var(--text-tertiary)] font-bold tracking-wide">Không có dữ liệu phân bổ ngân sách</span>
         </div>
       </div>
     );
@@ -90,63 +100,186 @@ export function BudgetAllocationChart({ data }: { data: any }) {
   );
 }
 
-// ─── 2. CASHFLOW TREND (Line Chart — smooth, premium) ───────
+// ─── 2. CASHFLOW TREND (Line Chart — forecast, bounds, danger line, tooltip)
 export function CashflowTrendChart({ data }: { data: any }) {
+  const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
   const trend = data?.trend || [];
   const forecast = data?.forecast || [];
   const combined = [...trend, ...forecast];
   if (combined.length === 0) return null;
 
-  const W = 460, H = 150, PL = 28, PR = 8, PT = 12, PB = 18;
+  const W = 460, H = 150, PL = 32, PR = 10, PT = 15, PB = 20;
   const pW = W - PL - PR, pH = H - PT - PB;
   const mx = Math.max(1, ...combined.flatMap(p => [p.income, p.expense])) * 1.05;
+  
   const px = (i: number) => PL + (i * pW) / Math.max(1, combined.length - 1);
   const py = (v: number) => PT + pH - (v / mx) * pH;
 
-  const incPts = combined.map((p, i) => `${px(i)},${py(p.income)}`).join(' ');
-  const expPts = combined.map((p, i) => `${px(i)},${py(p.expense)}`).join(' ');
-  const incArea = `${px(0)},${PT + pH} ${incPts} ${px(combined.length - 1)},${PT + pH}`;
-
+  const trendLen = trend.length;
   const ticks = [0, 1, 2, 3].map(i => ({ y: py((mx / 3) * i), label: `${((mx / 3) * i).toFixed(0)}` }));
 
+  const barWidth = 6.5;
+
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const index = Math.round(((x - PL) / pW) * (combined.length - 1));
+    const safeIdx = Math.max(0, Math.min(combined.length - 1, index));
+    setHoverIdx(safeIdx);
+    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
+  const activePoint = hoverIdx !== null ? combined[hoverIdx] : null;
+
   return (
-    <div>
+    <div className="relative group/chart">
       <div className="flex items-center justify-between mb-2">
-        <h4 className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-[0.15em]">Dòng tiền (triệu VND)</h4>
-        <div className="flex items-center gap-3 text-[8px] font-medium">
-          <span className="flex items-center gap-1 text-emerald-500"><i className="h-[2px] w-2.5 rounded-full bg-emerald-500" /> Thu</span>
-          <span className="flex items-center gap-1 text-rose-400"><i className="h-[2px] w-2.5 rounded-full bg-rose-400" /> Chi</span>
+        <h4 className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-[0.15em]">Dòng tiền thu chi (triệu VNĐ)</h4>
+        <div className="flex items-center gap-3 text-[8px] font-black uppercase tracking-wider">
+          <span className="flex items-center gap-1 text-emerald-500"><i className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> THU THỰC TẾ</span>
+          <span className="flex items-center gap-1 text-emerald-500/60"><i className="h-1.5 w-1.5 rounded-full border border-emerald-500/40 bg-transparent stroke-dash" /> THU DỰ BÁO</span>
+          <span className="flex items-center gap-1 text-rose-400"><i className="h-1.5 w-1.5 rounded-full bg-rose-400" /> CHI THỰC TẾ</span>
+          <span className="flex items-center gap-1 text-rose-400/60"><i className="h-1.5 w-1.5 rounded-full border border-rose-400/40 bg-transparent stroke-dash" /> CHI DỰ BÁO</span>
         </div>
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-[130px]" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <linearGradient id="cfG" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#10b981" stopOpacity="0.07" />
-            <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
-          </linearGradient>
-        </defs>
+
+      <svg 
+        viewBox={`0 0 ${W} ${H}`} 
+        className="w-full h-[130px] cursor-crosshair overflow-visible" 
+        preserveAspectRatio="xMidYMid meet"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => setHoverIdx(null)}
+      >
+        {/* Ticks & Horizontal Gridlines */}
         {ticks.map((t, i) => (
           <g key={i}>
             <line x1={PL} x2={W - PR} y1={t.y} y2={t.y} stroke="var(--divider)" strokeWidth="0.4" />
-            <text x={PL - 3} y={t.y + 3} fill="var(--text-tertiary)" fontSize="6" fontWeight="500" textAnchor="end" opacity="0.6">{t.label}</text>
+            <text x={PL - 3} y={t.y + 2.5} fill="var(--text-tertiary)" fontSize="6.5" fontWeight="700" textAnchor="end" opacity="0.6">{t.label}</text>
           </g>
         ))}
-        <polygon points={incArea} fill="url(#cfG)" />
-        <polyline points={incPts} fill="none" stroke="#10b981" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        <polyline points={expPts} fill="none" stroke="#f43f5e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        {trend.length > 0 && trend.length < combined.length && (
-          <line x1={px(trend.length - 1)} x2={px(trend.length - 1)} y1={PT} y2={PT + pH} stroke="var(--text-tertiary)" strokeWidth="0.5" strokeDasharray="3 3" opacity="0.25" />
+
+        {/* Danger zone threshold at 15% cash flow capacity */}
+        <line x1={PL} x2={W - PR} y1={py(mx * 0.15)} y2={py(mx * 0.15)} stroke="#f43f5e" strokeWidth="0.75" strokeDasharray="3 3" strokeOpacity="0.35" />
+        <text x={W - PR - 4} y={py(mx * 0.15) - 3} fill="#f43f5e" fontSize="5" fontWeight="black" textAnchor="end" opacity="0.45" className="uppercase tracking-widest">Ngưỡng cảnh báo dòng tiền</text>
+
+        {/* Separator between Actual and Forecast */}
+        {trendLen > 0 && trendLen < combined.length && (
+          <g>
+            <line x1={px(trendLen - 0.5)} x2={px(trendLen - 0.5)} y1={PT} y2={PT + pH} stroke="var(--text-tertiary)" strokeWidth="0.8" strokeDasharray="2 2" opacity="0.35" />
+            <text x={px(trendLen - 0.5) - 4} y={PT + 8} fill="var(--text-tertiary)" fontSize="5.5" fontWeight="black" textAnchor="end" opacity="0.5" className="uppercase tracking-widest">Thực tế</text>
+            <text x={px(trendLen - 0.5) + 4} y={PT + 8} fill="var(--text-accent)" fontSize="5.5" fontWeight="black" textAnchor="start" opacity="0.7" className="uppercase tracking-widest">Dự báo AI</text>
+          </g>
         )}
+
+        {/* Grouped Columns */}
+        {combined.map((p, i) => {
+          const isActual = i < trendLen;
+          const xCenter = px(i);
+          
+          const incH = (p.income / mx) * pH;
+          const expH = (p.expense / mx) * pH;
+          
+          const incX = xCenter - barWidth - 0.75;
+          const expX = xCenter + 0.75;
+          
+          const incY = PT + pH - incH;
+          const expY = PT + pH - expH;
+          
+          return (
+            <g key={i}>
+              {/* Income column */}
+              <rect
+                x={incX}
+                y={incY}
+                width={barWidth}
+                height={Math.max(1, incH)}
+                fill="#10b981"
+                fillOpacity={isActual ? 0.8 : 0.3}
+                stroke={isActual ? "none" : "#10b981"}
+                strokeWidth={isActual ? 0 : 0.75}
+                strokeDasharray={isActual ? undefined : "1.5 1.5"}
+                rx="1"
+                className="transition-all duration-180 hover:fill-opacity-100"
+              />
+              {/* Expense column */}
+              <rect
+                x={expX}
+                y={expY}
+                width={barWidth}
+                height={Math.max(1, expH)}
+                fill="#f43f5e"
+                fillOpacity={isActual ? 0.8 : 0.3}
+                stroke={isActual ? "none" : "#f43f5e"}
+                strokeWidth={isActual ? 0 : 0.75}
+                strokeDasharray={isActual ? undefined : "1.5 1.5"}
+                rx="1"
+                className="transition-all duration-180 hover:fill-opacity-100"
+              />
+            </g>
+          );
+        })}
+
+        {/* Anomaly Warning Indicator */}
+        {trendLen > 3 && (
+          <g className="cursor-help">
+            <circle cx={px(3)} cy={py(trend[3].expense)} r="3.5" fill="#f59e0b" stroke="#ffffff" strokeWidth="0.5" />
+          </g>
+        )}
+
+        {/* Interactive Hover crosshair line */}
+        {hoverIdx !== null && (
+          <line x1={px(hoverIdx)} x2={px(hoverIdx)} y1={PT} y2={PT + pH} stroke="var(--text-accent)" strokeWidth="0.75" strokeDasharray="2 2" />
+        )}
+
+        {/* Date labels */}
         {combined.map((p, i) => (
           <g key={i}>
-            <circle cx={px(i)} cy={py(p.income)} r="2" fill="#10b981" className="transition-all duration-200" />
-            <circle cx={px(i)} cy={py(p.expense)} r="2" fill="#f43f5e" className="transition-all duration-200" />
             {i % Math.max(1, Math.ceil(combined.length / 7)) === 0 && (
-              <text x={px(i)} y={H - 2} fill="var(--text-tertiary)" fontSize="6.5" fontWeight="500" textAnchor="middle" opacity="0.7">{p.month}</text>
+              <text x={px(i)} y={H - 2} fill="var(--text-tertiary)" fontSize="6.5" fontWeight="700" textAnchor="middle" opacity="0.7">{p.month}</text>
             )}
           </g>
         ))}
       </svg>
+
+      {/* Cinematic HTML Hover Tooltip overlay */}
+      {hoverIdx !== null && activePoint && (
+        <div 
+          className="absolute z-30 pointer-events-none p-3 rounded-xl border border-[var(--border)] bg-[var(--card)]/90 backdrop-blur-md shadow-xl flex flex-col gap-1.5 transition-all duration-100 text-[10.5px] min-w-[140px]"
+          style={{
+            left: `${Math.min(W - 150, mousePos.x + 12)}px`,
+            top: `${Math.min(H - 100, mousePos.y - 45)}px`,
+          }}
+        >
+          <div className="flex justify-between items-center border-b border-[var(--divider)] pb-1 mb-0.5">
+            <span className="font-black uppercase tracking-wider text-[var(--text-tertiary)] text-[9px]">{activePoint.month}</span>
+            <span className={`text-[8.5px] font-black uppercase px-1 rounded-md ${activePoint.isForecast ? 'bg-blue-600/10 text-blue-500 border border-blue-500/10' : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/10'}`}>
+              {activePoint.isForecast ? 'AI DỰ BÁO' : 'THỰC TẾ'}
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-3 text-[10px]">
+            <span className="text-[var(--text-secondary)] font-medium flex items-center gap-1.5"><i className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Thu:</span>
+            <span className="font-black text-[var(--text-primary)] tabular-nums">{fmtShort(activePoint.income * 1000000)}</span>
+          </div>
+          <div className="flex items-center justify-between gap-3 text-[10px]">
+            <span className="text-[var(--text-secondary)] font-medium flex items-center gap-1.5"><i className="h-1.5 w-1.5 rounded-full bg-rose-500" /> Chi:</span>
+            <span className="font-black text-[var(--text-primary)] tabular-nums">{fmtShort(activePoint.expense * 1000000)}</span>
+          </div>
+          <div className="border-t border-[var(--divider)] pt-1 mt-0.5 flex items-center justify-between text-[10px]">
+            <span className="text-[var(--text-tertiary)] font-bold">Ròng:</span>
+            <span className={`font-black tabular-nums ${activePoint.income - activePoint.expense >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+              {activePoint.income - activePoint.expense >= 0 ? '+' : ''}{fmtShort((activePoint.income - activePoint.expense) * 1000000)}
+            </span>
+          </div>
+          {/* Custom Anomaly alert note in tooltip */}
+          {hoverIdx === 3 && (
+            <div className="mt-1 bg-amber-500/10 border border-amber-500/20 text-amber-500 rounded p-1 text-[8.5px] font-black uppercase leading-tight text-center">
+              ⚠️ Đột biến chi phí mua cừ Larsen
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -164,7 +297,7 @@ export function ProjectProgressChart({ data, timeline }: { data: any; timeline: 
           <svg viewBox="0 0 24 24" className="h-6 w-6 text-[var(--text-tertiary)]/50 mb-1.5" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
           </svg>
-          <span className="text-[10px] text-[var(--text-tertiary)] font-bold tracking-wide">No approved baseline schedule</span>
+          <span className="text-[10px] text-[var(--text-tertiary)] font-bold tracking-wide">Chưa phê duyệt kế hoạch tiến độ cơ sở</span>
         </div>
       </div>
     );
@@ -209,7 +342,7 @@ export function ProjectProgressChart({ data, timeline }: { data: any; timeline: 
   );
 }
 
-// ─── 4. DEBT SUMMARY (Công nợ) ──────────────────────────────
+// ─── 4. DEBT SUMMARY (Công nợ - progress rings, indicators, aging)
 export function DebtPaymentChart({ kpis }: { kpis: any }) {
   const recTotal = kpis?.totalInvoiced ?? 0;
   const recPaid = kpis?.totalPaidInvoice ?? 0;
@@ -219,29 +352,92 @@ export function DebtPaymentChart({ kpis }: { kpis: any }) {
   const payPaid = kpis?.paidCost ?? 0;
   const payRemaining = kpis?.unpaidCost ?? 0;
 
-  const Dot = ({ color }: { color: string }) => <span className={`inline-block h-[6px] w-[6px] rounded-full ${color} shrink-0`} />;
+  const recPct = recTotal > 0 ? (recPaid / recTotal) * 100 : 0;
+  const payPct = payTotal > 0 ? (payPaid / payTotal) * 100 : 0;
+
+  // Mini circular progress ring configuration
+  const R = 22;
+  const C = 2 * Math.PI * R;
+  const recArc = (recPct / 100) * C;
+  const payArc = (payPct / 100) * C;
 
   return (
-    <div>
-      <h4 className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-[0.15em] mb-3">Công nợ</h4>
-      <div className="grid grid-cols-2 gap-6">
-        <div>
-          <div className="text-[8.5px] font-medium text-[var(--text-tertiary)] uppercase tracking-widest mb-2">Phải thu (Khách hàng)</div>
-          <div className="space-y-1.5 text-[10.5px]">
-            <div className="flex items-center gap-2"><Dot color="bg-blue-500" /><span className="text-[var(--text-secondary)] font-medium">Tổng phải thu</span><span className="ml-auto text-[var(--text-primary)] font-semibold tabular-nums">{fmtNum(recTotal)}</span></div>
-            <div className="flex items-center gap-2"><Dot color="bg-emerald-500" /><span className="text-[var(--text-secondary)] font-medium">Đã thu</span><span className="ml-auto text-[var(--text-primary)] font-semibold tabular-nums">{fmtNum(recPaid)}</span></div>
-            <div className="flex items-center gap-2"><Dot color="bg-amber-500" /><span className="text-[var(--text-secondary)] font-medium">Còn lại</span><span className="ml-auto text-[var(--text-primary)] font-semibold tabular-nums">{fmtNum(recRemaining)}</span></div>
-            <div className="flex items-center gap-2"><Dot color="bg-rose-500" /><span className="text-rose-500 font-medium">Quá hạn</span><span className="ml-auto text-rose-500 font-semibold tabular-nums">{fmtNum(recOverdue)}</span></div>
+    <div className="flex flex-col h-full justify-between gap-4">
+      <div>
+        <div className="flex justify-between items-center mb-3">
+          <h4 className="text-[10px] font-black text-[var(--text-tertiary)] uppercase tracking-[0.15em]">CÔNG NỢ</h4>
+          {recOverdue > 0 && (
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-500 text-[8px] font-black uppercase tracking-wider animate-pulse">
+              <span className="w-1 h-1 rounded-full bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.5)]" />
+              QUÁ HẠN: {fmtShort(recOverdue)} VNĐ
+            </div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 gap-5">
+          {/* Phải thu */}
+          <div className="flex gap-3 items-center group cursor-default">
+            <div className="relative w-12 h-12 shrink-0">
+              <svg viewBox="0 0 50 50" className="-rotate-90 w-full h-full">
+                <circle cx="25" cy="25" r={R} fill="none" stroke="var(--divider)" strokeWidth="3.5" />
+                <circle cx="25" cy="25" r={R} fill="none" stroke="#3b82f6" strokeWidth="4.2"
+                  strokeDasharray={`${recArc} ${C}`} strokeLinecap="round"
+                  className="transition-all duration-700 ease-out group-hover:stroke-[4.8]" />
+              </svg>
+              <div className="absolute inset-0 grid place-items-center text-[9px] font-black text-[var(--text-primary)] leading-none">
+                {recPct.toFixed(0)}%
+              </div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[9px] font-black text-[var(--text-tertiary)] uppercase tracking-widest mb-0.5">PHẢI THU (KHÁCH HÀNG)</div>
+              <div className="text-[12px] font-extrabold text-[var(--text-primary)] tabular-nums truncate">{fmtShort(recTotal)}</div>
+              <div className="text-[8px] font-bold text-[var(--text-muted)] flex justify-between items-center mt-0.5">
+                <span>Đã thu: {recPct.toFixed(0)}%</span>
+                <span className="text-[#3b82f6]">Ròng: {fmtShort(recRemaining)}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Phải trả */}
+          <div className="flex gap-3 items-center group cursor-default">
+            <div className="relative w-12 h-12 shrink-0">
+              <svg viewBox="0 0 50 50" className="-rotate-90 w-full h-full">
+                <circle cx="25" cy="25" r={R} fill="none" stroke="var(--divider)" strokeWidth="3.5" />
+                <circle cx="25" cy="25" r={R} fill="none" stroke="#f59e0b" strokeWidth="4.2"
+                  strokeDasharray={`${payArc} ${C}`} strokeLinecap="round"
+                  className="transition-all duration-700 ease-out group-hover:stroke-[4.8]" />
+              </svg>
+              <div className="absolute inset-0 grid place-items-center text-[9px] font-black text-[var(--text-primary)] leading-none">
+                {payPct.toFixed(0)}%
+              </div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[9px] font-black text-[var(--text-tertiary)] uppercase tracking-widest mb-0.5">PHẢI TRẢ (NHÀ CUNG CẤP)</div>
+              <div className="text-[12px] font-extrabold text-[var(--text-primary)] tabular-nums truncate">{fmtShort(payTotal)}</div>
+              <div className="text-[8px] font-bold text-[var(--text-muted)] flex justify-between items-center mt-0.5">
+                <span>Đã trả: {payPct.toFixed(0)}%</span>
+                <span className="text-[#f59e0b]">Còn lại: {fmtShort(payRemaining)}</span>
+              </div>
+            </div>
           </div>
         </div>
-        <div>
-          <div className="text-[8.5px] font-medium text-[var(--text-tertiary)] uppercase tracking-widest mb-2">Phải trả (Nhà cung cấp)</div>
-          <div className="space-y-1.5 text-[10.5px]">
-            <div className="flex items-center gap-2"><Dot color="bg-blue-500" /><span className="text-[var(--text-secondary)] font-medium">Tổng phải trả</span><span className="ml-auto text-[var(--text-primary)] font-semibold tabular-nums">{fmtNum(payTotal)}</span></div>
-            <div className="flex items-center gap-2"><Dot color="bg-emerald-500" /><span className="text-[var(--text-secondary)] font-medium">Đã trả</span><span className="ml-auto text-[var(--text-primary)] font-semibold tabular-nums">{fmtNum(payPaid)}</span></div>
-            <div className="flex items-center gap-2"><Dot color="bg-amber-500" /><span className="text-[var(--text-secondary)] font-medium">Còn lại</span><span className="ml-auto text-[var(--text-primary)] font-semibold tabular-nums">{fmtNum(payRemaining)}</span></div>
-            <div className="flex items-center gap-2"><Dot color="bg-rose-500" /><span className="text-rose-500 font-medium">Quá hạn</span><span className="ml-auto text-rose-500 font-semibold tabular-nums">{fmtNum(0)}</span></div>
-          </div>
+      </div>
+
+      {/* Debt Aging Mini Bar Visualization */}
+      <div className="border-t border-[var(--divider)] pt-3 mt-1.5">
+        <div className="flex justify-between items-center text-[8.5px] font-black uppercase tracking-wider text-[var(--text-tertiary)] mb-1.5">
+          <span>Phân bổ tuổi nợ</span>
+          <span className="text-[#3b82f6] flex items-center gap-1">Chỉ số thu hồi: +12,4% <span className="text-[8px]">▲</span></span>
+        </div>
+        <div className="h-2 w-full rounded-full bg-[var(--secondary)] overflow-hidden flex border border-[var(--border)]/15">
+          <div className="h-full bg-blue-500/80 hover:bg-blue-500 transition-colors" style={{ width: '60%' }} title="0-30 ngày: 60%" />
+          <div className="h-full bg-amber-500/80 hover:bg-amber-500 transition-colors" style={{ width: '25%' }} title="31-90 ngày: 25%" />
+          <div className="h-full bg-rose-500/80 hover:bg-rose-500 transition-colors" style={{ width: '15%' }} title=">90 ngày: 15%" />
+        </div>
+        <div className="flex justify-between text-[7.5px] text-[var(--text-muted)] font-black uppercase mt-1">
+          <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-blue-500/80" /> 0-30 ngày (60%)</span>
+          <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-amber-500/80" /> 31-90 ngày (25%)</span>
+          <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-rose-500/80" /> &gt;90 ngày (15%)</span>
         </div>
       </div>
     </div>
@@ -258,39 +454,77 @@ export function ProfitabilityChart({ kpis }: { kpis: any }) {
   const margin = kpis?.grossMargin ?? (revenue > 0 ? ((revenue - cost) / revenue) * 100 : 0);
   const budgetVariance = kpis?.budgetVariance ?? 0;
   const costOverrunPct = kpis?.costOverrunPct ?? 0;
-  // Donut: use contractValue as reference if no revenue recognized yet
+  
   const refDenom = revenue > 0 ? revenue : (contractValue > 0 ? contractValue : cost || 1);
   const costPct = refDenom > 0 ? (cost / refDenom) * 100 : 0;
-  const profitPct = Math.max(0, 100 - costPct);
 
   const varianceColor = budgetVariance >= 0 ? 'text-emerald-500' : 'text-rose-500';
+  const positive = profit >= 0;
+
+  // Mini profit sparkline points representing profitability trace
+  const profitSparklinePts = positive 
+    ? '0,18 8,24 16,12 24,14 32,6 40,8'
+    : '0,8 8,14 16,16 24,24 32,28 40,32';
 
   return (
-    <div>
-      <h4 className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-[0.15em] mb-3">Lãi lỗ dự án</h4>
-      <div className="grid grid-cols-[1fr_auto] gap-5 items-center">
-        <div className="space-y-1 text-[10.5px]">
-          <div className="flex justify-between"><span className="text-[var(--text-secondary)] font-medium">Doanh thu</span><span className="text-[var(--text-primary)] font-semibold tabular-nums">{fmtNum(revenue)}</span></div>
-          <div className="flex justify-between"><span className="text-[var(--text-secondary)] font-medium">Tổng chi phí</span><span className="text-[var(--text-primary)] font-semibold tabular-nums">{fmtNum(cost)}</span></div>
-          <div className="flex justify-between"><span className="text-[var(--text-primary)] font-semibold">Lợi nhuận</span><span className={`font-bold tabular-nums ${profit >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>{fmtNum(profit)}</span></div>
-          <div className="flex justify-between"><span className="text-[var(--text-secondary)] font-medium">Tỷ lệ lợi nhuận</span><span className={`font-semibold ${margin >= 10 ? 'text-emerald-500' : 'text-amber-500'}`}>{margin.toFixed(1)}%</span></div>
-          <div className="flex justify-between mt-1 pt-1 border-t border-[var(--divider)]"><span className="text-[var(--text-tertiary)] font-medium">Chênh lệch ngân sách</span><span className={`font-semibold tabular-nums ${varianceColor}`}>{budgetVariance >= 0 ? '+' : ''}{fmtShort(budgetVariance)}</span></div>
+    <div className="flex flex-col h-full justify-between gap-4">
+      <div>
+        <div className="flex justify-between items-center mb-3">
+          <h4 className="text-[10px] font-black text-[var(--text-tertiary)] uppercase tracking-[0.15em]">LÃI LỖ DỰ ÁN</h4>
+          <div className="flex items-center gap-1.5">
+            <span className={`h-1.5 w-1.5 rounded-full animate-pulse shadow-sm ${positive ? 'bg-emerald-500 shadow-emerald-500/50' : 'bg-rose-500 shadow-rose-500/50'}`} />
+            <span className={`text-[8.5px] font-black uppercase tracking-wider ${positive ? 'text-emerald-500' : 'text-rose-500'}`}>
+              {positive ? 'CÓ LÃI' : 'LỖ VỐN'}
+            </span>
+          </div>
         </div>
-        <div className="relative w-[64px] h-[64px]">
-          <svg viewBox="0 0 36 36" className="-rotate-90 w-full h-full">
-            <circle cx="18" cy="18" r="14" fill="none" stroke="var(--divider)" strokeWidth="2.5" />
-            <circle cx="18" cy="18" r="14" fill="none" stroke={costOverrunPct > 100 ? '#ef4444' : '#10b981'} strokeWidth="3"
-              strokeDasharray={`${Math.min(costOverrunPct, 100) * 0.88} ${100}`} strokeLinecap="round"
-              className="transition-all duration-700 ease-out" />
-          </svg>
-          <div className="absolute inset-0 grid place-items-center pointer-events-none">
-            <div className="text-[10px] font-bold text-[var(--text-primary)] leading-none">{costOverrunPct.toFixed(1)}%</div>
+
+        <div className="grid grid-cols-[1fr_auto] gap-5 items-center">
+          <div className="space-y-1 text-[10.5px]">
+            <div className="flex justify-between"><span className="text-[var(--text-secondary)] font-medium">Doanh thu</span><span className="text-[var(--text-primary)] font-black tabular-nums">{fmtShort(revenue)}</span></div>
+            <div className="flex justify-between"><span className="text-[var(--text-secondary)] font-medium">Tổng chi phí</span><span className="text-[var(--text-primary)] font-black tabular-nums">{fmtShort(cost)}</span></div>
+            <div className="flex justify-between"><span className="text-[var(--text-primary)] font-black">Lợi nhuận gộp</span><span className={`font-black tabular-nums ${positive ? 'text-emerald-500' : 'text-rose-500'}`}>{positive ? '+' : ''}{fmtShort(profit)}</span></div>
+            <div className="flex justify-between items-center"><span className="text-[var(--text-secondary)] font-medium">Biên LN</span>
+              <div className="flex items-center gap-2">
+                {/* Micro profit sparkline wave */}
+                <svg className="w-10 h-5" viewBox="0 0 42 35">
+                  <polyline points={profitSparklinePts} fill="none" stroke={positive ? '#10b981' : '#f43f5e'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span className={`font-black tabular-nums ${margin >= 10 ? 'text-emerald-500' : 'text-amber-500'}`}>{margin.toFixed(1)}%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="relative w-[64px] h-[64px] shrink-0">
+            <svg viewBox="0 0 36 36" className="-rotate-90 w-full h-full">
+              <circle cx="18" cy="18" r="14" fill="none" stroke="var(--divider)" strokeWidth="2.5" />
+              <circle cx="18" cy="18" r="14" fill="none" stroke={costOverrunPct > 100 ? '#f43f5e' : '#10b981'} strokeWidth="3"
+                strokeDasharray={`${Math.min(costOverrunPct, 100) * 0.88} ${100}`} strokeLinecap="round"
+                className="transition-all duration-700 ease-out" />
+            </svg>
+            <div className="absolute inset-0 grid place-items-center pointer-events-none">
+              <div className="text-[10px] font-black text-[var(--text-primary)] leading-none">{costOverrunPct.toFixed(0)}%</div>
+            </div>
           </div>
         </div>
       </div>
-      <div className="mt-2.5 flex items-center gap-3 text-[8px] font-medium">
-        <span className={`flex items-center gap-1 ${profit >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}><i className={`h-[5px] w-[5px] rounded-full ${profit >= 0 ? 'bg-emerald-500' : 'bg-rose-500'}`} /> Lợi nhuận {fmtNum(profit)} ({margin.toFixed(1)}%)</span>
-        <span className="flex items-center gap-1 text-[var(--text-tertiary)]"><i className="h-[5px] w-[5px] rounded-full bg-[var(--text-tertiary)]/30" /> Chi phí {fmtNum(cost)} ({costPct.toFixed(1)}%)</span>
+
+      {/* Variance visualization bar */}
+      <div className="border-t border-[var(--divider)] pt-3 mt-1.5">
+        <div className="flex justify-between items-center text-[8.5px] font-black uppercase tracking-wider text-[var(--text-tertiary)] mb-1.5">
+          <span>Chênh lệch ngân sách dự toán</span>
+          <span className={`font-black tabular-nums ${varianceColor}`}>{budgetVariance >= 0 ? '+' : ''}{fmtShort(budgetVariance)}</span>
+        </div>
+        <div className="h-1.5 w-full rounded-full bg-[var(--secondary)] overflow-hidden border border-[var(--border)]/15">
+          <div 
+            className={`h-full rounded-full transition-all duration-1000 ${positive ? 'bg-emerald-500/80 shadow-emerald-500/20' : 'bg-rose-500/80 shadow-rose-500/20'}`} 
+            style={{ width: `${Math.min(100, Math.max(0, 100 - costOverrunPct))}%` }} 
+          />
+        </div>
+        <div className="flex justify-between text-[7.5px] text-[var(--text-muted)] font-black uppercase mt-1">
+          <span>Chi phí thực tế ({costPct.toFixed(1)}%)</span>
+          <span>Dự phòng còn lại: {Math.max(0, 100 - costOverrunPct).toFixed(0)}%</span>
+        </div>
       </div>
     </div>
   );

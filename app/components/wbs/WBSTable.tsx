@@ -111,7 +111,7 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
   const statusMap: Record<string, string> = {
     'Đang thi công': 'border-emerald-500/30 text-emerald-600 bg-emerald-500/10',
     'Chậm tiến độ': 'border-orange-500/30 text-orange-600 bg-orange-500/10',
-    'Chưa triển khai': 'border-[var(--border)] text-[var(--text-muted)] bg-[var(--secondary)]',
+    'Chưa triển khai': 'border-[var(--border)] text-[var(--text-secondary)] bg-[var(--secondary)]',
     'Hoàn thành': 'border-blue-500/30 text-blue-600 bg-blue-500/10',
     'Vượt ngân sách': 'border-rose-500/30 text-rose-600 bg-rose-500/10 font-bold animate-pulse',
     'Chưa lập dự toán': 'border-rose-500/30 text-rose-600 bg-rose-500/10 italic',
@@ -155,14 +155,14 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                   <th className={`${COL_WIDTHS.CHECKBOX} text-center bg-[var(--table-head-bg)] border-r border-[var(--border)]`}>
                     <input type="checkbox" className="rounded border-[var(--border)] bg-[var(--secondary)] text-blue-600 focus:ring-blue-500/20 focus:ring-offset-0" />
                   </th>
-                  <th className={`${COL_WIDTHS.INDEX} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>Mã WBS</th>
-                  <th className={`${COL_WIDTHS.NAME_WBS} bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)] text-left px-4 border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.WBS.COL_NAME}</th>
-                  <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.BUDGET}</th>
-                  <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.ACTUAL}</th>
-                  <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.VARIANCE}</th>
-                  <th className={`${COL_WIDTHS.PROGRESS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>Tiến độ %</th>
-                  <th className={`${COL_WIDTHS.STATUS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.STATUS.TITLE}</th>
-                  <th className={`${COL_WIDTHS.ACTIONS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-muted)]`}>{ERP_TERMINOLOGY.ACTIONS.TITLE}</th>
+                  <th className={`${COL_WIDTHS.INDEX} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>Mã WBS</th>
+                  <th className={`${COL_WIDTHS.NAME_WBS} bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] text-left px-4 border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.WBS.COL_NAME}</th>
+                  <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.BUDGET}</th>
+                  <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.ACTUAL}</th>
+                  <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.VARIANCE}</th>
+                  <th className={`${COL_WIDTHS.PROGRESS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>Tiến độ %</th>
+                  <th className={`${COL_WIDTHS.STATUS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.STATUS.TITLE}</th>
+                  <th className={`${COL_WIDTHS.ACTIONS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)]`}>{ERP_TERMINOLOGY.ACTIONS.TITLE}</th>
                 </tr>
               )}
               itemContent={(i, node) => {
@@ -181,13 +181,13 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                     <td className={`${COL_WIDTHS.NAME_WBS} px-4 py-3 border-r border-[var(--border)]`}>
                       <div className="flex items-center" style={{ paddingLeft: `${node.level * 20}px` }}>
                         {isParent ? (
-                          <button onClick={() => onToggleExpand(node.id)} className="mr-2 flex h-5 w-5 items-center justify-center rounded text-[var(--text-muted)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)] transition-colors">
+                          <button onClick={() => onToggleExpand(node.id)} className="mr-2 flex h-5 w-5 items-center justify-center rounded text-[var(--text-secondary)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)] transition-colors">
                             <svg viewBox="0 0 24 24" className={`h-4 w-4 transition-transform ${node.isExpanded ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" strokeWidth="2">
                               <path d="M9 18l6-6-6-6" />
                             </svg>
                           </button>
                         ) : (
-                          <div className="mr-2 w-5 flex justify-center text-[var(--text-muted)] opacity-30 text-[10px]">●</div>
+                          <div className="mr-2 w-5 flex justify-center text-[var(--text-secondary)] opacity-40 text-[10px]">●</div>
                         )}
                         <span className={`text-[13px] ${isParent ? 'font-bold text-[var(--text-primary)]' : 'font-medium text-[var(--text-secondary)]'}`}>
                           {node.name === 'Foundation' ? 'Hầm & Móng' :
@@ -210,7 +210,7 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                     <td className={`${COL_WIDTHS.PROGRESS} px-4 py-3 border-r border-[var(--border)]`}>
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center justify-between">
-                          <span className={`text-[10px] font-bold ${isOverBudget ? 'text-rose-500' : 'text-[var(--text-muted)]'}`}>
+                          <span className={`text-[10px] font-bold ${isOverBudget ? 'text-rose-500' : 'text-[var(--text-secondary)]'}`}>
                             {node.percentage.toFixed(0)}%
                           </span>
                         </div>
@@ -231,7 +231,7 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                       <div className="flex items-center justify-center gap-1">
                         <button
                           onClick={() => handleEdit(node)}
-                          className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] shadow-sm transition-all hover:text-blue-500 hover:bg-blue-500/10"
+                          className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-secondary)] shadow-sm transition-all hover:text-blue-500 hover:bg-blue-500/10"
                           title="Sửa"
                         >
                           <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -241,7 +241,7 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                         </button>
                         <button
                           onClick={() => onAddChild && onAddChild(node.id)}
-                          className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] shadow-sm transition-all hover:text-emerald-500 hover:bg-emerald-500/10"
+                          className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-secondary)] shadow-sm transition-all hover:text-emerald-500 hover:bg-emerald-500/10"
                           title="Thêm mục con"
                         >
                           <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -250,7 +250,7 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                         </button>
                         <button
                           onClick={() => handleDeleteClick(node)}
-                          className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] shadow-sm transition-all hover:text-rose-500 hover:bg-rose-500/10"
+                          className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-secondary)] shadow-sm transition-all hover:text-rose-500 hover:bg-rose-500/10"
                           title="Xóa"
                         >
                           <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">

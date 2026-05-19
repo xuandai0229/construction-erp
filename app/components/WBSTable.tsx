@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState } from 'react';
 import { WBSBudgetRow, formatVnd } from './dashboard-data';
 import { COL_WIDTHS, FINANCIAL_CELL_CLASS } from '@/app/utils/table-constants';
@@ -12,7 +10,6 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
 
   const renderRows = (items: WBSBudgetRow[], level = 0, state = { count: 0 }): React.ReactNode => {
     return items.map((item) => {
-      // If not expanded, we limit the TOTAL count of rows shown
       if (!isExpanded && state.count >= INITIAL_VISIBLE_COUNT) return null;
       state.count++;
 
@@ -21,44 +18,44 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
 
       return (
         <React.Fragment key={item.id}>
-          <tr className="group erp-table-row select-none">
+          <tr className="group hover:bg-[var(--table-row-hover)] even:bg-[var(--divider)]/10 transition-all duration-180 border-b border-[var(--border)] last:border-b-0 select-none">
             {/* WBS Name */}
-            <td className="w-[320px] whitespace-nowrap py-2 px-4 border-r border-[var(--border)]">
+            <td className="w-[320px] py-2.5 px-4 border-r border-[var(--border)]">
               <div className="flex items-center gap-2.5" style={{ paddingLeft: `${level * 16}px` }}>
                 {item.children.length > 0 && (
                   <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 text-[var(--text-tertiary)] group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="m6 9 6 6 6-6" />
                   </svg>
                 )}
-                <span className={`font-bold truncate tracking-tight ${level === 0 ? 'text-blue-500 text-[12px]' : 'text-[var(--text-secondary)] text-[11.5px]'}`} title={item.name}>
+                <span className={`font-black truncate tracking-tight ${level === 0 ? 'text-blue-500 text-[11.5px]' : 'text-[var(--text-secondary)] text-[11px]'}`} title={item.name}>
                   {item.name}
                 </span>
               </div>
             </td>
 
-            <td className={`${COL_WIDTHS.FINANCIAL} text-right py-2 px-4 ${FINANCIAL_CELL_CLASS} text-[11.5px] text-[var(--text-tertiary)] font-bold tabular-nums whitespace-nowrap border-r border-[var(--border)]`}>
+            <td className={`${COL_WIDTHS.FINANCIAL} text-right py-2.5 px-4 ${FINANCIAL_CELL_CLASS} text-[11.5px] text-[var(--text-tertiary)] font-bold tabular-nums whitespace-nowrap border-r border-[var(--border)]`}>
               {formatVnd(item.budget)}
             </td>
-            <td className={`${COL_WIDTHS.FINANCIAL} text-right py-2 px-4 ${FINANCIAL_CELL_CLASS} text-[11.5px] text-[var(--text-primary)] font-bold tabular-nums group-hover:text-blue-500 transition-colors whitespace-nowrap border-r border-[var(--border)]`}>
+            <td className={`${COL_WIDTHS.FINANCIAL} text-right py-2.5 px-4 ${FINANCIAL_CELL_CLASS} text-[11.5px] text-[var(--text-primary)] font-bold tabular-nums group-hover:text-blue-500 transition-colors whitespace-nowrap border-r border-[var(--border)]`}>
               {formatVnd(item.actual)}
             </td>
-            <td className={`${COL_WIDTHS.FINANCIAL} text-right py-2 px-4 ${FINANCIAL_CELL_CLASS} text-[11.5px] font-bold tabular-nums whitespace-nowrap border-r border-[var(--border)] ${item.profit >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+            <td className={`${COL_WIDTHS.FINANCIAL} text-right py-2.5 px-4 ${FINANCIAL_CELL_CLASS} text-[11.5px] font-black tabular-nums whitespace-nowrap border-r border-[var(--border)] ${item.profit >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
               {item.profit >= 0 ? '+' : ''}{formatVnd(item.profit)}
             </td>
 
             {/* Progress bar */}
-            <td className={`${COL_WIDTHS.PROGRESS} text-center py-2 px-4`}>
+            <td className={`${COL_WIDTHS.PROGRESS} text-center py-2.5 px-4`}>
               <div className="flex flex-col items-center gap-1">
-                <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--secondary)]/50 border border-[var(--border)]/10">
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--secondary)] border border-[var(--border)]/15">
                   <div
                     className={`h-full rounded-full transition-all duration-1000 ease-out ${isOverBudget
-                      ? 'bg-gradient-to-r from-rose-600 to-rose-400'
-                      : 'bg-gradient-to-r from-blue-600 to-blue-400'
+                      ? 'bg-gradient-to-r from-rose-600 to-rose-400 shadow-[0_0_8px_rgba(244,63,94,0.3)]'
+                      : 'bg-gradient-to-r from-blue-600 to-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.3)]'
                       }`}
                     style={{ width: `${Math.min(100, percentage)}%` }}
                   />
                 </div>
-                <span className={`text-[9px] font-extrabold tracking-widest uppercase ${isOverBudget ? 'text-rose-500' : 'text-[var(--text-tertiary)]'}`}>
+                <span className={`text-[9px] font-extrabold tracking-widest uppercase ${isOverBudget ? 'text-rose-500 animate-pulse' : 'text-[var(--text-tertiary)]'}`}>
                   {percentage.toFixed(1)}%
                 </span>
               </div>
@@ -70,7 +67,6 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
     });
   };
 
-  // Calculate total rows for "See More" visibility
   const countAllRows = (items: WBSBudgetRow[]): number => {
     return items.reduce((acc, item) => acc + 1 + countAllRows(item.children), 0);
   };
@@ -78,11 +74,11 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
   const hasMore = totalRows > INITIAL_VISIBLE_COUNT;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col border border-[var(--border)] rounded-xl overflow-hidden bg-[var(--card)]/30 backdrop-blur-sm">
       <div className={`scroll-hint-container ${showScrollHint ? 'scroll-hint-right' : ''}`}>
         <div
           ref={scrollContainerRef}
-          className={`overflow-x-auto scrollbar-hide border border-[var(--border)] rounded-xl bg-[var(--card)]/30 backdrop-blur-sm ${dragCursorClass}`}
+          className={`overflow-x-auto scrollbar-thin scrollbar-thumb-[var(--border)] scrollbar-track-transparent ${dragCursorClass}`}
         >
           {showScrollHint && (
             <div className="scroll-hint-icon" title="Cuộn ngang để xem thêm">
@@ -91,12 +87,12 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
           )}
           <table className="erp-table w-full table-fixed min-w-[800px]">
             <thead>
-              <tr className="bg-[var(--table-head-bg)]">
-                <th className="w-[320px] text-left px-5 py-3 uppercase text-[10px] tracking-[0.2em] text-[var(--text-secondary)] font-black border-r border-[var(--border)]">Hạng mục thi công (WBS)</th>
-                <th className={`${COL_WIDTHS.FINANCIAL} text-right px-5 py-3 uppercase text-[10px] tracking-[0.1em] text-[var(--text-secondary)] font-black border-r border-[var(--border)]`}>Dự toán ngân sách</th>
-                <th className={`${COL_WIDTHS.FINANCIAL} text-right px-5 py-3 uppercase text-[10px] tracking-[0.1em] text-[var(--text-secondary)] font-black border-r border-[var(--border)]`}>Chi phí thực tế</th>
-                <th className={`${COL_WIDTHS.FINANCIAL} text-right px-5 py-3 uppercase text-[10px] tracking-[0.1em] text-[var(--text-secondary)] font-black border-r border-[var(--border)]`}>Chênh lệch</th>
-                <th className={`${COL_WIDTHS.PROGRESS} text-center px-5 py-3 uppercase text-[10px] tracking-[0.2em] text-[var(--text-secondary)] font-black border-none`}>Tiến độ</th>
+              <tr className="bg-[var(--table-head-bg)] border-b border-[var(--border)] h-9">
+                <th className="w-[320px] text-left px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)]">Hạng mục thi công (WBS)</th>
+                <th className={`${COL_WIDTHS.FINANCIAL} text-right px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)]`}>Dự toán ngân sách</th>
+                <th className={`${COL_WIDTHS.FINANCIAL} text-right px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)]`}>Chi phí thực tế</th>
+                <th className={`${COL_WIDTHS.FINANCIAL} text-right px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)]`}>Chênh lệch</th>
+                <th className={`${COL_WIDTHS.PROGRESS} text-center px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-none`}>Tiến độ</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--border)]">
@@ -104,20 +100,13 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
                 renderRows(data)
               ) : (
                 <tr>
-                  <td colSpan={5} className="h-32 text-center text-[11px] font-bold text-[var(--text-tertiary)] uppercase tracking-[0.2em]">
+                  <td colSpan={5} className="h-32 text-center text-[10.5px] font-bold text-[var(--text-tertiary)] uppercase tracking-[0.2em]">
                     Không có dữ liệu WBS
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
-
-          {/* Bottom Fade Overlay - only when NOT expanded and has more data */}
-          {!isExpanded && hasMore && (
-            <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[var(--background)] to-transparent pointer-events-none z-10"
-              style={{ opacity: 0.9 }}
-            />
-          )}
         </div>
       </div>
 
@@ -125,7 +114,7 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
         <div className="flex justify-center border-t border-[var(--border)] bg-[var(--secondary)]/10">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-2 py-3.5 w-full justify-center text-[9px] font-black uppercase tracking-[0.25em] text-[var(--text-tertiary)] hover:text-blue-500 hover:bg-blue-500/5 transition-all duration-300 group"
+            className="flex items-center gap-2 py-3 w-full justify-center text-[9px] font-black uppercase tracking-[0.25em] text-[var(--text-tertiary)] hover:text-blue-500 hover:bg-blue-500/5 transition-all duration-180 group"
           >
             {isExpanded ? (
               <>

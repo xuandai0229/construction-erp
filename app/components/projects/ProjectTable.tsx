@@ -36,7 +36,7 @@ const enrichProject = (p: Project, index: number) => {
     code: `PRJ-${p.id.substring(0, 4).toUpperCase()}`,
     type: p.projectType || 'Dân dụng',
     typeColor: 'text-[var(--text-muted)]',
-    progress: Math.floor(Math.random() * 100),
+    progress: (p as any).progress || 0,
     thumbnail: CONSTRUCTION_IMAGES[index % CONSTRUCTION_IMAGES.length]
   };
 };
@@ -222,13 +222,13 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
                   </td>
                   <td className={`${COL_WIDTHS.FINANCIAL} py-3 px-4 text-right border-r border-[var(--border)]`}>
                     <div className="flex items-baseline gap-1 justify-end whitespace-nowrap">
-                      <span className="text-[12px] font-bold text-[var(--text-primary)] tabular-nums">{(p.totalValue ?? 0).toLocaleString()}</span>
+                      <span className="text-[12px] font-bold text-[var(--text-primary)] tabular-nums">{(p.totalBudget ?? 0).toLocaleString()}</span>
                       <span className="text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-widest opacity-60">VND</span>
                     </div>
                   </td>
                   <td className={`${COL_WIDTHS.FINANCIAL} py-3 px-4 text-right border-r border-[var(--border)]`}>
                     <div className="flex items-baseline gap-1 justify-end whitespace-nowrap">
-                      <span className="text-[12px] font-bold text-blue-500 tabular-nums">{(p.totalValue ?? 0).toLocaleString()}</span>
+                      <span className="text-[12px] font-bold text-blue-500 tabular-nums">{((p as any).actualCost ?? 0).toLocaleString()}</span>
                       <span className="text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-widest opacity-60">VND</span>
                     </div>
                   </td>

@@ -20,7 +20,7 @@ export default function AIChatBox() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
+
   const { currentProjectId } = useERPStore();
 
   const quickQuestions = [
@@ -57,7 +57,7 @@ export default function AIChatBox() {
       });
 
       const result = await response.json();
-      
+
       if (result.success && result.data?.answer) {
         setMessages(prev => [...prev, {
           role: 'assistant',
@@ -90,7 +90,7 @@ export default function AIChatBox() {
       if (formattedLine.startsWith('### ')) {
         return <h4 key={idx} className="text-sm font-black text-blue-400 mt-3 mb-2 tracking-tight uppercase">{formattedLine.replace('### ', '')}</h4>;
       }
-      
+
       // Bullet points
       if (formattedLine.startsWith('• ') || formattedLine.startsWith('- ')) {
         const content = formattedLine.replace(/^(• |- )/, '');
@@ -150,11 +150,11 @@ export default function AIChatBox() {
       {/* Chat Window with Glassmorphism */}
       {isOpen && (
         <div className="absolute bottom-18 right-0 flex h-[580px] w-[420px] flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[#020617]/95 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl animate-in slide-in-from-bottom-5 duration-300">
-          
+
           {/* Header */}
           <div className="flex items-center justify-between bg-gradient-to-r from-slate-900 to-indigo-950 px-5 py-4 border-b border-[var(--border)] relative">
             <div className="absolute inset-0 bg-blue-500/[0.02] pointer-events-none" />
-            
+
             <div className="flex items-center gap-3 relative z-10">
               <div className="relative">
                 <div className="h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]" />
@@ -165,8 +165,8 @@ export default function AIChatBox() {
                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none block mt-0.5">Python Analytics Engine</span>
               </div>
             </div>
-            
-            <button 
+
+            <button
               onClick={() => setIsOpen(false)}
               className="text-slate-400 hover:text-white transition-colors"
             >
@@ -180,11 +180,10 @@ export default function AIChatBox() {
           <div className="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar bg-slate-950/20">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
-                <div className={`max-w-[85%] rounded-2xl px-4 py-3 shadow-md ${
-                  m.role === 'user' 
-                    ? 'bg-blue-600 text-white rounded-tr-none' 
+                <div className={`max-w-[85%] rounded-2xl px-4 py-3 shadow-md ${m.role === 'user'
+                    ? 'bg-blue-600 text-white rounded-tr-none'
                     : 'bg-slate-900/90 border border-slate-800 text-slate-100 rounded-tl-none relative overflow-hidden'
-                }`}>
+                  }`}>
                   {m.role === 'assistant' && (
                     <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/[0.01] rounded-full blur-md" />
                   )}
@@ -194,7 +193,7 @@ export default function AIChatBox() {
                 </div>
               </div>
             ))}
-            
+
             {/* Loading Indicator */}
             {isLoading && (
               <div className="flex justify-start animate-in fade-in duration-300">

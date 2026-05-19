@@ -63,10 +63,22 @@ export function formatVnd(value: any) {
 
 export function formatShortVnd(value: any) {
   const num = typeof value === 'number' ? value : parseFloat(value);
-  if (isNaN(num)) return '0';
-  if (num >= 1000000000) return `${formatVnd(num / 1000000000)} Tỷ`;
-  if (num >= 1000000) return `${formatVnd(num / 1000000)} Tr`;
-  return formatVnd(num);
+  if (isNaN(num)) return '0 ₫';
+  const absNum = Math.abs(num);
+  const sign = num < 0 ? '-' : '';
+  return `${sign}${new Intl.NumberFormat('vi-VN').format(absNum)} ₫`;
+}
+
+export function formatKpiValue(value: any) {
+  const num = typeof value === 'number' ? value : parseFloat(value);
+  if (isNaN(num)) return { valueStr: '0', unitStr: '₫' };
+  
+  const absNum = Math.abs(num);
+  const sign = num < 0 ? '-' : '';
+  return {
+    valueStr: `${sign}${new Intl.NumberFormat('vi-VN').format(absNum)}`,
+    unitStr: '₫'
+  };
 }
 
 export function formatDate(value?: string | null) {

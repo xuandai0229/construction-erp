@@ -446,7 +446,7 @@ export class PythonAnalyticsService {
 
     // Dynamic Level 1 Auto-Infer: If no dedicated BudgetRecord rows exist, infer budget allocations from WBS Item metadata budgetAmount
     if (totalBudget === 0) {
-      wbs.forEach((w: any) => {
+      wbs.filter((w: any) => !w.parentId).forEach((w: any) => {
         if (w.budgetAmount > 0) {
           const nameLower = (w.name || '').toLowerCase();
           const codeLower = (w.code || '').toLowerCase();
