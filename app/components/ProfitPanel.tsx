@@ -13,10 +13,10 @@ export default function ProfitPanel({ data }: { data: DashboardData }) {
   const costSlice = cost / total * 100;
 
   return (
-    <section className="card-elevation p-5 animate-fade-in">
+    <section className="card-elevation p-5 animate-fade-in hover-lift-xs">
       <div className="mb-5 flex items-center justify-between">
-        <h3 className="text-[14px] font-bold tracking-tight text-slate-100">LÃI LỖ DỰ ÁN</h3>
-        <span className={`rounded px-2 py-0.5 text-[10px] font-bold ring-1 ${profit >= 0 ? 'bg-green-500/10 text-green-400 ring-green-500/20' : 'bg-red-500/10 text-red-400 ring-red-500/20'}`}>
+        <h3 className="text-[14px] font-bold tracking-tight text-slate-100 transition-executive">LÃI LỖ DỰ ÁN</h3>
+        <span className={`rounded px-2 py-0.5 text-[10px] font-bold ring-1 transition-executive ${profit >= 0 ? 'bg-green-500/10 text-green-400 ring-green-500/20' : 'bg-red-500/10 text-red-400 ring-red-500/20'}`}>
           {profit >= 0 ? 'CÓ LÃI' : 'LỖ VỐN'}
         </span>
       </div>
@@ -52,9 +52,9 @@ export default function ProfitPanel({ data }: { data: DashboardData }) {
 
 function Metric({ label, value, raw, accent = 'text-slate-100' }: { label: string; value?: number; raw?: string; accent?: string }) {
   return (
-    <div className="flex items-center justify-between gap-4">
-      <span className="text-slate-300">{label}</span>
-      <span className={`font-extrabold ${accent}`}>{raw ?? formatVnd(value ?? 0)}</span>
+    <div className="flex items-center justify-between gap-4 group">
+      <span className="text-slate-300 transition-executive group-hover:text-slate-100">{label}</span>
+      <span className={`font-extrabold transition-executive ${accent}`}>{raw ?? formatVnd(value ?? 0)}</span>
     </div>
   );
 }

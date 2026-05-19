@@ -14,9 +14,9 @@ export default function ChartSection({ data }: { data: DashboardData }) {
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <article className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-[var(--erp-card-shadow)] hover:shadow-[var(--erp-hover-shadow)] transition-all duration-300">
+    <article className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-[var(--erp-card-shadow)] hover:shadow-[var(--erp-hover-shadow)] transition-executive hover-lift-xs">
       <h3 className="mb-6 text-[10px] font-black text-[var(--text-tertiary)] uppercase tracking-[0.2em] flex items-center gap-2">
-        <span className="h-1.5 w-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+        <span className="h-1.5 w-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)] pulse-subtle" />
         {title}
       </h3>
       {children}
@@ -26,9 +26,9 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-[var(--divider)] last:border-0">
-      <span className="text-[12px] font-bold text-[var(--text-secondary)]">{label}</span>
-      <span className="text-[12.5px] font-black text-[var(--text-primary)] tabular-nums">{value}</span>
+    <div className="flex items-center justify-between py-2 border-b border-[var(--divider)] last:border-0 group">
+      <span className="text-[12px] font-bold text-[var(--text-secondary)] transition-executive group-hover:text-[var(--text-primary)]">{label}</span>
+      <span className="text-[12.5px] font-black text-[var(--text-primary)] tabular-nums transition-executive group-hover:text-blue-500">{value}</span>
     </div>
   );
 }
@@ -59,7 +59,8 @@ function BudgetPie({ data }: { data: DashboardData }) {
                 strokeWidth="7" 
                 strokeDasharray={`${row.pct} ${100 - row.pct}`} 
                 strokeDashoffset={row.offset} 
-                className="transition-all duration-1000 ease-out"
+                className="progress-fill"
+                style={{ transition: 'stroke-dasharray var(--motion-duration-slow) var(--motion-easing-executive), stroke-dashoffset var(--motion-duration-slow) var(--motion-easing-executive)' }}
               />
             ))}
           </svg>

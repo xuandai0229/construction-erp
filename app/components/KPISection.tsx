@@ -39,22 +39,22 @@ export default function KPISection({ data }: { data: DashboardData }) {
         <article key={card.title} className="erp-kpi-card group">
           <div className="flex flex-col gap-5">
             <div className="flex items-center justify-between">
-              <div className={`grid h-10 w-10 place-items-center rounded-xl border-2 transition-all duration-300 group-hover:scale-110 shadow-sm ${iconTone(card.tone)}`}>
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <div className={`grid h-10 w-10 place-items-center rounded-xl border-2 transition-executive shadow-sm icon-hover-scale ${iconTone(card.tone)}`}>
+                <svg viewBox="0 0 24 24" className="h-5 w-5 transition-executive" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d={card.icon} />
                 </svg>
               </div>
-              <div className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider border shadow-sm transition-colors ${card.tone === 'red' ? 'border-rose-500/20 bg-rose-500/10 text-rose-500' : 'border-emerald-500/20 bg-emerald-500/10 text-emerald-500'}`}>
+              <div className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider border shadow-sm transition-executive ${card.tone === 'red' ? 'border-rose-500/20 bg-rose-500/10 text-rose-500' : 'border-emerald-500/20 bg-emerald-500/10 text-emerald-500'}`}>
                 {card.tone === 'red' ? 'Cảnh báo' : 'Ổn định'}
               </div>
             </div>
 
             <div className="min-w-0">
               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-tertiary)] mb-1.5">{card.title}</div>
-              <div className="text-[20px] font-black tracking-tight text-[var(--text-primary)] tabular-nums truncate leading-none mb-3">
+              <div className="text-[20px] font-black tracking-tight text-[var(--text-primary)] tabular-nums truncate leading-none mb-3 transition-executive">
                 {formatVnd(card.value ?? 0)}
               </div>
-              <div className={`text-[10.5px] font-bold tracking-tight ${card.tone === 'red' ? 'text-rose-500' : 'text-emerald-500'} flex items-center gap-1`}>
+              <div className={`text-[10.5px] font-bold tracking-tight ${card.tone === 'red' ? 'text-rose-500' : 'text-emerald-500'} flex items-center gap-1 transition-executive`}>
                 <span className="opacity-70">{card.change}</span>
               </div>
             </div>

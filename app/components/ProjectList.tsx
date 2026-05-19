@@ -173,39 +173,39 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="bg-[var(--card)] rounded-lg p-4 border border-[var(--border)] hover:border-blue-500/50 cursor-pointer card-elevation group transition-all"
+              className="bg-[var(--card)] rounded-lg p-4 border border-[var(--border)] hover:border-blue-500/50 cursor-pointer card-elevation group transition-executive hover-lift-sm"
               onClick={() => onSelectProject?.(project)}
             >
               <div className="flex items-start justify-between mb-3">
-                <h3 className="text-lg font-bold text-[var(--text-primary)] truncate flex-1 group-hover:text-blue-500 transition-colors">{project.name}</h3>
-                <span className={`px-2 py-0.5 rounded text-xs text-white ${statusColors[project.status]}`}>
+                <h3 className="text-lg font-bold text-[var(--text-primary)] truncate flex-1 group-hover:text-blue-500 transition-executive">{project.name}</h3>
+                <span className={`px-2 py-0.5 rounded text-xs text-white transition-executive ${statusColors[project.status]}`}>
                   {statusLabels[project.status]}
                 </span>
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-[var(--text-muted)] font-medium">Chủ đầu tư:</span>
-                  <span className="text-[var(--text-primary)] font-bold truncate ml-2">{project.investor || '-'}</span>
+                  <span className="text-[var(--text-muted)] font-medium transition-executive group-hover:text-[var(--text-secondary)]">Chủ đầu tư:</span>
+                  <span className="text-[var(--text-primary)] font-bold truncate ml-2 transition-executive">{project.investor || '-'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[var(--text-muted)] font-medium">Giá trị:</span>
-                  <span className="text-blue-500 font-bold tabular-nums">{formatCurrency(project.totalValue ?? 0)}</span>
+                  <span className="text-[var(--text-muted)] font-medium transition-executive group-hover:text-[var(--text-secondary)]">Giá trị:</span>
+                  <span className="text-blue-500 font-bold tabular-nums transition-executive group-hover:text-blue-400">{formatCurrency(project.totalValue ?? 0)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[var(--text-muted)] font-medium">Ngày tạo:</span>
-                  <span className="text-[var(--text-secondary)] font-bold tabular-nums">{formatDate(project.createdAt)}</span>
+                  <span className="text-[var(--text-muted)] font-medium transition-executive group-hover:text-[var(--text-secondary)]">Ngày tạo:</span>
+                  <span className="text-[var(--text-secondary)] font-bold tabular-nums transition-executive">{formatDate(project.createdAt)}</span>
                 </div>
               </div>
               <div className="flex gap-2 mt-4 pt-3 border-t border-[var(--border)]">
                 <button
                   onClick={(e) => { e.stopPropagation(); handleEdit(project); }}
-                  className="flex-1 px-3 py-1.5 bg-[var(--secondary)] text-[var(--text-primary)] text-xs font-bold rounded hover:bg-[var(--hover-bg)] transition-colors"
+                  className="flex-1 px-3 py-1.5 bg-[var(--secondary)] text-[var(--text-primary)] text-xs font-bold rounded hover:bg-[var(--hover-bg)] transition-executive hover-lift-xs"
                 >
                   Sửa
                 </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); handleDelete(project.id); }}
-                  className="flex-1 px-3 py-1.5 bg-rose-500/10 text-rose-500 text-xs font-bold rounded hover:bg-rose-500/20 transition-colors"
+                  className="flex-1 px-3 py-1.5 bg-rose-500/10 text-rose-500 text-xs font-bold rounded hover:bg-rose-500/20 transition-executive hover-lift-xs"
                 >
                   Xóa
                 </button>

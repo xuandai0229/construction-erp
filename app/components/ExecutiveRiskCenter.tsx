@@ -89,20 +89,20 @@ export default function ExecutiveRiskCenter({ risks = [] }: ExecutiveRiskCenterP
   ];
 
   const getRiskCardStyle = (severity: string, isExpanded: boolean) => {
-    const base = 'border rounded-xl p-3 transition-all duration-180 cursor-pointer ';
+    const base = 'border rounded-xl p-3 transition-executive cursor-pointer hover-lift-xs ';
     if (severity === 'CRITICAL') {
       return base + (isExpanded 
-        ? 'bg-rose-500/[0.08] border-rose-500/40 shadow-sm' 
-        : 'bg-rose-500/[0.03] border-rose-500/15 hover:bg-rose-500/[0.06] hover:border-rose-500/30');
+        ? 'bg-rose-500/[0.08] border-rose-500/40 shadow-sm risk-pulse-critical' 
+        : 'bg-rose-500/[0.03] border-rose-500/15 hover:bg-rose-500/[0.06] hover:border-rose-500/30 hover-glow-rose');
     }
     if (severity === 'WARNING') {
       return base + (isExpanded 
         ? 'bg-amber-500/[0.08] border-amber-500/40 shadow-sm' 
-        : 'bg-amber-500/[0.03] border-amber-500/15 hover:bg-amber-500/[0.06] hover:border-amber-500/30');
+        : 'bg-amber-500/[0.03] border-amber-500/15 hover:bg-amber-500/[0.06] hover:border-amber-500/30 hover-glow-amber');
     }
     return base + (isExpanded 
       ? 'bg-blue-500/[0.08] border-blue-500/40 shadow-sm' 
-      : 'bg-blue-500/[0.03] border-blue-500/15 hover:bg-blue-500/[0.06] hover:border-blue-500/30');
+      : 'bg-blue-500/[0.03] border-blue-500/15 hover:bg-blue-500/[0.06] hover:border-blue-500/30 hover-glow-blue');
   };
 
   const getRiskBadge = (severity: string) => {
@@ -170,10 +170,10 @@ export default function ExecutiveRiskCenter({ risks = [] }: ExecutiveRiskCenterP
               </div>
 
               {/* Hover Reveal / Click Drill-down details */}
-              <div className={`transition-all duration-200 overflow-hidden ${isExpanded ? 'max-h-[220px] mt-2.5 opacity-100' : 'max-h-0 opacity-0'}`}>
-                <div className="border-t border-[var(--divider)] pt-2 mt-2 space-y-1.5 text-[9.5px] text-[var(--text-secondary)] font-medium leading-relaxed bg-[var(--card)]/40 p-2 rounded-lg">
+              <div className={`transition-executive overflow-hidden ${isExpanded ? 'max-h-[220px] mt-2.5 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <div className="border-t border-[var(--divider)] pt-2 mt-2 space-y-1.5 text-[9.5px] text-[var(--text-secondary)] font-medium leading-relaxed bg-[var(--card)]/40 p-2 rounded-lg transition-executive">
                   {risk.details.map((detail, dIdx) => (
-                    <div key={dIdx} className="flex items-start gap-1.5">
+                    <div key={dIdx} className="flex items-start gap-1.5 transition-executive hover:text-[var(--text-primary)]">
                       <span className="text-blue-500 font-bold shrink-0">•</span>
                       <p>{detail}</p>
                     </div>

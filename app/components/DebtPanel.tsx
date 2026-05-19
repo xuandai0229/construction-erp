@@ -20,8 +20,8 @@ export function DebtPanel({ receivable, payable }: { receivable: DebtSummary, pa
             <span className="text-[9.5px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider">Tổng giá trị hóa đơn thu</span>
             <span className="text-[12.5px] font-black text-[var(--text-primary)] tabular-nums">{formatVnd(receivable.total)}</span>
           </div>
-          <div className="h-1.5 w-full rounded-full bg-[var(--secondary)] overflow-hidden border border-[var(--border)]/10">
-            <div className="h-full rounded-full bg-blue-500 transition-all duration-1000 ease-out" style={{ width: `${Math.min(100, receivablePct)}%` }} />
+          <div className="h-1.5 w-full rounded-full bg-[var(--secondary)] overflow-hidden border border-[var(--border)]/10 transition-executive">
+            <div className="h-full rounded-full bg-blue-500 progress-fill hover-glow-blue" style={{ width: `${Math.min(100, receivablePct)}%` }} />
           </div>
           <div className="flex items-center justify-between">
             <div>
@@ -50,8 +50,8 @@ export function DebtPanel({ receivable, payable }: { receivable: DebtSummary, pa
             <span className="text-[9.5px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider">Tổng nợ phải trả</span>
             <span className="text-[12.5px] font-black text-[var(--text-primary)] tabular-nums">{formatVnd(payable.total)}</span>
           </div>
-          <div className="h-1.5 w-full rounded-full bg-[var(--secondary)] overflow-hidden border border-[var(--border)]/10">
-            <div className="h-full rounded-full bg-amber-500 transition-all duration-1000 ease-out" style={{ width: `${Math.min(100, payablePct)}%` }} />
+          <div className="h-1.5 w-full rounded-full bg-[var(--secondary)] overflow-hidden border border-[var(--border)]/10 transition-executive">
+            <div className="h-full rounded-full bg-amber-500 progress-fill hover-glow-amber" style={{ width: `${Math.min(100, payablePct)}%` }} />
           </div>
           <div className="flex items-center justify-between">
             <div>
@@ -92,18 +92,18 @@ export function ProfitPanel({ revenue, cost, margin }: { revenue: number; cost: 
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-[var(--secondary)] border border-[var(--border)] p-3 group-hover:border-emerald-500/30 transition-all duration-300 shadow-sm">
-            <div className="text-[8.5px] font-black text-[var(--text-tertiary)] uppercase tracking-widest mb-1">BIÊN LỢI NHUẬN</div>
-            <div className={`text-[14px] font-black tabular-nums ${profitPct >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+          <div className="rounded-xl bg-[var(--secondary)] border border-[var(--border)] p-3 group-hover:border-emerald-500/30 transition-executive shadow-sm hover-lift-xs">
+            <div className="text-[8.5px] font-black text-[var(--text-tertiary)] uppercase tracking-widest mb-1 transition-executive">BIÊN LỢI NHUẬN</div>
+            <div className={`text-[14px] font-black tabular-nums transition-executive ${profitPct >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
               {profitPct >= 0 ? '+' : ''}{profitPct.toFixed(1)}%
             </div>
           </div>
-          <div className="rounded-xl bg-[var(--secondary)] border border-[var(--border)] p-3 group-hover:border-blue-500/30 transition-all duration-300 shadow-sm">
-            <div className="text-[8.5px] font-black text-[var(--text-tertiary)] uppercase tracking-widest mb-1">Tiến độ thi công</div>
-            <div className="text-[14px] font-black text-blue-500 tabular-nums">{margin.toFixed(1)}%</div>
+          <div className="rounded-xl bg-[var(--secondary)] border border-[var(--border)] p-3 group-hover:border-blue-500/30 transition-executive shadow-sm hover-lift-xs">
+            <div className="text-[8.5px] font-black text-[var(--text-tertiary)] uppercase tracking-widest mb-1 transition-executive">Tiến độ thi công</div>
+            <div className="text-[14px] font-black text-blue-500 tabular-nums transition-executive">{margin.toFixed(1)}%</div>
           </div>
         </div>
-        <button className="w-full text-[10px] font-black bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-500 uppercase tracking-[0.15em] transition-all duration-300 shadow-lg shadow-blue-600/20 active:scale-[0.98]">
+        <button className="w-full text-[10px] font-black bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-500 uppercase tracking-[0.15em] transition-executive shadow-lg shadow-blue-600/20 hover-lift-xs active:scale-[0.98]">
           Báo cáo phân tích hiệu quả
         </button>
       </div>

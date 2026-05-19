@@ -83,44 +83,44 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
               </thead>
               <tbody className="divide-y divide-[var(--border)]">
                 {visibleCosts.map((cost) => (
-                  <tr key={cost.id} className="group hover:bg-[var(--table-row-hover)] even:bg-[var(--divider)]/10 transition-all duration-180 border-b border-[var(--border)] last:border-b-0 select-none">
+                  <tr key={cost.id} className="erp-table-row group even:bg-[var(--divider)]/10 border-b border-[var(--border)] last:border-b-0 select-none">
                     {/* Date */}
-                    <td className={`whitespace-nowrap py-2.5 px-4 text-[11px] font-bold text-[var(--text-tertiary)] group-hover:text-blue-500 transition-colors border-r border-[var(--border)] ${COL_WIDTHS.DATE}`}>
+                    <td className={`whitespace-nowrap py-2.5 px-4 text-[11px] font-bold text-[var(--text-tertiary)] group-hover:text-blue-500 transition-executive border-r border-[var(--border)] ${COL_WIDTHS.DATE}`}>
                       {formatDate(cost.date)}
                     </td>
 
                     {/* Description + Supplier */}
                     <td className="w-[280px] py-2.5 px-4 border-r border-[var(--border)]">
-                      <div className="font-black text-[var(--text-primary)] text-[11.5px] truncate leading-tight mb-0.5" title={cost.note ?? ''}>
+                      <div className="font-black text-[var(--text-primary)] text-[11.5px] truncate leading-tight mb-0.5 transition-executive group-hover:text-blue-500" title={cost.note ?? ''}>
                         {cost.note ?? 'Chi phí không tên'}
                       </div>
-                      <div className="text-[9px] font-extrabold text-[var(--text-tertiary)] uppercase tracking-wider truncate opacity-70">
+                      <div className="text-[9px] font-extrabold text-[var(--text-tertiary)] uppercase tracking-wider truncate opacity-70 transition-executive">
                         {cost.supplier || 'Nhiều nhà CC'}
                       </div>
                     </td>
 
                     {/* WBS */}
                     <td className="w-[200px] py-2.5 px-4 border-r border-[var(--border)]">
-                      <div className="text-[11px] font-bold text-[var(--text-secondary)] truncate" title={getWBSName(cost.wbsId)}>
+                      <div className="text-[11px] font-bold text-[var(--text-secondary)] truncate transition-executive group-hover:text-[var(--text-primary)]" title={getWBSName(cost.wbsId)}>
                         {getWBSName(cost.wbsId)}
                       </div>
                     </td>
 
                     {/* Cost Type Badge */}
                     <td className={`${COL_WIDTHS.STATUS} py-2.5 px-4 border-r border-[var(--border)]`}>
-                      <span className="inline-flex items-center whitespace-nowrap rounded-lg px-2 py-0.5 text-[8.5px] font-black uppercase tracking-wider bg-[var(--secondary)] text-[var(--text-tertiary)] border border-[var(--border)] group-hover:border-blue-500/20 group-hover:text-blue-500 transition-all">
+                      <span className="inline-flex items-center whitespace-nowrap rounded-lg px-2 py-0.5 text-[8.5px] font-black uppercase tracking-wider bg-[var(--secondary)] text-[var(--text-tertiary)] border border-[var(--border)] group-hover:border-blue-500/20 group-hover:text-blue-500 transition-executive">
                         {costType_LABELS[cost.costType] || cost.costType}
                       </span>
                     </td>
 
                     {/* Amount */}
-                    <td className={`${COL_WIDTHS.FINANCIAL} py-2.5 px-4 text-right tabular-nums font-black text-[var(--text-primary)] text-[11.5px] group-hover:text-blue-500 transition-colors whitespace-nowrap border-r border-[var(--border)]`}>
+                    <td className={`${COL_WIDTHS.FINANCIAL} py-2.5 px-4 text-right tabular-nums font-black text-[var(--text-primary)] text-[11.5px] group-hover:text-blue-500 transition-executive whitespace-nowrap border-r border-[var(--border)]`}>
                       {formatVnd(cost.amount)}
                     </td>
 
                     {/* Status Badge */}
                     <td className={`${COL_WIDTHS.STATUS} py-2.5 px-4 text-center border-r border-[var(--border)]`}>
-                      <span className={`inline-flex items-center gap-1.5 rounded-xl px-2.5 py-0.5 text-[9px] font-black uppercase tracking-wider whitespace-nowrap transition-all border shadow-sm ${cost.workflowStatus === 'POSTED' || cost.approvalStatus === 'APPROVED'
+                      <span className={`inline-flex items-center gap-1.5 rounded-xl px-2.5 py-0.5 text-[9px] font-black uppercase tracking-wider whitespace-nowrap transition-executive border shadow-sm ${cost.workflowStatus === 'POSTED' || cost.approvalStatus === 'APPROVED'
                         ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30 shadow-emerald-500/5'
                         : cost.workflowStatus === 'REVERSED' || cost.workflowStatus === 'REJECTED'
                           ? 'bg-rose-500/10 text-rose-500 border-rose-500/30 shadow-rose-500/5'
@@ -138,10 +138,10 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
 
                     {/* Actions */}
                     <td className={`${COL_WIDTHS.ACTIONS} py-2.5 px-4 text-center`}>
-                      <div className="flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-180">
+                      <div className="flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-executive">
                         <button
                           onClick={() => onEdit(cost)}
-                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--text-tertiary)] hover:text-white hover:bg-blue-600 transition-all border border-[var(--border)] shadow-sm"
+                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--text-tertiary)] hover:text-white hover:bg-blue-600 transition-executive border border-[var(--border)] shadow-sm hover-lift-xs"
                           title="Hiệu chỉnh"
                         >
                           <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -150,7 +150,7 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
                         </button>
                         <button
                           onClick={() => setConfirmAction({ id: cost.id, type: 'DELETE' })}
-                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--text-tertiary)] hover:text-white hover:bg-rose-600 transition-all border border-[var(--border)] shadow-sm"
+                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--text-tertiary)] hover:text-white hover:bg-rose-600 transition-executive border border-[var(--border)] shadow-sm hover-lift-xs"
                           title="Hủy / Xóa"
                         >
                           <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -170,16 +170,16 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
           <div className="flex justify-center border-t border-[var(--border)] bg-[var(--secondary)]/10">
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="flex items-center gap-2 py-3 w-full justify-center text-[9px] font-black uppercase tracking-[0.25em] text-[var(--text-tertiary)] hover:text-blue-500 hover:bg-blue-500/5 transition-all duration-180 group"
+              className="flex items-center gap-2 py-3 w-full justify-center text-[9px] font-black uppercase tracking-[0.25em] text-[var(--text-tertiary)] hover:text-blue-500 hover:bg-blue-500/5 transition-executive group"
             >
               {isExpanded ? (
                 <>
-                  <svg viewBox="0 0 24 24" className="h-3 w-3 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" strokeWidth="3.5"><path d="m18 15-6-6-6 6" /></svg>
+                  <svg viewBox="0 0 24 24" className="h-3 w-3 group-hover:-translate-y-0.5 transition-executive" fill="none" stroke="currentColor" strokeWidth="3.5"><path d="m18 15-6-6-6 6" /></svg>
                   Thu gọn danh sách
                 </>
               ) : (
                 <>
-                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" strokeWidth="3.5"><path d="m6 9 6 6 6-6" /></svg>
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 group-hover:translate-y-0.5 transition-executive" fill="none" stroke="currentColor" strokeWidth="3.5"><path d="m6 9 6 6 6-6" /></svg>
                   + {costs.length - INITIAL_VISIBLE_COUNT} XEM THÊM
                 </>
               )}
