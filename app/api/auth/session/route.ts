@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
   let user = email
     ? await prisma.user.findUnique({ where: { email } })
-    : await prisma.user.findFirst({ where: { role: UserRole.SUPER_ADMIN } });
+    : await prisma.user.findFirst({ where: { role: UserRole.SUPER_ADMIN, companyId: null } });
 
   if (!user) {
     user = await prisma.user.create({

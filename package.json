@@ -14,7 +14,12 @@
     "integrity-check": "node scripts/enterprise-audit-check.js",
     "security-check": "tsx scripts/security_audit.ts",
     "stress-test": "tsx scripts/stress_test.ts",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "validation:check": "tsx scripts/check-validation-readiness.ts",
+    "validation:full": "tsx scripts/run-full-validation.ts",
+    "validation:database": "tsx scripts/master-erp-validation.ts",
+    "validation:e2e": "playwright test tests/e2e/master-screen-validation.spec.ts --reporter=html",
+    "validation:report": "playwright show-report"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

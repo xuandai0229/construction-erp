@@ -35,7 +35,7 @@ async function setupCompanyStructure(): Promise<GenerationContext> {
   const company = await prisma.company.create({
     data: {
       name: COMPANY_NAME,
-      code: "LCVN",
+      code: "LCVN-" + Date.now().toString().slice(-6),
       taxCode: "0123456789",
       address: "123 Đường Lê Văn Tươi, Tp.HCM",
     },
@@ -54,7 +54,7 @@ async function setupCompanyStructure(): Promise<GenerationContext> {
     const branch = await prisma.branch.create({
       data: {
         name: `Branch ${city}`,
-        code: `BR-${city.toUpperCase().replace(" ", "-")}`,
+        code: `BR-${city.toUpperCase().replace(" ", "-")}-${Date.now().toString().slice(-4)}`,
         companyId: company.id,
       },
     });
@@ -74,9 +74,10 @@ async function setupCompanyStructure(): Promise<GenerationContext> {
 
   for (let i = 0; i < STAFF_COUNT; i++) {
     const roleIndex = Math.min(i, roles.length - 1);
+    const companySuffix = company.code.split("-")[1];
     const user = await prisma.user.create({
       data: {
-        email: `staff${i + 1}@largecorp.vn`,
+        email: `staff${i + 1}_${companySuffix}@largecorp.vn`,
         name: generateVietnameseName(i),
         role: roles[roleIndex],
         companyId: company.id,
@@ -104,12 +105,15 @@ async function setupCompanyStructure(): Promise<GenerationContext> {
   for (let i = 0; i < MATERIALS_COUNT; i++) {
     const typeIndex = i % materialTypes.length;
     const unitIndex = i % units.length;
+    const companySuffix = company.code.split("-")[1];
     const material = await prisma.material.create({
       data: {
-        code: `MAT-${String(i + 1).padStart(5, "0")}`,
+        id: crypto.randomUUID(),
+        code: `MAT-${companySuffix}-${String(i + 1).padStart(5, "0")}`,
         name: `${materialTypes[typeIndex]} Type ${Math.floor(i / materialTypes.length) + 1}`,
         unit: units[unitIndex],
         description: `Quality construction material for large scale projects`,
+        updatedAt: new Date(),
       },
     });
     materials.push(material.id);
@@ -167,7 +171,7 @@ async function createProjects(ctx: GenerationContext): Promise<void> {
     ); // 100M - 900M
 
     const startDate = new Date(
-      "2024-01-01 + " + (i * 30 + Math.random() * 30) + " days"
+      new Date("2024-01-01").getTime() + (i * 30 + Math.random() * 30) * 24 * 60 * 60 * 1000
     );
     const endDate = new Date(
       startDate.getTime() + (365 + Math.random() * 365) * 24 * 60 * 60 * 1000
@@ -221,7 +225,7 @@ async function createWBSTree(
 
   for (let i = 0; i < itemsAtLevel; i++) {
     const wbsName = `${wbsNames[depth % wbsNames.length]} ${i + 1}`;
-    const wbs = await prisma.wbSItem.create({
+    const wbs = await prisma.wBSItem.create({
       data: {
         projectId,
         name: wbsName,
@@ -283,7 +287,7 @@ async function createBOQAndBudgets(ctx: GenerationContext): Promise<void> {
       }
 
       // Create budget records
-      const costTypes: CostType[] = ["material", "labor", "equipment"];
+      const costTypes: CostType[] = ["material", "labor", "machine"];
       for (const costType of costTypes) {
         const amount = wbs.budgetAmount.times(0.33).plus(
           Math.random() * 1000000
@@ -333,7 +337,7 @@ async function createFinancialData(ctx: GenerationContext): Promise<void> {
         data: {
           projectId,
           wbsId: wbs.id,
-          costType: ["material", "labor", "equipment"][
+          costType: ["material", "labor", "machine"][
             Math.floor(Math.random() * 3)
           ] as CostType,
           amount,
@@ -377,6 +381,7 @@ async function createFinancialData(ctx: GenerationContext): Promise<void> {
           netAmount,
           vatAmount,
           vatRate: new Decimal("10"),
+          remainingAmount: amount,
           issuedDate: new Date(
             ctx.startDate.getTime() + Math.random() * 365 * 24 * 60 * 60 * 1000
           ),
@@ -385,7 +390,7 @@ async function createFinancialData(ctx: GenerationContext): Promise<void> {
               (Math.random() * 365 + 30) * 24 * 60 * 60 * 1000
           ),
           invoiceNumber: `INV-${projectId.slice(0, 8)}-${String(i + 1).padStart(5, "0")}`,
-          status: ["DRAFT", "ISSUED", "PAID"][
+          status: ["DRAFT", "SENT", "PAID"][
             Math.floor(Math.random() * 3)
           ] as InvoiceStatus,
           createdById: ctx.userIds[0],
@@ -470,27 +475,28 @@ async function createInventoryData(ctx: GenerationContext): Promise<void> {
 
       for (let i = 0; i < transactionsCount; i++) {
         const type: InventoryTransactionType =
-          quantity === 0 || Math.random() > 0.3 ? "IN" : "OUT";
+          quantity === 0 || Math.random() > 0.3 ? "RECEIPT" : "ISSUE";
         const amount = new Decimal((Math.random() * 100 + 1).toFixed(3));
-        const transactionQuantity = type === "IN" ? amount : amount;
+        const transactionQuantity = type === "RECEIPT" ? amount : amount;
 
         await prisma.inventoryTransaction.create({
           data: {
+            id: crypto.randomUUID(),
             projectId,
             materialId,
             type,
             quantity: transactionQuantity,
             unitPrice:
-              type === "IN"
+              type === "RECEIPT"
                 ? new Decimal((Math.random() * 10000 + 100).toFixed(2))
                 : null,
             referenceId: `REF-${projectId.slice(0, 8)}-${i}`,
-            note: `${type === "IN" ? "Received" : "Used"} material transaction`,
+            note: `${type === "RECEIPT" ? "Received" : "Used"} material transaction`,
           },
         });
 
         quantity =
-          type === "IN" ? quantity.plus(transactionQuantity) : quantity;
+          type === "RECEIPT" ? quantity.plus(transactionQuantity) : quantity;
       }
     }
   }
