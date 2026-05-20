@@ -14,6 +14,33 @@
  * 8. Final enterprise QA report
  */
 
+import * as fs from 'fs';
+import * as path from 'path';
+
+// Automatically load Next.js environment files for standalone CLI execution
+function loadEnvFiles() {
+  const envLocal = path.join(process.cwd(), '.env.local');
+  const envBase = path.join(process.cwd(), '.env');
+  const parse = (filePath: string) => {
+    if (!fs.existsSync(filePath)) return;
+    const content = fs.readFileSync(filePath, 'utf-8');
+    content.split(/\r?\n/).forEach(line => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return;
+      const idx = trimmed.indexOf('=');
+      if (idx === -1) return;
+      const k = trimmed.substring(0, idx).trim();
+      let v = trimmed.substring(idx + 1).trim();
+      if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1);
+      else if (v.startsWith("'") && v.endsWith("'")) v = v.slice(1, -1);
+      process.env[k] = v;
+    });
+  };
+  parse(envLocal);
+  parse(envBase);
+}
+loadEnvFiles();
+
 import { PrismaClient } from '../generated/prisma-client';
 import { createClient } from '@supabase/supabase-js';
 import Decimal from 'decimal.js';
@@ -21,8 +48,8 @@ import Decimal from 'decimal.js';
 const prisma = new PrismaClient();
 
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || 'mock-key'
 );
 
 interface ValidationResult {

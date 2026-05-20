@@ -1,313 +1,216 @@
-# Enterprise Motion System Documentation
+# Enterprise ERP Motion System - Refined
 
-## Overview
+## Philosophy
 
-This ERP dashboard implements a **subtle, synchronized, enterprise-grade motion system** inspired by premium enterprise applications like SAP Fiori, Bloomberg Terminal, and Oracle Cloud ERP.
+This ERP dashboard follows **Bloomberg Terminal / SAP Fiori / Oracle ERP** standards:
+
+- **80% Focus**: Layout, information hierarchy, financial readability
+- **20% Focus**: Minimal motion polish
+- **Zero**: Attention-seeking animations, pulse effects, glows, scaling
+
+Motion is **functional, not decorative**.
+
+---
 
 ## Core Principles
 
-### 1. **Subtle & Premium**
-- Animations are barely noticeable but make the dashboard feel alive
-- No flashy, gaming-style, or crypto dashboard effects
-- Executive-grade feeling: professional, refined, sophisticated
+### 1. **Minimal & Functional**
+- Motion serves readability and hierarchy
+- No attention-seeking animations
+- No pulse, glow, or scaling effects
+- Subtle surface brighten on hover only
 
 ### 2. **Synchronized**
-- Same timing across all components
-- Same easing curves throughout
+- Same timing: 150ms-180ms
+- Same easing: executive cubic-bezier
 - Unified hover behaviors
-- Consistent animation language
 
 ### 3. **Performance-First**
-- GPU-friendly transforms and opacity
-- Smooth 60fps animations
-- No layout thrashing
-- Optimized for production use
+- GPU-friendly transforms only
+- Instant progress animations (not cinematic)
+- 60fps maintained
 
 ---
 
 ## Motion Variables
 
-All motion timing is centralized in `globals.css`:
-
 ```css
-/* Duration */
---motion-duration-instant: 100ms;
+/* Duration - Fast & Functional */
 --motion-duration-fast: 150ms;
 --motion-duration-base: 180ms;
---motion-duration-smooth: 220ms;
---motion-duration-slow: 280ms;
 
-/* Easing Curves */
---motion-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);      /* Material ease-out */
---motion-easing-gentle: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Gentle curve */
---motion-easing-executive: cubic-bezier(0.32, 0.08, 0.24, 1); /* Premium feel */
+/* Easing - Executive Standard */
+--motion-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+--motion-easing-executive: cubic-bezier(0.32, 0.08, 0.24, 1);
 
-/* Elevations */
+/* Elevations - Minimal */
 --motion-elevation-xs: 1px;
 --motion-elevation-sm: 2px;
---motion-elevation-md: 3px;
---motion-elevation-lg: 4px;
-
-/* Glow Intensities */
---glow-subtle: 0 0 12px -3px;
---glow-medium: 0 0 16px -2px;
---glow-emphasis: 0 0 20px -1px;
 ```
 
 ---
 
-## Utility Classes
+## Allowed Utility Classes
 
-### Hover Elevation
+### ✅ Hover Elevation (Minimal Only)
 ```html
 <div class="hover-lift-xs">   <!-- 1px lift -->
 <div class="hover-lift-sm">   <!-- 2px lift -->
-<div class="hover-lift-md">   <!-- 3px lift -->
 ```
 
-### Subtle Glow Effects
+### ✅ Synchronized Transitions
 ```html
-<div class="hover-glow-blue">
-<div class="hover-glow-emerald">
-<div class="hover-glow-rose">
-<div class="hover-glow-amber">
+<div class="transition-executive">       <!-- 180ms -->
+<div class="transition-executive-fast">  <!-- 150ms -->
 ```
 
-### Icon Animations
+### ✅ Progress Animations (Instant)
 ```html
-<svg class="icon-hover-scale">  <!-- Scales to 1.08 on hover -->
+<div class="progress-fill" style="width: 75%">
 ```
 
-### Synchronized Transitions
-```html
-<div class="transition-executive">       <!-- Base 180ms -->
-<div class="transition-executive-fast">  <!-- Fast 150ms -->
-<div class="transition-executive-smooth"> <!-- Smooth 220ms -->
-```
+---
 
-### Progress Animations
-```html
-<div class="progress-fill" style="width: 75%">  <!-- Smooth width transition -->
-```
+## ❌ Removed (Not Enterprise ERP)
 
-### Pulse Effects
-```html
-<span class="pulse-subtle">  <!-- Extremely subtle pulse for indicators -->
-```
+### Pulse Animations
+- ❌ `pulse-subtle`
+- ❌ `risk-pulse-critical`
+- ❌ Any pulse/attention-seeking effects
 
-### Risk Alerts
-```html
-<div class="risk-pulse-critical">  <!-- Subtle pulse for critical alerts only -->
-```
+**Reason**: ERP dashboards don't use pulse. Bloomberg/SAP don't pulse.
+
+### Icon Scaling
+- ❌ `icon-hover-scale`
+- ❌ Any scale transforms on icons
+
+**Allowed**: Opacity shift or brightness shift only.
+
+### Glow Effects
+- ❌ `hover-glow-blue/rose/amber/emerald`
+- ❌ Gradient overlay fades
+- ❌ Shadow glows
+
+**Reason**: SaaS/startup UI pattern, not enterprise ERP.
+
+### Excessive Elevation
+- ❌ `hover-lift-md` (3px+)
+
+**Reason**: Too much movement. Keep it minimal.
 
 ---
 
 ## Component Patterns
 
 ### KPI Cards
-
-**Behavior:**
-- Subtle 2px elevation on hover
-- Border brightens slightly
-- Icon scales to 1.08
-- Gradient overlay fades in
-- All synchronized at 180ms
-
-**Implementation:**
 ```tsx
+// ✅ Correct
 <article className="erp-kpi-card group">
-  <div className="icon-hover-scale transition-executive">
-    {/* Icon */}
-  </div>
-  <div className="transition-executive">
-    {/* Content */}
-  </div>
+  <svg className="transition-executive group-hover:opacity-80">
+    {/* Icon - opacity shift only */}
+  </svg>
 </article>
+
+// ❌ Wrong
+<svg className="icon-hover-scale pulse-subtle">
 ```
 
 ### Table Rows
-
-**Behavior:**
-- Background brightens on hover
-- Left accent bar appears (2px blue)
-- Text colors shift to blue
-- All cells transition together
-- 150ms fast transition
-
-**Implementation:**
 ```tsx
+// ✅ Correct
 <tr className="erp-table-row group">
   <td className="transition-executive group-hover:text-blue-500">
-    {/* Cell content */}
+    {/* Subtle color shift */}
   </td>
 </tr>
 ```
 
-### Buttons
-
-**Behavior:**
-- Subtle 1px lift on hover
-- Brightness increases 5%
-- Press feedback: scale(0.98)
-- Tactile executive feeling
-
-**Implementation:**
+### Progress Bars
 ```tsx
-<button className="erp-btn hover-lift-xs">
-  Action
-</button>
-```
+// ✅ Correct - Fast, not cinematic
+<div className="progress-fill" style={{ width: `${pct}%` }} />
 
-### Charts
-
-**Behavior:**
-- Smooth data transitions
-- Progress bars animate with easing
-- Tooltip fades in/out
-- Crosshair smooth movement
-
-**Implementation:**
-```tsx
-<div className="progress-fill" style={{ width: `${percentage}%` }} />
+// ❌ Wrong - Too slow
+<div className="transition-all duration-1000">
 ```
 
 ### Risk Cards
-
-**Behavior:**
-- **CRITICAL**: Subtle pulse animation (2.5s cycle)
-- **WARNING**: Hover glow amber
-- **INFO**: Hover glow blue
-- Expand/collapse with smooth height transition
-- Details fade in on expand
-
-**Implementation:**
 ```tsx
-<div className={`
-  transition-executive 
-  hover-lift-xs 
-  ${severity === 'CRITICAL' ? 'risk-pulse-critical' : ''}
-  ${severity === 'WARNING' ? 'hover-glow-amber' : ''}
-`}>
-  {/* Risk content */}
+// ✅ Correct - No pulse
+<div className="transition-executive hover-lift-xs">
+  {/* Subtle hover only */}
 </div>
+
+// ❌ Wrong - Attention-seeking
+<div className="risk-pulse-critical hover-glow-rose">
 ```
 
 ---
 
-## Theme Synchronization
+## Priority Hierarchy
 
-**CRITICAL:** All animations work identically in both dark and light modes.
+### 80% Effort: Information Architecture
+1. Layout refinement
+2. Information hierarchy
+3. Financial readability
+4. WBS table structure
+5. Chart clarity
+6. Risk architecture
 
-- Same timing
-- Same easing
-- Same hover behaviors
-- Same motion language
-
-Only colors change between themes, never motion characteristics.
-
----
-
-## Performance Guidelines
-
-### ✅ DO USE:
-- `transform: translateY()` for elevation
-- `opacity` for fades
-- `will-change: transform` for hover elements
-- CSS variables for consistent timing
-
-### ❌ AVOID:
-- `margin` or `padding` animations
-- `width`/`height` without `overflow: hidden`
-- Excessive `blur()` filters
-- Layout-triggering properties
-
----
-
-## Animation Timing Reference
-
-| Use Case | Duration | Easing | Class |
-|----------|----------|--------|-------|
-| Table row hover | 150ms | standard | `transition-executive-fast` |
-| Card hover | 180ms | executive | `transition-executive` |
-| Button press | 100ms | executive | `transition-executive` |
-| Progress bar | 280ms | executive | `progress-fill` |
-| Modal entrance | 220ms | executive | `modal-entrance` |
-| Risk pulse | 2500ms | gentle | `risk-pulse-critical` |
+### 20% Effort: Motion Polish
+1. Subtle hover states
+2. Smooth transitions
+3. Minimal elevation
 
 ---
 
 ## Testing Checklist
 
-- [ ] All hover states are synchronized
-- [ ] No animation feels "flashy" or "gaming-style"
-- [ ] Dark and light modes have identical motion
-- [ ] 60fps maintained on all interactions
-- [ ] Animations feel premium and executive-grade
-- [ ] No component has mismatched timing
-- [ ] Progress bars animate smoothly
-- [ ] Table rows have unified hover behavior
-- [ ] Buttons have tactile feedback
-- [ ] Risk alerts pulse subtly (critical only)
-
----
-
-## Examples
-
-### Before (Inconsistent):
-```tsx
-// ❌ Different timings, no synchronization
-<div className="transition-all duration-300">
-<div className="transition-colors duration-200">
-<div className="hover:scale-110 duration-500">
-```
-
-### After (Synchronized):
-```tsx
-// ✅ Unified motion system
-<div className="transition-executive">
-<div className="transition-executive hover-lift-sm">
-<div className="icon-hover-scale transition-executive">
-```
-
----
-
-## Maintenance
-
-When adding new components:
-
-1. **Use existing utility classes** instead of inline transitions
-2. **Match the timing** of similar components
-3. **Test in both themes** to ensure synchronization
-4. **Keep it subtle** - if users notice the animation, it's too much
-5. **Use CSS variables** for all timing and easing
+- [ ] No pulse animations anywhere
+- [ ] No icon scaling
+- [ ] No glow effects
+- [ ] Progress bars are instant (not cinematic)
+- [ ] Hover feedback is subtle surface brighten only
+- [ ] All timing synchronized (150-180ms)
+- [ ] Dashboard feels like Bloomberg/SAP, not futuristic UI
 
 ---
 
 ## Success Criteria
 
-The motion system is successful when:
+Motion system is correct when:
 
-1. Dashboard feels **alive** but not **animated**
-2. Users barely notice individual animations
-3. Everything feels **smooth** and **premium**
-4. Motion is **synchronized** across all components
-5. Performance stays at **60fps**
-6. Both themes have **identical** motion behavior
+1. **Barely noticeable** - Users don't see animations
+2. **Functional** - Motion serves hierarchy, not decoration
+3. **Fast** - Progress is instant, not cinematic
+4. **Minimal** - Only hover lift and color shifts
+5. **Bloomberg-like** - Operational density, not visual showcase
 
 ---
 
-## References
+## Reference Standards
 
-Inspired by:
-- SAP Fiori Design System
-- Bloomberg Terminal UX
-- Oracle Cloud ERP
-- Apple enterprise motion guidelines
-- Material Design (subtle variant)
+✅ **Follow**:
+- Bloomberg Terminal
+- SAP Fiori
+- Oracle ERP
+- Microsoft Dynamics
 
-**NOT inspired by:**
-- Startup SaaS flashy animations
-- Fintech overload effects
-- Crypto dashboard motion
-- Gaming UI animations
-- Cyberpunk aesthetics
+❌ **Avoid**:
+- Startup SaaS dashboards
+- Fintech flashy UI
+- Crypto dashboards
+- Futuristic UI showcases
+
+---
+
+## Motion Framework: LOCKED
+
+**No further animation framework expansion allowed.**
+
+Focus shifts to:
+- Information architecture
+- Financial readability
+- Operational density
+- Chart redesign
+- Table structure

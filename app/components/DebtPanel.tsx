@@ -21,7 +21,7 @@ export function DebtPanel({ receivable, payable }: { receivable: DebtSummary, pa
             <span className="text-[12.5px] font-black text-[var(--text-primary)] tabular-nums">{formatVnd(receivable.total)}</span>
           </div>
           <div className="h-1.5 w-full rounded-full bg-[var(--secondary)] overflow-hidden border border-[var(--border)]/10 transition-executive">
-            <div className="h-full rounded-full bg-blue-500 progress-fill hover-glow-blue" style={{ width: `${Math.min(100, receivablePct)}%` }} />
+            <div className="h-full rounded-full bg-blue-500 progress-fill" style={{ width: `${Math.min(100, receivablePct)}%` }} />
           </div>
           <div className="flex items-center justify-between">
             <div>
@@ -51,7 +51,7 @@ export function DebtPanel({ receivable, payable }: { receivable: DebtSummary, pa
             <span className="text-[12.5px] font-black text-[var(--text-primary)] tabular-nums">{formatVnd(payable.total)}</span>
           </div>
           <div className="h-1.5 w-full rounded-full bg-[var(--secondary)] overflow-hidden border border-[var(--border)]/10 transition-executive">
-            <div className="h-full rounded-full bg-amber-500 progress-fill hover-glow-amber" style={{ width: `${Math.min(100, payablePct)}%` }} />
+            <div className="h-full rounded-full bg-amber-500 progress-fill" style={{ width: `${Math.min(100, payablePct)}%` }} />
           </div>
           <div className="flex items-center justify-between">
             <div>

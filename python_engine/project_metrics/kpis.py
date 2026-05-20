@@ -81,12 +81,19 @@ def calculate_project_kpis(data):
 
     # ─── PROGRESS & TIMELINE ─────────────────────────────────
     active_wbs = [w for w in wbs if float(w.get('budgetAmount', 0)) > 0]
-    completed_wbs = sum(
-        1 for w in active_wbs
-        if any(c.get('wbsId') == w.get('id') and c.get('status') == 'paid' for c in active_costs)
-    )
-    total_wbs_nodes = len(active_wbs)
-    actual_progress = (completed_wbs / total_wbs_nodes * 100) if total_wbs_nodes > 0 else 0.0
+    total_active_wbs_budget = sum(float(w.get('budgetAmount', 0)) for w in active_wbs)
+    
+    weighted_progress_sum = 0.0
+    for w in active_wbs:
+        w_budget = float(w.get('budgetAmount', 0))
+        # Sum all paid actual costs associated with this specific WBS item
+        w_paid_costs = sum(float(c.get('amount', 0)) for c in active_costs if c.get('wbsId') == w.get('id') and c.get('status') == 'paid')
+        # Progress percentage capped at 100%
+        w_progress = min(100.0, (w_paid_costs / w_budget * 100.0)) if w_budget > 0 else 0.0
+        # Weight by individual budget relative to total active WBS budget
+        weighted_progress_sum += w_progress * w_budget
+        
+    actual_progress = (weighted_progress_sum / total_active_wbs_budget) if total_active_wbs_budget > 0 else 0.0
 
     # Timeline
     start_date_str = project.get('startDate')

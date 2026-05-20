@@ -173,7 +173,7 @@ export default function ProjectList({ onSelectProject }: ProjectListProps) {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="bg-[var(--card)] rounded-lg p-4 border border-[var(--border)] hover:border-blue-500/50 cursor-pointer card-elevation group transition-executive hover-lift-sm"
+              className="bg-[var(--card)] rounded-lg p-4 border border-[var(--border)] hover:border-blue-500/50 cursor-pointer card-elevation group transition-executive hover-lift-xs"
               onClick={() => onSelectProject?.(project)}
             >
               <div className="flex items-start justify-between mb-3">

@@ -16,7 +16,7 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
   return (
     <article className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-[var(--erp-card-shadow)] hover:shadow-[var(--erp-hover-shadow)] transition-executive hover-lift-xs">
       <h3 className="mb-6 text-[10px] font-black text-[var(--text-tertiary)] uppercase tracking-[0.2em] flex items-center gap-2">
-        <span className="h-1.5 w-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)] pulse-subtle" />
+        <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
         {title}
       </h3>
       {children}

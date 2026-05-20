@@ -49,13 +49,13 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--secondary)] border border-[var(--border)]/15 transition-executive">
                   <div
                     className={`h-full rounded-full progress-fill ${isOverBudget
-                      ? 'bg-gradient-to-r from-rose-600 to-rose-400 shadow-[0_0_8px_rgba(244,63,94,0.3)]'
-                      : 'bg-gradient-to-r from-blue-600 to-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.3)]'
+                      ? 'bg-gradient-to-r from-rose-600 to-rose-400'
+                      : 'bg-gradient-to-r from-blue-600 to-blue-400'
                       }`}
                     style={{ width: `${Math.min(100, percentage)}%` }}
                   />
                 </div>
-                <span className={`text-[9px] font-extrabold tracking-widest uppercase transition-executive ${isOverBudget ? 'text-rose-500 pulse-subtle' : 'text-[var(--text-tertiary)]'}`}>
+                <span className={`text-[9px] font-extrabold tracking-widest uppercase transition-executive ${isOverBudget ? 'text-rose-500' : 'text-[var(--text-tertiary)]'}`}>
                   {percentage.toFixed(1)}%
                 </span>
               </div>

@@ -430,7 +430,12 @@ export default function Dashboard() {
             <section className="xl:col-span-5 rounded-lg border border-[var(--border)] bg-[var(--card)] overflow-hidden transition-all duration-300 hover:border-[var(--primary)]/15">
               <div className="px-4 py-2 border-b border-[var(--divider)] flex items-center justify-between">
                 <h3 className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-[0.15em]">Chi phí gần nhất</h3>
-                <span className="text-[9px] font-semibold text-[var(--text-accent)] cursor-pointer hover:underline transition-all">Xem tất cả</span>
+                <span 
+                  onClick={() => router.push('/costs')}
+                  className="text-[9px] font-semibold text-[var(--text-accent)] cursor-pointer hover:underline transition-all"
+                >
+                  Xem tất cả
+                </span>
               </div>
               <div className="px-3 py-2 overflow-x-auto">
                 <CostTable costs={data.costs} onEdit={setEditingCost} />

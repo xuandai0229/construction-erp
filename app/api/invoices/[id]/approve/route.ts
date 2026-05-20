@@ -11,12 +11,12 @@ export async function POST(
   try {
     const { id } = await params;
     const { status } = await request.json();
-    const userId = "system_internal_admin";
+    const user = await assertAuthenticated();
 
     // Security Guard: Only Managers/Admins can approve
-    await assertIsManager(userId);
+    await assertIsManager(user.id);
     
-    const result = await RevenueService.updateInvoiceApproval(id, status, userId);
+    const result = await RevenueService.updateInvoiceApproval(id, status, user.id);
     return successResponse(result);
   } catch (error) {
     return handleApiError(error);

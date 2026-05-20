@@ -769,14 +769,14 @@ select {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   ENTERPRISE MOTION UTILITIES
-   Synchronized • Subtle • Executive-grade
+   ENTERPRISE ERP MOTION UTILITIES
+   Minimal • Functional • Bloomberg/SAP Standard
    ═══════════════════════════════════════════════════════════ */
 
-/* ─── Hover Elevation System ──────────────────────────────── */
+/* ─── Subtle Elevation (Minimal) ──────────────────────────── */
 .hover-lift-xs {
-  transition: transform var(--motion-duration-base) var(--motion-easing-executive);
-  will-change: transform;
+  transition: transform var(--motion-duration-fast) var(--motion-easing-executive),
+    box-shadow var(--motion-duration-fast) var(--motion-easing-executive);
 }
 
 .hover-lift-xs:hover {
@@ -784,82 +784,12 @@ select {
 }
 
 .hover-lift-sm {
-  transition: transform var(--motion-duration-base) var(--motion-easing-executive);
-  will-change: transform;
+  transition: transform var(--motion-duration-fast) var(--motion-easing-executive),
+    box-shadow var(--motion-duration-fast) var(--motion-easing-executive);
 }
 
 .hover-lift-sm:hover {
   transform: translateY(calc(-1 * var(--motion-elevation-sm)));
-}
-
-.hover-lift-md {
-  transition: transform var(--motion-duration-base) var(--motion-easing-executive);
-  will-change: transform;
-}
-
-.hover-lift-md:hover {
-  transform: translateY(calc(-1 * var(--motion-elevation-md)));
-}
-
-/* ─── Subtle Glow Effects ─────────────────────────────────── */
-.hover-glow-blue {
-  transition: box-shadow var(--motion-duration-base) var(--motion-easing-executive);
-}
-
-.hover-glow-blue:hover {
-  box-shadow: var(--glow-subtle) rgba(59, 130, 246, 0.3);
-}
-
-.hover-glow-emerald {
-  transition: box-shadow var(--motion-duration-base) var(--motion-easing-executive);
-}
-
-.hover-glow-emerald:hover {
-  box-shadow: var(--glow-subtle) rgba(16, 185, 129, 0.3);
-}
-
-.hover-glow-rose {
-  transition: box-shadow var(--motion-duration-base) var(--motion-easing-executive);
-}
-
-.hover-glow-rose:hover {
-  box-shadow: var(--glow-subtle) rgba(244, 63, 94, 0.3);
-}
-
-.hover-glow-amber {
-  transition: box-shadow var(--motion-duration-base) var(--motion-easing-executive);
-}
-
-.hover-glow-amber:hover {
-  box-shadow: var(--glow-subtle) rgba(245, 158, 11, 0.3);
-}
-
-/* ─── Icon Hover Animation ────────────────────────────────── */
-.icon-hover-scale {
-  transition: transform var(--motion-duration-base) var(--motion-easing-executive);
-  will-change: transform;
-}
-
-.icon-hover-scale:hover {
-  transform: scale(1.08);
-}
-
-/* ─── Smooth Brightness Transition ────────────────────────── */
-.hover-brighten {
-  transition: filter var(--motion-duration-base) var(--motion-easing-executive);
-}
-
-.hover-brighten:hover {
-  filter: brightness(1.05);
-}
-
-/* ─── Border Accent on Hover ──────────────────────────────── */
-.hover-border-accent {
-  transition: border-color var(--motion-duration-base) var(--motion-easing-executive);
-}
-
-.hover-border-accent:hover {
-  border-color: rgba(59, 130, 246, 0.4);
 }
 
 /* ─── Synchronized Transition Utility ─────────────────────── */
@@ -871,74 +801,16 @@ select {
   transition: all var(--motion-duration-fast) var(--motion-easing-executive);
 }
 
-.transition-executive-smooth {
-  transition: all var(--motion-duration-smooth) var(--motion-easing-executive);
-}
-
-/* ─── Pulse Animation (Extremely Subtle) ──────────────────── */
-@keyframes pulse-subtle {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.85;
-  }
-}
-
-.pulse-subtle {
-  animation: pulse-subtle 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* ─── Sparkline Reveal Animation ──────────────────────────── */
-@keyframes sparkline-draw {
-  from {
-    stroke-dashoffset: 100;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-.sparkline-animate {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  animation: sparkline-draw 1.2s var(--motion-easing-executive) forwards;
-}
-
-/* ─── Chart Tooltip Fade ──────────────────────────────────── */
-.chart-tooltip-fade {
-  opacity: 0;
-  transition: opacity var(--motion-duration-fast) var(--motion-easing-standard);
-}
-
-.chart-tooltip-fade.active {
-  opacity: 1;
-}
-
-/* ─── Risk Card Pulse (Critical Only) ─────────────────────── */
-@keyframes risk-pulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0);
-  }
-  50% {
-    box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.15);
-  }
-}
-
-.risk-pulse-critical {
-  animation: risk-pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* ─── Progress Bar Smooth Fill ────────────────────────────── */
+/* ─── Progress Bar (Instant, Not Cinematic) ───────────────── */
 .progress-fill {
-  transition: width var(--motion-duration-slow) var(--motion-easing-executive);
+  transition: width var(--motion-duration-fast) var(--motion-easing-standard);
 }
 
 /* ─── Modal/Dropdown Entrance ─────────────────────────────── */
 @keyframes modal-entrance {
   from {
     opacity: 0;
-    transform: scale(0.96) translateY(8px);
+    transform: scale(0.98) translateY(4px);
   }
   to {
     opacity: 1;
@@ -947,7 +819,7 @@ select {
 }
 
 .modal-entrance {
-  animation: modal-entrance var(--motion-duration-smooth) var(--motion-easing-executive) forwards;
+  animation: modal-entrance var(--motion-duration-base) var(--motion-easing-executive) forwards;
 }
 
 /* ─── Backdrop Blur Fade ──────────────────────────────────── */
@@ -963,5 +835,5 @@ select {
 }
 
 .backdrop-fade {
-  animation: backdrop-fade var(--motion-duration-smooth) var(--motion-easing-gentle) forwards;
+  animation: backdrop-fade var(--motion-duration-base) var(--motion-easing-gentle) forwards;
 }

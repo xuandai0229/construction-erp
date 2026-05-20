@@ -36,6 +36,22 @@ const fmtShort = (v: number) => {
   return `${sign}${new Intl.NumberFormat('vi-VN').format(absV)} ₫`;
 };
 
+const fmtParts = (v: number) => {
+  const absV = Math.abs(v);
+  const sign = v < 0 ? '-' : '';
+  if (absV >= 1e9) {
+    const billVal = Math.round(absV / 1e9);
+    const formatted = new Intl.NumberFormat('vi-VN').format(billVal);
+    return { value: `${sign}${formatted}`, unit: 'Tỷ VNĐ' };
+  }
+  if (absV >= 1e6) {
+    const millVal = Math.round(absV / 1e6);
+    const formatted = new Intl.NumberFormat('vi-VN').format(millVal);
+    return { value: `${sign}${formatted}`, unit: 'Triệu VNĐ' };
+  }
+  return { value: `${sign}${new Intl.NumberFormat('vi-VN').format(absV)}`, unit: '₫' };
+};
+
 // ─── 1. BUDGET ALLOCATION (Donut + Legend) ──────────────────
 export function BudgetAllocationChart({ data }: { data: any }) {
   const costByType = (data?.costByType || [])
@@ -64,6 +80,8 @@ export function BudgetAllocationChart({ data }: { data: any }) {
     return [...items, { ...c, pct, offset }];
   }, []);
 
+  const parts = fmtParts(total);
+
   return (
     <div>
       <h4 className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-[0.15em] mb-4">Phân bổ ngân sách</h4>
@@ -79,9 +97,9 @@ export function BudgetAllocationChart({ data }: { data: any }) {
             ))}
           </svg>
           <div className="absolute inset-0 grid place-items-center pointer-events-none">
-            <div className="text-center">
-              <div className="text-[13px] font-bold text-[var(--text-primary)] leading-none tracking-tight">{fmtShort(total)}</div>
-              <div className="text-[7px] font-medium text-[var(--text-tertiary)] uppercase tracking-widest mt-0.5">Triệu VND</div>
+            <div className="text-center px-1.5 w-full overflow-hidden">
+              <div className="text-[13px] font-black text-[var(--text-primary)] leading-none tracking-tight truncate">{parts.value}</div>
+              <div className="text-[7px] font-black text-[var(--text-tertiary)] uppercase tracking-[0.15em] mt-1">{parts.unit}</div>
             </div>
           </div>
         </div>

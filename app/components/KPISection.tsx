@@ -39,8 +39,8 @@ export default function KPISection({ data }: { data: DashboardData }) {
         <article key={card.title} className="erp-kpi-card group">
           <div className="flex flex-col gap-5">
             <div className="flex items-center justify-between">
-              <div className={`grid h-10 w-10 place-items-center rounded-xl border-2 transition-executive shadow-sm icon-hover-scale ${iconTone(card.tone)}`}>
-                <svg viewBox="0 0 24 24" className="h-5 w-5 transition-executive" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <div className={`grid h-10 w-10 place-items-center rounded-xl border-2 transition-executive shadow-sm ${iconTone(card.tone)}`}>
+                <svg viewBox="0 0 24 24" className="h-5 w-5 transition-executive group-hover:opacity-80" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d={card.icon} />
                 </svg>
               </div>
@@ -51,10 +51,10 @@ export default function KPISection({ data }: { data: DashboardData }) {
 
             <div className="min-w-0">
               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-tertiary)] mb-1.5">{card.title}</div>
-              <div className="text-[20px] font-black tracking-tight text-[var(--text-primary)] tabular-nums truncate leading-none mb-3 transition-executive">
+              <div className="text-[20px] font-black tracking-tight text-[var(--text-primary)] tabular-nums truncate leading-none mb-3">
                 {formatVnd(card.value ?? 0)}
               </div>
-              <div className={`text-[10.5px] font-bold tracking-tight ${card.tone === 'red' ? 'text-rose-500' : 'text-emerald-500'} flex items-center gap-1 transition-executive`}>
+              <div className={`text-[10.5px] font-bold tracking-tight ${card.tone === 'red' ? 'text-rose-500' : 'text-emerald-500'} flex items-center gap-1`}>
                 <span className="opacity-70">{card.change}</span>
               </div>
             </div>

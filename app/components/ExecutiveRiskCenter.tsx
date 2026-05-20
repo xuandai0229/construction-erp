@@ -92,17 +92,17 @@ export default function ExecutiveRiskCenter({ risks = [] }: ExecutiveRiskCenterP
     const base = 'border rounded-xl p-3 transition-executive cursor-pointer hover-lift-xs ';
     if (severity === 'CRITICAL') {
       return base + (isExpanded 
-        ? 'bg-rose-500/[0.08] border-rose-500/40 shadow-sm risk-pulse-critical' 
-        : 'bg-rose-500/[0.03] border-rose-500/15 hover:bg-rose-500/[0.06] hover:border-rose-500/30 hover-glow-rose');
+        ? 'bg-rose-500/[0.08] border-rose-500/40 shadow-sm' 
+        : 'bg-rose-500/[0.03] border-rose-500/15 hover:bg-rose-500/[0.06] hover:border-rose-500/30');
     }
     if (severity === 'WARNING') {
       return base + (isExpanded 
         ? 'bg-amber-500/[0.08] border-amber-500/40 shadow-sm' 
-        : 'bg-amber-500/[0.03] border-amber-500/15 hover:bg-amber-500/[0.06] hover:border-amber-500/30 hover-glow-amber');
+        : 'bg-amber-500/[0.03] border-amber-500/15 hover:bg-amber-500/[0.06] hover:border-amber-500/30');
     }
     return base + (isExpanded 
       ? 'bg-blue-500/[0.08] border-blue-500/40 shadow-sm' 
-      : 'bg-blue-500/[0.03] border-blue-500/15 hover:bg-blue-500/[0.06] hover:border-blue-500/30 hover-glow-blue');
+      : 'bg-blue-500/[0.03] border-blue-500/15 hover:bg-blue-500/[0.06] hover:border-blue-500/30');
   };
 
   const getRiskBadge = (severity: string) => {

@@ -1,6 +1,6 @@
 import { CostService } from '@/services/cost.service';
 import { handleApiError, successResponse } from '@/lib/api-error';
-import { assertAuthenticated } from '@/lib/auth-guard';
+import { assertAuthenticated, assertIsAccountant } from '@/lib/auth-guard';
 import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/api-error';
 import { headers } from "next/headers";
@@ -22,7 +22,10 @@ export async function POST(
   try {
     const { id } = await params;
     const { status } = await request.json(); // nextStatus
-    const user = await assertAuthenticated();
+    const authenticatedUser = await assertAuthenticated();
+    
+    // Security Guard: Only Accountants/CFOs/Admins can approve
+    const user = await assertIsAccountant(authenticatedUser.id);
 
     // Verify record exists and belongs to the user's company (Tenant Isolation)
     if (user.companyId) {
