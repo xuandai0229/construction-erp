@@ -40,7 +40,16 @@ export class WBSService {
     let level = 0;
     if (data.parentId) {
       const parent = await prisma.wBSItem.findUnique({ where: { id: data.parentId } });
-      level = (parent?.level ?? 0) + 1;
+      if (!parent) throw new ApiError(404, "Không tìm thấy hạng mục cha");
+      
+      level = parent.level + 1;
+
+      // Hierarchical Code Validation
+      if (data.code && parent.code) {
+        if (!data.code.startsWith(parent.code)) {
+          throw new ApiError(400, `Mã hạng mục con (${data.code}) phải bắt đầu bằng tiền tố của hạng mục cha (${parent.code}).`);
+        }
+      }
     }
 
     const item = await prisma.wBSItem.create({

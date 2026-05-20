@@ -65,7 +65,10 @@ export class FinancialAggregationService {
       prisma.project.findUnique({ where: { id: projectId } })
     ]);
 
-    if (!project) throw new Error("Project not found");
+    if (!project) {
+      const { ApiError } = require("@/lib/api-error");
+      throw new ApiError(404, "Không tìm thấy dự án");
+    }
 
     // KPI CONTRACT: COST_ACT (Accounting Reality)
     const costActualD = costs
@@ -319,8 +322,11 @@ export class FinancialAggregationService {
     const costs = await prisma.costRecord.findMany({
       where: {
         deletedAt: null,
-        status: "unpaid",
         approvalStatus: { not: "REJECTED" },
+        OR: [
+          { status: "unpaid" },
+          { retentionAmount: { gt: 0 } }
+        ],
         ...(projectId && { projectId }),
         ...(companyId && { companyId })
       }
@@ -339,11 +345,12 @@ export class FinancialAggregationService {
       
       const bucket = buckets.find(b => diffDays >= b.minDays && diffDays <= b.maxDays);
       if (bucket) {
-        // Handle partial payment if applicable (assuming cost.amount is total and we might need a remaining amount field)
-        // If remainingAmount doesn't exist, we use amount (for unpaid)
-        const remaining = (cost as any).remainingAmount !== undefined 
-          ? safeDecimal((cost as any).remainingAmount) 
-          : safeDecimal(cost.amount);
+        let remaining = safeDecimal(0);
+        if (cost.status === "unpaid") {
+          remaining = safeDecimal(cost.amount);
+        } else {
+          remaining = safeDecimal(cost.retentionAmount || 0);
+        }
           
         bucket.amount = bucket.amount.add(remaining);
         bucket.count++;

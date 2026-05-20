@@ -20,7 +20,7 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
         <React.Fragment key={item.id}>
           <tr className="erp-table-row group even:bg-[var(--divider)]/10 border-b border-[var(--border)] last:border-b-0 select-none">
             {/* WBS Name */}
-            <td className="w-[320px] py-2.5 px-4 border-r border-[var(--border)]">
+            <td className="w-[320px] min-w-[320px] max-w-[320px] py-2.5 px-4 border-r border-[var(--border)] shrink-0">
               <div className="flex items-center gap-2.5 min-w-0" style={{ paddingLeft: `${level * 16}px` }}>
                 {item.children.length > 0 && (
                   <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 text-[var(--text-tertiary)] group-hover:text-blue-500 transition-executive" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -33,22 +33,22 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
               </div>
             </td>
 
-            <td className={`${COL_WIDTHS.FINANCIAL} text-right py-2.5 px-4 ${FINANCIAL_CELL_CLASS} text-[11.5px] text-[var(--text-tertiary)] font-bold tabular-nums whitespace-nowrap border-r border-[var(--border)] transition-executive`}>
+            <td className={`${COL_WIDTHS.FINANCIAL} min-w-[160px] max-w-[160px] text-right py-2.5 px-4 ${FINANCIAL_CELL_CLASS} text-[11.5px] text-[var(--text-tertiary)] font-bold tabular-nums whitespace-nowrap border-r border-[var(--border)] transition-executive shrink-0`}>
               {formatVnd(item.budget)}
             </td>
-            <td className={`${COL_WIDTHS.FINANCIAL} text-right py-2.5 px-4 ${FINANCIAL_CELL_CLASS} text-[11.5px] text-[var(--text-primary)] font-bold tabular-nums group-hover:text-blue-500 transition-executive whitespace-nowrap border-r border-[var(--border)]`}>
+            <td className={`${COL_WIDTHS.FINANCIAL} min-w-[160px] max-w-[160px] text-right py-2.5 px-4 ${FINANCIAL_CELL_CLASS} text-[11.5px] text-[var(--text-primary)] font-bold tabular-nums group-hover:text-blue-500 transition-executive whitespace-nowrap border-r border-[var(--border)] shrink-0`}>
               {formatVnd(item.actual)}
             </td>
-            <td className={`${COL_WIDTHS.FINANCIAL} text-right py-2.5 px-4 ${FINANCIAL_CELL_CLASS} text-[11.5px] font-black tabular-nums whitespace-nowrap border-r border-[var(--border)] transition-executive ${item.profit >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+            <td className={`${COL_WIDTHS.FINANCIAL} min-w-[160px] max-w-[160px] text-right py-2.5 px-4 ${FINANCIAL_CELL_CLASS} text-[11.5px] font-black tabular-nums whitespace-nowrap border-r border-[var(--border)] transition-executive shrink-0 ${item.profit >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
               {item.profit >= 0 ? '+' : ''}{formatVnd(item.profit)}
             </td>
 
             {/* Progress bar */}
-            <td className={`${COL_WIDTHS.PROGRESS} text-center py-2.5 px-2`}>
+            <td className={`${COL_WIDTHS.PROGRESS} min-w-[120px] max-w-[120px] text-center py-2.5 px-2 shrink-0`}>
               <div className="flex flex-col items-center gap-1 min-w-0">
                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--secondary)] border border-[var(--border)]/15 transition-executive">
                   <div
-                    className={`h-full rounded-full progress-fill ${isOverBudget
+                     className={`h-full rounded-full progress-fill ${isOverBudget
                       ? 'bg-gradient-to-r from-rose-600 to-rose-400'
                       : 'bg-gradient-to-r from-blue-600 to-blue-400'
                       }`}
@@ -85,14 +85,14 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="3"><path d="m9 18 6-6-6-6" /></svg>
             </div>
           )}
-          <table className="erp-table w-full table-fixed min-w-[800px]">
+          <table className="erp-table w-full table-fixed min-w-[920px]">
             <thead>
               <tr className="bg-[var(--table-head-bg)] border-b border-[var(--border)] h-9">
-                <th className="w-[320px] text-left px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)]">Hạng mục thi công (WBS)</th>
-                <th className={`${COL_WIDTHS.FINANCIAL} text-right px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)]`}>Dự toán ngân sách</th>
-                <th className={`${COL_WIDTHS.FINANCIAL} text-right px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)]`}>Chi phí thực tế</th>
-                <th className={`${COL_WIDTHS.FINANCIAL} text-right px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)]`}>Chênh lệch</th>
-                <th className={`${COL_WIDTHS.PROGRESS} text-center px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-none`}>Tiến độ</th>
+                <th className="w-[320px] min-w-[320px] text-left px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)] whitespace-nowrap truncate">Hạng mục thi công (WBS)</th>
+                <th className={`${COL_WIDTHS.FINANCIAL} min-w-[160px] text-right px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)] whitespace-nowrap truncate`}>Dự toán ngân sách</th>
+                <th className={`${COL_WIDTHS.FINANCIAL} min-w-[160px] text-right px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)] whitespace-nowrap truncate`}>Chi phí thực tế</th>
+                <th className={`${COL_WIDTHS.FINANCIAL} min-w-[160px] text-right px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)] whitespace-nowrap truncate`}>Chênh lệch</th>
+                <th className={`${COL_WIDTHS.PROGRESS} min-w-[120px] text-center px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-none whitespace-nowrap truncate`}>Tiến độ</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--border)]">

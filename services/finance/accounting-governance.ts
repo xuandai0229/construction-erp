@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { LoggerService } from "../logger.service";
+import { ApiError } from "@/lib/api-error";
 
 /**
  * Enterprise Accounting Governance
@@ -22,7 +23,7 @@ export class AccountingGovernance {
 
     if (period && period.isLocked) {
       LoggerService.error(`[AccountingGovernance] Attempted to modify locked period ${month}`);
-      throw new Error(`Kỳ kế toán ${month} đã bị khóa. Không thể thêm/sửa đổi/xóa dữ liệu tài chính trong kỳ này.`);
+      throw new ApiError(400, `Kỳ kế toán ${month} đã bị khóa. Không thể thêm/sửa đổi/xóa dữ liệu tài chính trong kỳ này.`);
     }
     
     return true;

@@ -70,10 +70,13 @@ export default function Dashboard() {
 
   const [editingCost, setEditingCost] = useState<CostRecord | null>(null);
 
-  // STABILITY FIX: Auto-select first project if none selected to prevent "idle loading"
+  // STABILITY FIX: Auto-select first project if none selected or if selected project is stale
   useEffect(() => {
-    if (!currentProjectId && projects.length > 0) {
-      setCurrentProject(projects[0].id);
+    if (projects.length > 0) {
+      const exists = projects.some((p: any) => p.id === currentProjectId);
+      if (!currentProjectId || !exists) {
+        setCurrentProject(projects[0].id);
+      }
     }
   }, [projects, currentProjectId, setCurrentProject]);
 

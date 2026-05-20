@@ -191,6 +191,9 @@ async function main() {
           wbsId: wbsItem.id,
           costType: "material",
           amount: new Decimal("9999000"),
+          netAmount: new Decimal("9999000"),
+          vatAmount: new Decimal("0"),
+          vatRate: new Decimal("0"),
           requestId: failRequestId,
           note: "Hạch toán thử nghiệm rollback"
         }
@@ -235,6 +238,9 @@ async function main() {
         projectId: project.id,
         wbsId: wbs.id,
         amount: new Decimal("12500000"),
+        netAmount: new Decimal("12500000"),
+        vatAmount: new Decimal("0"),
+        vatRate: new Decimal("0"),
         requestId: uniqueReqId,
         note: "First unique transaction posting"
       }
@@ -248,6 +254,9 @@ async function main() {
           projectId: project.id,
           wbsId: wbs.id,
           amount: new Decimal("12500000"),
+          netAmount: new Decimal("12500000"),
+          vatAmount: new Decimal("0"),
+          vatRate: new Decimal("0"),
           requestId: uniqueReqId,
           note: "Duplicate posting attempt"
         }

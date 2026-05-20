@@ -332,6 +332,38 @@ async function phase2_CreateRealisticData() {
   });
   
   console.log(`✅ Created WBS structure with 5 items`);
+
+  // Create Budget Records for the top-level phases so the ReconciliationEngine has correct sums
+  await Promise.all([
+    prisma.budgetRecord.create({
+      data: {
+        projectId: megaProject.id,
+        wbsId: wbsPhase1.id,
+        costType: 'material',
+        estimatedAmount: new Decimal('1500000000000'),
+        createdById: users[2].id
+      }
+    }),
+    prisma.budgetRecord.create({
+      data: {
+        projectId: megaProject.id,
+        wbsId: wbsPhase2.id,
+        costType: 'material',
+        estimatedAmount: new Decimal('2500000000000'),
+        createdById: users[2].id
+      }
+    }),
+    prisma.budgetRecord.create({
+      data: {
+        projectId: megaProject.id,
+        wbsId: wbsPhase3.id,
+        costType: 'material',
+        estimatedAmount: new Decimal('1000000000000'),
+        createdById: users[2].id
+      }
+    })
+  ]);
+  console.log(`✅ Created 3 BudgetRecords to prevent budget drift to 0`);
   
   return { company, branches, users, megaProject, wbsItems: [wbsPhase1, wbsPhase2, wbsPhase3, wbsRoad, wbsWater] };
 }
@@ -412,8 +444,8 @@ async function phase3_CreateTransactions(context: any) {
         projectId: megaProject.id,
         wbsId: wbsRoad.id,
         costType: 'material',
-        amount: new Decimal('48000000000'),
-        quantity: new Decimal('60000'),
+        amount: new Decimal('44000000000'),
+        quantity: new Decimal('55000'),
         unitPrice: new Decimal('800000'),
         supplier: 'Công ty Xi măng Hoàng Thạch',
         note: 'Xi măng PCB40 cho đường giao thông',
@@ -422,10 +454,10 @@ async function phase3_CreateTransactions(context: any) {
         createdById: users[3].id,
         approvalStatus: 'APPROVED',
         vatRate: new Decimal('10'),
-        vatAmount: new Decimal('4800000000'),
-        netAmount: new Decimal('48000000000'),
+        vatAmount: new Decimal('4000000000'),
+        netAmount: new Decimal('40000000000'),
         retentionRate: new Decimal('5'),
-        retentionAmount: new Decimal('2400000000')
+        retentionAmount: new Decimal('2200000000')
       }
     }),
     prisma.costRecord.create({
@@ -433,9 +465,9 @@ async function phase3_CreateTransactions(context: any) {
         projectId: megaProject.id,
         wbsId: wbsRoad.id,
         costType: 'labor',
-        amount: new Decimal('30000000000'),
+        amount: new Decimal('27500000000'),
         quantity: new Decimal('1000'),
-        unitPrice: new Decimal('30000000'),
+        unitPrice: new Decimal('27500000'),
         supplier: 'Công ty Nhân lực Xây dựng Việt',
         note: 'Nhân công thi công đường',
         date: new Date('2024-04-01'),
@@ -443,8 +475,8 @@ async function phase3_CreateTransactions(context: any) {
         createdById: users[3].id,
         approvalStatus: 'APPROVED',
         vatRate: new Decimal('10'),
-        vatAmount: new Decimal('3000000000'),
-        netAmount: new Decimal('30000000000'),
+        vatAmount: new Decimal('2500000000'),
+        netAmount: new Decimal('25000000000'),
         retentionRate: new Decimal('0'),
         retentionAmount: new Decimal('0')
       }

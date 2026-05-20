@@ -69,28 +69,28 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
               Không có dữ liệu chi phí
             </div>
           ) : (
-            <table className="erp-table w-full table-fixed min-w-[800px]">
+            <table className="erp-table w-full table-fixed min-w-[1130px]">
               <thead>
                 <tr className="bg-[var(--table-head-bg)] border-b border-[var(--border)] h-9">
-                  <th className={`${COL_WIDTHS.DATE} text-left px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)]`}>Ngày</th>
-                  <th className="w-[280px] text-left px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)]">Nội dung / Nhà cung cấp</th>
-                  <th className="w-[200px] text-left px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)]">Hạng mục WBS</th>
-                  <th className={`${COL_WIDTHS.STATUS} text-left px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)]`}>Phân loại</th>
-                  <th className={`${COL_WIDTHS.FINANCIAL} text-right px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)]`}>Số tiền</th>
-                  <th className={`${COL_WIDTHS.STATUS} text-center px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)]`}>Trạng thái</th>
-                  <th className={`${COL_WIDTHS.ACTIONS} text-center px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-none`}>Nghiệp vụ</th>
+                  <th className={`${COL_WIDTHS.DATE} min-w-[130px] text-left px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)] whitespace-nowrap truncate`}>Ngày</th>
+                  <th className="w-[280px] min-w-[280px] text-left px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)] whitespace-nowrap truncate">Nội dung / Nhà cung cấp</th>
+                  <th className="w-[200px] min-w-[200px] text-left px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)] whitespace-nowrap truncate">Hạng mục WBS</th>
+                  <th className={`${COL_WIDTHS.STATUS} min-w-[125px] text-left px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)] whitespace-nowrap truncate`}>Phân loại</th>
+                  <th className={`${COL_WIDTHS.FINANCIAL} min-w-[160px] text-right px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)] whitespace-nowrap truncate`}>Số tiền</th>
+                  <th className={`${COL_WIDTHS.STATUS} min-w-[125px] text-center px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-r border-[var(--border)] whitespace-nowrap truncate`}>Trạng thái</th>
+                  <th className={`${COL_WIDTHS.ACTIONS} min-w-[110px] text-center px-4 py-2 uppercase text-[10px] tracking-[0.15em] text-[var(--text-tertiary)] font-black border-none whitespace-nowrap truncate`}>Nghiệp vụ</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--border)]">
                 {visibleCosts.map((cost) => (
                   <tr key={cost.id} className="erp-table-row group even:bg-[var(--divider)]/10 border-b border-[var(--border)] last:border-b-0 select-none">
                     {/* Date */}
-                    <td className={`whitespace-nowrap py-2.5 px-4 text-[11px] font-bold text-[var(--text-tertiary)] group-hover:text-blue-500 transition-executive border-r border-[var(--border)] ${COL_WIDTHS.DATE}`}>
+                    <td className={`whitespace-nowrap py-2.5 px-4 text-[11px] font-bold text-[var(--text-tertiary)] group-hover:text-blue-500 transition-executive border-r border-[var(--border)] shrink-0 ${COL_WIDTHS.DATE} min-w-[130px] max-w-[130px]`}>
                       {formatDate(cost.date)}
                     </td>
 
                     {/* Description + Supplier */}
-                    <td className="w-[280px] py-2.5 px-4 border-r border-[var(--border)]">
+                    <td className="w-[280px] min-w-[280px] max-w-[280px] py-2.5 px-4 border-r border-[var(--border)] shrink-0">
                       <div className="font-black text-[var(--text-primary)] text-[11.5px] truncate leading-tight mb-0.5 transition-executive group-hover:text-blue-500" title={cost.note ?? ''}>
                         {cost.note ?? 'Chi phí không tên'}
                       </div>
@@ -100,26 +100,26 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
                     </td>
 
                     {/* WBS */}
-                    <td className="w-[200px] py-2.5 px-4 border-r border-[var(--border)]">
+                    <td className="w-[200px] min-w-[200px] max-w-[200px] py-2.5 px-4 border-r border-[var(--border)] shrink-0">
                       <div className="text-[11px] font-bold text-[var(--text-secondary)] truncate transition-executive group-hover:text-[var(--text-primary)]" title={getWBSName(cost.wbsId)}>
                         {getWBSName(cost.wbsId)}
                       </div>
                     </td>
 
                     {/* Cost Type Badge */}
-                    <td className={`${COL_WIDTHS.STATUS} py-2.5 px-4 border-r border-[var(--border)]`}>
+                    <td className={`${COL_WIDTHS.STATUS} min-w-[125px] max-w-[125px] py-2.5 px-4 border-r border-[var(--border)] shrink-0`}>
                       <span className="inline-flex items-center whitespace-nowrap rounded-lg px-2 py-0.5 text-[8.5px] font-black uppercase tracking-wider bg-[var(--secondary)] text-[var(--text-tertiary)] border border-[var(--border)] group-hover:border-blue-500/20 group-hover:text-blue-500 transition-executive">
                         {costType_LABELS[cost.costType] || cost.costType}
                       </span>
                     </td>
 
                     {/* Amount */}
-                    <td className={`${COL_WIDTHS.FINANCIAL} py-2.5 px-4 text-right tabular-nums font-black text-[var(--text-primary)] text-[11.5px] group-hover:text-blue-500 transition-executive whitespace-nowrap border-r border-[var(--border)]`}>
+                    <td className={`${COL_WIDTHS.FINANCIAL} min-w-[160px] max-w-[160px] py-2.5 px-4 text-right tabular-nums font-black text-[var(--text-primary)] text-[11.5px] group-hover:text-blue-500 transition-executive whitespace-nowrap border-r border-[var(--border)] shrink-0`}>
                       {formatVnd(cost.amount)}
                     </td>
 
                     {/* Status Badge */}
-                    <td className={`${COL_WIDTHS.STATUS} py-2.5 px-4 text-center border-r border-[var(--border)]`}>
+                    <td className={`${COL_WIDTHS.STATUS} min-w-[125px] max-w-[125px] py-2.5 px-4 text-center border-r border-[var(--border)] shrink-0`}>
                       <span className={`inline-flex items-center gap-1.5 rounded-xl px-2.5 py-0.5 text-[9px] font-black uppercase tracking-wider whitespace-nowrap transition-executive border shadow-sm ${cost.workflowStatus === 'POSTED' || cost.approvalStatus === 'APPROVED'
                         ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30 shadow-emerald-500/5'
                         : cost.workflowStatus === 'REVERSED' || cost.workflowStatus === 'REJECTED'
@@ -137,11 +137,11 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
                     </td>
 
                     {/* Actions */}
-                    <td className={`${COL_WIDTHS.ACTIONS} py-2.5 px-2 text-center`}>
-                      <div className="flex items-center justify-center gap-1.5 md:opacity-0 md:group-hover:opacity-100 transition-executive">
+                    <td className={`${COL_WIDTHS.ACTIONS} min-w-[110px] max-w-[110px] py-2.5 px-2 text-center shrink-0`}>
+                      <div className="flex items-center justify-center gap-1.5 md:opacity-0 md:group-hover:opacity-100 transition-executive whitespace-nowrap">
                         <button
                           onClick={() => onEdit(cost)}
-                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--text-tertiary)] hover:text-white hover:bg-blue-600 transition-executive border border-[var(--border)] shadow-sm hover-lift-xs"
+                          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--text-tertiary)] hover:text-white hover:bg-blue-600 transition-executive border border-[var(--border)] shadow-sm hover-lift-xs"
                           title="Hiệu chỉnh"
                         >
                           <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -150,7 +150,7 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
                         </button>
                         <button
                           onClick={() => setConfirmAction({ id: cost.id, type: 'DELETE' })}
-                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--text-tertiary)] hover:text-white hover:bg-rose-600 transition-executive border border-[var(--border)] shadow-sm hover-lift-xs"
+                          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--text-tertiary)] hover:text-white hover:bg-rose-600 transition-executive border border-[var(--border)] shadow-sm hover-lift-xs"
                           title="Hủy / Xóa"
                         >
                           <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
