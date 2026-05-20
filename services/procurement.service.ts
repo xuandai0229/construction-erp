@@ -3,6 +3,7 @@ import { ApiError } from "@/lib/api-error";
 import { ProcurementStatus } from "@prisma/client";
 import { AuditService } from "./audit.service";
 import { round } from "@/lib/math";
+import { PostingEngine } from "@/lib/accounting/postingEngine";
 
 export class ProcurementService {
   
@@ -79,28 +80,16 @@ export class ProcurementService {
         data: { status: ProcurementStatus.RECEIVED }
       });
 
-      // Automatically create CostRecords for received goods
+      // Automatically create Ledger Entries (GRN -> WIP/Inventory)
       for (const item of po.items) {
         if (item.wbsId) {
-          await tx.costRecord.create({
-            data: {
-              projectId: po.projectId,
-              wbsId: item.wbsId,
-              costType: item.costType,
-              amount: item.amount,
-              quantity: item.quantity,
-              unitPrice: item.unitPrice,
-              supplier: po.vendor,
-              note: `Nhận hàng từ PO ${po.poNumber || po.id}: ${item.description}`,
-              date: new Date(),
-              status: "unpaid",
-              purchaseOrderId: po.id
-            }
+          await PostingEngine.postGoodsReceipt(tx, {
+            receiptId: gr.id,
+            projectId: po.projectId,
+            amount: Number(item.amount),
+            costType: item.costType as any,
+            description: `Nhập kho từ PO ${po.poNumber || po.id}: ${item.description}`
           });
-          // Note: In a real ERP, the PostingEngine would post when the INVOICE arrives,
-          // but for construction, we might post at Receipt (Accrued Liability).
-          // We'll stick to user instructions: Generate journal entries for financial actions.
-          // Receiving goods is a financial event.
         }
       }
 

@@ -20,10 +20,14 @@ export class PostingEngine {
     amount: number;
     costType: CostType;
     description: string;
+    purchaseOrderId?: string;
   }) {
     const expenseCode = this.getExpenseCode(params.costType);
     const apCode = "3310"; // Accounts Payable
+    const grniCode = "3311"; // GRNI (Phải trả người bán chưa có hóa đơn/Hàng về chưa hóa đơn)
 
+    const debitAccount = params.purchaseOrderId ? grniCode : expenseCode;
+    
     await this.createDoubleEntry(tx, {
       projectId: params.projectId,
       description: `Ghi nhận chi phí: ${params.description}`,
@@ -31,8 +35,37 @@ export class PostingEngine {
       sourceType: "COST",
       sourceId: params.costId,
       lines: [
-        { accountCode: expenseCode, amount: params.amount, type: TransactionType.DEBIT },
+        { accountCode: debitAccount, amount: params.amount, type: TransactionType.DEBIT },
         { accountCode: apCode, amount: params.amount, type: TransactionType.CREDIT },
+      ]
+    });
+  }
+
+  /**
+   * Posts a Goods Receipt to the Ledger.
+   * Logic:
+   * Debit: Inventory/WIP (6210/6220/152)
+   * Credit: GRNI (3311)
+   */
+  static async postGoodsReceipt(tx: any, params: {
+    receiptId: string;
+    projectId: string;
+    amount: number;
+    costType: CostType;
+    description: string;
+  }) {
+    const expenseCode = this.getExpenseCode(params.costType);
+    const grniCode = "3311"; 
+
+    await this.createDoubleEntry(tx, {
+      projectId: params.projectId,
+      description: `Nhập kho / Nhận hàng: ${params.description}`,
+      reference: `GRN-${params.receiptId}`,
+      sourceType: "GRN",
+      sourceId: params.receiptId,
+      lines: [
+        { accountCode: expenseCode, amount: params.amount, type: TransactionType.DEBIT },
+        { accountCode: grniCode, amount: params.amount, type: TransactionType.CREDIT },
       ]
     });
   }
@@ -49,8 +82,45 @@ export class PostingEngine {
     amount: number;
     description: string;
   }) {
+    // Fetch Invoice to get detailed amounts
+    const invoice = await tx.invoice.findUnique({
+      where: { id: params.invoiceId }
+    });
+
+    if (!invoice) throw new ApiError(404, `Invoice not found for posting: ${params.invoiceId}`);
+
     const arCode = "1310"; // Accounts Receivable
+    const retentionCode = "1368"; // Phải thu khác (Retention)
     const revenueCode = "5110"; // Revenue
+    const vatCode = "33311"; // Thuế GTGT đầu ra
+
+    // Fallbacks if missing
+    const netAmount = Number(invoice.netAmount || invoice.amount);
+    const vatAmount = Number(invoice.vatAmount || 0);
+    const retentionAmount = Number(invoice.retentionAmount || 0);
+    const claimAmount = Number(invoice.amount);
+
+    const lines = [];
+
+    // Debit AR
+    if (claimAmount > 0) {
+      lines.push({ accountCode: arCode, amount: claimAmount - retentionAmount, type: TransactionType.DEBIT });
+    }
+
+    // Debit Retention
+    if (retentionAmount > 0) {
+      lines.push({ accountCode: retentionCode, amount: retentionAmount, type: TransactionType.DEBIT });
+    }
+
+    // Credit Revenue
+    if (netAmount > 0) {
+      lines.push({ accountCode: revenueCode, amount: netAmount, type: TransactionType.CREDIT });
+    }
+
+    // Credit VAT
+    if (vatAmount > 0) {
+      lines.push({ accountCode: vatCode, amount: vatAmount, type: TransactionType.CREDIT });
+    }
 
     await this.createDoubleEntry(tx, {
       projectId: params.projectId,
@@ -58,10 +128,7 @@ export class PostingEngine {
       reference: `INV-${params.invoiceId}`,
       sourceType: "INVOICE",
       sourceId: params.invoiceId,
-      lines: [
-        { accountCode: arCode, amount: params.amount, type: TransactionType.DEBIT },
-        { accountCode: revenueCode, amount: params.amount, type: TransactionType.CREDIT },
-      ]
+      lines: lines
     });
   }
 
@@ -106,8 +173,8 @@ export class PostingEngine {
     }
   }
 
-  private static async createDoubleEntry(tx: any, params: {
-    projectId: string;
+  static async createDoubleEntry(tx: any, params: {
+    projectId: string | null;
     description: string;
     reference: string;
     sourceType: string;

@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { ApiError } from "@/lib/api-error";
-import { InvoiceStatus, PaymentStatus } from "@prisma/client";
+import { InvoiceStatus, PaymentStatus, ApprovalStatus } from "@prisma/client";
 import { assertValidEntity } from "@/lib/assertion";
 import { round } from "@/lib/math";
 import { PostingEngine } from "@/lib/accounting/postingEngine";
@@ -23,9 +23,49 @@ export class RevenueService {
     if (!wbs) throw new ApiError(404, "Không tìm thấy hạng mục WBS");
     if (wbs.projectId !== data.projectId) throw new ApiError(400, "Hạng mục WBS không thuộc về dự án đã chọn");
 
-    const amount = round(data.amount);
-    if (amount <= 0) throw new ApiError(400, "Số tiền hóa đơn phải lớn hơn 0");
+    // Enterprise Calculation Logic
+    const netAmount = round(data.netAmount || data.amount);
+    if (netAmount <= 0) throw new ApiError(400, "Giá trị Net (netAmount) phải lớn hơn 0");
+
+    const vatRate = data.vatRate !== undefined ? Number(data.vatRate) : 10;
+    const vatAmount = round(netAmount * (vatRate / 100));
+    const grossAmount = netAmount + vatAmount;
+
+    const retentionRate = data.retentionRate !== undefined ? Number(data.retentionRate) : 0;
+    const retentionAmount = round(grossAmount * (retentionRate / 100));
+
+    // Billing Claim is Gross Amount minus Retention
+    const billingClaim = round(grossAmount - retentionAmount);
+    // Amount must be grossAmount due to DB check constraint
+    const amount = grossAmount;
+
     await assertPeriodNotLocked(data.issuedDate || new Date());
+
+    // 1. Certified Progress Billing Eligibility Check
+    const progressAgg = await prisma.progressEntry.aggregate({
+      where: {
+        BOQItem: { wbsId: data.wbsId },
+        status: "APPROVED"
+      },
+      _sum: { amount: true }
+    });
+
+    const approvedProgress = Number(progressAgg._sum?.amount || 0);
+
+    const invoiceAgg = await prisma.invoice.aggregate({
+      where: {
+        wbsId: data.wbsId,
+        deletedAt: null,
+        approvalStatus: { in: [ApprovalStatus.APPROVED, ApprovalStatus.PENDING, ApprovalStatus.DRAFT] }
+      },
+      _sum: { netAmount: true }
+    });
+
+    const alreadyInvoiced = Number(invoiceAgg._sum?.netAmount || 0);
+
+    if (alreadyInvoiced + netAmount > approvedProgress + 0.01) {
+      throw new ApiError(400, `3-WAY MATCH ERROR (Billing): Lũy kế yêu cầu thanh toán (${(alreadyInvoiced + netAmount).toLocaleString()} ₫) vượt quá khối lượng dở dang nghiệm thu được duyệt (${approvedProgress.toLocaleString()} ₫).`);
+    }
 
     const { requestId } = data;
     if (requestId) {
@@ -39,13 +79,18 @@ export class RevenueService {
           projectId: data.projectId,
           wbsId: data.wbsId,
           invoiceNumber: data.invoiceNumber,
-          amount: amount,
+          amount: amount, // grossAmount
+          netAmount: netAmount,
+          vatRate: vatRate,
+          vatAmount: vatAmount,
+          retentionRate: retentionRate,
+          retentionAmount: retentionAmount,
           issuedDate: data.issuedDate ? new Date(data.issuedDate) : new Date(),
           dueDate: data.dueDate ? new Date(data.dueDate) : null,
           remainingAmount: amount,
           status: "DRAFT",
           note: data.note,
-          createdById: data.createdById,
+          createdById: data.createdById || userId,
           companyId: project.companyId, // Propagate tenant context
           branchId: project.branchId, // Propagate branch context
           approvalStatus: "DRAFT",

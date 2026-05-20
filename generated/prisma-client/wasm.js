@@ -878,6 +878,261 @@ exports.Prisma.OrganizationUnitScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.BankAccountScalarFieldEnum = {
+  id: 'id',
+  accountNumber: 'accountNumber',
+  bankName: 'bankName',
+  currency: 'currency',
+  balance: 'balance',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BankTransactionScalarFieldEnum = {
+  id: 'id',
+  bankAccountId: 'bankAccountId',
+  date: 'date',
+  amount: 'amount',
+  description: 'description',
+  reference: 'reference',
+  type: 'type',
+  isMatched: 'isMatched',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BankStatementScalarFieldEnum = {
+  id: 'id',
+  importDate: 'importDate',
+  fileName: 'fileName',
+  rawData: 'rawData',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PaymentBatchScalarFieldEnum = {
+  id: 'id',
+  bankAccountId: 'bankAccountId',
+  name: 'name',
+  status: 'status',
+  totalAmount: 'totalAmount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TreasuryApprovalScalarFieldEnum = {
+  id: 'id',
+  paymentBatchId: 'paymentBatchId',
+  userId: 'userId',
+  status: 'status',
+  comment: 'comment',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CashReservationScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  amount: 'amount',
+  reason: 'reason',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ActivityScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  wbsId: 'wbsId',
+  code: 'code',
+  name: 'name',
+  description: 'description',
+  plannedStart: 'plannedStart',
+  plannedFinish: 'plannedFinish',
+  plannedDuration: 'plannedDuration',
+  actualStart: 'actualStart',
+  actualFinish: 'actualFinish',
+  actualDuration: 'actualDuration',
+  earlyStart: 'earlyStart',
+  earlyFinish: 'earlyFinish',
+  lateStart: 'lateStart',
+  lateFinish: 'lateFinish',
+  totalFloat: 'totalFloat',
+  freeFloat: 'freeFloat',
+  isCritical: 'isCritical',
+  isNearCritical: 'isNearCritical',
+  isMilestone: 'isMilestone',
+  percentComplete: 'percentComplete',
+  status: 'status',
+  forecastFinish: 'forecastFinish',
+  baselineId: 'baselineId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.ActivityDependencyScalarFieldEnum = {
+  id: 'id',
+  predecessorId: 'predecessorId',
+  successorId: 'successorId',
+  type: 'type',
+  lagDays: 'lagDays',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.BaselineScheduleScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  version: 'version',
+  name: 'name',
+  description: 'description',
+  snapshotDate: 'snapshotDate',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DelayEventScalarFieldEnum = {
+  id: 'id',
+  activityId: 'activityId',
+  projectId: 'projectId',
+  category: 'category',
+  description: 'description',
+  delayDays: 'delayDays',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  isExcusable: 'isExcusable',
+  isCompensable: 'isCompensable',
+  impactCost: 'impactCost',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ResourcePoolScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  name: 'name',
+  type: 'type',
+  capacity: 'capacity',
+  costPerDay: 'costPerDay',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.LaborCrewScalarFieldEnum = {
+  id: 'id',
+  resourcePoolId: 'resourcePoolId',
+  name: 'name',
+  headCount: 'headCount',
+  dailyRate: 'dailyRate',
+  skillLevel: 'skillLevel',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CrewAssignmentScalarFieldEnum = {
+  id: 'id',
+  crewId: 'crewId',
+  activityId: 'activityId',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  hoursPerDay: 'hoursPerDay',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.EquipmentAssetScalarFieldEnum = {
+  id: 'id',
+  resourcePoolId: 'resourcePoolId',
+  code: 'code',
+  name: 'name',
+  type: 'type',
+  dailyRate: 'dailyRate',
+  status: 'status',
+  fuelCostPerDay: 'fuelCostPerDay',
+  lastMaintenance: 'lastMaintenance',
+  nextMaintenance: 'nextMaintenance',
+  totalDowntimeDays: 'totalDowntimeDays',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.EquipmentAssignmentScalarFieldEnum = {
+  id: 'id',
+  equipmentId: 'equipmentId',
+  activityId: 'activityId',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  hoursPerDay: 'hoursPerDay',
+  utilization: 'utilization',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.EquipmentBreakdownScalarFieldEnum = {
+  id: 'id',
+  equipmentId: 'equipmentId',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  cause: 'cause',
+  repairCost: 'repairCost',
+  downtimeDays: 'downtimeDays',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ChangeRequestScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  status: 'status',
+  costImpact: 'costImpact',
+  scheduleImpact: 'scheduleImpact',
+  variationOrderId: 'variationOrderId',
+  requestedById: 'requestedById',
+  approvedById: 'approvedById',
+  approvedDate: 'approvedDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.ClaimRecordScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  changeRequestId: 'changeRequestId',
+  type: 'type',
+  title: 'title',
+  description: 'description',
+  claimedAmount: 'claimedAmount',
+  approvedAmount: 'approvedAmount',
+  claimedDays: 'claimedDays',
+  approvedDays: 'approvedDays',
+  status: 'status',
+  evidence: 'evidence',
+  submittedDate: 'submittedDate',
+  resolvedDate: 'resolvedDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.CommitmentScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  type: 'type',
+  reference: 'reference',
+  sourceId: 'sourceId',
+  description: 'description',
+  originalAmount: 'originalAmount',
+  invoicedAmount: 'invoicedAmount',
+  remainingAmount: 'remainingAmount',
+  dueDate: 'dueDate',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1013,6 +1268,81 @@ exports.SubcontractStatus = exports.$Enums.SubcontractStatus = {
   TERMINATED: 'TERMINATED'
 };
 
+exports.ActivityStatus = exports.$Enums.ActivityStatus = {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  SUSPENDED: 'SUSPENDED'
+};
+
+exports.DependencyType = exports.$Enums.DependencyType = {
+  FS: 'FS',
+  SS: 'SS',
+  FF: 'FF',
+  SF: 'SF'
+};
+
+exports.DelayCategory = exports.$Enums.DelayCategory = {
+  WEATHER: 'WEATHER',
+  PERMIT: 'PERMIT',
+  INSPECTION: 'INSPECTION',
+  SUBCONTRACTOR: 'SUBCONTRACTOR',
+  MATERIAL_SHORTAGE: 'MATERIAL_SHORTAGE',
+  EQUIPMENT_BREAKDOWN: 'EQUIPMENT_BREAKDOWN',
+  DESIGN_CHANGE: 'DESIGN_CHANGE',
+  CLIENT_INSTRUCTION: 'CLIENT_INSTRUCTION',
+  FORCE_MAJEURE: 'FORCE_MAJEURE',
+  OTHER: 'OTHER'
+};
+
+exports.ResourceType = exports.$Enums.ResourceType = {
+  LABOR: 'LABOR',
+  EQUIPMENT: 'EQUIPMENT',
+  MATERIAL: 'MATERIAL'
+};
+
+exports.EquipmentStatus = exports.$Enums.EquipmentStatus = {
+  AVAILABLE: 'AVAILABLE',
+  IN_USE: 'IN_USE',
+  MAINTENANCE: 'MAINTENANCE',
+  BREAKDOWN: 'BREAKDOWN',
+  RETIRED: 'RETIRED'
+};
+
+exports.ChangeType = exports.$Enums.ChangeType = {
+  SCOPE_CHANGE: 'SCOPE_CHANGE',
+  DESIGN_CHANGE: 'DESIGN_CHANGE',
+  CLIENT_INSTRUCTION: 'CLIENT_INSTRUCTION',
+  SITE_CONDITION: 'SITE_CONDITION',
+  REGULATORY: 'REGULATORY',
+  VALUE_ENGINEERING: 'VALUE_ENGINEERING'
+};
+
+exports.ClaimType = exports.$Enums.ClaimType = {
+  EXTENSION_OF_TIME: 'EXTENSION_OF_TIME',
+  DELAY_COST: 'DELAY_COST',
+  DISRUPTION: 'DISRUPTION',
+  COST_ESCALATION: 'COST_ESCALATION',
+  VARIATION: 'VARIATION',
+  ACCELERATION: 'ACCELERATION'
+};
+
+exports.CommitmentType = exports.$Enums.CommitmentType = {
+  PURCHASE_ORDER: 'PURCHASE_ORDER',
+  SUBCONTRACT: 'SUBCONTRACT',
+  PAYROLL: 'PAYROLL',
+  EQUIPMENT_LEASE: 'EQUIPMENT_LEASE',
+  RETENTION: 'RETENTION'
+};
+
+exports.CommitmentStatus = exports.$Enums.CommitmentStatus = {
+  OPEN: 'OPEN',
+  PARTIALLY_INVOICED: 'PARTIALLY_INVOICED',
+  FULLY_INVOICED: 'FULLY_INVOICED',
+  CLOSED: 'CLOSED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Category: 'Category',
@@ -1068,7 +1398,26 @@ exports.Prisma.ModelName = {
   WorkflowDefinition: 'WorkflowDefinition',
   SagaState: 'SagaState',
   ReadModel: 'ReadModel',
-  OrganizationUnit: 'OrganizationUnit'
+  OrganizationUnit: 'OrganizationUnit',
+  BankAccount: 'BankAccount',
+  BankTransaction: 'BankTransaction',
+  BankStatement: 'BankStatement',
+  PaymentBatch: 'PaymentBatch',
+  TreasuryApproval: 'TreasuryApproval',
+  CashReservation: 'CashReservation',
+  Activity: 'Activity',
+  ActivityDependency: 'ActivityDependency',
+  BaselineSchedule: 'BaselineSchedule',
+  DelayEvent: 'DelayEvent',
+  ResourcePool: 'ResourcePool',
+  LaborCrew: 'LaborCrew',
+  CrewAssignment: 'CrewAssignment',
+  EquipmentAsset: 'EquipmentAsset',
+  EquipmentAssignment: 'EquipmentAssignment',
+  EquipmentBreakdown: 'EquipmentBreakdown',
+  ChangeRequest: 'ChangeRequest',
+  ClaimRecord: 'ClaimRecord',
+  Commitment: 'Commitment'
 };
 
 /**

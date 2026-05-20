@@ -261,7 +261,7 @@ async function phase2_CreateRealisticData() {
       branchId: branches[0].id,
       totalBudget: new Decimal('5000000000000'), // 5 trillion VND
       contractValue: new Decimal('4800000000000'), // 4.8 trillion VND
-      startDate: new Date('2024-01-01'),
+      startDate: new Date('2026-05-10'),
       endDate: new Date('2027-12-31'),
       investor: 'Tập đoàn Vingroup',
       projectType: 'URBAN_DEVELOPMENT'
@@ -449,7 +449,7 @@ async function phase3_CreateTransactions(context: any) {
         unitPrice: new Decimal('800000'),
         supplier: 'Công ty Xi măng Hoàng Thạch',
         note: 'Xi măng PCB40 cho đường giao thông',
-        date: new Date('2024-03-15'),
+        date: new Date('2026-05-12'),
         status: 'paid',
         createdById: users[3].id,
         approvalStatus: 'APPROVED',
@@ -470,7 +470,7 @@ async function phase3_CreateTransactions(context: any) {
         unitPrice: new Decimal('27500000'),
         supplier: 'Công ty Nhân lực Xây dựng Việt',
         note: 'Nhân công thi công đường',
-        date: new Date('2024-04-01'),
+        date: new Date('2026-05-15'),
         status: 'paid',
         createdById: users[3].id,
         approvalStatus: 'APPROVED',
@@ -484,8 +484,41 @@ async function phase3_CreateTransactions(context: any) {
   ]);
   
   console.log(`✅ Created ${costs.length} cost records`);
+
+  // Create Progress Entries to establish realistic EV (Earned Value)
+  // EV = 75B VND (CPI = EV/AC = 75/71.5 = 1.05; SPI = EV/PV = 75/83.45 = 0.90)
+  const progressEntries = await Promise.all([
+    prisma.progressEntry.create({
+      data: {
+        id: 'PROG-001',
+        boqItemId: boqItems[0].id,
+        date: new Date('2026-05-18'),
+        quantity: new Decimal('70000'),
+        amount: new Decimal('59500000000'), // 70k * 850k
+        createdById: users[2].id, // PM
+        status: 'APPROVED',
+        note: 'Nghiệm thu phần mặt đường bê tông nhựa nóng đợt 1',
+        updatedAt: new Date()
+      }
+    }),
+    prisma.progressEntry.create({
+      data: {
+        id: 'PROG-002',
+        boqItemId: boqItems[1].id,
+        date: new Date('2026-05-19'),
+        quantity: new Decimal('23846.154'),
+        amount: new Decimal('15500000000'), // 23846.154 * 650k
+        createdById: users[2].id, // PM
+        status: 'APPROVED',
+        note: 'Nghiệm thu vỉa hè đá granite tuyến chính',
+        updatedAt: new Date()
+      }
+    })
+  ]);
+
+  console.log(`✅ Created ${progressEntries.length} progress entries (EV = 75,000,000,000 VND)`);
   
-  return { mainContract, boqItems, costs };
+  return { mainContract, boqItems, costs, progressEntries };
 }
 
 // ============================================================

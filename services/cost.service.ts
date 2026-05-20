@@ -97,6 +97,33 @@ export class CostService {
           });
         }
 
+        // 3-Way Matching Logic
+        if ((data as any).purchaseOrderId) {
+          const po = await tx.purchaseOrder.findUnique({
+            where: { id: (data as any).purchaseOrderId },
+            include: { items: true, goodsReceipts: true }
+          });
+          
+          if (!po) throw new ApiError(404, "Không tìm thấy Đơn mua hàng (PO) để đối chiếu");
+          
+          if (po.goodsReceipts.length === 0) {
+            throw new ApiError(400, "3-WAY MATCH ERROR: Không thể ghi nhận hóa đơn khi chưa có Phiếu Nhập Kho (GRN).");
+          }
+
+          const poItem = po.items.find(i => i.wbsId === data.wbsId && i.costType === data.costType);
+          if (!poItem) throw new ApiError(400, "3-WAY MATCH ERROR: Hạng mục hóa đơn không khớp với Đơn mua hàng (PO).");
+          
+          // Price matching (allow max 5% tolerance)
+          if (finalAmountD.toNumber() > Number(poItem.amount) * 1.05) {
+             throw new ApiError(400, `3-WAY MATCH ERROR: Giá trị hóa đơn (${finalAmountD.toNumber()}) vượt quá giá trị PO (${poItem.amount}) hơn mức cho phép.`);
+          }
+          
+          // Quantity check
+          if (data.quantity && data.quantity > Number(poItem.quantity)) {
+             throw new ApiError(400, `3-WAY MATCH ERROR: Số lượng hóa đơn (${data.quantity}) vượt quá số lượng đặt mua (${poItem.quantity}).`);
+          }
+        }
+
         // Create Cost Record in DRAFT
         const item = await tx.costRecord.create({
           data: {
@@ -116,6 +143,7 @@ export class CostService {
             note: data.note,
             date: data.date ? new Date(data.date) : new Date(),
             status: data.status,
+            purchaseOrderId: (data as any).purchaseOrderId,
             createdById: userId || data.createdById,
             companyId: project.companyId, // Enforce tenant propagation
             branchId: project.branchId, // Enforce branch propagation
@@ -286,14 +314,16 @@ export class CostService {
         
         RBAC.assertPermission(user.role, "COST", action);
 
-        // Financial authority limit check
-        const limit = RBAC.getFinancialLimit(user.role);
-        const costAmount = Number(existing.amount);
-        if (costAmount > limit) {
-          throw new ApiError(
-            403,
-            `Lỗi hạn mức: Số tiền chứng từ (${costAmount.toLocaleString("vi-VN")} ₫) vượt hạn mức phê duyệt tối đa của vai trò ${user.role} (${limit.toLocaleString("vi-VN")} ₫).`
-          );
+        // Financial authority limit check (Only for approval actions)
+        if (action === "APPROVE" || action === "POST" || action === "REVERSE") {
+          const limit = RBAC.getFinancialLimit(user.role);
+          const costAmount = Number(existing.amount);
+          if (costAmount > limit) {
+            throw new ApiError(
+              403,
+              `Lỗi hạn mức: Số tiền chứng từ (${costAmount.toLocaleString("vi-VN")} ₫) vượt hạn mức phê duyệt tối đa của vai trò ${user.role} (${limit.toLocaleString("vi-VN")} ₫).`
+            );
+          }
         }
       }
     }
@@ -320,7 +350,8 @@ export class CostService {
           projectId: item.projectId,
           amount: Number(item.amount),
           costType: item.costType,
-          description: item.note || `Chi phí ${item.costType} cho ${existing.wbs?.name || id}`
+          description: item.note || `Chi phí ${item.costType} cho ${existing.wbs?.name || id}`,
+          purchaseOrderId: existing.purchaseOrderId || undefined
         });
       } else if (nextStatus === "REVERSED" && (existing.workflowStatus === "POSTED" || existing.approvalStatus === "APPROVED")) {
         await PostingEngine.reverseJournal(tx, id, "COST", userId || "SYSTEM");
