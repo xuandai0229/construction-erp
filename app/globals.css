@@ -423,35 +423,22 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .erp-table-row {
   transition: background-color var(--motion-duration-fast) var(--motion-easing-standard),
     border-color var(--motion-duration-fast) var(--motion-easing-standard);
-  position: relative;
-}
-
-.erp-table-row::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--primary);
-  opacity: 0;
-  transition: opacity var(--motion-duration-fast) var(--motion-easing-standard);
 }
 
 .erp-table-row:hover {
   background-color: var(--table-row-hover);
 }
 
-.erp-table-row:hover::before {
-  opacity: 0.6;
+.erp-table-row:hover td:first-child {
+  box-shadow: inset 3px 0 0 var(--primary);
 }
 
 .erp-table-row.active {
   background-color: var(--accent);
 }
 
-.erp-table-row.active::before {
-  opacity: 1;
+.erp-table-row.active td:first-child {
+  box-shadow: inset 3px 0 0 var(--primary);
 }
 
 /* ─── Button (Tactile Executive Feedback) ─────────────────── */

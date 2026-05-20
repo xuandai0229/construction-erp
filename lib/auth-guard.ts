@@ -89,6 +89,7 @@ export async function assertHasRole(userId: string | undefined, allowedRoles: Us
       id: INTERNAL_ADMIN_ID,
       role: UserRole.SUPER_ADMIN,
       name: "System Administrator",
+      companyId: null,
     };
   }
 

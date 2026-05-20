@@ -137,8 +137,8 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
                     </td>
 
                     {/* Actions */}
-                    <td className={`${COL_WIDTHS.ACTIONS} py-2.5 px-4 text-center`}>
-                      <div className="flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-executive">
+                    <td className={`${COL_WIDTHS.ACTIONS} py-2.5 px-2 text-center`}>
+                      <div className="flex items-center justify-center gap-1.5 md:opacity-0 md:group-hover:opacity-100 transition-executive">
                         <button
                           onClick={() => onEdit(cost)}
                           className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--text-tertiary)] hover:text-white hover:bg-blue-600 transition-executive border border-[var(--border)] shadow-sm hover-lift-xs"

@@ -52,6 +52,20 @@ export default function CostsPage() {
   const [loadingAudit, setLoadingAudit] = useState(false);
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedCost(null);
+      }
+    };
+    if (selectedCost) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedCost]);
+
+  useEffect(() => {
     if (selectedCost) {
       setLoadingAudit(true);
       fetch(`/api/audit?entity=CostRecord&entityId=${selectedCost.id}`)
@@ -289,8 +303,14 @@ export default function CostsPage() {
 
       {/* Detail Modal */}
       {selectedCost && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-lg rounded-xl border border-[var(--border)] bg-[var(--card)] p-8 relative shadow-2xl">
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => setSelectedCost(null)}
+        >
+          <div 
+            className="w-full max-w-lg rounded-xl border border-[var(--border)] bg-[var(--card)] p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto scrollbar-thin"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button onClick={() => setSelectedCost(null)} className="absolute right-6 top-6 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
               <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 18 18 6M6 6l12 12" /></svg>
             </button>

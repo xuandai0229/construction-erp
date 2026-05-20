@@ -31,11 +31,13 @@ const severityIcons = {
   ),
 };
 
-export default function ExecutiveRiskCenter({ risks = [] }: ExecutiveRiskCenterProps) {
+export default function ExecutiveRiskCenter({ risks }: ExecutiveRiskCenterProps) {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
-  // High-fidelity fallback risks derived directly from the real project's status when the engine doesn't return anything
-  const displayedRisks = risks.length > 0 ? risks : [
+  // High-fidelity fallback risks derived directly from the real project's status when the engine doesn't return anything.
+  // If risks is undefined/null, we fall back to mock data. If it is an empty array [], it represents a healthy project.
+  const hasLoaded = risks !== undefined && risks !== null;
+  const displayedRisks = hasLoaded ? risks : [
     {
       type: 'FINANCIAL',
       severity: 'CRITICAL' as const,
@@ -87,6 +89,26 @@ export default function ExecutiveRiskCenter({ risks = [] }: ExecutiveRiskCenterP
       ]
     }
   ];
+
+  if (hasLoaded && displayedRisks.length === 0) {
+    return (
+      <div className="flex flex-col h-full">
+        <h4 className="text-[10px] font-black text-[var(--text-tertiary)] uppercase tracking-[0.15em] flex items-center gap-1.5 mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] animate-pulse" />
+          CẢNH BÁO & RỦI RO
+        </h4>
+        <div className="flex-1 flex flex-col items-center justify-center border border-emerald-500/10 bg-emerald-500/[0.02] rounded-xl p-6 text-center h-[280px]">
+          <div className="h-12 w-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 grid place-items-center mb-3">
+            <svg viewBox="0 0 24 24" className="h-6 w-6 text-emerald-500" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h5 className="text-[11px] font-black text-[var(--text-primary)] mb-1 uppercase tracking-wider">Hệ thống an toàn</h5>
+          <p className="text-[9.5px] text-[var(--text-tertiary)] font-bold leading-normal">Không phát hiện cảnh báo rủi ro về tiến độ, dòng tiền hay nhà thầu phụ trong chu kỳ kiểm toán này.</p>
+        </div>
+      </div>
+    );
+  }
 
   const getRiskCardStyle = (severity: string, isExpanded: boolean) => {
     const base = 'border rounded-xl p-3 transition-executive cursor-pointer hover-lift-xs ';

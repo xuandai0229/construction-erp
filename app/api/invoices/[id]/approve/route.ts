@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { RevenueService } from '@/services/revenue.service';
 import { handleApiError, successResponse } from '@/lib/api-error';
 
-import { assertIsManager } from '@/lib/auth-guard';
+import { assertAuthenticated, assertIsManager } from '@/lib/auth-guard';
 
 export async function POST(
   request: Request,

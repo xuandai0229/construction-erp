@@ -47,12 +47,14 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
     if (!isOpen) return;
 
     if (costRecord) {
+      const displayQty = costRecord.quantity || 1;
+      const displayPrice = costRecord.unitPrice || costRecord.amount;
       setForm({
         projectId: costRecord.projectId,
         wbsId: costRecord.wbsId,
         costType: costRecord.costType,
-        quantity: costRecord.quantity?.toString() || '',
-        unitPrice: costRecord.unitPrice?.toString() || '',
+        quantity: displayQty.toString(),
+        unitPrice: displayPrice.toString(),
         note: costRecord.note || '',
         supplier: (costRecord as any).supplier || '',
         date: costRecord.date.split('T')[0],
@@ -140,7 +142,7 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    <div className="fixed inset-0 z-[110] flex items-center justify-center">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
       <div className="relative z-10 w-full max-w-lg mx-4 rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-2xl shadow-black/50">
         {/* Header */}

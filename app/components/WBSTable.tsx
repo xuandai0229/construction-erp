@@ -21,7 +21,7 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
           <tr className="erp-table-row group even:bg-[var(--divider)]/10 border-b border-[var(--border)] last:border-b-0 select-none">
             {/* WBS Name */}
             <td className="w-[320px] py-2.5 px-4 border-r border-[var(--border)]">
-              <div className="flex items-center gap-2.5" style={{ paddingLeft: `${level * 16}px` }}>
+              <div className="flex items-center gap-2.5 min-w-0" style={{ paddingLeft: `${level * 16}px` }}>
                 {item.children.length > 0 && (
                   <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 text-[var(--text-tertiary)] group-hover:text-blue-500 transition-executive" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="m6 9 6 6 6-6" />
@@ -44,8 +44,8 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
             </td>
 
             {/* Progress bar */}
-            <td className={`${COL_WIDTHS.PROGRESS} text-center py-2.5 px-4`}>
-              <div className="flex flex-col items-center gap-1">
+            <td className={`${COL_WIDTHS.PROGRESS} text-center py-2.5 px-2`}>
+              <div className="flex flex-col items-center gap-1 min-w-0">
                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--secondary)] border border-[var(--border)]/15 transition-executive">
                   <div
                     className={`h-full rounded-full progress-fill ${isOverBudget
@@ -55,7 +55,7 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
                     style={{ width: `${Math.min(100, percentage)}%` }}
                   />
                 </div>
-                <span className={`text-[9px] font-extrabold tracking-widest uppercase transition-executive ${isOverBudget ? 'text-rose-500' : 'text-[var(--text-tertiary)]'}`}>
+                <span className={`text-[9px] font-extrabold tracking-wider uppercase whitespace-nowrap transition-executive ${isOverBudget ? 'text-rose-500' : 'text-[var(--text-tertiary)]'}`}>
                   {percentage.toFixed(1)}%
                 </span>
               </div>

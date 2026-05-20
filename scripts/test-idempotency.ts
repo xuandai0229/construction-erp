@@ -4,9 +4,21 @@ import { prisma } from "../lib/prisma";
 async function run() {
   console.log("Starting Idempotency Test...");
   const requestId = "test-idempotency-" + Date.now();
+  const project = await prisma.project.findFirst({ where: { deletedAt: null } });
+  if (!project) {
+    console.error("❌ Pre-requisite error: No projects in database.");
+    return;
+  }
+  const wbs = await prisma.wBSItem.findFirst({ where: { projectId: project.id, deletedAt: null } });
+
+  if (!wbs) {
+    console.error(`❌ Pre-requisite error: No WBS items found for project ${project.id} in database.`);
+    return;
+  }
+
   const costData = {
-    projectId: "2fa9e808-761f-4532-8d0c-85e748aaaeb4",
-    wbsId: "73533917-034d-4a2a-ba6d-968b783ba55b",
+    projectId: project.id,
+    wbsId: wbs.id,
     costType: "material" as any,
     amount: 100000,
     requestId,

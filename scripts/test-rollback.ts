@@ -5,13 +5,21 @@ async function run() {
   console.log("Starting Transaction Safety (Rollback) Test...");
   const requestId = "test-rollback-" + Date.now();
   
+  const project = await prisma.project.findFirst({ where: { deletedAt: null } });
+  const wbs = await prisma.wBSItem.findFirst({ where: { deletedAt: null } });
+
+  if (!project || !wbs) {
+    console.error("❌ Pre-requisite error: No projects or WBS items in database to run rollback test.");
+    return;
+  }
+
   try {
     await prisma.$transaction(async (tx) => {
       // 1. Create a cost record
       const cost = await tx.costRecord.create({
         data: {
-          projectId: "2fa9e808-761f-4532-8d0c-85e748aaaeb4",
-          wbsId: "73533917-034d-4a2a-ba6d-968b783ba55b",
+          projectId: project.id,
+          wbsId: wbs.id,
           costType: "material",
           amount: 999999,
           requestId,
