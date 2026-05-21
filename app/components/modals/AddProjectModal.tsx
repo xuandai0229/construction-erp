@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Project, ProjectStatus } from '@/app/types';
 import { useCreateProjectMutation, useUpdateProjectMutation } from '@/services/queries/useProjects';
 
@@ -8,16 +8,19 @@ interface Props {
   project?: Project | null;
 }
 
-const STATUS_OPTS: { value: ProjectStatus; label: string }[] = [
-  { value: 'PLANNED', label: 'Lập kế hoạch' },
-  { value: 'IN_PROGRESS', label: 'Đang thi công' },
-  { value: 'COMPLETED', label: 'Hoàn thành' },
-  { value: 'CANCELLED', label: 'Tạm dừng/Hủy' },
+const STATUS_OPTS: { value: ProjectStatus; label: string; icon: string; desc: string; color: string; bg: string }[] = [
+  { value: 'PLANNED', label: 'Lập kế hoạch', icon: '📋', desc: 'Đang chuẩn bị hồ sơ và triển khai', color: 'text-slate-400', bg: 'bg-slate-500/10 ring-slate-500/20' },
+  { value: 'IN_PROGRESS', label: 'Đang thi công', icon: '🚧', desc: 'Dự án đang được thi công thực tế', color: 'text-blue-400', bg: 'bg-blue-500/10 ring-blue-500/20' },
+  { value: 'ACTIVE', label: 'Đang vận hành', icon: '⚡', desc: 'Dự án đang vận hành và khai thác', color: 'text-emerald-400', bg: 'bg-emerald-500/10 ring-emerald-500/20' },
+  { value: 'COMPLETED', label: 'Hoàn thành', icon: '✅', desc: 'Đã nghiệm thu và bàn giao', color: 'text-green-400', bg: 'bg-green-500/10 ring-green-500/20' },
+  { value: 'CANCELLED', label: 'Tạm dừng', icon: '⏸', desc: 'Tạm dừng triển khai', color: 'text-amber-400', bg: 'bg-amber-500/10 ring-amber-500/20' },
 ];
 
 export default function AddProjectModal({ isOpen, onClose, project }: Props) {
   const { mutateAsync: createProject } = useCreateProjectMutation();
   const { mutateAsync: updateProject } = useUpdateProjectMutation();
+  const [showStatusPicker, setShowStatusPicker] = useState(false);
+  const statusRef = useRef<HTMLDivElement>(null);
 
   const [form, setForm] = useState({
     name: '',
@@ -53,7 +56,19 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
         projectType: '',
       });
     }
+    setShowStatusPicker(false);
   }, [project, isOpen]);
+
+  // Close status picker on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (statusRef.current && !statusRef.current.contains(e.target as Node)) {
+        setShowStatusPicker(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   if (!isOpen) return null;
 
@@ -61,6 +76,8 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
     setForm(prev => ({ ...prev, [field]: value }));
     setError('');
   };
+
+  const selectedStatus = STATUS_OPTS.find(s => s.value === form.status) || STATUS_OPTS[0];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,13 +118,13 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
       <div className="relative z-10 w-full max-w-lg mx-4 rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-2xl shadow-black/50">
         <div className="flex items-center justify-between border-b border-[var(--divider)] px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--secondary)] border border-[var(--border)] text-blue-500">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400">
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                 {project ? <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /> : <path d="M12 5v14M5 12h14" />}
               </svg>
             </div>
             <div>
-              <h2 className="text-[14px] font-semibold text-[var(--text-primary)] uppercase tracking-tight">{project ? 'Cập nhật hồ sơ dự án' : 'Khởi tạo hồ sơ công trình'}</h2>
+              <h2 className="text-[14px] font-semibold text-[var(--text-primary)] tracking-tight">{project ? 'Cập nhật hồ sơ dự án' : 'Khởi tạo hồ sơ công trình'}</h2>
               <p className="text-[10px] font-medium text-[var(--text-muted)] tracking-wider uppercase opacity-60">{project ? 'Quản lý dữ liệu vận hành' : 'Thiết lập thông tin quản trị cơ bản'}</p>
             </div>
           </div>
@@ -165,22 +182,58 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
               />
             </div>
 
-            <div className="col-span-2">
+            {/* Enterprise Status Selector */}
+            <div className="col-span-2" ref={statusRef}>
               <label className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1.5 block">Trạng thái vận hành</label>
-              <div className="relative">
-                <select
-                  value={form.status}
-                  onChange={e => handleChange('status', e.target.value)}
-                  className="erp-input w-full appearance-none pr-8 bg-[var(--secondary)]/30"
-                >
-                  {STATUS_OPTS.map(o => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
-                  ))}
-                </select>
-                <svg viewBox="0 0 24 24" className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--text-muted)]" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <button
+                type="button"
+                onClick={() => setShowStatusPicker(!showStatusPicker)}
+                className={`erp-input w-full flex items-center gap-3 cursor-pointer hover:border-blue-500/30 transition-all text-left ${showStatusPicker ? '!border-blue-500 shadow-[0_0_0_3px_rgba(59,130,246,0.1)]' : ''}`}
+              >
+                <span className={`h-6 w-6 flex items-center justify-center rounded-md text-sm ${selectedStatus.bg} ring-1`}>
+                  {selectedStatus.icon}
+                </span>
+                <div className="flex-1">
+                  <span className={`text-[12.5px] font-semibold ${selectedStatus.color}`}>{selectedStatus.label}</span>
+                  <span className="text-[10px] text-[var(--text-muted)] opacity-50 ml-2">{selectedStatus.desc}</span>
+                </div>
+                <svg viewBox="0 0 24 24" className={`h-3.5 w-3.5 text-[var(--text-muted)] transition-transform duration-200 ${showStatusPicker ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="m6 9 6 6 6-6" />
                 </svg>
-              </div>
+              </button>
+
+              {showStatusPicker && (
+                <div className="mt-2 w-full bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-2xl shadow-black/30 overflow-hidden animate-scale-up z-50 relative">
+                  <div className="py-1.5">
+                    {STATUS_OPTS.map(opt => (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => {
+                          handleChange('status', opt.value);
+                          setShowStatusPicker(false);
+                        }}
+                        className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-all hover:bg-[var(--secondary)]
+                          ${form.status === opt.value ? 'bg-blue-500/5' : ''}
+                        `}
+                      >
+                        <span className={`h-8 w-8 flex items-center justify-center rounded-lg text-sm ${opt.bg} ring-1`}>
+                          {opt.icon}
+                        </span>
+                        <div className="flex-1">
+                          <div className={`text-[13px] font-semibold ${opt.color}`}>{opt.label}</div>
+                          <div className="text-[10px] text-[var(--text-muted)] opacity-60 mt-0.5">{opt.desc}</div>
+                        </div>
+                        {form.status === opt.value && (
+                          <svg viewBox="0 0 24 24" className="h-4 w-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="3">
+                            <path d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div>

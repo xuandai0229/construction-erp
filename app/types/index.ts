@@ -237,11 +237,11 @@ export const PAYMENT_STATUS_LABELS: Record<PrismaPaymentStatus, string> = {
 };
 
 export const PROJECT_STATUS_LABELS: Record<ProjectStatus, string> = {
-  PLANNED: 'Đang lập kế hoạch',
-  IN_PROGRESS: 'Đang thực hiện',
-  COMPLETED: 'Đã hoàn thành',
-  CANCELLED: 'Đã hủy',
-  ACTIVE: 'Đang hoạt động',
+  PLANNED: 'Lập kế hoạch',
+  IN_PROGRESS: 'Đang thi công',
+  COMPLETED: 'Hoàn thành',
+  CANCELLED: 'Tạm dừng',
+  ACTIVE: 'Đang vận hành',
   CLOSED: 'Đã đóng',
   ARCHIVED: 'Đã lưu trữ',
 };

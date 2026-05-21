@@ -1,36 +1,9 @@
 import { PrismaClient } from "../generated/prisma-client";
 
-// Models that support soft-delete via deletedAt
-const SOFT_DELETE_MODELS = new Set(['user', 'category', 'project', 'task', 'invoice', 'payment', 'costrecord', 'wbsitem', 'revenue']);
+
 
 const prismaClientSingleton = () => {
-  return new PrismaClient().$extends({
-    query: {
-      $allModels: {
-        async $allOperations({ model, operation, args, query }) {
-          const isSoftDeleteModel = model && SOFT_DELETE_MODELS.has(model.toLowerCase());
-          
-          if (isSoftDeleteModel && (operation === 'delete' || operation === 'deleteMany')) {
-            throw new Error(`CRITICAL SECURITY ALERT: Hard delete is blocked for model ${model}. Use update with deletedAt instead.`);
-          }
-
-          if (
-            isSoftDeleteModel &&
-            (
-              operation === 'findUnique' ||
-              operation === 'findFirst' ||
-              operation === 'findMany' ||
-              operation === 'count'
-            )
-          ) {
-            // Automatically exclude soft-deleted records
-            args.where = { ...args.where, deletedAt: null };
-          }
-          return query(args);
-        },
-      },
-    },
-  });
+  return new PrismaClient();
 };
 
 type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;

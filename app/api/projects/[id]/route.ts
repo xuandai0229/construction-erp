@@ -42,7 +42,8 @@ export async function DELETE(
     const userId = "system_internal_admin";
     await ProjectService.delete(id, userId);
     return successResponse({ message: "Project deleted successfully" });
-  } catch (error) {
+  } catch (error: any) {
+    console.error("[DELETE /api/projects/:id]", error?.message || error);
     return handleApiError(error);
   }
 }

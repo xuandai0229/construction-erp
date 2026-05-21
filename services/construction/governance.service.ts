@@ -129,7 +129,7 @@ export class ContractGovernanceService {
           description: `EOT Claim Approved: ${claim.title}`,
           delayDays: data.approvedDays,
           isExcusable: true,
-          isCompensable: claim.type === ClaimType.DELAY_COST || claim.type === ClaimType.PROLONGATION_COST,
+          isCompensable: claim.type === ClaimType.DELAY_COST,
         });
       }
     }

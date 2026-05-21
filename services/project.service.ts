@@ -227,34 +227,81 @@ export class ProjectService {
   static async delete(id: string, userId?: string) {
     const oldProject = await this.findById(id);
 
-    // Financial Safety Check
-    const [invoiceCount, costCount, revenueCount] = await Promise.all([
-      prisma.invoice.count({ where: { projectId: id } }),
-      prisma.costRecord.count({ where: { projectId: id } }),
-      prisma.revenue.count({ where: { projectId: id } })
-    ]);
-
-    const hasFinancialData = invoiceCount > 0 || costCount > 0 || revenueCount > 0;
-
-    if (hasFinancialData) {
-      // B. DATA GOVERNANCE: Prevent Hard Delete, return structured metadata
-      throw new ApiError(400, "Không thể xóa dự án đã phát sinh dữ liệu tài chính (Hóa đơn, Chi phí, Doanh thu).", {
-        isFinancialLocked: true,
-        counts: { invoices: invoiceCount, costs: costCount, revenues: revenueCount },
-        actionSuggested: "ARCHIVE"
-      });
-    }
-
     // A. HARD DELETE: Project is empty, clean it completely from DB
-    await prisma.$transaction([
-      // Clean up children first
-      prisma.task.deleteMany({ where: { projectId: id } }),
-      prisma.budgetRecord.deleteMany({ where: { projectId: id } }),
-      prisma.costRecord.deleteMany({ where: { projectId: id } }),
-      prisma.wBSItem.deleteMany({ where: { projectId: id } }),
-      // Finally delete the project
-      prisma.project.delete({ where: { id } })
-    ]);
+    await prisma.$transaction(async (tx) => {
+      // Manual cascade delete due to lack of Prisma cascade
+      // Level 4 & 3
+      const boqs = await tx.bOQItem.findMany({ where: { projectId: id }, select: { id: true } });
+      if (boqs.length > 0) {
+          const boqIds = boqs.map((b: any) => b.id);
+          const progresses = await tx.progressEntry.findMany({ where: { boqItemId: { in: boqIds } }, select: { id: true } });
+          const pIds = progresses.map((p: any) => p.id);
+          if (pIds.length > 0) await tx.measurement.deleteMany({ where: { progressEntryId: { in: pIds } } });
+          await tx.progressEntry.deleteMany({ where: { boqItemId: { in: boqIds } } });
+      }
+      
+      const subcontracts = await tx.subcontract.findMany({ where: { projectId: id }, select: { id: true } });
+      if (subcontracts.length > 0) {
+          const subIds = subcontracts.map((s: any) => s.id);
+          const subItems = await tx.subcontractItem.findMany({ where: { subcontractId: { in: subIds } }, select: { id: true } });
+          const subItemIds = subItems.map((si: any) => si.id);
+          if (subItemIds.length > 0) await tx.subcontractProgress.deleteMany({ where: { subcontractItemId: { in: subItemIds } } });
+          await tx.subcontractItem.deleteMany({ where: { subcontractId: { in: subIds } } });
+          await tx.subcontractInvoice.deleteMany({ where: { subcontractId: { in: subIds } } });
+      }
+
+      await tx.transactionLine.deleteMany({ where: { journalEntry: { projectId: id } } });
+      await tx.purchaseOrderItem.deleteMany({ where: { purchaseOrder: { projectId: id } } });
+      await tx.quotation.deleteMany({ where: { purchaseRequest: { projectId: id } } });
+      await tx.contractChange.deleteMany({ where: { contract: { projectId: id } } });
+      await tx.approvalStep.deleteMany({ where: { ApprovalRequest: { projectId: id } } });
+
+      // Level 2
+      await tx.payment.deleteMany({ where: { projectId: id } });
+      await tx.revenue.deleteMany({ where: { projectId: id } });
+      await tx.invoice.deleteMany({ where: { projectId: id } });
+      await tx.costRecord.deleteMany({ where: { projectId: id } });
+      await tx.budgetRecord.deleteMany({ where: { projectId: id } });
+      
+      await tx.goodsReceipt.deleteMany({ where: { projectId: id } });
+      await tx.purchaseOrder.deleteMany({ where: { projectId: id } });
+      await tx.purchaseRequest.deleteMany({ where: { projectId: id } });
+      
+      await tx.contract.deleteMany({ where: { projectId: id } });
+      await tx.subcontract.deleteMany({ where: { projectId: id } });
+      
+      await tx.siteConsumption.deleteMany({ where: { projectId: id } });
+      await tx.inventoryTransaction.deleteMany({ where: { projectId: id } });
+      await tx.bOQItem.deleteMany({ where: { projectId: id } });
+      
+      await tx.variationOrder.deleteMany({ where: { projectId: id } });
+      await tx.document.deleteMany({ where: { projectId: id } });
+      await tx.activityFeed.deleteMany({ where: { projectId: id } });
+      await tx.approvalRequest.deleteMany({ where: { projectId: id } });
+      await tx.budgetVersion.deleteMany({ where: { projectId: id } });
+      await tx.journalEntry.deleteMany({ where: { projectId: id } });
+
+      await tx.siteLog.deleteMany({ where: { projectId: id } });
+
+      // Level 1
+      await tx.task.deleteMany({ where: { projectId: id } });
+      
+      // WBSItem has self-relations. Delete bottom-up safely.
+      let wbsCount = await tx.wBSItem.count({ where: { projectId: id } });
+      while (wbsCount > 0) {
+        await tx.$executeRaw`DELETE FROM "WBSItem" WHERE "projectId" = ${id} AND id NOT IN (SELECT DISTINCT "parentId" FROM "WBSItem" WHERE "parentId" IS NOT NULL AND "projectId" = ${id})`;
+        const newCount = await tx.wBSItem.count({ where: { projectId: id } });
+        if (newCount === wbsCount) {
+          // Fallback if circular reference
+          await tx.$executeRaw`DELETE FROM "WBSItem" WHERE "projectId" = ${id}`;
+          break;
+        }
+        wbsCount = newCount;
+      }
+      
+      // Finally, delete the project
+      await tx.project.delete({ where: { id } });
+    });
 
     await AuditService.log({
       userId,
@@ -262,30 +309,10 @@ export class ProjectService {
       entity: "Project",
       entityId: id,
       oldData: oldProject,
-      reason: "Xóa vĩnh viễn dự án (Hard Delete) do chưa phát sinh nghiệp vụ.",
+      reason: "Xóa vĩnh viễn dự án (Hard Delete)",
     });
 
-    return { ...oldProject, deletedAt: new Date() }; // Return standard shape for frontend success handlers
-  }
-
-  static async restore(id: string, userId?: string) {
-    const project = await prisma.project.update({
-      where: { id },
-      data: { 
-        deletedAt: null,
-        deletedById: null,
-      }
-    });
-
-    await AuditService.log({
-      userId,
-      action: "RESTORE",
-      entity: "Project",
-      entityId: id,
-      newData: project,
-    });
-
-    return project;
+    return oldProject;
   }
 
   static async getAccountingSummary(projectId: string) {
