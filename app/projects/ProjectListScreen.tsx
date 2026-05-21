@@ -6,6 +6,7 @@ import Header from '@/app/components/Header';
 import { Project } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
 import AddProjectModal from '@/app/components/modals/AddProjectModal';
+import StatusFilterDropdown from '@/app/components/StatusFilterDropdown';
 import { formatVnd, formatDate } from '@/app/components/dashboard-data';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
@@ -155,30 +156,11 @@ export default function ProjectListScreen() {
               />
             </div>
 
-            {/* Status Filters */}
-            {[
-              { key: 'ALL',      label: 'Tất cả'     },
-              { key: 'ACTIVE',   label: 'Thi công'   },
-              { key: 'PLANNED',  label: 'Kế hoạch'   },
-              { key: 'COMPLETED',label: 'Hoàn thành' },
-              { key: 'CLOSED',   label: 'Quyết toán' },
-            ].map(f => (
-              <button
-                key={f.key}
-                onClick={() => setStatusFilter(f.key)}
-                style={{
-                  height: '36px', padding: '0 14px', borderRadius: '6px', fontSize: '13px',
-                  fontWeight: statusFilter === f.key ? 600 : 400, cursor: 'pointer',
-                  border: '1px solid',
-                  borderColor: statusFilter === f.key ? 'var(--brand)' : 'var(--border)',
-                  background: statusFilter === f.key ? 'var(--brand)' : 'white',
-                  color: statusFilter === f.key ? 'white' : 'var(--text-secondary)',
-                  transition: 'all 0.12s',
-                }}
-              >
-                {f.label}
-              </button>
-            ))}
+            {/* Status Filter - Using Enterprise Dropdown */}
+            <StatusFilterDropdown
+              value={statusFilter}
+              onChange={setStatusFilter}
+            />
 
             <div style={{ marginLeft: 'auto', fontSize: '12px', color: 'var(--text-secondary)' }}>
               {projects.length} kết quả
@@ -186,7 +168,7 @@ export default function ProjectListScreen() {
           </div>
 
           {/* Main Table */}
-          <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '6px', overflow: 'hidden' }}>
+          <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '6px', overflow: 'visible' }}>
             <div style={{ borderBottom: '1px solid var(--border)', padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FAFBFC' }}>
               <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Danh sách Dự án ({projects.length})</span>
               <div style={{ display: 'flex', gap: '8px' }}>
@@ -195,7 +177,7 @@ export default function ProjectListScreen() {
                 </button>
               </div>
             </div>
-            <div style={{ overflowX: 'auto' }}>
+            <div style={{ overflowX: 'auto', position: 'relative', zIndex: 1 }}>
               <table className="erp-table zebra" style={{ minWidth: '900px' }}>
                 <thead>
                   <tr>

@@ -176,6 +176,17 @@ body {
   }
 }
 
+@keyframes dropdownEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes data-point-highlight {
   0% {
     r: 3px;
@@ -524,11 +535,27 @@ body {
   font-size: 12px;
 }
 
-/* ── 9. MODAL SYSTEM ────────────────────────────────────────────── */
+/* ── 9. Z-INDEX ARCHITECTURE ───────────────────────────────────── */
+/* 
+   ENTERPRISE OVERLAY STACKING CONTEXT
+   
+   Layer 100: Content
+   Layer 200: Sticky Navigation  
+   Layer 300: Dropdowns
+   Layer 400: Popovers/Tooltips
+   Layer 500: Action Menus
+   Layer 600: Date Pickers
+   Layer 700: Drawers
+   Layer 800: Modals
+   Layer 900: Toasts
+   Layer 1000: System Alerts
+*/
+
+/* ── 10. MODAL SYSTEM ────────────────────────────────────────────── */
 .erp-modal-overlay {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 800;
   background-color: rgba(17, 24, 39, 0.5);
   display: flex;
   align-items: center;
