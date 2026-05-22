@@ -6,7 +6,8 @@ import { createPortal } from 'react-dom';
 interface PortalOverlayProps {
   isOpen: boolean;
   onClose: () => void;
-  triggerRect: DOMRect | null;
+  triggerRect?: DOMRect | null; // Deprecated: Use anchorElement instead
+  anchorElement?: HTMLElement | null;
   children: ReactNode;
   width?: number;
   align?: 'left' | 'right';
@@ -18,6 +19,7 @@ export default function PortalOverlay({
   isOpen,
   onClose,
   triggerRect,
+  anchorElement,
   children,
   width = 200,
   align = 'left',
@@ -33,18 +35,23 @@ export default function PortalOverlay({
   }, []);
 
   useEffect(() => {
-    if (!isOpen || !triggerRect) return;
+    if (!isOpen) return;
 
     const calculatePosition = () => {
+      // Use dynamic element if provided, otherwise fallback to static rect
+      const rect = anchorElement ? anchorElement.getBoundingClientRect() : triggerRect;
+      if (!rect) return;
+
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       const scrollY = window.scrollY;
       const scrollX = window.scrollX;
 
-      let top = triggerRect.bottom + scrollY + 4; // 4px gap
+      // Use fixed positioning relative to viewport to avoid scrolling bugs
+      let top = rect.bottom + 4; // 4px gap
       let left = align === 'left' 
-        ? triggerRect.left + scrollX 
-        : triggerRect.right + scrollX - width;
+        ? rect.left 
+        : rect.right - width;
 
       let originY = 'top';
       let originX = align;
@@ -53,21 +60,21 @@ export default function PortalOverlay({
       const approxHeight = 320;
 
       // Viewport collision / Edge detection & flipping
-      if (top + approxHeight - scrollY > viewportHeight && triggerRect.top > approxHeight) {
+      if (top + approxHeight > viewportHeight && rect.top > approxHeight) {
         // Not enough space below, flip up
-        top = triggerRect.top + scrollY - approxHeight - 4;
+        top = rect.top - approxHeight - 4;
         originY = 'bottom';
       }
 
-      if (left + width - scrollX > viewportWidth) {
+      if (left + width > viewportWidth) {
         // Overflow right, align right
-        left = triggerRect.right + scrollX - width;
+        left = rect.right - width;
         originX = 'right';
       }
 
-      if (left < scrollX) {
+      if (left < 0) {
         // Overflow left, align left
-        left = triggerRect.left + scrollX;
+        left = rect.left;
         originX = 'left';
       }
 
@@ -86,7 +93,7 @@ export default function PortalOverlay({
       window.removeEventListener('resize', calculatePosition);
       window.removeEventListener('scroll', calculatePosition, true);
     };
-  }, [isOpen, triggerRect, align, width]);
+  }, [isOpen, triggerRect, anchorElement, align, width]);
 
   // Click outside to close
   useEffect(() => {
@@ -94,8 +101,10 @@ export default function PortalOverlay({
 
     const handleOutsideClick = (e: MouseEvent) => {
       if (overlayRef.current && !overlayRef.current.contains(e.target as Node)) {
-        // Only close if click is not inside the trigger button
-        // We assume the caller handles button clicks natively
+        // Do not close if clicking on the trigger element itself
+        if (anchorElement && anchorElement.contains(e.target as Node)) {
+          return;
+        }
         onClose();
       }
     };
@@ -128,20 +137,20 @@ export default function PortalOverlay({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen || !mounted || !triggerRect) return null;
+  if (!isOpen || !mounted || (!triggerRect && !anchorElement)) return null;
 
   return createPortal(
     <div
       ref={overlayRef}
       style={{
-        position: 'absolute',
+        position: 'fixed',
         top: coords.top,
         left: coords.left,
         width,
         transformOrigin: coords.transformOrigin,
         zIndex, // Controlled by Enterprise Architecture layers
       }}
-      className={`bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-2xl shadow-black/40 overflow-hidden animate-scale-up ${className}`}
+      className={`bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-2xl shadow-black/40 overflow-hidden animate-scale-up pointer-events-auto ${className}`}
     >
       {children}
     </div>,

@@ -11,11 +11,12 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   editingBudget?: any;
+  initialWbsId?: string;
 }
 
-export default function AddBudgetModal({ isOpen, onClose, editingBudget }: Props) {
+export default function AddBudgetModal({ isOpen, onClose, editingBudget, initialWbsId }: Props) {
   const { currentProjectId, setCurrentProject } = useERPStore();
-  
+
   const { data: paginatedData } = useProjectsQuery();
   const projects = paginatedData?.data || [];
   const { data: wbsData } = useWBSQuery(currentProjectId);
@@ -44,12 +45,12 @@ export default function AddBudgetModal({ isOpen, onClose, editingBudget }: Props
     } else if (isOpen) {
       setForm({
         projectId: currentProjectId || projects[0]?.id || '',
-        wbsId: '',
+        wbsId: initialWbsId || '',
         costType: 'material',
         estimatedAmount: '',
       });
     }
-  }, [editingBudget, isOpen, currentProjectId, projects]);
+  }, [editingBudget, isOpen, currentProjectId, projects, initialWbsId]);
 
   const filteredWbs = wbsItems.filter((w: any) =>
     form.projectId ? w.projectId === form.projectId : true
@@ -108,7 +109,7 @@ export default function AddBudgetModal({ isOpen, onClose, editingBudget }: Props
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[var(--divider)] px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-600/20 text-purple-500 ring-1 ring-purple-500/30">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-600/20 text-purple-500 ring-1 ring-purple-500/30">
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M7 3h10v18H7zM10 7h4M10 11h4M10 15h2" />
               </svg>
@@ -157,18 +158,25 @@ export default function AddBudgetModal({ isOpen, onClose, editingBudget }: Props
             </div>
           </div>
 
-          <div>
-            <label className="erp-label">Loại chi phí</label>
+          <div className="space-y-3">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)]">Cơ cấu chi phí (Cost Type) <span className="text-red-500">*</span></h3>
             <div className="grid grid-cols-3 gap-2">
-              {(Object.entries(costType_LABELS) as [CostType, string][]).map(([val, label]) => (
+              {(Object.entries({
+                material: 'Vật tư',
+                labor: 'Nhân công',
+                machine: 'Máy thi công',
+                subcontract: 'Thầu phụ',
+                overhead: 'Chi phí chung',
+                other: 'Khác'
+              }) as [any, string][]).map(([val, label]) => (
                 <button
                   key={val}
                   type="button"
                   onClick={() => handleChange('costType', val)}
-                  className={`h-8 rounded-lg border text-[11px] font-bold uppercase tracking-widest transition-colors ${
+                  className={`h-8 rounded text-[11px] font-bold uppercase tracking-widest transition-colors ${
                     form.costType === val
-                      ? 'border-purple-500 bg-purple-500/10 text-purple-500'
-                      : 'border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                      ? 'border border-purple-500 bg-purple-500/10 text-purple-500'
+                      : 'border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-muted)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]'
                   }`}
                 >
                   {label}

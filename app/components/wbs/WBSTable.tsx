@@ -56,11 +56,11 @@ const flattenWBS = (nodes: EnrichedWBSNode[], indexPrefix: string = ''): Flatten
 
 const WBSActionMenu = ({ node, onEdit, onAddChild, onDelete }: { node: FlattenedNode, onEdit: (node: FlattenedNode) => void, onAddChild?: (id: string) => void, onDelete: (node: FlattenedNode) => void }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [triggerRect, setTriggerRect] = useState<DOMRect | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    setTriggerRect(e.currentTarget.getBoundingClientRect());
+    setAnchorEl(e.currentTarget);
     setIsOpen(true);
   };
 
@@ -80,7 +80,7 @@ const WBSActionMenu = ({ node, onEdit, onAddChild, onDelete }: { node: Flattened
       <PortalOverlay 
         isOpen={isOpen} 
         onClose={() => setIsOpen(false)} 
-        triggerRect={triggerRect} 
+        anchorElement={anchorEl} 
         align="right"
         width={180}
         zIndex={100}

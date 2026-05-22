@@ -50,10 +50,10 @@ export type UpdateTaskDTO = z.infer<typeof updateTaskSchema>;
 // ─────────────────────────────────────────────
 
 export const createWBSSchema = z.object({
-  projectId: z.string().uuid(),
+  projectId: z.string().min(1, "Dự án là bắt buộc"),
   name: z.string().min(1, "Tên hạng mục là bắt buộc").max(255),
   code: z.string().max(50).optional(),
-  parentId: z.string().uuid().nullable().optional(),
+  parentId: z.string().min(1).nullable().optional(),
   sortOrder: z.number().int().optional().default(0),
 });
 
@@ -68,8 +68,8 @@ export type UpdateWBSDTO = z.infer<typeof updateWBSSchema>;
 
 export const createCostSchema = z.object({
   requestId: z.string().uuid("Idempotency key bắt buộc phải là UUID").optional(),
-  projectId: z.string().uuid("Dự án là bắt buộc"),
-  wbsId: z.string().uuid("Hạng mục WBS là bắt buộc"),
+  projectId: z.string().min(1, "Dự án là bắt buộc"),
+  wbsId: z.string().min(1, "Hạng mục WBS là bắt buộc"),
   costType: z.nativeEnum(CostType).default(CostType.material),
   amount: z.number().positive("Số tiền phải lớn hơn 0"),
   quantity: z.number().positive("Số lượng phải lớn hơn 0").optional(),
@@ -78,7 +78,7 @@ export const createCostSchema = z.object({
   note: z.string().max(1000).optional(),
   date: z.string().optional(),
   status: z.nativeEnum(PaymentStatus).optional().default(PaymentStatus.unpaid),
-  createdById: z.string().uuid().optional(),
+  createdById: z.string().min(1).optional(),
   vatRate: z.number().nonnegative().optional().default(10),
   vatAmount: z.number().nonnegative().optional(),
   netAmount: z.number().nonnegative().optional(),
@@ -102,11 +102,11 @@ export type ApproveCostDTO = z.infer<typeof approveCostSchema>;
 // ─────────────────────────────────────────────
 
 export const createBudgetSchema = z.object({
-  projectId: z.string().uuid("Dự án là bắt buộc"),
-  wbsId: z.string().uuid("Hạng mục WBS là bắt buộc"),
+  projectId: z.string().min(1, "Dự án là bắt buộc"),
+  wbsId: z.string().min(1, "Hạng mục WBS là bắt buộc"),
   costType: z.nativeEnum(CostType).default(CostType.material),
   estimatedAmount: z.number().positive("Dự toán phải lớn hơn 0"),
-  createdById: z.string().uuid().optional(),
+  createdById: z.string().min(1).optional(),
 });
 
 export type CreateBudgetDTO = z.infer<typeof createBudgetSchema>;
@@ -119,14 +119,14 @@ export type UpdateBudgetDTO = z.infer<typeof updateBudgetSchema>;
 // ─────────────────────────────────────────────
 
 export const createRevenueSchema = z.object({
-  projectId: z.string().uuid("Dự án là bắt buộc"),
-  wbsId: z.string().uuid("Hạng mục WBS là bắt buộc"),
-  invoiceId: z.string().uuid().nullable().optional(),
+  projectId: z.string().min(1, "Dự án là bắt buộc"),
+  wbsId: z.string().min(1, "Hạng mục WBS là bắt buộc"),
+  invoiceId: z.string().min(1).nullable().optional(),
   amount: z.number().positive("Doanh thu phải lớn hơn 0"),
   date: z.string().optional(),
   status: z.nativeEnum(PaymentStatus).optional().default(PaymentStatus.unpaid),
   description: z.string().max(1000).optional(),
-  createdById: z.string().uuid().optional(),
+  createdById: z.string().min(1).optional(),
 });
 
 export type CreateRevenueDTO = z.infer<typeof createRevenueSchema>;
@@ -139,15 +139,15 @@ export type UpdateRevenueDTO = z.infer<typeof updateRevenueSchema>;
 // ─────────────────────────────────────────────
 
 export const createInvoiceSchema = z.object({
-  projectId: z.string().uuid("Dự án là bắt buộc"),
-  wbsId: z.string().uuid("Hạng mục WBS là bắt buộc"),
+  projectId: z.string().min(1, "Dự án là bắt buộc"),
+  wbsId: z.string().min(1, "Hạng mục WBS là bắt buộc"),
   invoiceNumber: z.string().max(100).optional(),
   amount: z.number().positive("Giá trị hóa đơn phải lớn hơn 0"),
   issuedDate: z.string().optional(),
   dueDate: z.string().optional(),
   note: z.string().max(1000).optional(),
   status: z.nativeEnum(InvoiceStatus).optional().default(InvoiceStatus.DRAFT),
-  createdById: z.string().uuid().optional(),
+  createdById: z.string().min(1).optional(),
 });
 
 export type CreateInvoiceDTO = z.infer<typeof createInvoiceSchema>;

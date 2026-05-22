@@ -40,7 +40,9 @@ export class ProjectFinance {
     const itemMap = new Map<string, EnrichedWBSNode>();
     
     wbs.forEach(w => {
-      const wbsBudget = safeDecimal(budgetMap.get(w.id)).add(safeDecimal((w as any).budgetAmount || 0));
+      // ENTERPRISE RULE: BudgetRecords (CBS) are the single source of truth for budget.
+      // We do NOT add w.budgetAmount to avoid duplication.
+      const wbsBudget = safeDecimal(budgetMap.get(w.id));
       const wbsActual = safeDecimal(costMap.get(w.id));
       const wbsRevenue = safeDecimal(revenueMap.get(w.id));
 

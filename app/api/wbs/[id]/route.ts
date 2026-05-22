@@ -5,7 +5,7 @@ import { WBSService } from "@/services/wbs.service";
 
 const updateWBSSchema = z.object({
   name: z.string().min(1).optional(),
-  parentId: z.string().uuid().nullable().optional(),
+  parentId: z.string().min(1).nullable().optional(),
   sortOrder: z.number().int().optional(),
 });
 

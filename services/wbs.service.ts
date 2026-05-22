@@ -230,10 +230,6 @@ export class WBSService {
         where: { wbsId: { in: allIds } },
         data: { wbsId: null }
       });
-      await tx.activity.updateMany({
-        where: { wbsId: { in: allIds } },
-        data: { wbsId: null }
-      });
 
       // 12. Delete WBS items: break self-referencing FK first, then delete all
       // Nullify parentId on all descendants to break FK constraints
