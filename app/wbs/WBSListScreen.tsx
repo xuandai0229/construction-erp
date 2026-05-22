@@ -25,6 +25,8 @@ export default function WBSListScreen() {
   const [isAddingWBS, setIsAddingWBS] = useState(false);
   const [initialParentId, setInitialParentId] = useState<string | null>(null);
 
+  const [searchTerm, setSearchTerm] = useState('');
+
   const stats = useMemo(() => {
     let totalBudget = 0;
     let totalActual = 0;
@@ -44,14 +46,29 @@ export default function WBSListScreen() {
   }, [rawTree, flatWbs]);
 
   const tree = useMemo(() => {
+    const filterTree = (nodes: any[], search: string): any[] => {
+      if (!search) return nodes;
+      const lowerSearch = search.toLowerCase();
+      return nodes.map(node => {
+        const matchSelf = node.name.toLowerCase().includes(lowerSearch) || (node.code || '').toLowerCase().includes(lowerSearch);
+        const childrenMatch = filterTree(node.children || [], search);
+        if (matchSelf || childrenMatch.length > 0) {
+          return { ...node, children: childrenMatch };
+        }
+        return null;
+      }).filter(Boolean);
+    };
+
+    const filteredTree = filterTree(rawTree, searchTerm);
+
     const applyExpanded = (nodes: any[]): EnrichedWBSNode[] =>
       nodes.map(node => ({
         ...node,
-        isExpanded: expandedIds.has(node.id) || (node.level === 0 && !expandedIds.has('initialized')),
+        isExpanded: searchTerm ? true : (expandedIds.has(node.id) || (node.level === 0 && !expandedIds.has('initialized'))),
         children: applyExpanded(node.children || []),
       }));
-    return applyExpanded(rawTree);
-  }, [rawTree, expandedIds]);
+    return applyExpanded(filteredTree);
+  }, [rawTree, expandedIds, searchTerm]);
 
   const handleToggleExpand = (id: string) => {
     setExpandedIds(prev => {
@@ -124,7 +141,7 @@ export default function WBSListScreen() {
                 variance={stats.variance}
                 progress={stats.progress}
               />
-              <WBSActions onAdd={() => { setInitialParentId(null); setIsAddingWBS(true); }} onExport={handleExport} />
+              <WBSActions onAdd={() => { setInitialParentId(null); setIsAddingWBS(true); }} onExport={handleExport} onSearch={setSearchTerm} />
               <div className="card-elevation overflow-hidden border border-[var(--border)] rounded-lg">
                 <WBSTable
                   nodes={tree}

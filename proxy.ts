@@ -9,7 +9,7 @@ type Session = {
 
 const MUTATION_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 const PUBLIC_API_PREFIXES = ['/api/auth/session', '/api/health'];
-const WRITE_ROLES = new Set(['SUPER_ADMIN', 'ADMIN', 'CFO', 'ACCOUNTANT', 'MANAGER', 'BRANCH_DIRECTOR', 'GROUP_DIRECTOR']);
+const WRITE_ROLES = new Set(['SUPER_ADMIN', 'ADMIN', 'CFO', 'ACCOUNTANT', 'MANAGER', 'BRANCH_DIRECTOR', 'GROUP_DIRECTOR', 'PM', 'QS', 'SITE_ENGINEER']);
 const SYSTEM_ROLES = new Set(['SUPER_ADMIN']);
 
 function base64UrlToBytes(value: string) {
@@ -77,7 +77,7 @@ export async function proxy(request: NextRequest) {
   const needsSession =
     pathname.startsWith('/system') ||
     pathname.startsWith('/api/system') ||
-    (pathname.startsWith('/api') && MUTATION_METHODS.has(request.method) && !isPublicApi);
+    (pathname.startsWith('/api') && !isPublicApi);
 
   if (needsSession) {
     const session = await verifySessionToken(getSessionToken(request));

@@ -95,12 +95,12 @@ export class RealtimeIntelligenceService {
       const modelId = `${companyId}:ANOMALY_SUMMARY:${projectId}`;
       await prisma.readModel.upsert({
         where: { id: modelId },
-        update: { data: report, version: { increment: 1 } },
+        update: { data: report as any, version: { increment: 1 } },
         create: {
           id: modelId,
           companyId,
           type: "ANOMALY_SUMMARY",
-          data: report,
+          data: report as any,
           version: 1
         }
       });

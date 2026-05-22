@@ -13,9 +13,11 @@ export class ProjectFinance {
   static calculateWBSTree(
     wbs: WBSItem[], 
     costs: CostRecord[], 
-    budgets: BudgetRecord[]
+    budgets: BudgetRecord[],
+    revenues: RevenueRecord[] | InvoiceRecord[] = [],
+    committedCosts: any[] = [] // Future-proofing for Procurement
   ): EnrichedWBSNode[] {
-    // 1. Pre-aggregate budgets and costs by wbsId
+    // 1. Pre-aggregate budgets, costs, and revenues by wbsId
     const budgetMap = new Map<string, number>();
     budgets.forEach(b => {
       const current = safeDecimal(budgetMap.get(b.wbsId));
@@ -27,6 +29,12 @@ export class ProjectFinance {
       const current = safeDecimal(costMap.get(c.wbsId));
       costMap.set(c.wbsId, current.add(safeDecimal(c.amount)).toNumber());
     });
+    
+    const revenueMap = new Map<string, number>();
+    revenues.forEach(r => {
+      const current = safeDecimal(revenueMap.get((r as any).wbsId)); // Invoices or Revenues might have wbsId
+      revenueMap.set((r as any).wbsId, current.add(safeDecimal(r.amount)).toNumber());
+    });
 
     // 2. Create nodes with initial direct totals
     const itemMap = new Map<string, EnrichedWBSNode>();
@@ -34,6 +42,7 @@ export class ProjectFinance {
     wbs.forEach(w => {
       const wbsBudget = safeDecimal(budgetMap.get(w.id)).add(safeDecimal((w as any).budgetAmount || 0));
       const wbsActual = safeDecimal(costMap.get(w.id));
+      const wbsRevenue = safeDecimal(revenueMap.get(w.id));
 
       itemMap.set(w.id, {
         ...w,
@@ -41,44 +50,65 @@ export class ProjectFinance {
         level: 0,
         isExpanded: false,
         code: (w as any).code || "",
-        budget: wbsBudget.toNumber(),
-        actual: wbsActual.toNumber(),
-        revenue: 0,
-        profit: wbsBudget.sub(wbsActual).toNumber(),
+        budget: wbsBudget.toNumber(), // This is the direct budget
+        actual: wbsActual.toNumber(), // Direct actual
+        revenue: wbsRevenue.toNumber(), // Direct revenue
+        profit: wbsRevenue.sub(wbsActual).toNumber(),
         variance: wbsBudget.sub(wbsActual).toNumber(),
         percentage: safePercent(wbsActual, wbsBudget),
-        status: 'ok',
+        status: 'Chưa triển khai',
       });
     });
 
-    // 3. Build tree and roll up totals
-    const assemble = (parentId: string | null = null, level = 0): EnrichedWBSNode[] => {
+    // 3. Build tree and roll up totals (STRICT LINEAR ROLLUP)
+    const assemble = (parentId: string | null = null, level = 0, visited = new Set<string>()): EnrichedWBSNode[] => {
       const children: EnrichedWBSNode[] = [];
       
       for (const node of itemMap.values()) {
         if (node.parentId === parentId) {
-          const assembledChildren = assemble(node.id, level + 1);
+          // CYCLE DETECTION
+          if (visited.has(node.id)) {
+            console.error(`[ProjectFinance] CRITICAL ERROR: Circular Reference detected in WBS Tree at node ${node.id}`);
+            throw new Error("LỖI HỆ THỐNG: Cây WBS chứa vòng lặp vô hạn (Circular Reference). Dữ liệu bị hỏng.");
+          }
+          const nextVisited = new Set(visited);
+          nextVisited.add(node.id);
+          
+          const assembledChildren = assemble(node.id, level + 1, nextVisited);
           
           // Roll-up children totals using explicit Decimal logic
           const childBudget = assembledChildren.reduce((s, c) => s.add(safeDecimal(c.budget)), safeDecimal(0));
           const childActual = assembledChildren.reduce((s, c) => s.add(safeDecimal(c.actual)), safeDecimal(0));
+          const childRevenue = assembledChildren.reduce((s, c) => s.add(safeDecimal(c.revenue)), safeDecimal(0));
           
           node.level = level;
           node.children = assembledChildren;
           node.isExpanded = level === 0;
           
-          const nodeBudget = safeDecimal(node.budget).gt(childBudget) ? safeDecimal(node.budget) : safeDecimal(node.budget).add(childBudget);
+          // STRICT LINEAR ROLLUP: Parent Total = Direct + Sum(Children)
+          const nodeBudget = safeDecimal(node.budget).add(childBudget);
           const nodeActual = safeDecimal(node.actual).add(childActual);
+          const nodeRevenue = safeDecimal(node.revenue).add(childRevenue);
           const variance = nodeBudget.sub(nodeActual);
+          const profit = nodeRevenue.sub(nodeActual);
 
           node.budget = nodeBudget.toNumber();
           node.actual = nodeActual.toNumber();
+          node.revenue = nodeRevenue.toNumber();
           node.variance = variance.toNumber();
-          node.profit = node.variance;
+          node.profit = profit.toNumber();
           
           // RE-CALCULATE percentage after rollup
           node.percentage = safePercent(node.actual, node.budget);
-          node.status = node.percentage > 100 ? 'over' : 'ok';
+          
+          // ENTERPRISE STATUS LOGIC
+          if (node.percentage >= 100) node.status = 'Hoàn thành';
+          else if (node.percentage > 0) node.status = 'Đang thi công';
+          else node.status = 'Chưa triển khai';
+          
+          if (nodeBudget.gt(0) && nodeActual.gt(nodeBudget)) {
+            node.status = 'Chậm tiến độ'; // Over budget threshold mapping
+          }
           
           children.push(node);
         }

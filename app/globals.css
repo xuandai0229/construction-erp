@@ -58,6 +58,18 @@
   --glow-subtle: 0 0 12px -3px;
   --glow-medium: 0 0 16px -2px;
   --glow-emphasis: 0 0 20px -1px;
+
+  /* ─── Enterprise Overlay Architecture (Z-Index) ───────── */
+  --z-content: 100;
+  --z-sticky-header: 200;
+  --z-dropdown: 300;
+  --z-popover: 400;
+  --z-action-menu: 500;
+  --z-datepicker: 600;
+  --z-drawer: 700;
+  --z-modal: 800;
+  --z-toast: 900;
+  --z-alerts: 1000;
 }
 
 /* ─── Dark Mode (Premium Cinematic Look) ──────────────────── */

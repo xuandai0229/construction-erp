@@ -2,8 +2,9 @@
 
 import { EnrichedWBSNode, WBSItem } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import ConfirmModal from '@/app/components/modals/ConfirmModal';
+import PortalOverlay from '@/app/components/shared/PortalOverlay';
 
 import { TableVirtuoso } from 'react-virtuoso';
 import { useMemo } from 'react';
@@ -53,6 +54,59 @@ const flattenWBS = (nodes: EnrichedWBSNode[], indexPrefix: string = ''): Flatten
   return result;
 };
 
+const WBSActionMenu = ({ node, onEdit, onAddChild, onDelete }: { node: FlattenedNode, onEdit: (node: FlattenedNode) => void, onAddChild?: (id: string) => void, onDelete: (node: FlattenedNode) => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [triggerRect, setTriggerRect] = useState<DOMRect | null>(null);
+
+  const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setTriggerRect(e.currentTarget.getBoundingClientRect());
+    setIsOpen(true);
+  };
+
+  return (
+    <>
+      <button 
+        onClick={handleOpen}
+        className="flex h-7 w-7 items-center justify-center rounded border border-transparent hover:bg-[var(--secondary)] text-[var(--text-secondary)] transition-colors mx-auto"
+      >
+        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="5" r="1.5" />
+          <circle cx="12" cy="12" r="1.5" />
+          <circle cx="12" cy="19" r="1.5" />
+        </svg>
+      </button>
+
+      <PortalOverlay 
+        isOpen={isOpen} 
+        onClose={() => setIsOpen(false)} 
+        triggerRect={triggerRect} 
+        align="right"
+        width={180}
+        zIndex={100}
+      >
+        <div className="w-full bg-[var(--card)] flex flex-col py-1 border border-[var(--border)] rounded-md shadow-lg">
+          <button onClick={() => { setIsOpen(false); onEdit(node); }} className="w-full flex items-center gap-2.5 px-3 py-2 text-[12.5px] text-[var(--text-primary)] hover:bg-[var(--secondary)] transition-colors text-left">
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>
+            Sửa hạng mục
+          </button>
+          {onAddChild && (
+            <button onClick={() => { setIsOpen(false); onAddChild(node.id); }} className="w-full flex items-center gap-2.5 px-3 py-2 text-[12.5px] text-[var(--text-primary)] hover:bg-[var(--secondary)] transition-colors text-left">
+              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14" /></svg>
+              Thêm hạng mục con
+            </button>
+          )}
+          <div className="h-px w-full bg-[var(--divider)] my-1" />
+          <button onClick={() => { setIsOpen(false); onDelete(node); }} className="w-full flex items-center gap-2.5 px-3 py-2 text-[12.5px] font-medium text-rose-500 hover:bg-rose-500/10 transition-colors text-left">
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+            Xóa vĩnh viễn
+          </button>
+        </div>
+      </PortalOverlay>
+    </>
+  );
+};
+
 export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, totalBudget, totalActual, variance, progress }: WBSTableProps) {
   const currentProjectId = useERPStore(state => state.currentProjectId);
   const { mutateAsync: deleteWBS } = useDeleteWBSMutation(currentProjectId);
@@ -64,16 +118,13 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDeleteClick = (node: FlattenedNode) => {
-    // Frontend preemptive check
-    if (node.actual > 0 || node.revenue > 0) {
-      setConfirmAction({ id: node.id, name: node.name, type: 'LOCKED' });
-    } else {
-      setConfirmAction({ id: node.id, name: node.name, type: 'DELETE' });
-    }
+    // PERMANENT DELETE: Always allow user to confirm deletion.
+    // Service layer handles cascade delete of all financial data.
+    setConfirmAction({ id: node.id, name: node.name, type: 'DELETE' });
   };
 
   const executeDelete = async () => {
-    if (!confirmAction || confirmAction.type === 'LOCKED') {
+    if (!confirmAction) {
       setConfirmAction(null);
       return;
     }
@@ -82,12 +133,8 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
       await deleteWBS(confirmAction.id);
       setConfirmAction(null);
     } catch (err: any) {
-      if (err.metadata?.isFinancialLocked) {
-        setConfirmAction(prev => prev ? { ...prev, type: 'LOCKED' } : null);
-      } else {
-        alert(err.message || "Lỗi khi xóa hạng mục");
-        setConfirmAction(null);
-      }
+      alert(err.message || "Lỗi khi xóa hạng mục");
+      setConfirmAction(null);
     } finally {
       setIsDeleting(false);
     }
@@ -179,17 +226,22 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                       {node.rowIndex}
                     </td>
                     <td className={`${COL_WIDTHS.NAME_WBS} px-4 py-3 border-r border-[var(--border)]`}>
-                      <div className="flex items-center" style={{ paddingLeft: `${node.level * 20}px` }}>
+                      <div className="flex items-center" style={{ paddingLeft: `${node.level * 24}px` }}>
+                        {node.level > 0 && (
+                          <div className="absolute border-l border-[var(--border)] opacity-30" style={{ left: `calc(1rem + ${(node.level - 1) * 24}px + 10px)`, top: 0, bottom: 0 }} />
+                        )}
                         {isParent ? (
-                          <button onClick={() => onToggleExpand(node.id)} className="mr-2 flex h-5 w-5 items-center justify-center rounded text-[var(--text-secondary)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)] transition-colors">
-                            <svg viewBox="0 0 24 24" className={`h-4 w-4 transition-transform ${node.isExpanded ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" strokeWidth="2">
+                          <button onClick={() => onToggleExpand(node.id)} className="mr-2 flex h-5 w-5 items-center justify-center rounded text-blue-500 hover:bg-blue-500/10 transition-colors shrink-0">
+                            <svg viewBox="0 0 24 24" className={`h-4 w-4 transition-transform duration-200 ${node.isExpanded ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" strokeWidth="2">
                               <path d="M9 18l6-6-6-6" />
                             </svg>
                           </button>
                         ) : (
-                          <div className="mr-2 w-5 flex justify-center text-[var(--text-secondary)] opacity-40 text-[10px]">●</div>
+                          <div className="mr-2 w-5 flex justify-center shrink-0">
+                            <div className="w-1.5 h-1.5 rounded-full bg-[var(--text-muted)] opacity-40"></div>
+                          </div>
                         )}
-                        <span className={`text-[13px] ${isParent ? 'font-bold text-[var(--text-primary)]' : 'font-medium text-[var(--text-secondary)]'}`}>
+                        <span className={`text-[13px] truncate ${isParent ? 'font-bold text-[var(--text-primary)]' : 'font-medium text-[var(--text-secondary)]'}`}>
                           {node.name === 'Foundation' ? 'Hầm & Móng' :
                             node.name === 'Structure' ? 'Kết cấu thân' :
                               node.name === 'Electrical' ? 'Cơ điện (MEP)' :
@@ -214,7 +266,7 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                             {node.percentage.toFixed(0)}%
                           </span>
                         </div>
-                        <div className="h-1 w-full overflow-hidden rounded-full bg-[var(--secondary)]">
+                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--secondary)]">
                           <div
                             className={`h-full rounded-full transition-all duration-500 ${isOverBudget ? 'bg-rose-500' : 'bg-blue-500'}`}
                             style={{ width: `${Math.min(node.percentage, 100)}%` }}
@@ -223,41 +275,17 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                       </div>
                     </td>
                     <td className={`${COL_WIDTHS.STATUS} px-4 py-3 text-center border-r border-[var(--border)]`}>
-                      <span className={`erp-badge whitespace-nowrap inline-flex items-center justify-center rounded border px-2.5 py-1 text-[10px] font-bold shadow-sm ${statusMap[semanticStatus]}`}>
+                      <span className={`erp-badge whitespace-nowrap inline-flex items-center justify-center rounded border px-2 py-0.5 text-[10px] font-bold shadow-sm ${statusMap[semanticStatus]}`}>
                         {semanticStatus}
                       </span>
                     </td>
                     <td className={`${COL_WIDTHS.ACTIONS} px-4 py-3 text-center`}>
-                      <div className="flex items-center justify-center gap-1">
-                        <button
-                          onClick={() => handleEdit(node)}
-                          className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-secondary)] shadow-sm transition-all hover:text-blue-500 hover:bg-blue-500/10"
-                          title="Sửa"
-                        >
-                          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <path d="M12 20h9" />
-                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={() => onAddChild && onAddChild(node.id)}
-                          className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-secondary)] shadow-sm transition-all hover:text-emerald-500 hover:bg-emerald-500/10"
-                          title="Thêm mục con"
-                        >
-                          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <path d="M12 5v14M5 12h14" />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={() => handleDeleteClick(node)}
-                          className="flex h-7 w-7 items-center justify-center rounded border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-secondary)] shadow-sm transition-all hover:text-rose-500 hover:bg-rose-500/10"
-                          title="Xóa"
-                        >
-                          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                          </svg>
-                        </button>
-                      </div>
+                      <WBSActionMenu 
+                        node={node} 
+                        onEdit={handleEdit} 
+                        onAddChild={onAddChild} 
+                        onDelete={handleDeleteClick} 
+                      />
                     </td>
                   </>
                 );
@@ -266,26 +294,27 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
           )}
 
           {/* TFOOT implementation - Perfectly aligned with Header/Body */}
-          <div className="border-t-2 border-[var(--border)] bg-[var(--table-head-bg)] sticky bottom-0 z-20 shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
+          <div className="border-t-2 border-[var(--border)] bg-[var(--secondary)] sticky bottom-0 z-20 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
             <table className="erp-table w-full table-fixed min-w-max">
               <tbody>
                 <tr className="group">
                   <td className={`${COL_WIDTHS.CHECKBOX} border-r border-[var(--border)]`}></td>
                   <td className={`${COL_WIDTHS.INDEX} border-r border-[var(--border)]`}></td>
-                  <td className={`${COL_WIDTHS.NAME_WBS} px-4 py-3 text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--text-primary)] border-r border-[var(--border)]`}>
-                    TỔNG CỘNG DỰ TOÁN DỰ ÁN
+                  <td className={`${COL_WIDTHS.NAME_WBS} px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--text-primary)] border-r border-[var(--border)] flex items-center`}>
+                    <div className="h-2 w-2 rounded-full bg-blue-500 mr-2"></div>
+                    TỔNG CỘNG DỰ TOÁN
                   </td>
-                  <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right ${FINANCIAL_CELL_CLASS} text-[13px] text-[var(--text-primary)] border-r border-[var(--border)]`}>
+                  <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right ${FINANCIAL_CELL_CLASS} text-[14px] font-black text-blue-600 border-r border-[var(--border)] tabular-nums`}>
                     {totalBudget.toLocaleString()}
                   </td>
-                  <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right ${FINANCIAL_CELL_CLASS} text-[13px] text-[var(--text-primary)] border-r border-[var(--border)]`}>
+                  <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right ${FINANCIAL_CELL_CLASS} text-[14px] font-black text-[var(--text-primary)] border-r border-[var(--border)] tabular-nums`}>
                     {totalActual.toLocaleString()}
                   </td>
-                  <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right ${FINANCIAL_CELL_CLASS} text-[13px] border-r border-[var(--border)] ${variance < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
+                  <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right ${FINANCIAL_CELL_CLASS} text-[14px] font-black border-r border-[var(--border)] tabular-nums ${variance < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
                     {variance < 0 ? '' : '+'}{variance.toLocaleString()}
                   </td>
                   <td className={`${COL_WIDTHS.PROGRESS} px-4 py-3 text-center border-r border-[var(--border)]`}>
-                    <span className="text-[12px] font-bold text-blue-500 tabular-nums">{progress.toFixed(1)}%</span>
+                    <span className="text-[12px] font-black text-blue-500 tabular-nums">{progress.toFixed(1)}%</span>
                   </td>
                   <td className={`${COL_WIDTHS.STATUS} border-r border-[var(--border)]`}></td>
                   <td className={`${COL_WIDTHS.ACTIONS}`}></td>
@@ -300,15 +329,10 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
           onClose={() => setConfirmAction(null)}
           onConfirm={executeDelete}
           isLoading={isDeleting}
-          title={confirmAction?.type === 'LOCKED' ? "KHÔNG THỂ XÓA HẠNG MỤC" : "Xác nhận xóa vĩnh viễn"}
-          message={
-            confirmAction?.type === 'LOCKED'
-              ? `Hạng mục "${confirmAction?.name}" đã có dữ liệu phân bổ (Chi phí/Dự toán). Để đảm bảo tính toàn vẹn kế toán, hệ thống khóa chức năng xóa đối với hạng mục này.`
-              : `Bạn có chắc chắn muốn xóa vĩnh viễn hạng mục "${confirmAction?.name}" và toàn bộ các mục con của nó? Hành động này không thể hoàn tác.`
-          }
-          variant={confirmAction?.type === 'LOCKED' ? 'close' : 'danger'}
-          confirmLabel={confirmAction?.type === 'LOCKED' ? "Đã hiểu" : "Xóa vĩnh viễn"}
-          businessContext={confirmAction?.type === 'LOCKED' ? "Vui lòng điều chỉnh lại chứng từ tài chính (nếu nhập sai) trước khi xóa hạng mục này." : undefined}
+          title="Xóa vĩnh viễn hạng mục công trình"
+          message={`Bạn có chắc chắn muốn xóa hạng mục "${confirmAction?.name}"? Toàn bộ dữ liệu liên quan (hạng mục con, chi phí, dự toán, doanh thu) sẽ bị xóa hoàn toàn và không thể khôi phục.`}
+          variant="danger"
+          confirmLabel="Xóa vĩnh viễn"
         />
       </div>
     </>

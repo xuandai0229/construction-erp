@@ -25,9 +25,10 @@ export function useCreateWBSMutation(projectId: string) {
       if (!res.success) throw new Error(res.error || 'Failed to create WBS');
       return res.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(projectId) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
+    onSuccess: (_, variables) => {
+      const targetProject = variables.projectId || projectId;
+      queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(targetProject) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(targetProject) });
     },
   });
 }
@@ -41,9 +42,10 @@ export function useUpdateWBSMutation(projectId: string) {
       if (!res.success) throw new Error(res.error || 'Failed to update WBS');
       return res.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(projectId) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
+    onSuccess: (_, variables) => {
+      const targetProject = variables.updates.projectId || projectId;
+      queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(targetProject) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(targetProject) });
     },
   });
 }

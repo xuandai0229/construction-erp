@@ -51,7 +51,7 @@ export default function ConfirmModal({
   };
 
   const modalContent = (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 overflow-hidden pointer-events-none">
+    <div className="fixed inset-0 z-[800] flex items-center justify-center p-4 overflow-hidden pointer-events-none">
       <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-500 pointer-events-auto" onClick={onClose} />
       
       <div className="relative w-full max-w-[420px] bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-8 duration-500 pointer-events-auto">

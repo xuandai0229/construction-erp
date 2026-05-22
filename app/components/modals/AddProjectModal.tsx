@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { Project, ProjectStatus } from '@/app/types';
 import { useCreateProjectMutation, useUpdateProjectMutation } from '@/services/queries/useProjects';
+import PortalOverlay from '@/app/components/shared/PortalOverlay';
 
 interface Props {
   isOpen: boolean;
@@ -20,6 +21,7 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
   const { mutateAsync: createProject } = useCreateProjectMutation();
   const { mutateAsync: updateProject } = useUpdateProjectMutation();
   const [showStatusPicker, setShowStatusPicker] = useState(false);
+  const [statusTriggerRect, setStatusTriggerRect] = useState<DOMRect | null>(null);
   const statusRef = useRef<HTMLDivElement>(null);
 
   const [form, setForm] = useState({
@@ -59,16 +61,7 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
     setShowStatusPicker(false);
   }, [project, isOpen]);
 
-  // Close status picker on outside click
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (statusRef.current && !statusRef.current.contains(e.target as Node)) {
-        setShowStatusPicker(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  // PortalOverlay handles click outside natively
 
   if (!isOpen) return null;
 
@@ -113,7 +106,7 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    <div className="fixed inset-0 z-[800] flex items-center justify-center">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
       <div className="relative z-10 w-full max-w-lg mx-4 rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-2xl shadow-black/50">
         <div className="flex items-center justify-between border-b border-[var(--divider)] px-6 py-4">
@@ -187,7 +180,11 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
               <label className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1.5 block">Trạng thái vận hành</label>
               <button
                 type="button"
-                onClick={() => setShowStatusPicker(!showStatusPicker)}
+                onClick={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  setStatusTriggerRect(rect);
+                  setShowStatusPicker(!showStatusPicker);
+                }}
                 className={`erp-input w-full flex items-center gap-3 cursor-pointer hover:border-blue-500/30 transition-all text-left ${showStatusPicker ? '!border-blue-500 shadow-[0_0_0_3px_rgba(59,130,246,0.1)]' : ''}`}
               >
                 <span className={`h-6 w-6 flex items-center justify-center rounded-md text-sm ${selectedStatus.bg} ring-1`}>
@@ -202,38 +199,42 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
                 </svg>
               </button>
 
-              {showStatusPicker && (
-                <div className="mt-2 w-full bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-2xl shadow-black/30 overflow-hidden animate-scale-up z-50 relative">
-                  <div className="py-1.5">
-                    {STATUS_OPTS.map(opt => (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        onClick={() => {
-                          handleChange('status', opt.value);
-                          setShowStatusPicker(false);
-                        }}
-                        className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-all hover:bg-[var(--secondary)]
-                          ${form.status === opt.value ? 'bg-blue-500/5' : ''}
-                        `}
-                      >
-                        <span className={`h-8 w-8 flex items-center justify-center rounded-lg text-sm ${opt.bg} ring-1`}>
-                          {opt.icon}
-                        </span>
-                        <div className="flex-1">
-                          <div className={`text-[13px] font-semibold ${opt.color}`}>{opt.label}</div>
-                          <div className="text-[10px] text-[var(--text-muted)] opacity-60 mt-0.5">{opt.desc}</div>
-                        </div>
-                        {form.status === opt.value && (
-                          <svg viewBox="0 0 24 24" className="h-4 w-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="3">
-                            <path d="M5 13l4 4L19 7" />
-                          </svg>
-                        )}
-                      </button>
-                    ))}
-                  </div>
+              <PortalOverlay
+                isOpen={showStatusPicker}
+                onClose={() => setShowStatusPicker(false)}
+                triggerRect={statusTriggerRect}
+                width={430} // Same approx width as modal column
+                zIndex={1000} // var(--z-alerts) to be above modal (z-800)
+              >
+                <div className="py-1.5">
+                  {STATUS_OPTS.map(opt => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => {
+                        handleChange('status', opt.value);
+                        setShowStatusPicker(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-all hover:bg-[var(--secondary)]
+                        ${form.status === opt.value ? 'bg-blue-500/5' : ''}
+                      `}
+                    >
+                      <span className={`h-8 w-8 flex items-center justify-center rounded-lg text-sm ${opt.bg} ring-1`}>
+                        {opt.icon}
+                      </span>
+                      <div className="flex-1">
+                        <div className={`text-[13px] font-semibold ${opt.color}`}>{opt.label}</div>
+                        <div className="text-[10px] text-[var(--text-muted)] opacity-60 mt-0.5">{opt.desc}</div>
+                      </div>
+                      {form.status === opt.value && (
+                        <svg viewBox="0 0 24 24" className="h-4 w-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="3">
+                          <path d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
                 </div>
-              )}
+              </PortalOverlay>
             </div>
 
             <div>

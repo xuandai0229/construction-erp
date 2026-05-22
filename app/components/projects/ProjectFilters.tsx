@@ -5,6 +5,7 @@ import { projectApi } from '@/services/api/project.api';
 import AddProjectModal from '@/app/components/modals/AddProjectModal';
 import { exportToCsv } from '@/app/services/export.service';
 import { useDebounce } from '@/app/hooks/useDebounce';
+import PortalOverlay from '@/app/components/shared/PortalOverlay';
 
 interface ProjectFiltersProps {
   filters: {
@@ -47,6 +48,7 @@ export default function ProjectFilters({ filters, onFilterChange }: ProjectFilte
   const [isExporting, setIsExporting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(filters.search || '');
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
+  const [statusTriggerRect, setStatusTriggerRect] = useState<DOMRect | null>(null);
   const [focusedStatusIndex, setFocusedStatusIndex] = useState(-1);
   const [activeDatePreset, setActiveDatePreset] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -65,16 +67,7 @@ export default function ProjectFilters({ filters, onFilterChange }: ProjectFilte
     setSearchTerm(filters.search || '');
   }, [filters.search]);
 
-  // Close dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setShowStatusDropdown(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  // Close dropdown on outside click is handled by PortalOverlay
 
   // Keyboard navigation for status dropdown
   const handleStatusKeyDown = (e: React.KeyboardEvent) => {
@@ -192,9 +185,13 @@ export default function ProjectFilters({ filters, onFilterChange }: ProjectFilte
           <div className="h-6 w-px bg-[var(--border)] mx-1 hidden md:block" />
 
           {/* Status Filter - Enterprise Dropdown */}
-          <div className="relative" ref={dropdownRef}>
+          <div ref={dropdownRef}>
             <button
-              onClick={() => setShowStatusDropdown(!showStatusDropdown)}
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                setStatusTriggerRect(rect);
+                setShowStatusDropdown(!showStatusDropdown);
+              }}
               onKeyDown={handleStatusKeyDown}
               className={`erp-input flex items-center gap-2.5 !w-auto min-w-[180px] cursor-pointer hover:border-blue-500/30 transition-all ${showStatusDropdown ? '!border-blue-500 shadow-[0_0_0_3px_rgba(59,130,246,0.1)]' : ''}`}
             >
@@ -208,45 +205,49 @@ export default function ProjectFilters({ filters, onFilterChange }: ProjectFilte
             </button>
 
             {/* Dropdown */}
-            {showStatusDropdown && (
-              <div className="absolute top-full left-0 mt-2 w-[280px] bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-2xl shadow-black/30 z-50 overflow-hidden animate-scale-up">
-                <div className="px-3 py-2.5 border-b border-[var(--divider)]">
-                  <div className="text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em]">Trạng thái vận hành</div>
-                </div>
-                <div className="py-1.5 max-h-[320px] overflow-y-auto">
-                  {STATUS_OPTIONS.map((opt, index) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => {
-                        onFilterChange({ ...filters, status: opt.value });
-                        setShowStatusDropdown(false);
-                      }}
-                      className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-left transition-all
-                        ${focusedStatusIndex === index ? 'bg-blue-500/10' : 'hover:bg-[var(--secondary)]'}
-                        ${filters.status === opt.value || (!filters.status && !opt.value) ? 'bg-blue-500/5' : ''}
-                      `}
-                    >
-                      <span className={`h-8 w-8 flex items-center justify-center rounded-lg text-sm ${opt.bg || 'bg-[var(--secondary)]'}`}>
-                        {opt.icon}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <div className={`text-[12.5px] font-semibold ${opt.value ? opt.color : 'text-[var(--text-primary)]'}`}>
-                          {opt.label}
-                        </div>
-                        <div className="text-[10px] text-[var(--text-muted)] opacity-60 mt-0.5">
-                          {STATUS_DESCRIPTIONS[opt.value]}
-                        </div>
-                      </div>
-                      {(filters.status === opt.value || (!filters.status && !opt.value)) && (
-                        <svg viewBox="0 0 24 24" className="h-4 w-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="3">
-                          <path d="M5 13l4 4L19 7" />
-                        </svg>
-                      )}
-                    </button>
-                  ))}
-                </div>
+            <PortalOverlay
+              isOpen={showStatusDropdown}
+              onClose={() => setShowStatusDropdown(false)}
+              triggerRect={statusTriggerRect}
+              width={280}
+              zIndex={300} // var(--z-dropdown)
+            >
+              <div className="px-3 py-2.5 border-b border-[var(--divider)]">
+                <div className="text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em]">Trạng thái vận hành</div>
               </div>
-            )}
+              <div className="py-1.5 max-h-[320px] overflow-y-auto">
+                {STATUS_OPTIONS.map((opt, index) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => {
+                      onFilterChange({ ...filters, status: opt.value });
+                      setShowStatusDropdown(false);
+                    }}
+                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-left transition-all
+                      ${focusedStatusIndex === index ? 'bg-blue-500/10' : 'hover:bg-[var(--secondary)]'}
+                      ${filters.status === opt.value || (!filters.status && !opt.value) ? 'bg-blue-500/5' : ''}
+                    `}
+                  >
+                    <span className={`h-8 w-8 flex items-center justify-center rounded-lg text-sm ${opt.bg || 'bg-[var(--secondary)]'}`}>
+                      {opt.icon}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className={`text-[12.5px] font-semibold ${opt.value ? opt.color : 'text-[var(--text-primary)]'}`}>
+                        {opt.label}
+                      </div>
+                      <div className="text-[10px] text-[var(--text-muted)] opacity-60 mt-0.5">
+                        {STATUS_DESCRIPTIONS[opt.value]}
+                      </div>
+                    </div>
+                    {(filters.status === opt.value || (!filters.status && !opt.value)) && (
+                      <svg viewBox="0 0 24 24" className="h-4 w-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="3">
+                        <path d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </PortalOverlay>
           </div>
 
           {/* Date Preset Chips */}

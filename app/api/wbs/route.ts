@@ -19,12 +19,17 @@ export async function GET(request: Request) {
   }
 }
 
+import { headers } from "next/headers";
+
 export async function POST(request: Request) {
   try {
+    const headersList = await headers();
+    const userId = headersList.get("x-user-id") || undefined;
+    
     const body = await request.json();
     const data = createWBSSchema.parse(body);
 
-    const item = await WBSService.create(data);
+    const item = await WBSService.create(data, userId);
     return successResponse(item, null, 201);
   } catch (error) {
     return handleApiError(error);

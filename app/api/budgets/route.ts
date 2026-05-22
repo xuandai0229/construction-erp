@@ -12,10 +12,11 @@ export async function GET(request: Request) {
 
     const items = await BudgetService.findByProject(projectId);
 
-    const mapped = items.map((b) => ({
+    const mapped = items.map((b: any) => ({
       id: b.id,
       projectId: b.projectId,
       wbsId: b.wbsId,
+      wbsName: b.wbs?.name,
       costType: b.costType,
       estimatedAmount: b.estimatedAmount,
       createdAt: b.createdAt.toISOString(),
@@ -28,8 +29,11 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const userId = request.headers.get("x-user-id");
+    if (!userId) throw new ApiError(401, "Authentication required");
+
     const body = await request.json();
-    const data = createBudgetSchema.parse(body);
+    const data = createBudgetSchema.parse({ ...body, createdById: userId });
 
     const item = await BudgetService.create(data);
 

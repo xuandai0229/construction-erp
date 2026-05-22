@@ -28,6 +28,7 @@ const enrichProject = (p: Project, index: number) => {
 };
 
 import { useTableUX } from '@/app/hooks/useTableUX';
+import PortalOverlay from '@/app/components/shared/PortalOverlay';
 
 export default function ProjectTable({ projects, onEdit, totalGlobal }: { projects: Project[], onEdit: (p: Project) => void, totalGlobal: number }) {
   const enrichedProjects = projects.map((p, i) => enrichProject(p, i));
@@ -41,18 +42,10 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
 
   // Action menu state
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [actionTriggerRect, setActionTriggerRect] = useState<DOMRect | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close action menu on outside click
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setOpenMenuId(null);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  // PortalOverlay handles click outside natively
 
   const [confirmAction, setConfirmAction] = useState<{
     id: string,
@@ -142,7 +135,7 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
               data={enrichedProjects}
               components={{
                 Table: (props) => <table {...props} className="erp-table w-full table-fixed" />,
-                TableHead: (props) => <thead {...props} className="bg-[var(--table-head-bg)] z-40 sticky top-0" />,
+                TableHead: (props) => <thead {...props} className="bg-[var(--table-head-bg)] z-[200] sticky top-0" />,
                 TableRow: (props) => {
                   const project = props.item as any;
                   return (
@@ -239,7 +232,16 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
                   <td className={`${COL_WIDTHS.ACTIONS} py-3 px-4 text-center`}>
                     <div className="relative flex items-center justify-center" ref={openMenuId === p.id ? menuRef : undefined}>
                       <button
-                        onClick={(e) => { e.stopPropagation(); setOpenMenuId(openMenuId === p.id ? null : p.id); }}
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          if (openMenuId === p.id) {
+                            setOpenMenuId(null);
+                          } else {
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            setActionTriggerRect(rect);
+                            setOpenMenuId(p.id);
+                          }
+                        }}
                         className="h-7 w-7 flex items-center justify-center rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--secondary)] transition-all opacity-60 group-hover:opacity-100"
                       >
                         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
@@ -249,52 +251,57 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
                         </svg>
                       </button>
 
-                      {openMenuId === p.id && (
-                        <div className="absolute right-0 top-full mt-1 w-[200px] bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-2xl shadow-black/30 z-50 overflow-hidden animate-scale-up" onClick={(e) => e.stopPropagation()}>
-                          <div className="py-1.5">
+                      <PortalOverlay
+                        isOpen={openMenuId === p.id}
+                        onClose={() => setOpenMenuId(null)}
+                        triggerRect={actionTriggerRect}
+                        width={200}
+                        align="right"
+                        zIndex={500} // var(--z-action-menu)
+                      >
+                        <div className="py-1.5" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setOpenMenuId(null); router.push(`/projects/${p.id}`); }}
+                            className="w-full flex items-center gap-3 px-3.5 py-2 text-left hover:bg-[var(--secondary)] transition-colors"
+                          >
+                            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <span className="text-[12px] font-medium text-[var(--text-secondary)]">Xem chi tiết</span>
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setOpenMenuId(null); onEdit(p); }}
+                            className="w-full flex items-center gap-3 px-3.5 py-2 text-left hover:bg-[var(--secondary)] transition-colors"
+                          >
+                            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            <span className="text-[12px] font-medium text-[var(--text-secondary)]">Chỉnh sửa</span>
+                          </button>
+                          {p.status !== 'CLOSED' && (
                             <button
-                              onClick={(e) => { e.stopPropagation(); setOpenMenuId(null); router.push(`/projects/${p.id}`); }}
+                              onClick={(e) => { e.stopPropagation(); handleActionClick(p, 'CLOSE'); }}
                               className="w-full flex items-center gap-3 px-3.5 py-2 text-left hover:bg-[var(--secondary)] transition-colors"
                             >
-                              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
-                              <span className="text-[12px] font-medium text-[var(--text-secondary)]">Xem chi tiết</span>
+                              <span className="text-[12px] font-medium text-[var(--text-secondary)]">Đóng hồ sơ</span>
                             </button>
-                            <button
-                              onClick={(e) => { e.stopPropagation(); setOpenMenuId(null); onEdit(p); }}
-                              className="w-full flex items-center gap-3 px-3.5 py-2 text-left hover:bg-[var(--secondary)] transition-colors"
-                            >
-                              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                              </svg>
-                              <span className="text-[12px] font-medium text-[var(--text-secondary)]">Chỉnh sửa</span>
-                            </button>
-                            {p.status !== 'CLOSED' && (
-                              <button
-                                onClick={(e) => { e.stopPropagation(); handleActionClick(p, 'CLOSE'); }}
-                                className="w-full flex items-center gap-3 px-3.5 py-2 text-left hover:bg-[var(--secondary)] transition-colors"
-                              >
-                                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2">
-                                  <path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <span className="text-[12px] font-medium text-[var(--text-secondary)]">Đóng hồ sơ</span>
-                              </button>
-                            )}
-                            <div className="my-1 mx-3 h-px bg-[var(--divider)]" />
-                            <button
-                              onClick={(e) => { e.stopPropagation(); handleActionClick(p, 'DELETE'); }}
-                              className="w-full flex items-center gap-3 px-3.5 py-2 text-left hover:bg-rose-500/10 transition-colors"
-                            >
-                              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-rose-400" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                              </svg>
-                              <span className="text-[12px] font-medium text-rose-400">Xóa vĩnh viễn</span>
-                            </button>
-                          </div>
+                          )}
+                          <div className="my-1 mx-3 h-px bg-[var(--divider)]" />
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleActionClick(p, 'DELETE'); }}
+                            className="w-full flex items-center gap-3 px-3.5 py-2 text-left hover:bg-rose-500/10 transition-colors"
+                          >
+                            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-rose-400" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            <span className="text-[12px] font-medium text-rose-400">Xóa vĩnh viễn</span>
+                          </button>
                         </div>
-                      )}
+                      </PortalOverlay>
                     </div>
                   </td>
                 </>

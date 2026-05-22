@@ -30,6 +30,75 @@ export function useCreateBudgetMutation(projectId: string) {
       if (!json.success) throw new Error(json.error || 'Failed to create budget');
       return json.data;
     },
+    onSuccess: (_, variables) => {
+      const targetProject = variables.projectId || projectId;
+      queryClient.invalidateQueries({ queryKey: queryKeys.budgets.byProject(targetProject) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(targetProject) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(targetProject) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(targetProject) });
+    },
+  });
+}
+
+export function useUpdateBudgetMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, updates }: { id: string; updates: Partial<Budget> }) => {
+      const res = await fetch(`/api/budgets/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || 'Failed to update budget');
+      return json.data;
+    },
+    onSuccess: (_, variables) => {
+      const targetProject = variables.updates.projectId || projectId;
+      queryClient.invalidateQueries({ queryKey: queryKeys.budgets.byProject(targetProject) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(targetProject) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(targetProject) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(targetProject) });
+    },
+  });
+}
+
+export function useDeleteBudgetMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/budgets/${id}`, {
+        method: 'DELETE',
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || 'Failed to delete budget');
+      return json.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.budgets.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
+    },
+  });
+}
+
+export function useImportBudgetMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: any[]) => {
+      const res = await fetch('/api/budgets/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || 'Failed to import budgets');
+      return json;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.budgets.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(projectId) });

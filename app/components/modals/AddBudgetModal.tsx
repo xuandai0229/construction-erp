@@ -1,18 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
 import { CostType, costType_LABELS } from '@/app/types';
 import { useProjectsQuery } from '@/services/queries/useProjects';
 import { useWBSQuery } from '@/services/queries/useWBS';
-import { useCreateBudgetMutation } from '@/services/queries/useBudgets';
+import { useCreateBudgetMutation, useUpdateBudgetMutation } from '@/services/queries/useBudgets';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  editingBudget?: any;
 }
 
-export default function AddBudgetModal({ isOpen, onClose }: Props) {
+export default function AddBudgetModal({ isOpen, onClose, editingBudget }: Props) {
   const { currentProjectId, setCurrentProject } = useERPStore();
   
   const { data: paginatedData } = useProjectsQuery();
@@ -21,6 +22,7 @@ export default function AddBudgetModal({ isOpen, onClose }: Props) {
   const wbsItems = wbsData?.flat || [];
 
   const { mutateAsync: createBudget } = useCreateBudgetMutation(currentProjectId);
+  const { mutateAsync: updateBudget } = useUpdateBudgetMutation(currentProjectId);
 
   const [form, setForm] = useState({
     projectId: currentProjectId || projects[0]?.id || '',
@@ -30,6 +32,24 @@ export default function AddBudgetModal({ isOpen, onClose }: Props) {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (editingBudget && isOpen) {
+      setForm({
+        projectId: editingBudget.projectId || currentProjectId,
+        wbsId: editingBudget.wbsId || '',
+        costType: editingBudget.costType || 'material',
+        estimatedAmount: editingBudget.estimatedAmount ? String(editingBudget.estimatedAmount) : '',
+      });
+    } else if (isOpen) {
+      setForm({
+        projectId: currentProjectId || projects[0]?.id || '',
+        wbsId: '',
+        costType: 'material',
+        estimatedAmount: '',
+      });
+    }
+  }, [editingBudget, isOpen, currentProjectId, projects]);
 
   const filteredWbs = wbsItems.filter((w: any) =>
     form.projectId ? w.projectId === form.projectId : true
@@ -56,13 +76,23 @@ export default function AddBudgetModal({ isOpen, onClose }: Props) {
 
     setLoading(true);
     try {
-      await createBudget({
-        projectId: form.projectId,
-        wbsId: form.wbsId,
-        costType: form.costType,
-        estimatedAmount: amount,
-      });
-      setForm(prev => ({ ...prev, estimatedAmount: '', wbsId: '' }));
+      if (editingBudget) {
+        await updateBudget({
+          id: editingBudget.id,
+          updates: {
+            wbsId: form.wbsId,
+            costType: form.costType as any,
+            estimatedAmount: amount,
+          }
+        });
+      } else {
+        await createBudget({
+          projectId: form.projectId,
+          wbsId: form.wbsId,
+          costType: form.costType as any,
+          estimatedAmount: amount,
+        });
+      }
       onClose();
     } catch (err: any) {
       setError(err.message || 'Lỗi không xác định');

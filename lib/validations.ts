@@ -111,6 +111,9 @@ export const createBudgetSchema = z.object({
 
 export type CreateBudgetDTO = z.infer<typeof createBudgetSchema>;
 
+export const updateBudgetSchema = createBudgetSchema.partial().omit({ projectId: true });
+export type UpdateBudgetDTO = z.infer<typeof updateBudgetSchema>;
+
 // ─────────────────────────────────────────────
 // REVENUE
 // ─────────────────────────────────────────────

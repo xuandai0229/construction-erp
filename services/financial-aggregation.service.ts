@@ -11,7 +11,7 @@ import {
   MonthlyReportRow,
   KPIContract
 } from "@/app/types/financial";
-import { WBSItem, CostRecord, BudgetRecord } from "@/app/types";
+import { WBSItem, CostRecord, BudgetRecord, InvoiceRecord } from "@/app/types";
 import { Invoice } from "../generated/prisma-client";
 import { ApiError } from "@/lib/api-error";
 import { ProjectFinance } from "./finance/projectFinance";
@@ -525,45 +525,60 @@ export class FinancialAggregationService {
     const cacheKey = `wbs:${projectId}:aggregation`;
     const { CacheService } = require("./cache.service");
     return CacheService.wrap(cacheKey, async () => {
-      const [items, costs, budgets] = await Promise.all([
+      // SCALABLE AGGREGATION: Only select fields needed for tree calc to prevent memory freeze
+      const [items, costs, budgets, invoices] = await Promise.all([
         prisma.wBSItem.findMany({ where: { projectId, deletedAt: null }, orderBy: { sortOrder: 'asc' } }),
-        prisma.costRecord.findMany({ where: { projectId, deletedAt: null } }),
-        prisma.budgetRecord.findMany({ where: { projectId, deletedAt: null } })
+        prisma.costRecord.findMany({ 
+          where: { projectId, deletedAt: null },
+          select: { id: true, wbsId: true, amount: true, approvalStatus: true, workflowStatus: true }
+        }),
+        prisma.budgetRecord.findMany({ 
+          where: { projectId }, // Hard delete model
+          select: { id: true, wbsId: true, estimatedAmount: true }
+        }),
+        prisma.invoice.findMany({ 
+          where: { projectId, deletedAt: null, approvalStatus: { not: "REJECTED" } },
+          select: { id: true, wbsId: true, amount: true, approvalStatus: true, status: true }
+        })
       ]);
 
-      const wbsIds = new Set(items.map(i => i.id));
-      const approvedCosts = costs.filter(c => c.approvalStatus !== "REJECTED" && !["VOID", "REJECTED"].includes(c.workflowStatus));
+      const wbsIds = new Set(items.map((i: any) => i.id));
+      const approvedCosts = costs.filter((c: any) => c.approvalStatus !== "REJECTED" && !["VOID", "REJECTED"].includes(c.workflowStatus));
       
-      // Find Orphans (Costs not linked to active WBS)
-      const orphanCosts = approvedCosts.filter(c => !c.wbsId || !wbsIds.has(c.wbsId));
-      const orphanTotalD = orphanCosts.reduce((s, c) => s.add(safeDecimal(c.amount)), safeDecimal(0));
+      // Find Orphans (Costs AND Budgets not linked to active WBS)
+      const orphanCosts = approvedCosts.filter((c: any) => !c.wbsId || !wbsIds.has(c.wbsId));
+      const orphanBudgets = budgets.filter((b: any) => !b.wbsId || !wbsIds.has(b.wbsId));
 
-      // Initial Tree (using legacy ProjectFinance for rollup)
+      const orphanTotalCostD = orphanCosts.reduce((s: any, c: any) => s.add(safeDecimal(c.amount)), safeDecimal(0));
+      const orphanTotalBudgetD = orphanBudgets.reduce((s: any, b: any) => s.add(safeDecimal(b.estimatedAmount)), safeDecimal(0));
+
       const tree = ProjectFinance.calculateWBSTree(
         items as unknown as WBSItem[], 
         approvedCosts as unknown as CostRecord[], 
-        budgets as unknown as BudgetRecord[]
+        budgets as unknown as BudgetRecord[],
+        invoices as unknown as InvoiceRecord[],
+        [] 
       );
 
-      // Add Virtual Node if Orphans exist
-      if (orphanTotalD.gt(0)) {
+      // Add Virtual Node if Orphans exist (Cost OR Budget)
+      if (orphanTotalCostD.gt(0) || orphanTotalBudgetD.gt(0)) {
         tree.push({
           id: "virtual-unallocated",
-          name: "⚠️ CHI PHÍ CHƯA PHÂN BỔ (ORPHANS)",
+          name: "⚠️ DỮ LIỆU CHƯA PHÂN BỔ (ORPHANS)",
           code: "UNALLOC",
-          budget: 0,
-          actual: orphanTotalD.toNumber(),
-          variance: orphanTotalD.negated().toNumber(),
-          percentage: 100,
+          budget: orphanTotalBudgetD.toNumber(),
+          actual: orphanTotalCostD.toNumber(),
+          variance: orphanTotalBudgetD.sub(orphanTotalCostD).toNumber(),
+          percentage: safePercent(orphanTotalCostD, orphanTotalBudgetD),
           revenue: 0,
-          profit: orphanTotalD.negated().toNumber(),
-          status: 'over',
+          profit: orphanTotalCostD.negated().toNumber(),
+          status: orphanTotalCostD.gt(orphanTotalBudgetD) ? 'over' : 'normal',
           level: 0,
           children: [],
           isExpanded: true,
           projectId,
           sortOrder: 999,
-          budgetAmount: 0,
+          budgetAmount: orphanTotalBudgetD.toNumber(),
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           parentId: null
@@ -572,7 +587,6 @@ export class FinancialAggregationService {
 
       const approvedTotalD = approvedCosts.reduce((s, c) => s.add(safeDecimal(c.amount)), safeDecimal(0));
       
-      // Authoritative totals from tree roots
       const totalBudgetD = tree.filter(n => n.parentId === null).reduce((s, n) => s.add(safeDecimal(n.budget)), safeDecimal(0));
       const totalActualD = tree.filter(n => n.parentId === null).reduce((s, n) => s.add(safeDecimal(n.actual)), safeDecimal(0));
 
@@ -582,7 +596,7 @@ export class FinancialAggregationService {
           totalBudget: totalBudgetD.toNumber(),
           totalActual: totalActualD.toNumber(),
           totalApproved: approvedTotalD.toNumber(),
-          orphanTotal: orphanTotalD.toNumber(),
+          orphanTotal: orphanTotalCostD.toNumber(),
           healthScore: safePercent(approvedCosts.length - orphanCosts.length, approvedCosts.length),
           progress: safePercent(totalActualD, totalBudgetD)
         }
