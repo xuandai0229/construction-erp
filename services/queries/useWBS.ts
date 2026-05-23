@@ -28,6 +28,8 @@ export function useCreateWBSMutation(projectId: string) {
     onSuccess: (_, variables) => {
       const targetProject = variables.projectId || projectId;
       queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(targetProject) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.budgets.byProject(targetProject) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(targetProject) });
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(targetProject) });
     },
   });
@@ -45,6 +47,8 @@ export function useUpdateWBSMutation(projectId: string) {
     onSuccess: (_, variables) => {
       const targetProject = variables.updates.projectId || projectId;
       queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(targetProject) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.budgets.byProject(targetProject) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(targetProject) });
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(targetProject) });
     },
   });
@@ -65,6 +69,8 @@ export function useDeleteWBSMutation(projectId: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.budgets.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
     },
   });

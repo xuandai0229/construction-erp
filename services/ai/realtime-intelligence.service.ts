@@ -24,7 +24,7 @@ export class RealtimeIntelligenceService {
 
     try {
       // 1. Fetch denormalized project insights from CQRS read model
-      const insights: any = await CQRSQueryService.getProjectInsights(companyId, projectId);
+      const insights = await CQRSQueryService.getProjectInsights(companyId, projectId) as { totalCommittedCosts?: number; budgetVariance?: number } | null;
       
       // 2. Fetch project details
       const project = await prisma.project.findUnique({
@@ -95,12 +95,12 @@ export class RealtimeIntelligenceService {
       const modelId = `${companyId}:ANOMALY_SUMMARY:${projectId}`;
       await prisma.readModel.upsert({
         where: { id: modelId },
-        update: { data: report as any, version: { increment: 1 } },
+        update: { data: report as unknown as import("@prisma/client").Prisma.InputJsonValue, version: { increment: 1 } },
         create: {
           id: modelId,
           companyId,
           type: "ANOMALY_SUMMARY",
-          data: report as any,
+          data: report as unknown as import("@prisma/client").Prisma.InputJsonValue,
           version: 1
         }
       });

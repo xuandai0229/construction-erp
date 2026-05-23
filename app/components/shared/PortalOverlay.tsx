@@ -27,7 +27,7 @@ export default function PortalOverlay({
   zIndex = 300, // Default to dropdown layer
 }: PortalOverlayProps) {
   const [mounted, setMounted] = useState(false);
-  const [coords, setCoords] = useState({ top: 0, left: 0, transformOrigin: 'top left' });
+  const [coords, setCoords] = useState<{ top?: number; bottom?: number; left: number; transformOrigin: string } | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,7 +35,10 @@ export default function PortalOverlay({
   }, []);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      setCoords(null);
+      return;
+    }
 
     const calculatePosition = () => {
       // Use dynamic element if provided, otherwise fallback to static rect
@@ -44,11 +47,10 @@ export default function PortalOverlay({
 
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      const scrollY = window.scrollY;
-      const scrollX = window.scrollX;
 
       // Use fixed positioning relative to viewport to avoid scrolling bugs
-      let top = rect.bottom + 4; // 4px gap
+      let top: number | undefined = rect.bottom + 4; // 4px gap
+      let bottom: number | undefined = undefined;
       let left = align === 'left' 
         ? rect.left 
         : rect.right - width;
@@ -56,13 +58,14 @@ export default function PortalOverlay({
       let originY = 'top';
       let originX = align;
 
-      // Dropdown height approximation (max 320px)
-      const approxHeight = 320;
+      // Dropdown height approximation for threshold checks
+      const approxHeight = 160;
 
       // Viewport collision / Edge detection & flipping
       if (top + approxHeight > viewportHeight && rect.top > approxHeight) {
-        // Not enough space below, flip up
-        top = rect.top - approxHeight - 4;
+        // Not enough space below, flip up and anchor bottom edge to the top of trigger button
+        top = undefined;
+        bottom = viewportHeight - rect.top + 4;
         originY = 'bottom';
       }
 
@@ -80,20 +83,29 @@ export default function PortalOverlay({
 
       setCoords({
         top,
+        bottom,
         left,
         transformOrigin: `${originY} ${originX}`,
       });
     };
 
+    const handleScroll = (e: Event) => {
+      // Don't close if scrolling inside the overlay itself
+      if (overlayRef.current && overlayRef.current.contains(e.target as Node)) {
+        return;
+      }
+      onClose();
+    };
+
     calculatePosition();
     window.addEventListener('resize', calculatePosition);
-    window.addEventListener('scroll', calculatePosition, true);
+    window.addEventListener('scroll', handleScroll, true);
 
     return () => {
       window.removeEventListener('resize', calculatePosition);
-      window.removeEventListener('scroll', calculatePosition, true);
+      window.removeEventListener('scroll', handleScroll, true);
     };
-  }, [isOpen, triggerRect, anchorElement, align, width]);
+  }, [isOpen, triggerRect, anchorElement, align, width, onClose]);
 
   // Click outside to close
   useEffect(() => {
@@ -119,7 +131,7 @@ export default function PortalOverlay({
       clearTimeout(timeoutId);
       document.removeEventListener('mousedown', handleOutsideClick, true);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, anchorElement]);
 
   // Esc key to close
   useEffect(() => {
@@ -137,16 +149,17 @@ export default function PortalOverlay({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen || !mounted || (!triggerRect && !anchorElement)) return null;
+  if (!isOpen || !mounted || !coords) return null;
 
   return createPortal(
     <div
       ref={overlayRef}
       style={{
         position: 'fixed',
-        top: coords.top,
-        left: coords.left,
-        width,
+        top: coords.top !== undefined ? `${coords.top}px` : 'auto',
+        bottom: coords.bottom !== undefined ? `${coords.bottom}px` : 'auto',
+        left: `${coords.left}px`,
+        width: `${width}px`,
         transformOrigin: coords.transformOrigin,
         zIndex, // Controlled by Enterprise Architecture layers
       }}

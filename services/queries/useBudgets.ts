@@ -23,7 +23,7 @@ export function useCreateBudgetMutation(projectId: string) {
     mutationFn: async (data: Partial<Budget>) => {
       const res = await fetch('/api/budgets', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-user-id': 'admin' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
       const json = await res.json();
@@ -47,7 +47,7 @@ export function useUpdateBudgetMutation(projectId: string) {
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<Budget> }) => {
       const res = await fetch(`/api/budgets/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'x-user-id': 'admin' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates),
       });
       const json = await res.json();
@@ -71,7 +71,6 @@ export function useDeleteBudgetMutation(projectId: string) {
     mutationFn: async (id: string) => {
       const res = await fetch(`/api/budgets/${id}`, {
         method: 'DELETE',
-        headers: { 'x-user-id': 'admin' },
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.error || 'Failed to delete budget');

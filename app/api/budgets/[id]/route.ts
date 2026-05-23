@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+import { SessionManager } from "@/lib/session";
 import { handleApiError, successResponse, ApiError } from "@/lib/api-error";
 import { updateBudgetSchema } from "@/lib/validations";
 import { BudgetService } from "@/services/budget.service";
@@ -7,7 +9,10 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const userId = request.headers.get("x-user-id");
+    const cookieStore = await cookies();
+    const token = cookieStore.get("erp-session")?.value;
+    const session = SessionManager.verifySession(token || null);
+    const userId = session?.userId;
     if (!userId) throw new ApiError(401, "Authentication required");
 
     const { id } = await params;
@@ -26,7 +31,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const userId = request.headers.get("x-user-id");
+    const cookieStore = await cookies();
+    const token = cookieStore.get("erp-session")?.value;
+    const session = SessionManager.verifySession(token || null);
+    const userId = session?.userId;
     if (!userId) throw new ApiError(401, "Authentication required");
 
     const { id } = await params;

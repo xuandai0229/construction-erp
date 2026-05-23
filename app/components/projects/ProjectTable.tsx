@@ -114,7 +114,7 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
       <div className={`overflow-hidden bg-[var(--card)] rounded-xl border border-[var(--border)] shadow-sm relative`}>
         <div
           ref={scrollContainerRef}
-          className={`overflow-x-auto scrollbar-thin ${dragCursorClass}`}
+          className={`overflow-x-auto overflow-y-visible scrollbar-thin ${dragCursorClass}`}
           style={{ scrollBehavior: 'smooth' }}
         >
           {enrichedProjects.length === 0 ? (
@@ -133,6 +133,7 @@ export default function ProjectTable({ projects, onEdit, totalGlobal }: { projec
             <TableVirtuoso
               useWindowScroll
               data={enrichedProjects}
+              computeItemKey={(index, project) => project.id}
               components={{
                 Table: (props) => <table {...props} className="erp-table w-full table-fixed" />,
                 TableHead: (props) => <thead {...props} className="bg-[var(--table-head-bg)] z-[200] sticky top-0" />,

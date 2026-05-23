@@ -2,7 +2,7 @@
 
 import { EnrichedWBSNode, WBSItem } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import ConfirmModal from '@/app/components/modals/ConfirmModal';
 import PortalOverlay from '@/app/components/shared/PortalOverlay';
 
@@ -13,8 +13,11 @@ import { COL_WIDTHS, FINANCIAL_CELL_CLASS, ERP_TERMINOLOGY } from '@/app/utils/t
 
 // Stable references to prevent re-render loops with TableVirtuoso
 const WBSStableTableComponents = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Table: (props: any) => <table {...props} className="erp-table w-full min-w-max table-fixed" />,
-  TableHead: (props: any) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TableHead: (props: any) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-0" />,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TableRow: (props: any) => {
     const node = props.item as FlattenedNode;
     const isParent = node.children && node.children.length > 0;
@@ -58,16 +61,20 @@ const WBSActionMenu = ({ node, onEdit, onAddChild, onDelete }: { node: Flattened
   const [isOpen, setIsOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    setAnchorEl(e.currentTarget);
-    setIsOpen(true);
+    if (isOpen) {
+      setIsOpen(false);
+    } else {
+      setAnchorEl(e.currentTarget);
+      setIsOpen(true);
+    }
   };
 
   return (
     <>
       <button 
-        onClick={handleOpen}
+        onClick={handleToggle}
         className="flex h-7 w-7 items-center justify-center rounded border border-transparent hover:bg-[var(--secondary)] text-[var(--text-secondary)] transition-colors mx-auto"
       >
         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
@@ -132,8 +139,9 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
     try {
       await deleteWBS(confirmAction.id);
       setConfirmAction(null);
-    } catch (err: any) {
-      alert(err.message || "Lỗi khi xóa hạng mục");
+    } catch (err: unknown) {
+      const error = err as Error;
+      alert(error.message || "Lỗi khi xóa hạng mục");
       setConfirmAction(null);
     } finally {
       setIsDeleting(false);
@@ -177,7 +185,8 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
       <div className="scroll-hint-container">
         <div
           ref={scrollContainerRef}
-          className={`overflow-x-auto scrollbar-thin border border-[var(--border)] rounded-lg ${dragCursorClass} relative`}
+          className={`overflow-auto scrollbar-thin border border-[var(--border)] rounded-lg ${dragCursorClass} relative`}
+          style={{ height: 'calc(100vh - 290px)' }}
         >
           {/* Gradient fade hint - subtle theme-aware style */}
           {showScrollHint && (
@@ -194,22 +203,22 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
             </div>
           ) : (
             <TableVirtuoso
-              useWindowScroll
               data={flattenedNodes}
+              computeItemKey={(index, node) => node.id}
               components={WBSStableTableComponents}
               fixedHeaderContent={() => (
                 <tr>
-                  <th className={`${COL_WIDTHS.CHECKBOX} text-center bg-[var(--table-head-bg)] border-r border-[var(--border)]`}>
+                  <th className={`sticky top-0 z-10 ${COL_WIDTHS.CHECKBOX} text-center bg-[var(--table-head-bg)] border-r border-[var(--border)]`}>
                     <input type="checkbox" className="rounded border-[var(--border)] bg-[var(--secondary)] text-blue-600 focus:ring-blue-500/20 focus:ring-offset-0" />
                   </th>
-                  <th className={`${COL_WIDTHS.INDEX} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>Mã WBS</th>
-                  <th className={`${COL_WIDTHS.NAME_WBS} bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] text-left px-4 border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.WBS.COL_NAME}</th>
-                  <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.BUDGET}</th>
-                  <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.ACTUAL}</th>
-                  <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.VARIANCE}</th>
-                  <th className={`${COL_WIDTHS.PROGRESS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>Tiến độ %</th>
-                  <th className={`${COL_WIDTHS.STATUS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.STATUS.TITLE}</th>
-                  <th className={`${COL_WIDTHS.ACTIONS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)]`}>{ERP_TERMINOLOGY.ACTIONS.TITLE}</th>
+                  <th className={`sticky top-0 z-10 ${COL_WIDTHS.INDEX} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>Mã WBS</th>
+                  <th className={`sticky top-0 z-10 ${COL_WIDTHS.NAME_WBS} bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] text-left px-4 border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.WBS.COL_NAME}</th>
+                  <th className={`sticky top-0 z-10 ${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.BUDGET}</th>
+                  <th className={`sticky top-0 z-10 ${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.ACTUAL}</th>
+                  <th className={`sticky top-0 z-10 ${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.FINANCE.VARIANCE}</th>
+                  <th className={`sticky top-0 z-10 ${COL_WIDTHS.PROGRESS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>Tiến độ %</th>
+                  <th className={`sticky top-0 z-10 ${COL_WIDTHS.STATUS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)] border-r border-[var(--border)]`}>{ERP_TERMINOLOGY.STATUS.TITLE}</th>
+                  <th className={`sticky top-0 z-10 ${COL_WIDTHS.ACTIONS} text-center bg-[var(--table-head-bg)] whitespace-nowrap uppercase text-[10px] tracking-widest text-[var(--text-secondary)]`}>{ERP_TERMINOLOGY.ACTIONS.TITLE}</th>
                 </tr>
               )}
               itemContent={(i, node) => {

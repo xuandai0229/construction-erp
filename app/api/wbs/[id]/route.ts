@@ -1,4 +1,5 @@
-import { headers } from "next/headers";
+import { cookies } from "next/headers";
+import { SessionManager } from "@/lib/session";
 import { handleApiError, successResponse, ApiError } from "@/lib/api-error";
 import { z } from "zod";
 import { WBSService } from "@/services/wbs.service";
@@ -14,8 +15,14 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const headersList = await headers();
-    const userId = headersList.get("x-user-id") || undefined;
+    const cookieStore = await cookies();
+    const token = cookieStore.get("erp-session")?.value;
+    const session = SessionManager.verifySession(token || null);
+    const userId = session?.userId;
+    
+    if (!userId) {
+      return handleApiError(new ApiError(401, "Authentication required"));
+    }
 
     const { id } = await params;
     const body = await request.json();
@@ -33,8 +40,14 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const headersList = await headers();
-    const userId = headersList.get("x-user-id") || undefined;
+    const cookieStore = await cookies();
+    const token = cookieStore.get("erp-session")?.value;
+    const session = SessionManager.verifySession(token || null);
+    const userId = session?.userId;
+    
+    if (!userId) {
+      return handleApiError(new ApiError(401, "Authentication required"));
+    }
 
     const { id } = await params;
     // Bắt buộc gọi qua Service để kiểm tra ràng buộc tài chính, orphans, cấp con.

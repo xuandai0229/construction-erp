@@ -142,7 +142,7 @@ export default function WBSListScreen() {
                 progress={stats.progress}
               />
               <WBSActions onAdd={() => { setInitialParentId(null); setIsAddingWBS(true); }} onExport={handleExport} onSearch={setSearchTerm} />
-              <div className="card-elevation overflow-hidden border border-[var(--border)] rounded-lg">
+              <div className="card-elevation overflow-visible border border-[var(--border)] rounded-lg">
                 <WBSTable
                   nodes={tree}
                   onToggleExpand={handleToggleExpand}

@@ -54,8 +54,8 @@ export class CostService {
     const retentionRateD = safeDecimal(data.retentionRate || 0);
 
     // If netAmount is provided, use it as the base. Otherwise, back-calculate from total amount.
-    let netAmountD = data.netAmount ? safeDecimal(data.netAmount) : amountD.div(vatRateD.div(100).add(1));
-    let vatAmountD = data.vatAmount ? safeDecimal(data.vatAmount) : amountD.sub(netAmountD);
+    const netAmountD = data.netAmount ? safeDecimal(data.netAmount) : amountD.div(vatRateD.div(100).add(1));
+    const vatAmountD = data.vatAmount ? safeDecimal(data.vatAmount) : amountD.sub(netAmountD);
     
     // Final Reconciliation: amount = net + vat (to prevent rounding drift)
     const finalAmountD = netAmountD.add(vatAmountD);
@@ -98,9 +98,9 @@ export class CostService {
         }
 
         // 3-Way Matching Logic
-        if ((data as any).purchaseOrderId) {
+        if ((data as { purchaseOrderId?: string }).purchaseOrderId) {
           const po = await tx.purchaseOrder.findUnique({
-            where: { id: (data as any).purchaseOrderId },
+            where: { id: (data as { purchaseOrderId?: string }).purchaseOrderId },
             include: { items: true, goodsReceipts: true }
           });
           
@@ -143,7 +143,7 @@ export class CostService {
             note: data.note,
             date: data.date ? new Date(data.date) : new Date(),
             status: data.status,
-            purchaseOrderId: (data as any).purchaseOrderId,
+            purchaseOrderId: (data as { purchaseOrderId?: string }).purchaseOrderId,
             createdById: userId || data.createdById,
             companyId: project.companyId, // Enforce tenant propagation
             branchId: project.branchId, // Enforce branch propagation
@@ -169,8 +169,8 @@ export class CostService {
       });
 
       // Run heavy aggregation and outbox event publishing OUTSIDE transaction to prevent deadlock & escalation locks
-      const { ProjectService } = require("./project.service");
-      ProjectService.getAccountingSummary(item.projectId).catch((e: any) => {
+      const { ProjectService } = await import("./project.service");
+      ProjectService.getAccountingSummary(item.projectId).catch((e: unknown) => {
         LoggerService.error("Failed to sync project stats after cost create", { error: e });
       });
 
@@ -183,8 +183,9 @@ export class CostService {
       });
 
       return item;
-    } catch (error: any) {
-      if (error.code === 'P2002' && error.meta?.target?.includes('requestId')) {
+    } catch (error: unknown) {
+      const err = error as { code?: string; meta?: { target?: string[] } };
+      if (err.code === 'P2002' && err.meta?.target?.includes('requestId')) {
         const existing = await prisma.costRecord.findUnique({ where: { requestId } });
         if (existing) return existing;
         throw new DuplicateRequestError();
@@ -275,8 +276,8 @@ export class CostService {
     });
 
     // Run heavy aggregation OUTSIDE transaction to prevent deadlock & escalation locks
-    const { ProjectService } = require("./project.service");
-    ProjectService.getAccountingSummary(existing.projectId).catch((e: any) => {
+    const { ProjectService } = await import("./project.service");
+    ProjectService.getAccountingSummary(existing.projectId).catch((e: unknown) => {
       LoggerService.error("Failed to sync project stats after cost delete", { error: e });
     });
 
@@ -299,7 +300,7 @@ export class CostService {
     if (userId && userId !== "system_internal_admin") {
       const user = await prisma.user.findUnique({ where: { id: userId } });
       if (user) {
-        const { RBAC } = require("@/lib/rbac");
+        const { RBAC } = await import("@/lib/rbac");
         
         // Segregation of Duties (SoD): Creator cannot approve or post their own transactions
         if (nextStatus === "APPROVED" || nextStatus === "POSTED") {
@@ -307,7 +308,7 @@ export class CostService {
         }
 
         // Action-level permission check
-        let action: any = "UPDATE";
+        let action: "UPDATE" | "APPROVE" | "POST" | "REVERSE" = "UPDATE";
         if (nextStatus === "APPROVED") action = "APPROVE";
         else if (nextStatus === "POSTED") action = "POST";
         else if (nextStatus === "REVERSED") action = "REVERSE";
@@ -385,7 +386,7 @@ export class CostService {
     return item;
   }
 
-  static async findByProject(projectId: string, filters: any = {}, companyId?: string | null) {
+  static async findByProject(projectId: string, filters: { costType?: string; status?: string; startDate?: string; endDate?: string; limit?: number; skip?: number } = {}, companyId?: string | null) {
     const { costType, status, startDate, endDate, limit, skip } = filters;
     
     return prisma.costRecord.findMany({
@@ -393,8 +394,8 @@ export class CostService {
         projectId,
         deletedAt: null,
         ...(companyId && { companyId }), // Enforce tenant isolation
-        ...(costType && { costType }),
-        ...(status && { status }),
+        ...(costType && { costType: costType as import("../generated/prisma-client").CostType }),
+        ...(status && { status: status as import("../generated/prisma-client").PaymentStatus }),
         ...(startDate && endDate && {
           date: {
             gte: new Date(startDate),

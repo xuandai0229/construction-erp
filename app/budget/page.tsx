@@ -16,6 +16,7 @@ import { useBudgetsQuery, useDeleteBudgetMutation, useImportBudgetMutation } fro
 import { useCostsQuery } from '@/services/queries/useCosts';
 import { useWBSQuery } from '@/services/queries/useWBS';
 import { exportToCsv } from '@/app/services/export.service';
+import { useTableUX } from '@/app/hooks/useTableUX';
 
 const COST_TYPE_LABELS: Record<string, string> = {
   material: 'Vật tư',
@@ -30,16 +31,20 @@ const WBSActionMenu = ({ wbsId, onAdd }: { wbsId: string, onAdd: (wbsId: string)
   const [isOpen, setIsOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    setAnchorEl(e.currentTarget);
-    setIsOpen(true);
+    if (isOpen) {
+      setIsOpen(false);
+    } else {
+      setAnchorEl(e.currentTarget);
+      setIsOpen(true);
+    }
   };
 
   return (
     <>
       <button 
-        onClick={handleOpen}
+        onClick={handleToggle}
         className="flex h-7 w-7 items-center justify-center rounded border border-transparent hover:bg-[var(--secondary)] text-[var(--text-secondary)] transition-colors mx-auto"
       >
         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
@@ -64,16 +69,20 @@ const BudgetRecordActionMenu = ({ budget, onEdit, onDelete }: { budget: any, onE
   const [isOpen, setIsOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    setAnchorEl(e.currentTarget);
-    setIsOpen(true);
+    if (isOpen) {
+      setIsOpen(false);
+    } else {
+      setAnchorEl(e.currentTarget);
+      setIsOpen(true);
+    }
   };
 
   return (
     <>
       <button 
-        onClick={handleOpen}
+        onClick={handleToggle}
         className="flex h-7 w-7 items-center justify-center rounded border border-transparent hover:bg-[var(--secondary)] text-[var(--text-secondary)] transition-colors mx-auto"
       >
         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
@@ -121,6 +130,8 @@ export default function BudgetPage() {
   
   const { mutateAsync: deleteBudget } = useDeleteBudgetMutation(currentProjectId);
   const { mutateAsync: importBudgets } = useImportBudgetMutation(currentProjectId);
+
+  const { scrollContainerRef, showScrollHint, dragCursorClass } = useTableUX();
 
   const costs = Array.isArray(costsData) ? costsData.filter((c: any) => c.approvalStatus === "APPROVED") : [];
 
@@ -217,7 +228,7 @@ export default function BudgetPage() {
         }
       };
       reader.readAsText(file);
-    } catch (_err) {
+    } catch {
       alert('Lỗi import');
     } finally {
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -227,6 +238,22 @@ export default function BudgetPage() {
   // UI Expanded state for tree rows
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
   const toggleRow = (id: string) => setExpandedRows(p => ({ ...p, [id]: !p[id] }));
+
+  const flattenedNodes = useMemo(() => {
+    const flatten = (nodes: any[], indexPrefix: string = ''): any[] => {
+      let result: any[] = [];
+      nodes.forEach((node, idx) => {
+        const currentIndex = indexPrefix ? `${indexPrefix}.${idx + 1}` : `${idx + 1}`;
+        const isExpanded = expandedRows[node.id] !== false; // default true
+        result.push({ ...node, rowIndex: currentIndex, isExpanded });
+        if (isExpanded && node.children && node.children.length > 0) {
+          result = result.concat(flatten(node.children, currentIndex));
+        }
+      });
+      return result;
+    };
+    return flatten(filteredTree);
+  }, [filteredTree, expandedRows]);
 
   return (
     <div className="erp-page">
@@ -383,17 +410,26 @@ export default function BudgetPage() {
               </div>
             </div>
 
-            <div className="card-elevation overflow-hidden border border-[var(--border)] rounded-xl">
-              <table className="erp-table w-full table-fixed min-w-max">
-                <thead className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]">
+            <div className="scroll-hint-container relative">
+              <div ref={scrollContainerRef} className={`card-elevation overflow-auto border border-[var(--border)] rounded-xl scrollbar-thin ${dragCursorClass}`} style={{ height: 'calc(100vh - 290px)' }}>
+                {showScrollHint && (
+                  <div className="absolute right-0 top-0 bottom-0 w-12 pointer-events-none z-20"
+                    style={{
+                      background: 'linear-gradient(to left, var(--card) 0%, transparent 100%)',
+                      opacity: 0.9
+                    }}
+                  />
+                )}
+                <table className="erp-table w-full table-fixed min-w-max">
+                  <thead className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-0">
                   <tr>
-                    <th className={`${COL_WIDTHS.INDEX} text-center uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>Mở</th>
-                    <th className={`${COL_WIDTHS.NAME_WBS} text-left px-4 uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>Cấu trúc hạng mục (WBS) / Phân rã (CBS)</th>
-                    <th className={`${COL_WIDTHS.FINANCIAL} text-right uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>Dự toán</th>
-                    <th className={`${COL_WIDTHS.FINANCIAL} text-right uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>Thực tế</th>
-                    <th className={`${COL_WIDTHS.FINANCIAL} text-right uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>Chênh lệch</th>
-                    <th className={`${COL_WIDTHS.STATUS} text-center uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)]`}>Trạng thái</th>
-                    <th className={`${COL_WIDTHS.ACTIONS} text-center uppercase text-[10px] tracking-widest text-[var(--text-muted)]`}>Thao tác</th>
+                    <th className={`sticky top-0 z-10 ${COL_WIDTHS.INDEX} text-center uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)] bg-[var(--table-head-bg)]`}>Mở</th>
+                    <th className={`sticky top-0 z-10 ${COL_WIDTHS.NAME_WBS} text-left px-4 uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)] bg-[var(--table-head-bg)]`}>Cấu trúc hạng mục (WBS) / Phân rã (CBS)</th>
+                    <th className={`sticky top-0 z-10 ${COL_WIDTHS.FINANCIAL} text-right uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)] bg-[var(--table-head-bg)]`}>Dự toán</th>
+                    <th className={`sticky top-0 z-10 ${COL_WIDTHS.FINANCIAL} text-right uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)] bg-[var(--table-head-bg)]`}>Thực tế</th>
+                    <th className={`sticky top-0 z-10 ${COL_WIDTHS.FINANCIAL} text-right uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)] bg-[var(--table-head-bg)]`}>Chênh lệch</th>
+                    <th className={`sticky top-0 z-10 ${COL_WIDTHS.STATUS} text-center uppercase text-[10px] tracking-widest text-[var(--text-muted)] border-r border-[var(--border)] bg-[var(--table-head-bg)]`}>Trạng thái</th>
+                    <th className={`sticky top-0 z-10 ${COL_WIDTHS.ACTIONS} text-center uppercase text-[10px] tracking-widest text-[var(--text-muted)] bg-[var(--table-head-bg)]`}>Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -404,23 +440,7 @@ export default function BudgetPage() {
                       </td>
                     </tr>
                   ) : (
-                    (() => {
-                      const flattenWBS = (nodes: any[], indexPrefix: string = ''): any[] => {
-                        let result: any[] = [];
-                        nodes.forEach((node, idx) => {
-                          const currentIndex = indexPrefix ? `${indexPrefix}.${idx + 1}` : `${idx + 1}`;
-                          const isExpanded = expandedRows[node.id] !== false; // default true
-                          result.push({ ...node, rowIndex: currentIndex, isExpanded });
-                          if (isExpanded && node.children && node.children.length > 0) {
-                            result = result.concat(flattenWBS(node.children, currentIndex));
-                          }
-                        });
-                        return result;
-                      };
-
-                      const flattenedNodes = flattenWBS(filteredTree);
-
-                      return flattenedNodes.map((item: any) => {
+                    flattenedNodes.map((item: any) => {
                         const wbsBudgets = budgets.filter((b: any) => b.wbsId === item.id);
                         const isExpanded = item.isExpanded;
                         const hasWbsChildren = item.children && item.children.length > 0;
@@ -429,7 +449,6 @@ export default function BudgetPage() {
 
                         return (
                           <React.Fragment key={item.id}>
-                          {/* LEVEL 1: WBS NODE ROW */}
                           <tr className={`transition-colors border-b border-[var(--border)] hover:bg-[var(--secondary)] select-none ${hasAnyChildren ? 'bg-[var(--card)]' : 'bg-[var(--secondary)]/10'}`}>
                             <td className={`${COL_WIDTHS.INDEX} px-4 py-3 text-center text-[12px] font-bold text-[var(--text-accent)] border-r border-[var(--border)] bg-[var(--accent)]`}>
                               {item.rowIndex}
@@ -474,8 +493,7 @@ export default function BudgetPage() {
                             </td>
                           </tr>
                           
-                          {/* LEVEL 2: CBS (COST BREAKDOWN STRUCTURE) ROWS */}
-                          {isExpanded && Array.from(
+                          {isExpanded ? Array.from(
                             wbsBudgets.reduce((acc: Map<string, any>, b: any) => {
                               if (acc.has(b.costType)) {
                                 acc.get(b.costType).estimatedAmount += Number(b.estimatedAmount);
@@ -485,7 +503,7 @@ export default function BudgetPage() {
                               return acc;
                             }, new Map()).values()
                           ).map((budget: any) => (
-                            <tr key={budget.id} className="bg-[var(--secondary)]/10 hover:bg-[var(--secondary)] select-none transition-colors border-b border-dashed border-[var(--border)]/30">
+                            <tr key={`${item.id}-${budget.costType}`} className="bg-[var(--secondary)]/10 hover:bg-[var(--secondary)] select-none transition-colors border-b border-dashed border-[var(--border)]/30">
                               <td className="border-r border-[var(--border)]"></td>
                               <td className="px-4 py-2.5 border-r border-[var(--border)]">
                                 <div className="flex items-center gap-2" style={{ paddingLeft: `calc(1rem + ${(item.level + 1) * 24}px)` }}>
@@ -495,20 +513,19 @@ export default function BudgetPage() {
                                     {COST_TYPE_LABELS[budget.costType] || budget.costType}
                                   </span>
                                 </div>
-                              </td>
-                              <td className="text-right font-bold tabular-nums text-[var(--text-primary)] border-r border-[var(--border)] px-4 text-[12px]">{formatVnd(budget.estimatedAmount)}</td>
-                              <td className="border-r border-[var(--border)] bg-[var(--table-head-bg)]/20"></td>
-                              <td className="border-r border-[var(--border)] bg-[var(--table-head-bg)]/20"></td>
-                              <td className="border-r border-[var(--border)] bg-[var(--table-head-bg)]/20"></td>
-                              <td className="text-center">
-                                <BudgetRecordActionMenu budget={budget} onEdit={handleEdit} onDelete={setDeletingBudget} />
-                              </td>
-                            </tr>
-                          ))}
-                        </React.Fragment>
-                      );
-                    });
-                  })() )}
+                                </td>
+                                <td className="text-right font-bold tabular-nums text-[var(--text-primary)] border-r border-[var(--border)] px-4 text-[12px]">{formatVnd(budget.estimatedAmount)}</td>
+                                <td className="border-r border-[var(--border)] bg-[var(--table-head-bg)]/20"></td>
+                                <td className="border-r border-[var(--border)] bg-[var(--table-head-bg)]/20"></td>
+                                <td className="border-r border-[var(--border)] bg-[var(--table-head-bg)]/20"></td>
+                                <td className="text-center">
+                                  <BudgetRecordActionMenu budget={budget} onEdit={handleEdit} onDelete={setDeletingBudget} />
+                                </td>
+                              </tr>
+                            )) : null}
+                          </React.Fragment>
+                        );
+                      }) )}
                 </tbody>
                 <tfoot className="border-t-2 border-[var(--border)] bg-[var(--secondary)]/40 font-black">
                   <tr>
@@ -522,6 +539,7 @@ export default function BudgetPage() {
                   </tr>
                 </tfoot>
               </table>
+              </div>
             </div>
           </section>
         </div>

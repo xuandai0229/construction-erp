@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+import { SessionManager } from "@/lib/session";
 import { handleApiError, successResponse, ApiError } from "@/lib/api-error";
 import { createBudgetSchema } from "@/lib/validations";
 import { BudgetService } from "@/services/budget.service";
@@ -12,6 +14,7 @@ export async function GET(request: Request) {
 
     const items = await BudgetService.findByProject(projectId);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mapped = items.map((b: any) => ({
       id: b.id,
       projectId: b.projectId,
@@ -29,7 +32,10 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const userId = request.headers.get("x-user-id");
+    const cookieStore = await cookies();
+    const token = cookieStore.get("erp-session")?.value;
+    const session = SessionManager.verifySession(token || null);
+    const userId = session?.userId;
     if (!userId) throw new ApiError(401, "Authentication required");
 
     const body = await request.json();

@@ -1,17 +1,14 @@
 import { prisma } from "@/lib/prisma";
-import { round, safeMoney, safeDivide, safePercent, safeDecimal } from "@/lib/math";
+import { round, safePercent, safeDecimal } from "@/lib/math";
 import { 
   ProjectFinancialSnapshot, 
-  AggregationStatus,
   IntelligenceSnapshot,
   OperationalMetrics,
-  EnhancedFinancialAnomaly,
   WBSAggregationResult,
   AgingBucket,
-  MonthlyReportRow,
-  KPIContract
+  MonthlyReportRow
 } from "@/app/types/financial";
-import { WBSItem, CostRecord, BudgetRecord, InvoiceRecord } from "@/app/types";
+import { WBSItem, CostRecord, BudgetRecord, InvoiceRecord, EnrichedWBSNode } from "@/app/types";
 import { Invoice } from "../generated/prisma-client";
 import { ApiError } from "@/lib/api-error";
 import { ProjectFinance } from "./finance/projectFinance";
@@ -52,22 +49,21 @@ export class FinancialAggregationService {
    */
   static async getProjectSnapshot(projectId: string): Promise<ProjectFinancialSnapshot> {
     const cacheKey = `aggregation:${projectId}:snapshot`;
-    const { CacheService } = require("./cache.service");
+    const { CacheService } = await import("./cache.service");
     return CacheService.wrap(cacheKey, () => this.rebuildProjectSnapshot(projectId), 15000);
   }
 
   static async rebuildProjectSnapshot(projectId: string): Promise<ProjectFinancialSnapshot> {
     const startTime = Date.now();
-    const [costs, invoices, budgets, project] = await Promise.all([
+    const [costs, invoices, project] = await Promise.all([
       prisma.costRecord.findMany({ where: { projectId, deletedAt: null } }),
       prisma.invoice.findMany({ where: { projectId, deletedAt: null } }),
-      prisma.budgetRecord.findMany({ where: { projectId, deletedAt: null } }),
       prisma.project.findUnique({ where: { id: projectId } })
     ]);
 
     if (!project) {
-      const { ApiError } = require("@/lib/api-error");
-      throw new ApiError(404, "Không tìm thấy dự án");
+      const { ApiError: DynamicApiError } = await import("@/lib/api-error");
+      throw new DynamicApiError(404, "Không tìm thấy dự án");
     }
 
     // KPI CONTRACT: COST_ACT (Accounting Reality)
@@ -134,7 +130,7 @@ export class FinancialAggregationService {
    */
   static async getIntelligenceSnapshot(projectId: string): Promise<IntelligenceSnapshot> {
     const cacheKey = `aggregation:${projectId}:intelligence`;
-    const { CacheService } = require("./cache.service");
+    const { CacheService } = await import("./cache.service");
     return CacheService.wrap(cacheKey, async () => {
       const startTime = Date.now();
       
@@ -142,7 +138,7 @@ export class FinancialAggregationService {
       const snapshot = await this.getProjectSnapshot(projectId);
       
       // 2. Fetch Operational Context
-      const eventModel = (prisma as any).domainEvent;
+      const eventModel = (prisma as unknown as Record<string, { count: (args: unknown) => Promise<number>, findMany: (args: unknown) => Promise<unknown[]> }>).domainEvent;
       const [costs, invoices, pendingEvents, failedEvents] = await Promise.all([
         prisma.costRecord.findMany({ where: { projectId, deletedAt: null } }),
         prisma.invoice.findMany({ where: { projectId, deletedAt: null } }),
@@ -162,8 +158,8 @@ export class FinancialAggregationService {
       };
 
       // 4. Run Decision Intelligence Engine
-      const anomalies = FinancialIntelligenceService.detectAnomalies(snapshot, costs as any, invoices as any);
-      const insights = FinancialIntelligenceService.generateInsights(snapshot, costs as any);
+      const anomalies = FinancialIntelligenceService.detectAnomalies(snapshot, costs as unknown as CostRecord[], invoices as unknown as Invoice[]);
+      const insights = FinancialIntelligenceService.generateInsights(snapshot, costs as unknown as CostRecord[]);
       const health = FinancialIntelligenceService.calculateHealthScore(snapshot, operational, anomalies);
       const trends = FinancialIntelligenceService.generateTrends(snapshot);
 
@@ -183,7 +179,7 @@ export class FinancialAggregationService {
    * Fetches the chronological history of financial events, adjustments, and anomalies.
    */
   static async getOperationalTimeline(projectId: string, limit = 20) {
-    const eventModel = (prisma as any).domainEvent;
+    const eventModel = (prisma as unknown as Record<string, { findMany: (args: unknown) => Promise<unknown[]> }>).domainEvent;
     const [auditLogs, domainEvents] = await Promise.all([
       prisma.auditLog.findMany({
         where: { entity: { in: ["CostRecord", "Invoice", "BudgetRecord", "FiscalPeriod"] }, ...(projectId && { entityId: projectId }) },
@@ -198,22 +194,28 @@ export class FinancialAggregationService {
     ]);
 
     const timeline = [
-      ...auditLogs.map((a: any) => ({
-        id: a.id,
-        type: 'AUDIT',
-        action: a.action,
-        timestamp: a.timestamp,
-        message: `${a.action} on ${a.entity}`,
-        user: a.userId
-      })),
-      ...domainEvents.map((e: any) => ({
-        id: e.id,
-        type: 'EVENT',
-        action: e.type,
-        timestamp: e.timestamp,
-        message: `System Event: ${e.type}`,
-        status: e.status
-      }))
+      ...auditLogs.map((a: unknown) => {
+        const al = a as { id: string; action: string; timestamp: Date; entity: string; userId: string };
+        return {
+          id: al.id,
+          type: 'AUDIT',
+          action: al.action,
+          timestamp: al.timestamp,
+          message: `${al.action} on ${al.entity}`,
+          user: al.userId
+        };
+      }),
+      ...domainEvents.map((e: unknown) => {
+        const ev = e as { id: string; type: string; timestamp: Date; status: string };
+        return {
+          id: ev.id,
+          type: 'EVENT',
+          action: ev.type,
+          timestamp: ev.timestamp,
+          message: `System Event: ${ev.type}`,
+          status: ev.status
+        };
+      })
     ].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
 
     return timeline.slice(0, limit);
@@ -238,12 +240,12 @@ export class FinancialAggregationService {
       try {
         // Here we would re-trigger the listeners or perform idempotent actions
         // For now, our listeners only invalidate caches, which is safe to repeat.
-        const { initializeFinancialListeners } = require('./finance/financial-event-listener');
+        await import('./finance/financial-event-listener');
         // This is a bit tricky because the bus is in-memory. 
         // We can manually trigger the specific invalidation logic.
         
         if (event.projectId) {
-          const { CacheService } = require('./cache.service');
+          const { CacheService } = await import('./cache.service');
           await CacheService.invalidatePrefix(`reporting:${event.projectId}`);
           await CacheService.invalidatePrefix(`aggregation:${event.projectId}`);
         }
@@ -255,13 +257,14 @@ export class FinancialAggregationService {
             processedAt: new Date() 
           }
         });
-      } catch (err: any) {
-        console.error(`[EventSync] Failed to process event ${event.id}:`, err);
+      } catch (err: unknown) {
+        const error = err as Error;
+        console.error(`[EventSync] Failed to process event ${event.id}:`, error);
         await prisma.domainEvent.update({
           where: { id: event.id },
           data: { 
             status: "FAILED", 
-            error: err?.message 
+            error: error?.message 
           }
         });
       }
@@ -374,7 +377,8 @@ export class FinancialAggregationService {
       prisma.payment.findMany({ where: { projectId, deletedAt: null, approvalStatus: { not: "REJECTED" } } }),
     ]);
 
-    const months: Record<string, any> = {};
+    type SafeDecimalType = ReturnType<typeof safeDecimal>;
+    const months: Record<string, { month: string; cashIn: SafeDecimalType; cashOut: SafeDecimalType; revenue: SafeDecimalType; cost: SafeDecimalType }> = {};
 
     const getMonth = (date: Date) => {
       const d = new Date(date);
@@ -523,7 +527,7 @@ export class FinancialAggregationService {
    */
   static async getWBSAggregation(projectId: string): Promise<WBSAggregationResult> {
     const cacheKey = `wbs:${projectId}:aggregation`;
-    const { CacheService } = require("./cache.service");
+    const { CacheService } = await import("./cache.service");
     return CacheService.wrap(cacheKey, async () => {
       // SCALABLE AGGREGATION: Only select fields needed for tree calc to prevent memory freeze
       const [items, costs, budgets, invoices] = await Promise.all([
@@ -542,15 +546,15 @@ export class FinancialAggregationService {
         })
       ]);
 
-      const wbsIds = new Set(items.map((i: any) => i.id));
-      const approvedCosts = costs.filter((c: any) => c.approvalStatus !== "REJECTED" && !["VOID", "REJECTED"].includes(c.workflowStatus));
+      const wbsIds = new Set(items.map((i) => i.id));
+      const approvedCosts = costs.filter((c) => c.approvalStatus !== "REJECTED" && !["VOID", "REJECTED"].includes(c.workflowStatus || ""));
       
       // Find Orphans (Costs AND Budgets not linked to active WBS)
-      const orphanCosts = approvedCosts.filter((c: any) => !c.wbsId || !wbsIds.has(c.wbsId));
-      const orphanBudgets = budgets.filter((b: any) => !b.wbsId || !wbsIds.has(b.wbsId));
+      const orphanCosts = approvedCosts.filter((c) => !c.wbsId || !wbsIds.has(c.wbsId));
+      const orphanBudgets = budgets.filter((b) => !b.wbsId || !wbsIds.has(b.wbsId));
 
-      const orphanTotalCostD = orphanCosts.reduce((s: any, c: any) => s.add(safeDecimal(c.amount)), safeDecimal(0));
-      const orphanTotalBudgetD = orphanBudgets.reduce((s: any, b: any) => s.add(safeDecimal(b.estimatedAmount)), safeDecimal(0));
+      const orphanTotalCostD = orphanCosts.reduce((s, c) => s.add(safeDecimal(c.amount)), safeDecimal(0));
+      const orphanTotalBudgetD = orphanBudgets.reduce((s, b) => s.add(safeDecimal(b.estimatedAmount)), safeDecimal(0));
 
       const tree = ProjectFinance.calculateWBSTree(
         items as unknown as WBSItem[], 
@@ -590,7 +594,7 @@ export class FinancialAggregationService {
       const totalBudgetD = tree.filter(n => n.parentId === null).reduce((s, n) => s.add(safeDecimal(n.budget)), safeDecimal(0));
       const totalActualD = tree.filter(n => n.parentId === null).reduce((s, n) => s.add(safeDecimal(n.actual)), safeDecimal(0));
 
-      return {
+      const result = {
         tree,
         stats: {
           totalBudget: totalBudgetD.toNumber(),
@@ -601,6 +605,46 @@ export class FinancialAggregationService {
           progress: safePercent(totalActualD, totalBudgetD)
         }
       };
+
+      // PERSIST DERIVED TOTALS TO DB FOR DATA INTEGRITY (Audit compliance)
+      // Run async to not block the read path
+      process.nextTick(() => {
+        FinancialAggregationService.syncWBSTotalsToDB(projectId, tree).catch(err => {
+          console.error(`[Aggregation] Failed to sync WBS totals to DB:`, err);
+        });
+      });
+
+      return result;
     }, 15000);
+  }
+
+  /**
+   * Persists the rolled-up totals to the database to ensure WBSItem.budgetAmount matches actual calculations.
+   */
+  static async syncWBSTotalsToDB(projectId: string, tree: EnrichedWBSNode[]) {
+    // Flatten tree
+    const flatten = (nodes: EnrichedWBSNode[]): EnrichedWBSNode[] => {
+      let flat: EnrichedWBSNode[] = [];
+      for (const node of nodes) {
+        flat.push(node);
+        if (node.children && node.children.length > 0) {
+          flat = flat.concat(flatten(node.children));
+        }
+      }
+      return flat;
+    };
+    
+    const allNodes = flatten(tree).filter(n => !n.id.startsWith("virtual-"));
+    
+    // Batch update
+    const transactions = allNodes.map(node => 
+      prisma.wBSItem.update({
+        where: { id: node.id },
+        data: { budgetAmount: node.budget }
+      })
+    );
+    
+    // Using transaction for atomicity
+    await prisma.$transaction(transactions);
   }
 }

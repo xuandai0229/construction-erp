@@ -31,15 +31,7 @@ export default function WBSActions({ onAdd, onExport, onSearch }: WBSActionsProp
           Thêm hạng mục
         </button>
 
-        <button
-          onClick={onAdd}
-          className="erp-btn border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] gap-1.5 whitespace-nowrap"
-        >
-          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-          Thêm mục con
-        </button>
+
 
         {/* Search */}
         <div className="relative flex-1 min-w-[240px] max-w-[360px] group ml-auto md:ml-2 w-full">

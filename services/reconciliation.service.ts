@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { round, safeDecimal } from "@/lib/math";
+import { safeDecimal } from "@/lib/math";
+type DecimalType = ReturnType<typeof safeDecimal>;
 import { FinancialAggregationService } from "./financial-aggregation.service";
 
 export class ReconciliationService {
@@ -21,7 +22,7 @@ export class ReconciliationService {
     const issues = [];
     
     // 1. BUDGET INTEGRITY: Project.totalBudget vs SUM(BudgetRecords)
-    const recordBudgetTotal = budgets.reduce((s, b) => s.add(safeDecimal(b.estimatedAmount)), safeDecimal(0));
+    const recordBudgetTotal = budgets.reduce((s: DecimalType, b: { estimatedAmount: number | string | import("decimal.js").Decimal }) => s.add(safeDecimal(b.estimatedAmount as string | number)), safeDecimal(0));
     const projectBudget = safeDecimal(project.totalBudget);
     
     if (!projectBudget.equals(recordBudgetTotal)) {
@@ -36,7 +37,7 @@ export class ReconciliationService {
     }
 
     // 2. COST INTEGRITY: Accounting Reality vs WBS Rollup
-    const totalActualCosts = approvedCosts.reduce((s, c) => s.add(safeDecimal(c.amount)), safeDecimal(0));
+    const totalActualCosts = approvedCosts.reduce((s: DecimalType, c: { amount: number | string | import("decimal.js").Decimal }) => s.add(safeDecimal(c.amount as string | number)), safeDecimal(0));
     const wbsActualTotal = safeDecimal(wbsAggregation.stats.totalActual);
 
     if (!totalActualCosts.equals(wbsActualTotal)) {
@@ -63,8 +64,8 @@ export class ReconciliationService {
 
     // 4. ROUNDING INTEGRITY: Check for hidden drift in WBS tree
     const wbsLeavesActual = wbsAggregation.tree
-      .filter(n => n.children.length === 0)
-      .reduce((s, n) => s.add(safeDecimal(n.actual)), safeDecimal(0));
+      .filter((n: { children: unknown[] }) => n.children.length === 0)
+      .reduce((s: DecimalType, n: { actual: number | string }) => s.add(safeDecimal(n.actual)), safeDecimal(0));
     
     if (!wbsLeavesActual.equals(wbsActualTotal)) {
        issues.push({
@@ -78,7 +79,7 @@ export class ReconciliationService {
     // 5. REVENUE INTEGRITY
     const totalRevenue = (await prisma.invoice.findMany({
       where: { projectId, deletedAt: null, status: { in: ["SENT", "PAID", "PARTIAL", "OVERDUE"] } }
-    })).reduce((s, i) => s.add(safeDecimal(i.amount)), safeDecimal(0));
+    })).reduce((s: DecimalType, i: { amount: number | string | import("decimal.js").Decimal }) => s.add(safeDecimal(i.amount as string | number)), safeDecimal(0));
     
     const snapshotRevenue = safeDecimal(snapshot.reality.totalRevenue);
     if (!snapshotRevenue.equals(totalRevenue)) {
@@ -108,8 +109,8 @@ export class ReconciliationService {
         continue;
       }
 
-      const debits = entry.lines.filter(l => l.type === "DEBIT").reduce((s, l) => s.add(safeDecimal(l.amount)), safeDecimal(0));
-      const credits = entry.lines.filter(l => l.type === "CREDIT").reduce((s, l) => s.add(safeDecimal(l.amount)), safeDecimal(0));
+      const debits = entry.lines.filter((l: { type: string; amount: number | string | import("decimal.js").Decimal }) => l.type === "DEBIT").reduce((s: DecimalType, l: { amount: number | string | import("decimal.js").Decimal }) => s.add(safeDecimal(l.amount as string | number)), safeDecimal(0));
+      const credits = entry.lines.filter((l: { type: string; amount: number | string | import("decimal.js").Decimal }) => l.type === "CREDIT").reduce((s: DecimalType, l: { amount: number | string | import("decimal.js").Decimal }) => s.add(safeDecimal(l.amount as string | number)), safeDecimal(0));
 
       if (!debits.equals(credits)) {
         issues.push({
@@ -129,7 +130,7 @@ export class ReconciliationService {
     });
 
     for (const cost of postedCosts) {
-      const correspondingJournal = journalEntries.find(j => j.sourceId === cost.id && j.sourceType === "COST");
+      const correspondingJournal = journalEntries.find((j: { sourceId: string | null; sourceType: string | null }) => j.sourceId === cost.id && j.sourceType === "COST");
       if (!correspondingJournal) {
         issues.push({
           type: "ORPHAN_POSTED_RECORD",
@@ -149,7 +150,7 @@ export class ReconciliationService {
 
     for (const inv of invoices) {
       // Overpayment: Payment sum > Invoice amount
-      const totalPayments = inv.payments.reduce((s, p) => s.add(safeDecimal(p.amount)), safeDecimal(0));
+      const totalPayments = inv.payments.reduce((s: DecimalType, p: { amount: number | string | import("decimal.js").Decimal }) => s.add(safeDecimal(p.amount as string | number)), safeDecimal(0));
       const invoiceAmount = safeDecimal(inv.amount);
 
       if (totalPayments.gt(invoiceAmount)) {
@@ -197,7 +198,7 @@ export class ReconciliationService {
     }
 
     if (issues.length > 0) {
-      const { MetricsCollector } = require("@/lib/metrics");
+      const { MetricsCollector } = await import("@/lib/metrics");
       MetricsCollector.recordReconciliationFailure();
       await prisma.auditLog.create({
         data: {
@@ -231,12 +232,12 @@ export class ReconciliationService {
       results.push(await this.runProjectReconciliation(p.id));
     }
 
-    const totalIssues = results.reduce((s, r) => s + r.issues.length, 0);
+    const totalIssues = results.reduce((s: number, r: { issues: unknown[] }) => s + r.issues.length, 0);
 
     return {
       totalProjects: projects.length,
-      healthyCount: results.filter(r => r.isHealthy).length,
-      criticalCount: results.filter(r => !r.isHealthy).length,
+      healthyCount: results.filter((r: { isHealthy: boolean }) => r.isHealthy).length,
+      criticalCount: results.filter((r: { isHealthy: boolean }) => !r.isHealthy).length,
       totalIssues,
       details: results
     };
