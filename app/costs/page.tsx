@@ -46,6 +46,7 @@ export default function CostsPage() {
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [selectedCost, setSelectedCost] = useState<CostRecord | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Audit Trail states (Batch 5.2)
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
@@ -83,9 +84,11 @@ export default function CostsPage() {
   }, [selectedCost]);
 
   const filteredCosts = useMemo(() => {
+    const searchLower = debouncedSearch.toLowerCase();
     return costs.filter(c => {
-      const matchesSearch = c.note?.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
-                           c.supplier?.toLowerCase().includes(debouncedSearch.toLowerCase());
+      const matchesSearch = (c.note?.toLowerCase() || '').includes(searchLower) || 
+                            (c.supplier?.toLowerCase() || '').includes(searchLower) ||
+                            c.id.toLowerCase().includes(searchLower);
       const matchesType = typeFilter === 'ALL' || c.costType === typeFilter;
       const matchesStatus = statusFilter === 'ALL' || c.status === statusFilter;
       return matchesSearch && matchesType && matchesStatus;
@@ -154,10 +157,10 @@ export default function CostsPage() {
             <div className="md:col-span-1">
               <label className="erp-label">Tìm kiếm</label>
               <div className="relative">
-                <svg viewBox="0 0 24 24" className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--text-muted)]" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                <svg viewBox="0 0 24 24" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-muted)] pointer-events-none" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                 <input 
                   type="text" 
-                  className="erp-input pl-10 text-[13px]" 
+                  className="erp-input !pl-9 text-[13px] focus:ring-2 focus:ring-blue-500/20 transition-all" 
                   placeholder="Nhà cung cấp, nội dung..." 
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -221,6 +224,26 @@ export default function CostsPage() {
                       <th className={`${COL_WIDTHS.ACTIONS} py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-[var(--border)]`}>Thao tác</th>
                     </tr>
                   )}
+                  fixedFooterContent={() => {
+                    if (filteredCosts.length === 0) return null;
+                    const totalNet = filteredCosts.reduce((sum, c) => sum + Math.round(c.netAmount || c.amount / (1 + (c.vatRate !== undefined ? c.vatRate : 10) / 100)), 0);
+                    const totalVat = filteredCosts.reduce((sum, c) => sum + Math.round(c.vatAmount || (c.amount - Math.round(c.netAmount || c.amount / (1 + (c.vatRate !== undefined ? c.vatRate : 10) / 100)))), 0);
+                    const totalRetention = filteredCosts.reduce((sum, c) => sum + Math.round(c.retentionAmount || (c.amount * ((c.retentionRate !== undefined ? c.retentionRate : 0) / 100))), 0);
+                    const totalAmount = filteredCosts.reduce((sum, c) => sum + c.amount, 0);
+                    const totalPayable = totalAmount - totalRetention;
+
+                    return (
+                      <tr className="bg-[var(--table-head-bg)] shadow-[0_-1px_0_var(--border)] font-bold text-[var(--text-primary)] z-20 sticky bottom-0">
+                        <td colSpan={6} className="py-3 px-4 text-right text-[11px] uppercase tracking-wider text-[var(--text-secondary)] border-r border-t-2 border-[var(--border)]">Tổng cộng trang</td>
+                        <td className="py-3 px-4 text-right tabular-nums text-[11.5px] border-r border-t-2 border-[var(--border)]">{totalNet.toLocaleString('vi-VN')}</td>
+                        <td className="py-3 px-4 text-right tabular-nums text-[11.5px] border-r border-t-2 border-[var(--border)]">{totalVat.toLocaleString('vi-VN')}</td>
+                        <td className="py-3 px-4 text-right tabular-nums text-[11.5px] text-amber-500 border-r border-t-2 border-[var(--border)]">-{totalRetention.toLocaleString('vi-VN')}</td>
+                        <td className="py-3 px-4 text-right tabular-nums text-[12.5px] font-black border-r border-t-2 border-[var(--border)]">{totalAmount.toLocaleString('vi-VN')}</td>
+                        <td className="py-3 px-4 text-right tabular-nums text-[12.5px] font-black text-emerald-500 border-r border-t-2 border-[var(--border)]">{totalPayable.toLocaleString('vi-VN')}</td>
+                        <td colSpan={2} className="border-t-2 border-[var(--border)]"></td>
+                      </tr>
+                    );
+                  }}
                   itemContent={(i, c) => {
                     const vatRate = c.vatRate !== undefined ? c.vatRate : 10;
                     const retentionRate = c.retentionRate !== undefined ? c.retentionRate : 0;
@@ -472,7 +495,9 @@ export default function CostsPage() {
             {/* Transition handler function inside UI markup to satisfy React lexical scoping */}
             {(() => {
               const handleTransition = async (nextStatus: string, actionLabel: string) => {
+                if (isProcessing) return;
                 if (confirm(`Bạn có chắc chắn muốn thực hiện hành động "${actionLabel}"?`)) {
+                  setIsProcessing(true);
                   try {
                     const res = await fetch(`/api/costs/${selectedCost.id}/approve`, {
                       method: 'POST',
@@ -490,6 +515,8 @@ export default function CostsPage() {
                     }
                   } catch (e) {
                     alert('Lỗi kết nối');
+                  } finally {
+                    setIsProcessing(false);
                   }
                 }
               };
@@ -498,7 +525,7 @@ export default function CostsPage() {
                 <div className="flex flex-col gap-4 mt-8 pt-6 border-t border-[var(--border)]">
                   <div className="flex gap-4">
                     <button 
-                      disabled={selectedCost.workflowStatus !== 'DRAFT' && selectedCost.workflowStatus !== 'REJECTED'}
+                      disabled={isProcessing || (selectedCost.workflowStatus !== 'DRAFT' && selectedCost.workflowStatus !== 'REJECTED')}
                       onClick={() => setShowAddModal(true)}
                       className="flex-1 erp-btn bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-600/20 disabled:opacity-30 disabled:pointer-events-none"
                     >
@@ -507,9 +534,10 @@ export default function CostsPage() {
                     </button>
 
                     <button 
-                      disabled={selectedCost.workflowStatus !== 'DRAFT' && selectedCost.workflowStatus !== 'REJECTED'}
+                      disabled={isProcessing || (selectedCost.workflowStatus !== 'DRAFT' && selectedCost.workflowStatus !== 'REJECTED')}
                       onClick={async () => {
                         if (confirm('Bạn có chắc chắn muốn XÓA chi phí này?')) {
+                          setIsProcessing(true);
                           try {
                             const res = await fetch(`/api/costs/${selectedCost.id}`, {
                               method: 'DELETE',
@@ -526,6 +554,8 @@ export default function CostsPage() {
                             }
                           } catch (e) {
                             alert('Lỗi kết nối');
+                          } finally {
+                            setIsProcessing(false);
                           }
                         }
                       }}
@@ -543,12 +573,14 @@ export default function CostsPage() {
                     {selectedCost.workflowStatus === 'DRAFT' && (
                       <div className="flex gap-2">
                         <button 
+                          disabled={isProcessing}
                           onClick={() => handleTransition('PENDING_PM', 'Trình duyệt PM')}
                           className="flex-1 erp-btn bg-blue-600 text-white hover:bg-blue-500 shadow-sm"
                         >
                           Trình duyệt PM
                         </button>
                         <button 
+                          disabled={isProcessing}
                           onClick={() => handleTransition('PENDING_FINANCE', 'Gửi thẳng Kế toán')}
                           className="flex-1 erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm"
                         >
@@ -560,12 +592,14 @@ export default function CostsPage() {
                     {selectedCost.workflowStatus === 'PENDING_PM' && (
                       <div className="flex gap-2">
                         <button 
+                          disabled={isProcessing}
                           onClick={() => handleTransition('PENDING_FINANCE', 'Duyệt & Chuyển Kế toán')}
                           className="flex-1 erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm"
                         >
                           Duyệt chuyển Kế toán
                         </button>
                         <button 
+                          disabled={isProcessing}
                           onClick={() => handleTransition('REJECTED', 'Từ chối')}
                           className="flex-1 erp-btn bg-rose-600 text-white hover:bg-rose-500 shadow-sm"
                         >
@@ -578,12 +612,14 @@ export default function CostsPage() {
                       <div className="flex flex-col gap-2">
                         <div className="flex gap-2">
                           <button 
+                            disabled={isProcessing}
                             onClick={() => handleTransition('APPROVED', 'Phê duyệt chi phí')}
                             className="flex-1 erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm"
                           >
                             Phê duyệt
                           </button>
                           <button 
+                            disabled={isProcessing}
                             onClick={() => handleTransition('PENDING_DIRECTOR', 'Trình Giám đốc phê duyệt')}
                             className="flex-1 erp-btn bg-amber-600 text-white hover:bg-amber-500 shadow-sm"
                           >
@@ -591,6 +627,7 @@ export default function CostsPage() {
                           </button>
                         </div>
                         <button 
+                          disabled={isProcessing}
                           onClick={() => handleTransition('REJECTED', 'Từ chối')}
                           className="w-full erp-btn bg-rose-600 text-white hover:bg-rose-500 shadow-sm"
                         >
@@ -602,12 +639,14 @@ export default function CostsPage() {
                     {selectedCost.workflowStatus === 'PENDING_DIRECTOR' && (
                       <div className="flex gap-2">
                         <button 
+                          disabled={isProcessing}
                           onClick={() => handleTransition('APPROVED', 'Phê duyệt')}
                           className="flex-1 erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm"
                         >
                           Phê duyệt
                         </button>
                         <button 
+                          disabled={isProcessing}
                           onClick={() => handleTransition('REJECTED', 'Từ chối')}
                           className="flex-1 erp-btn bg-rose-600 text-white hover:bg-rose-500 shadow-sm"
                         >
@@ -618,6 +657,7 @@ export default function CostsPage() {
 
                     {selectedCost.workflowStatus === 'APPROVED' && (
                       <button 
+                        disabled={isProcessing}
                         onClick={() => handleTransition('POSTED', 'Ghi sổ cái')}
                         className="w-full erp-btn bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-500/20"
                       >
@@ -627,6 +667,7 @@ export default function CostsPage() {
 
                     {selectedCost.workflowStatus === 'POSTED' && (
                       <button 
+                        disabled={isProcessing}
                         onClick={() => handleTransition('REVERSED', 'Hoàn bút toán')}
                         className="w-full erp-btn bg-purple-600 text-white hover:bg-purple-500 shadow-sm"
                       >
@@ -636,6 +677,7 @@ export default function CostsPage() {
 
                     {selectedCost.workflowStatus === 'REJECTED' && (
                       <button 
+                        disabled={isProcessing}
                         onClick={() => handleTransition('DRAFT', 'Đưa về Nháp')}
                         className="w-full erp-btn bg-gray-600 text-white hover:bg-gray-500 shadow-sm"
                       >

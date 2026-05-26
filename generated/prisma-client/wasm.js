@@ -1133,6 +1133,36 @@ exports.Prisma.CommitmentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.VendorPaymentScalarFieldEnum = {
+  id: 'id',
+  paymentNo: 'paymentNo',
+  projectId: 'projectId',
+  costRecordId: 'costRecordId',
+  amount: 'amount',
+  paymentDate: 'paymentDate',
+  reference: 'reference',
+  note: 'note',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  deletedById: 'deletedById',
+  version: 'version',
+  isReversed: 'isReversed',
+  reversalRef: 'reversalRef'
+};
+
+exports.Prisma.PaymentAllocationScalarFieldEnum = {
+  id: 'id',
+  paymentId: 'paymentId',
+  invoiceId: 'invoiceId',
+  vendorPaymentId: 'vendorPaymentId',
+  amount: 'amount',
+  allocatedAt: 'allocatedAt',
+  allocatedById: 'allocatedById',
+  isReversed: 'isReversed'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1417,7 +1447,9 @@ exports.Prisma.ModelName = {
   EquipmentBreakdown: 'EquipmentBreakdown',
   ChangeRequest: 'ChangeRequest',
   ClaimRecord: 'ClaimRecord',
-  Commitment: 'Commitment'
+  Commitment: 'Commitment',
+  VendorPayment: 'VendorPayment',
+  PaymentAllocation: 'PaymentAllocation'
 };
 
 /**

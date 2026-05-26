@@ -274,8 +274,11 @@ export class RevenueService {
     
     return prisma.$transaction(async (tx) => {
       // GOVERNANCE: Block update if invoice is already POSTED or PAID
-      if (existing.status !== "DRAFT") {
-        throw new ApiError(400, `Không thể sửa hóa đơn đã ${existing.status}. Vui lòng sử dụng quy trình điều chỉnh.`);
+      if (existing.status !== "DRAFT" && existing.status !== "SENT") {
+        throw new ApiError(400, `LỖI NGHIỆP VỤ KẾ TOÁN: Không thể sửa hóa đơn khi trạng thái là ${existing.status}. Dữ liệu kế toán đã Immutable.`);
+      }
+      if (existing.approvalStatus === "APPROVED") {
+        throw new ApiError(400, "LỖI NGHIỆP VỤ KẾ TOÁN: Hóa đơn đã được phê duyệt (APPROVED) không thể chỉnh sửa trực tiếp. Vui lòng sử dụng quy trình điều chỉnh.");
       }
 
       const { assertPeriodNotLocked } = await import("@/lib/period");
@@ -317,7 +320,7 @@ export class RevenueService {
     
     return prisma.$transaction(async (tx) => {
       // GOVERNANCE: Payments are immutable once created.
-      throw new ApiError(400, "Thanh toán là chứng từ không thể sửa đổi sau khi phát hành. Vui lòng hủy và tạo lại nếu cần.");
+      throw new ApiError(400, "LỖI NGHIỆP VỤ KẾ TOÁN: Thanh toán là chứng từ Immutable (không thể sửa đổi sau khi phát hành). Vui lòng hoàn bút toán (Reverse) và tạo lại nếu cần.");
     });
   }
 
@@ -327,6 +330,15 @@ export class RevenueService {
     if (!existing) throw new ApiError(404, "Không tìm thấy hóa đơn");
 
     await assertPeriodNotLocked(existing.issuedDate);
+
+    // ACCOUNTING IMMUTABILITY GUARD
+    if (Number(existing.paidAmount) > 0 || existing.status === "PAID" || existing.status === "PARTIAL") {
+      throw new ApiError(400, "LỖI NGHIỆP VỤ KẾ TOÁN: Không thể xóa hóa đơn đã phát sinh giao dịch thanh toán. Vui lòng thực hiện Hoàn bút toán (Reverse Payment) trước.");
+    }
+
+    if (existing.approvalStatus === "APPROVED") {
+      throw new ApiError(400, "LỖI NGHIỆP VỤ KẾ TOÁN: Không thể xóa hóa đơn đã chốt sổ (Approved). Vui lòng dùng quy trình điều chỉnh/đảo bút toán.");
+    }
 
     return prisma.$transaction(async (tx) => {
       const item = await tx.invoice.update({

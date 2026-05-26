@@ -92,3 +92,25 @@ export function useDeleteCostMutation(projectId: string) {
     },
   });
 }
+
+export function useCreateVendorPaymentMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: { id: string; amount: number; paymentDate?: string; note?: string; reference?: string }) => {
+      const { id, ...payload } = data;
+      const res = await fetch(`/api/costs/${id}/payment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || 'Failed to create vendor payment');
+      return json.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
+    },
+  });
+}

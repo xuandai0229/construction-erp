@@ -206,12 +206,47 @@ export class CostService {
 
     // Block update if not in editable state
     if (existing.workflowStatus !== "DRAFT" && existing.workflowStatus !== "REJECTED") {
-      throw new ApiError(400, `Không thể sửa chi phí khi đang ở trạng thái ${existing.workflowStatus}`);
+      if (data.status === "paid" && existing.status !== "paid") {
+        // Allowing AP FAKE PAYMENT for backward compatibility but logging aggressively.
+      } else {
+        throw new ApiError(400, `LỖI NGHIỆP VỤ KẾ TOÁN: Không thể sửa chi phí khi đang ở trạng thái ${existing.workflowStatus}`);
+      }
+    }
+
+    // IMMUTABILITY GUARD
+    if (existing.status === "paid" && data.status !== "paid" && data.status !== undefined) {
+      throw new ApiError(400, "LỖI NGHIỆP VỤ KẾ TOÁN: Khoản chi phí đã thanh toán là Immutable. Vui lòng thực hiện Hoàn bút toán (Reverse) để thay đổi.");
     }
 
     await assertPeriodNotLocked(existing.date);
 
     return prisma.$transaction(async (tx) => {
+      // AP PAYMENT FOUNDATION (FAKE ACCOUNTING MITIGATION)
+      if (data.status === "paid" && existing.status !== "paid") {
+        // Create an explicit Audit Log simulating an AP Payment
+        await tx.auditLog.create({
+          data: {
+             userId,
+             action: "CREATE_AP_PAYMENT_SIMULATION",
+             entity: "CostRecord",
+             entityId: id,
+             newData: { amount: Number(existing.amount), date: new Date().toISOString() },
+             reason: "Mô phỏng sinh chứng từ thanh toán AP (Architecture-ready cho Phase 3)",
+             severity: "WARNING",
+             correlationId
+          }
+        });
+
+        // Repost to ledger for payment
+        await PostingEngine.postCost(tx, {
+          costId: id,
+          projectId: existing.projectId,
+          amount: Number(existing.amount),
+          costType: existing.costType,
+          description: `Thanh toán khoản chi phí AP cho ${existing.supplier || 'Nhà cung cấp'}`
+        });
+      }
+
       const updated = await tx.costRecord.update({
         where: { id, version: existing.version }, // Optimistic locking
         data: {
@@ -247,8 +282,12 @@ export class CostService {
 
     await assertPeriodNotLocked(existing.date);
 
+    if (existing.status === "paid") {
+      throw new ApiError(400, "LỖI NGHIỆP VỤ KẾ TOÁN: Không thể xóa khoản chi phí đã thanh toán (Immutable). Vui lòng dùng luồng Hoàn bút toán (Reverse).");
+    }
+
     if (existing.workflowStatus === "POSTED" || existing.workflowStatus === "APPROVED" || existing.approvalStatus === "APPROVED") {
-      throw new ApiError(400, "LỖI NGHIỆP VỤ: Không thể xóa chi phí đã được duyệt hoặc ghi sổ kế toán.", {
+      throw new ApiError(400, "LỖI NGHIỆP VỤ KẾ TOÁN: Không thể xóa chi phí đã được duyệt hoặc ghi sổ kế toán.", {
         isFinancialLocked: true,
         actionSuggested: "REVERSE"
       });

@@ -21,6 +21,7 @@ const StableTableComponents = {
 
 export default function RevenueListPage() {
   const [showAddModal, setShowAddModal] = useState(false);
+  const [processingId, setProcessingId] = useState<string | null>(null);
   const currentProjectId = useERPStore(state => state.currentProjectId);
   const sidebarCollapsed = useERPStore(state => state.sidebarCollapsed);
 
@@ -34,7 +35,17 @@ export default function RevenueListPage() {
   const getWbsName = (id: string) => wbs.find(w => w.id === id)?.name || '—';
 
   const handleToggle = (id: string, current: RevenueStatus) => {
-    updateRevenue({ id, updates: { status: current === 'paid' ? 'unpaid' : 'paid' } });
+    if (processingId) return;
+    const actionLabel = current === 'paid' ? 'Hoàn bút toán (Hủy thu)' : 'Ghi nhận đã thu';
+    if (!confirm(`Bạn có chắc chắn muốn thực hiện: ${actionLabel}?`)) return;
+
+    setProcessingId(id);
+    updateRevenue(
+      { id, updates: { status: current === 'paid' ? 'unpaid' : 'paid' } },
+      {
+        onSettled: () => setProcessingId(null)
+      }
+    );
   };
 
   const totalAmount = revenues.reduce((sum, r) => sum + Number(r.amount), 0);
@@ -56,17 +67,24 @@ export default function RevenueListPage() {
               <h1 className="erp-section-title">Doanh thu</h1>
               <p className="erp-section-subtitle">Quản lý các khoản thu và trạng thái thanh toán</p>
             </div>
+            <div className="flex flex-wrap items-center gap-3">
               <button 
                 onClick={() => {
                   if (revenues.length === 0) return;
-                  const headers = ['Ngày', 'Hạng mục', 'Diễn giải', 'Số tiền', 'Trạng thái'];
-                  const rows = revenues.map(rev => [
-                    formatDate(rev.date),
-                    getWbsName(rev.wbsId),
-                    rev.description || '',
-                    rev.amount,
-                    rev.status === 'paid' ? 'Đã thu' : 'Chưa thu'
-                  ]);
+                  const headers = ['Ngày', 'Hạng mục', 'Diễn giải', 'Trước thuế', 'VAT', 'Tổng doanh thu', 'Trạng thái'];
+                  const rows = revenues.map(rev => {
+                    const net = Math.round(Number(rev.amount) / 1.1);
+                    const vat = Math.round(Number(rev.amount) - net);
+                    return [
+                      formatDate(rev.date),
+                      getWbsName(rev.wbsId),
+                      rev.description || '',
+                      net,
+                      vat,
+                      rev.amount,
+                      rev.status === 'paid' ? 'Đã thu' : 'Chưa thu'
+                    ];
+                  });
                   exportToCsv('ERP_Revenue', headers, rows);
                 }}
                 className="erp-btn bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--hover-bg)] gap-2 px-5"
@@ -78,11 +96,12 @@ export default function RevenueListPage() {
                 onClick={() => setShowAddModal(true)}
                 className="erp-btn bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-900/20 gap-2 px-5"
               >
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-              Thêm doanh thu
-            </button>
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                Thêm doanh thu
+              </button>
+            </div>
           </div>
 
           {/* Table */}
@@ -105,55 +124,81 @@ export default function RevenueListPage() {
                   data={revenues}
                   fixedHeaderContent={() => (
                     <tr>
-                      <th className="w-[100px] bg-[var(--table-head-bg)]">Ngày</th>
-                      <th className="min-w-[180px] bg-[var(--table-head-bg)]">Hạng mục (WBS)</th>
-                      <th className="min-w-[200px] bg-[var(--table-head-bg)]">Diễn giải</th>
-                      <th className="w-[140px] text-right bg-[var(--table-head-bg)]">Số tiền</th>
-                      <th className="w-[100px] text-center bg-[var(--table-head-bg)]">Trạng thái</th>
-                      <th className="w-[140px] text-center bg-[var(--table-head-bg)]">Thao tác</th>
+                      <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] bg-[var(--table-head-bg)] w-[110px]">Ngày</th>
+                      <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] bg-[var(--table-head-bg)] min-w-[180px]">Hạng mục (WBS)</th>
+                      <th className="py-3 px-4 text-left text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] bg-[var(--table-head-bg)] min-w-[200px]">Diễn giải</th>
+                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] bg-[var(--table-head-bg)] w-[130px]">Trước thuế</th>
+                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] bg-[var(--table-head-bg)] w-[110px]">VAT (10%)</th>
+                      <th className="py-3 px-4 text-right text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] bg-[var(--table-head-bg)] w-[140px]">Tổng doanh thu</th>
+                      <th className="py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-r border-[var(--border)] bg-[var(--table-head-bg)] w-[120px]">Trạng thái</th>
+                      <th className="py-3 px-4 text-center text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] whitespace-nowrap border-b border-[var(--border)] bg-[var(--table-head-bg)] w-[140px]">Nghiệp vụ</th>
                     </tr>
                   )}
-                  itemContent={(i, rev) => (
+                  itemContent={(i, rev) => {
+                    const vatRate = 10;
+                    const net = Math.round(Number(rev.amount) / (1 + vatRate / 100));
+                    const vat = Math.round(Number(rev.amount) - net);
+
+                    return (
                     <>
-                      <td className="whitespace-nowrap text-[12px] font-semibold text-[var(--text-muted)] group-hover:text-[var(--text-accent)] transition-colors">
+                      <td className="py-3 px-4 border-r border-[var(--border)] whitespace-nowrap text-[12px] font-bold text-[var(--text-muted)] group-hover:text-[var(--text-accent)] transition-colors">
                         {formatDate(rev.date)}
                       </td>
-                      <td className="font-bold text-[var(--text-primary)]">
+                      <td className="py-3 px-4 border-r border-[var(--border)] font-bold text-[var(--text-primary)]">
                         {getWbsName(rev.wbsId)}
                       </td>
-                      <td className="text-[var(--text-secondary)] text-[12.5px]">
-                        {rev.description}
+                      <td className="py-3 px-4 border-r border-[var(--border)] text-[var(--text-secondary)] text-[12.5px]">
+                        {rev.description || '—'}
                       </td>
-                      <td className="text-right tabular-nums font-black text-emerald-500 whitespace-nowrap group-hover:text-emerald-400 transition-colors">
+                      <td className="py-3 px-4 border-r border-[var(--border)] text-right tabular-nums font-semibold text-[var(--text-secondary)] whitespace-nowrap">
+                        {formatVnd(net)}
+                      </td>
+                      <td className="py-3 px-4 border-r border-[var(--border)] text-right tabular-nums font-semibold text-[var(--text-secondary)] whitespace-nowrap">
+                        {formatVnd(vat)}
+                      </td>
+                      <td className="py-3 px-4 border-r border-[var(--border)] text-right tabular-nums font-black text-emerald-500 whitespace-nowrap group-hover:text-emerald-400 transition-colors">
                         {formatVnd(rev.amount)}
                       </td>
-                      <td className="text-center">
-                        <span className={rev.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}>
+                      <td className="py-3 px-4 border-r border-[var(--border)] text-center">
+                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest ${
+                            rev.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/30' : 'bg-amber-500/10 text-amber-500 ring-1 ring-amber-500/30'
+                          }`}>
+                          <span className={`h-1.5 w-1.5 rounded-full ${rev.status === 'paid' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]' : 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]'}`}></span>
                           {rev.status === 'paid' ? 'Đã thu' : 'Chưa thu'}
                         </span>
                       </td>
-                      <td className="text-center">
+                      <td className="py-3 px-4 text-center">
                         <button
+                          disabled={!!processingId}
                           onClick={() => handleToggle(rev.id, rev.status)}
-                          className="text-[11px] font-bold text-[var(--text-accent)] hover:underline underline-offset-4 transition-colors"
+                          className={`text-[11px] font-bold hover:underline underline-offset-4 transition-colors disabled:opacity-50 disabled:pointer-events-none ${
+                            rev.status === 'paid' ? 'text-rose-500' : 'text-emerald-500'
+                          }`}
                         >
-                          {rev.status === 'paid' ? 'Đánh dấu chưa thu' : 'Xác nhận đã thu'}
+                          {processingId === rev.id ? 'Đang xử lý...' : rev.status === 'paid' ? 'Hoàn bút toán' : 'Ghi nhận đã thu'}
                         </button>
                       </td>
                     </>
-                  )}
+                  )}}
                   components={StableTableComponents}
-                  fixedFooterContent={() => (
-                    <tr className="bg-[var(--table-head-bg)] border-t-2 border-[var(--border)] h-10">
-                      <td colSpan={3} className="text-right px-4 py-2 font-black text-[11px] uppercase tracking-wider text-[var(--text-secondary)]">
-                        Tổng cộng
-                      </td>
-                      <td className="text-right px-4 py-2 tabular-nums font-black text-emerald-500 text-[13px]">
-                        {formatVnd(totalAmount)}
-                      </td>
-                      <td colSpan={2}></td>
-                    </tr>
-                  )}
+                  fixedFooterContent={() => {
+                    if (revenues.length === 0) return null;
+                    const totalNet = revenues.reduce((sum, r) => sum + Math.round(Number(r.amount) / 1.1), 0);
+                    const totalVat = revenues.reduce((sum, r) => sum + Math.round(Number(r.amount) - Math.round(Number(r.amount) / 1.1)), 0);
+                    const totalAmount = revenues.reduce((sum, r) => sum + Number(r.amount), 0);
+
+                    return (
+                      <tr className="bg-[var(--table-head-bg)] shadow-[0_-1px_0_var(--border)] font-bold text-[var(--text-primary)] z-20 sticky bottom-0">
+                        <td colSpan={3} className="py-3 px-4 text-right text-[11px] uppercase tracking-wider text-[var(--text-secondary)] border-r border-t-2 border-[var(--border)]">
+                          Tổng cộng
+                        </td>
+                        <td className="py-3 px-4 text-right tabular-nums text-[11.5px] border-r border-t-2 border-[var(--border)]">{formatVnd(totalNet)}</td>
+                        <td className="py-3 px-4 text-right tabular-nums text-[11.5px] border-r border-t-2 border-[var(--border)]">{formatVnd(totalVat)}</td>
+                        <td className="py-3 px-4 text-right tabular-nums text-[13px] font-black text-emerald-500 border-r border-t-2 border-[var(--border)]">{formatVnd(totalAmount)}</td>
+                        <td colSpan={2} className="border-t-2 border-[var(--border)]"></td>
+                      </tr>
+                    );
+                  }}
                 />
               )}
             </div>
