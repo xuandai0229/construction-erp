@@ -66,20 +66,31 @@ export class FinancialAggregationService {
       throw new DynamicApiError(404, "Không tìm thấy dự án");
     }
 
-    // KPI CONTRACT: COST_ACT (Accounting Reality)
-    const costActualD = costs
-      .filter(c => !["VOID", "REJECTED"].includes(c.workflowStatus) && c.approvalStatus !== "REJECTED")
-      .reduce((s, c) => s.add(safeDecimal(c.amount)), safeDecimal(0));
+    // DB AGGREGATION LAYER (OOM SAFE - LEDGER DRIVEN)
+    const [revCreditAgg, revDebitAgg, costDebitAgg, costCreditAgg] = await Promise.all([
+      prisma.transactionLine.aggregate({
+        where: { account: { code: { startsWith: '511' } }, journalEntry: { projectId, deletedAt: null }, deletedAt: null, type: 'CREDIT' },
+        _sum: { amount: true }
+      }),
+      prisma.transactionLine.aggregate({
+        where: { account: { code: { startsWith: '511' } }, journalEntry: { projectId, deletedAt: null }, deletedAt: null, type: 'DEBIT' },
+        _sum: { amount: true }
+      }),
+      prisma.transactionLine.aggregate({
+        where: { account: { code: { startsWith: '62' } }, journalEntry: { projectId, deletedAt: null }, deletedAt: null, type: 'DEBIT' },
+        _sum: { amount: true }
+      }),
+      prisma.transactionLine.aggregate({
+        where: { account: { code: { startsWith: '62' } }, journalEntry: { projectId, deletedAt: null }, deletedAt: null, type: 'CREDIT' },
+        _sum: { amount: true }
+      })
+    ]);
+
+    const revenueAccrualD = safeDecimal(Number(revCreditAgg._sum?.amount || 0) - Number(revDebitAgg._sum?.amount || 0));
+    const costActualD = safeDecimal(Number(costDebitAgg._sum?.amount || 0) - Number(costCreditAgg._sum?.amount || 0));
 
     // KPI CONTRACT: COST_EXP (Management Exposure)
-    const costExposureD = costs
-      .filter(c => !["VOID", "REJECTED"].includes(c.workflowStatus) && c.approvalStatus !== "REJECTED")
-      .reduce((s, c) => s.add(safeDecimal(c.amount)), safeDecimal(0));
-
-    // KPI CONTRACT: REV_ACC (Accrual Revenue)
-    const revenueAccrualD = invoices
-      .filter(i => i.approvalStatus !== "REJECTED" && ["DRAFT", "SENT", "PAID", "PARTIAL", "OVERDUE"].includes(i.status))
-      .reduce((s, i) => s.add(safeDecimal(i.amount)), safeDecimal(0));
+    const costExposureD = costActualD;
 
     // KPI CONTRACT: ALLOCATION_HEALTH
     const wbsData = await prisma.wBSItem.findMany({ where: { projectId, deletedAt: null }, select: { id: true } });

@@ -41,3 +41,11 @@ yarn-error.log*
 next-env.d.ts
 
 /lib/generated/prisma
+
+# archive & debug
+/archive
+/scratch
+
+# test output
+/playwright-report
+/test-results

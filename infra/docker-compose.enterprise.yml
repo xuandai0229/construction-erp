@@ -1,0 +1,172 @@
+version: '3.8'
+
+services:
+  # App Node 1 - Next.js Application Server
+  app-node-1:
+    image: node:20-alpine
+    container_name: app-node-1
+    command: npm run start
+    environment:
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres-primary:5432/hbcerp?schema=public}
+      - REDIS_URL=${REDIS_URL:-redis://redis-primary:6379}
+      - NODE_ENV=production
+    ports:
+      - "3001:3000"
+    depends_on:
+      - postgres-primary
+      - redis-primary
+
+  # App Node 2 - Next.js Application Server
+  app-node-2:
+    image: node:20-alpine
+    container_name: app-node-2
+    command: npm run start
+    environment:
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres-primary:5432/hbcerp?schema=public}
+      - REDIS_URL=${REDIS_URL:-redis://redis-primary:6379}
+      - NODE_ENV=production
+    ports:
+      - "3002:3000"
+    depends_on:
+      - postgres-primary
+      - redis-primary
+
+  # App Node 3 - Next.js Application Server
+  app-node-3:
+    image: node:20-alpine
+    container_name: app-node-3
+    command: npm run start
+    environment:
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres-primary:5432/hbcerp?schema=public}
+      - REDIS_URL=${REDIS_URL:-redis://redis-primary:6379}
+      - NODE_ENV=production
+    ports:
+      - "3003:3000"
+    depends_on:
+      - postgres-primary
+      - redis-primary
+
+  # PostgreSQL Primary Database
+  postgres-primary:
+    image: postgres:16-alpine
+    container_name: postgres-primary
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-hbcerp}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+    command: ["postgres", "-c", "wal_level=replica", "-c", "max_wal_senders=10", "-c", "hot_standby=on"]
+    ports:
+      - "5431:5432"
+    volumes:
+      - pg-primary-data:/var/lib/postgresql/data
+
+  # PostgreSQL Read Replica Database
+  postgres-replica:
+    image: postgres:16-alpine
+    container_name: postgres-replica
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-hbcerp}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+    command: ["postgres", "-c", "hot_standby=on"]
+    ports:
+      - "5432:5432"
+    depends_on:
+      - postgres-primary
+    volumes:
+      - pg-replica-data:/var/lib/postgresql/data
+
+  # Redis Cache Primary Node
+  redis-primary:
+    image: redis:7-alpine
+    container_name: redis-primary
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-primary-data:/data
+
+  # Redis Cache Read Replica Node
+  redis-replica:
+    image: redis:7-alpine
+    container_name: redis-replica
+    command: redis-server --replicaof redis-primary 6379
+    ports:
+      - "6380:6379"
+    depends_on:
+      - redis-primary
+    volumes:
+      - redis-replica-data:/data
+
+  # Websocket Gateway
+  websocket-gateway:
+    image: node:20-alpine
+    container_name: websocket-gateway
+    command: node dist/websocket-server.js
+    environment:
+      - PORT=4000
+      - REDIS_URL=redis://redis-primary:6379
+    ports:
+      - "4000:4000"
+    depends_on:
+      - redis-primary
+
+  # Worker Cluster
+  worker-cluster:
+    image: node:20-alpine
+    container_name: worker-cluster
+    command: node dist/worker.js
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres-primary:5432/hbcerp?schema=public}
+      - REDIS_URL=${REDIS_URL:-redis://redis-primary:6379}
+    depends_on:
+      - postgres-primary
+      - redis-primary
+
+  # Prometheus Monitoring Metrics Stack
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus-data:/prometheus
+
+  # Grafana Observability Dashboard Stack
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+  # Loki Structured Logs Aggregator
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
+
+  # Jaeger Distributed Tracing Collector
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+
+volumes:
+  pg-primary-data:
+  pg-replica-data:
+  redis-primary-data:
+  redis-replica-data:
+  prometheus-data:
+  grafana-data:

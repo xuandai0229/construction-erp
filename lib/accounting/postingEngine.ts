@@ -27,6 +27,26 @@ export class PostingEngine {
     const grniCode = "3311"; // GRNI (Phải trả người bán chưa có hóa đơn/Hàng về chưa hóa đơn)
 
     const debitAccount = params.purchaseOrderId ? grniCode : expenseCode;
+
+    // Fetch CostRecord to split VAT properly
+    const cost = await tx.costRecord.findUnique({
+      where: { id: params.costId }
+    });
+
+    if (!cost) throw new ApiError(404, `Không tìm thấy chi phí để hạch toán: ${params.costId}`);
+
+    const vatAmount = Number(cost.vatAmount || 0);
+    const grossAmount = Number(cost.amount || params.amount);
+    const netAmount = grossAmount - vatAmount;
+
+    const lines = [];
+    if (netAmount > 0) {
+      lines.push({ accountCode: debitAccount, amount: netAmount, type: TransactionType.DEBIT });
+    }
+    if (vatAmount > 0) {
+      lines.push({ accountCode: "1331", amount: vatAmount, type: TransactionType.DEBIT });
+    }
+    lines.push({ accountCode: apCode, amount: grossAmount, type: TransactionType.CREDIT });
     
     await this.createDoubleEntry(tx, {
       projectId: params.projectId,
@@ -34,10 +54,7 @@ export class PostingEngine {
       reference: `COST-${params.costId}`,
       sourceType: "COST",
       sourceId: params.costId,
-      lines: [
-        { accountCode: debitAccount, amount: params.amount, type: TransactionType.DEBIT },
-        { accountCode: apCode, amount: params.amount, type: TransactionType.CREDIT },
-      ]
+      lines
     });
   }
 
@@ -288,6 +305,36 @@ export class PostingEngine {
           description: `Hủy: ${line.description}`
         }
       });
+    }
+
+    // Update Operational source to reflect reversal in reporting/operations
+    if (sourceId && sourceType) {
+      const lowerType = sourceType.toLowerCase();
+      try {
+        if (lowerType === "invoice") {
+          await tx.invoice.update({
+            where: { id: sourceId },
+            data: { approvalStatus: "CANCELLED", deletedAt: new Date() }
+          });
+        } else if (lowerType === "cost" || lowerType === "costrecord") {
+          await tx.costRecord.update({
+            where: { id: sourceId },
+            data: { approvalStatus: "CANCELLED", deletedAt: new Date() }
+          });
+        } else if (lowerType === "payment") {
+          await tx.payment.update({
+            where: { id: sourceId },
+            data: { approvalStatus: "CANCELLED", deletedAt: new Date() }
+          });
+        } else if (lowerType === "vendor_payment" || lowerType === "vendorpayment") {
+          await tx.vendorPayment.update({
+            where: { id: sourceId },
+            data: { isReversed: true, deletedAt: new Date() }
+          });
+        }
+      } catch (err) {
+        console.error(`[PostingEngine] Failed to update operational source ${sourceType}:${sourceId} on reversal:`, err);
+      }
     }
   }
 

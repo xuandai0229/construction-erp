@@ -45,6 +45,8 @@ model User {
   company                                            Company?           @relation(fields: [companyId], references: [id])
   UserMaturity                                       UserMaturity?
   wbsDeleted                                         WBSItem[]          @relation("WBSDeletedBy")
+  fiscalYearsClosed                                  FiscalYear[]       @relation("FiscalYearClosedBy")
+  accountingPeriodsClosed                            AccountingPeriod[] @relation("AccountingPeriodClosedBy")
 
   @@index([createdAt])
   @@index([companyId])
@@ -62,44 +64,47 @@ model Category {
 }
 
 model Project {
-  id                   String                 @id @default(uuid())
-  name                 String
-  createdAt            DateTime               @default(now())
-  deletedAt            DateTime?
-  description          String?
-  ownerId              String?
-  status               ProjectStatus          @default(PLANNED)
-  updatedAt            DateTime               @updatedAt
-  contractValue        Decimal                @default(0) @db.Decimal(18, 2)
-  endDate              DateTime?
-  startDate            DateTime?
-  totalBudget          Decimal                @default(0) @db.Decimal(18, 2)
-  deletedById          String?
-  version              Int                    @default(1)
-  branchId             String?
-  companyId            String?
-  investor             String?
-  projectType          String?
-  ActivityFeed         ActivityFeed[]
-  ApprovalRequest      ApprovalRequest[]
-  BOQItem              BOQItem[]
-  BudgetVersion        BudgetVersion[]
-  contracts            Contract[]
-  Document             Document[]
-  InventoryTransaction InventoryTransaction[]
-  journalEntries       JournalEntry[]
-  branch               Branch?                @relation(fields: [branchId], references: [id])
-  company              Company?               @relation(fields: [companyId], references: [id])
-  deletedBy            User?                  @relation("ProjectDeletedBy", fields: [deletedById], references: [id])
-  owner                User?                  @relation("ProjectOwner", fields: [ownerId], references: [id])
-  purchaseOrders       PurchaseOrder[]
-  SiteConsumption      SiteConsumption[]
-  SiteLog              SiteLog[]
-  Subcontract          Subcontract[]
-  tasks                Task[]
-  VariationOrder       VariationOrder[]
-  wbsItems             WBSItem[]
-  VendorPayment        VendorPayment[]
+  id                     String                 @id @default(uuid())
+  name                   String
+  createdAt              DateTime               @default(now())
+  deletedAt              DateTime?
+  description            String?
+  ownerId                String?
+  status                 ProjectStatus          @default(PLANNED)
+  updatedAt              DateTime               @updatedAt
+  contractValue          Decimal                @default(0) @db.Decimal(18, 2)
+  endDate                DateTime?
+  startDate              DateTime?
+  totalBudget            Decimal                @default(0) @db.Decimal(18, 2)
+  deletedById            String?
+  version                Int                    @default(1)
+  branchId               String?
+  companyId              String?
+  investor               String?
+  projectType            String?
+  ActivityFeed           ActivityFeed[]
+  ApprovalRequest        ApprovalRequest[]
+  BOQItem                BOQItem[]
+  BudgetVersion          BudgetVersion[]
+  contracts              Contract[]
+  Document               Document[]
+  InventoryTransaction   InventoryTransaction[]
+  journalEntries         JournalEntry[]
+  branch                 Branch?                @relation(fields: [branchId], references: [id])
+  company                Company?               @relation(fields: [companyId], references: [id])
+  deletedBy              User?                  @relation("ProjectDeletedBy", fields: [deletedById], references: [id])
+  owner                  User?                  @relation("ProjectOwner", fields: [ownerId], references: [id])
+  purchaseOrders         PurchaseOrder[]
+  SiteConsumption        SiteConsumption[]
+  SiteLog                SiteLog[]
+  Subcontract            Subcontract[]
+  tasks                  Task[]
+  VariationOrder         VariationOrder[]
+  wbsItems               WBSItem[]
+  VendorPayment          VendorPayment[]
+  trialBalanceSnapshots  TrialBalanceSnapshot[]
+  balanceSheetSnapshots  BalanceSheetSnapshot[]
+  profitLossSnapshots    ProfitLossSnapshot[]
 
   @@index([status])
   @@index([ownerId])
@@ -331,6 +336,7 @@ model JournalEntry {
   sourceType   String?
   sourceId     String?
   isPosted     Boolean           @default(true)
+  isClosing    Boolean           @default(false)
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
   deletedAt    DateTime?
@@ -952,6 +958,7 @@ model Company {
   branches     Branch[]
   costs        CostRecord[]
   FiscalPeriod FiscalPeriod[]
+  fiscalYears  FiscalYear[]
   invoices     Invoice[]
   projects     Project[]
   users        User[]
@@ -1656,4 +1663,123 @@ model PaymentAllocation {
   @@index([paymentId])
   @@index([invoiceId])
   @@index([vendorPaymentId])
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ENTERPRISE ACCOUNTING PERIOD & FINANCIAL SNAPSHOT ENGINE
+// Phase 2: Fiscal Year, Closing Engine, Immutable Snapshots
+// ═══════════════════════════════════════════════════════════════
+
+enum PeriodStatus {
+  OPEN
+  CLOSED
+}
+
+model FiscalYear {
+  id         String       @id @default(uuid())
+  companyId  String
+  year       Int
+  startDate  DateTime
+  endDate    DateTime
+  status     PeriodStatus @default(OPEN)
+  closedAt   DateTime?
+  closedById String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  company  Company            @relation(fields: [companyId], references: [id])
+  closedBy User?              @relation(name: "FiscalYearClosedBy", fields: [closedById], references: [id])
+  periods  AccountingPeriod[]
+
+  @@unique([companyId, year])
+  @@index([companyId])
+}
+
+model AccountingPeriod {
+  id           String       @id @default(uuid())
+  fiscalYearId String
+  periodNumber Int
+  month        String
+  startDate    DateTime
+  endDate      DateTime
+  status       PeriodStatus @default(OPEN)
+  closedAt     DateTime?
+  closedById   String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  fiscalYear        FiscalYear             @relation(fields: [fiscalYearId], references: [id], onDelete: Cascade)
+  closedBy          User?                  @relation(name: "AccountingPeriodClosedBy", fields: [closedById], references: [id])
+  trialBalanceSnaps TrialBalanceSnapshot[]
+  balanceSheetSnaps BalanceSheetSnapshot[]
+  profitLossSnaps   ProfitLossSnapshot[]
+
+  @@unique([fiscalYearId, periodNumber])
+  @@unique([fiscalYearId, month])
+  @@index([month])
+  @@index([status])
+}
+
+model TrialBalanceSnapshot {
+  id                 String  @id @default(uuid())
+  accountingPeriodId String
+  projectId          String
+  accountCode        String
+  accountName        String
+  accountType        String
+  openingDebit       Decimal @default(0) @db.Decimal(18, 2)
+  openingCredit      Decimal @default(0) @db.Decimal(18, 2)
+  periodDebit        Decimal @default(0) @db.Decimal(18, 2)
+  periodCredit       Decimal @default(0) @db.Decimal(18, 2)
+  closingDebit       Decimal @default(0) @db.Decimal(18, 2)
+  closingCredit      Decimal @default(0) @db.Decimal(18, 2)
+  balance            Decimal @default(0) @db.Decimal(18, 2)
+  generatedAt        DateTime @default(now())
+  generatedById      String?
+
+  accountingPeriod AccountingPeriod @relation(fields: [accountingPeriodId], references: [id])
+  project          Project          @relation(fields: [projectId], references: [id])
+
+  @@unique([accountingPeriodId, projectId, accountCode])
+  @@index([accountingPeriodId])
+  @@index([projectId])
+}
+
+model BalanceSheetSnapshot {
+  id                 String  @id @default(uuid())
+  accountingPeriodId String
+  projectId          String
+  section            String
+  accountCode        String
+  accountName        String
+  balance            Decimal @default(0) @db.Decimal(18, 2)
+  generatedAt        DateTime @default(now())
+  generatedById      String?
+
+  accountingPeriod AccountingPeriod @relation(fields: [accountingPeriodId], references: [id])
+  project          Project          @relation(fields: [projectId], references: [id])
+
+  @@unique([accountingPeriodId, projectId, accountCode])
+  @@index([accountingPeriodId])
+  @@index([projectId])
+}
+
+model ProfitLossSnapshot {
+  id                 String  @id @default(uuid())
+  accountingPeriodId String
+  projectId          String
+  totalRevenue       Decimal @default(0) @db.Decimal(18, 2)
+  totalCost          Decimal @default(0) @db.Decimal(18, 2)
+  grossProfit        Decimal @default(0) @db.Decimal(18, 2)
+  grossMargin        Decimal @default(0) @db.Decimal(18, 4)
+  netProfit          Decimal @default(0) @db.Decimal(18, 2)
+  generatedAt        DateTime @default(now())
+  generatedById      String?
+
+  accountingPeriod AccountingPeriod @relation(fields: [accountingPeriodId], references: [id])
+  project          Project          @relation(fields: [projectId], references: [id])
+
+  @@unique([accountingPeriodId, projectId])
+  @@index([accountingPeriodId])
+  @@index([projectId])
 }

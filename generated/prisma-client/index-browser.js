@@ -318,6 +318,7 @@ exports.Prisma.JournalEntryScalarFieldEnum = {
   sourceType: 'sourceType',
   sourceId: 'sourceId',
   isPosted: 'isPosted',
+  isClosing: 'isClosing',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
@@ -1163,6 +1164,76 @@ exports.Prisma.PaymentAllocationScalarFieldEnum = {
   isReversed: 'isReversed'
 };
 
+exports.Prisma.FiscalYearScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  year: 'year',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  status: 'status',
+  closedAt: 'closedAt',
+  closedById: 'closedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AccountingPeriodScalarFieldEnum = {
+  id: 'id',
+  fiscalYearId: 'fiscalYearId',
+  periodNumber: 'periodNumber',
+  month: 'month',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  status: 'status',
+  closedAt: 'closedAt',
+  closedById: 'closedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TrialBalanceSnapshotScalarFieldEnum = {
+  id: 'id',
+  accountingPeriodId: 'accountingPeriodId',
+  projectId: 'projectId',
+  accountCode: 'accountCode',
+  accountName: 'accountName',
+  accountType: 'accountType',
+  openingDebit: 'openingDebit',
+  openingCredit: 'openingCredit',
+  periodDebit: 'periodDebit',
+  periodCredit: 'periodCredit',
+  closingDebit: 'closingDebit',
+  closingCredit: 'closingCredit',
+  balance: 'balance',
+  generatedAt: 'generatedAt',
+  generatedById: 'generatedById'
+};
+
+exports.Prisma.BalanceSheetSnapshotScalarFieldEnum = {
+  id: 'id',
+  accountingPeriodId: 'accountingPeriodId',
+  projectId: 'projectId',
+  section: 'section',
+  accountCode: 'accountCode',
+  accountName: 'accountName',
+  balance: 'balance',
+  generatedAt: 'generatedAt',
+  generatedById: 'generatedById'
+};
+
+exports.Prisma.ProfitLossSnapshotScalarFieldEnum = {
+  id: 'id',
+  accountingPeriodId: 'accountingPeriodId',
+  projectId: 'projectId',
+  totalRevenue: 'totalRevenue',
+  totalCost: 'totalCost',
+  grossProfit: 'grossProfit',
+  grossMargin: 'grossMargin',
+  netProfit: 'netProfit',
+  generatedAt: 'generatedAt',
+  generatedById: 'generatedById'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1373,6 +1444,11 @@ exports.CommitmentStatus = exports.$Enums.CommitmentStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.PeriodStatus = exports.$Enums.PeriodStatus = {
+  OPEN: 'OPEN',
+  CLOSED: 'CLOSED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Category: 'Category',
@@ -1449,7 +1525,12 @@ exports.Prisma.ModelName = {
   ClaimRecord: 'ClaimRecord',
   Commitment: 'Commitment',
   VendorPayment: 'VendorPayment',
-  PaymentAllocation: 'PaymentAllocation'
+  PaymentAllocation: 'PaymentAllocation',
+  FiscalYear: 'FiscalYear',
+  AccountingPeriod: 'AccountingPeriod',
+  TrialBalanceSnapshot: 'TrialBalanceSnapshot',
+  BalanceSheetSnapshot: 'BalanceSheetSnapshot',
+  ProfitLossSnapshot: 'ProfitLossSnapshot'
 };
 
 /**
