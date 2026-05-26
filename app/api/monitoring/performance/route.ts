@@ -2,9 +2,11 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { successResponse, handleApiError } from '@/lib/api-error';
 import { MetricsCollector } from '@/lib/metrics';
+import { requireAdmin, requireAuth } from '@/lib/route-security';
 
 export async function GET() {
   try {
+    await requireAdmin();
     const stats = await prisma.$transaction([
       prisma.auditLog.count({ where: { severity: "CRITICAL" } }),
       prisma.auditLog.count({ where: { severity: "WARNING" } }),
@@ -35,6 +37,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    await requireAuth();
     const { type } = await request.json();
     if (type) {
       MetricsCollector.recordExportUsage(type);

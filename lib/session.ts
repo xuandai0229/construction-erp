@@ -1,7 +1,22 @@
 import crypto from "crypto";
 import { ApiError } from "./api-error";
 
-const SESSION_SECRET = process.env.SESSION_SECRET || "erp-enterprise-vault-super-secure-signature-key-2026";
+const globalForSession = globalThis as unknown as { devSessionSecret?: string };
+
+function getSessionSecret() {
+  const secret = process.env.SESSION_SECRET;
+  if (secret && secret.length >= 32) return secret;
+
+  if (process.env.NODE_ENV === "production") {
+    throw new ApiError(500, "SESSION_SECRET must be configured with at least 32 characters in production.");
+  }
+
+  if (!globalForSession.devSessionSecret) {
+    globalForSession.devSessionSecret = crypto.randomBytes(48).toString("base64url");
+  }
+  return globalForSession.devSessionSecret;
+}
+
 const SESSION_EXPIRY_MS = 2 * 60 * 60 * 1000; // 2 hours session lifecycle (Batch 7.1)
 
 export interface SecureSession {
@@ -21,7 +36,7 @@ export class SessionManager {
     const payloadBase64 = Buffer.from(payload).toString("base64url");
     
     const signature = crypto
-      .createHmac("sha256", SESSION_SECRET)
+      .createHmac("sha256", getSessionSecret())
       .update(payloadBase64)
       .digest("base64url");
 
@@ -39,7 +54,7 @@ export class SessionManager {
 
     const [payloadBase64, signature] = parts;
     const expectedSignature = crypto
-      .createHmac("sha256", SESSION_SECRET)
+      .createHmac("sha256", getSessionSecret())
       .update(payloadBase64)
       .digest("base64url");
 

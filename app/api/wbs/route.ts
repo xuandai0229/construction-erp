@@ -1,6 +1,7 @@
 import { handleApiError, successResponse } from "@/lib/api-error";
 import { createWBSSchema } from "@/lib/validations";
 import { WBSService } from "@/services/wbs.service";
+import { requireProjectPermission } from "@/lib/route-security";
 
 export async function GET(request: Request) {
   try {
@@ -11,6 +12,7 @@ export async function GET(request: Request) {
       return successResponse({ tree: [], flat: [], stats: {} });
     }
 
+    await requireProjectPermission(projectId, "PROJECT", "READ");
     const result = await WBSService.findByProject(projectId);
     return successResponse(result);
   } catch (error) {
@@ -34,6 +36,7 @@ export async function POST(request: Request) {
     
     const body = await request.json();
     const data = createWBSSchema.parse(body);
+    await requireProjectPermission(data.projectId, "PROJECT", "UPDATE");
 
     const item = await WBSService.create(data, userId);
     return successResponse(item, null, 201);

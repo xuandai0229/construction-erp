@@ -8,8 +8,10 @@ services:
     command: npm run start
     environment:
       - PORT=3000
-      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres-primary:5432/hbcerp?schema=public}
+      - DATABASE_URL=${DATABASE_URL:?DATABASE_URL is required}
       - REDIS_URL=${REDIS_URL:-redis://redis-primary:6379}
+      - SESSION_SECRET=${SESSION_SECRET:?SESSION_SECRET is required}
+      - INTERNAL_SYSTEM_TOKEN=${INTERNAL_SYSTEM_TOKEN:?INTERNAL_SYSTEM_TOKEN is required}
       - NODE_ENV=production
     ports:
       - "3001:3000"
@@ -24,8 +26,10 @@ services:
     command: npm run start
     environment:
       - PORT=3000
-      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres-primary:5432/hbcerp?schema=public}
+      - DATABASE_URL=${DATABASE_URL:?DATABASE_URL is required}
       - REDIS_URL=${REDIS_URL:-redis://redis-primary:6379}
+      - SESSION_SECRET=${SESSION_SECRET:?SESSION_SECRET is required}
+      - INTERNAL_SYSTEM_TOKEN=${INTERNAL_SYSTEM_TOKEN:?INTERNAL_SYSTEM_TOKEN is required}
       - NODE_ENV=production
     ports:
       - "3002:3000"
@@ -40,8 +44,10 @@ services:
     command: npm run start
     environment:
       - PORT=3000
-      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres-primary:5432/hbcerp?schema=public}
+      - DATABASE_URL=${DATABASE_URL:?DATABASE_URL is required}
       - REDIS_URL=${REDIS_URL:-redis://redis-primary:6379}
+      - SESSION_SECRET=${SESSION_SECRET:?SESSION_SECRET is required}
+      - INTERNAL_SYSTEM_TOKEN=${INTERNAL_SYSTEM_TOKEN:?INTERNAL_SYSTEM_TOKEN is required}
       - NODE_ENV=production
     ports:
       - "3003:3000"
@@ -56,7 +62,7 @@ services:
     environment:
       - POSTGRES_DB=${POSTGRES_DB:-hbcerp}
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
     command: ["postgres", "-c", "wal_level=replica", "-c", "max_wal_senders=10", "-c", "hot_standby=on"]
     ports:
       - "5431:5432"
@@ -70,7 +76,7 @@ services:
     environment:
       - POSTGRES_DB=${POSTGRES_DB:-hbcerp}
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
     command: ["postgres", "-c", "hot_standby=on"]
     ports:
       - "5432:5432"
@@ -105,7 +111,8 @@ services:
   websocket-gateway:
     image: node:20-alpine
     container_name: websocket-gateway
-    command: node dist/websocket-server.js
+    profiles: ["disabled-until-built-artifact-exists"]
+    command: ["sh", "-c", "echo websocket gateway disabled: dist/websocket-server.js is not packaged in this repo && sleep infinity"]
     environment:
       - PORT=4000
       - REDIS_URL=redis://redis-primary:6379
@@ -118,9 +125,10 @@ services:
   worker-cluster:
     image: node:20-alpine
     container_name: worker-cluster
-    command: node dist/worker.js
+    profiles: ["disabled-until-built-artifact-exists"]
+    command: ["sh", "-c", "echo worker cluster disabled: dist/worker.js is not packaged in this repo && sleep infinity"]
     environment:
-      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres-primary:5432/hbcerp?schema=public}
+      - DATABASE_URL=${DATABASE_URL:?DATABASE_URL is required}
       - REDIS_URL=${REDIS_URL:-redis://redis-primary:6379}
     depends_on:
       - postgres-primary

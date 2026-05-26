@@ -1,15 +1,12 @@
 import { handleApiError, successResponse } from "@/lib/api-error";
-import { assertAuthenticated } from "@/lib/auth-guard";
+import { requireAdmin } from "@/lib/route-security";
 import { JobService } from "@/services/job.service";
 import { prisma } from "@/lib/prisma";
 import { MetricsCollector } from "@/lib/metrics";
 
 export async function GET(request: Request) {
   try {
-    const user = await assertAuthenticated();
-    if (user.role !== "SUPER_ADMIN" && user.role !== "ADMIN") {
-      throw new Error("Only system administrators can access queue diagnostics.");
-    }
+    await requireAdmin();
 
     const { searchParams } = new URL(request.url);
     const limit = Number(searchParams.get("limit") || "20");
@@ -49,10 +46,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const user = await assertAuthenticated();
-    if (user.role !== "SUPER_ADMIN" && user.role !== "ADMIN") {
-      throw new Error("Only system administrators can trigger worker iterations.");
-    }
+    await requireAdmin();
 
     const body = await request.json();
     const { action, type, payload } = body;

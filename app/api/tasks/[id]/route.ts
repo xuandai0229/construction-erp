@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
 import { TaskService } from "@/services/task.service";
 import { updateTaskSchema } from "@/lib/validations";
 import { handleApiError, successResponse } from "@/lib/api-error";
+import { requireProjectPermission } from "@/lib/route-security";
 
 export async function GET(
   request: Request,
@@ -10,6 +10,7 @@ export async function GET(
   try {
     const { id } = await params;
     const task = await TaskService.findById(id);
+    await requireProjectPermission(task.projectId, "PROJECT", "READ");
     return successResponse(task);
   } catch (error) {
     return handleApiError(error);
@@ -22,6 +23,8 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
+    const existing = await TaskService.findById(id);
+    await requireProjectPermission(existing.projectId, "PROJECT", "UPDATE");
     const body = await request.json();
     const validatedData = updateTaskSchema.parse(body);
     
@@ -38,6 +41,8 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
+    const existing = await TaskService.findById(id);
+    await requireProjectPermission(existing.projectId, "PROJECT", "UPDATE");
     await TaskService.delete(id);
     return successResponse({ message: "Task deleted successfully" });
   } catch (error) {

@@ -1,11 +1,9 @@
 import { handleApiError, successResponse, ApiError } from "@/lib/api-error";
 import { BudgetService } from "@/services/budget.service";
+import { requireProjectPermission } from "@/lib/route-security";
 
 export async function POST(request: Request) {
   try {
-    const userId = request.headers.get("x-user-id");
-    if (!userId) throw new ApiError(401, "Authentication required");
-
     const body = await request.json();
     if (!Array.isArray(body)) throw new ApiError(400, "Dữ liệu import phải là một mảng");
 
@@ -19,18 +17,19 @@ export async function POST(request: Request) {
         if (!row.projectId || !row.wbsId || !row.estimatedAmount) {
           throw new Error("Thiếu trường bắt buộc (projectId, wbsId, estimatedAmount)");
         }
+        const user = await requireProjectPermission(row.projectId, "PROJECT", "UPDATE");
         await BudgetService.create({
           projectId: row.projectId,
           wbsId: row.wbsId,
           costType: row.costType || "material",
           estimatedAmount: Number(row.estimatedAmount),
-          createdById: userId
+          createdById: user.id
         });
         successCount++;
         results.push({ row, status: 'success' });
-      } catch (err: any) {
+      } catch (err: unknown) {
         failCount++;
-        results.push({ row, status: 'error', error: err.message });
+        results.push({ row, status: 'error', error: err instanceof Error ? err.message : "Unknown import error" });
       }
     }
 

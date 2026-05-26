@@ -1,12 +1,17 @@
 import { eventBus } from '@/lib/event-bus';
+import { handleApiError } from '@/lib/api-error';
+import { requireAuth, requireProjectAccess } from '@/lib/route-security';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const projectId = searchParams.get('projectId');
+  try {
+    const user = await requireAuth();
+    const { searchParams } = new URL(request.url);
+    const projectId = searchParams.get('projectId');
+    if (projectId) await requireProjectAccess(user, projectId);
 
-  const stream = new ReadableStream({
+    const stream = new ReadableStream({
     start(controller) {
       const listener = (event: any) => {
         // If projectId is provided, only send events for that project
@@ -35,11 +40,14 @@ export async function GET(request: Request) {
     }
   });
 
-  return new Response(stream, {
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache, no-transform',
-      'Connection': 'keep-alive',
-    },
-  });
+    return new Response(stream, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache, no-transform',
+        'Connection': 'keep-alive',
+      },
+    });
+  } catch (error) {
+    return handleApiError(error);
+  }
 }

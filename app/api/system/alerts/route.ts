@@ -1,8 +1,18 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { auditSecurityAccess, requireAdmin } from "@/lib/route-security";
 
 export async function GET() {
   try {
+    const user = await requireAdmin();
+    await auditSecurityAccess({
+      userId: user.id,
+      entity: "SystemAlerts",
+      entityId: user.companyId || "GLOBAL",
+      reason: "System alerts accessed.",
+      severity: "WARNING",
+    });
+
     const alerts = await prisma.auditLog.findMany({
       where: {
         OR: [

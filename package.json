@@ -13,6 +13,7 @@
     "financial-check": "node scripts/audit/enterprise-audit-check.js",
     "integrity-check": "node scripts/audit/enterprise-audit-check.js",
     "security-check": "tsx scripts/audit/security_audit.ts",
+    "security:routes": "tsx scripts/security/route-security-inventory.ts",
     "stress-test": "tsx scripts/validation/stress_test.ts",
     "e2e": "playwright test",
     "validation:check": "tsx scripts/validation/check-validation-readiness.ts",

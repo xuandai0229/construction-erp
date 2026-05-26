@@ -33,7 +33,8 @@ async function verifySessionToken(token: string | undefined): Promise<Session | 
   const [payloadBase64, signature] = token.split('.');
   if (!payloadBase64 || !signature) return null;
 
-  const secret = process.env.SESSION_SECRET || 'erp-enterprise-vault-super-secure-signature-key-2026';
+  const secret = process.env.SESSION_SECRET;
+  if (!secret || secret.length < 32) return null;
   const key = await crypto.subtle.importKey(
     'raw',
     new TextEncoder().encode(secret),
@@ -100,7 +101,7 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(new URL('/', request.url));
     }
 
-    requestHeaders.set('x-user-id', session.userId);
+    requestHeaders.set('x-verified-user-id', session.userId);
     requestHeaders.set('x-user-role-verified', session.role);
   }
 

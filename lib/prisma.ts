@@ -1,5 +1,7 @@
 import { PrismaClient } from "../generated/prisma-client";
+import { validateRuntimeEnv } from "@/lib/env";
 
+validateRuntimeEnv();
 
 
 const prismaClientSingleton = () => {

@@ -1,11 +1,13 @@
 import { handleApiError, successResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
 import { ProjectService } from "@/services/project.service";
+import { requireAccountingAccess } from "@/lib/route-security";
 
 export async function GET(request: Request) {
   try {
+    const user = await requireAccountingAccess("READ");
     const projects = await prisma.project.findMany({
-      where: { deletedAt: null },
+      where: { deletedAt: null, ...(user.companyId && { companyId: user.companyId }) },
       take: 10,
       orderBy: { createdAt: "desc" }
     });

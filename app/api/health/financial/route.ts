@@ -1,9 +1,11 @@
 import { handleApiError, successResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
 import { ReconciliationService } from "@/services/reconciliation.service";
+import { requireAdmin } from "@/lib/route-security";
 
 export async function GET(request: Request) {
   try {
+    await requireAdmin();
     const { searchParams } = new URL(request.url);
     const includeDetails = searchParams.get("details") === "true";
 

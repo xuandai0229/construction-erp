@@ -1,9 +1,19 @@
 import { handleApiError, successResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
 import { MetricsService } from "@/services/metrics.service";
+import { auditSecurityAccess, requireAdmin } from "@/lib/route-security";
 
 export async function GET() {
   try {
+    const user = await requireAdmin();
+    await auditSecurityAccess({
+      userId: user.id,
+      entity: "AdminFinancialHealth",
+      entityId: user.companyId || "GLOBAL",
+      reason: "Admin financial health endpoint accessed.",
+      severity: "WARNING",
+    });
+
     const [
       snapshotCount,
       pendingEvents,

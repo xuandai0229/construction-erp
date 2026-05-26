@@ -7,6 +7,10 @@ import { AuditService } from "@/services/audit.service";
 
 export const INTERNAL_ADMIN_ID = "system_internal_admin";
 
+function isInternalAdminBypassEnabled() {
+  return process.env.ALLOW_INTERNAL_ADMIN_BYPASS === "true" && process.env.NODE_ENV !== "production";
+}
+
 export async function getVerifiedSession() {
   let head;
   try {
@@ -40,7 +44,7 @@ export async function getVerifiedSessionUserId() {
 export async function assertAuthenticated() {
   const session = await getVerifiedSession();
   if (!session) {
-    if (process.env.ALLOW_INTERNAL_ADMIN_BYPASS === "true") {
+    if (isInternalAdminBypassEnabled()) {
       return {
         id: INTERNAL_ADMIN_ID,
         role: UserRole.SUPER_ADMIN,
@@ -70,7 +74,7 @@ export async function assertHasRole(userId: string | undefined, allowedRoles: Us
   const verifiedUserId = await getVerifiedSessionUserId();
   const authoritativeUserId = verifiedUserId || userId;
 
-  if (!verifiedUserId && process.env.ALLOW_INTERNAL_ADMIN_BYPASS !== "true") {
+  if (!verifiedUserId && !isInternalAdminBypassEnabled()) {
     await AuditService.log({
       action: "AUTH_FAILED",
       entity: "Security",
@@ -82,7 +86,7 @@ export async function assertHasRole(userId: string | undefined, allowedRoles: Us
   }
 
   if (!authoritativeUserId || authoritativeUserId === INTERNAL_ADMIN_ID) {
-    if (process.env.ALLOW_INTERNAL_ADMIN_BYPASS !== "true") {
+    if (!isInternalAdminBypassEnabled()) {
       throw new ApiError(401, "Internal administrator bypass is disabled.");
     }
     return {

@@ -1,11 +1,22 @@
 
 import { handleApiError } from "@/lib/api-error";
 import { ReportingService } from "@/services/reporting.service";
+import { auditExportOrThrow, requireAccountingAccess } from "@/lib/route-security";
 
 export async function GET(request: Request) {
   try {
+    const user = await requireAccountingAccess("READ");
     const { searchParams } = new URL(request.url);
     const format = searchParams.get("format") || "json";
+    if (format === "csv") {
+      await requireAccountingAccess("EXPORT");
+      await auditExportOrThrow({
+        userId: user.id,
+        companyId: user.companyId,
+        reportType: "FINANCIAL_SUMMARY",
+        format: "csv",
+      });
+    }
 
     const data = await ReportingService.getMonthlyFinancialSummary();
 

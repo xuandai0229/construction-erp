@@ -40,10 +40,10 @@ const PERMISSION_MATRIX: Record<UserRole, Partial<Record<Module, Action[]>>> = {
     COST: ["READ", "CREATE", "UPDATE"],
     REVENUE: ["READ", "CREATE", "UPDATE"],
     INVOICE: ["READ", "CREATE", "UPDATE"],
-    LEDGER: ["READ"],
+    LEDGER: ["READ", "POST", "REVERSE"],
     PERIOD: ["READ"],
     AUDIT: ["READ"],
-    REPORT: ["READ"],
+    REPORT: ["READ", "EXPORT"],
     PROJECT: ["READ"]
   },
   MANAGER: {
@@ -83,7 +83,7 @@ const PERMISSION_MATRIX: Record<UserRole, Partial<Record<Module, Action[]>>> = {
     LEDGER: ["READ"],
     PERIOD: ["READ"],
     AUDIT: ["READ", "EXPORT"],
-    REPORT: ["READ", "EXPORT"],
+    REPORT: ["READ"],
     PROJECT: ["READ"]
   },
   VIEWER: {

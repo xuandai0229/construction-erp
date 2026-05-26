@@ -1,10 +1,9 @@
 import { handleApiError, successResponse, ApiError } from "@/lib/api-error";
-import { prisma } from "@/lib/prisma";
-import { assertAuthenticated } from "@/lib/auth-guard";
+import { auditExportOrThrow, requireAccountingAccess, requireProjectAccess } from "@/lib/route-security";
 
 export async function POST(request: Request) {
   try {
-    const user = await assertAuthenticated();
+    const user = await requireAccountingAccess("EXPORT");
     const body = await request.json();
     const { reportType, projectId } = body;
 
@@ -12,24 +11,14 @@ export async function POST(request: Request) {
       throw new ApiError(400, "Missing required parameters: reportType, projectId");
     }
 
-    const ipAddress = request.headers.get("x-forwarded-for") || "unknown";
-    const userAgent = request.headers.get("user-agent") || "unknown";
-
-    const audit = await prisma.auditLog.create({
-      data: {
-        userId: user.id,
-        action: "EXPORT_REPORT",
-        entity: reportType,
-        entityId: projectId,
-        ipAddress,
-        userAgent,
-        newData: {
-          reportType,
-          projectId,
-          exportedAt: new Date().toISOString()
-        },
-        severity: "WARNING" // Warning because it is a data export operation
-      }
+    await requireProjectAccess(user, projectId);
+    const audit = await auditExportOrThrow({
+      userId: user.id,
+      companyId: user.companyId,
+      projectId,
+      reportType,
+      format: String(body.format || "client_export"),
+      reason: body.reason
     });
 
     return successResponse({ success: true, logId: audit.id });

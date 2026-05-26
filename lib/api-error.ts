@@ -26,7 +26,7 @@ export interface ApiResponse<T = any> {
 export async function handleApiError(error: unknown) {
   const head = await headers();
   const requestId = head.get("x-request-id") || undefined;
-  const userId = head.get("x-user-id") || undefined;
+  const userId = undefined;
 
   if (error instanceof ZodError) {
     const errorMessages = error.issues?.map((e) => `${e.path.join('.')}: ${e.message}`).join(", ") || "Lỗi validation không xác định";

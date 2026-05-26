@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { safeDecimal } from "@/lib/math";
-import { assertAuthenticated, assertIsAccountant } from "@/lib/auth-guard";
+import { handleApiError } from "@/lib/api-error";
+import { requireAccountingAccess, requireProjectAccess } from "@/lib/route-security";
 
 export async function GET(request: Request) {
   try {
-    const user = await assertAuthenticated();
-    await assertIsAccountant(user.id); // CFO/ACCOUNTANT only
+    const user = await requireAccountingAccess("READ");
 
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("projectId");
@@ -27,9 +27,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ success: false, error: "Project not found" }, { status: 404 });
     }
 
-    if (user.companyId && project.companyId !== user.companyId) {
-      return NextResponse.json({ success: false, error: "Cross-tenant access denied" }, { status: 403 });
-    }
+    await requireProjectAccess(user, projectId);
 
     // 1. Fetch ledger accounts
     const accounts = await prisma.ledgerAccount.findMany({ orderBy: { code: "asc" } });
@@ -134,7 +132,7 @@ export async function GET(request: Request) {
         pagination: { page, limit }
       }
     });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  } catch (error) {
+    return handleApiError(error);
   }
 }

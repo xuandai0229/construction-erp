@@ -1,8 +1,7 @@
-import { NextResponse } from 'next/server';
 import { RevenueService } from '@/services/revenue.service';
-import { handleApiError, successResponse } from '@/lib/api-error';
-
-import { assertAuthenticated, assertIsManager } from '@/lib/auth-guard';
+import { handleApiError, successResponse, ApiError } from '@/lib/api-error';
+import { prisma } from '@/lib/prisma';
+import { requireProjectPermission } from '@/lib/route-security';
 
 export async function POST(
   request: Request,
@@ -11,10 +10,12 @@ export async function POST(
   try {
     const { id } = await params;
     const { status } = await request.json();
-    const user = await assertAuthenticated();
-
-    // Security Guard: Only Managers/Admins can approve
-    await assertIsManager(user.id);
+    const invoice = await prisma.invoice.findFirst({
+      where: { id, deletedAt: null },
+      select: { projectId: true },
+    });
+    if (!invoice) throw new ApiError(404, "Invoice not found.");
+    const user = await requireProjectPermission(invoice.projectId, "INVOICE", "APPROVE");
     
     const result = await RevenueService.updateInvoiceApproval(id, status, user.id);
     return successResponse(result);

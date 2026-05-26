@@ -1,10 +1,10 @@
 import { handleApiError, successResponse, ApiError } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
-import { assertAuthenticated } from "@/lib/auth-guard";
+import { requireAccountingAccess, requireProjectAccess } from "@/lib/route-security";
 
 export async function GET(request: Request) {
   try {
-    const user = await assertAuthenticated();
+    const user = await requireAccountingAccess("READ");
 
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("projectId") || searchParams.get("project_id");
@@ -13,18 +13,7 @@ export async function GET(request: Request) {
       throw new ApiError(400, "ProjectId is required for reconciliation");
     }
 
-    // Validate Project & Tenant Boundary
-    const project = await prisma.project.findFirst({
-      where: { id: projectId, deletedAt: null }
-    });
-
-    if (!project) {
-      throw new ApiError(404, "Project not found");
-    }
-
-    if (user.companyId && project.companyId !== user.companyId) {
-      throw new ApiError(403, "Cross-tenant reconciliation denied");
-    }
+    await requireProjectAccess(user, projectId);
 
     // ─── 1. AR DRIFT ───────────────────────────────────────────
     const [opInvoiceSum, ledgerArDebit, ledgerArCredit] = await Promise.all([

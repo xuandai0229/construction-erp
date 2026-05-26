@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { AuditService } from "@/services/audit.service";
 import { headers } from "next/headers";
-import { assertHasRole } from "@/lib/auth-guard";
-import { UserRole } from "../../../../generated/prisma-client";
-import { ApiError } from "@/lib/api-error";
+import { prisma } from "@/lib/prisma";
+import { handleApiError, ApiError } from "@/lib/api-error";
+import { AuditService } from "@/services/audit.service";
+import { auditSecurityAccess, requireSuperAdmin } from "@/lib/route-security";
 
-async function getServiceOptions() {
+async function getRequestContext() {
   const head = await headers();
   return {
-    userId: head.get("x-user-id") || "system_internal_admin",
     correlationId: head.get("x-correlation-id") || crypto.randomUUID(),
     ipAddress: head.get("x-forwarded-for") || head.get("remote-addr") || undefined,
     userAgent: head.get("user-agent") || undefined,
@@ -18,10 +16,8 @@ async function getServiceOptions() {
 
 export async function GET() {
   try {
-    const options = await getServiceOptions();
-    
-    // Authorization Hardening: Only Super Admin can export raw backup snapshots (Batch 7.2 & 7.6)
-    await assertHasRole(options.userId, [UserRole.SUPER_ADMIN]);
+    const user = await requireSuperAdmin();
+    const context = await getRequestContext();
 
     const [
       users,
@@ -37,7 +33,7 @@ export async function GET() {
       journalEntries,
       transactionLines,
       fiscalPeriods,
-      auditLogs
+      auditLogs,
     ] = await Promise.all([
       prisma.user.findMany(),
       prisma.project.findMany(),
@@ -52,20 +48,23 @@ export async function GET() {
       prisma.journalEntry.findMany(),
       prisma.transactionLine.findMany(),
       prisma.fiscalPeriod.findMany(),
-      prisma.auditLog.findMany()
+      prisma.auditLog.findMany(),
     ]);
 
-    // Audit backup export event (Batch 7.2 & 7.7)
-    await AuditService.log({
-      userId: options.userId !== "system_internal_admin" ? options.userId : undefined,
-      action: "UPDATE",
-      entity: "System",
-      entityId: "SYSTEM_BACKUP",
-      reason: "Trích xuất sao lưu dữ liệu toàn cục thành công.",
-      severity: "WARNING",
-      correlationId: options.correlationId,
-      ipAddress: options.ipAddress,
-      userAgent: options.userAgent
+    await auditSecurityAccess({
+      userId: user.id,
+      entity: "SystemBackup",
+      entityId: user.companyId || "GLOBAL",
+      reason: "Super admin exported a full system backup snapshot.",
+      severity: "CRITICAL",
+      data: {
+        companyId: user.companyId,
+        projectId: null,
+        reportType: "system-backup",
+        format: "json",
+        timestamp: new Date().toISOString(),
+        correlationId: context.correlationId,
+      },
     });
 
     return NextResponse.json({
@@ -85,47 +84,65 @@ export async function GET() {
         journalEntries,
         transactionLines,
         fiscalPeriods,
-        auditLogs
-      }
+        auditLogs,
+      },
     });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: error.statusCode || 500 });
+  } catch (error) {
+    return handleApiError(error);
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const options = await getServiceOptions();
+    const user = await requireSuperAdmin();
+    const context = await getRequestContext();
+    const { backup, confirmationToken, reason } = await request.json();
 
-    // Authorization Hardening: Only Super Admin can restore database state (Batch 7.2)
-    await assertHasRole(options.userId, [UserRole.SUPER_ADMIN]);
-
-    const { backup } = await request.json();
     if (!backup || typeof backup !== "object") {
-      return NextResponse.json({ success: false, error: "Dữ liệu sao lưu không hợp lệ." }, { status: 400 });
+      throw new ApiError(400, "Invalid backup payload.");
+    }
+    if (confirmationToken !== "CONFIRM_RESTORE") {
+      throw new ApiError(400, "Restore requires confirmationToken=CONFIRM_RESTORE.");
+    }
+    if (typeof reason !== "string" || reason.trim().length < 10) {
+      throw new ApiError(400, "Restore requires an explicit audit reason of at least 10 characters.");
     }
 
-    // Schema and Integrity validation check (Batch 7.6 backup verification)
+    await auditSecurityAccess({
+      userId: user.id,
+      entity: "SystemRestore",
+      entityId: user.companyId || "GLOBAL",
+      reason: `Restore requested: ${reason.trim()}`,
+      severity: "CRITICAL",
+      data: {
+        companyId: user.companyId,
+        projectId: null,
+        reportType: "system-restore",
+        format: "json",
+        timestamp: new Date().toISOString(),
+        correlationId: context.correlationId,
+      },
+    });
+
     const requiredTables = ["users", "projects", "costs", "ledgerAccounts", "journalEntries", "transactionLines"];
     for (const table of requiredTables) {
       if (!Array.isArray(backup[table])) {
-        // Log critical backup corruption security alert
         await AuditService.log({
-          userId: options.userId !== "system_internal_admin" ? options.userId : undefined,
+          userId: user.id,
           action: "SECURITY_ALERT",
           entity: "System",
           entityId: "SYSTEM_RESTORE_FAIL",
-          reason: `Phục hồi thất bại: File backup bị lỗi cấu trúc dữ liệu bảng ${table}.`,
+          reason: `Restore failed: backup payload is missing required table ${table}.`,
           severity: "CRITICAL",
-          correlationId: options.correlationId
+          correlationId: context.correlationId,
+          ipAddress: context.ipAddress,
+          userAgent: context.userAgent,
         });
-        return NextResponse.json({ success: false, error: `Sao lưu bị lỗi hoặc thiếu dữ liệu bảng bắt buộc: ${table}` }, { status: 400 });
+        throw new ApiError(400, `Backup is missing required table: ${table}`);
       }
     }
 
-    // Perform validation and restoration inside a SINGLE isolated transaction for absolute safety! (Batch 6.6)
     await prisma.$transaction(async (tx) => {
-      // 1. Delete all records in safe topological order to satisfy foreign key constraints
       await tx.transactionLine.deleteMany();
       await tx.journalEntry.deleteMany();
       await tx.ledgerAccount.deleteMany();
@@ -138,10 +155,8 @@ export async function POST(request: Request) {
       await tx.wBSItem.deleteMany();
       await tx.project.deleteMany();
       await tx.fiscalPeriod.deleteMany();
-      await tx.auditLog.deleteMany();
       await tx.user.deleteMany();
 
-      // 2. Re-insert records in correct topological order
       if (backup.users?.length) await tx.user.createMany({ data: backup.users });
       if (backup.fiscalPeriods?.length) await tx.fiscalPeriod.createMany({ data: backup.fiscalPeriods });
       if (backup.projects?.length) await tx.project.createMany({ data: backup.projects });
@@ -155,24 +170,22 @@ export async function POST(request: Request) {
       if (backup.ledgerAccounts?.length) await tx.ledgerAccount.createMany({ data: backup.ledgerAccounts });
       if (backup.journalEntries?.length) await tx.journalEntry.createMany({ data: backup.journalEntries });
       if (backup.transactionLines?.length) await tx.transactionLine.createMany({ data: backup.transactionLines });
-      if (backup.auditLogs?.length) await tx.auditLog.createMany({ data: backup.auditLogs });
     });
 
-    // Write restoration audit entry
     await AuditService.log({
-      userId: options.userId !== "system_internal_admin" ? options.userId : undefined,
+      userId: user.id,
       action: "RESTORE",
       entity: "System",
       entityId: "SYSTEM_RESTORE",
-      reason: "Khôi phục dữ liệu toàn cục từ file JSON sao lưu thành công.",
+      reason: `Full system restore completed. Reason: ${reason.trim()}`,
       severity: "CRITICAL",
-      correlationId: options.correlationId,
-      ipAddress: options.ipAddress,
-      userAgent: options.userAgent
+      correlationId: context.correlationId,
+      ipAddress: context.ipAddress,
+      userAgent: context.userAgent,
     });
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: error.statusCode || 500 });
+  } catch (error) {
+    return handleApiError(error);
   }
 }

@@ -501,7 +501,7 @@ export default function CostsPage() {
                   try {
                     const res = await fetch(`/api/costs/${selectedCost.id}/approve`, {
                       method: 'POST',
-                      headers: { 'Content-Type': 'application/json', 'x-user-id': 'admin' },
+                      headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({ status: nextStatus })
                     });
                     if (res.ok) {
@@ -540,8 +540,7 @@ export default function CostsPage() {
                           setIsProcessing(true);
                           try {
                             const res = await fetch(`/api/costs/${selectedCost.id}`, {
-                              method: 'DELETE',
-                              headers: { 'x-user-id': 'admin' }
+                              method: 'DELETE'
                             });
                             if (res.ok) {
                               queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(currentProjectId) });

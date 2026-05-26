@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { handleApiError, successResponse } from '@/lib/api-error';
 import { PythonAnalyticsService } from '@/services/python-analytics.service';
+import { requireProjectAccess, requireProjectPermission } from '@/lib/route-security';
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,6 +15,8 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    const user = await requireProjectPermission(projectId, "PROJECT", "READ");
+    await requireProjectAccess(user, projectId);
     const data = await PythonAnalyticsService.runAnalytics(projectId, 'chat', query);
     return successResponse(data);
   } catch (error) {

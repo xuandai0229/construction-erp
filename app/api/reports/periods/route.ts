@@ -1,8 +1,10 @@
 import { handleApiError, successResponse, ApiError } from "@/lib/api-error";
 import { FinancialAggregationService } from "@/services/financial-aggregation.service";
+import { auditSecurityAccess, requireAccountingAccess, requirePermission } from "@/lib/route-security";
 
 export async function GET() {
   try {
+    await requireAccountingAccess("READ");
     const lockedMonths = await FinancialAggregationService.getLockedMonths();
     return successResponse(lockedMonths);
   } catch (error) {
@@ -12,14 +14,21 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const user = await requirePermission("PERIOD", "LOCK");
     const { month } = await request.json();
     
     if (!month) {
       throw new ApiError(400, "Month is required");
     }
 
-    // In stabilization mode, we use a placeholder or system user
-    const result = await FinancialAggregationService.toggleFiscalPeriod(month, "system-admin");
+    await auditSecurityAccess({
+      userId: user.id,
+      entity: "FiscalPeriod",
+      entityId: month,
+      reason: "Legacy fiscal period toggle requested.",
+      severity: "WARNING",
+    });
+    const result = await FinancialAggregationService.toggleFiscalPeriod(month, user.id);
     return successResponse(result);
   } catch (error) {
     return handleApiError(error);
