@@ -103,7 +103,6 @@ export default function RevenueListPage() {
                 <TableVirtuoso
                   useWindowScroll
                   data={revenues}
-                  components={StableTableComponents}
                   fixedHeaderContent={() => (
                     <tr>
                       <th className="w-[100px] bg-[var(--table-head-bg)]">Ngày</th>
@@ -143,20 +142,18 @@ export default function RevenueListPage() {
                       </td>
                     </>
                   )}
-                  components={{
-                    ...StableTableComponents,
-                    Footer: () => (
-                      <tr className="bg-[var(--table-head-bg)] border-t-2 border-[var(--border)] h-10">
-                        <td colSpan={3} className="text-right px-4 py-2 font-black text-[11px] uppercase tracking-wider text-[var(--text-secondary)]">
-                          Tổng cộng
-                        </td>
-                        <td className="text-right px-4 py-2 tabular-nums font-black text-emerald-500 text-[13px]">
-                          {formatVnd(totalAmount)}
-                        </td>
-                        <td colSpan={2}></td>
-                      </tr>
-                    )
-                  }}
+                  components={StableTableComponents}
+                  fixedFooterContent={() => (
+                    <tr className="bg-[var(--table-head-bg)] border-t-2 border-[var(--border)] h-10">
+                      <td colSpan={3} className="text-right px-4 py-2 font-black text-[11px] uppercase tracking-wider text-[var(--text-secondary)]">
+                        Tổng cộng
+                      </td>
+                      <td className="text-right px-4 py-2 tabular-nums font-black text-emerald-500 text-[13px]">
+                        {formatVnd(totalAmount)}
+                      </td>
+                      <td colSpan={2}></td>
+                    </tr>
+                  )}
                 />
               )}
             </div>

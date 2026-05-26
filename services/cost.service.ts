@@ -333,7 +333,8 @@ export class CostService {
     // 1.5. Validate Transition
     CostWorkflow.validateTransition(existing.workflowStatus, nextStatus);
 
-    const item = await prisma.$transaction(async (tx) => {
+    try {
+      const item = await prisma.$transaction(async (tx) => {
       // 2. Update Status
       const item = await tx.costRecord.update({
         where: { id, version: existing.version },
@@ -375,17 +376,23 @@ export class CostService {
       return item;
     });
 
-    eventBus.publish({
-      type: nextStatus === "APPROVED" ? 'COST_APPROVED' : 
-            nextStatus === "POSTED" ? 'COST_POSTED' : 
-            nextStatus === "REJECTED" ? 'COST_REJECTED' : 'COST_UPDATED',
-      payload: item,
-      metadata: { userId, projectId: item.projectId }
-    }).catch((e) => {
-      LoggerService.error("Failed to publish cost state transition event", { error: e });
-    });
+      eventBus.publish({
+        type: nextStatus === "APPROVED" ? 'COST_APPROVED' : 
+              nextStatus === "POSTED" ? 'COST_POSTED' : 
+              nextStatus === "REJECTED" ? 'COST_REJECTED' : 'COST_UPDATED',
+        payload: item,
+        metadata: { userId, projectId: item.projectId }
+      }).catch((e) => {
+        LoggerService.error("Failed to publish cost state transition event", { error: e });
+      });
 
-    return item;
+      return item;
+    } catch (error: any) {
+      if (error.code === 'P2025') {
+        throw new ApiError(409, "Xung đột dữ liệu (Concurrency): Chứng từ này đã được phê duyệt hoặc cập nhật bởi một người dùng khác. Vui lòng tải lại trang.");
+      }
+      throw error;
+    }
   }
 
   static async findByProject(projectId: string, filters: { costType?: string; status?: string; startDate?: string; endDate?: string; limit?: number; skip?: number } = {}, companyId?: string | null) {

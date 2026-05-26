@@ -219,6 +219,11 @@ export class RevenueService {
       });
 
       return payment;
+    }).catch(error => {
+      if (error.code === 'P2025') {
+        throw new ApiError(409, "Xung đột dữ liệu (Concurrency): Hóa đơn đã được cập nhật bởi một phiên giao dịch khác. Vui lòng tải lại trang.");
+      }
+      throw error;
     });
   }
 
@@ -298,6 +303,11 @@ export class RevenueService {
       });
 
       return updated;
+    }).catch(error => {
+      if (error.code === 'P2025') {
+        throw new ApiError(409, "Xung đột dữ liệu (Concurrency): Hóa đơn đã được cập nhật bởi một phiên giao dịch khác. Vui lòng tải lại trang.");
+      }
+      throw error;
     });
   }
 

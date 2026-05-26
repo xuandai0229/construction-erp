@@ -435,7 +435,7 @@ export default function BudgetPage() {
                 <tbody>
                   {filteredTree.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="h-40 text-center text-[12px] font-bold text-[var(--text-muted)] uppercase tracking-widest bg-[var(--card)]">
+                      <td colSpan={7} className="h-32 text-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest bg-[var(--table-head-bg)]">
                         Không tìm thấy phân bổ ngân sách nào
                       </td>
                     </tr>
@@ -527,7 +527,7 @@ export default function BudgetPage() {
                         );
                       }) )}
                 </tbody>
-                <tfoot className="border-t-2 border-[var(--border)] bg-[var(--secondary)]/40 font-black">
+                <tfoot className="border-t-2 border-[var(--border)] bg-[var(--secondary)]/40 font-black sticky bottom-0 z-20 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
                   <tr>
                     <td className={`${COL_WIDTHS.INDEX} text-center border-r border-[var(--border)]`}></td>
                     <td className={`${COL_WIDTHS.NAME_WBS} px-4 py-3 text-[11px] uppercase tracking-wider text-[var(--text-primary)] border-r border-[var(--border)]`}>TỔNG CỘNG HỆ THỐNG</td>

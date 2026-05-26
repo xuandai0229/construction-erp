@@ -8,8 +8,8 @@ services:
     command: npm run start
     environment:
       - PORT=3000
-      - DATABASE_URL=postgresql://postgres:hbcerp_secure_2026@postgres-primary:5432/hbcerp?schema=public
-      - REDIS_URL=redis://redis-primary:6379
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres-primary:5432/hbcerp?schema=public}
+      - REDIS_URL=${REDIS_URL:-redis://redis-primary:6379}
       - NODE_ENV=production
     ports:
       - "3001:3000"
@@ -24,8 +24,8 @@ services:
     command: npm run start
     environment:
       - PORT=3000
-      - DATABASE_URL=postgresql://postgres:hbcerp_secure_2026@postgres-primary:5432/hbcerp?schema=public
-      - REDIS_URL=redis://redis-primary:6379
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres-primary:5432/hbcerp?schema=public}
+      - REDIS_URL=${REDIS_URL:-redis://redis-primary:6379}
       - NODE_ENV=production
     ports:
       - "3002:3000"
@@ -40,8 +40,8 @@ services:
     command: npm run start
     environment:
       - PORT=3000
-      - DATABASE_URL=postgresql://postgres:hbcerp_secure_2026@postgres-primary:5432/hbcerp?schema=public
-      - REDIS_URL=redis://redis-primary:6379
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres-primary:5432/hbcerp?schema=public}
+      - REDIS_URL=${REDIS_URL:-redis://redis-primary:6379}
       - NODE_ENV=production
     ports:
       - "3003:3000"
@@ -54,9 +54,9 @@ services:
     image: postgres:16-alpine
     container_name: postgres-primary
     environment:
-      - POSTGRES_DB=hbcerp
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=hbcerp_secure_2026
+      - POSTGRES_DB=${POSTGRES_DB:-hbcerp}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
     command: ["postgres", "-c", "wal_level=replica", "-c", "max_wal_senders=10", "-c", "hot_standby=on"]
     ports:
       - "5431:5432"
@@ -68,9 +68,9 @@ services:
     image: postgres:16-alpine
     container_name: postgres-replica
     environment:
-      - POSTGRES_DB=hbcerp
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=hbcerp_secure_2026
+      - POSTGRES_DB=${POSTGRES_DB:-hbcerp}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
     command: ["postgres", "-c", "hot_standby=on"]
     ports:
       - "5432:5432"
@@ -120,8 +120,8 @@ services:
     container_name: worker-cluster
     command: node dist/worker.js
     environment:
-      - DATABASE_URL=postgresql://postgres:hbcerp_secure_2026@postgres-primary:5432/hbcerp?schema=public
-      - REDIS_URL=redis://redis-primary:6379
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres-primary:5432/hbcerp?schema=public}
+      - REDIS_URL=${REDIS_URL:-redis://redis-primary:6379}
     depends_on:
       - postgres-primary
       - redis-primary

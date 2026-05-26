@@ -197,15 +197,22 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
               }}
             />
           )}
-          {flattenedNodes.length === 0 ? (
-            <div className="h-32 flex items-center justify-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest bg-[var(--table-head-bg)]">
-              Không có dữ liệu hạng mục
-            </div>
-          ) : (
-            <TableVirtuoso
-              data={flattenedNodes}
-              computeItemKey={(index, node) => node.id}
-              components={WBSStableTableComponents}
+          <TableVirtuoso
+            className="h-full"
+            data={flattenedNodes}
+            computeItemKey={(index, node) => node.id}
+            components={{
+              ...WBSStableTableComponents,
+              EmptyPlaceholder: () => (
+                <tbody>
+                  <tr>
+                    <td colSpan={9} className="h-32 text-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest bg-[var(--table-head-bg)]">
+                      Không có dữ liệu hạng mục
+                    </td>
+                  </tr>
+                </tbody>
+              )
+            }}
               fixedHeaderContent={() => (
                 <tr>
                   <th className={`sticky top-0 z-10 ${COL_WIDTHS.CHECKBOX} text-center bg-[var(--table-head-bg)] border-r border-[var(--border)]`}>
@@ -299,19 +306,15 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                   </>
                 );
               }}
-            />
-          )}
-
-          {/* TFOOT implementation - Perfectly aligned with Header/Body */}
-          <div className="border-t-2 border-[var(--border)] bg-[var(--secondary)] sticky bottom-0 z-20 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
-            <table className="erp-table w-full table-fixed min-w-max">
-              <tbody>
-                <tr className="group">
+              fixedFooterContent={() => (
+                <tr className="bg-[var(--secondary)] border-t-2 border-[var(--border)] shadow-[0_-4px_12px_rgba(0,0,0,0.05)] group">
                   <td className={`${COL_WIDTHS.CHECKBOX} border-r border-[var(--border)]`}></td>
                   <td className={`${COL_WIDTHS.INDEX} border-r border-[var(--border)]`}></td>
-                  <td className={`${COL_WIDTHS.NAME_WBS} px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--text-primary)] border-r border-[var(--border)] flex items-center`}>
-                    <div className="h-2 w-2 rounded-full bg-blue-500 mr-2"></div>
-                    TỔNG CỘNG DỰ TOÁN
+                  <td className={`${COL_WIDTHS.NAME_WBS} px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--text-primary)] border-r border-[var(--border)]`}>
+                    <div className="flex items-center">
+                      <div className="h-2 w-2 rounded-full bg-blue-500 mr-2"></div>
+                      TỔNG CỘNG DỰ TOÁN
+                    </div>
                   </td>
                   <td className={`${COL_WIDTHS.FINANCIAL} px-4 py-3 text-right ${FINANCIAL_CELL_CLASS} text-[14px] font-black text-blue-600 border-r border-[var(--border)] tabular-nums`}>
                     {totalBudget.toLocaleString()}
@@ -328,9 +331,8 @@ export default function WBSTable({ nodes, onToggleExpand, onEdit, onAddChild, to
                   <td className={`${COL_WIDTHS.STATUS} border-r border-[var(--border)]`}></td>
                   <td className={`${COL_WIDTHS.ACTIONS}`}></td>
                 </tr>
-              </tbody>
-            </table>
-          </div>
+              )}
+            />
         </div>
 
         <ConfirmModal

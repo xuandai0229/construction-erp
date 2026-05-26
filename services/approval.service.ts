@@ -17,6 +17,18 @@ export class ApprovalService {
     reason?: string;
   }) {
     return prisma.$transaction(async (tx) => {
+      // 0. Idempotency Check / Anti Double-Submit
+      const existingPending = await tx.approvalRequest.findFirst({
+        where: {
+          entityType: data.entityType,
+          entityId: data.entityId,
+          status: "PENDING"
+        }
+      });
+      if (existingPending) {
+        return existingPending;
+      }
+
       // 1. Tạo request
       const id = crypto.randomUUID();
       const request = await tx.approvalRequest.create({
