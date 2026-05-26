@@ -182,6 +182,9 @@ export class PostingEngine {
     lines: { accountCode: string, amount: number, type: TransactionType }[];
   }) {
     const startTime = Date.now();
+    // 0. Period Lock Check
+    await this.assertPeriodNotLocked(new Date());
+
     // 0. Verify no duplicate posting for source record
     if (params.sourceId && params.sourceType) {
       const activeEntry = await tx.journalEntry.findFirst({
@@ -251,6 +254,9 @@ export class PostingEngine {
 
     if (!oldEntry) return; // Nothing to reverse
     if (oldEntry.isReversed) throw new Error("Giao dịch đã được hủy trước đó.");
+
+    // Period Lock Check for Reversal Entry (Reversals happen in the current period, not the original period)
+    await this.assertPeriodNotLocked(new Date());
 
     // Mark old entry as reversed
     await tx.journalEntry.update({

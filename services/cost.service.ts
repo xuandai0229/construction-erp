@@ -16,6 +16,7 @@ export interface ServiceOptions {
   correlationId?: string;
   ipAddress?: string;
   userAgent?: string;
+  reason?: string;
 }
 
 export class CostService {
@@ -360,11 +361,12 @@ export class CostService {
 
       await AuditService.log({
         userId,
-        action: nextStatus === "APPROVED" ? "APPROVE" : nextStatus === "REJECTED" ? "REJECT" : "UPDATE",
+        action: nextStatus === "APPROVED" ? "APPROVE" : nextStatus === "REJECTED" ? "REJECT" : nextStatus === "REVERSED" ? "REVERSE" : "UPDATE",
         entity: "CostRecord",
         entityId: id,
         oldData: existing,
         newData: item,
+        reason: options.reason || `Chuyển trạng thái sang ${nextStatus}`,
         correlationId,
         ipAddress: options.ipAddress,
         userAgent: options.userAgent

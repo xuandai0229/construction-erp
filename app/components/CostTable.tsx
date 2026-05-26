@@ -29,14 +29,14 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
 
   const getWBSName = (id: string) => wbs.find((w: { id: string, name: string }) => w.id === id)?.name || '—';
 
-  const executeAction = async () => {
+  const executeAction = async (reason?: string) => {
     if (!confirmAction) return;
     setIsProcessing(true);
     try {
       if (confirmAction.type === 'DELETE') {
         await deleteCost(confirmAction.id);
       } else if (confirmAction.type === 'LOCKED') {
-        await transitionCost({ id: confirmAction.id, status: 'REVERSED' });
+        await transitionCost({ id: confirmAction.id, status: 'REVERSED', reason });
       }
       setConfirmAction(null);
     } catch (err: unknown) {
@@ -162,6 +162,17 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
                   </tr>
                 ))}
               </tbody>
+              <tfoot className="bg-[var(--table-head-bg)] shadow-[0_-1px_0_var(--border)] z-10 sticky bottom-0 font-black text-[var(--text-primary)]">
+                <tr className="border-t-2 border-[var(--border)] h-10">
+                  <td colSpan={4} className="text-right px-4 py-2 text-[11px] uppercase tracking-wider text-[var(--text-secondary)] border-r border-[var(--border)]">
+                    Tổng cộng trang này
+                  </td>
+                  <td className="text-right px-4 py-2 tabular-nums text-emerald-500 text-[13px] border-r border-[var(--border)]">
+                    {formatVnd(visibleCosts.reduce((sum, cost) => sum + Number(cost.amount), 0))}
+                  </td>
+                  <td colSpan={2}></td>
+                </tr>
+              </tfoot>
             </table>
           )}
         </div>
@@ -202,6 +213,7 @@ export default function CostTable({ costs, onEdit }: { costs: CostRecord[], onEd
         variant={confirmAction?.type === 'LOCKED' ? 'archive' : 'danger'}
         confirmLabel={confirmAction?.type === 'LOCKED' ? "Hoàn bút toán" : "Xóa vĩnh viễn"}
         businessContext={confirmAction?.type === 'LOCKED' ? "Hoàn bút toán sẽ sinh ra một giao dịch đảo ngược (Reverse Journal) để đảm bảo toàn vẹn dữ liệu cho công tác kiểm toán." : undefined}
+        requireReason={confirmAction?.type === 'LOCKED'}
       />
     </>
   );

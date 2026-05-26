@@ -273,6 +273,9 @@ export class RevenueService {
         throw new ApiError(400, `Không thể sửa hóa đơn đã ${existing.status}. Vui lòng sử dụng quy trình điều chỉnh.`);
       }
 
+      const { assertPeriodNotLocked } = await import("@/lib/period");
+      await assertPeriodNotLocked(existing.issuedDate);
+
       const updated = await tx.invoice.update({
         where: { id, version: existing.version },
         data: {

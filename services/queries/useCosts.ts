@@ -55,8 +55,8 @@ export function useTransitionCostMutation(projectId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const res = await costApi.transitionCost(id, status);
+    mutationFn: async ({ id, status, reason }: { id: string; status: string; reason?: string }) => {
+      const res = await costApi.transitionCost(id, status, reason);
       if (!res.success) {
         const err: any = new Error(res.error || 'Failed to transition cost');
         err.metadata = res.metadata;

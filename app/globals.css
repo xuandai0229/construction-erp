@@ -412,6 +412,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   white-space: nowrap;
   backdrop-filter: blur(12px);
   box-shadow: none;
+  vertical-align: middle;
 }
 
 .erp-table td {
@@ -421,6 +422,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   color: var(--text-primary);
   font-size: 0.8125rem;
   transition: background-color var(--motion-duration-fast) var(--motion-easing-standard);
+  vertical-align: middle;
+  overflow-wrap: anywhere;
 }
 
 .erp-table tr:last-child td {
@@ -477,6 +480,26 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .erp-btn:active {
   transform: scale(0.98) translateY(0);
   transition-duration: var(--motion-duration-instant);
+}
+
+.erp-btn:focus-visible,
+.erp-input:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.erp-table-empty {
+  min-height: 9rem;
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--divider);
+  border-radius: 0.75rem;
+  color: var(--text-tertiary);
+  background: color-mix(in srgb, var(--card) 70%, transparent);
 }
 
 /* ─── Utility ─────────────────────────────────────────────── */
@@ -836,3 +859,4 @@ select {
 .backdrop-fade {
   animation: backdrop-fade var(--motion-duration-base) var(--motion-easing-gentle) forwards;
 }
+@media print { @page { size: A4 landscape; margin: 1cm; } body { background: white !important; color: black !important; font-size: 10pt !important; } aside, nav, .sidebar, button, .erp-btn, .no-print { display: none !important; } main, .erp-page-main, .erp-content-container { width: 100% !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; background: transparent !important; box-shadow: none !important; } table { page-break-inside: auto !important; width: 100% !important; border-collapse: collapse !important; } tr { page-break-inside: avoid !important; page-break-after: auto !important; } thead { display: table-header-group !important; } tfoot { display: table-footer-group !important; } th, td { border: 1px solid #ddd !important; padding: 4px 8px !important; color: black !important; background: transparent !important; } svg, canvas { max-width: 100% !important; page-break-inside: avoid !important; } }

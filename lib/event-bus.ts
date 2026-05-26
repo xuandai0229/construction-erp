@@ -71,29 +71,48 @@ class EnterpriseEventBus extends EventEmitter {
   }
 }
 
-export const eventBus = EnterpriseEventBus.getInstance();
+const globalForEventBus = globalThis as unknown as {
+  eventBusInstance: EnterpriseEventBus | undefined;
+  pollingInterval: NodeJS.Timeout | undefined;
+  isInitialized: boolean;
+};
+
+export const eventBus = globalForEventBus.eventBusInstance || EnterpriseEventBus.getInstance();
+if (process.env.NODE_ENV !== 'production') {
+  globalForEventBus.eventBusInstance = eventBus;
+}
 
 if (typeof window === 'undefined') {
-  // Auto-initialize financial runtime listeners (Server-side)
-  try {
-    const { initializeFinancialListeners } = require('../services/finance/financial-event-listener');
-    initializeFinancialListeners();
-  } catch (err) {
-    console.warn('[EventBus] Failed to initialize financial listeners:', err);
-  }
+  // Ensure we only initialize listeners ONCE per Node process, avoiding HMR duplicate listener leaks
+  if (!globalForEventBus.isInitialized) {
+    globalForEventBus.isInitialized = true;
+    
+    // Auto-initialize financial runtime listeners (Server-side)
+    try {
+      const { initializeFinancialListeners } = require('../services/finance/financial-event-listener');
+      initializeFinancialListeners();
+    } catch (err) {
+      console.warn('[EventBus] Failed to initialize financial listeners:', err);
+    }
 
-  // Initialize CQRS Read Model Projectors (Server-side)
-  try {
-    const { ReadModelProjector } = require('../services/cqrs/read-model.projector');
-    ReadModelProjector.init();
-  } catch (err) {
-    console.warn('[EventBus] Failed to initialize CQRS read model projector:', err);
+    // Initialize CQRS Read Model Projectors (Server-side)
+    try {
+      const { ReadModelProjector } = require('../services/cqrs/read-model.projector');
+      ReadModelProjector.init();
+    } catch (err) {
+      console.warn('[EventBus] Failed to initialize CQRS read model projector:', err);
+    }
   }
 
   // Automatic Background Job Polling Worker (Runs every 3 seconds)
   const POLLING_INTERVAL_MS = 3000;
   let runCount = 0;
-  setInterval(async () => {
+  
+  if (globalForEventBus.pollingInterval) {
+    clearInterval(globalForEventBus.pollingInterval);
+  }
+  
+  globalForEventBus.pollingInterval = setInterval(async () => {
     runCount++;
     try {
       const { ResilientQueueService } = require('../services/queue/resilient-queue.service');
@@ -107,4 +126,8 @@ if (typeof window === 'undefined') {
       // Quietly suppress to prevent server spam
     }
   }, POLLING_INTERVAL_MS);
+  
+  if (globalForEventBus.pollingInterval.unref) {
+    globalForEventBus.pollingInterval.unref();
+  }
 }

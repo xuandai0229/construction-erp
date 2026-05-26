@@ -19,7 +19,7 @@ export function useCreateRevenueMutation(projectId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: any) => revenueApi.createRevenue(data),
+    mutationFn: (data: Record<string, unknown>) => revenueApi.createRevenue(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.revenues.byProject(projectId) });
     },
@@ -30,7 +30,7 @@ export function useUpdateRevenueMutation(projectId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: any }) =>
+    mutationFn: ({ id, updates }: { id: string; updates: Record<string, unknown> }) =>
       revenueApi.updateRevenue(id, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.revenues.byProject(projectId) });
@@ -55,7 +55,7 @@ export function useCreateInvoiceMutation(projectId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: any) => revenueApi.createInvoice(data),
+    mutationFn: (data: Record<string, unknown>) => revenueApi.createInvoice(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.invoices.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(projectId), 'stats'] });
@@ -80,7 +80,7 @@ export function useCreatePaymentMutation(projectId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: any) => revenueApi.createPayment(data),
+    mutationFn: (data: Record<string, unknown>) => revenueApi.createPayment(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.payments.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.invoices.byProject(projectId) });
@@ -93,7 +93,11 @@ export function useDeletePaymentMutation(projectId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => revenueApi.deletePayment(id),
+    mutationFn: async (id: string) => {
+      const res = await revenueApi.deletePayment(id);
+      if (!res.success) throw new Error(res.error || 'Failed to delete payment');
+      return res;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.payments.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.invoices.byProject(projectId) });

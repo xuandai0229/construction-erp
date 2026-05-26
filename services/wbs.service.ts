@@ -77,7 +77,7 @@ export class WBSService {
       metadata: { userId, projectId: data.projectId }
     });
 
-    const { CacheService } = require("./cache.service");
+    const { CacheService } = await import("./cache.service");
     await CacheService.invalidatePrefix(`wbs:${data.projectId}`);
 
     return item;
@@ -135,7 +135,7 @@ export class WBSService {
       metadata: { userId, projectId: item.projectId }
     });
 
-    const { CacheService } = require("./cache.service");
+    const { CacheService } = await import("./cache.service");
     await CacheService.invalidatePrefix(`wbs:${item.projectId}`);
 
     return item;
@@ -145,11 +145,83 @@ export class WBSService {
     const existing = await prisma.wBSItem.findUnique({ where: { id } });
     if (!existing) throw new ApiError(404, "Không tìm thấy hạng mục");
 
-    // Collect all descendant IDs (recursive) for cascade permanent delete
     const allIds = await this.collectDescendantIds(id);
-    allIds.push(id); // Include self
+    allIds.push(id);
 
-    // PERMANENT DELETE: Cascade delete ALL related financial data + WBS items
+    const [costIds, invoiceIds, paymentIds, revenueCount] = await prisma.$transaction([
+      prisma.costRecord.findMany({
+        where: { wbsId: { in: allIds }, deletedAt: null },
+        select: { id: true },
+      }),
+      prisma.invoice.findMany({
+        where: { wbsId: { in: allIds }, deletedAt: null },
+        select: { id: true },
+      }),
+      prisma.payment.findMany({
+        where: { invoice: { wbsId: { in: allIds } }, deletedAt: null },
+        select: { id: true },
+      }),
+      prisma.revenue.count({
+        where: { wbsId: { in: allIds }, deletedAt: null },
+      }),
+    ]);
+
+    const journalCount = await prisma.journalEntry.count({
+      where: {
+        deletedAt: null,
+        OR: [
+          { sourceType: "COST", sourceId: { in: costIds.map((cost) => cost.id) } },
+          { sourceType: "INVOICE", sourceId: { in: invoiceIds.map((invoice) => invoice.id) } },
+          { sourceType: "PAYMENT", sourceId: { in: paymentIds.map((payment) => payment.id) } },
+        ],
+      },
+    });
+
+    const financialUsage = {
+      costs: costIds.length,
+      invoices: invoiceIds.length,
+      payments: paymentIds.length,
+      revenues: revenueCount,
+      journals: journalCount,
+    };
+
+    const hasFinancialUsage = Object.values(financialUsage).some((count) => count > 0);
+
+    if (hasFinancialUsage) {
+      await prisma.$transaction(async (tx) => {
+        await tx.wBSItem.updateMany({
+          where: { id: { in: allIds }, deletedAt: null },
+          data: { deletedAt: new Date(), deletedById: userId },
+        });
+      });
+
+      const result = {
+        deletedWBSCount: allIds.length,
+        preservedFinancialUsage: financialUsage,
+      };
+
+      await AuditService.log({
+        userId,
+        action: "DELETE",
+        entity: "WBSItem",
+        entityId: id,
+        oldData: existing,
+        reason: `Soft delete WBS subtree because financial history exists. Preserved ${financialUsage.costs} costs, ${financialUsage.invoices} invoices, ${financialUsage.payments} payments, ${financialUsage.revenues} revenues, ${financialUsage.journals} journal entries.`,
+      });
+
+      eventBus.publish({
+        type: 'WBS_DELETED',
+        payload: { id, projectId: existing.projectId, cascade: result },
+        metadata: { userId, projectId: existing.projectId }
+      });
+
+      const { CacheService } = await import("./cache.service");
+      await CacheService.invalidateFinancialProject(existing.projectId);
+
+      return { deleted: true, ...result };
+    }
+
+    // Permanent structural cleanup is allowed only when no financial history exists.
     // Uses a single transaction to ensure atomicity
     // Must delete ALL FK-linked records before deleting WBS items
     // ORDER MATTERS: Payment → Revenue → Invoice (FK dependency chain)
@@ -264,8 +336,8 @@ export class WBSService {
       metadata: { userId, projectId: existing.projectId }
     });
 
-    const { CacheService } = require("./cache.service");
-    await CacheService.invalidatePrefix(`wbs:${existing.projectId}`);
+    const { CacheService } = await import("./cache.service");
+    await CacheService.invalidateFinancialProject(existing.projectId);
 
     return { deleted: true, ...result };
   }

@@ -16,6 +16,7 @@ import { useProjectsQuery, useProjectStatsQuery } from '@/services/queries/usePr
 import { useCostsQuery } from '@/services/queries/useCosts';
 import { useWBSQuery } from '@/services/queries/useWBS';
 import ExecutiveRiskCenter from './ExecutiveRiskCenter';
+import FinancialIntegrityDashboard from './FinancialIntegrityDashboard';
 
 // Visual Analytics Imports
 import {
@@ -446,15 +447,18 @@ export default function Dashboard() {
             </section>
           </div>
 
-          {/* ROW 3: Debt + P&L (aligned to same column split as Row 2) */}
+          {/* ROW 3: Debt + P&L + Integrity (aligned to same column split as Row 2) */}
           <div className="grid grid-cols-1 xl:grid-cols-12 gap-3">
-            <div className="xl:col-span-5 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15 animate-fade-in">
+            <div className="xl:col-span-3 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15 animate-fade-in">
               <DebtPaymentChart kpis={activeAnalytics.kpis} />
             </div>
             <div className="xl:col-span-3 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15 animate-fade-in">
               <ProfitabilityChart kpis={activeAnalytics.kpis} />
             </div>
-            <div className="xl:col-span-4 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15 animate-fade-in">
+            <div className="xl:col-span-3 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15 animate-fade-in flex flex-col justify-between">
+              <FinancialIntegrityDashboard analyticsData={analyticsData} stats={stats} />
+            </div>
+            <div className="xl:col-span-3 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-4 transition-all duration-300 hover:border-[var(--primary)]/15 animate-fade-in">
               <ExecutiveRiskCenter risks={analyticsData?.risk?.risks} />
             </div>
           </div>

@@ -15,6 +15,9 @@ export async function GET(request: Request) {
         unbalancedJournals,
         inconsistentCosts,
         inconsistentInvoices,
+        orphanTransactionLines,
+        staleProjectBudgets,
+        lockedPeriods,
       ] = await Promise.all([
         prisma.project.count({ where: { deletedAt: null } }),
         prisma.costRecord.count({ where: { deletedAt: null } }),
@@ -48,6 +51,25 @@ export async function GET(request: Request) {
             OR ABS(("remainingAmount" - GREATEST(0, amount - "paidAmount"))::numeric) > 1
           )
         `,
+        prisma.$queryRaw<Array<{ count: number }>>`
+          SELECT COUNT(*)::int AS count
+          FROM "TransactionLine" tl
+          LEFT JOIN "JournalEntry" je ON je.id = tl."journalEntryId"
+          WHERE tl."deletedAt" IS NULL AND (je.id IS NULL OR je."deletedAt" IS NOT NULL)
+        `,
+        prisma.$queryRaw<Array<{ count: number }>>`
+          SELECT COUNT(*)::int AS count
+          FROM "Project" p
+          LEFT JOIN (
+            SELECT "projectId", COALESCE(SUM("estimatedAmount"), 0) AS budget
+            FROM "BudgetRecord"
+            WHERE "deletedAt" IS NULL
+            GROUP BY "projectId"
+          ) b ON b."projectId" = p.id
+          WHERE p."deletedAt" IS NULL
+            AND ABS((p."totalBudget" - COALESCE(b.budget, 0))::numeric) > 1
+        `,
+        prisma.fiscalPeriod.count({ where: { isLocked: true } }),
       ]);
 
       const data = {
@@ -58,10 +80,15 @@ export async function GET(request: Request) {
         unbalancedJournalEntries: unbalancedJournals[0]?.count ?? 0,
         inconsistentCosts: inconsistentCosts[0]?.count ?? 0,
         inconsistentInvoices: inconsistentInvoices[0]?.count ?? 0,
+        orphanTransactionLines: orphanTransactionLines[0]?.count ?? 0,
+        staleProjectBudgets: staleProjectBudgets[0]?.count ?? 0,
+        lockedPeriods,
         isHealthy:
           (unbalancedJournals[0]?.count ?? 0) === 0 &&
           (inconsistentCosts[0]?.count ?? 0) === 0 &&
-          (inconsistentInvoices[0]?.count ?? 0) === 0,
+          (inconsistentInvoices[0]?.count ?? 0) === 0 &&
+          (orphanTransactionLines[0]?.count ?? 0) === 0 &&
+          (staleProjectBudgets[0]?.count ?? 0) === 0,
       };
       return successResponse(data);
     }

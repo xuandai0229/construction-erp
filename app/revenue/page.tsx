@@ -12,11 +12,11 @@ import { useRevenuesQuery, useUpdateRevenueMutation } from '@/services/queries/u
 import { useWBSQuery } from '@/services/queries/useWBS';
 import { exportToCsv } from '@/app/services/export.service';
 
-// Stable references to prevent re-render loops with TableVirtuoso
 const StableTableComponents = {
   Table: (props: any) => <table {...props} className="erp-table w-full min-w-[860px]" />,
-  TableHead: (props: any) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-[var(--erp-header-height)]" />,
-  TableRow: (props: any) => <tr {...props} className="group hover:bg-[var(--secondary)] transition-colors" />,
+  TableHead: (props: any) => <thead {...props} className="bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)] z-10 sticky top-0" />,
+  TableRow: (props: any) => <tr {...props} className="erp-table-row group border-b border-[var(--border)] last:border-b-0" />,
+  TableFoot: (props: any) => <tfoot {...props} className="bg-[var(--table-head-bg)] shadow-[0_-1px_0_var(--border)] z-10 sticky bottom-0 font-black text-[var(--text-primary)]" />,
 };
 
 export default function RevenueListPage() {
@@ -36,6 +36,8 @@ export default function RevenueListPage() {
   const handleToggle = (id: string, current: RevenueStatus) => {
     updateRevenue({ id, updates: { status: current === 'paid' ? 'unpaid' : 'paid' } });
   };
+
+  const totalAmount = revenues.reduce((sum, r) => sum + Number(r.amount), 0);
 
   return (
     <>
@@ -141,6 +143,20 @@ export default function RevenueListPage() {
                       </td>
                     </>
                   )}
+                  components={{
+                    ...StableTableComponents,
+                    Footer: () => (
+                      <tr className="bg-[var(--table-head-bg)] border-t-2 border-[var(--border)] h-10">
+                        <td colSpan={3} className="text-right px-4 py-2 font-black text-[11px] uppercase tracking-wider text-[var(--text-secondary)]">
+                          Tổng cộng
+                        </td>
+                        <td className="text-right px-4 py-2 tabular-nums font-black text-emerald-500 text-[13px]">
+                          {formatVnd(totalAmount)}
+                        </td>
+                        <td colSpan={2}></td>
+                      </tr>
+                    )
+                  }}
                 />
               )}
             </div>

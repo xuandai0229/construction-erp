@@ -2,7 +2,7 @@ import { LoggerService } from "./logger.service";
 import { redis } from "@/lib/redis";
 
 interface CacheEntry {
-  value: any;
+  value: unknown;
   expiry: number;
 }
 
@@ -12,39 +12,60 @@ export class CacheService {
   private static MAX_CACHE_SIZE = 5000; // Hard memory limit
   private static sweepInterval: NodeJS.Timeout | null = null;
   private static isRedisAvailable = false;
+  private static lastFallbackLogAt = 0;
+  private static FALLBACK_LOG_COOLDOWN_MS = 300000;
 
   static {
     if (typeof global !== 'undefined') {
       this.startSweeper();
-      this.checkRedis();
+      this.initializeRedisListeners();
     }
   }
 
-  private static async checkRedis() {
-    try {
-      if (redis.status === 'ready' || redis.status === 'connecting') {
-        // Just ping to ensure
-        await redis.ping();
-        this.isRedisAvailable = true;
+  private static initializeRedisListeners() {
+    this.isRedisAvailable = redis.status === 'ready';
+
+    redis.on('connect', () => {
+      this.isRedisAvailable = true;
+    });
+
+    redis.on('error', () => {
+      if (this.isRedisAvailable) {
+        this.isRedisAvailable = false;
+        this.logFallbackOnce();
       }
-    } catch (e) {
+    });
+    
+    redis.on('end', () => {
       this.isRedisAvailable = false;
-      LoggerService.warn('[CacheService] Redis unavailable, falling back to memory cache.');
-    }
+    });
+  }
+
+  private static logFallbackOnce() {
+    const now = Date.now();
+    if (now - this.lastFallbackLogAt < this.FALLBACK_LOG_COOLDOWN_MS) return;
+    this.lastFallbackLogAt = now;
+    LoggerService.warn('[CacheService] Redis unavailable, falling back to bounded memory cache.');
   }
 
   private static startSweeper() {
-    if (this.sweepInterval) return;
+    const globalForCache = globalThis as unknown as { cacheSweepInterval: NodeJS.Timeout | undefined };
+    if (globalForCache.cacheSweepInterval) {
+      clearInterval(globalForCache.cacheSweepInterval);
+    }
     this.sweepInterval = setInterval(() => {
       this.sweepExpired();
-    }, 300000);
+    }, 60000); // Check every minute instead of 5 minutes for tighter cleanup
+    
+    globalForCache.cacheSweepInterval = this.sweepInterval;
+    
     if (this.sweepInterval.unref) {
       this.sweepInterval.unref();
     }
   }
 
   static sweepExpired() {
-    if (this.isRedisAvailable) return; // Redis handles its own expiry
+    // We still sweep memory cache even if Redis is available, just in case we have stale memory data from when Redis was down
     const now = Date.now();
     let count = 0;
     for (const [key, entry] of this.cache.entries()) {
@@ -58,13 +79,14 @@ export class CacheService {
     }
   }
 
-  static async set(key: string, value: any, ttlMs: number = this.DEFAULT_TTL) {
+  static async set(key: string, value: unknown, ttlMs: number = this.DEFAULT_TTL) {
     if (this.isRedisAvailable) {
       try {
         await redis.set(key, JSON.stringify(value), 'PX', ttlMs);
         return;
-      } catch (e) {
+      } catch {
         this.isRedisAvailable = false; // Fallback
+        this.logFallbackOnce();
       }
     }
 
@@ -89,8 +111,9 @@ export class CacheService {
         const val = await redis.get(key);
         if (val) return JSON.parse(val) as T;
         return null;
-      } catch (e) {
+      } catch {
         this.isRedisAvailable = false;
+        this.logFallbackOnce();
       }
     }
 
@@ -108,8 +131,10 @@ export class CacheService {
     if (this.isRedisAvailable) {
       try {
         await redis.del(key);
-        return;
-      } catch (e) {}
+      } catch {
+        this.isRedisAvailable = false;
+        this.logFallbackOnce();
+      }
     }
     this.cache.delete(key);
   }
@@ -117,18 +142,42 @@ export class CacheService {
   static async invalidatePrefix(prefix: string) {
     if (this.isRedisAvailable) {
       try {
-        const keys = await redis.keys(`${prefix}*`);
-        if (keys.length > 0) {
-          await redis.del(...keys);
-        }
-        return;
-      } catch (e) {}
+        let cursor = '0';
+        do {
+          const [nextCursor, keys] = await redis.scan(cursor, 'MATCH', `${prefix}*`, 'COUNT', 250);
+          cursor = nextCursor;
+          if (keys.length > 0) {
+            await redis.del(...keys);
+          }
+        } while (cursor !== '0');
+      } catch {
+        this.isRedisAvailable = false;
+        this.logFallbackOnce();
+      }
     }
     for (const key of this.cache.keys()) {
       if (key.startsWith(prefix)) {
         this.cache.delete(key);
       }
     }
+  }
+
+  static async invalidateFinancialProject(projectId: string) {
+    await Promise.all([
+      this.invalidatePrefix(`wbs:${projectId}`),
+      this.invalidatePrefix(`aggregation:${projectId}`),
+      this.invalidatePrefix(`reporting:${projectId}`),
+      this.invalidatePrefix(`dashboard:${projectId}`),
+      this.invalidatePrefix(`financial:${projectId}`),
+    ]);
+  }
+
+  static diagnostics() {
+    return {
+      redisAvailable: this.isRedisAvailable,
+      memoryEntries: this.cache.size,
+      maxMemoryEntries: this.MAX_CACHE_SIZE,
+    };
   }
 
   static async wrap<T>(key: string, fn: () => Promise<T>, ttlMs?: number): Promise<T> {

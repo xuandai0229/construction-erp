@@ -2,44 +2,65 @@ import { handleApiError, successResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
 import { AuditService } from "@/services/audit.service";
 import { headers } from "next/headers";
+import { assertAuthenticated } from "@/lib/auth-guard";
+import { RBAC } from "@/lib/rbac";
+import { z } from "zod";
+
+const fiscalPeriodMutationSchema = z.object({
+  month: z.string().regex(/^\d{4}-\d{2}$/),
+  isLocked: z.boolean(),
+  reason: z.string().trim().min(12, "Audit reason is required").max(1000),
+});
 
 async function getServiceOptions() {
   const head = await headers();
   return {
-    userId: head.get("x-user-id") || "system_internal_admin",
     correlationId: head.get("x-correlation-id") || crypto.randomUUID(),
     ipAddress: head.get("x-forwarded-for") || head.get("remote-addr") || undefined,
     userAgent: head.get("user-agent") || undefined,
   };
 }
 
+function buildFiscalPeriod(month: string, isLocked = false, lockedById?: string | null) {
+  const [yearRaw, monthRaw] = month.split("-");
+  const year = Number.parseInt(yearRaw, 10);
+  const monthIndex = Number.parseInt(monthRaw, 10) - 1;
+
+  return {
+    month,
+    isLocked,
+    name: `Kỳ Kế Toán ${monthRaw}/${year}`,
+    startDate: new Date(year, monthIndex, 1),
+    endDate: new Date(year, monthIndex + 1, 0, 23, 59, 59, 999),
+    lockedAt: isLocked ? new Date() : null,
+    lockedById: isLocked ? lockedById : null,
+    companyId: null,
+  };
+}
+
 export async function GET() {
   try {
+    const user = await assertAuthenticated();
+    RBAC.assertPermission(user.role, "PERIOD", "READ");
+
     let periods = await prisma.fiscalPeriod.findMany({
-      orderBy: { month: "asc" }
+      orderBy: { month: "asc" },
     });
 
-    // Automatically seed fiscal periods for the year 2026 if none exist
     if (periods.length === 0) {
       const currentYear = new Date().getFullYear();
       const recordsToCreate = Array.from({ length: 12 }, (_, i) => {
-        const monthNum = String(i + 1).padStart(2, '0');
-        const monthStr = `${currentYear}-${monthNum}`;
-        return {
-          month: monthStr,
-          isLocked: false,
-          name: `Kỳ Kế Toán ${monthNum}/${currentYear}`,
-          startDate: new Date(currentYear, i, 1),
-          endDate: new Date(currentYear, i + 1, 0, 23, 59, 59, 999),
-        };
+        const month = `${currentYear}-${String(i + 1).padStart(2, "0")}`;
+        return buildFiscalPeriod(month);
       });
 
       await prisma.fiscalPeriod.createMany({
-        data: recordsToCreate
+        data: recordsToCreate,
+        skipDuplicates: true,
       });
 
       periods = await prisma.fiscalPeriod.findMany({
-        orderBy: { month: "asc" }
+        orderBy: { month: "asc" },
       });
     }
 
@@ -51,64 +72,44 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { month, isLocked, reason } = body;
-
-    if (!month) {
-      return handleApiError(new Error("Thiếu kỳ kế toán (month)"));
-    }
+    const user = await assertAuthenticated();
+    const { month, isLocked, reason } = fiscalPeriodMutationSchema.parse(await request.json());
+    RBAC.assertPermission(user.role, "PERIOD", isLocked ? "LOCK" : "UNLOCK");
 
     const options = await getServiceOptions();
-
-    // 1. Get or create the fiscal period
-    const existing = await prisma.fiscalPeriod.findUnique({
-      where: { month }
+    const existing = await prisma.fiscalPeriod.findFirst({
+      where: { month },
     });
 
-    let updatedPeriod;
-    const dateNow = new Date();
-
-    if (existing) {
-      updatedPeriod = await prisma.fiscalPeriod.update({
-        where: { id: existing.id },
-        data: {
-          isLocked,
-          lockedAt: isLocked ? dateNow : null,
-          lockedById: isLocked ? (options.userId !== "system_internal_admin" ? options.userId : null) : null,
-          updatedAt: dateNow
-        }
-      });
-    } else {
-      const parts = month.split('-');
-      const year = parseInt(parts[0], 10);
-      const m = parseInt(parts[1], 10) - 1;
-      
-      updatedPeriod = await prisma.fiscalPeriod.create({
-        data: {
-          month,
-          isLocked,
-          name: `Kỳ Kế Toán ${parts[1]}/${year}`,
-          startDate: new Date(year, m, 1),
-          endDate: new Date(year, m + 1, 0, 23, 59, 59, 999),
-          lockedAt: isLocked ? dateNow : null,
-          lockedById: isLocked ? (options.userId !== "system_internal_admin" ? options.userId : null) : null
-        }
-      });
+    if (existing?.isLocked === isLocked) {
+      return successResponse(existing);
     }
 
-    // 2. Write to Audit Log (Immutable record of lock/reopen action)
+    const updatedPeriod = existing
+      ? await prisma.fiscalPeriod.update({
+          where: { id: existing.id },
+          data: {
+            isLocked,
+            lockedAt: isLocked ? new Date() : null,
+            lockedById: isLocked ? user.id : null,
+          },
+        })
+      : await prisma.fiscalPeriod.create({
+          data: buildFiscalPeriod(month, isLocked, user.id),
+        });
+
     await AuditService.log({
-      userId: options.userId !== "system_internal_admin" ? options.userId : undefined,
+      userId: user.id,
       action: isLocked ? "LOCK" : "UNLOCK",
       entity: "FiscalPeriod",
       entityId: updatedPeriod.id,
       oldData: existing || null,
       newData: updatedPeriod,
-      reason: reason || (isLocked ? "Khóa sổ kỳ kế toán" : "Mở khóa sổ kỳ kế toán"),
+      reason,
       severity: isLocked ? "INFO" : "WARNING",
       correlationId: options.correlationId,
       ipAddress: options.ipAddress,
-      userAgent: options.userAgent
+      userAgent: options.userAgent,
     });
 
     return successResponse(updatedPeriod);

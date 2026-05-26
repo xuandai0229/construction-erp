@@ -62,7 +62,7 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
       <AddInvoiceModal isOpen={showInvoiceModal} onClose={() => setShowInvoiceModal(false)} />
       <AddTaskModal isOpen={showTaskModal} onClose={() => setShowTaskModal(false)} />
 
-      <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--header-bg)] backdrop-blur-md shadow-sm">
+      <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--header-bg)] backdrop-blur-md shadow-sm no-print">
         <div className="max-w-[1600px] mx-auto flex h-[var(--erp-header-height)] items-center justify-between gap-6 px-6 lg:px-8">
 
           {/* ── Left: Mobile Toggle + Project Switcher ── */}
@@ -112,6 +112,16 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
 
             {/* Quick-add buttons (lg+) */}
             <div className="hidden lg:flex items-center gap-3">
+              <button
+                onClick={() => window.print()}
+                className="flex items-center gap-2.5 h-10 px-5 rounded-xl border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-primary)] hover:bg-[var(--divider)] transition-all text-[10px] font-black uppercase tracking-[0.15em] shadow-sm active:scale-95 no-print"
+                title="Xuất PDF / In báo cáo"
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z" />
+                </svg>
+                <span>Báo cáo</span>
+              </button>
               <button
                 onClick={() => setShowCostModal(true)}
                 className="flex items-center gap-2.5 h-10 px-5 rounded-xl border border-amber-500/20 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 hover:border-amber-500/40 transition-all text-[10px] font-black uppercase tracking-[0.15em] shadow-[0_0_20px_-5px_rgba(245,158,11,0.2)] active:scale-95"

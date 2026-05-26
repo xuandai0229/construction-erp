@@ -48,11 +48,11 @@ export const costApi = {
     return { success: json.success, error: json.error };
   },
 
-  async transitionCost(id: string, status: string, headers: any = {}): Promise<ServiceResponse<void>> {
+  async transitionCost(id: string, status: string, reason?: string, headers: any = {}): Promise<ServiceResponse<void>> {
     const res = await fetch(`/api/costs/${id}/approve`, {
       method: 'POST',
       headers: { ...headers, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ status, reason }),
     });
     const json = await res.json();
     return { success: json.success, error: json.error, metadata: json.metadata };

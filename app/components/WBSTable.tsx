@@ -73,6 +73,11 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
   const totalRows = countAllRows(data);
   const hasMore = totalRows > INITIAL_VISIBLE_COUNT;
 
+  const totalBudget = data.reduce((sum, item) => sum + item.budget, 0);
+  const totalActual = data.reduce((sum, item) => sum + item.actual, 0);
+  const totalProfit = data.reduce((sum, item) => sum + item.profit, 0);
+  const totalProgress = totalBudget > 0 ? (totalActual / totalBudget) * 100 : 0;
+
   return (
     <div className="flex flex-col border border-[var(--border)] rounded-xl overflow-hidden bg-[var(--card)]/30 backdrop-blur-sm">
       <div className={`scroll-hint-container ${showScrollHint ? 'scroll-hint-right' : ''}`}>
@@ -106,6 +111,25 @@ export default function WBSTable({ data }: { data: WBSBudgetRow[] }) {
                 </tr>
               )}
             </tbody>
+            <tfoot className="bg-[var(--table-head-bg)] shadow-[0_-1px_0_var(--border)] z-10 sticky bottom-0 font-black text-[var(--text-primary)]">
+              <tr className="border-t-2 border-[var(--border)] h-10">
+                <td className="text-right px-4 py-2 text-[11px] uppercase tracking-wider text-[var(--text-secondary)] border-r border-[var(--border)]">
+                  Tổng cộng
+                </td>
+                <td className="text-right px-4 py-2 tabular-nums text-purple-600 text-[13px] border-r border-[var(--border)]">
+                  {formatVnd(totalBudget)}
+                </td>
+                <td className="text-right px-4 py-2 tabular-nums text-amber-500 text-[13px] border-r border-[var(--border)]">
+                  {formatVnd(totalActual)}
+                </td>
+                <td className={`text-right px-4 py-2 tabular-nums text-[13px] border-r border-[var(--border)] ${totalProfit >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                  {totalProfit >= 0 ? '+' : ''}{formatVnd(totalProfit)}
+                </td>
+                <td className="text-center px-4 py-2 text-[11px] font-black text-blue-600">
+                  {totalProgress.toFixed(1)}%
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </div>

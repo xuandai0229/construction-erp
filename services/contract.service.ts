@@ -14,6 +14,9 @@ export class ContractService {
     contractorName?: string;
     createdById?: string;
   }) {
+    const { assertPeriodNotLocked } = await import("@/lib/period");
+    await assertPeriodNotLocked(new Date());
+
     const value = round(data.originalValue);
 
     return prisma.$transaction(async (tx) => {
@@ -54,6 +57,9 @@ export class ContractService {
     changeAmount: number;
     description?: string;
   }) {
+    const { assertPeriodNotLocked } = await import("@/lib/period");
+    await assertPeriodNotLocked(new Date());
+
     const amount = round(data.changeAmount);
 
     return prisma.$transaction(async (tx) => {

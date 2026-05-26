@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-05-23T03:43:00.600Z",
-  "overallDuration": 32107,
+  "timestamp": "2026-05-23T06:43:59.149Z",
+  "overallDuration": 24485,
   "summary": {
     "total": 2,
     "passed": 2,
@@ -11,12 +11,12 @@
     {
       "phase": "Database & Business Logic Validation",
       "status": "PASS",
-      "duration": 956
+      "duration": 796
     },
     {
       "phase": "Browser E2E Screen Validation",
       "status": "PASS",
-      "duration": 31151
+      "duration": 23689
     }
   ],
   "productionReady": true

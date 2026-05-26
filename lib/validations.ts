@@ -102,6 +102,7 @@ export type ApproveCostDTO = z.infer<typeof approveCostSchema>;
 // ─────────────────────────────────────────────
 
 export const createBudgetSchema = z.object({
+  requestId: z.string().uuid("Idempotency key bắt buộc phải là UUID").optional(),
   projectId: z.string().uuid("Dự án là bắt buộc"),
   wbsId: z.string().uuid("Hạng mục WBS là bắt buộc"),
   costType: z.nativeEnum(CostType).default(CostType.material),

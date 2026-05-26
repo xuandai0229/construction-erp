@@ -4,6 +4,7 @@ import { CreateBudgetDTO, UpdateBudgetDTO } from "@/lib/validations";
 import { assertValidEntity } from "@/lib/assertion";
 import { AuditService } from "./audit.service";
 import { CacheService } from "./cache.service";
+import { assertPeriodNotLocked } from "@/lib/period";
 
 export class BudgetService {
   /**
@@ -12,7 +13,7 @@ export class BudgetService {
    */
   private static async syncProjectBudget(projectId: string) {
     const agg = await prisma.budgetRecord.aggregate({
-      where: { projectId },
+      where: { projectId, deletedAt: null },
       _sum: { estimatedAmount: true }
     });
     const total = Number(agg._sum.estimatedAmount || 0);
@@ -23,13 +24,22 @@ export class BudgetService {
   }
 
   private static async invalidateCaches(projectId: string) {
-    await CacheService.invalidatePrefix(`wbs:${projectId}`);
-    await CacheService.invalidatePrefix(`aggregation:${projectId}`);
-    await CacheService.invalidatePrefix(`reporting:${projectId}`);
+    await CacheService.invalidateFinancialProject(projectId);
   }
 
   static async create(data: CreateBudgetDTO) {
     assertValidEntity(data, "CreateBudgetDTO");
+    await assertPeriodNotLocked(new Date());
+
+    if ((data as any).requestId) {
+      const lockKey = `idempotency:budget:${(data as any).requestId}`;
+      const isLocked = await CacheService.get(lockKey);
+      if (isLocked) {
+        const { DuplicateRequestError } = await import("@/lib/errors");
+        throw new DuplicateRequestError();
+      }
+      await CacheService.set(lockKey, true, 60000); // 1 minute lock
+    }
 
     const project = await prisma.project.findUnique({ where: { id: data.projectId } });
     if (!project) throw new ApiError(404, "Không tìm thấy dự án");
@@ -69,6 +79,7 @@ export class BudgetService {
     const existing = await prisma.budgetRecord.findUnique({ where: { id } });
     if (!existing) throw new ApiError(404, "Không tìm thấy dự toán");
 
+    await assertPeriodNotLocked(existing.createdAt);
     const amount = data.estimatedAmount !== undefined ? Math.round((data.estimatedAmount + Number.EPSILON) * 100) / 100 : undefined;
 
     const budget = await prisma.budgetRecord.update({
@@ -97,7 +108,7 @@ export class BudgetService {
 
   static async findByProject(projectId: string) {
     return prisma.budgetRecord.findMany({
-      where: { projectId }, // Hard delete model, no deletedAt check needed
+      where: { projectId, deletedAt: null },
       orderBy: { createdAt: "asc" },
       include: { wbs: { select: { name: true } } }
     });
@@ -107,16 +118,20 @@ export class BudgetService {
     const existing = await prisma.budgetRecord.findUnique({ where: { id } });
     if (!existing) throw new ApiError(404, "Không tìm thấy dự toán");
     
-    // HARD DELETE POLICY ALIGNMENT
-    const deleted = await prisma.budgetRecord.delete({ where: { id } });
+    await assertPeriodNotLocked(existing.createdAt);
+    const deleted = await prisma.budgetRecord.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
     
     await AuditService.log({
       userId: userId || "SYSTEM",
-      action: "HARD_DELETE",
+      action: "DELETE",
       entity: "BudgetRecord",
       entityId: id,
       oldData: existing,
-      reason: "Permanent Delete per WBS Architecture Rules"
+      newData: deleted,
+      reason: "Soft delete budget allocation; project budget totals recalculated."
     });
 
     await this.syncProjectBudget(existing.projectId);

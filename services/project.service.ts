@@ -227,24 +227,65 @@ export class ProjectService {
   static async delete(id: string, userId?: string) {
     const oldProject = await this.findById(id);
 
+    const financialUsage = await prisma.$transaction(async (tx) => {
+      const [costs, budgets, invoices, payments, revenues, journals] = await Promise.all([
+        tx.costRecord.count({ where: { projectId: id, deletedAt: null } }),
+        tx.budgetRecord.count({ where: { projectId: id, deletedAt: null } }),
+        tx.invoice.count({ where: { projectId: id, deletedAt: null } }),
+        tx.payment.count({ where: { projectId: id, deletedAt: null } }),
+        tx.revenue.count({ where: { projectId: id, deletedAt: null } }),
+        tx.journalEntry.count({ where: { projectId: id, deletedAt: null } }),
+      ]);
+
+      return { costs, budgets, invoices, payments, revenues, journals };
+    });
+
+    const hasFinancialHistory = Object.values(financialUsage).some((count) => count > 0);
+
+    if (hasFinancialHistory) {
+      const project = await prisma.project.update({
+        where: { id, version: oldProject.version },
+        data: {
+          deletedAt: new Date(),
+          deletedById: userId,
+          version: { increment: 1 },
+        },
+      });
+
+      await AuditService.log({
+        userId,
+        action: "DELETE",
+        entity: "Project",
+        entityId: id,
+        oldData: oldProject,
+        newData: project,
+        reason: `Soft delete project because financial history exists. Preserved ${financialUsage.costs} costs, ${financialUsage.budgets} budgets, ${financialUsage.invoices} invoices, ${financialUsage.payments} payments, ${financialUsage.revenues} revenues, ${financialUsage.journals} journal entries.`,
+      });
+
+      const { CacheService } = await import("./cache.service");
+      await CacheService.invalidateFinancialProject(id);
+
+      return project;
+    }
+
     // A. HARD DELETE: Project is empty, clean it completely from DB
     await prisma.$transaction(async (tx) => {
       // Manual cascade delete due to lack of Prisma cascade
       // Level 4 & 3
       const boqs = await tx.bOQItem.findMany({ where: { projectId: id }, select: { id: true } });
       if (boqs.length > 0) {
-          const boqIds = boqs.map((b: any) => b.id);
+          const boqIds = boqs.map((boq) => boq.id);
           const progresses = await tx.progressEntry.findMany({ where: { boqItemId: { in: boqIds } }, select: { id: true } });
-          const pIds = progresses.map((p: any) => p.id);
+          const pIds = progresses.map((progress) => progress.id);
           if (pIds.length > 0) await tx.measurement.deleteMany({ where: { progressEntryId: { in: pIds } } });
           await tx.progressEntry.deleteMany({ where: { boqItemId: { in: boqIds } } });
       }
       
       const subcontracts = await tx.subcontract.findMany({ where: { projectId: id }, select: { id: true } });
       if (subcontracts.length > 0) {
-          const subIds = subcontracts.map((s: any) => s.id);
+          const subIds = subcontracts.map((subcontract) => subcontract.id);
           const subItems = await tx.subcontractItem.findMany({ where: { subcontractId: { in: subIds } }, select: { id: true } });
-          const subItemIds = subItems.map((si: any) => si.id);
+          const subItemIds = subItems.map((subItem) => subItem.id);
           if (subItemIds.length > 0) await tx.subcontractProgress.deleteMany({ where: { subcontractItemId: { in: subItemIds } } });
           await tx.subcontractItem.deleteMany({ where: { subcontractId: { in: subIds } } });
           await tx.subcontractInvoice.deleteMany({ where: { subcontractId: { in: subIds } } });

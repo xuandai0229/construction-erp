@@ -142,9 +142,13 @@ export default function ExecutiveRiskCenter({ risks }: ExecutiveRiskCenterProps)
   const getTypeLabel = (type: string) => {
     switch (type.toUpperCase()) {
       case 'FINANCIAL': return 'Tài chính';
+      case 'FINANCIAL_ANOMALY': return 'Bất thường TC';
+      case 'FRAUD_RISK': return 'Gian lận';
+      case 'OPERATIONAL_BOTTLENECK': return 'Vận hành';
+      case 'AUDIT_WARNING': return 'Kiểm toán';
       case 'PROCUREMENT': return 'Vật tư';
       case 'PROJECT': return 'Tiến độ';
-      default: return 'Rủi ro';
+      default: return 'Cảnh báo';
     }
   };
 

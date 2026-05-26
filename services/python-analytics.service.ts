@@ -798,6 +798,68 @@ export class PythonAnalyticsService {
       });
     }
 
+    // ─── NEW: FINANCIAL ANOMALY DETECTION (PHASE 5) ───
+
+    // 1. Abnormal Project Margin (Biên lợi nhuận bất thường)
+    const grossMargin = kpis.grossMargin || 0;
+    if (kpis.totalRevenue > 0 && grossMargin < 5) {
+      risks_detected.push({
+        type: 'FINANCIAL_ANOMALY',
+        severity: grossMargin < 0 ? 'CRITICAL' : 'WARNING',
+        message: `Biên lợi nhuận gộp bất thường (${grossMargin.toFixed(2)}%)`,
+        details: [
+          `Doanh thu ghi nhận: ${kpis.totalRevenue.toLocaleString('vi-VN')} VND.`,
+          `Chi phí thực tế: ${kpis.totalCost.toLocaleString('vi-VN')} VND.`,
+          `Khuyến nghị: Rà soát lại việc hạch toán chi phí hoặc đôn đốc nghiệm thu (Doanh thu đang thấp hơn chi phí).`
+        ]
+      });
+    }
+
+    // 2. Duplicate Payment Risk (Rủi ro thanh toán trùng lặp)
+    const costs = snapshot.costs || [];
+    const amountMap = new Map();
+    let duplicateFound = false;
+    for (const c of costs) {
+      if (c.status === 'paid' || c.status === 'POSTED') {
+        const key = `${c.amount}_${c.supplier || 'unknown'}`;
+        if (amountMap.has(key)) {
+          duplicateFound = true;
+          break;
+        }
+        amountMap.set(key, true);
+      }
+    }
+    if (duplicateFound) {
+      risks_detected.push({
+        type: 'FRAUD_RISK',
+        severity: 'CRITICAL',
+        message: `Phát hiện nghi vấn thanh toán trùng lặp (Duplicate Payment)`,
+        details: [`Hệ thống phát hiện có nhiều khoản chi có cùng số tiền và cùng nhà cung cấp.`, `Khuyến nghị: Kế toán trưởng cần review lại sổ cái chi phí.`]
+      });
+    }
+
+    // 3. Stale Approvals / Pending Bottlenecks
+    const pendingCosts = costs.filter((c: any) => c.status === 'pending' || c.status === 'PENDING');
+    if (pendingCosts.length > 5) {
+      risks_detected.push({
+        type: 'OPERATIONAL_BOTTLENECK',
+        severity: 'WARNING',
+        message: `Ách tắc phê duyệt: Có ${pendingCosts.length} chứng từ đang chờ duyệt`,
+        details: [`Số lượng chứng từ treo lớn gây sai lệch báo cáo dòng tiền và công nợ thực tế.`, `Khuyến nghị: Kế toán trưởng cần xử lý dứt điểm các yêu cầu phê duyệt.`]
+      });
+    }
+
+    // 4. Reversal Spikes (Bất thường về đảo bút toán)
+    const reversedCosts = costs.filter((c: any) => c.status === 'REVERSED');
+    if (reversedCosts.length > 3) {
+      risks_detected.push({
+        type: 'AUDIT_WARNING',
+        severity: 'WARNING',
+        message: `Tần suất đảo bút toán (Reversal) cao bất thường (${reversedCosts.length} giao dịch)`,
+        details: [`Việc hoàn bút toán liên tục phản ánh chất lượng hạch toán ban đầu kém hoặc có dấu hiệu thao túng số liệu.`, `Khuyến nghị: CFO cần Audit lại lịch sử giao dịch.`]
+      });
+    }
+
     const criticalCount = risks_detected.filter(r => r.severity === 'CRITICAL').length;
     const warningCount = risks_detected.filter(r => r.severity === 'WARNING').length;
     const riskScore = Math.min(100, (criticalCount * 30) + (warningCount * 15));

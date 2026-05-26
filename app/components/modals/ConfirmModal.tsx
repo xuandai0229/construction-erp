@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 interface ConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (reason?: string) => void;
   isLoading?: boolean;
   title: string;
   message: string;
@@ -12,6 +12,7 @@ interface ConfirmModalProps {
   cancelLabel?: string;
   variant?: 'danger' | 'warning' | 'info' | 'archive' | 'close';
   businessContext?: string;
+  requireReason?: boolean;
 }
 
 export default function ConfirmModal({
@@ -24,9 +25,11 @@ export default function ConfirmModal({
   confirmLabel = 'Xác nhận',
   cancelLabel = 'Hủy bỏ',
   variant = 'danger',
-  businessContext
+  businessContext,
+  requireReason = false
 }: ConfirmModalProps) {
   const [mounted, setMounted] = useState(false);
+  const [reason, setReason] = useState('');
 
   useEffect(() => {
     setMounted(true);
@@ -93,6 +96,19 @@ export default function ConfirmModal({
                   <div className="text-[11.5px] font-bold text-[var(--text-primary)] leading-snug">{businessContext}</div>
                 </div>
               )}
+
+              {requireReason && (
+                <div className="mt-4">
+                  <label className="erp-label !text-[10px]">Lý do thực hiện (Bắt buộc cho Kiểm toán)</label>
+                  <textarea
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    placeholder="Nhập lý do chi tiết..."
+                    className="erp-input h-auto py-2 !text-[12px] min-h-[60px] resize-none"
+                    rows={2}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -106,9 +122,9 @@ export default function ConfirmModal({
             {cancelLabel}
           </button>
           <button
-            onClick={onConfirm}
-            disabled={isLoading}
-            className={`px-7 py-2.5 text-[11px] font-black rounded-xl uppercase tracking-[0.15em] shadow-lg transition-all active:scale-95 disabled:opacity-50 disabled:cursor-wait flex items-center gap-2.5 ${variantStyles[variant]}`}
+            onClick={() => onConfirm(requireReason ? reason : undefined)}
+            disabled={isLoading || (requireReason && reason.trim().length < 5)}
+            className={`px-7 py-2.5 text-[11px] font-black rounded-xl uppercase tracking-[0.15em] shadow-lg transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2.5 ${variantStyles[variant]}`}
           >
             {isLoading && (
               <svg className="animate-spin h-3.5 w-3.5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

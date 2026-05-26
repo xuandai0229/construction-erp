@@ -3,6 +3,7 @@ import './globals.css';
 import { AuthProvider } from './components/auth/AuthProvider';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import QueryProvider from './providers/QueryProvider';
+import { ToastProvider } from './components/shared/ToastProvider';
 
 export const metadata: Metadata = {
   title: 'Construction ERP - Quản lý dự án xây dựng',
@@ -19,9 +20,11 @@ export default function RootLayout({
       <body className="min-h-screen antialiased overflow-x-hidden">
         <ErrorBoundary>
           <QueryProvider>
-            <AuthProvider>
-              {children}
-            </AuthProvider>
+            <ToastProvider>
+              <AuthProvider>
+                {children}
+              </AuthProvider>
+            </ToastProvider>
           </QueryProvider>
         </ErrorBoundary>
       </body>
