@@ -22,6 +22,204 @@ import { FinancialIntelligenceService } from "./financial-intelligence.service";
  * It enforces the separation between Accounting Reality and Management Exposure.
  */
 export class FinancialAggregationService {
+  static readonly VALID_INVOICE_STATUSES = ["SENT", "PARTIAL", "PAID", "OVERDUE"] as const;
+  static readonly VALID_APPROVAL_STATUSES = ["PENDING", "APPROVED"] as const;
+
+  private static async getLedgerAccountBalance(projectId: string, accountPrefixes: string[]) {
+    const accountWhere = accountPrefixes.length === 1
+      ? { code: { startsWith: accountPrefixes[0] } }
+      : { OR: accountPrefixes.map(prefix => ({ code: { startsWith: prefix } })) };
+
+    const [debitAgg, creditAgg] = await Promise.all([
+      prisma.transactionLine.aggregate({
+        where: {
+          account: accountWhere,
+          journalEntry: { projectId, deletedAt: null, isPosted: true, isReversed: false },
+          deletedAt: null,
+          type: "DEBIT"
+        },
+        _sum: { amount: true }
+      }),
+      prisma.transactionLine.aggregate({
+        where: {
+          account: accountWhere,
+          journalEntry: { projectId, deletedAt: null, isPosted: true, isReversed: false },
+          deletedAt: null,
+          type: "CREDIT"
+        },
+        _sum: { amount: true }
+      })
+    ]);
+
+    return {
+      debit: Number(debitAgg._sum?.amount || 0),
+      credit: Number(creditAgg._sum?.amount || 0)
+    };
+  }
+
+  static async getCanonicalProjectFinancials(projectId: string) {
+    const [
+      project,
+      invoiceAgg,
+      overdueAgg,
+      costRecordAgg,
+      vendorPaymentAgg,
+      budgetAgg,
+      taskStats,
+      wbsCount,
+      revenueLedger,
+      costLedger,
+      customerReceivableLedger,
+      retentionReceivableLedger,
+      vendorPayableLedger
+    ] = await Promise.all([
+      prisma.project.findUnique({ where: { id: projectId, deletedAt: null } }),
+      prisma.invoice.aggregate({
+        where: {
+          projectId,
+          deletedAt: null,
+          status: { in: [...this.VALID_INVOICE_STATUSES] },
+          approvalStatus: { notIn: ["REJECTED", "CANCELLED"] }
+        },
+        _sum: { amount: true, paidAmount: true, remainingAmount: true, retentionAmount: true }
+      }),
+      prisma.invoice.aggregate({
+        where: {
+          projectId,
+          deletedAt: null,
+          status: { in: ["SENT", "PARTIAL", "OVERDUE"] },
+          approvalStatus: { notIn: ["REJECTED", "CANCELLED"] },
+          dueDate: { lt: new Date() },
+          remainingAmount: { gt: 0 }
+        },
+        _sum: { remainingAmount: true },
+        _count: true
+      }),
+      prisma.costRecord.aggregate({
+        where: {
+          projectId,
+          deletedAt: null,
+          approvalStatus: { notIn: ["REJECTED", "CANCELLED"] }
+        },
+        _sum: { amount: true }
+      }),
+      prisma.vendorPayment.aggregate({
+        where: { projectId, deletedAt: null },
+        _sum: { amount: true }
+      }),
+      prisma.budgetRecord.aggregate({
+        where: { projectId, deletedAt: null },
+        _sum: { estimatedAmount: true }
+      }),
+      prisma.task.groupBy({
+        by: ["status"],
+        where: { projectId, deletedAt: null },
+        _count: { status: true }
+      }),
+      prisma.wBSItem.count({ where: { projectId, deletedAt: null } }),
+      this.getLedgerAccountBalance(projectId, ["511"]),
+      this.getLedgerAccountBalance(projectId, ["621", "622", "623", "627"]),
+      this.getLedgerAccountBalance(projectId, ["131"]),
+      this.getLedgerAccountBalance(projectId, ["1368"]),
+      this.getLedgerAccountBalance(projectId, ["331"])
+    ]);
+
+    if (!project) {
+      throw new ApiError(404, "Khong tim thay du an");
+    }
+
+    const postedRevenue = revenueLedger.credit - revenueLedger.debit;
+    const postedCost = costLedger.debit - costLedger.credit;
+    const customerReceivable = customerReceivableLedger.debit - customerReceivableLedger.credit;
+    const retentionReceivable = retentionReceivableLedger.debit - retentionReceivableLedger.credit;
+    const vendorPayable = vendorPayableLedger.credit - vendorPayableLedger.debit;
+    const totalContractReceivable = customerReceivable + retentionReceivable;
+    const totalInvoiced = Number(invoiceAgg._sum?.amount || 0);
+    const totalPaidInvoice = Number(invoiceAgg._sum?.paidAmount || 0);
+    const invoiceRemaining = Number(invoiceAgg._sum?.remainingAmount || 0);
+    const costIncurred = Number(costRecordAgg._sum?.amount || 0);
+    const vendorPaid = Number(vendorPaymentAgg._sum?.amount || 0);
+    const currentBudget = Number(budgetAgg._sum?.estimatedAmount || 0) || Number(project.totalBudget || 0);
+    const grossProfit = postedRevenue - postedCost;
+    const grossMargin = postedRevenue > 0 ? (grossProfit / postedRevenue) * 100 : 0;
+    const budgetVariance = currentBudget - postedCost;
+    const costReconciliationVariance = costIncurred - postedCost;
+    const receivableReconciliationVariance = invoiceRemaining - totalContractReceivable;
+    const payableReconciliationVariance = vendorPayable - Math.max(0, costIncurred - vendorPaid);
+    const needsReconciliation = [costReconciliationVariance, receivableReconciliationVariance, payableReconciliationVariance]
+      .some(value => Math.abs(value) >= 1);
+
+    const taskBreakdown: Record<string, number> = {};
+    taskStats.forEach(t => taskBreakdown[t.status] = t._count.status);
+    const totalTasks = Object.values(taskBreakdown).reduce((sum, value) => sum + value, 0);
+    const doneTasks = taskBreakdown.DONE ?? 0;
+    const actualProgress = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 10000) / 100 : 0;
+
+    return {
+      projectId,
+      timestamp: new Date().toISOString(),
+      sourceOfTruth: {
+        postedRevenue: "Ledger account 511* posted, unreversed journal lines",
+        totalInvoiced: "Invoice.amount where status in SENT/PARTIAL/PAID/OVERDUE and not rejected/cancelled",
+        collectedCash: "Invoice.paidAmount for valid invoices",
+        customerReceivable: "Ledger account 131* debit-credit",
+        retentionReceivable: "Ledger account 1368 debit-credit",
+        totalContractReceivable: "131* + 1368 ledger balances",
+        postedCost: "Ledger accounts 621*/622*/623*/627* debit-credit",
+        incurredCost: "CostRecord.amount not rejected/cancelled",
+        vendorPaid: "VendorPayment.amount",
+        vendorPayable: "Ledger account 331* credit-debit",
+        grossProfit: "Ledger postedRevenue - postedCost",
+        currentBudget: "BudgetRecord.estimatedAmount sum, fallback Project.totalBudget",
+        actualProgress: "Task DONE / total tasks until certified progress module exists"
+      },
+      totalRevenue: round(postedRevenue),
+      postedRevenue: round(postedRevenue),
+      totalInvoiced: round(totalInvoiced),
+      totalPaidInvoice: round(totalPaidInvoice),
+      collectedCash: round(totalPaidInvoice),
+      totalRemainingInvoice: round(invoiceRemaining),
+      customerReceivable: round(customerReceivable),
+      retentionReceivable: round(retentionReceivable),
+      totalContractReceivable: round(totalContractReceivable),
+      outstandingReceivable: round(totalContractReceivable),
+      overdueReceivable: round(Number(overdueAgg._sum?.remainingAmount || 0)),
+      overdueInvoices: overdueAgg._count,
+      totalCost: round(postedCost),
+      postedCost: round(postedCost),
+      incurredCost: round(costIncurred),
+      costReconciliationVariance: round(costReconciliationVariance),
+      paidCost: round(vendorPaid),
+      vendorPaid: round(vendorPaid),
+      vendorPayable: round(vendorPayable),
+      accruedCost: round(vendorPayable),
+      unpaidCost: round(vendorPayable),
+      payableReconciliationVariance: round(payableReconciliationVariance),
+      totalBudget: round(currentBudget),
+      costVariance: round(budgetVariance),
+      budgetVariance: round(budgetVariance),
+      costOverrunPct: currentBudget > 0 ? round((postedCost / currentBudget) * 100, 2) : 0,
+      isCostOverrun: currentBudget > 0 && postedCost > currentBudget,
+      grossProfit: round(grossProfit),
+      profit: round(grossProfit),
+      grossMargin: round(grossMargin, 2),
+      profitMargin: round(grossMargin, 2),
+      actualProgress,
+      taskProgress: actualProgress,
+      taskBreakdown,
+      wbsCount,
+      reconciliationStatus: needsReconciliation ? "NEEDS_RECONCILIATION" : "RECONCILED",
+      reconciliationMessage: needsReconciliation ? "Can doi soat du lieu" : "Da doi soat",
+      reconciliation: {
+        needsReconciliation,
+        costVariance: round(costReconciliationVariance),
+        receivableVariance: round(receivableReconciliationVariance),
+        payableVariance: round(payableReconciliationVariance)
+      },
+      version: `canonical-${projectId}-${Date.now()}`
+    };
+  }
+
   
   /**
    * PERIOD CLOSE GOVERNANCE: Verifies if a date falls within a locked fiscal period.
@@ -77,11 +275,11 @@ export class FinancialAggregationService {
         _sum: { amount: true }
       }),
       prisma.transactionLine.aggregate({
-        where: { account: { code: { startsWith: '62' } }, journalEntry: { projectId, deletedAt: null }, deletedAt: null, type: 'DEBIT' },
+        where: { account: { OR: [{ code: { startsWith: '621' } }, { code: { startsWith: '622' } }, { code: { startsWith: '623' } }, { code: { startsWith: '627' } }] }, journalEntry: { projectId, deletedAt: null, isPosted: true, isReversed: false }, deletedAt: null, type: 'DEBIT' },
         _sum: { amount: true }
       }),
       prisma.transactionLine.aggregate({
-        where: { account: { code: { startsWith: '62' } }, journalEntry: { projectId, deletedAt: null }, deletedAt: null, type: 'CREDIT' },
+        where: { account: { OR: [{ code: { startsWith: '621' } }, { code: { startsWith: '622' } }, { code: { startsWith: '623' } }, { code: { startsWith: '627' } }] }, journalEntry: { projectId, deletedAt: null, isPosted: true, isReversed: false }, deletedAt: null, type: 'CREDIT' },
         _sum: { amount: true }
       })
     ]);
@@ -548,7 +746,7 @@ export class FinancialAggregationService {
           select: { id: true, wbsId: true, amount: true, approvalStatus: true, workflowStatus: true }
         }),
         prisma.budgetRecord.findMany({ 
-          where: { projectId }, // Hard delete model
+          where: { projectId, deletedAt: null },
           select: { id: true, wbsId: true, estimatedAmount: true }
         }),
         prisma.invoice.findMany({ 

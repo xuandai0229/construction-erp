@@ -359,32 +359,7 @@ export class ProjectService {
   static async getAccountingSummary(projectId: string) {
     // const snapshot = await FinancialAggregationService.getProjectSnapshot(projectId);
     
-    const [costsAgg, budgetsAgg, revenuesAgg, invoicesAgg, wbsCount, taskStats, purchaseOrdersAgg] = await Promise.all([
-      prisma.costRecord.aggregate({
-        where: { 
-          projectId, 
-          deletedAt: null,
-          // Relaxing strict approval status to reconcile data visibility
-          wbs: { deletedAt: null } 
-        },
-        _sum: { amount: true },
-      }),
-       prisma.budgetRecord.aggregate({
-        where: { 
-          projectId, 
-          deletedAt: null,
-          wbs: { deletedAt: null } // SME Rule: Exclude orphans
-        },
-        _sum: { estimatedAmount: true },
-      }),
-      prisma.revenue.aggregate({
-        where: { projectId, deletedAt: null },
-        _sum: { amount: true },
-      }),
-      prisma.invoice.aggregate({
-        where: { projectId, deletedAt: null },
-        _sum: { amount: true, paidAmount: true, remainingAmount: true },
-      }),
+    const [wbsCount, taskStats, purchaseOrdersAgg] = await Promise.all([
       prisma.wBSItem.count({ where: { projectId, deletedAt: null } }),
       prisma.task.groupBy({
         by: ["status"],
@@ -398,7 +373,7 @@ export class ProjectService {
     ]);
 
     // Extra: Get grouped costs and budgets by type for breakdown
-    const [costsByType, budgetsByType, paidCostsAgg, paidRevenuesAgg] = await Promise.all([
+    const [costsByType, budgetsByType, paidRevenuesAgg] = await Promise.all([
       prisma.costRecord.groupBy({
         by: ["costType"],
         where: { projectId, deletedAt: null },
@@ -408,10 +383,6 @@ export class ProjectService {
         by: ["costType"],
         where: { projectId, deletedAt: null },
         _sum: { estimatedAmount: true }
-      }),
-      prisma.costRecord.aggregate({
-        where: { projectId, status: "paid", deletedAt: null },
-        _sum: { amount: true }
       }),
       prisma.revenue.aggregate({
         where: { projectId, status: "paid", deletedAt: null },
@@ -423,16 +394,17 @@ export class ProjectService {
       where: { projectId, status: "OVERDUE", deletedAt: null }
     });
 
+    const canonical = await FinancialAggregationService.getCanonicalProjectFinancials(projectId);
     const snapshot = await FinancialAggregationService.getProjectSnapshot(projectId);
 
-    const totalCost = snapshot.reality.actualCost;
-    const totalBudget = Number(budgetsAgg._sum?.estimatedAmount || 0);
-    const totalRevenue = snapshot.reality.totalRevenue;
-    const totalInvoiced = snapshot.reality.totalRevenue;
-    const totalPaidInvoice = Number(invoicesAgg._sum?.paidAmount || 0);
-    const totalRemainingInvoice = Number(invoicesAgg._sum?.remainingAmount || 0);
+    const totalCost = canonical.postedCost;
+    const totalBudget = canonical.totalBudget;
+    const totalRevenue = canonical.postedRevenue;
+    const totalInvoiced = canonical.totalInvoiced;
+    const totalPaidInvoice = canonical.totalPaidInvoice;
+    const totalRemainingInvoice = canonical.totalRemainingInvoice;
     const committedCost = Number(purchaseOrdersAgg._sum?.totalAmount || 0);
-    const paidCost = Number(paidCostsAgg._sum?.amount || 0);
+    const paidCost = canonical.vendorPaid;
     const paidRevenue = Number(paidRevenuesAgg._sum?.amount || 0);
 
     // [INTEGRITY FIX DEFERRED]: Budget drift sync is moved to a Background Reconciliation Job (Reconciliation Engine)
@@ -447,10 +419,6 @@ export class ProjectService {
     const taskBreakdown: Record<string, number> = {};
     taskStats.forEach(t => taskBreakdown[t.status] = t._count.status);
 
-    const totalTasks = Object.values(taskBreakdown).reduce((s, v) => s + v, 0);
-    const doneTasks = taskBreakdown["DONE"] ?? 0;
-    const taskProgress = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
-
     const profit = snapshot.reality.grossProfit;
     const profitMargin = snapshot.reality.grossMargin;
     const costVariance = totalBudget - totalCost;
@@ -461,7 +429,7 @@ export class ProjectService {
     return {
       totalCost,
       paidCost,
-      unpaidCost: totalCost - paidCost,
+      unpaidCost: canonical.vendorPayable,
       costByType,
       totalBudget,
       budgetByType,
@@ -474,18 +442,35 @@ export class ProjectService {
       totalInvoiced,
       totalPaidInvoice,
       totalRemainingInvoice,
+      collectedCash: canonical.collectedCash,
+      customerReceivable: canonical.customerReceivable,
+      retentionReceivable: canonical.retentionReceivable,
+      totalContractReceivable: canonical.totalContractReceivable,
+      outstandingReceivable: canonical.outstandingReceivable,
       overdueInvoices: overdueCount,
+      overdueReceivable: canonical.overdueReceivable,
       profit,
+      grossProfit: profit,
       profitMargin,
-      taskProgress,
+      grossMargin: profitMargin,
+      taskProgress: canonical.taskProgress,
+      actualProgress: canonical.actualProgress,
       taskBreakdown,
       wbsCount,
       committedCost,
       totalExposure,
       budgetRemaining,
+      incurredCost: canonical.incurredCost,
+      postedCost: canonical.postedCost,
+      vendorPaid: canonical.vendorPaid,
+      vendorPayable: canonical.vendorPayable,
+      reconciliationStatus: canonical.reconciliationStatus,
+      reconciliationMessage: canonical.reconciliationMessage,
+      reconciliation: canonical.reconciliation,
+      sourceOfTruth: canonical.sourceOfTruth,
       // Integration metadata
       integrity: snapshot.integrity,
-      version: snapshot.version
+      version: canonical.version
     };
   }
 }

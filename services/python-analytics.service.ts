@@ -1,5 +1,6 @@
 import { spawn } from 'child_process';
 import { prisma } from '@/lib/prisma';
+import { FinancialAggregationService } from './financial-aggregation.service';
 
 export class PythonAnalyticsService {
   /**
@@ -177,6 +178,8 @@ export class PythonAnalyticsService {
    * KPI Schema: Contract → Revenue (Accrual) → Cost → Profitability → EVM → Health
    */
   private static async calculateJSKpis(projectId: string, projectInfo: any) {
+    const canonical = await FinancialAggregationService.getCanonicalProjectFinancials(projectId);
+
     // ─── DB AGGREGATION LAYER (OOM SAFE - LEDGER DRIVEN) ──────────────────────
     const [
       revCreditAgg,
@@ -249,13 +252,13 @@ export class PythonAnalyticsService {
     const totalBudget = projectInfo.totalBudget || 0;
 
     // ─── LEDGER CALCULATIONS ──────────────────────────────────
-    const recognizedRevenue = Number(revCreditAgg._sum?.amount || 0) - Number(revDebitAgg._sum?.amount || 0);
-    const actualCost = Number(costDebitAgg._sum?.amount || 0) - Number(costCreditAgg._sum?.amount || 0);
-    const outstandingReceivable = Number(arDebitAgg._sum?.amount || 0) - Number(arCreditAgg._sum?.amount || 0);
-    const collectedCash = recognizedRevenue - outstandingReceivable;
-    const unpaidCost = Number(apCreditAgg._sum?.amount || 0) - Number(apDebitAgg._sum?.amount || 0);
-    const paidCost = actualCost - unpaidCost;
-    const accruedCost = unpaidCost;
+    const recognizedRevenue = canonical.postedRevenue;
+    const actualCost = canonical.postedCost;
+    const outstandingReceivable = canonical.totalContractReceivable;
+    const collectedCash = canonical.collectedCash;
+    const unpaidCost = canonical.vendorPayable;
+    const paidCost = canonical.vendorPaid;
+    const accruedCost = canonical.vendorPayable;
 
     // OVERDUE REQUIRE DB FILTERING (Operational Reference)
     const overdueAgg = await prisma.invoice.aggregate({
@@ -278,7 +281,7 @@ export class PythonAnalyticsService {
     const costOverrunPct = totalBudget > 0 ? (actualCost / totalBudget) * 100 : 0.0;
 
     // ─── PROGRESS & TIMELINE ─────────────────────────────────
-    const actualProgress = 50; // Mocked for phase 1 DB migration
+    const actualProgress = canonical.actualProgress;
     
     let daysElapsed = 0;
     let durationDays = 0;
@@ -320,6 +323,14 @@ export class PythonAnalyticsService {
       outstandingReceivable,
       overdueReceivable,
       totalBudget,
+      totalInvoiced: canonical.totalInvoiced,
+      customerReceivable: canonical.customerReceivable,
+      retentionReceivable: canonical.retentionReceivable,
+      totalContractReceivable: canonical.totalContractReceivable,
+      incurredCost: canonical.incurredCost,
+      postedCost: canonical.postedCost,
+      vendorPaid: canonical.vendorPaid,
+      vendorPayable: canonical.vendorPayable,
       totalCost: actualCost,
       paidCost,
       accruedCost,
@@ -338,18 +349,21 @@ export class PythonAnalyticsService {
       cpi: cpi !== null ? Math.round(cpi * 1000) / 1000 : null,
       eac,
       etc,
-      totalInvoiced: recognizedRevenue,
-      totalPaidInvoice: collectedCash,
-      totalRemainingInvoice: outstandingReceivable,
+      totalPaidInvoice: canonical.totalPaidInvoice,
+      totalRemainingInvoice: canonical.totalContractReceivable,
       overdueInvoices: overdueReceivable,
       totalCashIn,
       totalCashOut,
       netCashflow,
       daysElapsed,
       durationDays,
-      healthScore: 100,
-      healthStatus: 'STABLE',
-      version: projectInfo.version || 1
+      healthScore: canonical.reconciliation.needsReconciliation ? 75 : 100,
+      healthStatus: canonical.reconciliation.needsReconciliation ? 'WARNING' : 'STABLE',
+      reconciliationStatus: canonical.reconciliationStatus,
+      reconciliationMessage: canonical.reconciliationMessage,
+      reconciliation: canonical.reconciliation,
+      sourceOfTruth: canonical.sourceOfTruth,
+      version: canonical.version || projectInfo.version || 1
     };
   }
 

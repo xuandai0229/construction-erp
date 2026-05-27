@@ -35,21 +35,10 @@ export async function GET(request: Request) {
     });
     const projectIds = authorizedProjects.map(p => p.id);
 
-    const [projectCount, activeProjectCount, costsAgg, budgetsAgg, invoicesAgg, costsByType] = await Promise.all([
+    const [projectCount, activeProjectCount, canonicalSummaries, costsByType] = await Promise.all([
       prisma.project.count({ where: { deletedAt: null, ...companyFilter } }),
       prisma.project.count({ where: { deletedAt: null, status: { in: ['ACTIVE', 'IN_PROGRESS'] }, ...companyFilter } }),
-      prisma.costRecord.aggregate({ 
-        where: { deletedAt: null, approvalStatus: { not: "REJECTED" }, projectId: { in: projectIds } }, 
-        _sum: { amount: true } 
-      }),
-      prisma.budgetRecord.aggregate({ 
-        where: { deletedAt: null, projectId: { in: projectIds } }, 
-        _sum: { estimatedAmount: true } 
-      }),
-      prisma.invoice.aggregate({ 
-        where: { deletedAt: null, status: { in: ["SENT", "PAID", "PARTIAL", "OVERDUE", "DRAFT"] }, approvalStatus: { not: "REJECTED" }, projectId: { in: projectIds } }, 
-        _sum: { amount: true, paidAmount: true, remainingAmount: true } 
-      }),
+      Promise.all(projectIds.map(projectId => FinancialAggregationService.getCanonicalProjectFinancials(projectId))),
       prisma.costRecord.groupBy({ 
         by: ["costType"], 
         where: { deletedAt: null, approvalStatus: { not: "REJECTED" }, projectId: { in: projectIds } }, 
@@ -57,11 +46,13 @@ export async function GET(request: Request) {
       })
     ]);
 
-    const totalRevenue = Number(invoicesAgg._sum?.amount || 0);
-    const totalCost = Number(costsAgg._sum?.amount || 0);
-    const totalBudget = Number(budgetsAgg._sum?.estimatedAmount || 0);
-    const totalCollected = Number(invoicesAgg._sum?.paidAmount || 0);
-    const totalReceivable = Number(invoicesAgg._sum?.remainingAmount || 0);
+    const totalRevenue = canonicalSummaries.reduce((sum, item) => sum + item.totalRevenue, 0);
+    const totalCost = canonicalSummaries.reduce((sum, item) => sum + item.totalCost, 0);
+    const totalBudget = canonicalSummaries.reduce((sum, item) => sum + item.totalBudget, 0);
+    const totalInvoiced = canonicalSummaries.reduce((sum, item) => sum + item.totalInvoiced, 0);
+    const totalCollected = canonicalSummaries.reduce((sum, item) => sum + item.collectedCash, 0);
+    const totalReceivable = canonicalSummaries.reduce((sum, item) => sum + item.totalContractReceivable, 0);
+    const needsReconciliation = canonicalSummaries.some(item => item.reconciliation.needsReconciliation);
     
     const costByType: Record<string, number> = {};
     costsByType.forEach(c => {
@@ -79,10 +70,12 @@ export async function GET(request: Request) {
         margin: totalRevenue > 0 ? ((totalRevenue - totalCost) / totalRevenue) * 100 : 0,
         costByType,
         invoiceStats: {
-          totalInvoiced: totalRevenue,
+          totalInvoiced,
           totalCollected,
           totalReceivable
-        }
+        },
+        reconciliationStatus: needsReconciliation ? "NEEDS_RECONCILIATION" : "RECONCILED",
+        reconciliationMessage: needsReconciliation ? "Can doi soat du lieu" : "Da doi soat"
       },
       // Global snapshot version (based on last update across all financial entities)
       version: `v_global_${Date.now()}` 

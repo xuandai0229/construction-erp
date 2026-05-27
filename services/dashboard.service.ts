@@ -15,20 +15,20 @@ export class DashboardService {
       : (companyId ? `dashboard:kpis:global:${companyId}` : "dashboard:kpis:global");
     
     return CacheService.wrap(cacheKey, async () => {
-      const [projects, invoices, costs, riskProfiles] = await Promise.all([
+      const [projects, riskProfiles] = await Promise.all([
         prisma.project.findMany({ where: { deletedAt: null, ...(companyId && { companyId }) } }),
-        prisma.invoice.findMany({ where: { deletedAt: null, ...(projectId && { projectId }), ...(companyId && { companyId }) } }),
-        prisma.costRecord.findMany({ where: { deletedAt: null, ...(projectId && { projectId }), ...(companyId && { companyId }) } }),
         ReportingService.getProjectRiskProfiles(companyId)
       ]);
 
-      const snapshot = projectId 
-        ? await FinancialAggregationService.getProjectSnapshot(projectId)
-        : null;
+      const canonicalSummaries = projectId
+        ? [await FinancialAggregationService.getCanonicalProjectFinancials(projectId)]
+        : await Promise.all(projects.map(project => FinancialAggregationService.getCanonicalProjectFinancials(project.id)));
 
-      const totalInvoiced = snapshot ? snapshot.reality.totalRevenue : invoices.reduce((s, i) => s + (["APPROVED", "POSTED", "PAID", "PARTIAL"].includes(i.status) ? Number(i.amount) : 0), 0);
-      const totalCost = snapshot ? snapshot.reality.actualCost : costs.reduce((s, c) => s + (["APPROVED", "POSTED", "LOCKED"].includes(c.workflowStatus || c.approvalStatus) ? Number(c.amount) : 0), 0);
-      const grossMargin = totalInvoiced > 0 ? ((totalInvoiced - totalCost) / totalInvoiced) * 100 : 0;
+      const totalInvoiced = canonicalSummaries.reduce((s, item) => s + item.totalInvoiced, 0);
+      const totalRevenue = canonicalSummaries.reduce((s, item) => s + item.totalRevenue, 0);
+      const totalCost = canonicalSummaries.reduce((s, item) => s + item.totalCost, 0);
+      const totalContractReceivable = canonicalSummaries.reduce((s, item) => s + item.totalContractReceivable, 0);
+      const grossMargin = totalRevenue > 0 ? ((totalRevenue - totalCost) / totalRevenue) * 100 : 0;
 
       // Aging & Collection Intelligence
       const aging = await ReportingService.getReceivableAging(projectId, companyId);
@@ -48,9 +48,12 @@ export class DashboardService {
       return {
         financials: {
           totalInvoiced: round(totalInvoiced),
+          totalRevenue: round(totalRevenue),
           totalCost: round(totalCost),
           grossMarginPct: round(grossMargin, 2),
           totalOverdue: round(totalOverdue),
+          totalContractReceivable: round(totalContractReceivable),
+          reconciliationStatus: canonicalSummaries.some(item => item.reconciliation.needsReconciliation) ? "NEEDS_RECONCILIATION" : "RECONCILED"
         },
         portfolio: {
           activeProjects: projects.length,

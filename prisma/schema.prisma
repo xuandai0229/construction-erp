@@ -105,6 +105,7 @@ model Project {
   trialBalanceSnapshots  TrialBalanceSnapshot[]
   balanceSheetSnapshots  BalanceSheetSnapshot[]
   profitLossSnapshots    ProfitLossSnapshot[]
+  suppliers              ProjectSupplier[]
 
   @@index([status])
   @@index([ownerId])
@@ -291,7 +292,8 @@ model Invoice {
 
 model Payment {
   id             String              @id @default(uuid())
-  invoiceId      String
+  invoiceId      String?
+  contractId     String?
   projectId      String
   amount         Decimal             @db.Decimal(18, 2)
   date           DateTime            @default(now())
@@ -304,7 +306,8 @@ model Payment {
   deletedById    String?
   version        Int                 @default(1)
   deletedBy      User?               @relation("PaymentDeletedBy", fields: [deletedById], references: [id])
-  invoice        Invoice             @relation(fields: [invoiceId], references: [id])
+  invoice        Invoice?            @relation(fields: [invoiceId], references: [id])
+  contract       Contract?           @relation(fields: [contractId], references: [id])
   allocations    PaymentAllocation[]
 
   @@index([invoiceId, deletedAt])
@@ -453,7 +456,9 @@ model GoodsReceipt {
 model Contract {
   id             String           @id @default(uuid())
   projectId      String
+  supplierId     String?
   contractNumber String?          @unique
+  contractCode   String?
   title          String
   description    String?
   contractorName String?
@@ -469,11 +474,17 @@ model Contract {
   deletedAt      DateTime?
   createdBy      User?            @relation("ContractCreatedBy", fields: [createdById], references: [id])
   project        Project          @relation(fields: [projectId], references: [id])
+  supplier       Supplier?        @relation(fields: [supplierId], references: [id])
   changes        ContractChange[]
   invoices       Invoice[]
+  payments       Payment[]
+  acceptances    Acceptance[]
+  paymentPlans   PaymentPlan[]
+  documentChecklist DocumentChecklist[]
 
   @@index([projectId])
   @@index([status])
+  @@unique([projectId, supplierId, contractCode])
 }
 
 model ContractChange {
@@ -1783,3 +1794,72 @@ model ProfitLossSnapshot {
   @@index([accountingPeriodId])
   @@index([projectId])
 }
+
+model Supplier {
+  id             String            @id @default(uuid())
+  code           String            @unique // supplierCode không được trùng
+  name           String
+  description    String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  deletedAt      DateTime?
+
+  projects       ProjectSupplier[]
+  contracts      Contract[]
+}
+
+model ProjectSupplier {
+  id          String   @id @default(uuid())
+  projectId   String
+  supplierId  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project     Project  @relation(fields: [projectId], references: [id])
+  supplier    Supplier @relation(fields: [supplierId], references: [id])
+
+  @@unique([projectId, supplierId])
+}
+
+model Acceptance {
+  id               String    @id @default(uuid())
+  contractId       String
+  acceptanceNumber String
+  amount           Decimal   @db.Decimal(18, 2)
+  date             DateTime  @default(now())
+  note             String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
+
+  contract         Contract  @relation(fields: [contractId], references: [id])
+
+  @@unique([contractId, acceptanceNumber])
+}
+
+model PaymentPlan {
+  id            String    @id @default(uuid())
+  contractId    String
+  dueDate       DateTime
+  amount        Decimal   @db.Decimal(18, 2)
+  paymentMethod String?   // Hình thức thanh toán
+  status        String    @default("PENDING") // PENDING, OVERDUE, PAID
+  note          String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  contract      Contract  @relation(fields: [contractId], references: [id])
+}
+
+model DocumentChecklist {
+  id         String   @id @default(uuid())
+  contractId String
+  name       String
+  status     String   @default("MISSING") // MISSING, SUBMITTED
+  note       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  contract   Contract @relation(fields: [contractId], references: [id])
+}
+
