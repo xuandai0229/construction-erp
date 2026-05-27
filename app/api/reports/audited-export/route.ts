@@ -96,7 +96,7 @@ async function buildRows(reportType: string, projectId: string) {
       }];
     }
     case "CASH_AGING":
-      return (await ReportingService.getProjectMonthlyReport(projectId)) as Record<string, unknown>[];
+      return (await ReportingService.getProjectMonthlyReport(projectId)) as unknown as Record<string, unknown>[];
     case "TRIAL_BALANCE":
     case "BALANCE_SHEET":
     case "VAT_SUMMARY": {

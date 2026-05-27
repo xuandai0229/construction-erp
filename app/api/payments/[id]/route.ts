@@ -37,12 +37,14 @@ export async function DELETE(
         },
       });
 
-      await tx.revenue.updateMany({
-        where: { invoiceId: existing.invoiceId, amount: existing.amount, deletedAt: null },
-        data: { deletedAt: new Date() },
-      });
+      if (existing.invoiceId) {
+        await tx.revenue.updateMany({
+          where: { invoiceId: existing.invoiceId, amount: existing.amount, deletedAt: null },
+          data: { deletedAt: new Date() },
+        });
+      }
 
-      const invoice = await tx.invoice.findUnique({ where: { id: existing.invoiceId } });
+      const invoice = existing.invoiceId ? await tx.invoice.findUnique({ where: { id: existing.invoiceId } }) : null;
       if (invoice) {
         const newPaidAmount = Number(invoice.paidAmount) - Number(existing.amount);
         const newRemainingAmount = Number(invoice.amount) - newPaidAmount;

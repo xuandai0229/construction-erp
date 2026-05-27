@@ -284,6 +284,7 @@ exports.Prisma.InvoiceScalarFieldEnum = {
 exports.Prisma.PaymentScalarFieldEnum = {
   id: 'id',
   invoiceId: 'invoiceId',
+  contractId: 'contractId',
   projectId: 'projectId',
   amount: 'amount',
   date: 'date',
@@ -400,7 +401,9 @@ exports.Prisma.GoodsReceiptScalarFieldEnum = {
 exports.Prisma.ContractScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
+  supplierId: 'supplierId',
   contractNumber: 'contractNumber',
+  contractCode: 'contractCode',
   title: 'title',
   description: 'description',
   contractorName: 'contractorName',
@@ -1234,6 +1237,58 @@ exports.Prisma.ProfitLossSnapshotScalarFieldEnum = {
   generatedById: 'generatedById'
 };
 
+exports.Prisma.SupplierScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.ProjectSupplierScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  supplierId: 'supplierId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AcceptanceScalarFieldEnum = {
+  id: 'id',
+  contractId: 'contractId',
+  acceptanceNumber: 'acceptanceNumber',
+  amount: 'amount',
+  date: 'date',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.PaymentPlanScalarFieldEnum = {
+  id: 'id',
+  contractId: 'contractId',
+  dueDate: 'dueDate',
+  amount: 'amount',
+  paymentMethod: 'paymentMethod',
+  status: 'status',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DocumentChecklistScalarFieldEnum = {
+  id: 'id',
+  contractId: 'contractId',
+  name: 'name',
+  status: 'status',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1530,7 +1585,12 @@ exports.Prisma.ModelName = {
   AccountingPeriod: 'AccountingPeriod',
   TrialBalanceSnapshot: 'TrialBalanceSnapshot',
   BalanceSheetSnapshot: 'BalanceSheetSnapshot',
-  ProfitLossSnapshot: 'ProfitLossSnapshot'
+  ProfitLossSnapshot: 'ProfitLossSnapshot',
+  Supplier: 'Supplier',
+  ProjectSupplier: 'ProjectSupplier',
+  Acceptance: 'Acceptance',
+  PaymentPlan: 'PaymentPlan',
+  DocumentChecklist: 'DocumentChecklist'
 };
 
 /**

@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
 
 const menuItems = [
+  { id: 'accounting', label: 'Kế toán công trình', href: '/accounting', icon: 'M7 4h10a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V6a2 2 0 0 1 2-2zM10 9h4M10 13h4M10 17h2' },
   { id: 'overview', label: 'Tổng quan', href: '/', icon: 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
   { id: 'projects', label: 'Dự án', href: '/projects', icon: 'M4 7h16M7 7V5h10v2M6 10h12v10H6z' },
   { id: 'wbs', label: 'Hạng mục (WBS)', href: '/wbs', icon: 'M12 3v5m-6 4h12M6 12v5m12-5v5M4 17h4v4H4zm8 0h4v4h-4zm8 0h-4v4h4z' },
@@ -36,8 +37,12 @@ export default function Sidebar({ activeItem }: { activeItem?: string }) {
   };
 
   const filteredItems = menuItems.filter(item => {
+    // Temporarily hidden from the primary accounting workflow: the dashboard still exists in code,
+    // but generic widgets/AI insights are not the source of truth for construction accounting.
+    if (item.id === 'overview') return false;
     if (item.id === 'system') return userRole === 'SUPER_ADMIN';
     if (item.id === 'budget' || item.id === 'costs') return ['SUPER_ADMIN', 'ADMIN', 'ACCOUNTANT', 'MANAGER'].includes(userRole);
+    if (item.id === 'wbs' || item.id === 'revenue') return ['SUPER_ADMIN', 'ADMIN', 'ACCOUNTANT', 'MANAGER'].includes(userRole);
     return true;
   });
 
