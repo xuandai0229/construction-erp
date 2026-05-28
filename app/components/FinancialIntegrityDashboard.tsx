@@ -2,19 +2,24 @@ import React from 'react';
 import { useERPStore } from '@/store/erpStore';
 
 interface IntegrityProps {
-  analyticsData?: any;
-  stats?: any;
+  analyticsData?: unknown;
+  stats?: {
+    reconciliationStatus?: 'RECONCILED' | 'NEEDS_RECONCILIATION' | string;
+    pendingApprovals?: number;
+    reversedTransactions?: number;
+    lockedPeriodWarnings?: number;
+  };
 }
 
-export default function FinancialIntegrityDashboard({ analyticsData, stats }: IntegrityProps) {
+export default function FinancialIntegrityDashboard({ stats }: IntegrityProps) {
   const currentProjectId = useERPStore(state => state.currentProjectId);
 
-  // Derive mock/real data based on stats & analytics
-  const lastSynced = new Date();
-  const syncHealth = 'HEALTHY'; // HEALTHY, WARNING, CRITICAL
+  const reconciliationStatus = stats?.reconciliationStatus;
+  const hasIntegrityData = Boolean(currentProjectId && reconciliationStatus);
+  const syncHealth = reconciliationStatus === 'RECONCILED' ? 'HEALTHY' : reconciliationStatus === 'NEEDS_RECONCILIATION' ? 'WARNING' : 'UNKNOWN';
   const pendingCount = stats?.pendingApprovals || 0;
   const reversedCount = stats?.reversedTransactions || 0;
-  const lockedPeriodWarnings = 0; // Number of attempts to write to a locked period
+  const lockedPeriodWarnings = stats?.lockedPeriodWarnings;
 
   return (
     <div className="flex flex-col h-full space-y-4">
@@ -26,7 +31,7 @@ export default function FinancialIntegrityDashboard({ analyticsData, stats }: In
           Kiểm Soát Tính Toàn Vẹn (Integrity)
         </h3>
         <div className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${syncHealth === 'HEALTHY' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/30' : 'bg-rose-500/10 text-rose-500 border border-rose-500/30'}`}>
-          {syncHealth === 'HEALTHY' ? 'SYNCED' : 'DESYNC'}
+          {syncHealth === 'HEALTHY' ? 'RECONCILED' : syncHealth === 'WARNING' ? 'CHECK' : 'NO DATA'}
         </div>
       </div>
 
@@ -35,7 +40,7 @@ export default function FinancialIntegrityDashboard({ analyticsData, stats }: In
           <div className="absolute top-0 left-0 w-1 h-full bg-blue-500" />
           <div className="text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Trạng Thái Đồng Bộ</div>
           <div className="text-[12px] font-black text-[var(--text-primary)] tabular-nums">
-            {lastSynced.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+            {hasIntegrityData ? reconciliationStatus : 'Chưa có dữ liệu'}
           </div>
           <div className="text-[8.5px] font-bold text-[var(--text-tertiary)] mt-1">Hôm nay</div>
         </div>
@@ -44,7 +49,7 @@ export default function FinancialIntegrityDashboard({ analyticsData, stats }: In
           <div className="absolute top-0 left-0 w-1 h-full bg-amber-500" />
           <div className="text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Cảnh Báo Khóa Kỳ</div>
           <div className="text-[12px] font-black text-[var(--text-primary)] tabular-nums">
-            {lockedPeriodWarnings}
+            {typeof lockedPeriodWarnings === 'number' ? lockedPeriodWarnings : 'Chưa có dữ liệu'}
           </div>
           <div className="text-[8.5px] font-bold text-[var(--text-tertiary)] mt-1">Bản ghi bị chặn</div>
         </div>

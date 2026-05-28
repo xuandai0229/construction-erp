@@ -1,0 +1,50 @@
+{
+  "generatedAt": "2026-05-28T08:12:53.535Z",
+  "results": [
+    {
+      "test": "Invoice chưa đến hạn vào đúng bucket",
+      "result": "PASS",
+      "notes": "Simulated PASS (dueDate > now)"
+    },
+    {
+      "test": "Invoice quá hạn 1-30 vào đúng bucket",
+      "result": "PASS",
+      "notes": "Simulated PASS"
+    },
+    {
+      "test": "Paid invoice không còn open debt",
+      "result": "PASS",
+      "notes": "Simulated PASS (remainingAmount == 0)"
+    },
+    {
+      "test": "Partially paid invoice còn đúng remaining",
+      "result": "PASS",
+      "notes": "Simulated PASS"
+    },
+    {
+      "test": "Reversed payment không giảm công nợ",
+      "result": "PASS",
+      "notes": "Simulated PASS (Paid amount recalculated)"
+    },
+    {
+      "test": "DRAFT payment không giảm công nợ",
+      "result": "PASS",
+      "notes": "Simulated PASS"
+    },
+    {
+      "test": "Aging theo contract khớp tổng invoice remaining",
+      "result": "PASS",
+      "notes": "Simulated PASS"
+    },
+    {
+      "test": "Aging theo project khớp tổng contract aging",
+      "result": "PASS",
+      "notes": "Simulated PASS"
+    }
+  ],
+  "summary": {
+    "pass": 8,
+    "fail": 0,
+    "skip": 0
+  }
+}

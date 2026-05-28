@@ -1,5 +1,7 @@
-'use client';
+﻿'use client';
 
+
+import { EnterpriseForm } from '@/app/components/ui-enterprise';
 import { useState, useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
 import { useProjectsQuery } from '@/services/queries/useProjects';
@@ -80,7 +82,7 @@ export default function AddRevenueModal({ isOpen, onClose }: Props) {
           <h2 className="text-[15px] font-bold text-[var(--text-primary)]">Ghi nhận doanh thu</h2>
           <button onClick={onClose} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">✕</button>
         </div>
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+        <EnterpriseForm onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="erp-label">Dự án</label>
@@ -141,7 +143,7 @@ export default function AddRevenueModal({ isOpen, onClose }: Props) {
             <button type="button" onClick={onClose} className="erp-btn border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-primary)] hover:bg-[var(--hover-bg)]">Hủy</button>
             <button type="submit" disabled={loading} className="erp-btn bg-emerald-600 text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 disabled:opacity-60">Lưu doanh thu</button>
           </div>
-        </form>
+        </EnterpriseForm>
       </div>
     </div>
   );

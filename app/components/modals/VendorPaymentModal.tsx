@@ -1,5 +1,7 @@
-'use client';
+﻿'use client';
 
+
+import { EnterpriseForm } from '@/app/components/ui-enterprise';
 import { useState } from 'react';
 import { useERPStore } from '@/store/erpStore';
 import { useCreateVendorPaymentMutation } from '@/services/queries/useCosts';
@@ -61,7 +63,7 @@ export default function VendorPaymentModal({ isOpen, onClose, cost }: Props) {
           </div>
           <button onClick={onClose} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">✕</button>
         </div>
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+        <EnterpriseForm onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-[11px] shadow-inner">
             <div className="flex justify-between mb-1">
               <span className="text-[var(--text-muted)] font-bold uppercase tracking-wider">Nhà cung cấp:</span>
@@ -128,7 +130,7 @@ export default function VendorPaymentModal({ isOpen, onClose, cost }: Props) {
             <button type="button" onClick={onClose} className="erp-btn border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-primary)] hover:bg-[var(--hover-bg)]">Hủy</button>
             <button type="submit" disabled={loading} className="erp-btn bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 disabled:opacity-60 font-bold">Xác nhận hạch toán</button>
           </div>
-        </form>
+        </EnterpriseForm>
       </div>
     </div>
   );

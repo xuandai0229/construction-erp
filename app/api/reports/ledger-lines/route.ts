@@ -1,6 +1,7 @@
 import { handleApiError, successResponse, ApiError } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
 import { requireAccountingAccess, requireProjectAccess } from "@/lib/route-security";
+import { getPostedLedgerLineFilter } from "@/lib/accounting/ledgerFilters";
 
 export async function GET(request: Request) {
   try {
@@ -25,11 +26,7 @@ export async function GET(request: Request) {
     // Build query conditions
     const whereCondition = {
       account: { code: { startsWith: accountCode } },
-      journalEntry: {
-        projectId,
-        deletedAt: null
-      },
-      deletedAt: null
+      ...getPostedLedgerLineFilter({ projectId })
     };
 
     // Parallel Count & Query for optimized performance

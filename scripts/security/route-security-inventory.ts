@@ -34,6 +34,7 @@ const authPatterns = [
   "assertIsAdmin(",
   "assertIsAccountant(",
   "SessionManager.verifySession(",
+  "getServerSession(",
 ];
 
 const sensitiveGuardPatterns = [

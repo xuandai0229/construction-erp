@@ -1,5 +1,7 @@
-'use client';
+﻿'use client';
 
+
+import { EnterpriseForm } from '@/app/components/ui-enterprise';
 import { useEffect, useState } from 'react';
 import { useERPStore } from '@/store/erpStore';
 import { CostType, costType_LABELS, CostRecord } from '@/app/types';
@@ -166,7 +168,7 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto scrollbar-hide">
+        <EnterpriseForm onSubmit={handleSubmit} className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto scrollbar-hide">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="erp-label">Dự án <span className="text-red-500">*</span></label>
@@ -373,7 +375,7 @@ export default function AddCostModal({ isOpen, onClose, costRecord }: Props) {
               {costRecord ? 'Cập nhật' : 'Ghi nhận chi phí'}
             </button>
           </div>
-        </form>
+        </EnterpriseForm>
       </div>
     </div>
   );

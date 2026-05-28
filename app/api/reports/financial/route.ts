@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { safeDecimal } from "@/lib/math";
 import { handleApiError } from "@/lib/api-error";
 import { requireAccountingAccess, requireProjectAccess } from "@/lib/route-security";
+import { getPostedLedgerLineFilter } from "@/lib/accounting/ledgerFilters";
 
 export async function GET(request: Request) {
   try {
@@ -36,10 +37,7 @@ export async function GET(request: Request) {
     const lineAggregations = await prisma.transactionLine.groupBy({
       by: ['accountId', 'type'],
       where: {
-        journalEntry: {
-          projectId,
-          deletedAt: null
-        }
+        ...getPostedLedgerLineFilter({ projectId })
       },
       _sum: { amount: true }
     });

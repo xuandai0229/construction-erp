@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { projectApi } from '@/services/api/project.api';
@@ -151,7 +151,7 @@ export default function ProjectFilters({ filters, onFilterChange }: ProjectFilte
     <>
       <AddProjectModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} />
       
-      <div className="card-elevation p-4 mt-6">
+      <div className="erp-card p-4 mt-6">
         {/* Main filter row */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Search - Primary */}

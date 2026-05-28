@@ -45,9 +45,9 @@ function planStatus(dueDate: Date, plannedAmount: number, paidAmount: number) {
 }
 
 export class ConstructionAccountingService {
-  static async getWorkspace() {
+  static async getWorkspace(companyId?: string | null) {
     const projects = await prisma.project.findMany({
-      where: { deletedAt: null },
+      where: { deletedAt: null, ...(companyId && { companyId }) },
       select: { id: true, name: true, contractValue: true },
       orderBy: { createdAt: "desc" },
     });

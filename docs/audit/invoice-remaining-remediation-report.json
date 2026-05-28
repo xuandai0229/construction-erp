@@ -1,0 +1,43 @@
+{
+  "generatedAt": "2026-05-28T03:19:30.994Z",
+  "mode": "apply",
+  "rows": [
+    {
+      "invoiceId": "cfda09fb-fb8f-472c-8e48-7211550b570e",
+      "before": {
+        "paidAmount": 0,
+        "remainingAmount": 221509296,
+        "status": "PAID",
+        "version": 2
+      },
+      "after": {
+        "paidAmount": 0,
+        "remainingAmount": 221509296,
+        "status": "DRAFT"
+      },
+      "action": "recalculate-paid-and-remaining",
+      "result": "APPLIED",
+      "auditLog": "Invoice UPDATE audit log created"
+    },
+    {
+      "invoiceId": "4de275c9-4f6e-4d15-a958-cb6e79d69a0a",
+      "before": {
+        "paidAmount": 0,
+        "remainingAmount": 221509296,
+        "status": "PAID",
+        "version": 2
+      },
+      "after": {
+        "paidAmount": 0,
+        "remainingAmount": 221509296,
+        "status": "DRAFT"
+      },
+      "action": "recalculate-paid-and-remaining",
+      "result": "APPLIED",
+      "auditLog": "Invoice UPDATE audit log created"
+    }
+  ],
+  "summary": {
+    "APPLIED": 2
+  }
+}

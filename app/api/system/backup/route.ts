@@ -14,6 +14,44 @@ async function getRequestContext() {
   };
 }
 
+function getRestoreTableSummary(backup: Record<string, unknown>) {
+  const tableNames = [
+    "users",
+    "fiscalPeriods",
+    "projects",
+    "wbs",
+    "categories",
+    "tasks",
+    "costs",
+    "invoices",
+    "revenues",
+    "payments",
+    "ledgerAccounts",
+    "journalEntries",
+    "transactionLines",
+  ];
+
+  return Object.fromEntries(
+    tableNames.map((table) => [table, Array.isArray(backup[table]) ? backup[table].length : 0]),
+  );
+}
+
+function assertRestoreExecutionAllowed(confirmationToken?: string) {
+  const configuredToken = process.env.SYSTEM_RESTORE_CONFIRMATION_TOKEN;
+  const executionEnabled = process.env.ALLOW_SYSTEM_RESTORE_EXECUTION === "true";
+  const productionEnabled = process.env.ALLOW_PRODUCTION_SYSTEM_RESTORE === "true";
+
+  if (!executionEnabled) {
+    throw new ApiError(403, "System restore execution is disabled. Run dryRun=true to validate backup payload.");
+  }
+  if (process.env.NODE_ENV === "production" && !productionEnabled) {
+    throw new ApiError(403, "System restore execution is blocked in production without ALLOW_PRODUCTION_SYSTEM_RESTORE=true.");
+  }
+  if (!configuredToken || confirmationToken !== configuredToken) {
+    throw new ApiError(400, "Restore execution requires SYSTEM_RESTORE_CONFIRMATION_TOKEN.");
+  }
+}
+
 export async function GET() {
   try {
     const user = await requireSuperAdmin();
@@ -96,13 +134,10 @@ export async function POST(request: Request) {
   try {
     const user = await requireSuperAdmin();
     const context = await getRequestContext();
-    const { backup, confirmationToken, reason } = await request.json();
+    const { backup, confirmationToken, reason, dryRun = true } = await request.json();
 
     if (!backup || typeof backup !== "object") {
       throw new ApiError(400, "Invalid backup payload.");
-    }
-    if (confirmationToken !== "CONFIRM_RESTORE") {
-      throw new ApiError(400, "Restore requires confirmationToken=CONFIRM_RESTORE.");
     }
     if (typeof reason !== "string" || reason.trim().length < 10) {
       throw new ApiError(400, "Restore requires an explicit audit reason of at least 10 characters.");
@@ -119,6 +154,8 @@ export async function POST(request: Request) {
         projectId: null,
         reportType: "system-restore",
         format: "json",
+        mode: dryRun ? "dry-run" : "execute",
+        affectedTables: getRestoreTableSummary(backup as Record<string, unknown>),
         timestamp: new Date().toISOString(),
         correlationId: context.correlationId,
       },
@@ -141,6 +178,27 @@ export async function POST(request: Request) {
         throw new ApiError(400, `Backup is missing required table: ${table}`);
       }
     }
+
+    const affectedTables = getRestoreTableSummary(backup as Record<string, unknown>);
+
+    if (dryRun) {
+      await AuditService.log({
+        userId: user.id,
+        action: "SECURITY_ALERT",
+        entity: "System",
+        entityId: "SYSTEM_RESTORE_DRY_RUN",
+        reason: `System restore dry-run completed. Reason: ${reason.trim()}`,
+        severity: "CRITICAL",
+        newData: { mode: "dry-run", affectedTables },
+        correlationId: context.correlationId,
+        ipAddress: context.ipAddress,
+        userAgent: context.userAgent,
+      });
+
+      return NextResponse.json({ success: true, data: { mode: "dry-run", affectedTables } });
+    }
+
+    assertRestoreExecutionAllowed(confirmationToken);
 
     await prisma.$transaction(async (tx) => {
       await tx.transactionLine.deleteMany();
@@ -179,6 +237,7 @@ export async function POST(request: Request) {
       entityId: "SYSTEM_RESTORE",
       reason: `Full system restore completed. Reason: ${reason.trim()}`,
       severity: "CRITICAL",
+      newData: { mode: "execute", affectedTables },
       correlationId: context.correlationId,
       ipAddress: context.ipAddress,
       userAgent: context.userAgent,

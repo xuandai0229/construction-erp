@@ -82,7 +82,7 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
           </div>
 
           {/* ── Center: Project Stats (xl only) ── */}
-          <div className="hidden xl:flex flex-1 items-center justify-center gap-12">
+          <div className="hidden 2xl:flex flex-1 items-center justify-center gap-10">
             {stats.map((s, i) => (
               <div key={i} className="flex items-center gap-4 group">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--secondary)]/30 text-[var(--text-tertiary)] group-hover:text-blue-500 group-hover:border-blue-500/30 group-hover:bg-blue-500/5 transition-all duration-500 shadow-sm">
@@ -91,7 +91,7 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
                   </svg>
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--text-tertiary)] leading-none mb-2 opacity-60 flex items-center gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--text-tertiary)] leading-none mb-2 opacity-60 flex items-center gap-2">
                     {s.label}
                     {i === 1 && propData?.version && (
                       <span className="bg-blue-500/10 text-blue-500 px-1.5 py-0.5 rounded text-[8px] border border-blue-500/20">
@@ -99,7 +99,7 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
                       </span>
                     )}
                   </span>
-                  <span className="text-[12.5px] font-black text-[var(--text-primary)] truncate max-w-[200px] group-hover:text-blue-500 transition-colors tracking-tight">
+                  <span className="text-[12px] font-bold text-[var(--text-primary)] truncate max-w-[200px] group-hover:text-blue-500 transition-colors tracking-tight tabular-nums font-mono">
                     {s.value}
                   </span>
                 </div>
@@ -147,7 +147,7 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
                   <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
                 </svg>
                 {unreadCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-black text-white ring-2 ring-[var(--header-bg)] animate-pulse shadow-sm">
+                  <span className="absolute -right-1 -top-1 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white ring-2 ring-[var(--header-bg)] animate-pulse shadow-sm">
                     {unreadCount}
                   </span>
                 )}
@@ -183,7 +183,7 @@ export default function Header({ data: propData }: { data?: DashboardData }) {
 
                 {/* Name + Role */}
                 <div className="hidden flex-col items-start md:flex min-w-[90px]">
-                  <span className="text-[13px] font-black text-[var(--text-primary)] leading-none mb-1.5 tracking-tight">
+                  <span className="text-[12px] font-bold text-[var(--text-primary)] leading-none mb-1.5 tracking-tight">
                     {user?.name || 'Quản trị viên'}
                   </span>
                   <span className="text-[10px] font-black text-[var(--text-tertiary)] uppercase tracking-[0.15em] opacity-70">

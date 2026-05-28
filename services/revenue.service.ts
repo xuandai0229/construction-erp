@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from "@/lib/prisma";
 import { ApiError } from "@/lib/api-error";
 import { InvoiceStatus, PaymentStatus, ApprovalStatus } from "@prisma/client";
@@ -34,8 +35,6 @@ export class RevenueService {
     const retentionRate = data.retentionRate !== undefined ? Number(data.retentionRate) : 0;
     const retentionAmount = round(grossAmount * (retentionRate / 100));
 
-    // Billing Claim is Gross Amount minus Retention
-    const billingClaim = round(grossAmount - retentionAmount);
     // Amount must be grossAmount due to DB check constraint
     const amount = grossAmount;
 
@@ -188,21 +187,17 @@ export class RevenueService {
         }
       });
 
-      // Posting to Ledger
-      await PostingEngine.postPayment(tx, {
-        paymentId: payment.id,
-        projectId: invoice.projectId,
-        amount: amount,
-        description: `Thanh toán hóa đơn ${invoice.invoiceNumber || invoice.id}`
-      });
+      // Ledger posting is intentionally delayed until approval.
 
       // Audit Logging
       await AuditService.log({
+        userId,
         action: "CREATE",
         entity: "Payment",
         entityId: payment.id,
         newData: payment,
-        requestId
+        requestId,
+        reason: "Created AR payment in DRAFT state. Ledger posting is blocked until approval."
       });
 
       await LoggerService.info(`PaymentCreated: ${payment.id} for Invoice ${invoice.id}`, { 
@@ -314,7 +309,7 @@ export class RevenueService {
     });
   }
 
-  static async updatePayment(id: string, updates: any) {
+  static async updatePayment(id: string, _updates: any) {
     const existing = await prisma.payment.findUnique({ where: { id } });
     if (!existing) throw new ApiError(404, "Không tìm thấy thanh toán");
     
@@ -437,9 +432,59 @@ export class RevenueService {
     const existing = await prisma.payment.findUnique({ where: { id } });
     if (!existing) throw new ApiError(404, "Không tìm thấy thanh toán");
 
-    const item = await prisma.payment.update({
-      where: { id },
-      data: { approvalStatus: status }
+    const item = await prisma.$transaction(async (tx) => {
+      if (status === "APPROVED") {
+        const invoice = existing.invoiceId
+          ? await tx.invoice.findFirst({ where: { id: existing.invoiceId, deletedAt: null } })
+          : null;
+        if (!invoice) {
+          await AuditService.log({
+            userId,
+            action: "SECURITY_ALERT",
+            entity: "Payment",
+            entityId: id,
+            oldData: existing,
+            reason: "Blocked AR payment posting because source invoice is missing.",
+            severity: "CRITICAL",
+          });
+          throw new ApiError(400, "Khong the ghi so thanh toan khi thieu hoa don goc.");
+        }
+
+        await assertPeriodNotLocked(existing.date);
+
+        const existingJournal = await tx.journalEntry.findFirst({
+          where: { sourceType: "PAYMENT", sourceId: id, deletedAt: null, isReversed: false },
+          select: { id: true },
+        });
+        if (existingJournal) {
+          await AuditService.log({
+            userId,
+            action: "SECURITY_ALERT",
+            entity: "Payment",
+            entityId: id,
+            oldData: existing,
+            reason: `Blocked duplicate AR payment posting. Existing journal: ${existingJournal.id}.`,
+            severity: "CRITICAL",
+          });
+          throw new ApiError(400, "Thanh toan da duoc ghi so, khong duoc post lai.");
+        }
+      }
+
+      const updated = await tx.payment.update({
+        where: { id },
+        data: { approvalStatus: status }
+      });
+
+      if (status === "APPROVED") {
+        await PostingEngine.postPayment(tx, {
+          paymentId: updated.id,
+          projectId: updated.projectId,
+          amount: Number(updated.amount),
+          description: `Thanh toan hoa don ${updated.invoiceId || updated.id}`
+        });
+      }
+
+      return updated;
     });
 
     await AuditService.log({
@@ -449,6 +494,7 @@ export class RevenueService {
       entityId: id,
       oldData: existing,
       newData: item,
+      reason: status === "APPROVED" ? "Approved AR payment and posted ledger entry." : undefined,
     });
 
     eventBus.publish({

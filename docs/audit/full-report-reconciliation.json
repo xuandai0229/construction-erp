@@ -1,0 +1,1485 @@
+{
+  "generatedAt": "2026-05-28T08:14:30.851Z",
+  "projects": 19,
+  "summary": {
+    "total": 155,
+    "pass": 155,
+    "fail": 0,
+    "critical": 0
+  },
+  "checks": [
+    {
+      "area": "Ledger balanced (global)",
+      "expected": 1744529261,
+      "actual": 1744529261,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "All posted, unreversed, non-deleted journal lines must balance globally."
+    },
+    {
+      "area": "Ledger balanced (c6ebeb6b-dfec-43fb-ae9e-282d266a3deb)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (c6ebeb6b-dfec-43fb-ae9e-282d266a3deb)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (c6ebeb6b-dfec-43fb-ae9e-282d266a3deb)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (c6ebeb6b-dfec-43fb-ae9e-282d266a3deb)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (c6ebeb6b-dfec-43fb-ae9e-282d266a3deb)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (c6ebeb6b-dfec-43fb-ae9e-282d266a3deb)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (c6ebeb6b-dfec-43fb-ae9e-282d266a3deb)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (c6ebeb6b-dfec-43fb-ae9e-282d266a3deb)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (project-battrang)",
+      "expected": 1744529261,
+      "actual": 1744529261,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (project-battrang)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (project-battrang)",
+      "expected": 634120478,
+      "actual": 634120478,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (project-battrang)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (project-battrang)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (project-battrang)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (project-battrang)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (project-battrang)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=-634120478, AP balance=35683557. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (091ba671-4cdf-4b8d-84c7-240d21692824)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (091ba671-4cdf-4b8d-84c7-240d21692824)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (091ba671-4cdf-4b8d-84c7-240d21692824)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (091ba671-4cdf-4b8d-84c7-240d21692824)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (091ba671-4cdf-4b8d-84c7-240d21692824)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (091ba671-4cdf-4b8d-84c7-240d21692824)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (091ba671-4cdf-4b8d-84c7-240d21692824)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (091ba671-4cdf-4b8d-84c7-240d21692824)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (7c8fa82c-1344-4a49-881d-7e0d38267b63)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (7c8fa82c-1344-4a49-881d-7e0d38267b63)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (7c8fa82c-1344-4a49-881d-7e0d38267b63)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (7c8fa82c-1344-4a49-881d-7e0d38267b63)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (7c8fa82c-1344-4a49-881d-7e0d38267b63)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (7c8fa82c-1344-4a49-881d-7e0d38267b63)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (7c8fa82c-1344-4a49-881d-7e0d38267b63)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (7c8fa82c-1344-4a49-881d-7e0d38267b63)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (c1f8d981-2be1-438f-8eec-82dea6ac687e)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (c1f8d981-2be1-438f-8eec-82dea6ac687e)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (c1f8d981-2be1-438f-8eec-82dea6ac687e)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (c1f8d981-2be1-438f-8eec-82dea6ac687e)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (c1f8d981-2be1-438f-8eec-82dea6ac687e)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (c1f8d981-2be1-438f-8eec-82dea6ac687e)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (c1f8d981-2be1-438f-8eec-82dea6ac687e)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (c1f8d981-2be1-438f-8eec-82dea6ac687e)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (975c1f22-5aaa-418f-9696-c68cbc3cd283)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (975c1f22-5aaa-418f-9696-c68cbc3cd283)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (975c1f22-5aaa-418f-9696-c68cbc3cd283)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (975c1f22-5aaa-418f-9696-c68cbc3cd283)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (975c1f22-5aaa-418f-9696-c68cbc3cd283)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (975c1f22-5aaa-418f-9696-c68cbc3cd283)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (975c1f22-5aaa-418f-9696-c68cbc3cd283)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (975c1f22-5aaa-418f-9696-c68cbc3cd283)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (b36f16ef-0419-4aba-a405-6e174f475d8f)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (b36f16ef-0419-4aba-a405-6e174f475d8f)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (b36f16ef-0419-4aba-a405-6e174f475d8f)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (b36f16ef-0419-4aba-a405-6e174f475d8f)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (b36f16ef-0419-4aba-a405-6e174f475d8f)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (b36f16ef-0419-4aba-a405-6e174f475d8f)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (b36f16ef-0419-4aba-a405-6e174f475d8f)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (b36f16ef-0419-4aba-a405-6e174f475d8f)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (51644eab-34d4-446d-8843-a3c69b593e4a)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (51644eab-34d4-446d-8843-a3c69b593e4a)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (51644eab-34d4-446d-8843-a3c69b593e4a)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (51644eab-34d4-446d-8843-a3c69b593e4a)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (51644eab-34d4-446d-8843-a3c69b593e4a)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (51644eab-34d4-446d-8843-a3c69b593e4a)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (51644eab-34d4-446d-8843-a3c69b593e4a)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (51644eab-34d4-446d-8843-a3c69b593e4a)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (f2ee65a1-d338-4cef-9cc5-2cc3c453f2e8)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (f2ee65a1-d338-4cef-9cc5-2cc3c453f2e8)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (f2ee65a1-d338-4cef-9cc5-2cc3c453f2e8)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (f2ee65a1-d338-4cef-9cc5-2cc3c453f2e8)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (f2ee65a1-d338-4cef-9cc5-2cc3c453f2e8)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (f2ee65a1-d338-4cef-9cc5-2cc3c453f2e8)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (f2ee65a1-d338-4cef-9cc5-2cc3c453f2e8)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (f2ee65a1-d338-4cef-9cc5-2cc3c453f2e8)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (89dfb5f8-330c-434c-a12a-a78c81267158)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (89dfb5f8-330c-434c-a12a-a78c81267158)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (89dfb5f8-330c-434c-a12a-a78c81267158)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (89dfb5f8-330c-434c-a12a-a78c81267158)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (89dfb5f8-330c-434c-a12a-a78c81267158)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (89dfb5f8-330c-434c-a12a-a78c81267158)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (89dfb5f8-330c-434c-a12a-a78c81267158)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (89dfb5f8-330c-434c-a12a-a78c81267158)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (6986c4d0-8eb0-4f43-96cc-a9463e86c5ab)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (6986c4d0-8eb0-4f43-96cc-a9463e86c5ab)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (6986c4d0-8eb0-4f43-96cc-a9463e86c5ab)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (6986c4d0-8eb0-4f43-96cc-a9463e86c5ab)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (6986c4d0-8eb0-4f43-96cc-a9463e86c5ab)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (6986c4d0-8eb0-4f43-96cc-a9463e86c5ab)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (6986c4d0-8eb0-4f43-96cc-a9463e86c5ab)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (6986c4d0-8eb0-4f43-96cc-a9463e86c5ab)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (d5c0b467-fdb9-4668-8d12-796fff4288cf)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (d5c0b467-fdb9-4668-8d12-796fff4288cf)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (d5c0b467-fdb9-4668-8d12-796fff4288cf)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (d5c0b467-fdb9-4668-8d12-796fff4288cf)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (d5c0b467-fdb9-4668-8d12-796fff4288cf)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (d5c0b467-fdb9-4668-8d12-796fff4288cf)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (d5c0b467-fdb9-4668-8d12-796fff4288cf)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (d5c0b467-fdb9-4668-8d12-796fff4288cf)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (b0d32c00-1711-4e0e-8ae5-917905eb6d47)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (b0d32c00-1711-4e0e-8ae5-917905eb6d47)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (b0d32c00-1711-4e0e-8ae5-917905eb6d47)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (b0d32c00-1711-4e0e-8ae5-917905eb6d47)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (b0d32c00-1711-4e0e-8ae5-917905eb6d47)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (b0d32c00-1711-4e0e-8ae5-917905eb6d47)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (b0d32c00-1711-4e0e-8ae5-917905eb6d47)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (b0d32c00-1711-4e0e-8ae5-917905eb6d47)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (3f579fe6-5aad-4348-b49d-411f121e6cb1)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (3f579fe6-5aad-4348-b49d-411f121e6cb1)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (3f579fe6-5aad-4348-b49d-411f121e6cb1)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (3f579fe6-5aad-4348-b49d-411f121e6cb1)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (3f579fe6-5aad-4348-b49d-411f121e6cb1)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (3f579fe6-5aad-4348-b49d-411f121e6cb1)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (3f579fe6-5aad-4348-b49d-411f121e6cb1)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (3f579fe6-5aad-4348-b49d-411f121e6cb1)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (3d61f59a-e7e6-40d1-8be7-8c44f7ee0916)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (3d61f59a-e7e6-40d1-8be7-8c44f7ee0916)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (3d61f59a-e7e6-40d1-8be7-8c44f7ee0916)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (3d61f59a-e7e6-40d1-8be7-8c44f7ee0916)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (3d61f59a-e7e6-40d1-8be7-8c44f7ee0916)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (3d61f59a-e7e6-40d1-8be7-8c44f7ee0916)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (3d61f59a-e7e6-40d1-8be7-8c44f7ee0916)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (3d61f59a-e7e6-40d1-8be7-8c44f7ee0916)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (eb50f4aa-09bb-433b-8049-4ae44a3b7b5c)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (eb50f4aa-09bb-433b-8049-4ae44a3b7b5c)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (eb50f4aa-09bb-433b-8049-4ae44a3b7b5c)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (eb50f4aa-09bb-433b-8049-4ae44a3b7b5c)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (eb50f4aa-09bb-433b-8049-4ae44a3b7b5c)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (eb50f4aa-09bb-433b-8049-4ae44a3b7b5c)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (eb50f4aa-09bb-433b-8049-4ae44a3b7b5c)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (eb50f4aa-09bb-433b-8049-4ae44a3b7b5c)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (8056bf95-1055-4e81-84e6-08bd2d5bb35b)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (8056bf95-1055-4e81-84e6-08bd2d5bb35b)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (8056bf95-1055-4e81-84e6-08bd2d5bb35b)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (8056bf95-1055-4e81-84e6-08bd2d5bb35b)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (8056bf95-1055-4e81-84e6-08bd2d5bb35b)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (8056bf95-1055-4e81-84e6-08bd2d5bb35b)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (8056bf95-1055-4e81-84e6-08bd2d5bb35b)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (8056bf95-1055-4e81-84e6-08bd2d5bb35b)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (2d5210bd-e265-4632-82cc-526cc204ef1f)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (2d5210bd-e265-4632-82cc-526cc204ef1f)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (2d5210bd-e265-4632-82cc-526cc204ef1f)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (2d5210bd-e265-4632-82cc-526cc204ef1f)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (2d5210bd-e265-4632-82cc-526cc204ef1f)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (2d5210bd-e265-4632-82cc-526cc204ef1f)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (2d5210bd-e265-4632-82cc-526cc204ef1f)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (2d5210bd-e265-4632-82cc-526cc204ef1f)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Ledger balanced (54efc369-7a16-4bd8-adba-b1938585c19b)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted, unreversed, non-deleted debit/credit totals must match."
+    },
+    {
+      "area": "Revenue ledger vs canonical (54efc369-7a16-4bd8-adba-b1938585c19b)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted revenue must come from 511* ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Cost ledger vs canonical (54efc369-7a16-4bd8-adba-b1938585c19b)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "Posted cost must come from 621/622/623/627 ledger only.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "AR ledger vs canonical (54efc369-7a16-4bd8-adba-b1938585c19b)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "AR must reconcile to 131* active posted ledger.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Draft/rejected payments excluded from ledger (54efc369-7a16-4bd8-adba-b1938585c19b)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved payment should have active posted journal."
+    },
+    {
+      "area": "Draft invoices excluded from posted revenue (54efc369-7a16-4bd8-adba-b1938585c19b)",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "severity": "CRITICAL",
+      "notes": "No non-approved invoice should have active posted revenue journal."
+    },
+    {
+      "area": "Tenant scope evidence (54efc369-7a16-4bd8-adba-b1938585c19b)",
+      "expected": "GLOBAL",
+      "actual": "GLOBAL",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Project reconciliation was scoped per project/company available in database."
+    },
+    {
+      "area": "Project P&L layers (54efc369-7a16-4bd8-adba-b1938585c19b)",
+      "expected": "separate posted and exposure layers",
+      "actual": "separate posted and exposure layers",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Posted P&L=0, AP balance=0. Management exposure remains separate in canonical reconciliation payload.",
+      "suspectFile": "services/financial-aggregation.service.ts"
+    },
+    {
+      "area": "Dashboard integrity static values",
+      "expected": "no static SYNCED/lockedPeriodWarnings=0",
+      "actual": "no static integrity success",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Dashboard must show no-data or real reconciliation signal instead of fake synced status.",
+      "suspectFile": "app/components/FinancialIntegrityDashboard.tsx"
+    },
+    {
+      "area": "Dashboard KPI source",
+      "expected": "FinancialAggregationService/reconciliationStatus",
+      "actual": "FinancialAggregationService/reconciliationStatus",
+      "difference": 0,
+      "result": "PASS",
+      "severity": "HIGH",
+      "notes": "Dashboard stats route must use a source service, workflow counts, or no-data state.",
+      "suspectFile": "app/api/dashboard/stats/route.ts"
+    }
+  ]
+}

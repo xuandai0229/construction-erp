@@ -8,6 +8,16 @@ import { formatVnd } from '@/app/components/dashboard-data';
 import { exportToCsv } from '@/app/services/export.service';
 import { useProjectsQuery } from '@/services/queries/useProjects';
 import { COL_WIDTHS, ERP_TERMINOLOGY } from '@/app/utils/table-constants';
+import { 
+  EnterpriseCard,
+  EnterpriseTable,
+  EnterpriseSection,
+  EnterpriseMetric,
+  EnterpriseBadge,
+  EnterpriseEmptyState,
+  Select,
+  Column
+} from '@/app/components/ui-enterprise';
 
 import { 
   useMonthlyReportQuery, 
@@ -26,7 +36,7 @@ export default function ReportsPage() {
   const setCurrentProject = useERPStore(state => state.setCurrentProject);
   const sidebarCollapsed  = useERPStore(state => state.sidebarCollapsed);
 
-  // Tab state (Batch 6.3)
+  // Tab state
   const [activeTab, setActiveTab] = useState<ReportTab>('cash_aging');
   const [financialData, setFinancialData] = useState<any>(null);
   const [loadingFinancial, setLoadingFinancial] = useState(false);
@@ -38,7 +48,7 @@ export default function ReportsPage() {
   const [drillTotalPages, setDrillTotalPages] = useState(1);
   const [loadingDrill, setLoadingDrill] = useState(false);
 
-  // Classic queries (backward compatibility)
+  // Classic queries
   const { data: monthlyData = [], isLoading: loadingMonthly } = useMonthlyReportQuery(currentProjectId);
   const { data: arAging = [] } = useAgingReportQuery(currentProjectId, 'receivable');
   const { data: apAging = [] } = useAgingReportQuery(currentProjectId, 'payable');
@@ -49,7 +59,7 @@ export default function ReportsPage() {
     toggleLockMutation.mutate(month);
   };
 
-  // Fetch dynamic authoritative accounting reports (Batch 6.3)
+  // Fetch dynamic authoritative accounting reports
   useEffect(() => {
     if (currentProjectId) {
       setLoadingFinancial(true);
@@ -95,14 +105,12 @@ export default function ReportsPage() {
     const project = projects.find(p => p.id === currentProjectId);
     const dateStr = new Date().toISOString().split('T')[0];
     
-    // Register CSV export metric (Batch 7.5)
     fetch("/api/monitoring/performance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ type: "CSV" })
     }).catch(() => {});
 
-    // Big 4 Financial Audit trail export logging
     fetch("/api/reports/audit-export", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -130,14 +138,12 @@ export default function ReportsPage() {
   };
 
   const handlePrint = () => {
-    // Register PDF print metric (Batch 7.5)
     fetch("/api/monitoring/performance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ type: "PDF" })
     }).catch(() => {});
 
-    // Big 4 Financial Audit trail print logging
     fetch("/api/reports/audit-export", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -147,34 +153,213 @@ export default function ReportsPage() {
     window.print();
   };
 
+  // 1. Column Definitions: Dòng tiền & Công nợ
+  const columnsMonthly: Column<MonthlyReportRow>[] = [
+    {
+      header: "Tháng",
+      accessor: (row) => {
+        const locked = locks.includes(row.month);
+        return (
+          <div className="flex items-center gap-2 font-bold tabular-nums">
+            {locked && (
+              <svg viewBox="0 0 24 24" className="h-3 w-3 text-rose-500 shrink-0" fill="currentColor">
+                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/>
+              </svg>
+            )}
+            {row.month}
+          </div>
+        );
+      },
+      align: "center",
+      width: "130px"
+    },
+    {
+      header: "Tổng Thu (Cash In)",
+      accessor: (row) => <span className="text-emerald-500 font-semibold">{formatVnd(row.cashIn)}</span>,
+      align: "right",
+      width: "170px"
+    },
+    {
+      header: "Tổng Chi (Cash Out)",
+      accessor: (row) => <span className="text-rose-500 font-semibold">{formatVnd(row.cashOut)}</span>,
+      align: "right",
+      width: "170px"
+    },
+    {
+      header: ERP_TERMINOLOGY.FINANCE.REVENUE,
+      accessor: (row) => formatVnd(row.revenue),
+      align: "right",
+      width: "180px"
+    },
+    {
+      header: "Chi Phí Sổ Sách",
+      accessor: (row) => formatVnd(row.cost),
+      align: "right",
+      width: "160px"
+    },
+    {
+      header: "Lợi Nhuận Thuần",
+      accessor: (row) => (
+        <span className={row.profit >= 0 ? 'text-emerald-500 font-bold' : 'text-rose-500 font-bold'}>
+          {row.profit >= 0 ? '+' : ''}{formatVnd(row.profit)}
+        </span>
+      ),
+      align: "right",
+      width: "170px"
+    },
+    {
+      header: "Số Dư Lũy Kế",
+      accessor: (row) => (
+        <span className={row.runningBalance >= 0 ? 'text-blue-500 font-black' : 'text-rose-500 font-black'}>
+          {formatVnd(row.runningBalance)}
+        </span>
+      ),
+      align: "right",
+      width: "160px"
+    },
+    {
+      header: "Khóa Sổ",
+      accessor: (row) => {
+        const locked = locks.includes(row.month);
+        return (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleLock(row.month);
+            }}
+            className={`h-7 px-3 text-[10px] font-bold rounded-[var(--radius-sm)] border transition-all duration-150 cursor-pointer ${
+              locked
+                ? 'bg-rose-500/10 text-rose-500 border-rose-500/20 hover:bg-rose-500/20'
+                : 'bg-[var(--card)] text-[var(--text-secondary)] border-[var(--border)] hover:bg-[var(--muted)]'
+            }`}
+          >
+            {locked ? 'Mở khóa' : 'Khóa sổ'}
+          </button>
+        );
+      },
+      align: "center",
+      width: "120px"
+    }
+  ];
+
+  // 2. Column Definitions: Bảng cân đối phát sinh
+  const columnsTrialBalance: Column<any>[] = [
+    {
+      header: "Mã TK",
+      accessor: (row) => (
+        <div className="flex items-center justify-center gap-1.5 font-bold text-violet-400 group-hover:text-violet-300">
+          {row.code}
+          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 opacity-20 group-hover:opacity-100 transition-opacity text-violet-400" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </div>
+      ),
+      align: "center",
+      width: "15%"
+    },
+    {
+      header: "Tên Tài Khoản Sổ Cái",
+      accessor: (row) => row.name,
+      width: "40%"
+    },
+    {
+      header: "Loại TK",
+      accessor: (row) => <span className="text-[10px] font-black uppercase text-violet-400">{row.type}</span>,
+      align: "center",
+      width: "12%"
+    },
+    {
+      header: "Phát Sinh Nợ (Debit)",
+      accessor: (row) => <span className="text-emerald-500 font-semibold">{formatVnd(row.debitSum)}</span>,
+      align: "right",
+      width: "16%"
+    },
+    {
+      header: "Phát Sinh Có (Credit)",
+      accessor: (row) => <span className="text-rose-500 font-semibold">{formatVnd(row.creditSum)}</span>,
+      align: "right",
+      width: "16%"
+    },
+    {
+      header: "Dư Cuối Kỳ (Balance)",
+      accessor: (row) => <span className="text-blue-500 font-extrabold">{formatVnd(row.balance)}</span>,
+      align: "right",
+      width: "16%"
+    }
+  ];
+
+  // 3. Column Definitions: VAT Summary
+  const columnsVat: Column<any>[] = [
+    {
+      header: "Ngày",
+      accessor: (row) => new Date(row.date).toLocaleDateString('vi-VN'),
+      align: "center",
+      width: "12%"
+    },
+    {
+      header: "Nhà cung cấp / Đối tác",
+      accessor: (row) => row.supplier,
+      width: "240px"
+    },
+    {
+      header: "Nội dung chi tiết chứng từ",
+      accessor: (row) => row.note || "N/A",
+      width: "320px"
+    },
+    {
+      header: "Giá chưa thuế (Net)",
+      accessor: (row) => formatVnd(row.netAmount),
+      align: "right",
+      width: "170px"
+    },
+    {
+      header: "Thuế suất",
+      accessor: (row) => `${row.vatRate}%`,
+      align: "center",
+      width: "110px"
+    },
+    {
+      header: "Tiền thuế VAT",
+      accessor: (row) => <span className="text-rose-500 font-semibold">{formatVnd(row.vatAmount)}</span>,
+      align: "right",
+      width: "160px"
+    },
+    {
+      header: "Tổng thanh toán",
+      accessor: (row) => <span className="text-blue-500 font-extrabold">{formatVnd(row.amount)}</span>,
+      align: "right",
+      width: "180px"
+    }
+  ];
+
   return (
-    <div className="erp-page">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex overflow-hidden">
       <Sidebar activeItem="reports" />
-      <main className={`erp-page-main ${sidebarCollapsed ? 'with-sidebar-collapsed' : 'with-sidebar-expanded'}`}>
+      <main className={`erp-page-main flex-1 flex flex-col h-screen overflow-hidden ${sidebarCollapsed ? 'pl-[var(--erp-sidebar-collapsed)]' : 'pl-[var(--erp-sidebar-width)]'}`}>
         <Header />
         
-        <div className="erp-content-container animate-fade-in space-y-6 print:p-0 print:space-y-4">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin print:p-0 print:overflow-visible print:h-auto">
           
           {/* Page Header (Hidden in Print mode) */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
-            <div className="accent-line">
-              <h1 className="erp-section-title">Hệ thống Báo cáo Kế toán & Tài chính</h1>
-              <p className="erp-section-subtitle">Accounting-grade dynamic ledger aggregation and tax governance</p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between select-none pb-4 border-b border-[var(--border)] print:hidden">
+            <div>
+              <h1 className="text-base font-bold tracking-tight text-[var(--text-primary)]">Hệ thống Báo cáo Kế toán & Tài chính</h1>
+              <p className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wide mt-1">Accounting-grade dynamic ledger aggregation and tax governance</p>
             </div>
 
-            <div className="flex items-center gap-2 shrink-0">
-              <select
+            <div className="flex items-center gap-2 mt-4 sm:mt-0">
+              <Select
                 value={currentProjectId}
                 onChange={e => setCurrentProject(e.target.value)}
-                className="erp-input h-9 w-auto px-3 text-[13px] font-bold"
+                className="min-w-64 font-bold"
               >
                 {projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
-              </select>
+              </Select>
 
               <button
                 onClick={handlePrint}
-                className="erp-btn bg-violet-600 text-white hover:bg-violet-500 gap-1.5"
-                title="Xuất định dạng PDF"
+                className="h-[38px] px-4 text-xs font-semibold text-white bg-violet-600 hover:bg-violet-500 rounded-[var(--radius-sm)] flex items-center gap-1.5 transition-colors duration-150 cursor-pointer shadow-sm"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <polyline points="6 9 6 2 18 2 18 9" />
@@ -186,8 +371,7 @@ export default function ReportsPage() {
 
               <button
                 onClick={handleExport}
-                className="erp-btn border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] gap-1.5"
-                title="Xuất định dạng CSV/Excel"
+                className="h-[38px] px-4 text-xs font-semibold text-[var(--text-primary)] border border-[var(--border)] bg-[var(--card)] hover:bg-[var(--muted)] rounded-[var(--radius-sm)] flex items-center gap-1.5 transition-colors duration-150 cursor-pointer shadow-sm"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5 5 5 5-5m-5 5V3" />
@@ -198,7 +382,7 @@ export default function ReportsPage() {
           </div>
 
           {/* Dynamic Tab Switcher (Hidden in Print Mode) */}
-          <div className="flex border-b border-[var(--border)] gap-2 print:hidden overflow-x-auto scrollbar-hide">
+          <div className="flex border-b border-[var(--border)] gap-2 print:hidden overflow-x-auto scrollbar-hide select-none">
             {[
               { id: 'cash_aging', label: 'Dòng tiền & Công nợ' },
               { id: 'trial_balance', label: 'Bảng Cân đối Phát sinh' },
@@ -208,10 +392,10 @@ export default function ReportsPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as ReportTab)}
-                className={`py-2.5 px-4 font-black text-[11px] uppercase tracking-wider transition-all border-b-2 -mb-0.5 whitespace-nowrap ${
+                className={`py-2 px-4 font-bold text-xs uppercase tracking-wider transition-all border-b-2 -mb-0.5 whitespace-nowrap cursor-pointer ${
                   activeTab === tab.id
                     ? 'border-violet-500 text-violet-400 font-extrabold'
-                    : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                    : 'border-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)]'
                 }`}
               >
                 {tab.label}
@@ -230,213 +414,120 @@ export default function ReportsPage() {
           {activeTab === 'cash_aging' && (
             <div className="space-y-6">
               {/* Monthly P&L table */}
-              <section className="card-elevation overflow-hidden print:shadow-none print:border">
-                <div className="px-6 py-4 border-b border-[var(--border)] flex items-center justify-between print:px-2">
-                  <h2 className="text-[12px] font-black text-[var(--text-primary)] uppercase tracking-widest print:text-black">
-                    Kết quả hoạt động kinh doanh (P&L) theo tháng
-                  </h2>
-                  <div className="flex items-center gap-2 text-[10px] text-[var(--text-muted)] italic print:hidden">
+              <EnterpriseCard
+                title="KẾT QUẢ HOẠT ĐỘNG KINH DOANH (P&L) THEO THÁNG"
+                subtitle="Dòng tiền mặt thu chi và kết quả sản xuất kinh doanh dở dang hạch toán"
+                headerActions={
+                  <div className="flex items-center gap-2 text-[10px] text-[var(--text-tertiary)] font-semibold uppercase tracking-wider print:hidden">
                     <span className="h-2 w-2 rounded-full bg-rose-500 shrink-0" />
-                    Tháng đỏ: Kỳ kế toán đã khóa hạch toán
+                    Tháng đỏ: Kỳ hạch toán đã khóa
                   </div>
-                </div>
-                <div className="overflow-x-auto scrollbar-hide">
-                  <table className="erp-table print:text-black">
-                    <thead>
-                      <tr>
-                        <th className={`${COL_WIDTHS.DATE} bg-[var(--table-head-bg)] text-center px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black`}>Tháng</th>
-                        <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black`}>Tổng Thu (Cash In)</th>
-                        <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black`}>Tổng Chi (Cash Out)</th>
-                        <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black`}>{ERP_TERMINOLOGY.FINANCE.REVENUE}</th>
-                        <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black`}>Chi Phí Sổ Sách</th>
-                        <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black`}>Lợi Nhuận Thuần</th>
-                        <th className={`${COL_WIDTHS.FINANCIAL} text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black`}>Số Dư Lũy Kế</th>
-                        <th className={`${COL_WIDTHS.STATUS} text-center bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:hidden`}>Khóa Sổ</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {monthlyData?.map((row: MonthlyReportRow) => {
-                        const locked = locks.includes(row.month);
-                        return (
-                          <tr key={row.month} className={`group ${locked ? 'bg-rose-500/5 print:bg-zinc-50' : ''}`}>
-                            <td className={`${COL_WIDTHS.DATE} text-center font-bold text-[var(--text-primary)] border-r border-[var(--border)] tabular-nums px-4 py-3 print:text-black`}>
-                              <div className="flex items-center justify-center gap-2">
-                                {locked && (
-                                  <svg viewBox="0 0 24 24" className="h-3 w-3 text-rose-500 shrink-0 print:text-black" fill="currentColor">
-                                    <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/>
-                                  </svg>
-                                )}
-                                {row.month} 
-                              </div>
-                            </td>
-                            <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums font-semibold text-emerald-500 whitespace-nowrap px-4 py-3 border-r border-[var(--border)] print:text-black`}>{formatVnd(row.cashIn)}</td>
-                            <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums font-semibold text-rose-500 whitespace-nowrap px-4 py-3 border-r border-[var(--border)] print:text-black`}>{formatVnd(row.cashOut)}</td>
-                            <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums text-[var(--text-secondary)] whitespace-nowrap px-4 py-3 border-r border-[var(--border)] print:text-black`}>{formatVnd(row.revenue)}</td>
-                            <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums text-[var(--text-secondary)] whitespace-nowrap px-4 py-3 border-r border-[var(--border)] print:text-black`}>{formatVnd(row.cost)}</td>
-                            <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums font-bold whitespace-nowrap px-4 py-3 border-r border-[var(--border)] print:text-black ${row.profit >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
-                              {row.profit >= 0 ? '+' : ''}{formatVnd(row.profit)}
-                            </td>
-                            <td className={`${COL_WIDTHS.FINANCIAL} text-right tabular-nums font-extrabold whitespace-nowrap px-4 py-3 border-r border-[var(--border)] print:text-black ${row.runningBalance >= 0 ? 'text-blue-500' : 'text-rose-500'}`}>
-                              {formatVnd(row.runningBalance)}
-                            </td>
-                            <td className={`${COL_WIDTHS.STATUS} text-center px-4 py-3 border-r border-[var(--border)] print:hidden`}>
-                              <button
-                                onClick={() => toggleLock(row.month)}
-                                className={`erp-btn h-7 px-3 text-[10px] ${locked
-                                  ? 'bg-rose-500/15 text-rose-500 border border-rose-500/25 hover:bg-rose-500/25'
-                                  : 'bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text-primary)]'
-                                }`}
-                              >
-                                {locked ? 'Mở khóa' : 'Khóa sổ'}
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                      {monthlyData.length === 0 && (
-                        <tr>
-                          <td colSpan={8} className="h-32 text-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest">
-                            Chưa có dữ liệu phát sinh
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </section>
+                }
+              >
+                <EnterpriseTable
+                  data={monthlyData}
+                  columns={columnsMonthly}
+                  loading={loadingMonthly}
+                  emptyState={
+                    <EnterpriseEmptyState
+                      title="Chưa có dữ liệu phát sinh"
+                      description="Hệ thống chưa ghi nhận dòng tiền hay doanh thu hạch toán nào của dự án trong kỳ này."
+                      iconType="report"
+                    />
+                  }
+                />
+              </EnterpriseCard>
 
               {/* Aging Debt Panel */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 print:grid-cols-2 print:gap-4">
-                <section className="card-elevation overflow-hidden print:shadow-none print:border">
-                  <div className="px-5 py-4 border-b border-[var(--border)] flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)] print:bg-black" />
-                    <h3 className="text-[11.5px] font-black text-[var(--text-primary)] uppercase tracking-widest print:text-black">
-                      Phân tích tuổi nợ phải thu (A/R Aging)
-                    </h3>
-                  </div>
-                  <div className="p-5 space-y-3 print:p-2">
+                
+                <EnterpriseCard
+                  title="PHÂN TÍCH TUỔI NỢ PHẢI THU (A/R AGING)"
+                  subtitle="Công nợ chủ đầu tư quá hạn thanh toán"
+                >
+                  <div className="space-y-3">
                     {agingCats.map(cat => {
                       const bucket = arAging.find((b: any) => b.bucket === cat);
                       const total = bucket?.amount || 0;
                       const count = bucket?.count || 0;
                       return (
-                        <div key={cat} className="flex items-center justify-between p-3 rounded-xl bg-[var(--secondary)] border border-[var(--border)] print:bg-white print:text-black">
+                        <div key={cat} className="flex items-center justify-between p-3 rounded-lg bg-[var(--background)] border border-[var(--border)] select-none hover:border-[var(--primary)]/35 transition-colors">
                           <div>
-                            <div className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-wider print:text-zinc-500">{agingLabels[cat] || cat}</div>
-                            <div className="text-[13px] font-black text-[var(--text-primary)] tabular-nums mt-0.5 print:text-black">{formatVnd(total)}</div>
+                            <div className="text-[9px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider">{agingLabels[cat] || cat}</div>
+                            <div className="text-xs font-black text-[var(--text-primary)] tabular-nums mt-0.5">{formatVnd(total)}</div>
                           </div>
-                          <div className="text-[10.5px] text-[var(--text-muted)] print:text-zinc-500">{count} khoản</div>
+                          <EnterpriseBadge variant="neutral">{count} khoản nợ</EnterpriseBadge>
                         </div>
                       );
                     })}
                   </div>
-                </section>
+                </EnterpriseCard>
 
-                <section className="card-elevation overflow-hidden print:shadow-none print:border">
-                  <div className="px-5 py-4 border-b border-[var(--border)] flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-rose-500 shadow-[0_0_6px_rgba(239,68,68,0.6)] print:bg-black" />
-                    <h3 className="text-[11.5px] font-black text-[var(--text-primary)] uppercase tracking-widest print:text-black">
-                      Phân tích tuổi nợ phải trả (A/P Aging)
-                    </h3>
-                  </div>
-                  <div className="p-5 space-y-3 print:p-2">
+                <EnterpriseCard
+                  title="PHÂN TÍCH TUỔI NỢ PHẢI TRẢ (A/P AGING)"
+                  subtitle="Công nợ tổ đội, nhà thầu phụ quá hạn thanh toán"
+                >
+                  <div className="space-y-3">
                     {agingCats.map(cat => {
                       const bucket = apAging.find((b: any) => b.bucket === cat);
                       const total = bucket?.amount || 0;
                       const count = bucket?.count || 0;
                       return (
-                        <div key={cat} className="flex items-center justify-between p-3 rounded-xl bg-[var(--secondary)] border border-[var(--border)] print:bg-white print:text-black">
+                        <div key={cat} className="flex items-center justify-between p-3 rounded-lg bg-[var(--background)] border border-[var(--border)] select-none hover:border-[var(--primary)]/35 transition-colors">
                           <div>
-                            <div className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-wider print:text-zinc-500">{agingLabels[cat] || cat}</div>
-                            <div className="text-[13px] font-black text-[var(--text-primary)] tabular-nums mt-0.5 print:text-black">{formatVnd(total)}</div>
+                            <div className="text-[9px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider">{agingLabels[cat] || cat}</div>
+                            <div className="text-xs font-black text-[var(--text-primary)] tabular-nums mt-0.5">{formatVnd(total)}</div>
                           </div>
-                          <div className="text-[10.5px] text-[var(--text-muted)] print:text-zinc-500">{count} khoản</div>
+                          <EnterpriseBadge variant="neutral">{count} khoản nợ</EnterpriseBadge>
                         </div>
                       );
                     })}
                   </div>
-                </section>
+                </EnterpriseCard>
+
               </div>
             </div>
           )}
 
           {/* TAB CONTENT 2: TRIAL BALANCE */}
           {activeTab === 'trial_balance' && (
-            <section className="card-elevation overflow-hidden print:shadow-none print:border">
-              <div className="px-6 py-4 border-b border-[var(--border)] flex items-center justify-between">
-                <h2 className="text-[12px] font-black text-[var(--text-primary)] uppercase tracking-widest print:text-black">
-                  Bảng Cân đối Phát sinh Tài khoản (Trial Balance)
-                </h2>
-                <div className="text-[10.5px] text-[var(--text-muted)] italic print:hidden">
-                  Đối soát kép: Tổng Nợ (Debit) = Tổng Có (Credit)
+            <EnterpriseCard
+              title="BẢNG CÂN ĐỐI PHÁT SINH TÀI KHOẢN (TRIAL BALANCE)"
+              subtitle="Cân đối đối soát kép toàn bộ Sổ cái tài khoản kế toán công trình Thông tư 200"
+              headerActions={
+                <div className="text-[10px] text-[var(--text-tertiary)] font-semibold uppercase tracking-wider print:hidden">
+                  ĐốI SOÁT: TỔNG NỢ (DEBIT) = TỔNG CÓ (CREDIT)
                 </div>
-              </div>
-              <div className="overflow-x-auto">
-                {loadingFinancial ? (
-                  <div className="p-12 text-center text-[12px] text-[var(--text-muted)] italic animate-pulse">
-                    Đang tổng hợp Sổ cái tài khoản...
+              }
+            >
+              <EnterpriseTable
+                data={financialData?.trialBalance || []}
+                columns={columnsTrialBalance}
+                loading={loadingFinancial}
+                onRowClick={(row) => {
+                  setDrillAccount({ code: row.code, name: row.name });
+                  setDrillPage(1);
+                }}
+                emptyState={
+                  <EnterpriseEmptyState
+                    title="Chưa tổng hợp được Sổ Cái"
+                    description="Vui lòng thực hiện kiểm tra các bút toán hoặc mở kỳ hạch toán để tạo sổ phát sinh."
+                    iconType="report"
+                  />
+                }
+              />
+
+              {financialData?.trialBalance?.length > 0 && (
+                <div className="mt-4 p-4 rounded-lg bg-[var(--background)] border border-[var(--border)] flex flex-wrap justify-between items-center select-none font-bold text-xs uppercase tracking-wider text-[var(--text-primary)]">
+                  <span>TỔNG CỘNG ĐỐI SOÁT LEDGER</span>
+                  <div className="flex gap-8">
+                    <div>NỢ: <span className="text-emerald-500 font-black tabular-nums">{formatVnd(financialData.trialBalance.reduce((s: number, r: any) => s + r.debitSum, 0))}</span></div>
+                    <div>CÓ: <span className="text-rose-500 font-black tabular-nums">{formatVnd(financialData.trialBalance.reduce((s: number, r: any) => s + r.creditSum, 0))}</span></div>
+                    <div>CÂN ĐỐI: <span className="text-blue-500 font-black tabular-nums">{formatVnd(financialData.trialBalance.reduce((s: number, r: any) => s + Math.abs(r.balance), 0) / 2)}</span></div>
                   </div>
-                ) : (
-                  <table className="erp-table print:text-black">
-                    <thead>
-                      <tr>
-                        <th className="w-24 text-center bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black">Mã TK</th>
-                        <th className="text-left bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black">Tên Tài Khoản Sổ Cái</th>
-                        <th className="w-28 text-center bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black">Loại TK</th>
-                        <th className="w-40 text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black">Phát Sinh Nợ (Debit)</th>
-                        <th className="w-40 text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black">Phát Sinh Có (Credit)</th>
-                        <th className="w-40 text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black">Dư Cuối Kỳ (Balance)</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {financialData?.trialBalance.map((row: any) => (
-                        <tr 
-                          key={row.code} 
-                          className="hover:bg-violet-500/5 cursor-pointer transition-colors group"
-                          onClick={() => {
-                            setDrillAccount({ code: row.code, name: row.name });
-                            setDrillPage(1);
-                          }}
-                          title={`Click để xem sổ chi tiết tài khoản ${row.code}`}
-                        >
-                          <td className="text-center font-bold text-violet-400 group-hover:text-violet-300 border-r border-[var(--border)] tabular-nums px-4 py-2.5 print:text-black">
-                            <div className="flex items-center justify-center gap-1.5">
-                              {row.code}
-                              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 opacity-20 group-hover:opacity-100 transition-opacity text-violet-400" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0z" />
-                                <circle cx="12" cy="12" r="3" />
-                              </svg>
-                            </div>
-                          </td>
-                          <td className="text-left font-bold text-[var(--text-secondary)] border-r border-[var(--border)] px-4 py-2.5 print:text-black">{row.name}</td>
-                          <td className="text-center border-r border-[var(--border)] text-[10px] font-black uppercase text-violet-400 px-4 py-2.5 print:text-zinc-600">{row.type}</td>
-                          <td className="text-right border-r border-[var(--border)] font-semibold text-emerald-400 tabular-nums px-4 py-2.5 print:text-black">{formatVnd(row.debitSum)}</td>
-                          <td className="text-right border-r border-[var(--border)] font-semibold text-rose-400 tabular-nums px-4 py-2.5 print:text-black">{formatVnd(row.creditSum)}</td>
-                          <td className="text-right font-extrabold text-blue-500 tabular-nums px-4 py-2.5 print:text-black">{formatVnd(row.balance)}</td>
-                        </tr>
-                      ))}
-                      {/* Double entry summary row */}
-                      {financialData?.trialBalance.length > 0 && (
-                        <tr className="bg-[var(--secondary)]/70 font-black border-t-2 border-[var(--border)] print:bg-zinc-200">
-                          <td colSpan={3} className="text-right uppercase tracking-wider text-[10px] px-4 py-3 print:text-black">
-                            TỔNG CỘNG ĐỐI SOÁT LEDGER
-                          </td>
-                          <td className="text-right text-emerald-500 tabular-nums px-4 py-3 print:text-black border-r border-[var(--border)]">
-                            {formatVnd(financialData.trialBalance.reduce((s: number, r: any) => s + r.debitSum, 0))}
-                          </td>
-                          <td className="text-right text-rose-500 tabular-nums px-4 py-3 print:text-black border-r border-[var(--border)]">
-                            {formatVnd(financialData.trialBalance.reduce((s: number, r: any) => s + r.creditSum, 0))}
-                          </td>
-                          <td className="text-right text-blue-500 tabular-nums px-4 py-3 print:text-black">
-                            {formatVnd(financialData.trialBalance.reduce((s: number, r: any) => s + Math.abs(r.balance), 0) / 2)}
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                )}
-              </div>
-            </section>
+                </div>
+              )}
+            </EnterpriseCard>
           )}
 
           {/* TAB CONTENT 3: BALANCE SHEET */}
@@ -444,166 +535,96 @@ export default function ReportsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 print:grid-cols-2 print:gap-4">
               
               {/* ASSETS */}
-              <section className="card-elevation overflow-hidden print:shadow-none print:border">
-                <div className="px-5 py-4 border-b border-[var(--border)] bg-emerald-500/5 print:bg-zinc-100">
-                  <h3 className="text-[12px] font-black text-emerald-400 uppercase tracking-widest print:text-black">
-                    PHẦN I: TÀI SẢN (ASSETS)
-                  </h3>
-                </div>
-                <div className="p-3">
-                  <table className="w-full text-[11px] print:text-black">
-                    <thead>
-                      <tr className="border-b border-[var(--border)] text-[9.5px] uppercase tracking-wider text-[var(--text-muted)] font-black print:text-zinc-600">
-                        <th className="text-left py-2">Chỉ tiêu tài sản</th>
-                        <th className="text-center w-20 py-2">Mã TK</th>
-                        <th className="text-right w-36 py-2">Số dư cuối kỳ</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[var(--border)]">
-                      {financialData?.balanceSheet.assets.map((row: any) => (
-                        <tr key={row.code} className="hover:bg-[var(--secondary)]/40">
-                          <td className="py-2.5 font-bold text-[var(--text-secondary)] print:text-black">{row.name}</td>
-                          <td className="text-center font-bold text-[var(--text-primary)] tabular-nums print:text-black">{row.code}</td>
-                          <td className="text-right font-extrabold text-blue-500 tabular-nums print:text-black">{formatVnd(row.balance)}</td>
-                        </tr>
-                      ))}
-                      {/* Total Assets Row */}
-                      <tr className="font-black text-[12px] bg-[var(--secondary)]/60 border-t-2 border-[var(--border)] print:bg-zinc-200">
-                        <td className="py-3 uppercase text-emerald-500 print:text-black">TỔNG CỘNG TÀI SẢN</td>
-                        <td className="text-center">-</td>
-                        <td className="text-right text-emerald-500 tabular-nums print:text-black">
-                          {formatVnd(financialData?.balanceSheet.assets.reduce((s: number, r: any) => s + r.balance, 0) || 0)}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </section>
+              <EnterpriseCard
+                title="PHẦN I: TÀI SẢN (ASSETS)"
+                subtitle="Tổng hợp các chỉ tiêu tài sản dở dang và tiền gửi"
+              >
+                <EnterpriseTable
+                  data={financialData?.balanceSheet.assets || []}
+                  columns={[
+                    { header: 'Chỉ tiêu tài sản', accessor: (row: any) => row.name, width: '50%' },
+                    { header: 'Mã TK', accessor: (row: any) => <span className="font-bold text-violet-400">{row.code}</span>, align: 'center', width: '120px' },
+                    { header: 'Số dư cuối kỳ', accessor: (row: any) => <span className="font-bold text-blue-500">{formatVnd(row.balance)}</span>, align: 'right', width: '180px' },
+                  ]}
+                  minWidth="720px"
+                  getRowKey={(row: any) => row.code}
+                  emptyState={<EnterpriseEmptyState title="Chưa có báo cáo tài sản" description="Chưa có số dư tài sản để lập bảng cân đối kế toán." iconType="report" />}
+                  footer={
+                    <tr className="h-[40px] text-[12px] font-bold">
+                      <td className="px-4 text-left uppercase text-emerald-500">Tổng cộng tài sản</td>
+                      <td className="px-4 text-center">-</td>
+                      <td className="px-4 text-right font-mono tabular-nums text-emerald-500">{formatVnd(financialData?.balanceSheet.assets.reduce((s: number, r: any) => s + r.balance, 0) || 0)}</td>
+                    </tr>
+                  }
+                />
+              </EnterpriseCard>
 
               {/* LIABILITIES & EQUITIES */}
-              <section className="card-elevation overflow-hidden print:shadow-none print:border">
-                <div className="px-5 py-4 border-b border-[var(--border)] bg-rose-500/5 print:bg-zinc-100">
-                  <h3 className="text-[12px] font-black text-rose-400 uppercase tracking-widest print:text-black">
-                    PHẦN II: NGUỒN VỐN & PHẢI TRẢ
-                  </h3>
-                </div>
-                <div className="p-3">
-                  <table className="w-full text-[11px] print:text-black">
-                    <thead>
-                      <tr className="border-b border-[var(--border)] text-[9.5px] uppercase tracking-wider text-[var(--text-muted)] font-black print:text-zinc-600">
-                        <th className="text-left py-2">Chỉ tiêu nguồn vốn</th>
-                        <th className="text-center w-20 py-2">Mã TK</th>
-                        <th className="text-right w-36 py-2">Số dư cuối kỳ</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[var(--border)]">
-                      {/* Liabilities */}
-                      <tr className="bg-[var(--secondary)]/40 font-black text-[10px] uppercase text-[var(--text-muted)] print:text-black">
-                        <td colSpan={3} className="py-1 px-1">A. NỢ PHẢI TRẢ (LIABILITIES)</td>
-                      </tr>
-                      {financialData?.balanceSheet.liabilities.map((row: any) => (
-                        <tr key={row.code} className="hover:bg-[var(--secondary)]/40">
-                          <td className="py-2.5 font-bold text-[var(--text-secondary)] pl-4 print:text-black">{row.name}</td>
-                          <td className="text-center font-bold text-[var(--text-primary)] tabular-nums print:text-black">{row.code}</td>
-                          <td className="text-right font-extrabold text-rose-500 tabular-nums print:text-black">{formatVnd(row.balance)}</td>
-                        </tr>
-                      ))}
-
-                      {/* Equities */}
-                      <tr className="bg-[var(--secondary)]/40 font-black text-[10px] uppercase text-[var(--text-muted)] print:text-black">
-                        <td colSpan={3} className="py-1 px-1 mt-2">B. VỐN CHỦ SỞ HỮU (EQUITY)</td>
-                      </tr>
-                      {financialData?.balanceSheet.equity.map((row: any) => (
-                        <tr key={row.code} className="hover:bg-[var(--secondary)]/40">
-                          <td className="py-2.5 font-bold text-[var(--text-secondary)] pl-4 print:text-black">{row.name}</td>
-                          <td className="text-center font-bold text-[var(--text-primary)] tabular-nums print:text-black">{row.code}</td>
-                          <td className="text-right font-extrabold text-blue-500 tabular-nums print:text-black">{formatVnd(row.balance)}</td>
-                        </tr>
-                      ))}
-
-                      {/* Total Liabilities & Equity Row */}
-                      <tr className="font-black text-[12px] bg-[var(--secondary)]/60 border-t-2 border-[var(--border)] print:bg-zinc-200">
-                        <td className="py-3 uppercase text-rose-500 print:text-black">TỔNG CỘNG NGUỒN VỐN</td>
-                        <td className="text-center">-</td>
-                        <td className="text-right text-rose-500 tabular-nums print:text-black">
-                          {formatVnd(
-                            (financialData?.balanceSheet.liabilities.reduce((s: number, r: any) => s + r.balance, 0) || 0) +
-                            (financialData?.balanceSheet.equity.reduce((s: number, r: any) => s + r.balance, 0) || 0)
-                          )}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </section>
+              <EnterpriseCard
+                title="PHẦN II: NGUỒN VỐN & PHẢI TRẢ"
+                subtitle="Cơ cấu nợ phải trả nhà thầu phụ và vốn chủ sở hữu"
+              >
+                <EnterpriseTable
+                  data={[
+                    ...(financialData?.balanceSheet.liabilities || []).map((row: any) => ({ ...row, section: 'Nợ phải trả', tone: 'rose' })),
+                    ...(financialData?.balanceSheet.equity || []).map((row: any) => ({ ...row, section: 'Vốn chủ sở hữu', tone: 'blue' })),
+                  ]}
+                  columns={[
+                    { header: 'Chỉ tiêu nguồn vốn', accessor: (row: any) => `${row.section} - ${row.name}`, width: '50%' },
+                    { header: 'Mã TK', accessor: (row: any) => <span className="font-bold text-violet-400">{row.code}</span>, align: 'center', width: '120px' },
+                    { header: 'Số dư cuối kỳ', accessor: (row: any) => <span className={row.tone === 'rose' ? 'font-bold text-rose-500' : 'font-bold text-blue-500'}>{formatVnd(row.balance)}</span>, align: 'right', width: '180px' },
+                  ]}
+                  minWidth="720px"
+                  getRowKey={(row: any) => `${row.section}-${row.code}`}
+                  emptyState={<EnterpriseEmptyState title="Chưa có báo cáo nguồn vốn" description="Chưa có số dư nợ phải trả hoặc vốn chủ sở hữu." iconType="report" />}
+                  footer={
+                    <tr className="h-[40px] text-[12px] font-bold">
+                      <td className="px-4 text-left uppercase text-rose-500">Tổng cộng nguồn vốn</td>
+                      <td className="px-4 text-center">-</td>
+                      <td className="px-4 text-right font-mono tabular-nums text-rose-500">{formatVnd((financialData?.balanceSheet.liabilities.reduce((s: number, r: any) => s + r.balance, 0) || 0) + (financialData?.balanceSheet.equity.reduce((s: number, r: any) => s + r.balance, 0) || 0))}</td>
+                    </tr>
+                  }
+                />
+              </EnterpriseCard>
 
             </div>
           )}
 
           {/* TAB CONTENT 4: VAT SUMMARY */}
           {activeTab === 'vat_summary' && (
-            <section className="card-elevation overflow-hidden print:shadow-none print:border">
-              <div className="px-6 py-4 border-b border-[var(--border)] flex items-center justify-between">
-                <h2 className="text-[12px] font-black text-[var(--text-primary)] uppercase tracking-widest print:text-black">
-                  Báo cáo Tổng hợp Thuế GTGT đầu vào (VAT Summary)
-                </h2>
-                <div className="text-[10.5px] text-[var(--text-muted)] italic print:hidden">
-                  Khớp nối: Tổng tiền sau thuế = Tổng trước thuế + Thuế suất GTGT
+            <EnterpriseCard
+              title="BÁO CÁO TỔNG HỢP THUẾ GTGT ĐẦU VÀO (VAT SUMMARY)"
+              subtitle="Danh sách các hóa đơn VAT chi phí, vật tư mua vào phục vụ công trình"
+              headerActions={
+                <div className="text-[10px] text-[var(--text-tertiary)] font-semibold uppercase tracking-wider print:hidden">
+                  ĐỐI CHIẾU THỜI GIAN THỰC SỔ SÁCH
                 </div>
-              </div>
-              <div className="overflow-x-auto">
-                {loadingFinancial ? (
-                  <div className="p-12 text-center text-[12px] text-[var(--text-muted)] italic animate-pulse">
-                    Đang lập tờ khai thuế VAT chi tiết...
+              }
+            >
+              <EnterpriseTable
+                data={financialData?.vatSummary || []}
+                columns={columnsVat}
+                loading={loadingFinancial}
+                emptyState={
+                  <EnterpriseEmptyState
+                    title="Chưa kê khai thuế VAT đầu vào"
+                    description="Không có hóa đơn giá trị gia tăng nào phát sinh hoặc được ghi nhận trong kỳ báo cáo này."
+                    iconType="report"
+                  />
+                }
+              />
+
+              {financialData?.vatSummary?.length > 0 && (
+                <div className="mt-4 p-4 rounded-lg bg-[var(--background)] border border-[var(--border)] flex flex-wrap justify-between items-center select-none font-bold text-xs uppercase tracking-wider text-[var(--text-primary)]">
+                  <span>TỔNG KÊ KHAI THUẾ GTGT ĐẦU VÀO</span>
+                  <div className="flex gap-8">
+                    <div>CHƯA THUẾ (NET): <span className="text-[var(--text-primary)] font-black tabular-nums">{formatVnd(financialData.vatSummary.reduce((s: number, r: any) => s + r.netAmount, 0))}</span></div>
+                    <div>TIỀN THUẾ: <span className="text-rose-500 font-black tabular-nums">{formatVnd(financialData.vatSummary.reduce((s: number, r: any) => s + r.vatAmount, 0))}</span></div>
+                    <div>TỔNG THANH TOÁN: <span className="text-blue-500 font-black tabular-nums">{formatVnd(financialData.vatSummary.reduce((s: number, r: any) => s + r.amount, 0))}</span></div>
                   </div>
-                ) : (
-                  <table className="erp-table print:text-black">
-                    <thead>
-                      <tr>
-                        <th className="w-24 text-center bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black">Ngày</th>
-                        <th className="text-left bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black">Nhà cung cấp / Đối tác</th>
-                        <th className="text-left bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black">Nội dung chi tiết chứng từ</th>
-                        <th className="w-32 text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black">Giá chưa thuế (Net)</th>
-                        <th className="w-20 text-center bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black">Thuế suất</th>
-                        <th className="w-32 text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black">Tiền thuế VAT</th>
-                        <th className="w-36 text-right bg-[var(--table-head-bg)] px-4 py-2 uppercase text-[10px] tracking-widest text-[var(--text-muted)] font-black print:bg-zinc-100 print:text-black">Tổng thanh toán</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {financialData?.vatSummary.map((row: any) => (
-                        <tr key={row.id} className="hover:bg-[var(--secondary)]/40">
-                          <td className="text-center font-bold text-[var(--text-primary)] border-r border-[var(--border)] tabular-nums px-4 py-2.5 print:text-black">{new Date(row.date).toLocaleDateString('vi-VN')}</td>
-                          <td className="text-left font-bold text-[var(--text-secondary)] border-r border-[var(--border)] px-4 py-2.5 print:text-black">{row.supplier}</td>
-                          <td className="text-left border-r border-[var(--border)] text-[var(--text-muted)] px-4 py-2.5 print:text-zinc-600">{row.note}</td>
-                          <td className="text-right border-r border-[var(--border)] tabular-nums px-4 py-2.5 print:text-black">{formatVnd(row.netAmount)}</td>
-                          <td className="text-center border-r border-[var(--border)] font-bold text-violet-400 tabular-nums px-4 py-2.5 print:text-black">{row.vatRate}%</td>
-                          <td className="text-right border-r border-[var(--border)] font-semibold text-rose-500 tabular-nums px-4 py-2.5 print:text-black">{formatVnd(row.vatAmount)}</td>
-                          <td className="text-right font-extrabold text-blue-500 tabular-nums px-4 py-2.5 print:text-black">{formatVnd(row.amount)}</td>
-                        </tr>
-                      ))}
-                      {/* Summary VAT row */}
-                      {financialData?.vatSummary.length > 0 && (
-                        <tr className="bg-[var(--secondary)]/70 font-black border-t-2 border-[var(--border)] print:bg-zinc-200">
-                          <td colSpan={3} className="text-right uppercase tracking-wider text-[10px] px-4 py-3 print:text-black">
-                            TỔNG KÊ KHAI THUẾ GTGT ĐẦU VÀO
-                          </td>
-                          <td className="text-right text-[var(--text-primary)] tabular-nums px-4 py-3 print:text-black border-r border-[var(--border)]">
-                            {formatVnd(financialData.vatSummary.reduce((s: number, r: any) => s + r.netAmount, 0))}
-                          </td>
-                          <td className="text-center border-r border-[var(--border)]">-</td>
-                          <td className="text-right text-rose-500 tabular-nums px-4 py-3 print:text-black border-r border-[var(--border)]">
-                            {formatVnd(financialData.vatSummary.reduce((s: number, r: any) => s + r.vatAmount, 0))}
-                          </td>
-                          <td className="text-right text-blue-500 tabular-nums px-4 py-3 print:text-black">
-                            {formatVnd(financialData.vatSummary.reduce((s: number, r: any) => s + r.amount, 0))}
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                )}
-              </div>
-            </section>
+                </div>
+              )}
+            </EnterpriseCard>
           )}
 
           {/* CFO GRANULAR DRILL-DOWN LEDGER LINES MODAL */}
@@ -616,7 +637,7 @@ export default function ReportsPage() {
                 {/* Modal Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-violet-500/20">
                   <div>
-                    <h3 className="text-[14px] font-black text-violet-400 uppercase tracking-wider">
+                    <h3 className="text-sm font-black text-violet-400 uppercase tracking-wider">
                       Sổ Chi Tiết Tài Khoản Sổ Cái
                     </h3>
                     <p className="text-[11px] text-[var(--text-muted)] font-medium mt-0.5">
@@ -625,7 +646,7 @@ export default function ReportsPage() {
                   </div>
                   <button 
                     onClick={() => setDrillAccount(null)}
-                    className="p-1 rounded-lg hover:bg-white/10 text-[var(--text-muted)] hover:text-white transition-colors"
+                    className="p-1 rounded-lg hover:bg-white/10 text-[var(--text-muted)] hover:text-white transition-colors cursor-pointer"
                   >
                     <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <line x1="18" y1="6" x2="6" y2="18" />
@@ -635,65 +656,66 @@ export default function ReportsPage() {
                 </div>
 
                 {/* Modal Content */}
-                <div className="flex-1 overflow-y-auto p-6 scrollbar-hide min-h-[300px]">
+                <div className="flex-1 overflow-y-auto p-6 scrollbar-thin min-h-[300px]">
                   {loadingDrill ? (
                     <div className="flex flex-col items-center justify-center h-48 space-y-3">
                       <div className="h-8 w-8 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
-                      <p className="text-[11px] font-bold uppercase tracking-wider text-violet-400/70">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-violet-400/70">
                         Đang đối soát Sổ cái thời gian thực...
                       </p>
                     </div>
                   ) : drillLines.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-48 space-y-2 text-[var(--text-muted)]">
-                      <svg viewBox="0 0 24 24" className="h-8 w-8 text-violet-500/40" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <rect width="18" height="18" x="3" y="3" rx="2" />
-                        <path d="M3 9h18M9 21V9" />
-                      </svg>
-                      <p className="text-[11px] font-bold uppercase tracking-widest text-violet-400/50">
-                        Không tìm thấy phát sinh trong kỳ hạch toán
-                      </p>
-                    </div>
+                    <EnterpriseEmptyState
+                      title="Không có phát sinh phát sinh"
+                      description="Hệ thống chưa ghi nhận dòng tiền hay bút toán hạch toán nào của tài khoản này."
+                      iconType="report"
+                    />
                   ) : (
-                    <div className="overflow-x-auto rounded-xl border border-violet-500/10">
-                      <table className="w-full text-left border-collapse">
-                        <thead>
-                          <tr className="bg-violet-950/20 text-[9px] uppercase tracking-widest font-black text-violet-400/80 border-b border-violet-500/25">
-                            <th className="px-4 py-3">Ngày hạch toán</th>
-                            <th className="px-4 py-3">Số chứng từ (Ref)</th>
-                            <th className="px-4 py-3">Diễn giải / Nội dung chi tiết</th>
-                            <th className="px-4 py-3 text-right">Phát sinh Nợ (Debit)</th>
-                            <th className="px-4 py-3 text-right">Phát sinh Có (Credit)</th>
-                            <th className="px-4 py-3 text-center">Nguồn nghiệp vụ</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-violet-500/10 text-[11px]">
-                          {drillLines.map((line: any) => (
-                            <tr key={line.id} className="hover:bg-white/5 transition-colors text-[var(--text-secondary)] hover:text-white">
-                              <td className="px-4 py-3 tabular-nums text-[var(--text-muted)]">
-                                {new Date(line.journalEntry.date).toLocaleDateString('vi-VN')}
-                              </td>
-                              <td className="px-4 py-3 font-bold text-violet-400 tabular-nums">
-                                {line.journalEntry.reference}
-                              </td>
-                              <td className="px-4 py-3 max-w-sm truncate" title={line.description || line.journalEntry.description}>
-                                {line.description || line.journalEntry.description}
-                              </td>
-                              <td className="px-4 py-3 text-right font-semibold text-emerald-400 tabular-nums">
-                                {line.type === 'DEBIT' ? formatVnd(line.amount) : '—'}
-                              </td>
-                              <td className="px-4 py-3 text-right font-semibold text-rose-400 tabular-nums">
-                                {line.type === 'CREDIT' ? formatVnd(line.amount) : '—'}
-                              </td>
-                              <td className="px-4 py-3 text-center">
-                                <span className="inline-block px-2 py-0.5 rounded text-[9px] font-black tracking-wider uppercase bg-violet-500/10 text-violet-400 border border-violet-500/20">
-                                  {line.journalEntry.sourceType}
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                    <EnterpriseTable
+                      data={drillLines}
+                      columns={[
+                        {
+                          header: "Ngày hạch toán",
+                          accessor: (row) => new Date(row.journalEntry.date).toLocaleDateString('vi-VN'),
+                          align: "center",
+                          width: "15%"
+                        },
+                        {
+                          header: "Số chứng từ (Ref)",
+                          accessor: (row) => <span className="font-bold text-violet-400">{row.journalEntry.reference}</span>,
+                          align: "center",
+                          width: "15%"
+                        },
+                        {
+                          header: "Diễn giải / Nội dung chi tiết",
+                          accessor: (row) => row.description || row.journalEntry.description,
+                          width: "40%"
+                        },
+                        {
+                          header: "Phát sinh Nợ (Debit)",
+                          accessor: (row) => row.type === 'DEBIT' ? formatVnd(row.amount) : '—',
+                          align: "right",
+                          width: "15%"
+                        },
+                        {
+                          header: "Phát sinh Có (Credit)",
+                          accessor: (row) => row.type === 'CREDIT' ? formatVnd(row.amount) : '—',
+                          align: "right",
+                          width: "15%"
+                        },
+                        {
+                          header: "Nguồn nghiệp vụ",
+                          accessor: (row) => (
+                            <span className="inline-block px-2 py-0.5 rounded text-[9px] font-black tracking-wider uppercase bg-violet-500/10 text-violet-400 border border-violet-500/20">
+                              {row.journalEntry.sourceType}
+                            </span>
+                          ),
+                          align: "center",
+                          width: "15%"
+                        }
+                      ]}
+                      loading={loadingDrill}
+                    />
                   )}
                 </div>
 
@@ -709,7 +731,7 @@ export default function ReportsPage() {
                       <button
                         onClick={() => setDrillPage(p => Math.max(1, p - 1))}
                         disabled={drillPage === 1 || loadingDrill}
-                        className="erp-btn h-8 w-8 p-0 justify-center border border-violet-500/30 text-violet-400 hover:bg-violet-500/10 disabled:opacity-30 disabled:hover:bg-transparent"
+                        className="h-8 w-8 flex items-center justify-center border border-violet-500/30 text-violet-400 hover:bg-violet-500/10 rounded-[var(--radius-sm)] cursor-pointer disabled:opacity-30 disabled:hover:bg-transparent"
                       >
                         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
                           <polyline points="15 18 9 12 15 6" />
@@ -721,7 +743,7 @@ export default function ReportsPage() {
                       <button
                         onClick={() => setDrillPage(p => Math.min(drillTotalPages, p + 1))}
                         disabled={drillPage === drillTotalPages || loadingDrill}
-                        className="erp-btn h-8 w-8 p-0 justify-center border border-violet-500/30 text-violet-400 hover:bg-violet-500/10 disabled:opacity-30 disabled:hover:bg-transparent"
+                        className="h-8 w-8 flex items-center justify-center border border-violet-500/30 text-violet-400 hover:bg-violet-500/10 rounded-[var(--radius-sm)] cursor-pointer disabled:opacity-30 disabled:hover:bg-transparent"
                       >
                         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
                           <polyline points="9 18 15 12 9 6" />

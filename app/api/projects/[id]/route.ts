@@ -10,8 +10,10 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const user = await assertAuthenticated();
+    RBAC.assertPermission(user.role, "PROJECT", "READ");
     const { id } = await params;
-    const project = await ProjectService.findById(id);
+    const project = await ProjectService.findById(id, user.companyId);
     return successResponse(project);
   } catch (error) {
     return handleApiError(error);

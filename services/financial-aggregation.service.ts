@@ -14,6 +14,7 @@ import { ApiError } from "@/lib/api-error";
 import { ProjectFinance } from "./finance/projectFinance";
 import { MetricsService } from "./metrics.service";
 import { FinancialIntelligenceService } from "./financial-intelligence.service";
+import { getPostedLedgerLineFilter } from "@/lib/accounting/ledgerFilters";
 
 /**
  * FINANCIAL AGGREGATION SERVICE (The Single Source of Truth)
@@ -34,8 +35,7 @@ export class FinancialAggregationService {
       prisma.transactionLine.aggregate({
         where: {
           account: accountWhere,
-          journalEntry: { projectId, deletedAt: null, isPosted: true, isReversed: false },
-          deletedAt: null,
+          ...getPostedLedgerLineFilter({ projectId }),
           type: "DEBIT"
         },
         _sum: { amount: true }
@@ -43,8 +43,7 @@ export class FinancialAggregationService {
       prisma.transactionLine.aggregate({
         where: {
           account: accountWhere,
-          journalEntry: { projectId, deletedAt: null, isPosted: true, isReversed: false },
-          deletedAt: null,
+          ...getPostedLedgerLineFilter({ projectId }),
           type: "CREDIT"
         },
         _sum: { amount: true }
@@ -267,19 +266,19 @@ export class FinancialAggregationService {
     // DB AGGREGATION LAYER (OOM SAFE - LEDGER DRIVEN)
     const [revCreditAgg, revDebitAgg, costDebitAgg, costCreditAgg] = await Promise.all([
       prisma.transactionLine.aggregate({
-        where: { account: { code: { startsWith: '511' } }, journalEntry: { projectId, deletedAt: null }, deletedAt: null, type: 'CREDIT' },
+        where: { account: { code: { startsWith: '511' } }, ...getPostedLedgerLineFilter({ projectId }), type: 'CREDIT' },
         _sum: { amount: true }
       }),
       prisma.transactionLine.aggregate({
-        where: { account: { code: { startsWith: '511' } }, journalEntry: { projectId, deletedAt: null }, deletedAt: null, type: 'DEBIT' },
+        where: { account: { code: { startsWith: '511' } }, ...getPostedLedgerLineFilter({ projectId }), type: 'DEBIT' },
         _sum: { amount: true }
       }),
       prisma.transactionLine.aggregate({
-        where: { account: { OR: [{ code: { startsWith: '621' } }, { code: { startsWith: '622' } }, { code: { startsWith: '623' } }, { code: { startsWith: '627' } }] }, journalEntry: { projectId, deletedAt: null, isPosted: true, isReversed: false }, deletedAt: null, type: 'DEBIT' },
+        where: { account: { OR: [{ code: { startsWith: '621' } }, { code: { startsWith: '622' } }, { code: { startsWith: '623' } }, { code: { startsWith: '627' } }] }, ...getPostedLedgerLineFilter({ projectId }), type: 'DEBIT' },
         _sum: { amount: true }
       }),
       prisma.transactionLine.aggregate({
-        where: { account: { OR: [{ code: { startsWith: '621' } }, { code: { startsWith: '622' } }, { code: { startsWith: '623' } }, { code: { startsWith: '627' } }] }, journalEntry: { projectId, deletedAt: null, isPosted: true, isReversed: false }, deletedAt: null, type: 'CREDIT' },
+        where: { account: { OR: [{ code: { startsWith: '621' } }, { code: { startsWith: '622' } }, { code: { startsWith: '623' } }, { code: { startsWith: '627' } }] }, ...getPostedLedgerLineFilter({ projectId }), type: 'CREDIT' },
         _sum: { amount: true }
       })
     ]);
@@ -814,14 +813,6 @@ export class FinancialAggregationService {
           progress: safePercent(totalActualD, totalBudgetD)
         }
       };
-
-      // PERSIST DERIVED TOTALS TO DB FOR DATA INTEGRITY (Audit compliance)
-      // Run async to not block the read path
-      process.nextTick(() => {
-        FinancialAggregationService.syncWBSTotalsToDB(projectId, tree).catch(err => {
-          console.error(`[Aggregation] Failed to sync WBS totals to DB:`, err);
-        });
-      });
 
       return result;
     }, 15000);

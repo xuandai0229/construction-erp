@@ -8,6 +8,7 @@ import Header from '@/app/components/Header';
 import { useERPStore } from '@/store/erpStore';
 import { useProjectStatsQuery } from '@/services/queries/useProjects';
 import { formatVnd, formatDate } from '@/app/components/dashboard-data';
+import { EnterpriseCard } from '@/app/components/ui-enterprise';
 
 export default function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -66,7 +67,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Project Info Card */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="card-elevation p-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl">
+              <EnterpriseCard bodyClassName="p-8">
                 <div className="grid grid-cols-2 gap-8">
                   <div>
                     <label className="erp-label">Giá trị Hợp đồng</label>
@@ -90,9 +91,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     <div className="text-xl font-black text-[var(--text-primary)] tabular-nums">{stats.wbsCount} <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest ml-1">Hạng mục</span></div>
                   </div>
                 </div>
-              </div>
+              </EnterpriseCard>
 
-              <div className="card-elevation p-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl">
+              <EnterpriseCard bodyClassName="p-8">
                 <h3 className="text-xs font-black text-[var(--text-muted)] uppercase tracking-widest mb-6">Phân bổ chi phí theo loại</h3>
                 <div className="space-y-4">
                   {Object.entries(stats.costByType || {}).map(([type, value]: [string, any]) => (
@@ -102,12 +103,12 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     </div>
                   ))}
                 </div>
-              </div>
+              </EnterpriseCard>
             </div>
 
             {/* Sidebar Stats */}
             <div className="space-y-6">
-              <div className="card-elevation p-6 bg-[var(--secondary)] border border-[var(--border)] rounded-2xl">
+              <EnterpriseCard bodyClassName="p-6" className="bg-[var(--secondary)]">
                 <h3 className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-4">Tình trạng thanh toán</h3>
                 <div className="space-y-4">
                   <div>
@@ -129,9 +130,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     </div>
                   </div>
                 </div>
-              </div>
+              </EnterpriseCard>
 
-              <div className="card-elevation p-6 bg-blue-600/5 border border-blue-500/20 rounded-2xl">
+              <EnterpriseCard bodyClassName="p-6" className="bg-blue-600/5 border-blue-500/20">
                 <h3 className="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-4">Hoạt động tài chính</h3>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[11px] font-bold text-[var(--text-muted)]">Hóa đơn quá hạn</span>
@@ -141,7 +142,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                   <span className="text-[11px] font-bold text-[var(--text-muted)]">Cam kết chi phí (PO)</span>
                   <span className="text-[11px] font-black text-blue-400">{formatVnd(stats.committedCost)}</span>
                 </div>
-              </div>
+              </EnterpriseCard>
             </div>
           </div>
         </div>

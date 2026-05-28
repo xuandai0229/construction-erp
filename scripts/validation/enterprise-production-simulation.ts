@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma";
+import { prisma } from "../../lib/prisma";
 import { 
   UserRole, 
   ProjectStatus, 
@@ -9,9 +9,9 @@ import {
   ApprovalStatus, 
   InventoryTransactionType,
   AccountType
-} from "../generated/prisma-client";
-import { seedChartOfAccounts } from "../lib/accounting/chartOfAccounts";
-import { PostingEngine } from "../lib/accounting/postingEngine";
+} from "../../generated/prisma-client";
+import { seedChartOfAccounts } from "../../lib/accounting/chartOfAccounts";
+import { PostingEngine } from "../../lib/accounting/postingEngine";
 import { Decimal } from "decimal.js";
 import * as crypto from "crypto";
 

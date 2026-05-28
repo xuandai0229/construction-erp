@@ -1,0 +1,117 @@
+{
+  "generatedAt": "2026-05-28T03:12:06.888Z",
+  "mode": "apply",
+  "rows": [
+    {
+      "paymentId": "434ea714-96bf-43b3-aef3-d283b26f69dc",
+      "before": "DRAFT",
+      "after": "APPROVED",
+      "action": "align-status",
+      "result": "APPLIED",
+      "auditLog": "Payment UPDATE audit log created",
+      "journalId": "bbba69fe-8241-4bc0-8eb1-8318996b5e5d"
+    },
+    {
+      "paymentId": "9bee8b11-dd64-47dd-b49b-283ec3ba1a85",
+      "before": "DRAFT",
+      "after": "APPROVED",
+      "action": "align-status",
+      "result": "APPLIED",
+      "auditLog": "Payment UPDATE audit log created",
+      "journalId": "6e6af9da-9bfa-45d9-b904-f42dad21b4d1"
+    },
+    {
+      "paymentId": "35e57cde-8574-4abc-8d68-d7e1826167ec",
+      "before": "DRAFT",
+      "after": "APPROVED",
+      "action": "align-status",
+      "result": "APPLIED",
+      "auditLog": "Payment UPDATE audit log created",
+      "journalId": "e9f8de4a-9c10-45cc-9505-2530fb64e814"
+    },
+    {
+      "paymentId": "6a96a3dd-8099-4f20-bc9a-d745dc5d5974",
+      "before": "DRAFT",
+      "after": "APPROVED",
+      "action": "align-status",
+      "result": "APPLIED",
+      "auditLog": "Payment UPDATE audit log created",
+      "journalId": "6326e07c-706f-4dab-8107-ff28f5145b5a"
+    },
+    {
+      "paymentId": "5912d36d-b5f0-432d-9c8d-1b58e85040b9",
+      "before": "DRAFT",
+      "after": "APPROVED",
+      "action": "align-status",
+      "result": "APPLIED",
+      "auditLog": "Payment UPDATE audit log created",
+      "journalId": "1027128d-dc7c-4b30-a087-48ec443862a5"
+    },
+    {
+      "paymentId": "effc996f-b4fb-4d34-97cf-c66e394db70d",
+      "before": "DRAFT",
+      "after": "APPROVED",
+      "action": "align-status",
+      "result": "APPLIED",
+      "auditLog": "Payment UPDATE audit log created",
+      "journalId": "34e7bbda-7226-4c7f-bc0c-abbccdf59095"
+    },
+    {
+      "paymentId": "66f2a9f2-7b7b-4027-af98-433a73516c52",
+      "before": "DRAFT",
+      "after": "APPROVED",
+      "action": "align-status",
+      "result": "APPLIED",
+      "auditLog": "Payment UPDATE audit log created",
+      "journalId": "735cb957-20b8-4438-a877-f18e7cad61de"
+    },
+    {
+      "paymentId": "3edda3d0-f15d-4f72-9a31-53c49033e6b5",
+      "before": "DRAFT",
+      "after": "APPROVED",
+      "action": "align-status",
+      "result": "APPLIED",
+      "auditLog": "Payment UPDATE audit log created",
+      "journalId": "c6432517-eada-4316-a4da-30a3a5dcaa35"
+    },
+    {
+      "paymentId": "55676f75-8fb5-4d70-a15f-1c27af5db345",
+      "before": "DRAFT",
+      "after": "APPROVED",
+      "action": "align-status",
+      "result": "APPLIED",
+      "auditLog": "Payment UPDATE audit log created",
+      "journalId": "3fe79be5-e7c8-4562-83bf-daae4896c75d"
+    },
+    {
+      "paymentId": "5fdbda00-5c51-4435-a732-ba10129b4b6c",
+      "before": "DRAFT",
+      "after": "APPROVED",
+      "action": "align-status",
+      "result": "APPLIED",
+      "auditLog": "Payment UPDATE audit log created",
+      "journalId": "4de616bd-0b2c-4c8e-8100-c3452b3b6279"
+    },
+    {
+      "paymentId": "f18e3414-6dac-481c-831c-939f86cdaab8",
+      "before": "DRAFT",
+      "after": "APPROVED",
+      "action": "align-status",
+      "result": "APPLIED",
+      "auditLog": "Payment UPDATE audit log created",
+      "journalId": "a7bb08fd-6c62-4b10-ae26-9b93ad1c9540"
+    },
+    {
+      "paymentId": "591792d0-4194-4e71-aa67-92cce6341df8",
+      "before": "DRAFT",
+      "after": "APPROVED",
+      "action": "align-status",
+      "result": "APPLIED",
+      "auditLog": "Payment UPDATE audit log created",
+      "journalId": "276fd920-6a06-494d-aeb5-5a1127175a47"
+    }
+  ],
+  "summary": {
+    "APPLIED": 12
+  }
+}

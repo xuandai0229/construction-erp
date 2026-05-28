@@ -1,0 +1,3 @@
+-- Phase 2 enterprise database migration placeholder.
+-- This migration directory existed without SQL, causing Prisma migrate status
+-- to report unapplied drift. It is intentionally no-op to preserve data.

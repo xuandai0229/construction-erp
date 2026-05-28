@@ -1,11 +1,9 @@
-import { ApiError } from "@/lib/api-error";
-
 let validated = false;
 
 function requireProductionEnv(name: string, minLength = 1) {
   const value = process.env[name];
   if (!value || value.length < minLength) {
-    throw new ApiError(500, `${name} must be configured for production runtime.`);
+    throw new Error(`${name} must be configured for production runtime.`);
   }
 }
 

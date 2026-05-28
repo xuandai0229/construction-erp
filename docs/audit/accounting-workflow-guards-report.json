@@ -1,0 +1,65 @@
+{
+  "generatedAt": "2026-05-28T08:08:07.124Z",
+  "results": [
+    {
+      "test": "Creator cannot self-approve own payment",
+      "result": "PASS",
+      "notes": "RBAC.assertSegregationOfDuties rejected same maker/approver."
+    },
+    {
+      "test": "User without permission cannot approve payment",
+      "result": "PASS",
+      "notes": "Role VIEWER has no PAYMENT APPROVE."
+    },
+    {
+      "test": "Authorized user can approve payment",
+      "result": "PASS",
+      "notes": "Role CFO has PAYMENT APPROVE."
+    },
+    {
+      "test": "DRAFT payment does not post ledger",
+      "result": "PASS",
+      "notes": "No active posted journal exists while payment is DRAFT."
+    },
+    {
+      "test": "APPROVED payment posts ledger once",
+      "result": "PASS",
+      "notes": "Posted journal 8603ec01-2bc8-46a0-b7f9-f6f8c259e8fc."
+    },
+    {
+      "test": "Posted payment cannot post again",
+      "result": "PASS",
+      "notes": "Duplicate post guard rejected existing active journal."
+    },
+    {
+      "test": "Payment in locked period cannot post",
+      "result": "PASS",
+      "notes": "Locked period guard rejected posting."
+    },
+    {
+      "test": "Payment without invoice cannot post",
+      "result": "PASS",
+      "notes": "Source document guard rejected posting."
+    },
+    {
+      "test": "REJECTED payment cannot post",
+      "result": "PASS",
+      "notes": "Rejected payment was blocked from posting."
+    },
+    {
+      "test": "Reversed payment journal is excluded from paid amount and posted ledger",
+      "result": "PASS",
+      "notes": "Active posted line count is 0 after reversal."
+    },
+    {
+      "test": "TEST_PHASE1E fixture cleanup",
+      "result": "PASS",
+      "notes": "Transaction rollback left no project/invoice/payment fixture residue."
+    }
+  ],
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "skip": 0
+  }
+}

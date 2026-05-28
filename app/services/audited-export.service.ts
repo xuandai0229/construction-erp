@@ -7,7 +7,7 @@ function filenameFromDisposition(disposition: string | null, fallback: string) {
 
 export async function auditedCsvExport(params: { reportType: string; projectId?: string | null; reason?: string }) {
   if (!params.projectId) {
-    throw new Error('Vui long chon du an truoc khi xuat du lieu tai chinh.');
+    throw new Error('Vui lòng chọn dự án trước khi xuất dữ liệu tài chính.');
   }
 
   const res = await fetch('/api/reports/audited-export', {
@@ -21,7 +21,7 @@ export async function auditedCsvExport(params: { reportType: string; projectId?:
   });
 
   if (!res.ok) {
-    let message = 'Khong the xuat du lieu tai chinh vi audit log khong thanh cong.';
+    let message = 'Không thể xuất dữ liệu tài chính vì audit log không thành công.';
     try {
       const json = await res.json();
       message = json.error || message;

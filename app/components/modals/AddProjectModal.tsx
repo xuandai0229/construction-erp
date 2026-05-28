@@ -1,7 +1,8 @@
-import { useEffect, useState, useRef } from 'react';
+﻿import { useEffect, useState, useRef } from 'react';
 import { Project, ProjectStatus } from '@/app/types';
 import { useCreateProjectMutation, useUpdateProjectMutation } from '@/services/queries/useProjects';
 import PortalOverlay from '@/app/components/shared/PortalOverlay';
+import { EnterpriseForm } from '@/app/components/ui-enterprise';
 
 interface Props {
   isOpen: boolean;
@@ -128,7 +129,7 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-5">
+        <EnterpriseForm onSubmit={handleSubmit} className="px-6 py-5 space-y-5">
           <div className="grid grid-cols-2 gap-5">
             <div className="col-span-2">
               <label className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1.5 block">Tên dự án/công trình <span className="text-rose-500">*</span></label>
@@ -288,7 +289,7 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
               )}
             </button>
           </div>
-        </form>
+        </EnterpriseForm>
       </div>
     </div>
   );

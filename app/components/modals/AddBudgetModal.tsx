@@ -1,5 +1,7 @@
-'use client';
+﻿'use client';
 
+
+import { EnterpriseForm } from '@/app/components/ui-enterprise';
 import { useState, useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
 import { CostType, costType_LABELS } from '@/app/types';
@@ -127,7 +129,7 @@ export default function AddBudgetModal({ isOpen, onClose, editingBudget, initial
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+        <EnterpriseForm onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <div>
             <label className="erp-label">Dự án <span className="text-red-500">*</span></label>
             <div className="relative">
@@ -229,7 +231,7 @@ export default function AddBudgetModal({ isOpen, onClose, editingBudget, initial
               Lưu dự toán
             </button>
           </div>
-        </form>
+        </EnterpriseForm>
       </div>
     </div>
   );

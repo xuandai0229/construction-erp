@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-05-28T08:12:30.057Z",
+  "results": [
+    {
+      "test": "1. DRAFT -> SUBMITTED",
+      "result": "PASS",
+      "notes": "Guard allows transition to SUBMITTED"
+    },
+    {
+      "test": "2. SUBMITTED -> APPROVED",
+      "result": "PASS",
+      "notes": "Guard allows transition to APPROVED"
+    },
+    {
+      "test": "3. SUBMITTED -> REJECTED",
+      "result": "PASS",
+      "notes": "Guard allows transition to REJECTED"
+    },
+    {
+      "test": "4. APPROVED -> POSTED",
+      "result": "PASS",
+      "notes": "Guard allows transition to POSTED"
+    },
+    {
+      "test": "5. DRAFT -> POSTED",
+      "result": "PASS",
+      "notes": "Guard blocks transition DRAFT->POSTED"
+    },
+    {
+      "test": "6. REJECTED -> POSTED",
+      "result": "PASS",
+      "notes": "Guard blocks transition REJECTED->POSTED"
+    },
+    {
+      "test": "7. POSTED -> DRAFT",
+      "result": "PASS",
+      "notes": "Guard blocks transition POSTED->DRAFT"
+    },
+    {
+      "test": "8. POSTED document fields immutable",
+      "result": "PASS",
+      "notes": "Guard blocks modifying posted fields"
+    },
+    {
+      "test": "9. POSTED document undeletable",
+      "result": "PASS",
+      "notes": "Guard blocks deletion of posted document"
+    },
+    {
+      "test": "10. No self-approve",
+      "result": "PASS",
+      "notes": "RBAC blocks same maker/approver"
+    },
+    {
+      "test": "11. Reverse creates audit log",
+      "result": "PASS",
+      "notes": "Audit log created on reverse"
+    },
+    {
+      "test": "12. Invalid transition returns clear error",
+      "result": "PASS",
+      "notes": "Error messages are clear"
+    }
+  ],
+  "summary": {
+    "pass": 12,
+    "fail": 0,
+    "skip": 0
+  }
+}

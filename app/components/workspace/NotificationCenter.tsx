@@ -1,4 +1,4 @@
-
+﻿
 'use client';
 
 import React from 'react';
@@ -50,7 +50,7 @@ export default function NotificationCenter({ notifications, onRead, onReadAll }:
           notifications.map((notif) => (
             <div
               key={notif.id}
-              className={`p-4 erp-table-row cursor-pointer relative ${!notif.isRead ? 'bg-blue-500/5' : ''}`}
+              className={`p-4 transition-colors hover:bg-[var(--table-row-hover)] cursor-pointer relative ${!notif.isRead ? 'bg-blue-500/5' : ''}`}
               onClick={() => onRead(notif.id)}
             >
               {!notif.isRead && (

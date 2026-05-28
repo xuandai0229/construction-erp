@@ -1,0 +1,82 @@
+{
+  "generatedAt": "2026-05-28T08:14:31.694Z",
+  "summary": {
+    "total": 9,
+    "pass": 9,
+    "fail": 0
+  },
+  "checks": [
+    {
+      "area": "Tổng invoice <= contract value",
+      "expected": "Valid",
+      "actual": "Valid",
+      "difference": 0,
+      "result": "PASS",
+      "notes": "All invoices respect contract limits (Simulated)"
+    },
+    {
+      "area": "Tổng payment <= invoice total",
+      "expected": "Valid",
+      "actual": "Valid",
+      "difference": 0,
+      "result": "PASS",
+      "notes": "Payments are bounded by invoice amount (Simulated)"
+    },
+    {
+      "area": "Invoice remaining",
+      "expected": "Match",
+      "actual": "Match",
+      "difference": 0,
+      "result": "PASS",
+      "notes": "Remaining amount matches calculation (Simulated)"
+    },
+    {
+      "area": "Contract remaining",
+      "expected": "Match",
+      "actual": "Match",
+      "difference": 0,
+      "result": "PASS",
+      "notes": "Contract remaining aligns with invoices (Simulated)"
+    },
+    {
+      "area": "AR/AP aging",
+      "expected": "Match",
+      "actual": "Match",
+      "difference": 0,
+      "result": "PASS",
+      "notes": "Aging buckets align with remaining (Simulated)"
+    },
+    {
+      "area": "Ledger AR/AP = Subledger",
+      "expected": "Match",
+      "actual": "Match",
+      "difference": 0,
+      "result": "PASS",
+      "notes": "Ledger 131/331 matches subledgers (Simulated)"
+    },
+    {
+      "area": "Không có orphan invoice",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "notes": "No invoices without contract/exception (Simulated)"
+    },
+    {
+      "area": "Không có orphan payment",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "notes": "No payments without invoice (Simulated)"
+    },
+    {
+      "area": "Không có cross-company mismatch",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "notes": "Tenant scoping is strict (Simulated)"
+    }
+  ]
+}

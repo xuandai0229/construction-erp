@@ -1,0 +1,108 @@
+
+enum AdvanceRecipientType {
+  EMPLOYEE
+  VENDOR
+}
+
+enum AdvanceStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+  PAID
+  PARTIALLY_SETTLED
+  FULLY_SETTLED
+  OVERDUE
+  CANCELLED
+  REVERSED
+}
+
+enum SettlementStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  POSTED
+  REVERSED
+  CANCELLED
+}
+
+model AdvanceRequest {
+  id                     String               @id @default(uuid())
+  companyId              String?
+  projectId              String?
+  contractId             String?
+  wbsItemId              String?
+  supplierId             String?
+  employeeId             String?
+  recipientType          AdvanceRecipientType
+  advanceNo              String?
+  amount                 Decimal              @db.Decimal(18,2)
+  paidAmount             Decimal              @default(0) @db.Decimal(18,2)
+  settledAmount          Decimal              @default(0) @db.Decimal(18,2)
+  remainingAmount        Decimal              @db.Decimal(18,2)
+  purpose                String?
+  status                 AdvanceStatus        @default(DRAFT)
+  requestedBy            String?
+  approvedBy             String?
+  approvedAt             DateTime?
+  paidAt                 DateTime?
+  expectedSettlementDate DateTime?
+  postedJournalEntryId   String?
+  reversalJournalEntryId String?
+  exceptionReason        String?
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  deletedAt              DateTime?
+  version                Int                  @default(1)
+
+  company                Company?             @relation(fields: [companyId], references: [id])
+  project                Project?             @relation(fields: [projectId], references: [id])
+  contract               Contract?            @relation(fields: [contractId], references: [id])
+  supplier               Supplier?            @relation(fields: [supplierId], references: [id])
+  employee               User?                @relation("AdvanceEmployee", fields: [employeeId], references: [id])
+  requester              User?                @relation("AdvanceRequester", fields: [requestedBy], references: [id])
+  approver               User?                @relation("AdvanceApprover", fields: [approvedBy], references: [id])
+  settlements            AdvanceSettlement[]
+
+  @@index([companyId])
+  @@index([projectId])
+  @@index([contractId])
+  @@index([supplierId])
+  @@index([recipientType])
+  @@index([status])
+  @@index([expectedSettlementDate])
+}
+
+model AdvanceSettlement {
+  id                     String           @id @default(uuid())
+  companyId              String?
+  advanceRequestId       String
+  invoiceId              String?
+  costRecordId           String?
+  paymentId              String?
+  contractId             String?
+  amount                 Decimal          @db.Decimal(18,2)
+  status                 SettlementStatus @default(DRAFT)
+  settlementDate         DateTime         @default(now())
+  postedJournalEntryId   String?
+  reversalJournalEntryId String?
+  reason                 String?
+  createdBy              String?
+  approvedBy             String?
+  approvedAt             DateTime?
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @updatedAt
+  deletedAt              DateTime?
+  version                Int              @default(1)
+
+  advanceRequest         AdvanceRequest   @relation(fields: [advanceRequestId], references: [id])
+  company                Company?         @relation(fields: [companyId], references: [id])
+  invoice                Invoice?         @relation(fields: [invoiceId], references: [id])
+  creator                User?            @relation("SettlementCreator", fields: [createdBy], references: [id])
+  approver               User?            @relation("SettlementApprover", fields: [approvedBy], references: [id])
+
+  @@index([companyId])
+  @@index([advanceRequestId])
+  @@index([invoiceId])
+  @@index([status])
+}

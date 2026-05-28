@@ -1,5 +1,7 @@
-'use client';
+﻿'use client';
 
+
+import { EnterpriseForm } from '@/app/components/ui-enterprise';
 import { useState, useRef, useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
 
@@ -224,7 +226,7 @@ export default function AIChatBox() {
 
           {/* Input Box */}
           <div className="p-4 bg-slate-950 border-t border-[var(--border)]">
-            <form
+            <EnterpriseForm
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSendMessage(inputValue);
@@ -248,7 +250,7 @@ export default function AIChatBox() {
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </button>
-            </form>
+            </EnterpriseForm>
           </div>
         </div>
       )}

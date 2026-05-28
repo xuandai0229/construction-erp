@@ -1,5 +1,7 @@
-'use client';
+﻿'use client';
 
+
+import { EnterpriseForm } from '@/app/components/ui-enterprise';
 import { useState } from 'react';
 import { useERPStore } from '@/store/erpStore';
 import { TaskStatus } from '@prisma/client';
@@ -85,7 +87,7 @@ export default function AddTaskModal({ isOpen, onClose }: Props) {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+        <EnterpriseForm onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <div>
             <label className="erp-label">
               Dự án <span className="text-red-500">*</span>
@@ -173,7 +175,7 @@ export default function AddTaskModal({ isOpen, onClose }: Props) {
               Thêm công việc
             </button>
           </div>
-        </form>
+        </EnterpriseForm>
       </div>
     </div>
   );

@@ -1,14 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { FinancialAggregationService } from "./financial-aggregation.service";
-import { Prisma, ProjectStatus, ApprovalStatus } from "../generated/prisma-client";
+import { Prisma, ProjectStatus } from "../generated/prisma-client";
 import { AuditService } from "./audit.service";
 import { ApiError } from "@/lib/api-error";
 import { CreateProjectDTO, UpdateProjectDTO } from "@/lib/validations";
-import { ProjectFinance } from "./finance/projectFinance";
 import { assertValidEntity } from "@/lib/assertion";
-import { 
-  CostRecord, BudgetRecord, RevenueRecord, InvoiceRecord 
-} from "@/app/types";
 
 export class ProjectService {
   private static round(val: number): number {
@@ -116,9 +112,13 @@ export class ProjectService {
     };
   }
 
-  static async findById(id: string) {
-    const project = await prisma.project.findUnique({
-      where: { id },
+  static async findById(id: string, companyId?: string | null) {
+    const project = await prisma.project.findFirst({
+      where: {
+        id,
+        deletedAt: null,
+        ...(companyId && { companyId }),
+      },
       include: {
         owner: { select: { id: true, name: true, email: true } },
         tasks: {
@@ -227,23 +227,46 @@ export class ProjectService {
   static async delete(id: string, userId?: string) {
     const oldProject = await this.findById(id);
 
-    const financialUsage = await prisma.$transaction(async (tx) => {
-      const [costs, budgets, invoices, payments, revenues, journals] = await Promise.all([
-        tx.costRecord.count({ where: { projectId: id, deletedAt: null } }),
+    const relatedUsage = await prisma.$transaction(async (tx) => {
+      const [wbs, budgets, costs, revenues, contracts, invoices, payments, vendorPayments, journals, transactionLines, auditLogs, approvalRequests, documentChecklist] = await Promise.all([
+        tx.wBSItem.count({ where: { projectId: id, deletedAt: null } }),
         tx.budgetRecord.count({ where: { projectId: id, deletedAt: null } }),
+        tx.costRecord.count({ where: { projectId: id, deletedAt: null } }),
+        tx.revenue.count({ where: { projectId: id, deletedAt: null } }),
+        tx.contract.count({ where: { projectId: id, deletedAt: null } }),
         tx.invoice.count({ where: { projectId: id, deletedAt: null } }),
         tx.payment.count({ where: { projectId: id, deletedAt: null } }),
-        tx.revenue.count({ where: { projectId: id, deletedAt: null } }),
+        tx.vendorPayment.count({ where: { projectId: id, deletedAt: null } }),
         tx.journalEntry.count({ where: { projectId: id, deletedAt: null } }),
+        tx.transactionLine.count({ where: { journalEntry: { projectId: id, deletedAt: null }, deletedAt: null } }),
+        tx.auditLog.count({ where: { entity: "Project", entityId: id } }),
+        tx.approvalRequest.count({ where: { projectId: id } }),
+        tx.documentChecklist.count({ where: { contract: { projectId: id } } }),
       ]);
 
-      return { costs, budgets, invoices, payments, revenues, journals };
+      return { wbs, budgets, costs, revenues, contracts, invoices, payments, vendorPayments, journals, transactionLines, auditLogs, approvalRequests, documentChecklist };
     });
 
-    const hasFinancialHistory = Object.values(financialUsage).some((count) => count > 0);
+    const hasRelatedUsage = Object.values(relatedUsage).some((count) => count > 0);
 
-    if (hasFinancialHistory) {
-      const project = await prisma.project.update({
+    if (hasRelatedUsage) {
+      await AuditService.log({
+        userId,
+        action: "DELETE",
+        entity: "Project",
+        entityId: id,
+        oldData: oldProject,
+        reason: `Blocked project delete/archive because related accounting or operational data exists: ${JSON.stringify(relatedUsage)}.`,
+        severity: "WARNING",
+      });
+
+      throw new ApiError(400, "Khong the xoa cong trinh da co du lieu lien quan. Vui long dung quy trinh luu tru/vo hieu hoa co kiem soat.", {
+        relatedUsage,
+      });
+    }
+
+    const project = await prisma.$transaction(async (tx) => {
+      const archived = await tx.project.update({
         where: { id, version: oldProject.version },
         data: {
           deletedAt: new Date(),
@@ -252,23 +275,27 @@ export class ProjectService {
         },
       });
 
-      await AuditService.log({
-        userId,
-        action: "DELETE",
-        entity: "Project",
-        entityId: id,
-        oldData: oldProject,
-        newData: project,
-        reason: `Soft delete project because financial history exists. Preserved ${financialUsage.costs} costs, ${financialUsage.budgets} budgets, ${financialUsage.invoices} invoices, ${financialUsage.payments} payments, ${financialUsage.revenues} revenues, ${financialUsage.journals} journal entries.`,
+      await tx.auditLog.create({
+        data: {
+          userId,
+          action: "DELETE",
+          entity: "Project",
+          entityId: id,
+          oldData: oldProject as Prisma.InputJsonValue,
+          newData: archived as Prisma.InputJsonValue,
+          reason: "Soft archive project with no related accounting or operational records.",
+          severity: "WARNING",
+        },
       });
 
-      const { CacheService } = await import("./cache.service");
-      await CacheService.invalidateFinancialProject(id);
+      return archived;
+    });
 
-      return project;
-    }
+    const { CacheService } = await import("./cache.service");
+    await CacheService.invalidateFinancialProject(id);
 
-    // A. HARD DELETE: Project is empty, clean it completely from DB
+    return project;
+/*
     await prisma.$transaction(async (tx) => {
       // Manual cascade delete due to lack of Prisma cascade
       // Level 4 & 3
@@ -353,7 +380,7 @@ export class ProjectService {
       reason: "Xóa vĩnh viễn dự án (Hard Delete)",
     });
 
-    return oldProject;
+    return oldProject;*/
   }
 
   static async getAccountingSummary(projectId: string) {

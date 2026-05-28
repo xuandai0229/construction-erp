@@ -1,0 +1,47 @@
+{
+  "generatedAt": "2026-05-28T08:14:27.096Z",
+  "results": [
+    {
+      "test": "Không auth bị chặn",
+      "result": "PASS",
+      "notes": "Route has session check"
+    },
+    {
+      "test": "Sai tenant không xem được",
+      "result": "PASS",
+      "notes": "Empty list for other tenant"
+    },
+    {
+      "test": "Không có data trả empty state thật",
+      "result": "PASS",
+      "notes": "Source: database"
+    },
+    {
+      "test": "Có fixture advance PAID thì outstanding đúng",
+      "result": "PASS",
+      "notes": "Outstanding: 100"
+    },
+    {
+      "test": "Có partial settlement thì outstanding đúng",
+      "result": "PASS",
+      "notes": "Outstanding: 60"
+    },
+    {
+      "test": "FULLY_SETTLED không còn outstanding",
+      "result": "PASS",
+      "notes": "Count: 0"
+    },
+    {
+      "test": "REVERSED không tính outstanding",
+      "result": "PASS",
+      "notes": "Count: 0"
+    },
+    {
+      "test": "Overdue bucket đúng",
+      "result": "PASS",
+      "notes": "Included OVERDUE"
+    }
+  ],
+  "pass": 8,
+  "fail": 0
+}

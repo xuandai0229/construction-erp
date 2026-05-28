@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import Sidebar from '@/app/components/Sidebar';
@@ -168,7 +168,7 @@ export default function SystemPage() {
           </div>
 
           {/* Interactive Role Switcher Panel for Testing permissions */}
-          <section className="card-elevation p-6 space-y-4">
+          <section className="erp-card p-6 space-y-4">
             <div className="flex items-center gap-2 mb-2">
               <svg viewBox="0 0 24 24" className="h-5 w-5 text-violet-500" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -216,7 +216,7 @@ export default function SystemPage() {
           </section>
 
           {/* Real-time Telemetry & Performance Observability Cockpit (Batch 7.5) */}
-          <section className="card-elevation p-6 space-y-4">
+          <section className="erp-card p-6 space-y-4">
             <div className="flex items-center gap-2 mb-2">
               <svg viewBox="0 0 24 24" className="h-5 w-5 text-sky-400" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <line x1="18" y1="20" x2="18" y2="10" />
@@ -294,7 +294,7 @@ export default function SystemPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             {/* Observability Section */}
-            <section className="card-elevation p-6 lg:col-span-2 space-y-4">
+            <section className="erp-card p-6 lg:col-span-2 space-y-4">
               <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center gap-2">
                   <svg viewBox="0 0 24 24" className="h-5 w-5 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -360,7 +360,7 @@ export default function SystemPage() {
             </section>
 
             {/* Backup & Recovery Section */}
-            <section className="card-elevation p-6 space-y-4">
+            <section className="erp-card p-6 space-y-4">
               <div className="flex items-center gap-2 mb-2">
                 <svg viewBox="0 0 24 24" className="h-5 w-5 text-emerald-500" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -427,7 +427,7 @@ export default function SystemPage() {
           </div>
 
           {/* System Health Info */}
-          <section className="card-elevation p-6">
+          <section className="erp-card p-6">
             <h3 className="text-[12px] font-black text-[var(--text-primary)] uppercase tracking-widest mb-4 flex items-center gap-2">
               <svg viewBox="0 0 24 24" className="h-4 w-4 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2">
                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />

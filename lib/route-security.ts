@@ -41,9 +41,18 @@ export async function requireSuperAdmin() {
 
 export async function requireAccountingAccess(action: Action = "READ") {
   const user = await requireAuth();
-  RBAC.assertPermission(user.role, "REPORT", action);
-  const readRoles: UserRole[] = [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CFO, UserRole.ACCOUNTANT, UserRole.AUDITOR];
-  const exportRoles: UserRole[] = [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CFO, UserRole.ACCOUNTANT];
+  RBAC.assertPermission(user.role, "REPORT", action === "EXPORT" ? "EXPORT" : "READ");
+  const readRoles: UserRole[] = [
+    UserRole.SUPER_ADMIN,
+    UserRole.ADMIN,
+    UserRole.CFO,
+    UserRole.ACCOUNTANT,
+    UserRole.AUDITOR,
+    UserRole.MANAGER,
+    UserRole.BRANCH_DIRECTOR,
+    UserRole.GROUP_DIRECTOR,
+  ];
+  const exportRoles: UserRole[] = [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CFO, UserRole.ACCOUNTANT, UserRole.AUDITOR, UserRole.GROUP_DIRECTOR];
   const allowedRoles = action === "EXPORT" ? exportRoles : readRoles;
   if (!allowedRoles.includes(user.role)) {
     throw new ApiError(403, `Role ${user.role} is not allowed to access accounting data.`);

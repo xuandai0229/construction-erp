@@ -305,6 +305,7 @@ exports.Prisma.LedgerAccountScalarFieldEnum = {
   type: 'type',
   description: 'description',
   isActive: 'isActive',
+  parentId: 'parentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -320,6 +321,7 @@ exports.Prisma.JournalEntryScalarFieldEnum = {
   sourceId: 'sourceId',
   isPosted: 'isPosted',
   isClosing: 'isClosing',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
@@ -793,6 +795,16 @@ exports.Prisma.BranchScalarFieldEnum = {
   name: 'name',
   code: 'code',
   address: 'address',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.VoucherSequenceScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  type: 'type',
+  year: 'year',
+  current: 'current',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -1289,6 +1301,59 @@ exports.Prisma.DocumentChecklistScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.AdvanceRequestScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  projectId: 'projectId',
+  contractId: 'contractId',
+  wbsItemId: 'wbsItemId',
+  supplierId: 'supplierId',
+  employeeId: 'employeeId',
+  recipientType: 'recipientType',
+  advanceNo: 'advanceNo',
+  amount: 'amount',
+  paidAmount: 'paidAmount',
+  settledAmount: 'settledAmount',
+  remainingAmount: 'remainingAmount',
+  purpose: 'purpose',
+  status: 'status',
+  requestedBy: 'requestedBy',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  paidAt: 'paidAt',
+  expectedSettlementDate: 'expectedSettlementDate',
+  postedJournalEntryId: 'postedJournalEntryId',
+  reversalJournalEntryId: 'reversalJournalEntryId',
+  exceptionReason: 'exceptionReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  version: 'version'
+};
+
+exports.Prisma.AdvanceSettlementScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  advanceRequestId: 'advanceRequestId',
+  invoiceId: 'invoiceId',
+  costRecordId: 'costRecordId',
+  paymentId: 'paymentId',
+  contractId: 'contractId',
+  amount: 'amount',
+  status: 'status',
+  settlementDate: 'settlementDate',
+  postedJournalEntryId: 'postedJournalEntryId',
+  reversalJournalEntryId: 'reversalJournalEntryId',
+  reason: 'reason',
+  createdBy: 'createdBy',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  version: 'version'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1504,6 +1569,33 @@ exports.PeriodStatus = exports.$Enums.PeriodStatus = {
   CLOSED: 'CLOSED'
 };
 
+exports.AdvanceRecipientType = exports.$Enums.AdvanceRecipientType = {
+  EMPLOYEE: 'EMPLOYEE',
+  VENDOR: 'VENDOR'
+};
+
+exports.AdvanceStatus = exports.$Enums.AdvanceStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  PAID: 'PAID',
+  PARTIALLY_SETTLED: 'PARTIALLY_SETTLED',
+  FULLY_SETTLED: 'FULLY_SETTLED',
+  OVERDUE: 'OVERDUE',
+  CANCELLED: 'CANCELLED',
+  REVERSED: 'REVERSED'
+};
+
+exports.SettlementStatus = exports.$Enums.SettlementStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  APPROVED: 'APPROVED',
+  POSTED: 'POSTED',
+  REVERSED: 'REVERSED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Category: 'Category',
@@ -1553,6 +1645,7 @@ exports.Prisma.ModelName = {
   Quotation: 'Quotation',
   Company: 'Company',
   Branch: 'Branch',
+  VoucherSequence: 'VoucherSequence',
   Notification: 'Notification',
   DomainEvent: 'DomainEvent',
   FinancialSnapshot: 'FinancialSnapshot',
@@ -1590,7 +1683,9 @@ exports.Prisma.ModelName = {
   ProjectSupplier: 'ProjectSupplier',
   Acceptance: 'Acceptance',
   PaymentPlan: 'PaymentPlan',
-  DocumentChecklist: 'DocumentChecklist'
+  DocumentChecklist: 'DocumentChecklist',
+  AdvanceRequest: 'AdvanceRequest',
+  AdvanceSettlement: 'AdvanceSettlement'
 };
 
 /**

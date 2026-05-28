@@ -8,42 +8,34 @@ import Sidebar from '@/app/components/Sidebar';
 import Header from '@/app/components/Header';
 import { useERPStore } from '@/store/erpStore';
 import { formatDate, formatVnd } from '@/app/components/dashboard-data';
-
+import { Column, EnterpriseCard, EnterpriseEmptyState, EnterpriseTable } from '@/app/components/ui-enterprise';
 function MoneyCard({ label, value, danger }: { label: string; value: number; danger?: boolean }) {
   return (
-    <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-4">
+    <EnterpriseCard bodyClassName="p-4">
       <div className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)]">{label}</div>
-      <div className={`mt-2 text-lg font-black tabular-nums ${danger ? 'text-rose-500' : 'text-[var(--text-primary)]'}`}>{formatVnd(value)}</div>
-    </div>
+      <div className={`mt-2 text-[18px] font-black tabular-nums ${danger ? 'text-rose-500' : 'text-[var(--text-primary)]'}`}>{formatVnd(value)}</div>
+    </EnterpriseCard>
   );
 }
 
 function DataTable({ title, rows, columns }: { title: string; rows: any[]; columns: { key: string; label: string; money?: boolean; date?: boolean }[] }) {
+  const tableColumns: Column<any>[] = columns.map(col => ({
+    header: col.label,
+    accessor: row => col.money ? formatVnd(Number(row[col.key] || 0)) : col.date ? formatDate(row[col.key]) : row[col.key] || '',
+    align: col.money ? 'right' : col.date ? 'center' : 'left',
+    width: col.money ? '160px' : col.date ? '140px' : '220px',
+  }));
+
   return (
-    <section className="rounded-lg border border-[var(--border)] bg-[var(--card)] overflow-hidden">
-      <div className="border-b border-[var(--border)] px-4 py-3">
-        <h2 className="text-[12px] font-black uppercase tracking-widest">{title}</h2>
-      </div>
-      <div className="overflow-x-auto">
-        <table className="erp-table min-w-[720px]">
-          <thead>
-            <tr>{columns.map(col => <th key={col.key}>{col.label}</th>)}</tr>
-          </thead>
-          <tbody>
-            {rows.map(row => (
-              <tr key={row.id}>
-                {columns.map(col => (
-                  <td key={col.key} className={col.money ? 'text-right tabular-nums font-bold' : ''}>
-                    {col.money ? formatVnd(Number(row[col.key] || 0)) : col.date ? formatDate(row[col.key]) : row[col.key] || ''}
-                  </td>
-                ))}
-              </tr>
-            ))}
-            {rows.length === 0 && <tr><td colSpan={columns.length} className="h-24 text-center text-[12px] font-bold text-[var(--text-muted)]">Chưa có dữ liệu.</td></tr>}
-          </tbody>
-        </table>
-      </div>
-    </section>
+    <EnterpriseCard title={title} bodyClassName="p-0">
+      <EnterpriseTable
+        data={rows}
+        columns={tableColumns}
+        minWidth={`${Math.max(720, columns.length * 150)}px`}
+        getRowKey={(row, index) => row.id || index}
+        emptyState={<EnterpriseEmptyState title="Chưa có giao dịch" description="Các phát sinh của hợp đồng sẽ hiển thị tại đây khi được ghi nhận." iconType="voucher" />}
+      />
+    </EnterpriseCard>
   );
 }
 

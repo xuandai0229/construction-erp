@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
@@ -140,7 +140,7 @@ export default function SettingsPage() {
 
           <div className="space-y-6">
             {/* Theme & Display */}
-            <section className="card-elevation p-6 md:p-8">
+            <section className="erp-card p-6 md:p-8">
               <h3 className="text-[12px] font-black text-[var(--text-primary)] uppercase tracking-widest mb-6 flex items-center gap-2">
                 <svg viewBox="0 0 24 24" className="h-4 w-4 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-11.314l.707.707m11.314 11.314l.707.707M12 5a7 7 0 1 0 0 14 7 7 0 0 0 0-14z" />
@@ -210,7 +210,7 @@ export default function SettingsPage() {
             </section>
 
             {/* System Config */}
-            <section className="card-elevation p-6 md:p-8">
+            <section className="erp-card p-6 md:p-8">
               <h3 className="text-[12px] font-black text-[var(--text-primary)] uppercase tracking-widest mb-6 flex items-center gap-2">
                 <svg viewBox="0 0 24 24" className="h-4 w-4 text-emerald-500" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M21 12V3H3v18h10M12 3v18M3 9h18M3 15h10" />
@@ -240,7 +240,7 @@ export default function SettingsPage() {
             {/* Admin only */}
             {userRole === 'ADMIN' && (
               <div className="space-y-6">
-                <section className="card-elevation p-6 md:p-8 border-blue-500/20 bg-blue-600/5">
+                <section className="erp-card p-6 md:p-8 border-blue-500/20 bg-blue-600/5">
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-[12px] font-black text-blue-500 uppercase tracking-widest flex items-center gap-2">
                       <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
@@ -272,7 +272,7 @@ export default function SettingsPage() {
                 </section>
 
                 {/* Fiscal Period Locking Control (Batch 5.3) */}
-                <section className="card-elevation p-6 md:p-8 border-rose-500/20 bg-rose-950/5">
+                <section className="erp-card p-6 md:p-8 border-rose-500/20 bg-rose-950/5">
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <h3 className="text-[12px] font-black text-rose-500 uppercase tracking-widest flex items-center gap-2">

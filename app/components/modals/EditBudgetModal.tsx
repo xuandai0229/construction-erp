@@ -1,6 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+
+import { EnterpriseForm } from '@/app/components/ui-enterprise';
 import { useState, useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
 import { CostType } from '@/app/types';
@@ -105,7 +107,7 @@ export default function EditBudgetModal({ isOpen, onClose, editingBudget }: Prop
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-5">
+        <EnterpriseForm onSubmit={handleSubmit} className="px-6 py-5 space-y-5">
           <div className="space-y-4 rounded-lg border border-[var(--border)] p-4 bg-[var(--secondary)]/10">
             <h3 className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)]">Thông tin hạng mục</h3>
             <div>
@@ -190,7 +192,7 @@ export default function EditBudgetModal({ isOpen, onClose, editingBudget }: Prop
               )}
             </button>
           </div>
-        </form>
+        </EnterpriseForm>
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
-'use client';
+﻿'use client';
 
+
+import { EnterpriseForm } from '@/app/components/ui-enterprise';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useERPStore } from '@/store/erpStore';
@@ -47,7 +49,7 @@ export default function LoginPage() {
         </div>
 
         <div className="rounded-2xl border border-slate-800/50 bg-slate-900/40 p-8 shadow-2xl backdrop-blur-xl inner-border">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <EnterpriseForm onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <label className="erp-label">Email / Tên đăng nhập</label>
               <div className="relative">
@@ -116,7 +118,7 @@ export default function LoginPage() {
                 </>
               )}
             </button>
-          </form>
+          </EnterpriseForm>
         </div>
 
         <p className="mt-8 text-center text-xs font-medium text-slate-500">

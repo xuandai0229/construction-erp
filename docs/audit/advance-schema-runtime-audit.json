@@ -1,0 +1,20 @@
+{
+  "generatedAt": "2026-05-28T08:14:44.681Z",
+  "results": [
+    {
+      "check": "AdvanceRequest table exists",
+      "result": "PASS",
+      "note": "Count: 0"
+    },
+    {
+      "check": "AdvanceSettlement table exists",
+      "result": "PASS",
+      "note": "Count: 0"
+    },
+    {
+      "check": "Enums exist in DB",
+      "result": "PASS",
+      "note": "Found: [{\"typname\":\"AdvanceRecipientType\"},{\"typname\":\"AdvanceStatus\"},{\"typname\":\"SettlementStatus\"}]"
+    }
+  ]
+}

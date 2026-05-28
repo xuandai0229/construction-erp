@@ -1,5 +1,7 @@
-'use client';
+﻿'use client';
 
+
+import { EnterpriseForm } from '@/app/components/ui-enterprise';
 import { useEffect, useState } from 'react';
 import { useERPStore } from '@/store/erpStore';
 import { WBSItem } from '@/app/types';
@@ -124,7 +126,7 @@ export default function AddWBSModal({ isOpen, onClose, wbsItem, initialParentId 
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+        <EnterpriseForm onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <div>
             <label className="erp-label">Dự án <span className="text-red-500">*</span></label>
             <div className="relative">
@@ -201,7 +203,7 @@ export default function AddWBSModal({ isOpen, onClose, wbsItem, initialParentId 
               {wbsItem ? 'Cập nhật' : 'Thêm hạng mục'}
             </button>
           </div>
-        </form>
+        </EnterpriseForm>
       </div>
     </div>
   );

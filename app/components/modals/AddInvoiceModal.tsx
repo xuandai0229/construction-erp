@@ -1,5 +1,7 @@
-'use client';
+﻿'use client';
 
+
+import { EnterpriseForm } from '@/app/components/ui-enterprise';
 import { useState, useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
 import { useProjectsQuery } from '@/services/queries/useProjects';
@@ -83,7 +85,7 @@ export default function AddInvoiceModal({ isOpen, onClose }: Props) {
           <h2 className="text-[15px] font-bold text-[var(--text-primary)]">Xuất hóa đơn (Invoice)</h2>
           <button onClick={onClose} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">✕</button>
         </div>
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+        <EnterpriseForm onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <div>
             <label className="erp-label">Dự án</label>
             <select
@@ -129,7 +131,7 @@ export default function AddInvoiceModal({ isOpen, onClose }: Props) {
             <button type="button" onClick={onClose} className="erp-btn border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-primary)] hover:bg-[var(--hover-bg)]">Hủy</button>
             <button type="submit" disabled={loading} className="erp-btn bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 disabled:opacity-60">Xuất hóa đơn</button>
           </div>
-        </form>
+        </EnterpriseForm>
       </div>
     </div>
   );

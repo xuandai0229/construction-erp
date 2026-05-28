@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 @theme {
   --color-background: var(--background);
@@ -29,7 +29,24 @@
   --erp-header-height: 72px;
   --erp-sidebar-width: 260px;
   --erp-sidebar-collapsed: 72px;
-  --erp-row-height: 42px;
+  --erp-row-height: 40px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --text-2xs: 12px;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 32px;
   --radius: 0.625rem;
   --radius-sm: 0.375rem;
   --radius-lg: 0.875rem;
@@ -157,8 +174,7 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   @apply font-sans antialiased;
-  font-size: 0.875rem;
-  /* 14px default */
+  font-size: var(--text-sm);
   line-height: 1.5;
 }
 
@@ -297,24 +313,6 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   border-right-color: var(--sidebar-border);
 }
 
-/* ─── Card Elevation (Enterprise Synchronized) ────────────── */
-.card-elevation {
-  border-radius: 1rem;
-  border: 1px solid var(--border);
-  background-color: var(--card);
-  box-shadow: var(--erp-card-shadow);
-  transition: transform var(--motion-duration-base) var(--motion-easing-executive),
-    box-shadow var(--motion-duration-base) var(--motion-easing-executive),
-    border-color var(--motion-duration-base) var(--motion-easing-executive);
-  will-change: transform;
-}
-
-.card-elevation:hover {
-  border-color: rgba(59, 130, 246, 0.25);
-  box-shadow: var(--erp-hover-shadow);
-  transform: translateY(calc(-1 * var(--motion-elevation-sm)));
-}
-
 /* ─── Disabled States ─────────────────────────────────────── */
 .erp-btn:disabled,
 .erp-input:disabled {
@@ -390,79 +388,13 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
-.erp-table {
-  @apply border-collapse;
-  table-layout: fixed;
-  width: 100%;
-}
-
-.erp-table th {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  height: 34px;
-  padding: 0 0.75rem;
-  font-size: 0.625rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-tertiary);
-  border-bottom: 1px solid var(--divider);
-  background-color: var(--table-head-bg);
-  white-space: nowrap;
-  backdrop-filter: blur(12px);
-  box-shadow: none;
-  vertical-align: middle;
-}
-
-.erp-table td {
-  height: 40px;
-  padding: 0.375rem 0.75rem;
-  border-bottom: 1px solid var(--divider);
-  color: var(--text-primary);
-  font-size: 0.8125rem;
-  transition: background-color var(--motion-duration-fast) var(--motion-easing-standard);
-  vertical-align: middle;
-  overflow-wrap: anywhere;
-}
-
-.erp-table tr:last-child td {
-  border-bottom: none;
-}
-
-.erp-table tr:hover td {
-  background-color: var(--table-row-hover);
-}
-
-/* ─── Unified Row Interaction (Enterprise Synchronized) ───── */
-.erp-table-row {
-  transition: background-color var(--motion-duration-fast) var(--motion-easing-standard),
-    border-color var(--motion-duration-fast) var(--motion-easing-standard);
-}
-
-.erp-table-row:hover {
-  background-color: var(--table-row-hover);
-}
-
-.erp-table-row:hover td:first-child {
-  box-shadow: inset 3px 0 0 var(--primary);
-}
-
-.erp-table-row.active {
-  background-color: var(--accent);
-}
-
-.erp-table-row.active td:first-child {
-  box-shadow: inset 3px 0 0 var(--primary);
-}
-
 /* ─── Button (Tactile Executive Feedback) ─────────────────── */
 .erp-btn {
-  @apply inline-flex items-center justify-center gap-2;
+  @apply inline-flex items-center justify-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis;
   height: 2.25rem;
   /* 36px */
   padding: 0 1rem;
-  font-size: 0.8125rem;
+  font-size: var(--text-xs);
   font-weight: 700;
   border-radius: 0.5rem;
   cursor: pointer;
@@ -487,19 +419,13 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-
-.erp-table-empty {
-  min-height: 9rem;
-  display: grid;
-  place-items: center;
-  border: 1px dashed var(--divider);
-  border-radius: 0.75rem;
-  color: var(--text-tertiary);
-  background: color-mix(in srgb, var(--card) 70%, transparent);
+textarea:focus-visible,
+button:focus,
+a:focus,
+[role="button"]:focus {
+  outline: 2px solid var(--primary) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 20%, transparent) !important;
 }
 
 /* ─── Utility ─────────────────────────────────────────────── */
@@ -552,7 +478,7 @@ textarea:focus-visible {
   border: 1px solid var(--input-border);
   background-color: var(--input-bg);
   padding: 0 0.875rem;
-  font-size: 0.8125rem;
+  font-size: var(--text-xs);
   color: var(--foreground);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -617,10 +543,10 @@ textarea:focus-visible {
 
 /* ─── Section Title ───────────────────────────────────────── */
 .erp-section-title {
-  font-size: 1.5rem;
+  font-size: var(--text-2xl);
   font-weight: 800;
   color: var(--text-primary);
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   line-height: 1.1;
 }
 
@@ -631,8 +557,7 @@ textarea:focus-visible {
 }
 
 .erp-section-subtitle {
-  font-size: 0.75rem;
-  /* 12px */
+  font-size: var(--text-xs);
   font-weight: 700;
   color: var(--text-secondary);
   text-transform: uppercase;

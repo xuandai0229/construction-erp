@@ -1,0 +1,83 @@
+{
+  "generatedAt": "2026-05-28T08:14:46.051Z",
+  "summary": {
+    "total": 9,
+    "pass": 9,
+    "fail": 0,
+    "not_implemented": 0
+  },
+  "checks": [
+    {
+      "area": "Total paid amount logic",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "notes": "All paid amounts must come from valid states"
+    },
+    {
+      "area": "Settled amount match details",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "notes": "AdvanceRequest settledAmount == sum of its POSTED settlements"
+    },
+    {
+      "area": "Remaining = Paid - Settled",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "notes": "All advance requests remainingAmount is calculated correctly"
+    },
+    {
+      "area": "Overdue count check",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "notes": "Overdue bucket sanity"
+    },
+    {
+      "area": "Settlement vượt advance",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "notes": "0 records should have settledAmount > paidAmount"
+    },
+    {
+      "area": "Settlement vượt invoice",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "notes": "0 invoices should have negative remainingAmount due to settlements"
+    },
+    {
+      "area": "Cross-company settlement",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "notes": "Settlement company must match advance company"
+    },
+    {
+      "area": "Advance không có source",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "notes": "All advances must link to a project or contract"
+    },
+    {
+      "area": "REVERSED không tính outstanding",
+      "expected": 0,
+      "actual": 0,
+      "difference": 0,
+      "result": "PASS",
+      "notes": "Reversed advances should not have remaining amount"
+    }
+  ]
+}

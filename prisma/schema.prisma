@@ -18,6 +18,11 @@ model User {
   role                                               UserRole           @default(VIEWER)
   companyId                                          String?
   ActivityFeed                                       ActivityFeed[]
+  advanceEmployee AdvanceRequest[] @relation("AdvanceEmployee")
+  advanceRequester AdvanceRequest[] @relation("AdvanceRequester")
+  advanceApprover AdvanceRequest[] @relation("AdvanceApprover")
+  settlementCreator AdvanceSettlement[] @relation("SettlementCreator")
+  settlementApprover AdvanceSettlement[] @relation("SettlementApprover")
   ApprovalRequest                                    ApprovalRequest[]
   ApprovalStep                                       ApprovalStep[]
   auditLogs                                          AuditLog[]
@@ -83,6 +88,7 @@ model Project {
   investor               String?
   projectType            String?
   ActivityFeed           ActivityFeed[]
+  advanceRequests AdvanceRequest[]
   ApprovalRequest        ApprovalRequest[]
   BOQItem                BOQItem[]
   BudgetVersion          BudgetVersion[]
@@ -285,6 +291,7 @@ model Invoice {
   payments          Payment[]
   revenues          Revenue[]
   allocations       PaymentAllocation[]
+  advanceSettlements AdvanceSettlement[]
 
   @@index([projectId, deletedAt, issuedDate])
   @@index([wbsId, deletedAt])
@@ -321,13 +328,17 @@ model LedgerAccount {
   type        AccountType
   description String?
   isActive    Boolean           @default(true)
+  parentId    String?
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
   deletedAt   DateTime?
   lines       TransactionLine[]
+  parent      LedgerAccount?    @relation("AccountHierarchy", fields: [parentId], references: [id])
+  children    LedgerAccount[]   @relation("AccountHierarchy")
 
   @@index([code])
   @@index([type])
+  @@index([parentId])
 }
 
 model JournalEntry {
@@ -340,6 +351,7 @@ model JournalEntry {
   sourceId     String?
   isPosted     Boolean           @default(true)
   isClosing    Boolean           @default(false)
+  status       String            @default("DA_CAT")
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
   deletedAt    DateTime?
@@ -480,6 +492,7 @@ model Contract {
   payments       Payment[]
   acceptances    Acceptance[]
   paymentPlans   PaymentPlan[]
+  advanceRequests AdvanceRequest[]
   documentChecklist DocumentChecklist[]
 
   @@index([projectId])
@@ -959,20 +972,23 @@ model Quotation {
 }
 
 model Company {
-  id           String         @id @default(uuid())
-  name         String
-  code         String         @unique
-  taxCode      String?
-  address      String?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  branches     Branch[]
-  costs        CostRecord[]
-  FiscalPeriod FiscalPeriod[]
-  fiscalYears  FiscalYear[]
-  invoices     Invoice[]
-  projects     Project[]
-  users        User[]
+  id              String            @id @default(uuid())
+  name            String
+  code            String            @unique
+  taxCode         String?
+  address         String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  branches        Branch[]
+  costs           CostRecord[]
+  FiscalPeriod    FiscalPeriod[]
+  advanceRequests AdvanceRequest[]
+  advanceSettlements AdvanceSettlement[]
+  fiscalYears     FiscalYear[]
+  invoices        Invoice[]
+  projects        Project[]
+  users           User[]
+  voucherSequences VoucherSequence[]
 }
 
 model Branch {
@@ -987,6 +1003,20 @@ model Branch {
   costs     CostRecord[]
   invoices  Invoice[]
   projects  Project[]
+}
+
+model VoucherSequence {
+  id        String   @id @default(uuid())
+  companyId String
+  type      String   // PT, PC, UNC, BC, BN, PN, PX, PKT
+  year      Int      // Ví dụ: 2026, 2027
+  current   Int      @default(0) // Số thứ tự tăng dần
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  company   Company  @relation(fields: [companyId], references: [id])
+
+  @@unique([companyId, type, year])
+  @@index([companyId, type, year])
 }
 
 model Notification {
@@ -1806,6 +1836,7 @@ model Supplier {
 
   projects       ProjectSupplier[]
   contracts      Contract[]
+  advanceRequests AdvanceRequest[]
 }
 
 model ProjectSupplier {
@@ -1863,3 +1894,111 @@ model DocumentChecklist {
   contract   Contract @relation(fields: [contractId], references: [id])
 }
 
+
+enum AdvanceRecipientType {
+  EMPLOYEE
+  VENDOR
+}
+
+enum AdvanceStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+  PAID
+  PARTIALLY_SETTLED
+  FULLY_SETTLED
+  OVERDUE
+  CANCELLED
+  REVERSED
+}
+
+enum SettlementStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  POSTED
+  REVERSED
+  CANCELLED
+}
+
+model AdvanceRequest {
+  id                     String               @id @default(uuid())
+  companyId              String?
+  projectId              String?
+  contractId             String?
+  wbsItemId              String?
+  supplierId             String?
+  employeeId             String?
+  recipientType          AdvanceRecipientType
+  advanceNo              String?
+  amount                 Decimal              @db.Decimal(18,2)
+  paidAmount             Decimal              @default(0) @db.Decimal(18,2)
+  settledAmount          Decimal              @default(0) @db.Decimal(18,2)
+  remainingAmount        Decimal              @db.Decimal(18,2)
+  purpose                String?
+  status                 AdvanceStatus        @default(DRAFT)
+  requestedBy            String?
+  approvedBy             String?
+  approvedAt             DateTime?
+  paidAt                 DateTime?
+  expectedSettlementDate DateTime?
+  postedJournalEntryId   String?
+  reversalJournalEntryId String?
+  exceptionReason        String?
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  deletedAt              DateTime?
+  version                Int                  @default(1)
+
+  company                Company?             @relation(fields: [companyId], references: [id])
+  project                Project?             @relation(fields: [projectId], references: [id])
+  contract               Contract?            @relation(fields: [contractId], references: [id])
+  supplier               Supplier?            @relation(fields: [supplierId], references: [id])
+  employee               User?                @relation("AdvanceEmployee", fields: [employeeId], references: [id])
+  requester              User?                @relation("AdvanceRequester", fields: [requestedBy], references: [id])
+  approver               User?                @relation("AdvanceApprover", fields: [approvedBy], references: [id])
+  settlements            AdvanceSettlement[]
+
+  @@index([companyId])
+  @@index([projectId])
+  @@index([contractId])
+  @@index([supplierId])
+  @@index([recipientType])
+  @@index([status])
+  @@index([expectedSettlementDate])
+}
+
+model AdvanceSettlement {
+  id                     String           @id @default(uuid())
+  companyId              String?
+  advanceRequestId       String
+  invoiceId              String?
+  costRecordId           String?
+  paymentId              String?
+  contractId             String?
+  amount                 Decimal          @db.Decimal(18,2)
+  status                 SettlementStatus @default(DRAFT)
+  settlementDate         DateTime         @default(now())
+  postedJournalEntryId   String?
+  reversalJournalEntryId String?
+  reason                 String?
+  createdBy              String?
+  approvedBy             String?
+  approvedAt             DateTime?
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @updatedAt
+  deletedAt              DateTime?
+  version                Int              @default(1)
+
+  advanceRequest         AdvanceRequest   @relation(fields: [advanceRequestId], references: [id])
+  company                Company?         @relation(fields: [companyId], references: [id])
+  invoice                Invoice?         @relation(fields: [invoiceId], references: [id])
+  creator                User?            @relation("SettlementCreator", fields: [createdBy], references: [id])
+  approver               User?            @relation("SettlementApprover", fields: [approvedBy], references: [id])
+
+  @@index([companyId])
+  @@index([advanceRequestId])
+  @@index([invoiceId])
+  @@index([status])
+}

@@ -1,4 +1,4 @@
-
+﻿
 'use client';
 
 import React from 'react';
@@ -14,7 +14,7 @@ interface Activity {
 
 export default function ActivityStream({ activities }: { activities: any[] }) {
   return (
-    <section className="card-elevation p-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl h-full">
+    <section className="erp-card p-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl h-full">
       <div className="mb-5 flex items-center justify-between">
         <div className="accent-line border-l-4 border-slate-500 pl-4">
           <h3 className="text-[10px] font-black text-[var(--text-primary)] tracking-widest uppercase">LỊCH SỬ HOẠT ĐỘNG</h3>

@@ -1,4 +1,4 @@
-
+﻿
 'use client';
 
 import React, { useState } from 'react';
@@ -48,7 +48,7 @@ export default function ActionCenter({ tasks, onAction }: ActionCenterProps) {
 
 
   return (
-    <div className="card-elevation overflow-hidden flex flex-col h-full border border-[var(--border)] bg-[var(--card)]">
+    <div className="erp-card overflow-hidden flex flex-col h-full border border-[var(--border)] bg-[var(--card)]">
       <div className="px-4 py-3 border-b border-[var(--border)] flex justify-between items-center bg-[var(--secondary)]">
         <h2 className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest flex items-center gap-2">
           <div className="w-1 h-3 bg-blue-600 rounded-full" />
@@ -66,7 +66,7 @@ export default function ActionCenter({ tasks, onAction }: ActionCenterProps) {
           </div>
         ) : (
           visibleTasks.map((task) => (
-            <div key={task.id} className="p-3 erp-table-row group cursor-pointer border-b border-[var(--border)] last:border-0">
+            <div key={task.id} className="p-3 transition-colors hover:bg-[var(--table-row-hover)] group cursor-pointer border-b border-[var(--border)] last:border-0">
               <div className="flex items-start gap-3">
                 <div className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${task.severity === 'CRITICAL' ? 'bg-rose-500' :
                     task.severity === 'ERROR' ? 'bg-orange-500' :

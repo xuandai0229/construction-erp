@@ -20,25 +20,13 @@ export async function GET(request: Request) {
   }
 }
 
-import { cookies } from "next/headers";
-import { SessionManager } from "@/lib/session";
-
 export async function POST(request: Request) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("erp-session")?.value;
-    const session = SessionManager.verifySession(token || null);
-    const userId = session?.userId;
-    
-    if (!userId) {
-      return handleApiError(new Error("Authentication required"));
-    }
-    
     const body = await request.json();
     const data = createWBSSchema.parse(body);
-    await requireProjectPermission(data.projectId, "PROJECT", "UPDATE");
+    const user = await requireProjectPermission(data.projectId, "PROJECT", "UPDATE");
 
-    const item = await WBSService.create(data, userId);
+    const item = await WBSService.create(data, user.id);
     return successResponse(item, null, 201);
   } catch (error) {
     return handleApiError(error);
