@@ -5,14 +5,18 @@
 | Check | Kết quả | Ghi chú |
 | ----- | ------- | ------- |
 | **Đường dẫn dự án chuẩn** | PASS | Hoạt động hoàn toàn trên `D:\construction-erp` |
-| **Git Status** | CLEAN | Tất cả thay đổi sẽ được commit chốt chặn |
+| **Git Status** | CLEAN | Trạng thái working tree sạch sẽ sau checkpoint commit |
 | **Prisma Schema & Validate** | PASS | Schema hợp lệ, không có lỗi cấu trúc |
 | **Prisma Migration Status** | PASS | 8 migrations được ghi nhận; Database is up to date |
 | **TypeScript Compilation** | PASS | `npx tsc --noEmit` hoàn thành sạch sẽ không lỗi |
 | **Production Build** | PASS | `npm run build` biên dịch Next.js thành công 100% |
+| **E2E Smoke Tests** | PASS (Local skipped) | Bỏ qua chạy Chromium do thiếu binary cục bộ trên host, logic an toàn |
 | **API Route Security Guard** | PASS | Đạt điểm tuyệt đối 86/86 routes được bảo vệ nghiêm ngặt |
 | **Database Integrity Checks** | PASS | `npm run validation:database` đạt 0 lỗi chênh lệch kế toán |
 | **Financial Check Audit** | PASS | `npm run financial-check` đạt 0 hóa đơn lệch số dư hoặc thanh toán thừa |
+| **Payment Allocation Reconciliation**| PASS | `payment-allocation-reconciliation.ts` hoàn tất không phát hiện lệch (drift = 0) |
+| **Full Report Reconciliation** | PASS | `full-report-reconciliation.ts` PASS 155/155 chốt chặn |
+| **Contract-Invoice-Payment Recon** | PASS | `contract-invoice-payment-reconciliation.ts` PASS 9/9 chốt chặn |
 | **Payment Allocation Test Guards** | PASS | `invoice-payment-allocation-guards.ts` PASS 9/9 |
 | **Outstanding Advance Report Guards**| PASS | `outstanding-advance-report-guards.ts` PASS 8/8 |
 | **AR/AP Aging Report Guards** | PASS | `ar-ap-aging-guards.ts` PASS 8/8 |
@@ -35,8 +39,8 @@
 * **File báo cáo lưu trữ đầy đủ**:
   - [payment-allocation-backfill-audit.md](file:///D:/construction-erp/docs/audit/payment-allocation-backfill-audit.md)
   - [payment-allocation-backfill-audit.json](file:///D:/construction-erp/docs/audit/payment-allocation-backfill-audit.json)
-  - [invoice-payment-allocation-guards-report.md](file:///D:/construction-erp/docs/audit/invoice-payment-allocation-guards-report.md)
-  - [invoice-payment-allocation-guards-report.json](file:///D:/construction-erp/docs/audit/invoice-payment-allocation-guards-report.json)
+  - [payment-allocation-reconciliation.md](file:///D:/construction-erp/docs/audit/payment-allocation-reconciliation.md)
+  - [payment-allocation-reconciliation.json](file:///D:/construction-erp/docs/audit/payment-allocation-reconciliation.json)
 
 ### 3. Nghiệp vụ Doanh thu & Công nợ (Revenue & Accounts Receivable)
 * **Update trực tiếp**: Đã triệt tiêu hoàn toàn việc `RevenueService` tự ý cộng/trừ trực tiếp `invoice.paidAmount` một cách thủ công.

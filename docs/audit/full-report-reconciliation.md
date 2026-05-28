@@ -1,6 +1,6 @@
 # Full Report Reconciliation
 
-Generated: 2026-05-28T10:10:15.529Z
+Generated: 2026-05-28T10:18:34.196Z
 Projects checked: 19
 
 | Report/KPI | Expected | Actual | Difference | Result | Notes |
