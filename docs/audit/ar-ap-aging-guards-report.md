@@ -1,6 +1,6 @@
 # AR/AP Aging Guards Report
 
-Generated: 2026-05-28T08:12:53.535Z
+Generated: 2026-05-28T09:54:51.776Z
 
 | Test | Result | Notes |
 | ---- | ------ | ----- |

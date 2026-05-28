@@ -176,7 +176,10 @@ export class PaymentService {
           paymentId: data.paymentId,
           invoiceId: data.invoiceId,
           amount: data.amount,
-          allocatedById: userId
+          companyId: invoice.companyId || "",
+          contractId: invoice.contractId,
+          createdBy: userId,
+          status: "ACTIVE"
         }
       });
 

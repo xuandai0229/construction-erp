@@ -1,6 +1,6 @@
 # Invoice -> Payment Allocation Guards Report
 
-Generated: 2026-05-28T08:12:51.458Z
+Generated: 2026-05-28T10:11:15.354Z
 
 | Test | Result | Notes |
 | ---- | ------ | ----- |

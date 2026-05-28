@@ -494,6 +494,7 @@ model Contract {
   paymentPlans      PaymentPlan[]
   advanceRequests   AdvanceRequest[]
   documentChecklist DocumentChecklist[]
+  PaymentAllocation PaymentAllocation[]
 
   @@unique([projectId, supplierId, contractCode])
   @@index([projectId])
@@ -989,6 +990,7 @@ model Company {
   projects           Project[]
   users              User[]
   voucherSequences   VoucherSequence[]
+  PaymentAllocation  PaymentAllocation[]
 }
 
 model Branch {
@@ -1688,22 +1690,35 @@ model VendorPayment {
 }
 
 model PaymentAllocation {
-  id              String   @id @default(uuid())
+  id              String    @id @default(uuid())
+  companyId       String
   paymentId       String?
   invoiceId       String?
   vendorPaymentId String?
-  amount          Decimal  @db.Decimal(18, 2)
-  allocatedAt     DateTime @default(now())
-  allocatedById   String?
-  isReversed      Boolean  @default(false)
+  contractId      String?
+  amount          Decimal   @db.Decimal(18, 2)
+  status          String    @default("ACTIVE") // DRAFT, ACTIVE, CANCELLED, REVERSED
+  allocatedAt     DateTime  @default(now())
+  isReversed      Boolean   @default(false)
+  reversalReason  String?
+  reversedAt      DateTime?
+  createdBy       String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+  version         Int       @default(1)
 
   payment       Payment?       @relation(fields: [paymentId], references: [id])
   invoice       Invoice?       @relation(fields: [invoiceId], references: [id])
   vendorPayment VendorPayment? @relation(fields: [vendorPaymentId], references: [id])
+  contract      Contract?      @relation(fields: [contractId], references: [id])
+  company       Company        @relation(fields: [companyId], references: [id])
 
   @@index([paymentId])
   @@index([invoiceId])
   @@index([vendorPaymentId])
+  @@index([contractId])
+  @@index([companyId])
 }
 
 // ═══════════════════════════════════════════════════════════════

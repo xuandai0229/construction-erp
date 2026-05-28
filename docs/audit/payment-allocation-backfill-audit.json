@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-05-28T10:11:16.236Z",
+  "totalPaymentsChecked": 11,
+  "totalMissingAllocations": 0,
+  "validApprovedPostedCount": 0,
+  "draftOrCancelledCount": 0,
+  "crossCompanyMismatch": 0,
+  "overpaidInvoices": 0,
+  "duplicateJournals": 0,
+  "missingAllocations": []
+}

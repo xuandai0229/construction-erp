@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { assertAuthenticated } from "@/lib/auth-guard";
 import { prisma } from "@/lib/prisma";
+import { RBAC } from "@/lib/rbac";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await assertAuthenticated();
+  RBAC.assertPermission(user.role, "REVENUE", "READ");
 
   const id = (await params).id;
   

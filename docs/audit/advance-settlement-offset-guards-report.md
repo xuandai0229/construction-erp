@@ -1,6 +1,6 @@
 # Advance Settlement Offset Guards Report
 
-Generated: 2026-05-28T08:14:09.188Z
+Generated: 2026-05-28T09:59:57.045Z
 
 | Test | Result | Notes |
 | ---- | ------ | ----- |
@@ -14,7 +14,7 @@ Generated: 2026-05-28T08:14:09.188Z
 | Post APPROVED advance | PASS | Passed |
 | Post PAID advance lần 2 | PASS | Blocked: LỖI NGHIỆP VỤ: Tạm ứng này đã được chi tiền (PAID), không được ghi sổ lại. |
 | Reverse PAID advance | PASS | Passed |
-| Create settlement với PAID advance + APPROVED invoice | FAIL | Invoice not found |
+| Create settlement với PAID advance + APPROVED invoice | PASS | Passed |
 | Settlement invoice DRAFT | PASS | Simulated blocked |
 | Settlement vượt advance remaining | PASS | Simulated blocked |
 | Settlement vượt invoice remaining | PASS | Simulated blocked |

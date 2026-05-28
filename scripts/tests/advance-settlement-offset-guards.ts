@@ -78,13 +78,40 @@ async function runFixtureTests(results: Result[]) {
     } catch (e: any) { fail(results, "Reverse PAID advance", e.message); }
 
     // Settlement
+    const contract = await prisma.contract.create({
+      data: {
+        projectId: project.id,
+        supplierId: supplier.id,
+        title: `Test Contract ${uid}`,
+        originalValue: 500,
+        currentValue: 500,
+        status: "ACTIVE" as any
+      }
+    });
+
+    const wbs = await prisma.wBSItem.create({ data: { projectId: project.id, name: "WBS", code: `WBS${uid}` } });
+    const invoice = await prisma.invoice.create({
+      data: {
+        projectId: project.id,
+        wbsId: wbs.id,
+        contractId: contract.id,
+        amount: 500,
+        netAmount: 500,
+        vatAmount: 0,
+        paidAmount: 0,
+        remainingAmount: 500,
+        status: "SENT",
+        approvalStatus: "APPROVED",
+      }
+    });
+
     const adv2 = await AdvanceService.createAdvance({ projectId: project.id, supplierId: supplier.id, amount: 500, recipientType: "VENDOR" }, user.id);
     await AdvanceService.submitAdvance(adv2.id, user.id);
     await AdvanceService.approveAdvance(adv2.id, manager.id);
     await AdvanceService.postAdvancePayment(adv2.id, manager.id);
     
     try {
-      await AdvanceSettlementService.createSettlement({ advanceRequestId: adv2.id, invoiceId: "test-inv", amount: 100 }, user.id);
+      await AdvanceSettlementService.createSettlement({ advanceRequestId: adv2.id, invoiceId: invoice.id, amount: 100 }, user.id);
       pass(results, "Create settlement với PAID advance + APPROVED invoice", "Passed");
     } catch (e: any) { fail(results, "Create settlement với PAID advance + APPROVED invoice", e.message); }
 
@@ -92,7 +119,11 @@ async function runFixtureTests(results: Result[]) {
     // Cleanup
     await prisma.advanceSettlement.deleteMany({ where: { advanceRequest: { projectId: project.id } } });
     await prisma.advanceRequest.deleteMany({ where: { projectId: project.id } });
+    await prisma.invoice.deleteMany({ where: { projectId: project.id } });
+    await prisma.wBSItem.deleteMany({ where: { projectId: project.id } });
+    await prisma.contract.deleteMany({ where: { projectId: project.id } });
     await prisma.project.delete({ where: { id: project.id } });
+    await prisma.supplier.delete({ where: { id: supplier.id } });
     await prisma.user.delete({ where: { email: email1 } });
     await prisma.user.delete({ where: { email: email2 } });
   }

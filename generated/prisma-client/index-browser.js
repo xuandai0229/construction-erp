@@ -1170,13 +1170,22 @@ exports.Prisma.VendorPaymentScalarFieldEnum = {
 
 exports.Prisma.PaymentAllocationScalarFieldEnum = {
   id: 'id',
+  companyId: 'companyId',
   paymentId: 'paymentId',
   invoiceId: 'invoiceId',
   vendorPaymentId: 'vendorPaymentId',
+  contractId: 'contractId',
   amount: 'amount',
+  status: 'status',
   allocatedAt: 'allocatedAt',
-  allocatedById: 'allocatedById',
-  isReversed: 'isReversed'
+  isReversed: 'isReversed',
+  reversalReason: 'reversalReason',
+  reversedAt: 'reversedAt',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  version: 'version'
 };
 
 exports.Prisma.FiscalYearScalarFieldEnum = {

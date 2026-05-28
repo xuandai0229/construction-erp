@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-28T08:14:09.188Z",
+  "generatedAt": "2026-05-28T09:59:57.045Z",
   "results": [
     {
       "test": "Create vendor advance hợp lệ",
@@ -53,8 +53,8 @@
     },
     {
       "test": "Create settlement với PAID advance + APPROVED invoice",
-      "result": "FAIL",
-      "notes": "Invoice not found"
+      "result": "PASS",
+      "notes": "Passed"
     },
     {
       "test": "Settlement invoice DRAFT",
@@ -128,8 +128,8 @@
     }
   ],
   "summary": {
-    "pass": 24,
-    "fail": 1,
+    "pass": 25,
+    "fail": 0,
     "skip": 0
   }
 }

@@ -9,49 +9,49 @@ datasource db {
 }
 
 model User {
-  id                                                 String             @id @default(uuid())
-  email                                              String             @unique
+  id                                                 String              @id @default(uuid())
+  email                                              String              @unique
   name                                               String?
-  createdAt                                          DateTime           @default(now())
-  updatedAt                                          DateTime           @updatedAt
+  createdAt                                          DateTime            @default(now())
+  updatedAt                                          DateTime            @updatedAt
   deletedAt                                          DateTime?
-  role                                               UserRole           @default(VIEWER)
+  role                                               UserRole            @default(VIEWER)
   companyId                                          String?
   ActivityFeed                                       ActivityFeed[]
-  advanceEmployee AdvanceRequest[] @relation("AdvanceEmployee")
-  advanceRequester AdvanceRequest[] @relation("AdvanceRequester")
-  advanceApprover AdvanceRequest[] @relation("AdvanceApprover")
-  settlementCreator AdvanceSettlement[] @relation("SettlementCreator")
-  settlementApprover AdvanceSettlement[] @relation("SettlementApprover")
+  advanceEmployee                                    AdvanceRequest[]    @relation("AdvanceEmployee")
+  advanceRequester                                   AdvanceRequest[]    @relation("AdvanceRequester")
+  advanceApprover                                    AdvanceRequest[]    @relation("AdvanceApprover")
+  settlementCreator                                  AdvanceSettlement[] @relation("SettlementCreator")
+  settlementApprover                                 AdvanceSettlement[] @relation("SettlementApprover")
   ApprovalRequest                                    ApprovalRequest[]
   ApprovalStep                                       ApprovalStep[]
   auditLogs                                          AuditLog[]
-  budgetsCreated                                     BudgetRecord[]     @relation("BudgetCreatedBy")
+  budgetsCreated                                     BudgetRecord[]      @relation("BudgetCreatedBy")
   Comment                                            Comment[]
-  contractsCreated                                   Contract[]         @relation("ContractCreatedBy")
-  costsCreated                                       CostRecord[]       @relation("CostCreatedBy")
-  costsDeleted                                       CostRecord[]       @relation("CostDeletedBy")
-  DelegationWindow_DelegationWindow_delegateIdToUser DelegationWindow[] @relation("DelegationWindow_delegateIdToUser")
-  DelegationWindow_DelegationWindow_ownerIdToUser    DelegationWindow[] @relation("DelegationWindow_ownerIdToUser")
+  contractsCreated                                   Contract[]          @relation("ContractCreatedBy")
+  costsCreated                                       CostRecord[]        @relation("CostCreatedBy")
+  costsDeleted                                       CostRecord[]        @relation("CostDeletedBy")
+  DelegationWindow_DelegationWindow_delegateIdToUser DelegationWindow[]  @relation("DelegationWindow_delegateIdToUser")
+  DelegationWindow_DelegationWindow_ownerIdToUser    DelegationWindow[]  @relation("DelegationWindow_ownerIdToUser")
   Document                                           Document[]
   FiscalPeriod                                       FiscalPeriod[]
-  invoicesCreated                                    Invoice[]          @relation("InvoiceCreatedBy")
-  invoicesDeleted                                    Invoice[]          @relation("InvoiceDeletedBy")
+  invoicesCreated                                    Invoice[]           @relation("InvoiceCreatedBy")
+  invoicesDeleted                                    Invoice[]           @relation("InvoiceDeletedBy")
   notifications                                      Notification[]
-  paymentsDeleted                                    Payment[]          @relation("PaymentDeletedBy")
+  paymentsDeleted                                    Payment[]           @relation("PaymentDeletedBy")
   ProgressEntry                                      ProgressEntry[]
-  projectsDeleted                                    Project[]          @relation("ProjectDeletedBy")
-  projectsOwned                                      Project[]          @relation("ProjectOwner")
-  purchaseOrdersCreated                              PurchaseOrder[]    @relation("POCreatedBy")
-  purchaseRequestsCreated                            PurchaseRequest[]  @relation("PRCreatedBy")
-  revenuesCreated                                    Revenue[]          @relation("RevenueCreatedBy")
+  projectsDeleted                                    Project[]           @relation("ProjectDeletedBy")
+  projectsOwned                                      Project[]           @relation("ProjectOwner")
+  purchaseOrdersCreated                              PurchaseOrder[]     @relation("POCreatedBy")
+  purchaseRequestsCreated                            PurchaseRequest[]   @relation("PRCreatedBy")
+  revenuesCreated                                    Revenue[]           @relation("RevenueCreatedBy")
   tasksAssigned                                      Task[]
   TrainingRecord                                     TrainingRecord[]
-  company                                            Company?           @relation(fields: [companyId], references: [id])
+  company                                            Company?            @relation(fields: [companyId], references: [id])
   UserMaturity                                       UserMaturity?
-  wbsDeleted                                         WBSItem[]          @relation("WBSDeletedBy")
-  fiscalYearsClosed                                  FiscalYear[]       @relation("FiscalYearClosedBy")
-  accountingPeriodsClosed                            AccountingPeriod[] @relation("AccountingPeriodClosedBy")
+  wbsDeleted                                         WBSItem[]           @relation("WBSDeletedBy")
+  fiscalYearsClosed                                  FiscalYear[]        @relation("FiscalYearClosedBy")
+  accountingPeriodsClosed                            AccountingPeriod[]  @relation("AccountingPeriodClosedBy")
 
   @@index([createdAt])
   @@index([companyId])
@@ -69,49 +69,49 @@ model Category {
 }
 
 model Project {
-  id                     String                 @id @default(uuid())
-  name                   String
-  createdAt              DateTime               @default(now())
-  deletedAt              DateTime?
-  description            String?
-  ownerId                String?
-  status                 ProjectStatus          @default(PLANNED)
-  updatedAt              DateTime               @updatedAt
-  contractValue          Decimal                @default(0) @db.Decimal(18, 2)
-  endDate                DateTime?
-  startDate              DateTime?
-  totalBudget            Decimal                @default(0) @db.Decimal(18, 2)
-  deletedById            String?
-  version                Int                    @default(1)
-  branchId               String?
-  companyId              String?
-  investor               String?
-  projectType            String?
-  ActivityFeed           ActivityFeed[]
-  advanceRequests AdvanceRequest[]
-  ApprovalRequest        ApprovalRequest[]
-  BOQItem                BOQItem[]
-  BudgetVersion          BudgetVersion[]
-  contracts              Contract[]
-  Document               Document[]
-  InventoryTransaction   InventoryTransaction[]
-  journalEntries         JournalEntry[]
-  branch                 Branch?                @relation(fields: [branchId], references: [id])
-  company                Company?               @relation(fields: [companyId], references: [id])
-  deletedBy              User?                  @relation("ProjectDeletedBy", fields: [deletedById], references: [id])
-  owner                  User?                  @relation("ProjectOwner", fields: [ownerId], references: [id])
-  purchaseOrders         PurchaseOrder[]
-  SiteConsumption        SiteConsumption[]
-  SiteLog                SiteLog[]
-  Subcontract            Subcontract[]
-  tasks                  Task[]
-  VariationOrder         VariationOrder[]
-  wbsItems               WBSItem[]
-  VendorPayment          VendorPayment[]
-  trialBalanceSnapshots  TrialBalanceSnapshot[]
-  balanceSheetSnapshots  BalanceSheetSnapshot[]
-  profitLossSnapshots    ProfitLossSnapshot[]
-  suppliers              ProjectSupplier[]
+  id                    String                 @id @default(uuid())
+  name                  String
+  createdAt             DateTime               @default(now())
+  deletedAt             DateTime?
+  description           String?
+  ownerId               String?
+  status                ProjectStatus          @default(PLANNED)
+  updatedAt             DateTime               @updatedAt
+  contractValue         Decimal                @default(0) @db.Decimal(18, 2)
+  endDate               DateTime?
+  startDate             DateTime?
+  totalBudget           Decimal                @default(0) @db.Decimal(18, 2)
+  deletedById           String?
+  version               Int                    @default(1)
+  branchId              String?
+  companyId             String?
+  investor              String?
+  projectType           String?
+  ActivityFeed          ActivityFeed[]
+  advanceRequests       AdvanceRequest[]
+  ApprovalRequest       ApprovalRequest[]
+  BOQItem               BOQItem[]
+  BudgetVersion         BudgetVersion[]
+  contracts             Contract[]
+  Document              Document[]
+  InventoryTransaction  InventoryTransaction[]
+  journalEntries        JournalEntry[]
+  branch                Branch?                @relation(fields: [branchId], references: [id])
+  company               Company?               @relation(fields: [companyId], references: [id])
+  deletedBy             User?                  @relation("ProjectDeletedBy", fields: [deletedById], references: [id])
+  owner                 User?                  @relation("ProjectOwner", fields: [ownerId], references: [id])
+  purchaseOrders        PurchaseOrder[]
+  SiteConsumption       SiteConsumption[]
+  SiteLog               SiteLog[]
+  Subcontract           Subcontract[]
+  tasks                 Task[]
+  VariationOrder        VariationOrder[]
+  wbsItems              WBSItem[]
+  VendorPayment         VendorPayment[]
+  trialBalanceSnapshots TrialBalanceSnapshot[]
+  balanceSheetSnapshots BalanceSheetSnapshot[]
+  profitLossSnapshots   ProfitLossSnapshot[]
+  suppliers             ProjectSupplier[]
 
   @@index([status])
   @@index([ownerId])
@@ -254,43 +254,43 @@ model Revenue {
 }
 
 model Invoice {
-  id                String              @id @default(uuid())
-  projectId         String
-  wbsId             String
-  amount            Decimal             @db.Decimal(18, 2)
-  issuedDate        DateTime            @default(now())
-  paidAmount        Decimal             @default(0) @db.Decimal(18, 2)
-  remainingAmount   Decimal             @db.Decimal(18, 2)
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  createdById       String?
-  dueDate           DateTime?
-  invoiceNumber     String?
-  note              String?
-  status            InvoiceStatus       @default(DRAFT)
-  contractId        String?
-  requestId         String?             @unique
-  deletedAt         DateTime?
-  version           Int                 @default(1)
-  certifiedProgress Decimal             @default(0) @db.Decimal(18, 2)
-  retentionAmount   Decimal             @default(0) @db.Decimal(18, 2)
-  approvalStatus    ApprovalStatus      @default(DRAFT)
-  deletedById       String?
-  netAmount         Decimal             @default(0) @db.Decimal(18, 2)
-  retentionRate     Decimal             @default(0) @db.Decimal(5, 2)
-  vatAmount         Decimal             @default(0) @db.Decimal(18, 2)
-  vatRate           Decimal             @default(10) @db.Decimal(5, 2)
-  branchId          String?
-  companyId         String?
-  branch            Branch?             @relation(fields: [branchId], references: [id])
-  company           Company?            @relation(fields: [companyId], references: [id])
-  contract          Contract?           @relation(fields: [contractId], references: [id])
-  createdBy         User?               @relation("InvoiceCreatedBy", fields: [createdById], references: [id])
-  deletedBy         User?               @relation("InvoiceDeletedBy", fields: [deletedById], references: [id])
-  wbs               WBSItem             @relation(fields: [wbsId], references: [id])
-  payments          Payment[]
-  revenues          Revenue[]
-  allocations       PaymentAllocation[]
+  id                 String              @id @default(uuid())
+  projectId          String
+  wbsId              String
+  amount             Decimal             @db.Decimal(18, 2)
+  issuedDate         DateTime            @default(now())
+  paidAmount         Decimal             @default(0) @db.Decimal(18, 2)
+  remainingAmount    Decimal             @db.Decimal(18, 2)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  createdById        String?
+  dueDate            DateTime?
+  invoiceNumber      String?
+  note               String?
+  status             InvoiceStatus       @default(DRAFT)
+  contractId         String?
+  requestId          String?             @unique
+  deletedAt          DateTime?
+  version            Int                 @default(1)
+  certifiedProgress  Decimal             @default(0) @db.Decimal(18, 2)
+  retentionAmount    Decimal             @default(0) @db.Decimal(18, 2)
+  approvalStatus     ApprovalStatus      @default(DRAFT)
+  deletedById        String?
+  netAmount          Decimal             @default(0) @db.Decimal(18, 2)
+  retentionRate      Decimal             @default(0) @db.Decimal(5, 2)
+  vatAmount          Decimal             @default(0) @db.Decimal(18, 2)
+  vatRate            Decimal             @default(10) @db.Decimal(5, 2)
+  branchId           String?
+  companyId          String?
+  branch             Branch?             @relation(fields: [branchId], references: [id])
+  company            Company?            @relation(fields: [companyId], references: [id])
+  contract           Contract?           @relation(fields: [contractId], references: [id])
+  createdBy          User?               @relation("InvoiceCreatedBy", fields: [createdById], references: [id])
+  deletedBy          User?               @relation("InvoiceDeletedBy", fields: [deletedById], references: [id])
+  wbs                WBSItem             @relation(fields: [wbsId], references: [id])
+  payments           Payment[]
+  revenues           Revenue[]
+  allocations        PaymentAllocation[]
   advanceSettlements AdvanceSettlement[]
 
   @@index([projectId, deletedAt, issuedDate])
@@ -466,38 +466,39 @@ model GoodsReceipt {
 }
 
 model Contract {
-  id             String           @id @default(uuid())
-  projectId      String
-  supplierId     String?
-  contractNumber String?          @unique
-  contractCode   String?
-  title          String
-  description    String?
-  contractorName String?
-  originalValue  Decimal          @db.Decimal(18, 2)
-  currentValue   Decimal          @db.Decimal(18, 2)
-  status         ContractStatus   @default(DRAFT)
-  signedDate     DateTime?
-  startDate      DateTime?
-  endDate        DateTime?
-  createdById    String?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  deletedAt      DateTime?
-  createdBy      User?            @relation("ContractCreatedBy", fields: [createdById], references: [id])
-  project        Project          @relation(fields: [projectId], references: [id])
-  supplier       Supplier?        @relation(fields: [supplierId], references: [id])
-  changes        ContractChange[]
-  invoices       Invoice[]
-  payments       Payment[]
-  acceptances    Acceptance[]
-  paymentPlans   PaymentPlan[]
-  advanceRequests AdvanceRequest[]
+  id                String              @id @default(uuid())
+  projectId         String
+  supplierId        String?
+  contractNumber    String?             @unique
+  contractCode      String?
+  title             String
+  description       String?
+  contractorName    String?
+  originalValue     Decimal             @db.Decimal(18, 2)
+  currentValue      Decimal             @db.Decimal(18, 2)
+  status            ContractStatus      @default(DRAFT)
+  signedDate        DateTime?
+  startDate         DateTime?
+  endDate           DateTime?
+  createdById       String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  deletedAt         DateTime?
+  createdBy         User?               @relation("ContractCreatedBy", fields: [createdById], references: [id])
+  project           Project             @relation(fields: [projectId], references: [id])
+  supplier          Supplier?           @relation(fields: [supplierId], references: [id])
+  changes           ContractChange[]
+  invoices          Invoice[]
+  payments          Payment[]
+  acceptances       Acceptance[]
+  paymentPlans      PaymentPlan[]
+  advanceRequests   AdvanceRequest[]
   documentChecklist DocumentChecklist[]
+  PaymentAllocation PaymentAllocation[]
 
+  @@unique([projectId, supplierId, contractCode])
   @@index([projectId])
   @@index([status])
-  @@unique([projectId, supplierId, contractCode])
 }
 
 model ContractChange {
@@ -972,23 +973,24 @@ model Quotation {
 }
 
 model Company {
-  id              String            @id @default(uuid())
-  name            String
-  code            String            @unique
-  taxCode         String?
-  address         String?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  branches        Branch[]
-  costs           CostRecord[]
-  FiscalPeriod    FiscalPeriod[]
-  advanceRequests AdvanceRequest[]
+  id                 String              @id @default(uuid())
+  name               String
+  code               String              @unique
+  taxCode            String?
+  address            String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  branches           Branch[]
+  costs              CostRecord[]
+  FiscalPeriod       FiscalPeriod[]
+  advanceRequests    AdvanceRequest[]
   advanceSettlements AdvanceSettlement[]
-  fiscalYears     FiscalYear[]
-  invoices        Invoice[]
-  projects        Project[]
-  users           User[]
-  voucherSequences VoucherSequence[]
+  fiscalYears        FiscalYear[]
+  invoices           Invoice[]
+  projects           Project[]
+  users              User[]
+  voucherSequences   VoucherSequence[]
+  PaymentAllocation  PaymentAllocation[]
 }
 
 model Branch {
@@ -1008,8 +1010,8 @@ model Branch {
 model VoucherSequence {
   id        String   @id @default(uuid())
   companyId String
-  type      String   // PT, PC, UNC, BC, BN, PN, PX, PKT
-  year      Int      // Ví dụ: 2026, 2027
+  type      String // PT, PC, UNC, BC, BN, PN, PX, PKT
+  year      Int // Ví dụ: 2026, 2027
   current   Int      @default(0) // Số thứ tự tăng dần
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1688,22 +1690,35 @@ model VendorPayment {
 }
 
 model PaymentAllocation {
-  id              String   @id @default(uuid())
+  id              String    @id @default(uuid())
+  companyId       String
   paymentId       String?
   invoiceId       String?
   vendorPaymentId String?
-  amount          Decimal  @db.Decimal(18, 2)
-  allocatedAt     DateTime @default(now())
-  allocatedById   String?
-  isReversed      Boolean  @default(false)
+  contractId      String?
+  amount          Decimal   @db.Decimal(18, 2)
+  status          String    @default("ACTIVE") // DRAFT, ACTIVE, CANCELLED, REVERSED
+  allocatedAt     DateTime  @default(now())
+  isReversed      Boolean   @default(false)
+  reversalReason  String?
+  reversedAt      DateTime?
+  createdBy       String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+  version         Int       @default(1)
 
   payment       Payment?       @relation(fields: [paymentId], references: [id])
   invoice       Invoice?       @relation(fields: [invoiceId], references: [id])
   vendorPayment VendorPayment? @relation(fields: [vendorPaymentId], references: [id])
+  contract      Contract?      @relation(fields: [contractId], references: [id])
+  company       Company        @relation(fields: [companyId], references: [id])
 
   @@index([paymentId])
   @@index([invoiceId])
   @@index([vendorPaymentId])
+  @@index([contractId])
+  @@index([companyId])
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1762,19 +1777,19 @@ model AccountingPeriod {
 }
 
 model TrialBalanceSnapshot {
-  id                 String  @id @default(uuid())
+  id                 String   @id @default(uuid())
   accountingPeriodId String
   projectId          String
   accountCode        String
   accountName        String
   accountType        String
-  openingDebit       Decimal @default(0) @db.Decimal(18, 2)
-  openingCredit      Decimal @default(0) @db.Decimal(18, 2)
-  periodDebit        Decimal @default(0) @db.Decimal(18, 2)
-  periodCredit       Decimal @default(0) @db.Decimal(18, 2)
-  closingDebit       Decimal @default(0) @db.Decimal(18, 2)
-  closingCredit      Decimal @default(0) @db.Decimal(18, 2)
-  balance            Decimal @default(0) @db.Decimal(18, 2)
+  openingDebit       Decimal  @default(0) @db.Decimal(18, 2)
+  openingCredit      Decimal  @default(0) @db.Decimal(18, 2)
+  periodDebit        Decimal  @default(0) @db.Decimal(18, 2)
+  periodCredit       Decimal  @default(0) @db.Decimal(18, 2)
+  closingDebit       Decimal  @default(0) @db.Decimal(18, 2)
+  closingCredit      Decimal  @default(0) @db.Decimal(18, 2)
+  balance            Decimal  @default(0) @db.Decimal(18, 2)
   generatedAt        DateTime @default(now())
   generatedById      String?
 
@@ -1787,13 +1802,13 @@ model TrialBalanceSnapshot {
 }
 
 model BalanceSheetSnapshot {
-  id                 String  @id @default(uuid())
+  id                 String   @id @default(uuid())
   accountingPeriodId String
   projectId          String
   section            String
   accountCode        String
   accountName        String
-  balance            Decimal @default(0) @db.Decimal(18, 2)
+  balance            Decimal  @default(0) @db.Decimal(18, 2)
   generatedAt        DateTime @default(now())
   generatedById      String?
 
@@ -1806,14 +1821,14 @@ model BalanceSheetSnapshot {
 }
 
 model ProfitLossSnapshot {
-  id                 String  @id @default(uuid())
+  id                 String   @id @default(uuid())
   accountingPeriodId String
   projectId          String
-  totalRevenue       Decimal @default(0) @db.Decimal(18, 2)
-  totalCost          Decimal @default(0) @db.Decimal(18, 2)
-  grossProfit        Decimal @default(0) @db.Decimal(18, 2)
-  grossMargin        Decimal @default(0) @db.Decimal(18, 4)
-  netProfit          Decimal @default(0) @db.Decimal(18, 2)
+  totalRevenue       Decimal  @default(0) @db.Decimal(18, 2)
+  totalCost          Decimal  @default(0) @db.Decimal(18, 2)
+  grossProfit        Decimal  @default(0) @db.Decimal(18, 2)
+  grossMargin        Decimal  @default(0) @db.Decimal(18, 4)
+  netProfit          Decimal  @default(0) @db.Decimal(18, 2)
   generatedAt        DateTime @default(now())
   generatedById      String?
 
@@ -1826,28 +1841,28 @@ model ProfitLossSnapshot {
 }
 
 model Supplier {
-  id             String            @id @default(uuid())
-  code           String            @unique // supplierCode không được trùng
-  name           String
-  description    String?
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
-  deletedAt      DateTime?
+  id          String    @id @default(uuid())
+  code        String    @unique // supplierCode không được trùng
+  name        String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
-  projects       ProjectSupplier[]
-  contracts      Contract[]
+  projects        ProjectSupplier[]
+  contracts       Contract[]
   advanceRequests AdvanceRequest[]
 }
 
 model ProjectSupplier {
-  id          String   @id @default(uuid())
-  projectId   String
-  supplierId  String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(uuid())
+  projectId  String
+  supplierId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  project     Project  @relation(fields: [projectId], references: [id])
-  supplier    Supplier @relation(fields: [supplierId], references: [id])
+  project  Project  @relation(fields: [projectId], references: [id])
+  supplier Supplier @relation(fields: [supplierId], references: [id])
 
   @@unique([projectId, supplierId])
 }
@@ -1863,23 +1878,23 @@ model Acceptance {
   updatedAt        DateTime  @updatedAt
   deletedAt        DateTime?
 
-  contract         Contract  @relation(fields: [contractId], references: [id])
+  contract Contract @relation(fields: [contractId], references: [id])
 
   @@unique([contractId, acceptanceNumber])
 }
 
 model PaymentPlan {
-  id            String    @id @default(uuid())
+  id            String   @id @default(uuid())
   contractId    String
   dueDate       DateTime
-  amount        Decimal   @db.Decimal(18, 2)
-  paymentMethod String?   // Hình thức thanh toán
-  status        String    @default("PENDING") // PENDING, OVERDUE, PAID
+  amount        Decimal  @db.Decimal(18, 2)
+  paymentMethod String? // Hình thức thanh toán
+  status        String   @default("PENDING") // PENDING, OVERDUE, PAID
   note          String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  contract      Contract  @relation(fields: [contractId], references: [id])
+  contract Contract @relation(fields: [contractId], references: [id])
 }
 
 model DocumentChecklist {
@@ -1891,9 +1906,8 @@ model DocumentChecklist {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  contract   Contract @relation(fields: [contractId], references: [id])
+  contract Contract @relation(fields: [contractId], references: [id])
 }
-
 
 enum AdvanceRecipientType {
   EMPLOYEE
@@ -1932,10 +1946,10 @@ model AdvanceRequest {
   employeeId             String?
   recipientType          AdvanceRecipientType
   advanceNo              String?
-  amount                 Decimal              @db.Decimal(18,2)
-  paidAmount             Decimal              @default(0) @db.Decimal(18,2)
-  settledAmount          Decimal              @default(0) @db.Decimal(18,2)
-  remainingAmount        Decimal              @db.Decimal(18,2)
+  amount                 Decimal              @db.Decimal(18, 2)
+  paidAmount             Decimal              @default(0) @db.Decimal(18, 2)
+  settledAmount          Decimal              @default(0) @db.Decimal(18, 2)
+  remainingAmount        Decimal              @db.Decimal(18, 2)
   purpose                String?
   status                 AdvanceStatus        @default(DRAFT)
   requestedBy            String?
@@ -1951,14 +1965,14 @@ model AdvanceRequest {
   deletedAt              DateTime?
   version                Int                  @default(1)
 
-  company                Company?             @relation(fields: [companyId], references: [id])
-  project                Project?             @relation(fields: [projectId], references: [id])
-  contract               Contract?            @relation(fields: [contractId], references: [id])
-  supplier               Supplier?            @relation(fields: [supplierId], references: [id])
-  employee               User?                @relation("AdvanceEmployee", fields: [employeeId], references: [id])
-  requester              User?                @relation("AdvanceRequester", fields: [requestedBy], references: [id])
-  approver               User?                @relation("AdvanceApprover", fields: [approvedBy], references: [id])
-  settlements            AdvanceSettlement[]
+  company     Company?            @relation(fields: [companyId], references: [id])
+  project     Project?            @relation(fields: [projectId], references: [id])
+  contract    Contract?           @relation(fields: [contractId], references: [id])
+  supplier    Supplier?           @relation(fields: [supplierId], references: [id])
+  employee    User?               @relation("AdvanceEmployee", fields: [employeeId], references: [id])
+  requester   User?               @relation("AdvanceRequester", fields: [requestedBy], references: [id])
+  approver    User?               @relation("AdvanceApprover", fields: [approvedBy], references: [id])
+  settlements AdvanceSettlement[]
 
   @@index([companyId])
   @@index([projectId])
@@ -1977,7 +1991,7 @@ model AdvanceSettlement {
   costRecordId           String?
   paymentId              String?
   contractId             String?
-  amount                 Decimal          @db.Decimal(18,2)
+  amount                 Decimal          @db.Decimal(18, 2)
   status                 SettlementStatus @default(DRAFT)
   settlementDate         DateTime         @default(now())
   postedJournalEntryId   String?
@@ -1991,11 +2005,11 @@ model AdvanceSettlement {
   deletedAt              DateTime?
   version                Int              @default(1)
 
-  advanceRequest         AdvanceRequest   @relation(fields: [advanceRequestId], references: [id])
-  company                Company?         @relation(fields: [companyId], references: [id])
-  invoice                Invoice?         @relation(fields: [invoiceId], references: [id])
-  creator                User?            @relation("SettlementCreator", fields: [createdBy], references: [id])
-  approver               User?            @relation("SettlementApprover", fields: [approvedBy], references: [id])
+  advanceRequest AdvanceRequest @relation(fields: [advanceRequestId], references: [id])
+  company        Company?       @relation(fields: [companyId], references: [id])
+  invoice        Invoice?       @relation(fields: [invoiceId], references: [id])
+  creator        User?          @relation("SettlementCreator", fields: [createdBy], references: [id])
+  approver       User?          @relation("SettlementApprover", fields: [approvedBy], references: [id])
 
   @@index([companyId])
   @@index([advanceRequestId])

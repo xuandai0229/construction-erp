@@ -142,15 +142,16 @@ export class RevenueService {
       const invoice = await tx.invoice.findUnique({ where: { id: data.invoiceId } });
       if (!invoice) throw new ApiError(404, "Không tìm thấy hóa đơn");
 
-      if (amount > round(Number(invoice.remainingAmount)) + 0.01) { 
-        throw new ApiError(400, `Số tiền thanh toán (${amount}) vượt quá số tiền còn lại (${round(Number(invoice.remainingAmount))})`);
+      // Validate remaining amount against active allocations
+      const allActiveAllocations = await tx.paymentAllocation.findMany({
+        where: { invoiceId: data.invoiceId, status: "ACTIVE", isReversed: false },
+      });
+      const activePaid = allActiveAllocations.reduce((sum, a) => sum + Number(a.amount), 0);
+      const activeRemaining = Math.max(0, Number(invoice.amount) - activePaid);
+
+      if (amount > round(activeRemaining) + 0.01) { 
+        throw new ApiError(400, `Số tiền thanh toán (${amount}) vượt quá số tiền còn lại (${round(activeRemaining)})`);
       }
-      
-      const newPaidAmount = round(Number(invoice.paidAmount) + amount);
-      const newRemainingAmount = Math.max(0, round(Number(invoice.amount) - newPaidAmount));
-      
-      let newStatus: InvoiceStatus = "PARTIAL";
-      if (newRemainingAmount <= 0) newStatus = "PAID";
 
       const payment = await tx.payment.create({
         data: {
@@ -164,14 +165,17 @@ export class RevenueService {
         },
       });
 
-      await tx.invoice.update({
-        where: { id: data.invoiceId, version: invoice.version }, // Optimistic Locking
+      // Create a DRAFT PaymentAllocation
+      await tx.paymentAllocation.create({
         data: {
-          paidAmount: newPaidAmount,
-          remainingAmount: newRemainingAmount,
-          status: newStatus,
-          version: { increment: 1 }
-        },
+          companyId: invoice.companyId || "",
+          paymentId: payment.id,
+          invoiceId: data.invoiceId,
+          contractId: invoice.contractId,
+          amount: amount,
+          status: "DRAFT",
+          createdBy: userId || "SYSTEM",
+        }
       });
 
       // Create a revenue record for project tracking
@@ -187,8 +191,6 @@ export class RevenueService {
         }
       });
 
-      // Ledger posting is intentionally delayed until approval.
-
       // Audit Logging
       await AuditService.log({
         userId,
@@ -197,7 +199,7 @@ export class RevenueService {
         entityId: payment.id,
         newData: payment,
         requestId,
-        reason: "Created AR payment in DRAFT state. Ledger posting is blocked until approval."
+        reason: "Created AR payment in DRAFT state. Ledger posting and allocation are blocked until approval."
       });
 
       await LoggerService.info(`PaymentCreated: ${payment.id} for Invoice ${invoice.id}`, { 
@@ -345,13 +347,25 @@ export class RevenueService {
         }
       });
 
-      // 1. Soft delete payments
+      // 1. Soft delete payments and reverse allocations
       const payments = await tx.payment.findMany({ where: { invoiceId: id, deletedAt: null } });
       for (const pay of payments) {
         await tx.payment.update({
           where: { id: pay.id },
           data: { deletedAt: new Date(), deletedById: userId }
         });
+        
+        await tx.paymentAllocation.updateMany({
+          where: { paymentId: pay.id, deletedAt: null },
+          data: {
+            deletedAt: new Date(),
+            status: "REVERSED",
+            isReversed: true,
+            reversalReason: "Invoice soft deletion",
+            reversedAt: new Date()
+          }
+        });
+
         await PostingEngine.reverseJournal(tx, pay.id, "PAYMENT", userId || "SYSTEM");
       }
 
@@ -475,7 +489,39 @@ export class RevenueService {
         data: { approvalStatus: status }
       });
 
-      if (status === "APPROVED") {
+      // Update Allocation Status
+      const allocationStatus = status === "APPROVED" ? "ACTIVE" : status === "REJECTED" ? "REJECTED" : "DRAFT";
+      await tx.paymentAllocation.updateMany({
+        where: { paymentId: id },
+        data: { status: allocationStatus }
+      });
+
+      if (status === "APPROVED" && existing.invoiceId) {
+        // Recalculate Invoice paidAmount/remainingAmount from ACTIVE allocations
+        const invoice = await tx.invoice.findUnique({ where: { id: existing.invoiceId } });
+        if (invoice) {
+          const allActiveAllocations = await tx.paymentAllocation.findMany({
+            where: { invoiceId: existing.invoiceId, status: "ACTIVE", isReversed: false },
+          });
+
+          const totalPaid = allActiveAllocations.reduce((sum, a) => sum + Number(a.amount), 0);
+          const totalRemaining = Math.max(0, Number(invoice.amount) - totalPaid);
+          
+          let invoiceStatus = "PARTIAL";
+          if (totalRemaining <= 0.01) invoiceStatus = "PAID";
+          else if (totalPaid <= 0.01) invoiceStatus = "SENT";
+
+          await tx.invoice.update({
+            where: { id: existing.invoiceId, version: invoice.version },
+            data: {
+              paidAmount: totalPaid,
+              remainingAmount: totalRemaining,
+              status: invoiceStatus as any,
+              version: { increment: 1 }
+            }
+          });
+        }
+
         await PostingEngine.postPayment(tx, {
           paymentId: updated.id,
           projectId: updated.projectId,
@@ -597,6 +643,45 @@ export class RevenueService {
           version: { increment: 1 }
         }
       });
+
+      // Restore PaymentAllocation
+      await tx.paymentAllocation.updateMany({
+        where: { paymentId: id, deletedAt: { not: null } },
+        data: {
+          deletedAt: null,
+          status: "ACTIVE",
+          isReversed: false,
+          reversalReason: null,
+          reversedAt: null
+        }
+      });
+
+      // Recalculate Invoice paidAmount/remainingAmount from ACTIVE allocations
+      if (payment.invoiceId) {
+        const invoice = await tx.invoice.findUnique({ where: { id: payment.invoiceId } });
+        if (invoice) {
+          const allActiveAllocations = await tx.paymentAllocation.findMany({
+            where: { invoiceId: payment.invoiceId, status: "ACTIVE", isReversed: false },
+          });
+
+          const totalPaid = allActiveAllocations.reduce((sum, a) => sum + Number(a.amount), 0);
+          const totalRemaining = Math.max(0, Number(invoice.amount) - totalPaid);
+          
+          let invoiceStatus = "PARTIAL";
+          if (totalRemaining <= 0.01) invoiceStatus = "PAID";
+          else if (totalPaid <= 0.01) invoiceStatus = "SENT";
+
+          await tx.invoice.update({
+            where: { id: payment.invoiceId, version: invoice.version },
+            data: {
+              paidAmount: totalPaid,
+              remainingAmount: totalRemaining,
+              status: invoiceStatus as any,
+              version: { increment: 1 }
+            }
+          });
+        }
+      }
 
       // 2. Repost to Ledger
       await PostingEngine.postPayment(tx, {
