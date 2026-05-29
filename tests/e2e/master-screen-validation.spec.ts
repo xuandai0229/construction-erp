@@ -26,25 +26,25 @@ test.describe('DASHBOARD Screen Validation', () => {
     await page.waitForTimeout(2000);
 
     await expect(page.locator('main').first()).toBeVisible({ timeout: 10000 });
-    await expect(page.locator('text=/TK 131|TK 331|BOQ/i').first()).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('text=/CÔNG NỢ PHẢI THU|CÔNG NỢ PHẢI TRẢ|TỔNG CHI PHÍ/i').first()).toBeVisible({ timeout: 10000 });
 
     await page.screenshot({ path: 'test-results/dashboard-loaded.png', fullPage: true });
   });
 
   test('should display accounting KPI labels', async () => {
-    await expect(page.locator('text=/TK 131/i').first()).toBeVisible({ timeout: 5000 });
-    await expect(page.locator('text=/TK 331/i').first()).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('text=/CÔNG NỢ PHẢI THU/i').first()).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('text=/CÔNG NỢ PHẢI TRẢ/i').first()).toBeVisible({ timeout: 5000 });
     console.log('Accounting KPI labels displayed');
   });
 
   test('should display budget overrun KPI', async () => {
-    const costElement = page.locator('text=/BOQ/i').first();
+    const costElement = page.locator('text=/TỔNG CHI PHÍ/i').first();
     await expect(costElement).toBeVisible({ timeout: 5000 });
     console.log('Budget overrun KPI displayed:', await costElement.textContent());
   });
 
   test('should display receivable information', async () => {
-    const recvElement = page.locator('text=/TK 131/i').first();
+    const recvElement = page.locator('text=/CÔNG NỢ PHẢI THU/i').first();
     await expect(recvElement).toBeVisible({ timeout: 5000 });
     console.log('Receivable KPI displayed:', await recvElement.textContent());
   });

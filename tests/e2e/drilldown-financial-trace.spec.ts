@@ -12,7 +12,7 @@ test.describe('DRILL-DOWN UX & FINANCIAL TRACE E2E SUITE', () => {
     await page.waitForLoadState('networkidle');
 
     // 2. Locate TK 131 Receivable KPI Metric
-    const receivableKpi = page.locator('text=CÔNG NỢ PHẢI THU (TK 131)');
+    const receivableKpi = page.locator('text=CÔNG NỢ PHẢI THU (AR)');
     await expect(receivableKpi).toBeVisible();
 
     // 3. Click the TK 131 metric card to trigger drill-down trace

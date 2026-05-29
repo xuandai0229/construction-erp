@@ -2,7 +2,7 @@ import { requireAccountingAccess } from "@/lib/route-security";
 import { handleApiError, successResponse } from "@/lib/api-error";
 import { ApprovalInboxService } from "@/services/approval-inbox.service";
 
-export async function GET(request: Request, props: { params: Promise<{ id: string }> }) {
+export async function GET(request: Request, props: { params: Promise<any> }) {
   try {
     const user = await requireAccountingAccess("READ");
     const { id } = await props.params;
