@@ -243,7 +243,7 @@ export default function Dashboard() {
                 subtitle="Các chứng từ đã cất nháp chưa hạch toán chính thức vào Sổ Cái"
                 headerActions={
                   <button
-                    onClick={() => router.push('/accounting')}
+                    onClick={() => router.push('/approvals')}
                     className="text-xs font-semibold text-blue-500 hover:underline"
                   >
                     Xem chi tiết

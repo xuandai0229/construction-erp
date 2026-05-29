@@ -9,6 +9,7 @@ const menuGroups = [
     title: 'TỔNG QUAN',
     items: [
       { id: 'dashboard', label: 'Bàn làm việc', href: '/', icon: 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
+      { id: 'approvals', label: 'Duyệt chứng từ', href: '/approvals', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
     ],
   },
   {
