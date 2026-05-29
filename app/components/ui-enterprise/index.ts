@@ -7,3 +7,5 @@ export * from "./EnterpriseToolbar";
 export * from "./EnterpriseFilterBar";
 export * from "./EnterpriseBadge";
 export * from "./EnterpriseEmptyState";
+export * from "./EnterpriseTabs";
+export * from "./EnterprisePagination";

@@ -8,6 +8,7 @@ import ProjectFilters from '@/app/components/projects/ProjectFilters';
 import ProjectTable from '@/app/components/projects/ProjectTable';
 import { Project } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
+import { EnterprisePagination } from '@/app/components/ui-enterprise';
 import AddProjectModal from '@/app/components/modals/AddProjectModal';
 
 import { useProjectsQuery } from '@/services/queries/useProjects';
@@ -84,50 +85,14 @@ export default function ProjectListScreen() {
           <ProjectTable projects={projects} totalGlobal={metadata?.total || 0} onEdit={setEditingProject} />
 
           {/* Enterprise Pagination System */}
-          <div className="flex items-center justify-between pt-8 border-t border-[var(--border)]">
-            <div className="flex flex-col gap-1">
-              <div className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] opacity-40">Hệ thống phân trang</div>
-              <div className="text-[12px] font-bold text-[var(--text-secondary)] flex items-center gap-2">
-                Tổng cộng <span className="text-[var(--text-primary)] text-[14px] font-bold tabular-nums">{metadata?.total || 0}</span> hồ sơ dự án
-                <span className="h-3 w-[1px] bg-[var(--border)] mx-1" />
-                Trang <span className="text-[var(--text-primary)] tabular-nums">{page}</span> / <span className="tabular-nums">{totalPages}</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setPage(p => Math.max(1, p - 1))}
-                disabled={page === 1 || isLoading}
-                className="h-9 px-5 flex items-center justify-center rounded-xl bg-[var(--secondary)] border border-[var(--border)] text-[11px] font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--text-muted)] transition-all disabled:opacity-20 disabled:cursor-not-allowed uppercase tracking-widest"
-              >
-                Trang trước
-              </button>
-              
-              <div className="flex items-center gap-1">
-                {Array.from({ length: totalPages }).map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setPage(i + 1)}
-                    className={`h-9 w-9 flex items-center justify-center rounded-xl text-[11px] font-bold transition-all ${
-                      page === i + 1 
-                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 scale-110' 
-                        : 'text-[var(--text-muted)] hover:bg-[var(--secondary)] hover:text-[var(--text-primary)]'
-                    }`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                onClick={() => setPage(p => p + 1)}
-                disabled={page >= totalPages || isLoading}
-                className="h-9 px-5 flex items-center justify-center rounded-xl bg-blue-600 text-white text-[11px] font-bold uppercase tracking-widest shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
-              >
-                Trang sau
-              </button>
-            </div>
-          </div>
+          <EnterprisePagination
+            page={page}
+            totalPages={totalPages}
+            totalItems={metadata?.total || 0}
+            onPageChange={setPage}
+            isLoading={isLoading}
+            className="pt-8 mt-2"
+          />
         </div>
       </main>
 

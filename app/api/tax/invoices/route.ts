@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { requireAuth, requireCompanyScope } from "@/lib/route-security";
+import { requirePermission, requireCompanyScope } from "@/lib/route-security";
 import { handleApiError } from "@/lib/api-error";
 import { TaxInvoiceService } from "@/services/tax-invoice.service";
 import { TaxInvoiceType, TaxInvoiceStatus } from "@/generated/prisma-client";
 
 export async function GET(request: Request) {
   try {
-    const user = await requireAuth();
+    const user = await requirePermission("INVOICE", "READ");
     if (!user.companyId) {
       return NextResponse.json({ success: false, error: "User has no company context" }, { status: 403 });
     }
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const user = await requireAuth();
+    const user = await requirePermission("INVOICE", "CREATE");
     if (!user.companyId) {
       return NextResponse.json({ success: false, error: "User has no company context" }, { status: 403 });
     }

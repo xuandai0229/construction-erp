@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireAuth } from "@/lib/route-security";
+import { requirePermission } from "@/lib/route-security";
 import { handleApiError } from "@/lib/api-error";
 import { TaxInvoiceService } from "@/services/tax-invoice.service";
 
@@ -9,7 +9,7 @@ interface RouteParams {
 
 export async function POST(request: Request, props: RouteParams) {
   try {
-    const user = await requireAuth();
+    const user = await requirePermission("INVOICE", "UPDATE");
     if (!user.companyId) {
       return NextResponse.json({ success: false, error: "User has no company context" }, { status: 403 });
     }

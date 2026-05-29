@@ -64,8 +64,7 @@ export default function Dashboard() {
 
       <main className={`erp-page-main flex-1 flex flex-col h-screen overflow-hidden ${sidebarCollapsed ? 'pl-[var(--erp-sidebar-collapsed)]' : 'pl-[var(--erp-sidebar-width)]'}`}>
         <Header data={{ project: { name: "Trung tâm Chỉ huy Kế toán (Financial Command Center)" } } as any} />
-
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin bg-zinc-50/30">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin">
           
           {/* 1. EXECUTIVE SUMMARY */}
           <EnterpriseSection title="TỔNG QUAN TÀI CHÍNH (EXECUTIVE SUMMARY)" subtitle="Chỉ tiêu tài chính thời gian thực từ Hệ thống Sổ cái & Phân bổ gốc">

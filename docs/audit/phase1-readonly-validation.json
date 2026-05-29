@@ -10,11 +10,11 @@
     "payments": 11,
     "revenues": 0,
     "contracts": 22,
-    "journalEntries": 41,
-    "transactionLines": 96
+    "journalEntries": 51,
+    "transactionLines": 128
   },
   "integrity": {
-    "sampledPostedJournalEntries": 35,
+    "sampledPostedJournalEntries": 42,
     "unbalancedPostedJournalEntries": 0,
     "orphanCostWbs": 0,
     "orphanInvoiceWbs": 0,

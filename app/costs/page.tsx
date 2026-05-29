@@ -140,7 +140,7 @@ export default function CostsPage() {
     {
       header: 'Nghiệp vụ',
       accessor: cost => (
-        <button onClick={() => setSelectedCost(cost)} className="h-7 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--secondary)] px-3 text-[10px] font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
+        <button onClick={() => setSelectedCost(cost)} className="erp-btn h-7 px-3 text-[10px] border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
           Chi tiết
         </button>
       ),

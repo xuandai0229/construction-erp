@@ -114,6 +114,8 @@ model Project {
   suppliers             ProjectSupplier[]
   CashBankDocument      CashBankDocument[]
   TaxInvoice            TaxInvoice[]
+  Warehouse             Warehouse[]
+  InventoryDocument     InventoryDocument[]
 
   @@index([status])
   @@index([ownerId])
@@ -171,6 +173,7 @@ model WBSItem {
   children           WBSItem[]           @relation("WBSChildren")
   project            Project             @relation(fields: [projectId], references: [id])
   TaxInvoice         TaxInvoice[]
+  InventoryDocument  InventoryDocument[]
 
   @@index([parentId])
   @@index([projectId, deletedAt])
@@ -502,6 +505,7 @@ model Contract {
   PaymentAllocation PaymentAllocation[]
   CashBankDocument  CashBankDocument[]
   TaxInvoice        TaxInvoice[]
+  InventoryDocument InventoryDocument[]
 
   @@unique([projectId, supplierId, contractCode])
   @@index([projectId])
@@ -1000,6 +1004,11 @@ model Company {
   PaymentAllocation  PaymentAllocation[]
   CashBankDocument   CashBankDocument[]
   TaxInvoice         TaxInvoice[]
+  MaterialItem       MaterialItem[]
+  Warehouse          Warehouse[]
+  InventoryDocument  InventoryDocument[]
+  InventoryMovement  InventoryMovement[]
+  InventoryBalance   InventoryBalance[]
 }
 
 model Branch {
@@ -1858,9 +1867,10 @@ model Supplier {
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
 
-  projects        ProjectSupplier[]
-  contracts       Contract[]
-  advanceRequests AdvanceRequest[]
+  projects          ProjectSupplier[]
+  contracts         Contract[]
+  advanceRequests   AdvanceRequest[]
+  InventoryDocument InventoryDocument[]
 }
 
 model ProjectSupplier {
@@ -2123,10 +2133,11 @@ model TaxInvoice {
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
 
-  company  Company?  @relation(fields: [companyId], references: [id])
-  project  Project?  @relation(fields: [projectId], references: [id])
-  wbs      WBSItem?  @relation(fields: [wbsId], references: [id])
-  contract Contract? @relation(fields: [contractId], references: [id])
+  company           Company?            @relation(fields: [companyId], references: [id])
+  project           Project?            @relation(fields: [projectId], references: [id])
+  wbs               WBSItem?            @relation(fields: [wbsId], references: [id])
+  contract          Contract?           @relation(fields: [contractId], references: [id])
+  inventoryDocument InventoryDocument[]
 
   @@unique([companyId, invoiceType, invoiceNumber, invoiceSeries, deletedAt])
   @@index([companyId])
@@ -2134,4 +2145,196 @@ model TaxInvoice {
   @@index([invoiceType])
   @@index([status])
   @@index([invoiceDate])
+}
+
+enum InventoryDocumentType {
+  PURCHASE_RECEIPT
+  RETURN_RECEIPT
+  ADJUSTMENT_IN
+  ISSUE_TO_PROJECT
+  ISSUE_TO_COST
+  TRANSFER_OUT
+  TRANSFER_IN
+  ADJUSTMENT_OUT
+}
+
+enum InventoryDocumentStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  POSTED
+  REVERSED
+  CANCELLED
+}
+
+enum InventoryValuationMethod {
+  MOVING_AVERAGE
+}
+
+model MaterialItem {
+  id                 String                  @id @default(uuid())
+  companyId          String
+  code               String
+  name               String
+  unit               String
+  group              String?
+  defaultWarehouseId String?
+  inventoryAccount   String                  @default("152")
+  expenseAccount     String                  @default("621")
+  vatRate            Decimal                 @default(10) @db.Decimal(5, 2)
+  isActive           Boolean                 @default(true)
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
+  deletedAt          DateTime?
+  company            Company                 @relation(fields: [companyId], references: [id])
+  lines              InventoryDocumentLine[]
+  movements          InventoryMovement[]
+  balances           InventoryBalance[]
+
+  @@unique([companyId, code, deletedAt])
+  @@index([companyId])
+  @@index([code])
+}
+
+model Warehouse {
+  id          String                  @id @default(uuid())
+  companyId   String
+  projectId   String?
+  code        String
+  name        String
+  address     String?
+  managerName String?
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  deletedAt   DateTime?
+  company     Company                 @relation(fields: [companyId], references: [id])
+  project     Project?                @relation(fields: [projectId], references: [id])
+  movements   InventoryMovement[]
+  balances    InventoryBalance[]
+  sourceLines InventoryDocumentLine[] @relation("SourceWarehouse")
+  targetLines InventoryDocumentLine[] @relation("TargetWarehouse")
+
+  @@unique([companyId, code, deletedAt])
+  @@index([companyId])
+  @@index([projectId])
+}
+
+model InventoryDocument {
+  id                     String                  @id @default(uuid())
+  companyId              String
+  projectId              String?
+  wbsId                  String?
+  documentType           InventoryDocumentType
+  documentNo             String
+  documentDate           DateTime                @default(now())
+  accountingDate         DateTime                @default(now())
+  status                 InventoryDocumentStatus @default(DRAFT)
+  supplierId             String?
+  contractId             String?
+  vatInvoiceId           String?
+  sourceWarehouseId      String?
+  targetWarehouseId      String?
+  partnerName            String?
+  description            String?
+  netAmount              Decimal                 @default(0) @db.Decimal(18, 2)
+  vatAmount              Decimal                 @default(0) @db.Decimal(18, 2)
+  grossAmount            Decimal                 @default(0) @db.Decimal(18, 2)
+  createdBy              String
+  approvedBy             String?
+  approvedAt             DateTime?
+  postedJournalEntryId   String?
+  reversalJournalEntryId String?
+  rejectReason           String?
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  deletedAt              DateTime?
+  company                Company                 @relation(fields: [companyId], references: [id])
+  project                Project?                @relation(fields: [projectId], references: [id])
+  wbs                    WBSItem?                @relation(fields: [wbsId], references: [id])
+  supplier               Supplier?               @relation(fields: [supplierId], references: [id])
+  contract               Contract?               @relation(fields: [contractId], references: [id])
+  taxInvoice             TaxInvoice?             @relation(fields: [vatInvoiceId], references: [id])
+  lines                  InventoryDocumentLine[]
+  movements              InventoryMovement[]
+
+  @@unique([companyId, documentType, documentNo, deletedAt])
+  @@index([companyId])
+  @@index([projectId])
+  @@index([documentType])
+  @@index([status])
+}
+
+model InventoryDocumentLine {
+  id                  String              @id @default(uuid())
+  inventoryDocumentId String
+  materialItemId      String
+  quantity            Decimal             @db.Decimal(18, 4)
+  unitCost            Decimal             @db.Decimal(18, 2)
+  amount              Decimal             @db.Decimal(18, 2)
+  vatRate             Decimal?            @db.Decimal(5, 2)
+  vatAmount           Decimal?            @db.Decimal(18, 2)
+  grossAmount         Decimal?            @db.Decimal(18, 2)
+  debitAccount        String?
+  creditAccount       String?
+  sourceWarehouseId   String?
+  targetWarehouseId   String?
+  projectId           String?
+  wbsId               String?
+  document            InventoryDocument   @relation(fields: [inventoryDocumentId], references: [id])
+  material            MaterialItem        @relation(fields: [materialItemId], references: [id])
+  sourceWarehouse     Warehouse?          @relation("SourceWarehouse", fields: [sourceWarehouseId], references: [id])
+  targetWarehouse     Warehouse?          @relation("TargetWarehouse", fields: [targetWarehouseId], references: [id])
+  movements           InventoryMovement[]
+
+  @@index([inventoryDocumentId])
+  @@index([materialItemId])
+}
+
+model InventoryMovement {
+  id                      String                @id @default(uuid())
+  companyId               String
+  inventoryDocumentId     String
+  inventoryDocumentLineId String
+  materialItemId          String
+  warehouseId             String
+  projectId               String?
+  wbsId                   String?
+  movementDate            DateTime
+  documentType            InventoryDocumentType
+  documentNo              String
+  quantity                Decimal               @db.Decimal(18, 4)
+  unitCost                Decimal               @db.Decimal(18, 2)
+  amount                  Decimal               @db.Decimal(18, 2)
+  createdAt               DateTime              @default(now())
+  company                 Company               @relation(fields: [companyId], references: [id])
+  document                InventoryDocument     @relation(fields: [inventoryDocumentId], references: [id])
+  line                    InventoryDocumentLine @relation(fields: [inventoryDocumentLineId], references: [id])
+  material                MaterialItem          @relation(fields: [materialItemId], references: [id])
+  warehouse               Warehouse             @relation(fields: [warehouseId], references: [id])
+
+  @@index([companyId])
+  @@index([warehouseId])
+  @@index([materialItemId])
+  @@index([projectId])
+}
+
+model InventoryBalance {
+  id             String       @id @default(uuid())
+  companyId      String
+  warehouseId    String
+  materialItemId String
+  projectId      String?
+  wbsId          String?
+  quantity       Decimal      @default(0) @db.Decimal(18, 4)
+  totalCost      Decimal      @default(0) @db.Decimal(18, 2)
+  avgCost        Decimal      @default(0) @db.Decimal(18, 2)
+  updatedAt      DateTime     @updatedAt
+  company        Company      @relation(fields: [companyId], references: [id])
+  warehouse      Warehouse    @relation(fields: [warehouseId], references: [id])
+  material       MaterialItem @relation(fields: [materialItemId], references: [id])
+
+  @@unique([warehouseId, materialItemId, projectId, wbsId])
+  @@index([companyId])
+  @@index([warehouseId])
+  @@index([materialItemId])
 }

@@ -1419,6 +1419,116 @@ exports.Prisma.TaxInvoiceScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.MaterialItemScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  code: 'code',
+  name: 'name',
+  unit: 'unit',
+  group: 'group',
+  defaultWarehouseId: 'defaultWarehouseId',
+  inventoryAccount: 'inventoryAccount',
+  expenseAccount: 'expenseAccount',
+  vatRate: 'vatRate',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.WarehouseScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  projectId: 'projectId',
+  code: 'code',
+  name: 'name',
+  address: 'address',
+  managerName: 'managerName',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.InventoryDocumentScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  projectId: 'projectId',
+  wbsId: 'wbsId',
+  documentType: 'documentType',
+  documentNo: 'documentNo',
+  documentDate: 'documentDate',
+  accountingDate: 'accountingDate',
+  status: 'status',
+  supplierId: 'supplierId',
+  contractId: 'contractId',
+  vatInvoiceId: 'vatInvoiceId',
+  sourceWarehouseId: 'sourceWarehouseId',
+  targetWarehouseId: 'targetWarehouseId',
+  partnerName: 'partnerName',
+  description: 'description',
+  netAmount: 'netAmount',
+  vatAmount: 'vatAmount',
+  grossAmount: 'grossAmount',
+  createdBy: 'createdBy',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  postedJournalEntryId: 'postedJournalEntryId',
+  reversalJournalEntryId: 'reversalJournalEntryId',
+  rejectReason: 'rejectReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.InventoryDocumentLineScalarFieldEnum = {
+  id: 'id',
+  inventoryDocumentId: 'inventoryDocumentId',
+  materialItemId: 'materialItemId',
+  quantity: 'quantity',
+  unitCost: 'unitCost',
+  amount: 'amount',
+  vatRate: 'vatRate',
+  vatAmount: 'vatAmount',
+  grossAmount: 'grossAmount',
+  debitAccount: 'debitAccount',
+  creditAccount: 'creditAccount',
+  sourceWarehouseId: 'sourceWarehouseId',
+  targetWarehouseId: 'targetWarehouseId',
+  projectId: 'projectId',
+  wbsId: 'wbsId'
+};
+
+exports.Prisma.InventoryMovementScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  inventoryDocumentId: 'inventoryDocumentId',
+  inventoryDocumentLineId: 'inventoryDocumentLineId',
+  materialItemId: 'materialItemId',
+  warehouseId: 'warehouseId',
+  projectId: 'projectId',
+  wbsId: 'wbsId',
+  movementDate: 'movementDate',
+  documentType: 'documentType',
+  documentNo: 'documentNo',
+  quantity: 'quantity',
+  unitCost: 'unitCost',
+  amount: 'amount',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.InventoryBalanceScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  warehouseId: 'warehouseId',
+  materialItemId: 'materialItemId',
+  projectId: 'projectId',
+  wbsId: 'wbsId',
+  quantity: 'quantity',
+  totalCost: 'totalCost',
+  avgCost: 'avgCost',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1691,6 +1801,26 @@ exports.TaxInvoiceStatus = exports.$Enums.TaxInvoiceStatus = {
   REVERSED: 'REVERSED'
 };
 
+exports.InventoryDocumentType = exports.$Enums.InventoryDocumentType = {
+  PURCHASE_RECEIPT: 'PURCHASE_RECEIPT',
+  RETURN_RECEIPT: 'RETURN_RECEIPT',
+  ADJUSTMENT_IN: 'ADJUSTMENT_IN',
+  ISSUE_TO_PROJECT: 'ISSUE_TO_PROJECT',
+  ISSUE_TO_COST: 'ISSUE_TO_COST',
+  TRANSFER_OUT: 'TRANSFER_OUT',
+  TRANSFER_IN: 'TRANSFER_IN',
+  ADJUSTMENT_OUT: 'ADJUSTMENT_OUT'
+};
+
+exports.InventoryDocumentStatus = exports.$Enums.InventoryDocumentStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  APPROVED: 'APPROVED',
+  POSTED: 'POSTED',
+  REVERSED: 'REVERSED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Category: 'Category',
@@ -1782,7 +1912,13 @@ exports.Prisma.ModelName = {
   AdvanceRequest: 'AdvanceRequest',
   AdvanceSettlement: 'AdvanceSettlement',
   CashBankDocument: 'CashBankDocument',
-  TaxInvoice: 'TaxInvoice'
+  TaxInvoice: 'TaxInvoice',
+  MaterialItem: 'MaterialItem',
+  Warehouse: 'Warehouse',
+  InventoryDocument: 'InventoryDocument',
+  InventoryDocumentLine: 'InventoryDocumentLine',
+  InventoryMovement: 'InventoryMovement',
+  InventoryBalance: 'InventoryBalance'
 };
 
 /**

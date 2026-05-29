@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-29T07:32:42.457Z",
+  "generatedAt": "2026-05-29T08:13:04.547Z",
   "results": [
     {
       "test": "Creator cannot self-approve own payment",
@@ -24,7 +24,7 @@
     {
       "test": "APPROVED payment posts ledger once",
       "result": "PASS",
-      "notes": "Posted journal 2e5c2b25-0b4a-4335-9cc7-61cb8ae71d8b."
+      "notes": "Posted journal 796d35e1-f819-4818-904a-d3a57df2b109."
     },
     {
       "test": "Posted payment cannot post again",

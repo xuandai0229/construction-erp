@@ -1,3 +1,37 @@
+-- CreateTable for Supplier
+CREATE TABLE "Supplier" (
+    "id" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "Supplier_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Supplier_code_key" ON "Supplier"("code");
+
+-- CreateTable for ProjectSupplier
+CREATE TABLE "ProjectSupplier" (
+    "id" TEXT NOT NULL,
+    "projectId" TEXT NOT NULL,
+    "supplierId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ProjectSupplier_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ProjectSupplier_projectId_supplierId_key" ON "ProjectSupplier"("projectId", "supplierId");
+
+-- AddForeignKey
+ALTER TABLE "ProjectSupplier" ADD CONSTRAINT "ProjectSupplier_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ProjectSupplier" ADD CONSTRAINT "ProjectSupplier_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
 -- CreateEnum
 CREATE TYPE "AdvanceRecipientType" AS ENUM ('EMPLOYEE', 'VENDOR');
 

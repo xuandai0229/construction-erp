@@ -96,16 +96,16 @@ export default function DebtPage() {
       accessor: invoice => (
         <div className="flex items-center justify-center gap-2">
           {Number(invoice.remainingAmount || 0) > 0 && (
-            <button onClick={() => setSelectedInvoice(invoice.id)} disabled={!!deletingId} className="h-7 rounded-[var(--radius-sm)] bg-emerald-600 px-3 text-[10px] font-bold text-white hover:bg-emerald-500 disabled:opacity-50">
+            <button onClick={() => setSelectedInvoice(invoice.id)} disabled={!!deletingId} className="erp-btn h-7 px-2 text-[10px] bg-emerald-600 text-white hover:bg-emerald-500 disabled:opacity-50">
               Thu tiền
             </button>
           )}
-          <button onClick={() => setHistoryInvoice(invoice.id)} className="h-7 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--secondary)] px-3 text-[10px] font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
+          <button onClick={() => setHistoryInvoice(invoice.id)} className="erp-btn h-7 px-2 text-[10px] border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
             Lịch sử
           </button>
           <button
             onClick={() => setTraceInvoiceId(invoice.id)}
-            className="h-7 rounded-[var(--radius-sm)] border border-blue-500/20 bg-blue-500/10 px-3 text-[10px] font-bold text-blue-500 hover:bg-blue-500/20"
+            className="erp-btn h-7 px-2 text-[10px] border border-blue-500/20 bg-blue-500/10 text-blue-500 hover:bg-blue-500/20"
           >
             Truy vết
           </button>
@@ -153,7 +153,7 @@ export default function DebtPage() {
     {
       header: 'Nghiệp vụ',
       accessor: cost => (
-        <button onClick={() => setSelectedCost(cost)} className="h-7 rounded-[var(--radius-sm)] bg-blue-600 px-3 text-[10px] font-bold text-white hover:bg-blue-500">
+        <button onClick={() => setSelectedCost(cost)} className="erp-btn h-7 px-3 text-[10px] bg-blue-600 text-white hover:bg-blue-500">
           Chi tiền
         </button>
       ),
