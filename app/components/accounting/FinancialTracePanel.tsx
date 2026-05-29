@@ -10,7 +10,7 @@ import { formatVnd } from '@/app/components/dashboard-data';
 import { EnterpriseCard } from '@/app/components/ui-enterprise';
 
 interface FinancialTracePanelProps {
-  type: 'contract' | 'invoice' | 'payment' | 'advance';
+  type: 'contract' | 'invoice' | 'payment' | 'advance' | 'cost';
   id: string;
   isOpen: boolean;
   onClose: () => void;
@@ -39,6 +39,8 @@ export default function FinancialTracePanel({ type, id, isOpen, onClose }: Finan
           url = `/api/contracts/${id}/financial-trace`;
         } else if (type === 'advance') {
           url = `/api/advances/${id}/financial-trace`;
+        } else if (type === 'cost') {
+          url = `/api/costs/${id}/financial-trace`;
         }
 
         const res = await fetch(url);

@@ -75,7 +75,8 @@ export default function Dashboard() {
               onDrillDown={(type) => {
                 setTraceType(type);
                 setTraceId(""); // Trigger Financial Trace Panel
-              }} 
+              }}
+              onNavigateApprovals={() => router.push('/approvals')}
             />
           </EnterpriseSection>
 

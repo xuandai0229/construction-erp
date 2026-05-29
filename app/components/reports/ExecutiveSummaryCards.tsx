@@ -8,9 +8,10 @@ interface ExecutiveSummaryProps {
   data: any;
   isLoading: boolean;
   onDrillDown: (type: "invoice" | "advance" | "cost") => void;
+  onNavigateApprovals?: () => void;
 }
 
-export function ExecutiveSummaryCards({ data, isLoading, onDrillDown }: ExecutiveSummaryProps) {
+export function ExecutiveSummaryCards({ data, isLoading, onDrillDown, onNavigateApprovals }: ExecutiveSummaryProps) {
   const stats = data || {
     revenue: 0,
     cost: 0,
@@ -78,6 +79,7 @@ export function ExecutiveSummaryCards({ data, isLoading, onDrillDown }: Executiv
         value={stats.pendingApprovals.toString()}
         description="Số lượng chứng từ đang chờ phê duyệt"
         isLoading={isLoading}
+        onClick={onNavigateApprovals}
       />
     </div>
   );

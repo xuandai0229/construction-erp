@@ -1363,6 +1363,34 @@ exports.Prisma.AdvanceSettlementScalarFieldEnum = {
   version: 'version'
 };
 
+exports.Prisma.CashBankDocumentScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  projectId: 'projectId',
+  contractId: 'contractId',
+  documentType: 'documentType',
+  documentNo: 'documentNo',
+  documentDate: 'documentDate',
+  accountingDate: 'accountingDate',
+  amount: 'amount',
+  currency: 'currency',
+  description: 'description',
+  partnerName: 'partnerName',
+  paymentMethod: 'paymentMethod',
+  debitAccountId: 'debitAccountId',
+  creditAccountId: 'creditAccountId',
+  status: 'status',
+  createdBy: 'createdBy',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  postedJournalEntryId: 'postedJournalEntryId',
+  isReversed: 'isReversed',
+  reversalRef: 'reversalRef',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1605,6 +1633,23 @@ exports.SettlementStatus = exports.$Enums.SettlementStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.CashBankDocumentType = exports.$Enums.CashBankDocumentType = {
+  CASH_RECEIPT: 'CASH_RECEIPT',
+  CASH_PAYMENT: 'CASH_PAYMENT',
+  BANK_TRANSFER: 'BANK_TRANSFER',
+  BANK_CREDIT_NOTICE: 'BANK_CREDIT_NOTICE',
+  BANK_DEBIT_NOTICE: 'BANK_DEBIT_NOTICE'
+};
+
+exports.CashBankDocumentStatus = exports.$Enums.CashBankDocumentStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  APPROVED: 'APPROVED',
+  POSTED: 'POSTED',
+  REVERSED: 'REVERSED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Category: 'Category',
@@ -1694,7 +1739,8 @@ exports.Prisma.ModelName = {
   PaymentPlan: 'PaymentPlan',
   DocumentChecklist: 'DocumentChecklist',
   AdvanceRequest: 'AdvanceRequest',
-  AdvanceSettlement: 'AdvanceSettlement'
+  AdvanceSettlement: 'AdvanceSettlement',
+  CashBankDocument: 'CashBankDocument'
 };
 
 /**

@@ -17,6 +17,7 @@ const apiRoot = path.join(root, "app", "api");
 const publicAllowList = new Set([
   "app/api/auth/session/route.ts",
   "app/api/health/route.ts",
+  "app/api/readiness/route.ts",
 ]);
 
 const authPatterns = [

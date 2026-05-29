@@ -112,6 +112,7 @@ model Project {
   balanceSheetSnapshots BalanceSheetSnapshot[]
   profitLossSnapshots   ProfitLossSnapshot[]
   suppliers             ProjectSupplier[]
+  CashBankDocument      CashBankDocument[]
 
   @@index([status])
   @@index([ownerId])
@@ -322,19 +323,21 @@ model Payment {
 }
 
 model LedgerAccount {
-  id          String            @id @default(uuid())
-  code        String            @unique
-  name        String
-  type        AccountType
-  description String?
-  isActive    Boolean           @default(true)
-  parentId    String?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  deletedAt   DateTime?
-  lines       TransactionLine[]
-  parent      LedgerAccount?    @relation("AccountHierarchy", fields: [parentId], references: [id])
-  children    LedgerAccount[]   @relation("AccountHierarchy")
+  id                  String             @id @default(uuid())
+  code                String             @unique
+  name                String
+  type                AccountType
+  description         String?
+  isActive            Boolean            @default(true)
+  parentId            String?
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  deletedAt           DateTime?
+  lines               TransactionLine[]
+  parent              LedgerAccount?     @relation("AccountHierarchy", fields: [parentId], references: [id])
+  children            LedgerAccount[]    @relation("AccountHierarchy")
+  debitCashDocuments  CashBankDocument[] @relation("DebitAccount")
+  creditCashDocuments CashBankDocument[] @relation("CreditAccount")
 
   @@index([code])
   @@index([type])
@@ -495,6 +498,7 @@ model Contract {
   advanceRequests   AdvanceRequest[]
   documentChecklist DocumentChecklist[]
   PaymentAllocation PaymentAllocation[]
+  CashBankDocument  CashBankDocument[]
 
   @@unique([projectId, supplierId, contractCode])
   @@index([projectId])
@@ -991,6 +995,7 @@ model Company {
   users              User[]
   voucherSequences   VoucherSequence[]
   PaymentAllocation  PaymentAllocation[]
+  CashBankDocument   CashBankDocument[]
 }
 
 model Branch {
@@ -2014,5 +2019,62 @@ model AdvanceSettlement {
   @@index([companyId])
   @@index([advanceRequestId])
   @@index([invoiceId])
+  @@index([status])
+}
+
+enum CashBankDocumentType {
+  CASH_RECEIPT
+  CASH_PAYMENT
+  BANK_TRANSFER
+  BANK_CREDIT_NOTICE
+  BANK_DEBIT_NOTICE
+}
+
+enum CashBankDocumentStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  POSTED
+  REVERSED
+  CANCELLED
+}
+
+model CashBankDocument {
+  id                   String                 @id @default(uuid())
+  companyId            String?
+  projectId            String?
+  contractId           String?
+  documentType         CashBankDocumentType
+  documentNo           String
+  documentDate         DateTime               @default(now())
+  accountingDate       DateTime               @default(now())
+  amount               Decimal                @db.Decimal(18, 2)
+  currency             String                 @default("VND")
+  description          String
+  partnerName          String?
+  paymentMethod        String // CASH, BANK
+  debitAccountId       String
+  creditAccountId      String
+  status               CashBankDocumentStatus @default(DRAFT)
+  createdBy            String
+  approvedBy           String?
+  approvedAt           DateTime?
+  postedJournalEntryId String?
+  isReversed           Boolean                @default(false)
+  reversalRef          String?
+  deletedAt            DateTime?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+
+  company       Company?      @relation(fields: [companyId], references: [id])
+  project       Project?      @relation(fields: [projectId], references: [id])
+  contract      Contract?     @relation(fields: [contractId], references: [id])
+  debitAccount  LedgerAccount @relation("DebitAccount", fields: [debitAccountId], references: [id])
+  creditAccount LedgerAccount @relation("CreditAccount", fields: [creditAccountId], references: [id])
+
+  @@unique([companyId, documentType, documentNo, deletedAt])
+  @@index([companyId])
+  @@index([projectId])
+  @@index([documentType])
   @@index([status])
 }
