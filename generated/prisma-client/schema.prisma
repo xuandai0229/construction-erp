@@ -113,6 +113,7 @@ model Project {
   profitLossSnapshots   ProfitLossSnapshot[]
   suppliers             ProjectSupplier[]
   CashBankDocument      CashBankDocument[]
+  TaxInvoice            TaxInvoice[]
 
   @@index([status])
   @@index([ownerId])
@@ -169,6 +170,7 @@ model WBSItem {
   parent             WBSItem?            @relation("WBSChildren", fields: [parentId], references: [id])
   children           WBSItem[]           @relation("WBSChildren")
   project            Project             @relation(fields: [projectId], references: [id])
+  TaxInvoice         TaxInvoice[]
 
   @@index([parentId])
   @@index([projectId, deletedAt])
@@ -499,6 +501,7 @@ model Contract {
   documentChecklist DocumentChecklist[]
   PaymentAllocation PaymentAllocation[]
   CashBankDocument  CashBankDocument[]
+  TaxInvoice        TaxInvoice[]
 
   @@unique([projectId, supplierId, contractCode])
   @@index([projectId])
@@ -996,6 +999,7 @@ model Company {
   voucherSequences   VoucherSequence[]
   PaymentAllocation  PaymentAllocation[]
   CashBankDocument   CashBankDocument[]
+  TaxInvoice         TaxInvoice[]
 }
 
 model Branch {
@@ -2077,4 +2081,57 @@ model CashBankDocument {
   @@index([projectId])
   @@index([documentType])
   @@index([status])
+}
+
+enum TaxInvoiceType {
+  OUTBOUND
+  INBOUND
+}
+
+enum TaxInvoiceStatus {
+  DRAFT
+  ISSUED
+  POSTED
+  CANCELLED
+  REVERSED
+}
+
+model TaxInvoice {
+  id                   String           @id @default(uuid())
+  companyId            String?
+  projectId            String?
+  contractId           String?
+  wbsId                String?
+  invoiceType          TaxInvoiceType
+  invoiceNumber        String
+  invoiceSeries        String
+  invoiceTemplate      String           @default("1C26TBB")
+  invoiceDate          DateTime         @default(now())
+  partnerName          String
+  partnerTaxCode       String
+  partnerAddress       String?
+  netAmount            Decimal          @db.Decimal(18, 2)
+  vatRate              Decimal          @default(10) @db.Decimal(5, 2)
+  vatAmount            Decimal          @db.Decimal(18, 2)
+  grossAmount          Decimal          @db.Decimal(18, 2)
+  status               TaxInvoiceStatus @default(DRAFT)
+  description          String?
+  sourceType           String?
+  sourceId             String?
+  postedJournalEntryId String?
+  deletedAt            DateTime?
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  company  Company?  @relation(fields: [companyId], references: [id])
+  project  Project?  @relation(fields: [projectId], references: [id])
+  wbs      WBSItem?  @relation(fields: [wbsId], references: [id])
+  contract Contract? @relation(fields: [contractId], references: [id])
+
+  @@unique([companyId, invoiceType, invoiceNumber, invoiceSeries, deletedAt])
+  @@index([companyId])
+  @@index([projectId])
+  @@index([invoiceType])
+  @@index([status])
+  @@index([invoiceDate])
 }

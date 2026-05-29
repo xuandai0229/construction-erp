@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auditSecurityAccess, requireAdmin } from "@/lib/route-security";
+import { handleApiError } from "@/lib/api-error";
 
 export async function GET() {
   try {
@@ -40,7 +41,7 @@ export async function GET() {
       success: true,
       data: alerts
     });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  } catch (error) {
+    return handleApiError(error);
   }
 }

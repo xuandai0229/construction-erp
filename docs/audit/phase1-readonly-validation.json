@@ -1,20 +1,20 @@
 {
   "mode": "read-only",
   "counts": {
-    "users": 2280,
-    "companies": 47,
-    "projects": 19,
+    "users": 2281,
+    "companies": 49,
+    "projects": 20,
     "wbs": 10,
     "costs": 14,
     "invoices": 14,
     "payments": 11,
     "revenues": 0,
     "contracts": 22,
-    "journalEntries": 27,
-    "transactionLines": 68
+    "journalEntries": 41,
+    "transactionLines": 96
   },
   "integrity": {
-    "sampledPostedJournalEntries": 26,
+    "sampledPostedJournalEntries": 35,
     "unbalancedPostedJournalEntries": 0,
     "orphanCostWbs": 0,
     "orphanInvoiceWbs": 0,

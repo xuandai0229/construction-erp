@@ -1391,6 +1391,34 @@ exports.Prisma.CashBankDocumentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.TaxInvoiceScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  projectId: 'projectId',
+  contractId: 'contractId',
+  wbsId: 'wbsId',
+  invoiceType: 'invoiceType',
+  invoiceNumber: 'invoiceNumber',
+  invoiceSeries: 'invoiceSeries',
+  invoiceTemplate: 'invoiceTemplate',
+  invoiceDate: 'invoiceDate',
+  partnerName: 'partnerName',
+  partnerTaxCode: 'partnerTaxCode',
+  partnerAddress: 'partnerAddress',
+  netAmount: 'netAmount',
+  vatRate: 'vatRate',
+  vatAmount: 'vatAmount',
+  grossAmount: 'grossAmount',
+  status: 'status',
+  description: 'description',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  postedJournalEntryId: 'postedJournalEntryId',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1650,6 +1678,19 @@ exports.CashBankDocumentStatus = exports.$Enums.CashBankDocumentStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.TaxInvoiceType = exports.$Enums.TaxInvoiceType = {
+  OUTBOUND: 'OUTBOUND',
+  INBOUND: 'INBOUND'
+};
+
+exports.TaxInvoiceStatus = exports.$Enums.TaxInvoiceStatus = {
+  DRAFT: 'DRAFT',
+  ISSUED: 'ISSUED',
+  POSTED: 'POSTED',
+  CANCELLED: 'CANCELLED',
+  REVERSED: 'REVERSED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Category: 'Category',
@@ -1740,7 +1781,8 @@ exports.Prisma.ModelName = {
   DocumentChecklist: 'DocumentChecklist',
   AdvanceRequest: 'AdvanceRequest',
   AdvanceSettlement: 'AdvanceSettlement',
-  CashBankDocument: 'CashBankDocument'
+  CashBankDocument: 'CashBankDocument',
+  TaxInvoice: 'TaxInvoice'
 };
 
 /**

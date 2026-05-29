@@ -17,6 +17,7 @@ const menuGroups = [
     items: [
       { id: 'vouchers', label: 'Chứng từ', href: '/accounting', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
       { id: 'cash-bank', label: 'Quỹ & Ngân hàng', href: '/cash-bank', icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z' },
+      { id: 'tax-invoice', label: 'Thuế VAT', href: '/tax', icon: 'M9 14l6-6m-5.5.5h.01m5.99 5h.01M3 21h18a2 2 0 002-2V5a2 2 0 00-2-2H3a2 2 0 00-2 2v14a2 2 0 002 2z' },
       { id: 'general-journal', label: 'Nhật ký chung', href: '/reports?tab=general-journal', icon: 'M8 7v12m0 0l-3-3m3 3l3-3M16 17V5m0 0l-3 3m3-3l3 3' },
       { id: 'ledger', label: 'Sổ cái', href: '/reports?tab=ledger', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
       { id: 'trial-balance', label: 'Cân đối phát sinh', href: '/reports?tab=trial-balance', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
