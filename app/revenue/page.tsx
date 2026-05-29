@@ -12,7 +12,10 @@ import { useERPStore } from '@/store/erpStore';
 import { useRevenuesQuery, useUpdateRevenueMutation } from '@/services/queries/useRevenues';
 import { useWBSQuery } from '@/services/queries/useWBS';
 
+import FinancialTracePanel from '@/app/components/accounting/FinancialTracePanel';
+
 export default function RevenueListPage() {
+  const [traceInvoiceId, setTraceInvoiceId] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const currentProjectId = useERPStore(state => state.currentProjectId);
@@ -97,6 +100,21 @@ export default function RevenueListPage() {
       align: 'center',
       width: '160px',
     },
+    {
+      header: 'Truy vết',
+      accessor: row => row.invoiceId ? (
+        <button
+          onClick={() => setTraceInvoiceId(row.invoiceId)}
+          className="text-[11px] font-black uppercase tracking-wider text-blue-500 underline underline-offset-2 transition-colors hover:text-blue-400"
+        >
+          Xem truy vết
+        </button>
+      ) : (
+        <span className="text-[10px] text-[var(--text-tertiary)] italic">Không có hóa đơn</span>
+      ),
+      align: 'center',
+      width: '140px',
+    },
   ];
 
   return (
@@ -154,6 +172,12 @@ export default function RevenueListPage() {
               </EnterpriseCard>
             </EnterpriseSection>
           </div>
+          <FinancialTracePanel
+            type="invoice"
+            id={traceInvoiceId || ""}
+            isOpen={traceInvoiceId !== null}
+            onClose={() => setTraceInvoiceId(null)}
+          />
         </main>
       </div>
     </>

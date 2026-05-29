@@ -18,7 +18,11 @@ import {
   Column
 } from "./ui-enterprise";
 
+import FinancialTracePanel from "./accounting/FinancialTracePanel";
+
 export default function Dashboard() {
+  const [traceType, setTraceType] = useState<'contract' | 'invoice' | 'payment' | 'advance'>('invoice');
+  const [traceId, setTraceId] = useState<string | null>(null);
   const { currentProjectId, sidebarCollapsed } = useERPStore();
   const router = useRouter();
 
@@ -40,6 +44,25 @@ export default function Dashboard() {
       const res = await fetch(`/api/dashboard/stats?projectId=${currentProjectId || ""}`);
       const json = await res.json();
       return json.success ? json.data : null;
+    }
+  });
+
+  // 2.5. Lấy mẫu chứng từ để hỗ trợ click drill-down từ KPI
+  const { data: firstInvoice } = useQuery({
+    queryKey: ['sample-invoice-trace', currentProjectId],
+    queryFn: async () => {
+      const res = await fetch(`/api/invoices?projectId=${currentProjectId || ""}`);
+      const json = await res.json();
+      return json.success && json.data.length > 0 ? json.data[0] : null;
+    }
+  });
+
+  const { data: firstAdvance } = useQuery({
+    queryKey: ['sample-advance-trace', currentProjectId],
+    queryFn: async () => {
+      const res = await fetch(`/api/advances?projectId=${currentProjectId || ""}`);
+      const json = await res.json();
+      return json.success && json.data.length > 0 ? json.data[0] : null;
     }
   });
 
@@ -177,6 +200,10 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <EnterpriseMetric
                 title="CÔNG NỢ PHẢI THU (TK 131)"
+                onClick={() => {
+                  setTraceType('invoice');
+                  setTraceId(firstInvoice?.id || 'sample-invoice-id');
+                }}
                 value={formatVnd(stats.receivableOutstanding)}
                 description="Tổng tiền khách hàng nợ theo hợp đồng xây dựng"
                 isLoading={isLoading}
@@ -189,6 +216,10 @@ export default function Dashboard() {
               />
               <EnterpriseMetric
                 title="TẠM ỨNG CHƯA QUYẾT TOÁN (TK 141)"
+                onClick={() => {
+                  setTraceType('advance');
+                  setTraceId(firstAdvance?.id || 'sample-advance-id');
+                }}
                 value={formatVnd(stats.outstandingAdvances)}
                 description="Tạm ứng mua vật tư công trình chưa làm thủ tục hoàn ứng"
                 isLoading={isLoading}
@@ -313,6 +344,12 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
+      <FinancialTracePanel
+        type={traceType}
+        id={traceId || ""}
+        isOpen={traceId !== null}
+        onClose={() => setTraceId(null)}
+      />
     </div>
   );
 }

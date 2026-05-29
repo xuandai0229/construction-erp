@@ -12,6 +12,7 @@ interface EnterpriseMetricProps {
   };
   isLoading?: boolean;
   className?: string;
+  onClick?: () => void;
 }
 
 export function EnterpriseMetric({
@@ -20,11 +21,15 @@ export function EnterpriseMetric({
   description,
   trend,
   isLoading = false,
-  className = ""
+  className = "",
+  onClick
 }: EnterpriseMetricProps) {
   return (
     <div
-      className={`border border-[var(--border)] rounded-[var(--radius-sm)] bg-[var(--card)] p-5 shadow-[var(--erp-card-shadow)] select-none flex flex-col space-y-2 min-h-[96px] ${className}`}
+      onClick={onClick}
+      className={`border border-[var(--border)] rounded-[var(--radius-sm)] bg-[var(--card)] p-5 shadow-[var(--erp-card-shadow)] select-none flex flex-col space-y-2 min-h-[96px] ${
+        onClick ? "cursor-pointer hover:border-[var(--primary)]/60 hover:bg-[var(--card)]/90 transition-all duration-150 active:scale-[0.98]" : ""
+      } ${className}`}
     >
       <span className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider leading-none">{title}</span>
       {isLoading ? (

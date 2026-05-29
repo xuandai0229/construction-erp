@@ -13,7 +13,10 @@ import { useERPStore } from '@/store/erpStore';
 import { useCostsQuery } from '@/services/queries/useCosts';
 import { useDeleteInvoiceMutation, useInvoicesQuery } from '@/services/queries/useDebts';
 
+import FinancialTracePanel from '@/app/components/accounting/FinancialTracePanel';
+
 export default function DebtPage() {
+  const [traceInvoiceId, setTraceInvoiceId] = useState<string | null>(null);
   const currentProjectId = useERPStore(state => state.currentProjectId);
   const sidebarCollapsed = useERPStore(state => state.sidebarCollapsed);
   const { data: invoices = [], isLoading: isLoadingInvoices } = useInvoicesQuery(currentProjectId);
@@ -99,6 +102,12 @@ export default function DebtPage() {
           )}
           <button onClick={() => setHistoryInvoice(invoice.id)} className="h-7 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--secondary)] px-3 text-[10px] font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
             Lịch sử
+          </button>
+          <button
+            onClick={() => setTraceInvoiceId(invoice.id)}
+            className="h-7 rounded-[var(--radius-sm)] border border-blue-500/20 bg-blue-500/10 px-3 text-[10px] font-bold text-blue-500 hover:bg-blue-500/20"
+          >
+            Truy vết
           </button>
           <button
             disabled={!!deletingId || Number(invoice.paidAmount || 0) > 0}
@@ -239,6 +248,12 @@ export default function DebtPage() {
         <AddPaymentModal isOpen={!!selectedInvoice} onClose={() => setSelectedInvoice(null)} invoiceId={selectedInvoice || undefined} />
         <PaymentHistoryModal isOpen={!!historyInvoice} onClose={() => setHistoryInvoice(null)} invoiceId={historyInvoice || undefined} />
         <VendorPaymentModal isOpen={!!selectedCost} onClose={() => setSelectedCost(null)} cost={selectedCost} />
+        <FinancialTracePanel
+          type="invoice"
+          id={traceInvoiceId || ""}
+          isOpen={traceInvoiceId !== null}
+          onClose={() => setTraceInvoiceId(null)}
+        />
       </main>
     </div>
   );
