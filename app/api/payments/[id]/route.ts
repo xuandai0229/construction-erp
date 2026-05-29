@@ -76,6 +76,34 @@ export async function DELETE(
     return handleApiError(error);
   }
 }
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const user = await assertAuthenticated();
+    const { id } = await params;
+
+    const payment = await prisma.payment.findUnique({
+      where: { id }
+    });
+
+    if (!payment || payment.deletedAt) {
+      throw new ApiError(404, "Payment not found");
+    }
+
+    const project = await prisma.project.findUnique({
+      where: { id: payment.projectId }
+    });
+
+    return successResponse({
+      ...payment,
+      project
+    });
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
 
 export async function PUT(
   request: Request,
@@ -103,3 +131,4 @@ export async function PUT(
     return handleApiError(error);
   }
 }
+
