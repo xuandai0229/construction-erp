@@ -2,8 +2,9 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import Sidebar from '@/app/components/Sidebar';
-import Header from '@/app/components/Header';
+import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
+import EnterpriseHeader from '@/app/components/layout/EnterpriseHeader';
+import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
 import AddBudgetModal from '@/app/components/modals/AddBudgetModal';
 import ConfirmModal from '@/app/components/modals/ConfirmModal';
 import EditBudgetModal from '@/app/components/modals/EditBudgetModal';
@@ -19,7 +20,8 @@ import {
   EnterpriseTable,
   FormGroup,
   Input,
-  Select
+  Select,
+  EnterpriseActionMenu
 } from '@/app/components/ui-enterprise';
 import { exportToCsv } from '@/app/services/export.service';
 import { useERPStore } from '@/store/erpStore';
@@ -37,7 +39,6 @@ const COST_TYPE_LABELS: Record<string, string> = {
 };
 
 export default function BudgetPage() {
-  const sidebarCollapsed = useERPStore(state => state.sidebarCollapsed);
   const currentProjectId = useERPStore(state => state.currentProjectId);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -140,12 +141,28 @@ export default function BudgetPage() {
 
   const columns: Column<any>[] = [
     { header: 'Mã', accessor: row => row.rowIndex, align: 'center', width: '80px', minWidth: '70px' },
-    { header: 'Hạng mục WBS / CBS', accessor: row => row.name, width: '360px', minWidth: '260px' },
+    { 
+      header: 'Hạng mục WBS / CBS', 
+      accessor: row => {
+        const level = row.rowIndex ? row.rowIndex.split('.').length - 1 : 0;
+        return (
+          <span 
+            style={{ paddingLeft: `${level * 16}px` }} 
+            className={`${level === 0 ? 'font-bold text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'} block`}
+          >
+            {level > 0 && <span className="text-[var(--text-muted)] mr-1.5">└─</span>}
+            {row.name}
+          </span>
+        );
+      }, 
+      width: '360px', 
+      minWidth: '260px' 
+    },
     { header: 'Dự toán', accessor: row => formatVnd(row.budget), align: 'right', width: '170px', minWidth: '130px' },
     { header: 'Thực tế', accessor: row => formatVnd(row.actual), align: 'right', width: '170px', minWidth: '130px' },
     {
       header: 'Chênh lệch',
-      accessor: row => <span className={row.variance >= 0 ? 'text-emerald-500' : 'text-rose-500'}>{formatVnd(row.variance)}</span>,
+      accessor: row => <span className={row.variance >= 0 ? 'text-emerald-500 font-semibold' : 'text-rose-500 font-semibold'}>{formatVnd(row.variance)}</span>,
       align: 'right',
       width: '170px',
       minWidth: '130px'
@@ -163,99 +180,91 @@ export default function BudgetPage() {
     },
     {
       header: 'Nghiệp vụ',
-      accessor: row => (
-        <div className="flex justify-center gap-2">
-          <button onClick={() => { setInitialWbsIdForAdd(row.id); setIsAddModalOpen(true); }} className="h-7 rounded-[var(--radius-sm)] bg-[var(--primary)] px-3 text-[10px] font-bold text-white hover:bg-[var(--primary)]/90 cursor-pointer transition-colors">
-            Lập
-          </button>
-          {row.budgetRecords[0] && (
-            <button onClick={() => { setEditingBudget(row.budgetRecords[0]); setIsEditModalOpen(true); }} className="h-7 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--card)] px-3 text-[10px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer">
-              Sửa
-            </button>
-          )}
-        </div>
-      ),
+      accessor: row => {
+        const menuActions: any[] = [
+          { label: 'Lập dự toán', onClick: () => { setInitialWbsIdForAdd(row.id); setIsAddModalOpen(true); } }
+        ];
+        if (row.budgetRecords[0]) {
+          menuActions.push({ label: 'Chỉnh sửa', onClick: () => { setEditingBudget(row.budgetRecords[0]); setIsEditModalOpen(true); } });
+          menuActions.push({ label: 'Xóa dự toán', onClick: () => setDeletingBudget(row.budgetRecords[0]), variant: 'danger' });
+        }
+        return (
+          <div className="flex justify-center">
+            <EnterpriseActionMenu actions={menuActions} />
+          </div>
+        );
+      },
       align: 'center',
-      width: '150px',
-      minWidth: '110px'
+      width: '100px',
+      minWidth: '90px'
     },
   ];
 
   return (
-    <div className="erp-page">
+    <EnterpriseAppShell activeItem="budget">
       <AddBudgetModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} initialWbsId={initialWbsIdForAdd} />
       <EditBudgetModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} editingBudget={editingBudget} />
       <ConfirmModal isOpen={!!deletingBudget} onClose={() => setDeletingBudget(null)} onConfirm={executeDelete} title="Xác nhận xóa dự toán" message="Dự toán sẽ bị xóa khỏi màn hình quản trị ngân sách." />
 
-      <Sidebar activeItem="budget" />
-      <main className={`erp-page-main ${sidebarCollapsed ? 'with-sidebar-collapsed' : 'with-sidebar-expanded'}`}>
-        <Header data={{ costs, budgets } as any} />
-        <div className="erp-content-container animate-fade-in space-y-6">
-          <div className="border-b border-[var(--border)] pb-4">
-            <h1 className="text-[20px] font-bold text-[var(--text-primary)]">Quản lý Dự toán & Chi phí (CBS)</h1>
-            <p className="mt-1 text-[12px] font-bold uppercase text-[var(--text-tertiary)]">Hoạch định cấu trúc phân rã chi phí</p>
+      <EnterpriseHeader 
+        title="Quản lý Dự toán & Chi phí (CBS)" 
+        subtitle="Hoạch định chi tiết cấu trúc phân rã chi phí công trình"
+        actions={
+          <div className="flex gap-2">
+            <input type="file" accept=".csv" ref={fileInputRef} className="hidden" onChange={handleImport} />
+            <button onClick={() => fileInputRef.current?.click()} className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer shadow-sm">Import CSV</button>
+            <button onClick={() => exportToCsv(`ERP_Budget_Breakdown_${currentProjectId}.csv`, budgets)} className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer shadow-sm">Xuất CSV</button>
+            <button onClick={() => { setInitialWbsIdForAdd(undefined); setIsAddModalOpen(true); }} className="h-9 rounded-md bg-[var(--primary)] px-4 text-[12px] font-bold text-white hover:bg-[var(--primary)]/90 cursor-pointer transition-colors shadow-sm">+ LẬP DỰ TOÁN</button>
           </div>
+        }
+      />
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-6">
-            <EnterpriseMetric title="Tổng dự toán" value={formatVnd(totals.totalBudget)} />
-            <EnterpriseMetric title="Chi phí thực tế" value={formatVnd(totals.totalActual)} />
-            <EnterpriseMetric title="Chênh lệch" value={formatVnd(totals.variance)} />
-            <EnterpriseMetric title="% sử dụng" value={`${totals.pct.toFixed(1)}%`} />
-            <EnterpriseMetric title="Hạng mục vượt" value={totals.overrunCount} />
-            <EnterpriseMetric title="Chưa có dự toán" value={totals.unbudgetedCount} />
-          </div>
-
-          <EnterpriseSection
-            title="BỘ LỌC DỰ TOÁN"
-            actions={
-              <div className="flex gap-2">
-                <input type="file" accept=".csv" ref={fileInputRef} className="hidden" onChange={handleImport} />
-                <button onClick={() => fileInputRef.current?.click()} className="h-[36px] rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)]">Import CSV</button>
-                <button onClick={() => exportToCsv(`ERP_Budget_Breakdown_${currentProjectId}.csv`, budgets)} className="h-[36px] rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)]">Xuất CSV</button>
-              </div>
-            }
-          >
-            <EnterpriseFilterBar>
-              <FormGroup label="Tìm kiếm" className="min-w-[260px] flex-1">
-                <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Tìm theo mã WBS, tên hạng mục..." />
-              </FormGroup>
-              <FormGroup label="Loại chi phí" className="min-w-[200px]">
-                <Select value={filterCostType} onChange={(event) => setFilterCostType(event.target.value)}>
-                  <option value="ALL">Tất cả loại chi phí</option>
-                  {Object.entries(COST_TYPE_LABELS).map(([key, value]) => <option key={key} value={key}>{value}</option>)}
-                </Select>
-              </FormGroup>
-              <div className="flex items-end">
-                <button onClick={() => { setInitialWbsIdForAdd(undefined); setIsAddModalOpen(true); }} className="h-[38px] rounded-[var(--radius-sm)] bg-[var(--primary)] px-4 text-[12px] font-bold text-white hover:bg-[var(--primary)]/90 cursor-pointer transition-colors">
-                  Lập dự toán
-                </button>
-              </div>
-            </EnterpriseFilterBar>
-          </EnterpriseSection>
-
-          <EnterpriseSection title="BẢNG NGÂN SÁCH WBS / CBS" subtitle={`${wbsRows.length} hạng mục`}>
-            <EnterpriseCard bodyClassName="p-0">
-              <EnterpriseTable
-                data={wbsRows}
-                columns={columns}
-                minWidth="1260px"
-                getRowKey={row => row.id}
-                emptyState={<EnterpriseEmptyState title="Chưa có dự toán" description="Lập dự toán đầu tiên cho hạng mục WBS để theo dõi ngân sách công trình." iconType="report" />}
-                footer={
-                  <tr className="h-[40px] text-[12px] font-bold text-[var(--text-primary)]">
-                    <td colSpan={2} className="px-4 text-right uppercase text-[var(--text-secondary)]">Tổng cộng hệ thống</td>
-                    <td className="px-4 text-right font-mono tabular-nums">{formatVnd(totals.totalBudget)}</td>
-                    <td className="px-4 text-right font-mono tabular-nums">{formatVnd(totals.totalActual)}</td>
-                    <td className={`px-4 text-right font-mono tabular-nums ${totals.variance >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>{formatVnd(totals.variance)}</td>
-                    <td className="px-4 text-center font-mono tabular-nums">{totals.pct.toFixed(1)}%</td>
-                    <td />
-                  </tr>
-                }
-              />
-            </EnterpriseCard>
-          </EnterpriseSection>
+      <EnterprisePageContainer>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-6">
+          <EnterpriseMetric title="Tổng dự toán" value={formatVnd(totals.totalBudget)} />
+          <EnterpriseMetric title="Chi phí thực tế" value={formatVnd(totals.totalActual)} />
+          <EnterpriseMetric title="Chênh lệch" value={formatVnd(totals.variance)} />
+          <EnterpriseMetric title="% sử dụng" value={`${totals.pct.toFixed(1)}%`} />
+          <EnterpriseMetric title="Hạng mục vượt" value={totals.overrunCount} />
+          <EnterpriseMetric title="Chưa có dự toán" value={totals.unbudgetedCount} />
         </div>
-      </main>
-    </div>
+
+        <EnterpriseSection title="BỘ LỌC DỰ TOÁN & CHI PHÍ">
+          <EnterpriseFilterBar>
+            <FormGroup label="Tìm kiếm" className="min-w-[260px] flex-1">
+              <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Tìm theo mã WBS, tên hạng mục..." />
+            </FormGroup>
+            <FormGroup label="Loại chi phí" className="min-w-[200px]">
+              <Select value={filterCostType} onChange={(event) => setFilterCostType(event.target.value)}>
+                <option value="ALL">Tất cả loại chi phí</option>
+                {Object.entries(COST_TYPE_LABELS).map(([key, value]) => <option key={key} value={key}>{value}</option>)}
+              </Select>
+            </FormGroup>
+          </EnterpriseFilterBar>
+        </EnterpriseSection>
+
+        <EnterpriseSection title="BẢNG NGÂN SÁCH CHI TIẾT CBS WBS STRUCTURE">
+          <EnterpriseCard bodyClassName="p-0">
+            <EnterpriseTable
+              data={wbsRows}
+              columns={columns}
+              minWidth="1260px"
+              getRowKey={row => row.id}
+              emptyState={<EnterpriseEmptyState title="Chưa có dự toán" description="Lập dự toán đầu tiên cho hạng mục WBS để theo dõi ngân sách công trình." iconType="report" />}
+              footer={
+                <tr className="h-[40px] text-[12px] font-bold text-[var(--text-primary)]">
+                  <td colSpan={2} className="px-4 text-right uppercase text-[var(--text-secondary)]">Tổng cộng hệ thống</td>
+                  <td className="px-4 text-right font-mono tabular-nums">{formatVnd(totals.totalBudget)}</td>
+                  <td className="px-4 text-right font-mono tabular-nums">{formatVnd(totals.totalActual)}</td>
+                  <td className={`px-4 text-right font-mono tabular-nums ${totals.variance >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>{formatVnd(totals.variance)}</td>
+                  <td className="px-4 text-center font-mono tabular-nums">{totals.pct.toFixed(1)}%</td>
+                  <td />
+                </tr>
+              }
+            />
+          </EnterpriseCard>
+        </EnterpriseSection>
+      </EnterprisePageContainer>
+    </EnterpriseAppShell>
   );
 }

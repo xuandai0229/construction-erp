@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useERPStore } from '@/store/erpStore';
 import { useQuery } from '@tanstack/react-query';
-import Sidebar from './Sidebar';
-import Header from './Header';
+import EnterpriseAppShell from './layout/EnterpriseAppShell';
+import EnterpriseHeader from './layout/EnterpriseHeader';
+import EnterprisePageContainer from './layout/EnterprisePageContainer';
 import { EnterpriseSection, EnterpriseCard } from "./ui-enterprise";
 
 import { ExecutiveSummaryCards } from "./reports/ExecutiveSummaryCards";
@@ -18,7 +19,7 @@ export default function Dashboard() {
   const [traceType, setTraceType] = useState<'contract' | 'invoice' | 'payment' | 'advance' | 'cost'>('invoice');
   const [traceId, setTraceId] = useState<string | null>(null);
   
-  const { currentProjectId, sidebarCollapsed } = useERPStore();
+  const { currentProjectId } = useERPStore();
   const router = useRouter();
 
   // Queries cho Management Reports
@@ -59,50 +60,48 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex overflow-hidden">
-      <Sidebar activeItem="dashboard" />
+    <EnterpriseAppShell activeItem="dashboard">
+      <EnterpriseHeader 
+        title="Bàn làm việc" 
+        subtitle="Trung tâm Chỉ huy Kế toán (Financial Command Center)" 
+      />
+      <EnterprisePageContainer>
+        {/* 1. EXECUTIVE SUMMARY */}
+        <EnterpriseSection title="TỔNG QUAN TÀI CHÍNH (EXECUTIVE SUMMARY)" subtitle="Chỉ tiêu tài chính thời gian thực từ Hệ thống Sổ cái & Phân bổ gốc">
+          <ExecutiveSummaryCards 
+            data={execSummary} 
+            isLoading={loadingExec} 
+            onDrillDown={(type) => {
+              setTraceType(type);
+              setTraceId(""); // Trigger Financial Trace Panel
+            }}
+            onNavigateApprovals={() => router.push('/approvals')}
+          />
+        </EnterpriseSection>
 
-      <main className={`erp-page-main flex-1 flex flex-col h-screen overflow-hidden ${sidebarCollapsed ? 'pl-[var(--erp-sidebar-collapsed)]' : 'pl-[var(--erp-sidebar-width)]'}`}>
-        <Header data={{ project: { name: "Trung tâm Chỉ huy Kế toán (Financial Command Center)" } } as any} />
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           
-          {/* 1. EXECUTIVE SUMMARY */}
-          <EnterpriseSection title="TỔNG QUAN TÀI CHÍNH (EXECUTIVE SUMMARY)" subtitle="Chỉ tiêu tài chính thời gian thực từ Hệ thống Sổ cái & Phân bổ gốc">
-            <ExecutiveSummaryCards 
-              data={execSummary} 
-              isLoading={loadingExec} 
-              onDrillDown={(type) => {
-                setTraceType(type);
-                setTraceId(""); // Trigger Financial Trace Panel
-              }}
-              onNavigateApprovals={() => router.push('/approvals')}
-            />
-          </EnterpriseSection>
+          {/* 2. CÔNG NỢ & DÒNG TIỀN (DEBT & CASHFLOW) */}
+          <div className="xl:col-span-2 space-y-6">
+            <EnterpriseCard title="PHÂN TÍCH TUỔI NỢ & QUẢN TRỊ DÒNG TIỀN (DEBT AGING)" subtitle="Theo dõi hóa đơn đến hạn và quá hạn để tối ưu vốn lưu động">
+              <DebtAgingPanel data={debtMgmt} isLoading={loadingDebt} />
+            </EnterpriseCard>
 
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            
-            {/* 2. CÔNG NỢ & DÒNG TIỀN (DEBT & CASHFLOW) */}
-            <div className="xl:col-span-2 space-y-6">
-              <EnterpriseCard title="PHÂN TÍCH TUỔI NỢ & QUẢN TRỊ DÒNG TIỀN (DEBT AGING)" subtitle="Theo dõi hóa đơn đến hạn và quá hạn để tối ưu vốn lưu động">
-                <DebtAgingPanel data={debtMgmt} isLoading={loadingDebt} />
-              </EnterpriseCard>
-
-              {/* 3. HIỆU QUẢ DỰ ÁN (PROJECT PROFITABILITY) */}
-              <EnterpriseCard title="BÁO CÁO HIỆU QUẢ CÔNG TRÌNH (PROJECT PROFITABILITY)" subtitle="Đánh giá doanh thu, chi phí, và tỷ suất lợi nhuận từng dự án (P&L)">
-                <ProjectProfitabilityTable data={projectProfit} isLoading={loadingProfit} />
-              </EnterpriseCard>
-            </div>
-
-            {/* 4. CẢNH BÁO RỦI RO (EXCEPTION / RISK ALERTS) */}
-            <div className="space-y-6">
-              <EnterpriseCard title="CẢNH BÁO RỦI RO (EXCEPTION ALERTS)" subtitle="Các ngoại lệ, chứng từ quá hạn, và cảnh báo kiểm soát nội bộ">
-                <RiskAlertsPanel data={riskAlerts} isLoading={loadingRisk} />
-              </EnterpriseCard>
-            </div>
-            
+            {/* 3. HIỆU QUẢ DỰ ÁN (PROJECT PROFITABILITY) */}
+            <EnterpriseCard title="BÁO CÁO HIỆU QUẢ CÔNG TRÌNH (PROJECT PROFITABILITY)" subtitle="Đánh giá doanh thu, chi phí, và tỷ suất lợi nhuận từng dự án (P&L)">
+              <ProjectProfitabilityTable data={projectProfit} isLoading={loadingProfit} />
+            </EnterpriseCard>
           </div>
+
+          {/* 4. CẢNH BÁO RỦI RO (EXCEPTION / RISK ALERTS) */}
+          <div className="space-y-6">
+            <EnterpriseCard title="CẢNH BÁO RỦI RO (EXCEPTION ALERTS)" subtitle="Các ngoại lệ, chứng từ quá hạn, và cảnh báo kiểm soát nội bộ">
+              <RiskAlertsPanel data={riskAlerts} isLoading={loadingRisk} />
+            </EnterpriseCard>
+          </div>
+          
         </div>
-      </main>
+      </EnterprisePageContainer>
       
       <FinancialTracePanel
         type={traceType}
@@ -110,6 +109,6 @@ export default function Dashboard() {
         isOpen={traceId !== null}
         onClose={() => setTraceId(null)}
       />
-    </div>
+    </EnterpriseAppShell>
   );
 }

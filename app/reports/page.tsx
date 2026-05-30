@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import Sidebar from '@/app/components/Sidebar';
-import Header from '@/app/components/Header';
+import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
+import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
 import { useERPStore } from '@/store/erpStore';
 import { formatVnd } from '@/app/components/dashboard-data';
 import { exportToCsv } from '@/app/services/export.service';
@@ -340,13 +340,9 @@ export default function ReportsPage() {
     }
   ];
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex overflow-hidden">
-      <Sidebar activeItem="reports" />
-      <main className={`erp-page-main flex-1 flex flex-col h-screen overflow-hidden ${sidebarCollapsed ? 'pl-[var(--erp-sidebar-collapsed)]' : 'pl-[var(--erp-sidebar-width)]'}`}>
-        <Header />
-        
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin print:p-0 print:overflow-visible print:h-auto">
-          
+    <EnterpriseAppShell activeItem="reports">
+      <EnterprisePageContainer>
+        <div className="space-y-6 print:p-0 print:overflow-visible print:h-auto">
           {/* Page Header (Hidden in Print mode) */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between select-none pb-4 border-b border-[var(--border)] print:hidden">
             <div>
@@ -738,7 +734,7 @@ export default function ReportsPage() {
           </EnterpriseModal>
 
         </div>
-      </main>
-    </div>
+      </EnterprisePageContainer>
+    </EnterpriseAppShell>
   );
 }

@@ -13,6 +13,10 @@ import AddProjectModal from '@/app/components/modals/AddProjectModal';
 
 import { useProjectsQuery } from '@/services/queries/useProjects';
 
+import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
+import EnterpriseHeader from '@/app/components/layout/EnterpriseHeader';
+import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
+
 export default function ProjectListScreen() {
   const init             = useERPStore(state => state.init);
   const isInitialized    = useERPStore(state => state.initialized);
@@ -36,9 +40,6 @@ export default function ProjectListScreen() {
   const metadata = paginatedData?.metadata;
   const totalPages = metadata?.totalPages || 1;
 
-  // Bug Fix: Auto-navigate back ONLY when data is fully loaded, NOT placeholder, and actually empty
-  // This prevents the "click 2 times" bug where the page rolls back to 1 during loading because
-  // totalPages was still referring to the previous (possibly smaller) result set.
   useEffect(() => {
     if (!isLoading && !isPlaceholderData && paginatedData && page > totalPages && totalPages > 0) {
       setPage(totalPages);
@@ -47,60 +48,61 @@ export default function ProjectListScreen() {
 
   if (!isInitialized) {
     return (
-      <div className="erp-page">
-        <Sidebar activeItem="projects" />
-        <main
-          className="erp-page-main items-center justify-center"
-          style={{ marginLeft: sidebarCollapsed ? 'var(--erp-sidebar-collapsed)' : 'var(--erp-sidebar-width)' }}
-        >
-          <div className="flex flex-col items-center gap-4">
+      <EnterpriseAppShell activeItem="projects">
+        <EnterprisePageContainer>
+          <div className="flex h-64 flex-col items-center justify-center gap-4">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
-            <div className="text-[13px] font-semibold text-[var(--text-secondary)]">Đang tải dữ liệu...</div>
+            <div className="text-[13px] font-semibold text-[var(--text-secondary)]">Đang tải hệ thống...</div>
           </div>
-        </main>
-      </div>
+        </EnterprisePageContainer>
+      </EnterpriseAppShell>
     );
   }
 
   return (
-    <div className="erp-page">
-      <Sidebar activeItem="projects" />
-      <main
-        className={`erp-page-main ${sidebarCollapsed ? 'with-sidebar-collapsed' : 'with-sidebar-expanded'}`}
-      >
-        <ProjectsHeader onAdd={() => setIsAddingProject(true)} />
+    <EnterpriseAppShell activeItem="projects">
+      <EnterpriseHeader 
+        title="Hồ sơ công trình" 
+        subtitle="Quản lý vòng đời và ngân sách dự án"
+        actions={
+          <button 
+            onClick={() => setIsAddingProject(true)}
+            className="h-9 px-4 rounded-md bg-[var(--primary)] text-white text-[12px] font-bold hover:bg-[var(--primary)]/90 transition-colors shadow-sm cursor-pointer"
+          >
+            + THÊM HỒ SƠ
+          </button>
+        }
+      />
 
-        <div className="erp-content-container animate-fade-in space-y-6">
-          <ProjectCardStats 
-            stats={metadata?.stats} 
-            totalCount={metadata?.total || 0} 
-          />
-          <ProjectFilters 
-            filters={filters} 
-            onFilterChange={(f) => {
-              setFilters(f);
-              setPage(1); // Reset to page 1 on filter change
-            }} 
-          />
-          <ProjectTable projects={projects} totalGlobal={metadata?.total || 0} onEdit={setEditingProject} />
+      <EnterprisePageContainer>
+        <ProjectCardStats 
+          stats={metadata?.stats} 
+          totalCount={metadata?.total || 0} 
+        />
+        <ProjectFilters 
+          filters={filters} 
+          onFilterChange={(f) => {
+            setFilters(f);
+            setPage(1); 
+          }} 
+        />
+        <ProjectTable projects={projects} totalGlobal={metadata?.total || 0} onEdit={setEditingProject} />
 
-          {/* Enterprise Pagination System */}
-          <EnterprisePagination
-            page={page}
-            totalPages={totalPages}
-            totalItems={metadata?.total || 0}
-            onPageChange={setPage}
-            isLoading={isLoading}
-            className="pt-8 mt-2"
-          />
-        </div>
-      </main>
+        <EnterprisePagination
+          page={page}
+          totalPages={totalPages}
+          totalItems={metadata?.total || 0}
+          onPageChange={setPage}
+          isLoading={isLoading}
+          className="pt-4"
+        />
+      </EnterprisePageContainer>
 
       <AddProjectModal
         isOpen={isAddingProject || !!editingProject}
         onClose={() => { setIsAddingProject(false); setEditingProject(null); }}
         project={editingProject}
       />
-    </div>
+    </EnterpriseAppShell>
   );
 }

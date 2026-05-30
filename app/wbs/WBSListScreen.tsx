@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import Sidebar from '@/app/components/Sidebar';
-import Header from '@/app/components/Header';
+import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
+import EnterpriseHeader from '@/app/components/layout/EnterpriseHeader';
+import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
 import AddWBSModal from '@/app/components/modals/AddWBSModal';
 import { formatVnd } from '@/app/components/dashboard-data';
 import {
@@ -15,7 +16,8 @@ import {
   EnterpriseSection,
   EnterpriseTable,
   FormGroup,
-  Input
+  Input,
+  EnterpriseActionMenu
 } from '@/app/components/ui-enterprise';
 import { EnrichedWBSNode, WBSItem } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
@@ -23,7 +25,6 @@ import { useWBSQuery } from '@/services/queries/useWBS';
 
 export default function WBSListScreen() {
   const currentProjectId = useERPStore(state => state.currentProjectId);
-  const sidebarCollapsed = useERPStore(state => state.sidebarCollapsed);
   const { data, isLoading } = useWBSQuery(currentProjectId);
   const rawTree = data?.tree || [];
   const flatWbs = data?.flat || [];
@@ -83,14 +84,30 @@ export default function WBSListScreen() {
 
   const columns: Column<any>[] = [
     { header: 'Mã', accessor: row => row.rowIndex, align: 'center', width: '90px', minWidth: '70px' },
-    { header: 'Hạng mục thi công', accessor: row => row.name, width: '380px', minWidth: '260px' },
+    { 
+      header: 'Hạng mục thi công', 
+      accessor: row => {
+        const level = row.rowIndex ? row.rowIndex.split('.').length - 1 : 0;
+        return (
+          <span 
+            style={{ paddingLeft: `${level * 16}px` }} 
+            className={`${level === 0 ? 'font-bold text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'} block`}
+          >
+            {level > 0 && <span className="text-[var(--text-muted)] mr-1.5">└─</span>}
+            {row.name}
+          </span>
+        );
+      }, 
+      width: '380px', 
+      minWidth: '260px' 
+    },
     { header: 'Ngân sách', accessor: row => formatVnd(row.budget || 0), align: 'right', width: '170px', minWidth: '130px' },
     { header: 'Thực tế', accessor: row => formatVnd(row.actual || 0), align: 'right', width: '170px', minWidth: '130px' },
     {
       header: 'Chênh lệch',
       accessor: row => {
         const variance = Number(row.budget || 0) - Number(row.actual || 0);
-        return <span className={variance >= 0 ? 'text-emerald-500' : 'text-rose-500'}>{formatVnd(variance)}</span>;
+        return <span className={variance >= 0 ? 'text-emerald-500 font-semibold' : 'text-rose-500 font-semibold'}>{formatVnd(variance)}</span>;
       },
       align: 'right',
       width: '170px',
@@ -117,76 +134,73 @@ export default function WBSListScreen() {
     {
       header: 'Nghiệp vụ',
       accessor: row => (
-        <div className="flex justify-center gap-2">
-          <button onClick={() => setEditingWBS(row)} className="h-7 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--card)] px-3 text-[10px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer">Sửa</button>
-          <button onClick={() => { setInitialParentId(row.id); setIsAddingWBS(true); }} className="h-7 rounded-[var(--radius-sm)] bg-[var(--primary)] px-3 text-[10px] font-bold text-white hover:bg-[var(--primary)]/90 cursor-pointer transition-colors">Thêm</button>
+        <div className="flex justify-center">
+          <EnterpriseActionMenu 
+            actions={[
+              { label: 'Chỉnh sửa', onClick: () => setEditingWBS(row) },
+              { label: 'Thêm hạng mục con', onClick: () => { setInitialParentId(row.id); setIsAddingWBS(true); } }
+            ]}
+          />
         </div>
       ),
       align: 'center',
-      width: '160px',
-      minWidth: '130px'
+      width: '100px',
+      minWidth: '90px'
     },
   ];
 
   return (
-    <div className="erp-page">
-      <Sidebar activeItem="wbs" />
-      <main className={`erp-page-main ${sidebarCollapsed ? 'with-sidebar-collapsed' : 'with-sidebar-expanded'}`}>
-        <Header />
-        <div className="erp-content-container animate-fade-in space-y-6">
-          <div className="border-b border-[var(--border)] pb-4">
-            <h1 className="text-[20px] font-bold text-[var(--text-primary)]">Hạng mục thi công (WBS)</h1>
-            <p className="mt-1 text-[12px] font-bold uppercase text-[var(--text-tertiary)]">Phân tích ngân sách và thực tế theo hạng mục</p>
+    <EnterpriseAppShell activeItem="wbs">
+      <EnterpriseHeader 
+        title="Hạng mục thi công (WBS)" 
+        subtitle="Phân tích ngân sách và thực tế theo cấu trúc hạng mục" 
+        actions={
+          <div className="flex gap-2">
+            <button onClick={handleExport} className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer shadow-sm">Xuất CSV</button>
+            <button onClick={() => { setInitialParentId(null); setIsAddingWBS(true); }} className="h-9 rounded-md bg-[var(--primary)] px-4 text-[12px] font-bold text-white hover:bg-[var(--primary)]/90 cursor-pointer transition-colors shadow-sm">+ THÊM WBS</button>
           </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
-            <EnterpriseMetric title="Tổng hạng mục" value={stats.totalItems} />
-            <EnterpriseMetric title="Tổng ngân sách" value={formatVnd(stats.totalBudget)} />
-            <EnterpriseMetric title="Thực tế" value={formatVnd(stats.totalActual)} />
-            <EnterpriseMetric title="Chênh lệch" value={formatVnd(stats.variance)} />
-            <EnterpriseMetric title="Tiến độ" value={`${stats.progress.toFixed(1)}%`} />
-          </div>
-
-          <EnterpriseSection
-            title="BỘ LỌC WBS"
-            actions={
-              <div className="flex gap-2">
-                <button onClick={handleExport} className="h-[36px] rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer">Xuất CSV</button>
-                <button onClick={() => { setInitialParentId(null); setIsAddingWBS(true); }} className="h-[36px] rounded-[var(--radius-sm)] bg-[var(--primary)] px-4 text-[12px] font-bold text-white hover:bg-[var(--primary)]/90 cursor-pointer transition-colors">Thêm WBS</button>
-              </div>
-            }
-          >
-            <EnterpriseFilterBar>
-              <FormGroup label="Tìm kiếm" className="min-w-[260px] flex-1">
-                <Input value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder="Tìm theo mã hoặc tên hạng mục..." />
-              </FormGroup>
-            </EnterpriseFilterBar>
-          </EnterpriseSection>
-
-          <EnterpriseSection title="BẢNG WBS" subtitle={`${rows.length} hạng mục`}>
-            <EnterpriseCard bodyClassName="p-0">
-              <EnterpriseTable
-                data={rows}
-                columns={columns}
-                loading={isLoading}
-                minWidth="1410px"
-                getRowKey={row => row.id}
-                emptyState={<EnterpriseEmptyState title="Chưa có hạng mục WBS" description="Tạo hạng mục đầu tiên để quản lý ngân sách, chi phí và tiến độ công trình." iconType="report" />}
-                footer={
-                  <tr className="h-[40px] text-[12px] font-bold text-[var(--text-primary)]">
-                    <td colSpan={2} className="px-4 text-right uppercase text-[var(--text-secondary)]">Tổng cộng</td>
-                    <td className="px-4 text-right font-mono tabular-nums">{formatVnd(stats.totalBudget)}</td>
-                    <td className="px-4 text-right font-mono tabular-nums">{formatVnd(stats.totalActual)}</td>
-                    <td className={`px-4 text-right font-mono tabular-nums ${stats.variance >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>{formatVnd(stats.variance)}</td>
-                    <td className="px-4 text-right font-mono tabular-nums">{stats.progress.toFixed(1)}%</td>
-                    <td colSpan={2} />
-                  </tr>
-                }
-              />
-            </EnterpriseCard>
-          </EnterpriseSection>
+        }
+      />
+      <EnterprisePageContainer>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+          <EnterpriseMetric title="Tổng hạng mục" value={stats.totalItems} />
+          <EnterpriseMetric title="Tổng ngân sách" value={formatVnd(stats.totalBudget)} />
+          <EnterpriseMetric title="Thực tế" value={formatVnd(stats.totalActual)} />
+          <EnterpriseMetric title="Chênh lệch" value={formatVnd(stats.variance)} />
+          <EnterpriseMetric title="Tiến độ" value={`${stats.progress.toFixed(1)}%`} />
         </div>
-      </main>
+
+        <EnterpriseSection title="BỘ LỌC WBS">
+          <EnterpriseFilterBar>
+            <FormGroup label="Tìm kiếm" className="min-w-[260px] flex-1">
+              <Input value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder="Tìm theo mã hoặc tên hạng mục..." />
+            </FormGroup>
+          </EnterpriseFilterBar>
+        </EnterpriseSection>
+
+        <EnterpriseSection title="BẢNG HẠNG MỤC PHÂN CẤP (WBS STRUCTURE)">
+          <EnterpriseCard bodyClassName="p-0">
+            <EnterpriseTable
+              data={rows}
+              columns={columns}
+              loading={isLoading}
+              minWidth="1310px"
+              getRowKey={row => row.id}
+              emptyState={<EnterpriseEmptyState title="Chưa có hạng mục WBS" description="Tạo hạng mục đầu tiên để quản lý ngân sách, chi phí và tiến độ công trình." iconType="report" />}
+              footer={
+                <tr className="h-[40px] text-[12px] font-bold text-[var(--text-primary)]">
+                  <td colSpan={2} className="px-4 text-right uppercase text-[var(--text-secondary)]">Tổng cộng</td>
+                  <td className="px-4 text-right font-mono tabular-nums">{formatVnd(stats.totalBudget)}</td>
+                  <td className="px-4 text-right font-mono tabular-nums">{formatVnd(stats.totalActual)}</td>
+                  <td className={`px-4 text-right font-mono tabular-nums ${stats.variance >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>{formatVnd(stats.variance)}</td>
+                  <td className="px-4 text-right font-mono tabular-nums">{stats.progress.toFixed(1)}%</td>
+                  <td colSpan={1} />
+                </tr>
+              }
+            />
+          </EnterpriseCard>
+        </EnterpriseSection>
+      </EnterprisePageContainer>
 
       <AddWBSModal
         isOpen={isAddingWBS || !!editingWBS}
@@ -194,6 +208,6 @@ export default function WBSListScreen() {
         wbsItem={editingWBS}
         initialParentId={initialParentId}
       />
-    </div>
+    </EnterpriseAppShell>
   );
 }
