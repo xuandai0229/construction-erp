@@ -1,0 +1,3275 @@
+{
+  "root": "lib",
+  "exists": true,
+  "filesScanned": 43,
+  "matches": {
+    "ui_prop_keywords_english": [
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 4,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Đề nghị tạm ứng phải gắn với Công trình hoặc Hợp đồng.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 7,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Đề nghị tạm ứng phải chỉ định rõ đối tượng nhận (Nhà cung cấp hoặc Nhân viên).\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 10,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Số tiền tạm ứng phải lớn hơn 0.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 16,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Chỉ được duyệt tạm ứng khi ở trạng thái SUBMITTED.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 19,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Nguyên tắc SoD - Người tạo không được tự phê duyệt tạm ứng.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 25,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Không thể chi tiền/ghi sổ tạm ứng đang ở nháp (DRAFT).\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 28,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Tạm ứng này đã được chi tiền (PAID), không được ghi sổ lại.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 31,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Kỳ kế toán đã khóa, không thể ghi sổ chi tạm ứng.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 37,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Không thể hoàn ứng khi chứng từ tạm ứng chưa xuất tiền (PAID).\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 40,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Không thể hoàn ứng với chứng từ Hóa đơn/Chi phí đang nháp.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 43,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Số tiền hoàn ứng vượt quá số dư tạm ứng còn lại.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 46,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Số tiền hoàn ứng vượt quá số nợ còn lại của hóa đơn.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 52,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Không được phép đối trừ chéo công ty (Cross-company).\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 56,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Không được đối trừ sai đối tượng (khác nhà cung cấp/nhân viên) trừ khi có quyền ghi đè.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\inventoryPolicy.ts",
+        "line": 1,
+        "content": "import { ApiError } from \"@/lib/api-error\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\inventoryPolicy.ts",
+        "line": 10,
+        "content": "throw new ApiError(400, \"Số lượng vật tư nhập/xuất phải lớn hơn 0.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\inventoryPolicy.ts",
+        "line": 13,
+        "content": "throw new ApiError(400, \"Đơn giá vật tư không được âm.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\inventoryPolicy.ts",
+        "line": 55,
+        "content": "throw new ApiError(",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 2,
+        "content": "import { ApiError } from \"@/lib/api-error\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 7,
+        "content": "if (!data.paymentId) throw new ApiError(400, \"paymentId is required for allocation.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 8,
+        "content": "if (!data.invoiceId) throw new ApiError(400, \"invoiceId is required for allocation.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 9,
+        "content": "if (data.amount === undefined || data.amount === null) throw new ApiError(400, \"amount is required for allocation.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 10,
+        "content": "if (Number(data.amount) <= 0) throw new ApiError(400, \"Allocation amount must be greater than 0.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 15,
+        "content": "throw new ApiError(400, \"Số tiền phân bổ (allocation) phải lớn hơn 0\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 21,
+        "content": "throw new ApiError(400, `Số tiền phân bổ (${allocationAmount}) vượt quá số tiền còn lại của hóa đơn (${invoiceRemaining})`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 27,
+        "content": "throw new ApiError(400, `Số tiền phân bổ (${allocationAmount}) vượt quá số tiền chưa phân bổ của thanh toán (${paymentUnallocatedAmount})`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 33,
+        "content": "throw new ApiError(400, \"Payment và Invoice phải thuộc cùng một công ty (Tenant).\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 39,
+        "content": "throw new ApiError(400, \"Payment và Invoice phải thuộc cùng một đối tác (Counterparty).\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 45,
+        "content": "throw new ApiError(400, `Không thể phân bổ từ thanh toán có trạng thái ${status}`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 51,
+        "content": "throw new ApiError(400, `Không thể phân bổ vào hóa đơn có trạng thái ${status}`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 3,
+        "content": "import { ApiError } from \"@/lib/api-error\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 22,
+        "content": "description: string;",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 36,
+        "content": "if (!cost) throw new ApiError(404, `Không tìm thấy chi phí để hạch toán: ${params.costId}`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 53,
+        "content": "description: `Ghi nhận chi phí: ${params.description}`,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 72,
+        "content": "description: string;",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 79,
+        "content": "description: `Nhập kho / Nhận hàng: ${params.description}`,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 100,
+        "content": "description: string;",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 107,
+        "content": "if (!invoice) throw new ApiError(404, `Invoice not found for posting: ${params.invoiceId}`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 144,
+        "content": "description: `Phát hành hóa đơn: ${params.description}`,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 162,
+        "content": "description: string;",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 169,
+        "content": "description: `Thu tiền thanh toán: ${params.description}`,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 195,
+        "content": "description: string;",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 211,
+        "content": "throw new ApiError(400, `Giao dịch đã được hạch toán vào Sổ cái trước đó (JournalEntry ID: ${activeEntry.id})`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 220,
+        "content": "throw new ApiError(500, `Lỗi kế toán: Debit (${debits}) không bằng Credit (${credits})`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 235,
+        "content": "description: params.description,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 246,
+        "content": "if (!accountId) throw new ApiError(500, `Account code not found: ${line.accountCode}`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 254,
+        "content": "description: params.description",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 273,
+        "content": "if (oldEntry.isReversed) throw new Error(\"Giao dịch đã được hủy trước đó.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 288,
+        "content": "description: `Hủy giao dịch: ${oldEntry.description}`,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 305,
+        "content": "description: `Hủy: ${line.description}`",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 336,
+        "content": "console.error(`[PostingEngine] Failed to update operational source ${sourceType}:${sourceId} on reversal:`, err);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\sourceDocumentPolicy.ts",
+        "line": 7,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Hóa đơn bắt buộc phải liên kết với Hợp đồng (contractId), Nghiệm thu (acceptanceId) hoặc có Lý do ngoại lệ (exceptionReason).\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\sourceDocumentPolicy.ts",
+        "line": 13,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Lý do ngoại lệ quá ngắn, vui lòng giải trình rõ ràng.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\sourceDocumentPolicy.ts",
+        "line": 23,
+        "content": "throw new Error(\"LỖI NGHIỆP VỤ: Thanh toán bắt buộc phải liên kết với Hóa đơn (invoiceId) hoặc Hợp đồng (contractId). Không tạo thanh toán mồ côi.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\taxPolicy.ts",
+        "line": 1,
+        "content": "import { ApiError } from \"@/lib/api-error\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\taxPolicy.ts",
+        "line": 20,
+        "content": "throw new ApiError(",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\accounting\\taxPolicy.ts",
+        "line": 50,
+        "content": "throw new ApiError(",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 2,
+        "content": "import { ZodError } from \"zod\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 7,
+        "content": "export class ApiError extends Error {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 11,
+        "content": "constructor(statusCode: number, message: string, metadata?: any) {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 12,
+        "content": "super(message);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 15,
+        "content": "this.name = \"ApiError\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 20,
+        "content": "success: boolean;",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 22,
+        "content": "error?: string;",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 26,
+        "content": "export async function handleApiError(error: unknown) {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 31,
+        "content": "if (error instanceof ZodError) {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 32,
+        "content": "const errorMessages = error.issues?.map((e) => `${e.path.join('.')}: ${e.message}`).join(\", \") || \"Lỗi validation không xác định\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 33,
+        "content": "LoggerService.warn(\"Validation Error\", { requestId, userId, error: errorMessages });",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 35,
+        "content": "{ success: false, error: `Lỗi dữ liệu: ${errorMessages}` },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 40,
+        "content": "if (error instanceof ApiError) {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 41,
+        "content": "LoggerService.warn(error.message, { requestId, userId, statusCode: error.statusCode, metadata: error.metadata });",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 43,
+        "content": "{ success: false, error: error.message, metadata: error.metadata },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 44,
+        "content": "{ status: error.statusCode }",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 48,
+        "content": "if (error instanceof Prisma.PrismaClientKnownRequestError) {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 49,
+        "content": "LoggerService.error(\"Prisma Error\", { requestId, userId, errorCode: error.code, error: error.message });",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 50,
+        "content": "if (error.code === 'P2002') {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 51,
+        "content": "return NextResponse.json({ success: false, error: 'Dữ liệu đã tồn tại trong hệ thống' }, { status: 400 });",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 53,
+        "content": "if (error.code === 'P2003') {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 54,
+        "content": "return NextResponse.json({ success: false, error: 'Không thể xóa do đã có dữ liệu liên kết' }, { status: 400 });",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 56,
+        "content": "if (error.code === 'P2025') {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 57,
+        "content": "return NextResponse.json({ success: false, error: 'Không tìm thấy dữ liệu yêu cầu' }, { status: 404 });",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 61,
+        "content": "LoggerService.error(\"Unhandled Internal Server Error\", { requestId, userId, error: (error as any)?.message || error });",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 63,
+        "content": "{ success: false, error: \"Lỗi máy chủ nội bộ. Vui lòng thử lại sau hoặc liên hệ quản trị viên.\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 68,
+        "content": "export function successResponse<T>(data: T, metadata?: any, status = 200) {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 70,
+        "content": "success: true,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\assertion.ts",
+        "line": 1,
+        "content": "import { ApiError } from \"./api-error\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\assertion.ts",
+        "line": 13,
+        "content": "throw new ApiError(400, `Trường dữ liệu \"${key}\" trong ${entityName} bị thiếu (undefined)`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\assertion.ts",
+        "line": 17,
+        "content": "throw new ApiError(400, `Trường dữ liệu \"${key}\" trong ${entityName} không phải là số hợp lệ (NaN)`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 4,
+        "content": "import { ApiError } from \"./api-error\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 62,
+        "content": "throw new ApiError(401, \"Authentication required: invalid or expired ERP session.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 67,
+        "content": "throw new ApiError(401, \"User does not exist or has been disabled.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 85,
+        "content": "throw new ApiError(401, \"Authentication required: invalid or expired ERP session.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 90,
+        "content": "throw new ApiError(401, \"Internal administrator bypass is disabled.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 102,
+        "content": "throw new ApiError(401, \"User does not exist or has been disabled.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 114,
+        "content": "throw new ApiError(403, `Role ${user.role} is not allowed to perform this action.`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\env.ts",
+        "line": 6,
+        "content": "throw new Error(`${name} must be configured for production runtime.`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 1,
+        "content": "export class DomainError extends Error {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 2,
+        "content": "constructor(public statusCode: number, message: string) {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 3,
+        "content": "super(message);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 4,
+        "content": "this.name = \"DomainError\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 8,
+        "content": "export class PeriodLockedError extends DomainError {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 11,
+        "content": "this.name = \"PeriodLockedError\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 15,
+        "content": "export class UnbalancedEntryError extends DomainError {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 18,
+        "content": "this.name = \"UnbalancedEntryError\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 22,
+        "content": "export class DuplicateRequestError extends DomainError {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 25,
+        "content": "this.name = \"DuplicateRequestError\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 29,
+        "content": "export class WorkflowTransitionError extends DomainError {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 32,
+        "content": "this.name = \"WorkflowTransitionError\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 36,
+        "content": "export class UnauthorizedActionError extends DomainError {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 39,
+        "content": "this.name = \"UnauthorizedActionError\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\event-bus.ts",
+        "line": 61,
+        "content": "console.error(`[EventBus] Failed to persist event ${fullEvent.id}:`, dbErr);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 1,
+        "content": "import { ApiError } from \"@/lib/api-error\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 11,
+        "content": "label: string;",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 16,
+        "content": "{ type: \"HOA_DON\", label: \"Hóa đơn\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 17,
+        "content": "{ type: \"HOP_DONG\", label: \"Hợp đồng\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 20,
+        "content": "{ type: \"HOA_DON\", label: \"Hóa đơn\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 21,
+        "content": "{ type: \"HOP_DONG\", label: \"Hợp đồng\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 24,
+        "content": "{ type: \"HOA_DON\", label: \"Hóa đơn\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 25,
+        "content": "{ type: \"HOP_DONG\", label: \"Hợp đồng\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 28,
+        "content": "{ type: \"UNC\", label: \"Ủy nhiệm chi\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 29,
+        "content": "{ type: \"HOA_DON\", label: \"Hóa đơn\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 30,
+        "content": "{ type: \"HOP_DONG\", label: \"Hợp đồng\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 33,
+        "content": "{ type: \"HOA_DON\", label: \"Hóa đơn\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 34,
+        "content": "{ type: \"HOP_DONG\", label: \"Hợp đồng\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 35,
+        "content": "{ type: \"BIEN_BAN_NGHIEM_THU\", label: \"Biên bản nghiệm thu\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 38,
+        "content": "{ type: \"UNC\", label: \"Ủy nhiệm chi\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 39,
+        "content": "{ type: \"HOA_DON\", label: \"Hóa đơn\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 40,
+        "content": "{ type: \"HOP_DONG\", label: \"Hợp đồng\" },",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 70,
+        "content": "throw new ApiError(",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 72,
+        "content": "`Chứng từ thiếu hồ sơ bắt buộc: ${result.missing.map(item => item.label).join(\", \")}. Không được ghi sổ.`",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\payment-approval.ts",
+        "line": 2,
+        "content": "import { ApiError } from \"@/lib/api-error\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\payment-approval.ts",
+        "line": 33,
+        "content": "throw new ApiError(403, `Vai trò hiện tại không thuộc luồng duyệt thanh toán ${amount.toLocaleString(\"vi-VN\")} VND.`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\voucher-workflow.ts",
+        "line": 1,
+        "content": "import { ApiError } from \"@/lib/api-error\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\voucher-workflow.ts",
+        "line": 25,
+        "content": "throw new ApiError(400, `Không được chuyển trạng thái chứng từ từ ${from} sang ${to}.`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\governance\\voucher-workflow.ts",
+        "line": 32,
+        "content": "throw new ApiError(400, \"Chứng từ chưa được duyệt, không được ghi sổ.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\mappers\\project.mapper.ts",
+        "line": 7,
+        "content": "description: p.description ?? null,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\mappers\\project.mapper.ts",
+        "line": 26,
+        "content": "description: p.description,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\mappers\\revenue.mapper.ts",
+        "line": 24,
+        "content": "description: r.description ?? null,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\mappers\\revenue.mapper.ts",
+        "line": 57,
+        "content": "description: p.description ?? null,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\mappers\\revenue.mapper.ts",
+        "line": 71,
+        "content": "description: r.description,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\mappers\\revenue.mapper.ts",
+        "line": 94,
+        "content": "description: p.description,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\metrics.ts",
+        "line": 110,
+        "content": "static recordJobExecution(durationMs: number, success: boolean) {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\metrics.ts",
+        "line": 113,
+        "content": "if (!success) {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 2,
+        "content": "import { ApiError } from \"@/lib/api-error\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 48,
+        "content": "export const ENTERPRISE_ROLE_LABELS: Record<EnterpriseRole, string> = {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 208,
+        "content": "throw new ApiError(",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 210,
+        "content": "`Vai trò ${ENTERPRISE_ROLE_LABELS[enterpriseRole]} không được phép ${action} trên phân hệ ${module}.`",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 230,
+        "content": "throw new ApiError(400, \"Người tạo chứng từ không được tự duyệt chứng từ của chính mình.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 15,
+        "content": "private lastErrorLogTime = 0;",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 54,
+        "content": "this.client.on('error', (err: Error & { code?: string }) => {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 59,
+        "content": "this.logThrottled('warn', `Redis unavailable: ${err.message}`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 66,
+        "content": "LoggerService.info('[RedisManager] Redis connected successfully.');",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 75,
+        "content": "private logThrottled(level: 'error' | 'warn' | 'info', message: string) {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 77,
+        "content": "if (now - this.lastErrorLogTime > this.logThrottleMs) {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 78,
+        "content": "LoggerService[level](message);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 79,
+        "content": "this.lastErrorLogTime = now;",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\resilience.ts",
+        "line": 28,
+        "content": "} catch (error: any) {",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\resilience.ts",
+        "line": 31,
+        "content": "LoggerService.error(`[Resilience] Thất bại sau ${attempt - 1} lần thử lại. Lỗi: ${error.message}`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\resilience.ts",
+        "line": 32,
+        "content": "throw error;",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\resilience.ts",
+        "line": 44,
+        "content": "`[Resilience] Phát hiện lỗi. Đang thử lại lần ${attempt}/${maxRetries} sau ${Math.round(delay)}ms. Lỗi: ${error.message}`",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\resilience.ts",
+        "line": 58,
+        "content": "errorContext: string = \"Tác vụ\"",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\resilience.ts",
+        "line": 64,
+        "content": "reject(new Error(`[Resilience] Lỗi quá thời gian (Timeout): ${errorContext} vượt quá hạn mức ${timeoutMs}ms.`));",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\resilience.ts",
+        "line": 100,
+        "content": "LoggerService.error(`[Graceful Shutdown] Lỗi giải phóng tài nguyên tại vị trí ${i}: ${err.message}`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\resilience.ts",
+        "line": 111,
+        "content": "LoggerService.error(`[Graceful Shutdown] Tắt máy cưỡng chế do lỗi: ${err.message}`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 3,
+        "content": "import { ApiError } from \"@/lib/api-error\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 23,
+        "content": "throw new ApiError(403, `Role ${user.role} is not allowed for this route.`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 58,
+        "content": "throw new ApiError(403, `Role ${user.role} is not allowed to access accounting data.`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 65,
+        "content": "if (!user.companyId) throw new ApiError(403, \"User is not assigned to a company.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 67,
+        "content": "throw new ApiError(403, \"Access denied: tenant isolation violation.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 73,
+        "content": "if (!projectId) throw new ApiError(400, \"projectId is required.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 80,
+        "content": "if (!project) throw new ApiError(404, \"Project not found.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 94,
+        "content": "throw new ApiError(503, \"Internal system token is not configured.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 100,
+        "content": "throw new ApiError(401, \"Internal system authentication required.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 109,
+        "content": "severity?: \"INFO\" | \"WARNING\" | \"CRITICAL\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 144,
+        "content": "severity: \"WARNING\",",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\session.ts",
+        "line": 2,
+        "content": "import { ApiError } from \"./api-error\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\session.ts",
+        "line": 11,
+        "content": "throw new ApiError(500, \"SESSION_SECRET must be configured with at least 32 characters in production.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 6,
+        "content": "errors: string[];",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 7,
+        "content": "warnings: string[];",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 20,
+        "content": "const errors: string[] = [];",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 21,
+        "content": "const warnings: string[] = [];",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 32,
+        "content": "errors.push(`Thiếu biến môi trường nghiêm trọng: ${v}`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 41,
+        "content": "warnings.push(`Khuyên dùng cấu hình biến môi trường: ${v}`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 64,
+        "content": "errors.push(`Lỗi tương thích schema database hoặc mất kết nối: ${e.message}`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 80,
+        "content": "warnings.push(`Không thể kiểm tra lịch sử migrations (_prisma_migrations). Lý do: ${e.message}`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 83,
+        "content": "const healthy = errors.length === 0;",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 88,
+        "content": "errors,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 89,
+        "content": "warnings,",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 92,
+        "content": "status: errors.some(e => e.startsWith(\"Thiếu biến môi trường\")) ? \"FAIL\" : \"OK\",",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\supabase.ts",
+        "line": 7,
+        "content": "console.error('CRITICAL: Supabase environment variables are missing! Check .env.local');",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\system\\backupSafety.ts",
+        "line": 18,
+        "content": "throw new Error(\"UNAUTHORIZED: Only SUPER_ADMIN can create backups.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\system\\backupSafety.ts",
+        "line": 35,
+        "content": "throw new Error(\"UNAUTHORIZED: Only SUPER_ADMIN can restore backups.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\system\\backupSafety.ts",
+        "line": 42,
+        "content": "throw new Error(\"SECURITY: Invalid or missing confirmation token for restore.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\system\\backupSafety.ts",
+        "line": 47,
+        "content": "throw new Error(\"INTEGRITY: Backup metadata is missing or corrupted.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\system\\backupSafety.ts",
+        "line": 51,
+        "content": "throw new Error(\"INTEGRITY: Checksum mismatch. The backup might be tampered with.\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\system\\environmentGuard.ts",
+        "line": 16,
+        "content": "throw new Error(`[SECURITY] Operation \"${operationName}\" is BLOCKED in production environment.`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\system\\environmentGuard.ts",
+        "line": 22,
+        "content": "throw new Error(`[SECURITY] Restore operations are blocked. Set ALLOW_RESTORE=true to enable.`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\system\\environmentGuard.ts",
+        "line": 26,
+        "content": "throw new Error(`[SECURITY] Restore operations in PRODUCTION are blocked. Set ALLOW_PRODUCTION_RESTORE=true to enable.`);",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\tenant-context.ts",
+        "line": 2,
+        "content": "import { ApiError } from \"./api-error\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\tenant-context.ts",
+        "line": 5,
+        "content": "if (!userId) throw new ApiError(401, \"Unauthorized\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\tenant-context.ts",
+        "line": 12,
+        "content": "if (!user || !user.companyId) throw new ApiError(403, \"User does not belong to any company\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\tenant-context.ts",
+        "line": 25,
+        "content": "throw new ApiError(403, \"Access Denied: Tenant Isolation Violation\");",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\validations.ts",
+        "line": 10,
+        "content": "description: z.string().max(2000).optional(),",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\validations.ts",
+        "line": 34,
+        "content": "description: z.string().max(2000).optional(),",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\validations.ts",
+        "line": 129,
+        "content": "description: z.string().max(1000).optional(),",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\validations.ts",
+        "line": 165,
+        "content": "description: z.string().max(500).optional(),",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\workflow\\costWorkflow.ts",
+        "line": 1,
+        "content": "import { WorkflowTransitionError } from \"../errors\";",
+        "sev": "Medium"
+      },
+      {
+        "file": "lib\\workflow\\costWorkflow.ts",
+        "line": 22,
+        "content": "throw new WorkflowTransitionError(currentStatus, `chuyển sang ${nextStatus}`);",
+        "sev": "Medium"
+      }
+    ],
+    "english_ui_quotes": [
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 15,
+        "content": "if (currentStatus !== \"SUBMITTED\") {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 24,
+        "content": "if (currentStatus === \"DRAFT\") {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 27,
+        "content": "if (currentStatus === \"PAID\") {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 36,
+        "content": "if (advanceStatus !== \"PAID\" && advanceStatus !== \"PARTIALLY_SETTLED\") {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\advanceSettlementPolicy.ts",
+        "line": 39,
+        "content": "if (invoiceStatus === \"DRAFT\") {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\inventoryPolicy.ts",
+        "line": 2,
+        "content": "import { Decimal } from \"decimal.js\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 7,
+        "content": "if (!data.paymentId) throw new ApiError(400, \"paymentId is required for allocation.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 8,
+        "content": "if (!data.invoiceId) throw new ApiError(400, \"invoiceId is required for allocation.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 9,
+        "content": "if (data.amount === undefined || data.amount === null) throw new ApiError(400, \"amount is required for allocation.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 10,
+        "content": "if (Number(data.amount) <= 0) throw new ApiError(400, \"Allocation amount must be greater than 0.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 44,
+        "content": "if ([\"REJECTED\", \"CANCELLED\", \"REVERSED\"].includes(status)) {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 50,
+        "content": "if ([\"DRAFT\", \"REJECTED\", \"CANCELLED\", \"REVERSED\"].includes(status)) {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 57,
+        "content": "a.status !== \"DRAFT\" &&",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 58,
+        "content": "a.status !== \"REJECTED\" &&",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 59,
+        "content": "a.status !== \"CANCELLED\" &&",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\paymentAllocationPolicy.ts",
+        "line": 60,
+        "content": "a.status !== \"REVERSED\" &&",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 55,
+        "content": "sourceType: \"COST\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 81,
+        "content": "sourceType: \"GRN\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 146,
+        "content": "sourceType: \"INVOICE\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 171,
+        "content": "sourceType: \"PAYMENT\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 184,
+        "content": "case \"material\": return \"6210\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 185,
+        "content": "case \"labor\": return \"6220\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 186,
+        "content": "case \"machine\": return \"6230\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 187,
+        "content": "case \"subcontract\": return \"6270\"; // Or separate code",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 188,
+        "content": "case \"overhead\": return \"6270\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 304,
+        "content": "type: line.type === \"DEBIT\" ? \"CREDIT\" : \"DEBIT\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 314,
+        "content": "if (lowerType === \"invoice\") {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 317,
+        "content": "data: { approvalStatus: \"CANCELLED\", deletedAt: new Date() }",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 319,
+        "content": "} else if (lowerType === \"cost\" || lowerType === \"costrecord\") {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 322,
+        "content": "data: { approvalStatus: \"CANCELLED\", deletedAt: new Date() }",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 324,
+        "content": "} else if (lowerType === \"payment\") {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 327,
+        "content": "data: { approvalStatus: \"CANCELLED\", deletedAt: new Date() }",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\postingEngine.ts",
+        "line": 329,
+        "content": "} else if (lowerType === \"vendor_payment\" || lowerType === \"vendorpayment\") {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\taxPolicy.ts",
+        "line": 33,
+        "content": "invoiceType: \"OUTBOUND\" | \"INBOUND\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\accounting\\taxPolicy.ts",
+        "line": 52,
+        "content": "`LỖI TRÙNG HÓA ĐƠN: Hóa đơn ${invoiceType === \"OUTBOUND\" ? \"bán ra\" : \"mua vào\"} số ${invoiceNumber}, ký hiệu ${invoiceSeries} đã tồn tại trong hệ thống của công ty.`",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 1,
+        "content": "import { NextResponse } from \"next/server\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 2,
+        "content": "import { ZodError } from \"zod\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 5,
+        "content": "import { headers } from \"next/headers\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 15,
+        "content": "this.name = \"ApiError\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 28,
+        "content": "const requestId = head.get(\"x-request-id\") || undefined;",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 33,
+        "content": "LoggerService.warn(\"Validation Error\", { requestId, userId, error: errorMessages });",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 49,
+        "content": "LoggerService.error(\"Prisma Error\", { requestId, userId, errorCode: error.code, error: error.message });",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 50,
+        "content": "if (error.code === 'P2002') {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 53,
+        "content": "if (error.code === 'P2003') {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 56,
+        "content": "if (error.code === 'P2025') {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\api-error.ts",
+        "line": 61,
+        "content": "LoggerService.error(\"Unhandled Internal Server Error\", { requestId, userId, error: (error as any)?.message || error });",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\assertion.ts",
+        "line": 16,
+        "content": "if (typeof value === 'number' && isNaN(value)) {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\assertion.ts",
+        "line": 21,
+        "content": "if (value !== null && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)) {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\assertion.ts",
+        "line": 32,
+        "content": "const num = typeof val === 'number' ? val : parseFloat(val);",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 1,
+        "content": "import { headers } from \"next/headers\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 11,
+        "content": "return process.env.ALLOW_INTERNAL_ADMIN_BYPASS === \"true\" && process.env.NODE_ENV !== \"production\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 22,
+        "content": "const authHeader = head?.get(\"authorization\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 23,
+        "content": "const cookieHeader = head?.get(\"cookie\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 26,
+        "content": "if (authHeader?.startsWith(\"Bearer \")) {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 51,
+        "content": "name: \"System Administrator\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 57,
+        "content": "entity: \"Security\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 58,
+        "content": "entityId: \"ANONYMOUS\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 59,
+        "content": "reason: \"API access without a valid signed ERP session token.\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 60,
+        "content": "severity: \"CRITICAL\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 62,
+        "content": "throw new ApiError(401, \"Authentication required: invalid or expired ERP session.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 67,
+        "content": "throw new ApiError(401, \"User does not exist or has been disabled.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 80,
+        "content": "entity: \"Security\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 81,
+        "content": "entityId: userId || \"ANONYMOUS\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 82,
+        "content": "reason: \"API access without a valid signed ERP session token.\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 83,
+        "content": "severity: \"CRITICAL\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 85,
+        "content": "throw new ApiError(401, \"Authentication required: invalid or expired ERP session.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 90,
+        "content": "throw new ApiError(401, \"Internal administrator bypass is disabled.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 95,
+        "content": "name: \"System Administrator\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 102,
+        "content": "throw new ApiError(401, \"User does not exist or has been disabled.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 109,
+        "content": "entity: \"RBAC\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\auth-guard.ts",
+        "line": 112,
+        "content": "severity: \"CRITICAL\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\env.ts",
+        "line": 12,
+        "content": "if (process.env.NODE_ENV === \"production\") {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 4,
+        "content": "this.name = \"DomainError\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 11,
+        "content": "this.name = \"PeriodLockedError\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 18,
+        "content": "this.name = \"UnbalancedEntryError\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 25,
+        "content": "this.name = \"DuplicateRequestError\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 32,
+        "content": "this.name = \"WorkflowTransitionError\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\errors.ts",
+        "line": 39,
+        "content": "this.name = \"UnauthorizedActionError\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\event-bus.ts",
+        "line": 1,
+        "content": "import { EventEmitter } from 'events';",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\event-bus.ts",
+        "line": 29,
+        "content": "async publish(event: Omit<EnterpriseEvent, 'id' | 'timestamp'>) {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\event-bus.ts",
+        "line": 54,
+        "content": "status: \"PENDING\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\event-bus.ts",
+        "line": 81,
+        "content": "if (process.env.NODE_ENV !== 'production') {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\event-bus.ts",
+        "line": 85,
+        "content": "if (typeof window === 'undefined') {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\export\\accountingExport.ts",
+        "line": 21,
+        "content": "format: \"CSV\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\export\\accountingExport.ts",
+        "line": 46,
+        "content": "\"Content-Type\": \"text/csv; charset=utf-8\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\export\\accountingExport.ts",
+        "line": 47,
+        "content": "\"Content-Disposition\": `attachment; filename=\"${params.filename}\"`,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\export\\accountingExport.ts",
+        "line": 48,
+        "content": "\"Cache-Control\": \"no-store, max-age=0\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\export.ts",
+        "line": 2,
+        "content": "const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\export.ts",
+        "line": 21,
+        "content": "return typeof val === 'string' ? `\"${val.replace(/\"/g, '\"\"')}\"` : val;",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\dashboard-governance.ts",
+        "line": 5,
+        "content": "| \"RECEIVABLES\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\dashboard-governance.ts",
+        "line": 6,
+        "content": "| \"PAYABLES\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\dashboard-governance.ts",
+        "line": 14,
+        "content": "| \"PROFIT\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\dashboard-governance.ts",
+        "line": 18,
+        "content": "KE_TOAN_CONG_NO: [\"RECEIVABLES\", \"PAYABLES\", \"PENDING_APPROVALS\", \"MISSING_DOCUMENTS\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\dashboard-governance.ts",
+        "line": 19,
+        "content": "KE_TOAN_THANH_TOAN: [\"PAYABLES\", \"PENDING_ADVANCES\", \"PENDING_APPROVALS\", \"CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\dashboard-governance.ts",
+        "line": 20,
+        "content": "KE_TOAN_TONG_HOP: [\"RECEIVABLES\", \"PAYABLES\", \"PENDING_APPROVALS\", \"MISSING_DOCUMENTS\", \"OPEN_PERIODS\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\dashboard-governance.ts",
+        "line": 21,
+        "content": "KE_TOAN_TRUONG: [\"RECEIVABLES\", \"PAYABLES\", \"PENDING_ADVANCES\", \"PENDING_APPROVALS\", \"MISSING_DOCUMENTS\", \"OVER_BUDGET_PROJECTS\", \"LOSS_PROJECTS\", \"OPEN_PERIODS\", \"CASH_FLOW\", \"PROFIT\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\dashboard-governance.ts",
+        "line": 22,
+        "content": "GIAM_DOC: [\"RECEIVABLES\", \"PAYABLES\", \"OVER_BUDGET_PROJECTS\", \"LOSS_PROJECTS\", \"CASH_FLOW\", \"PROFIT\", \"AUDIT_ALERTS\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\dashboard-governance.ts",
+        "line": 24,
+        "content": "QUAN_TRI_HE_THONG: [\"RECEIVABLES\", \"PAYABLES\", \"PENDING_ADVANCES\", \"PENDING_APPROVALS\", \"MISSING_DOCUMENTS\", \"OVER_BUDGET_PROJECTS\", \"LOSS_PROJECTS\", \"OPEN_PERIODS\", \"CASH_FLOW\", \"PROFIT\", \"AUDIT_ALERTS\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 28,
+        "content": "{ type: \"UNC\", label: \"Ủy nhiệm chi\" },",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\document-governance.ts",
+        "line": 38,
+        "content": "{ type: \"UNC\", label: \"Ủy nhiệm chi\" },",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\payment-approval.ts",
+        "line": 33,
+        "content": "throw new ApiError(403, `Vai trò hiện tại không thuộc luồng duyệt thanh toán ${amount.toLocaleString(\"vi-VN\")} VND.`);",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\voucher-workflow.ts",
+        "line": 3,
+        "content": "export const VOUCHER_STATES = [\"NHAP\", \"CHO_DUYET\", \"DA_DUYET\", \"TU_CHOI\", \"DA_GHI_SO\", \"DA_HUY\"] as const;",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\voucher-workflow.ts",
+        "line": 10,
+        "content": "TU_CHOI: [\"NHAP\", \"DA_HUY\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\voucher-workflow.ts",
+        "line": 17,
+        "content": "if (status === \"DA_CAT\") return \"NHAP\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\governance\\voucher-workflow.ts",
+        "line": 19,
+        "content": "return \"NHAP\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\mappers\\cost.mapper.ts",
+        "line": 28,
+        "content": "workflowStatus: c.workflowStatus || \"DRAFT\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\mappers\\cost.mapper.ts",
+        "line": 29,
+        "content": "approvalStatus: c.approvalStatus || \"DRAFT\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\math.ts",
+        "line": 1,
+        "content": "import { Decimal } from 'decimal.js';",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\math.ts",
+        "line": 102,
+        "content": "return new Intl.NumberFormat('vi-VN', {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\math.ts",
+        "line": 103,
+        "content": "style: 'currency',",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\math.ts",
+        "line": 104,
+        "content": "currency: 'VND',",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\prisma.ts",
+        "line": 19,
+        "content": "if (process.env.NODE_ENV !== \"production\") globalForPrisma.prisma = prisma;",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 3,
+        "content": "all: ['erp-system'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 7,
+        "content": "all: () => [...queryKeys.all, 'projects'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 8,
+        "content": "lists: () => [...queryKeys.projects.all(), 'list'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 10,
+        "content": "details: () => [...queryKeys.projects.all(), 'detail'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 16,
+        "content": "all: () => [...queryKeys.all, 'costs'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 17,
+        "content": "lists: () => [...queryKeys.costs.all(), 'list'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 19,
+        "content": "allCosts: () => [...queryKeys.costs.lists(), 'all'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 24,
+        "content": "all: () => [...queryKeys.all, 'wbs'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 30,
+        "content": "all: () => [...queryKeys.all, 'budgets'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 36,
+        "content": "all: () => [...queryKeys.all, 'revenues'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 37,
+        "content": "lists: () => [...queryKeys.revenues.all(), 'list'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 43,
+        "content": "all: () => [...queryKeys.all, 'debts'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 44,
+        "content": "receivables: () => [...queryKeys.debts.all(), 'receivables'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 49,
+        "content": "all: () => [...queryKeys.all, 'invoices'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\query-keys.ts",
+        "line": 55,
+        "content": "all: () => [...queryKeys.all, 'payments'] as const,",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 5,
+        "content": "| \"COST\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 6,
+        "content": "| \"REVENUE\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 7,
+        "content": "| \"INVOICE\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 8,
+        "content": "| \"LEDGER\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 9,
+        "content": "| \"VOUCHER\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 10,
+        "content": "| \"PAYMENT\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 11,
+        "content": "| \"PERIOD\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 12,
+        "content": "| \"AUDIT\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 13,
+        "content": "| \"REPORT\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 14,
+        "content": "| \"PROJECT\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 15,
+        "content": "| \"DASHBOARD\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 16,
+        "content": "| \"DOCUMENT\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 17,
+        "content": "| \"SALARY\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 18,
+        "content": "| \"PROFIT\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 22,
+        "content": "| \"READ\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 23,
+        "content": "| \"CREATE\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 24,
+        "content": "| \"UPDATE\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 25,
+        "content": "| \"DELETE\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 26,
+        "content": "| \"APPROVE\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 27,
+        "content": "| \"POST\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 28,
+        "content": "| \"UNPOST\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 29,
+        "content": "| \"REVERSE\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 30,
+        "content": "| \"LOCK\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 31,
+        "content": "| \"UNLOCK\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 34,
+        "content": "| \"EXPORT\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 60,
+        "content": "case \"MANAGER\":",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 64,
+        "content": "case \"ACCOUNTANT\":",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 66,
+        "content": "case \"CFO\":",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 70,
+        "content": "case \"AUDITOR\":",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 73,
+        "content": "case \"ADMIN\":",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 80,
+        "content": "const CRUD: Action[] = [\"CREATE\", \"READ\", \"UPDATE\", \"DELETE\"];",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 81,
+        "content": "const READ_EXPORT: Action[] = [\"READ\", \"EXPORT\"];",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 85,
+        "content": "COST: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 86,
+        "content": "REVENUE: [\"CREATE\", \"READ\", \"UPDATE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 87,
+        "content": "INVOICE: [\"CREATE\", \"READ\", \"UPDATE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 88,
+        "content": "PAYMENT: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 89,
+        "content": "VOUCHER: [\"CREATE\", \"READ\", \"UPDATE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 90,
+        "content": "LEDGER: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 91,
+        "content": "PERIOD: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 92,
+        "content": "REPORT: [\"READ\", \"EXPORT\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 93,
+        "content": "PROJECT: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 94,
+        "content": "DASHBOARD: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 95,
+        "content": "DOCUMENT: [\"CREATE\", \"READ\", \"UPDATE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 98,
+        "content": "COST: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 99,
+        "content": "PAYMENT: [\"CREATE\", \"READ\", \"UPDATE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 100,
+        "content": "VOUCHER: [\"CREATE\", \"READ\", \"UPDATE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 101,
+        "content": "LEDGER: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 102,
+        "content": "PERIOD: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 103,
+        "content": "REPORT: [\"READ\", \"EXPORT\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 104,
+        "content": "PROJECT: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 105,
+        "content": "DASHBOARD: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 106,
+        "content": "DOCUMENT: [\"CREATE\", \"READ\", \"UPDATE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 107,
+        "content": "CASH_FLOW: [\"READ\", \"VIEW_CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 110,
+        "content": "COST: [\"CREATE\", \"READ\", \"UPDATE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 111,
+        "content": "REVENUE: [\"CREATE\", \"READ\", \"UPDATE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 112,
+        "content": "INVOICE: [\"CREATE\", \"READ\", \"UPDATE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 113,
+        "content": "PAYMENT: [\"CREATE\", \"READ\", \"UPDATE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 114,
+        "content": "VOUCHER: [\"CREATE\", \"READ\", \"UPDATE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 115,
+        "content": "LEDGER: [\"READ\", \"POST\", \"UNPOST\", \"REVERSE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 116,
+        "content": "PERIOD: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 117,
+        "content": "AUDIT: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 118,
+        "content": "REPORT: [\"READ\", \"EXPORT\", \"VIEW_CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 119,
+        "content": "PROJECT: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 120,
+        "content": "DASHBOARD: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 121,
+        "content": "DOCUMENT: [\"CREATE\", \"READ\", \"UPDATE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 122,
+        "content": "CASH_FLOW: [\"READ\", \"VIEW_CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 125,
+        "content": "COST: [\"READ\", \"APPROVE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 126,
+        "content": "REVENUE: [\"READ\", \"APPROVE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 127,
+        "content": "INVOICE: [\"READ\", \"APPROVE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 128,
+        "content": "PAYMENT: [\"READ\", \"APPROVE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 129,
+        "content": "VOUCHER: [\"READ\", \"APPROVE\", \"POST\", \"UNPOST\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 130,
+        "content": "LEDGER: [\"READ\", \"POST\", \"UNPOST\", \"REVERSE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 131,
+        "content": "PERIOD: [\"READ\", \"LOCK\", \"UNLOCK\", \"CLOSE_PERIOD\", \"OPEN_PERIOD\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 133,
+        "content": "REPORT: [\"READ\", \"EXPORT\", \"VIEW_PROFIT\", \"VIEW_CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 134,
+        "content": "PROJECT: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 135,
+        "content": "DASHBOARD: [\"READ\", \"VIEW_PROFIT\", \"VIEW_CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 136,
+        "content": "DOCUMENT: [\"READ\", \"APPROVE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 137,
+        "content": "PROFIT: [\"READ\", \"VIEW_PROFIT\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 138,
+        "content": "CASH_FLOW: [\"READ\", \"VIEW_CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 141,
+        "content": "COST: [\"READ\", \"APPROVE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 142,
+        "content": "REVENUE: [\"READ\", \"APPROVE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 143,
+        "content": "INVOICE: [\"READ\", \"APPROVE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 144,
+        "content": "PAYMENT: [\"READ\", \"APPROVE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 145,
+        "content": "VOUCHER: [\"READ\", \"APPROVE\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 146,
+        "content": "LEDGER: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 147,
+        "content": "PERIOD: [\"READ\", \"LOCK\", \"UNLOCK\", \"CLOSE_PERIOD\", \"OPEN_PERIOD\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 149,
+        "content": "REPORT: [\"READ\", \"EXPORT\", \"VIEW_PROFIT\", \"VIEW_CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 150,
+        "content": "PROJECT: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 151,
+        "content": "DASHBOARD: [\"READ\", \"VIEW_PROFIT\", \"VIEW_CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 152,
+        "content": "PROFIT: [\"READ\", \"VIEW_PROFIT\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 153,
+        "content": "CASH_FLOW: [\"READ\", \"VIEW_CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 156,
+        "content": "COST: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 157,
+        "content": "REVENUE: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 158,
+        "content": "INVOICE: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 159,
+        "content": "PAYMENT: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 160,
+        "content": "VOUCHER: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 161,
+        "content": "LEDGER: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 162,
+        "content": "PERIOD: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 164,
+        "content": "REPORT: [\"READ\", \"EXPORT\", \"VIEW_PROFIT\", \"VIEW_CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 165,
+        "content": "PROJECT: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 166,
+        "content": "DASHBOARD: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 167,
+        "content": "DOCUMENT: [\"READ\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 168,
+        "content": "PROFIT: [\"READ\", \"VIEW_PROFIT\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 169,
+        "content": "CASH_FLOW: [\"READ\", \"VIEW_CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 172,
+        "content": "COST: CRUD.concat([\"APPROVE\", \"POST\", \"UNPOST\", \"REVERSE\"]),",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 173,
+        "content": "REVENUE: CRUD.concat([\"APPROVE\"]),",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 174,
+        "content": "INVOICE: CRUD.concat([\"APPROVE\"]),",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 175,
+        "content": "PAYMENT: CRUD.concat([\"APPROVE\"]),",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 176,
+        "content": "VOUCHER: CRUD.concat([\"APPROVE\", \"POST\", \"UNPOST\", \"REVERSE\"]),",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 177,
+        "content": "LEDGER: CRUD.concat([\"APPROVE\", \"POST\", \"UNPOST\", \"REVERSE\"]),",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 178,
+        "content": "PERIOD: [\"READ\", \"LOCK\", \"UNLOCK\", \"CLOSE_PERIOD\", \"OPEN_PERIOD\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 180,
+        "content": "REPORT: [\"READ\", \"EXPORT\", \"VIEW_SALARY\", \"VIEW_PROFIT\", \"VIEW_CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 182,
+        "content": "DASHBOARD: [\"READ\", \"VIEW_SALARY\", \"VIEW_PROFIT\", \"VIEW_CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 183,
+        "content": "DOCUMENT: CRUD.concat([\"APPROVE\"]),",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 184,
+        "content": "SALARY: [\"READ\", \"VIEW_SALARY\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 185,
+        "content": "PROFIT: [\"READ\", \"VIEW_PROFIT\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 186,
+        "content": "CASH_FLOW: [\"READ\", \"VIEW_CASH_FLOW\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 191,
+        "content": "if (action === \"REVERSE\") return \"UNPOST\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 192,
+        "content": "if (action === \"LOCK\") return \"CLOSE_PERIOD\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\rbac.ts",
+        "line": 193,
+        "content": "if (action === \"UNLOCK\") return \"OPEN_PERIOD\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 1,
+        "content": "import Redis, { RedisOptions } from 'ioredis';",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 7,
+        "content": "return 'redis://localhost:6379';",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 19,
+        "content": "const isDev = process.env.NODE_ENV !== 'production';",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 28,
+        "content": "this.logThrottled('warn', '[RedisManager] REDIS_URL is not configured. Memory cache fallback active.');",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 37,
+        "content": "this.logThrottled('warn', `[RedisManager] Max retries reached in DEV mode. Stopping reconnect attempts. Memory cache fallback active.`);",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 43,
+        "content": "this.logThrottled('warn', `[RedisManager] Circuit breaker open. Waiting 60s before next attempt.`);",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 47,
+        "content": "this.logThrottled('warn', `[RedisManager] Retrying connection in ${delay}ms... (Attempt ${times})`);",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 54,
+        "content": "this.client.on('error', (err: Error & { code?: string }) => {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 56,
+        "content": "if (err.code === 'ECONNREFUSED') {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 57,
+        "content": "this.logThrottled('warn', `Redis connection refused. Memory cache fallback active.`);",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 59,
+        "content": "this.logThrottled('warn', `Redis unavailable: ${err.message}`);",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 63,
+        "content": "this.client.on('connect', () => {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 69,
+        "content": "this.client.on('end', () => {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 71,
+        "content": "this.logThrottled('warn', '[RedisManager] Redis connection ended.');",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 75,
+        "content": "private logThrottled(level: 'error' | 'warn' | 'info', message: string) {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\redis.ts",
+        "line": 91,
+        "content": "if (process.env.NODE_ENV !== 'production') {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\resilience.ts",
+        "line": 117,
+        "content": "if (typeof process !== \"undefined\" && typeof process.on === \"function\") {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\resilience.ts",
+        "line": 118,
+        "content": "process.on(\"SIGINT\", () => handleShutdown(\"SIGINT\"));",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\resilience.ts",
+        "line": 119,
+        "content": "process.on(\"SIGTERM\", () => handleShutdown(\"SIGTERM\"));",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 1,
+        "content": "import { headers } from \"next/headers\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 10,
+        "content": "const SYSTEM_INTERNAL_HEADER = \"x-internal-system-token\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 42,
+        "content": "export async function requireAccountingAccess(action: Action = \"READ\") {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 44,
+        "content": "RBAC.assertPermission(user.role, \"REPORT\", action === \"EXPORT\" ? \"EXPORT\" : \"READ\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 56,
+        "content": "const allowedRoles = action === \"EXPORT\" ? exportRoles : readRoles;",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 65,
+        "content": "if (!user.companyId) throw new ApiError(403, \"User is not assigned to a company.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 67,
+        "content": "throw new ApiError(403, \"Access denied: tenant isolation violation.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 73,
+        "content": "if (!projectId) throw new ApiError(400, \"projectId is required.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 80,
+        "content": "if (!project) throw new ApiError(404, \"Project not found.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 94,
+        "content": "throw new ApiError(503, \"Internal system token is not configured.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 100,
+        "content": "throw new ApiError(401, \"Internal system authentication required.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 109,
+        "content": "severity?: \"INFO\" | \"WARNING\" | \"CRITICAL\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 120,
+        "content": "severity: params.severity || \"INFO\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 121,
+        "content": "ipAddress: head.get(\"x-forwarded-for\") || \"unknown\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 122,
+        "content": "userAgent: head.get(\"user-agent\") || \"unknown\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 142,
+        "content": "entity: \"FinancialExport\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 143,
+        "content": "entityId: params.projectId || params.companyId || \"GLOBAL\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 144,
+        "content": "severity: \"WARNING\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 146,
+        "content": "ipAddress: head.get(\"x-forwarded-for\") || \"unknown\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\route-security.ts",
+        "line": 147,
+        "content": "userAgent: head.get(\"user-agent\") || \"unknown\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\session.ts",
+        "line": 1,
+        "content": "import crypto from \"crypto\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\session.ts",
+        "line": 10,
+        "content": "if (process.env.NODE_ENV === \"production\") {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\session.ts",
+        "line": 15,
+        "content": "globalForSession.devSessionSecret = crypto.randomBytes(48).toString(\"base64url\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\session.ts",
+        "line": 36,
+        "content": "const payloadBase64 = Buffer.from(payload).toString(\"base64url\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\session.ts",
+        "line": 39,
+        "content": ".createHmac(\"sha256\", getSessionSecret())",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\session.ts",
+        "line": 41,
+        "content": ".digest(\"base64url\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\session.ts",
+        "line": 57,
+        "content": ".createHmac(\"sha256\", getSessionSecret())",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\session.ts",
+        "line": 59,
+        "content": ".digest(\"base64url\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\session.ts",
+        "line": 62,
+        "content": "const sigBuffer = Buffer.from(signature, \"base64url\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\session.ts",
+        "line": 63,
+        "content": "const expBuffer = Buffer.from(expectedSignature, \"base64url\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\session.ts",
+        "line": 69,
+        "content": "const payloadStr = Buffer.from(payloadBase64, \"base64url\").toString(\"utf8\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 9,
+        "content": "environment: { status: \"OK\" | \"FAIL\"; details: Record<string, string> };",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 10,
+        "content": "databaseSchema: { status: \"OK\" | \"FAIL\"; latencyMs: number };",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 11,
+        "content": "migrations: { status: \"OK\" | \"FAIL\"; appliedCount: number };",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 33,
+        "content": "envDetails[v] = \"MISSING\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 35,
+        "content": "envDetails[v] = \"PRESENT\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 44,
+        "content": "envDetails[v] = \"PRESENT\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 49,
+        "content": "let schemaStatus: \"OK\" | \"FAIL\" = \"OK\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 63,
+        "content": "schemaStatus = \"FAIL\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 68,
+        "content": "let migrationStatus: \"OK\" | \"FAIL\" = \"OK\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 79,
+        "content": "migrationStatus = \"FAIL\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\startup-validator.ts",
+        "line": 92,
+        "content": "status: errors.some(e => e.startsWith(\"Thiếu biến môi trường\")) ? \"FAIL\" : \"OK\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\supabase.ts",
+        "line": 3,
+        "content": "const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co';",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\supabase.ts",
+        "line": 4,
+        "content": "const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock-key';",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\supabase.ts",
+        "line": 7,
+        "content": "console.error('CRITICAL: Supabase environment variables are missing! Check .env.local');",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\supabase.ts",
+        "line": 20,
+        "content": "if (process.env.NODE_ENV !== 'production') globalForSupabase.supabase = supabase;",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\system\\backupSafety.ts",
+        "line": 42,
+        "content": "throw new Error(\"SECURITY: Invalid or missing confirmation token for restore.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\system\\backupSafety.ts",
+        "line": 47,
+        "content": "throw new Error(\"INTEGRITY: Backup metadata is missing or corrupted.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\system\\backupSafety.ts",
+        "line": 51,
+        "content": "throw new Error(\"INTEGRITY: Checksum mismatch. The backup might be tampered with.\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\system\\backupSafety.ts",
+        "line": 67,
+        "content": "\"certs\",",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\system\\backupSafety.ts",
+        "line": 68,
+        "content": "\"secrets.json\"",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\system\\environmentGuard.ts",
+        "line": 7,
+        "content": "return process.env.APP_ENV || process.env.NODE_ENV || 'development';",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\system\\environmentGuard.ts",
+        "line": 11,
+        "content": "return this.env === 'production';",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\system\\environmentGuard.ts",
+        "line": 21,
+        "content": "if (process.env.ALLOW_RESTORE !== 'true') {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\system\\environmentGuard.ts",
+        "line": 25,
+        "content": "if (this.isProduction && process.env.ALLOW_PRODUCTION_RESTORE !== 'true') {",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\tenant-context.ts",
+        "line": 5,
+        "content": "if (!userId) throw new ApiError(401, \"Unauthorized\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\tenant-context.ts",
+        "line": 12,
+        "content": "if (!user || !user.companyId) throw new ApiError(403, \"User does not belong to any company\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\tenant-context.ts",
+        "line": 25,
+        "content": "throw new ApiError(403, \"Access Denied: Tenant Isolation Violation\");",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\utils\\numberToWords.ts",
+        "line": 6,
+        "content": "const DIGITS = [\"không\", \"một\", \"hai\", \"ba\", \"bốn\", \"năm\", \"sáu\", \"bảy\", \"tám\", \"chín\"];",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\validations.ts",
+        "line": 1,
+        "content": "import { z } from \"zod\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\validations.ts",
+        "line": 95,
+        "content": "action: z.enum([\"APPROVE\", \"REJECT\"]),",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\validations.ts",
+        "line": 185,
+        "content": "orderBy: z.enum([\"createdAt\", \"date\", \"amount\", \"name\"]).optional().default(\"createdAt\"),",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\validations.ts",
+        "line": 186,
+        "content": "orderDir: z.enum([\"asc\", \"desc\"]).optional().default(\"desc\"),",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\workflow\\costWorkflow.ts",
+        "line": 3,
+        "content": "export type CostWorkflowState = \"DRAFT\" | \"PENDING_PM\" | \"PENDING_FINANCE\" | \"PENDING_DIRECTOR\" | \"APPROVED\" | \"POSTED\" | \"REVERSED\" | \"REJECTED\";",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\workflow\\costWorkflow.ts",
+        "line": 7,
+        "content": "PENDING_PM: [\"PENDING_FINANCE\", \"REJECTED\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\workflow\\costWorkflow.ts",
+        "line": 8,
+        "content": "PENDING_FINANCE: [\"APPROVED\", \"PENDING_DIRECTOR\", \"REJECTED\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\workflow\\costWorkflow.ts",
+        "line": 9,
+        "content": "PENDING_DIRECTOR: [\"APPROVED\", \"REJECTED\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\workflow\\costWorkflow.ts",
+        "line": 10,
+        "content": "APPROVED: [\"POSTED\", \"REVERSED\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\workflow\\costWorkflow.ts",
+        "line": 11,
+        "content": "POSTED: [\"REVERSED\"],",
+        "sev": "High"
+      },
+      {
+        "file": "lib\\workflow\\costWorkflow.ts",
+        "line": 13,
+        "content": "REJECTED: [\"DRAFT\"] // Can be resubmitted",
+        "sev": "High"
+      }
+    ]
+  }
+}
