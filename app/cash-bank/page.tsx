@@ -606,20 +606,20 @@ export default function CashBankPage() {
       {/* CREATE MODAL */}
       {showCreateModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-[#1c1c24] border border-[#2d2d3c] rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl text-gray-200 animate-scale-in">
-            <div className="p-6 border-b border-[#2d2d3c] flex items-center justify-between">
-              <h3 className="text-[16px] font-black uppercase text-white">LẬP CHỨNG TỪ PHIẾU THU / PHIẾU CHI / ỦY NHIỆM CHI</h3>
-              <button onClick={() => setShowCreateModal(false)} className="text-gray-400 hover:text-white text-[20px] font-bold">×</button>
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl text-[var(--text-primary)] animate-scale-in">
+            <div className="p-6 border-b border-[var(--border)] flex items-center justify-between">
+              <h3 className="text-[16px] font-black uppercase text-[var(--text-primary)]">LẬP CHỨNG TỪ PHIẾU THU / PHIẾU CHI / ỦY NHIỆM CHI</h3>
+              <button onClick={() => setShowCreateModal(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] text-[20px] font-bold">×</button>
             </div>
             
             <form onSubmit={handleCreateDocument} className="p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-black text-gray-400 uppercase mb-1">Loại chứng từ</label>
+                  <label className="block text-[11px] font-black text-[var(--text-muted)] uppercase mb-1">Loại chứng từ</label>
                   <select 
                     value={formType} 
                     onChange={e => setFormType(e.target.value as CashBankDocumentType)}
-                    className="w-full h-10 rounded-md bg-[#13131a] border border-[#2d2d3c] text-[13px] text-gray-200 px-3"
+                    className="w-full h-10 rounded-md bg-[var(--background)] border border-[var(--border)] text-[13px] text-[var(--text-primary)] px-3"
                   >
                     <option value="CASH_RECEIPT">Phiếu thu tiền mặt</option>
                     <option value="CASH_PAYMENT">Phiếu chi tiền mặt</option>
@@ -630,35 +630,35 @@ export default function CashBankPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-black text-gray-400 uppercase mb-1">Số tiền (VND)</label>
+                  <label className="block text-[11px] font-black text-[var(--text-muted)] uppercase mb-1">Số tiền (VND)</label>
                   <input 
                     type="number" 
                     required 
                     value={formAmount} 
                     onChange={e => setFormAmount(Number(e.target.value))}
-                    className="w-full h-10 rounded-md bg-[#13131a] border border-[#2d2d3c] text-[13px] text-gray-200 px-3 font-mono font-bold" 
+                    className="w-full h-10 rounded-md bg-[var(--background)] border border-[var(--border)] text-[13px] text-[var(--text-primary)] px-3 font-mono font-bold" 
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-black text-gray-400 uppercase mb-1">Đối tác / Người nộp nhận</label>
+                  <label className="block text-[11px] font-black text-[var(--text-muted)] uppercase mb-1">Đối tác / Người nộp nhận</label>
                   <input 
                     type="text" 
                     placeholder="Tên khách hàng, NCC, nhân viên..."
                     value={formPartner} 
                     onChange={e => setFormPartner(e.target.value)}
-                    className="w-full h-10 rounded-md bg-[#13131a] border border-[#2d2d3c] text-[13px] text-gray-200 px-3" 
+                    className="w-full h-10 rounded-md bg-[var(--background)] border border-[var(--border)] text-[13px] text-[var(--text-primary)] px-3" 
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-black text-gray-400 uppercase mb-1">Liên kết Dự án</label>
+                  <label className="block text-[11px] font-black text-[var(--text-muted)] uppercase mb-1">Liên kết Dự án</label>
                   <select 
                     value={formProject} 
                     onChange={e => setFormProject(e.target.value)}
-                    className="w-full h-10 rounded-md bg-[#13131a] border border-[#2d2d3c] text-[13px] text-gray-200 px-3"
+                    className="w-full h-10 rounded-md bg-[var(--background)] border border-[var(--border)] text-[13px] text-[var(--text-primary)] px-3"
                   >
                     <option value="">Không thuộc dự án nào</option>
                     {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
@@ -668,11 +668,11 @@ export default function CashBankPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-black text-gray-400 uppercase mb-1">Tài khoản ghi Nợ (Debit)</label>
+                  <label className="block text-[11px] font-black text-[var(--text-muted)] uppercase mb-1">Tài khoản ghi Nợ (Debit)</label>
                   <select 
                     value={formDebitAcc} 
                     onChange={e => setFormDebitAcc(e.target.value)}
-                    className="w-full h-10 rounded-md bg-[#13131a] border border-[#2d2d3c] text-[13px] text-gray-200 px-3 font-mono"
+                    className="w-full h-10 rounded-md bg-[var(--background)] border border-[var(--border)] text-[13px] text-[var(--text-primary)] px-3 font-mono"
                   >
                     <option value="">Chọn tài khoản</option>
                     {accounts.map(a => <option key={a.id} value={a.id}>{a.code} - {a.name}</option>)}
@@ -680,11 +680,11 @@ export default function CashBankPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-black text-gray-400 uppercase mb-1">Tài khoản ghi Có (Credit)</label>
+                  <label className="block text-[11px] font-black text-[var(--text-muted)] uppercase mb-1">Tài khoản ghi Có (Credit)</label>
                   <select 
                     value={formCreditAcc} 
                     onChange={e => setFormCreditAcc(e.target.value)}
-                    className="w-full h-10 rounded-md bg-[#13131a] border border-[#2d2d3c] text-[13px] text-gray-200 px-3 font-mono"
+                    className="w-full h-10 rounded-md bg-[var(--background)] border border-[var(--border)] text-[13px] text-[var(--text-primary)] px-3 font-mono"
                   >
                     <option value="">Chọn tài khoản</option>
                     {accounts.map(a => <option key={a.id} value={a.id}>{a.code} - {a.name}</option>)}
@@ -694,40 +694,40 @@ export default function CashBankPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-black text-gray-400 uppercase mb-1">Ngày chứng từ</label>
+                  <label className="block text-[11px] font-black text-[var(--text-muted)] uppercase mb-1">Ngày chứng từ</label>
                   <input 
                     type="date" 
                     value={formDocDate} 
                     onChange={e => setFormDocDate(e.target.value)}
-                    className="w-full h-10 rounded-md bg-[#13131a] border border-[#2d2d3c] text-[13px] text-gray-200 px-3" 
+                    className="w-full h-10 rounded-md bg-[var(--background)] border border-[var(--border)] text-[13px] text-[var(--text-primary)] px-3" 
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-black text-gray-400 uppercase mb-1">Ngày hạch toán kế toán</label>
+                  <label className="block text-[11px] font-black text-[var(--text-muted)] uppercase mb-1">Ngày hạch toán kế toán</label>
                   <input 
                     type="date" 
                     value={formAccDate} 
                     onChange={e => setFormAccDate(e.target.value)}
-                    className="w-full h-10 rounded-md bg-[#13131a] border border-[#2d2d3c] text-[13px] text-gray-200 px-3" 
+                    className="w-full h-10 rounded-md bg-[var(--background)] border border-[var(--border)] text-[13px] text-[var(--text-primary)] px-3" 
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-black text-gray-400 uppercase mb-1">Diễn giải lý do thu / chi (tối thiểu 5 ký tự)</label>
+                <label className="block text-[11px] font-black text-[var(--text-muted)] uppercase mb-1">Diễn giải lý do thu / chi (tối thiểu 5 ký tự)</label>
                 <textarea 
                   required 
                   rows={3} 
                   placeholder="Nhập lý do, căn cứ kèm theo chứng từ..."
                   value={formDesc} 
                   onChange={e => setFormDesc(e.target.value)}
-                  className="w-full rounded-md bg-[#13131a] border border-[#2d2d3c] text-[13px] text-gray-200 p-3"
+                  className="w-full rounded-md bg-[var(--background)] border border-[var(--border)] text-[13px] text-[var(--text-primary)] p-3"
                 />
               </div>
 
-              <div className="p-4 border-t border-[#2d2d3c] flex justify-end gap-3 pt-6">
-                <button type="button" onClick={() => setShowCreateModal(false)} className="h-[36px] px-5 rounded-[var(--radius-sm)] border border-[#2d2d3c] bg-[#1c1c24] hover:bg-[#252533] text-[12px] font-bold text-gray-300">Hủy</button>
+              <div className="p-4 border-t border-[var(--border)] flex justify-end gap-3 pt-6">
+                <button type="button" onClick={() => setShowCreateModal(false)} className="h-[36px] px-5 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--secondary)] hover:bg-[var(--muted)] text-[12px] font-bold text-[var(--text-secondary)]">Hủy</button>
                 <button type="submit" className="h-[36px] px-5 rounded-[var(--radius-sm)] bg-gradient-to-r from-blue-600 to-indigo-600 text-[12px] font-black text-white hover:from-blue-500 hover:to-indigo-500 shadow-md">LẬP CHỨNG TỪ</button>
               </div>
             </form>
@@ -738,32 +738,32 @@ export default function CashBankPage() {
       {/* DETAIL MODAL / DRAWER */}
       {showDetailModal && selectedDoc && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-sm p-4">
-          <div className="bg-[#1c1c24] border border-[#2d2d3c] rounded-xl w-full max-w-3xl max-h-[92vh] overflow-y-auto shadow-2xl text-gray-200 animate-scale-in">
-            <div className="p-6 border-b border-[#2d2d3c] flex items-center justify-between">
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl w-full max-w-3xl max-h-[92vh] overflow-y-auto shadow-2xl text-[var(--text-primary)] animate-scale-in">
+            <div className="p-6 border-b border-[var(--border)] flex items-center justify-between">
               <div className="space-y-1">
-                <h3 className="text-[15px] font-black uppercase text-white">CHI TIẾT CHỨNG TỪ QUỸ & NGÂN HÀNG</h3>
-                <p className="text-[11px] text-blue-400 font-mono">ID: {selectedDoc.id}</p>
+                <h3 className="text-[15px] font-black uppercase text-[var(--text-primary)]">CHI TIẾT CHỨNG TỪ QUỸ & NGÂN HÀNG</h3>
+                <p className="text-[11px] text-blue-500 font-mono">ID: {selectedDoc.id}</p>
               </div>
-              <button onClick={() => { setShowDetailModal(false); setShowRejectInput(false); setShowReverseInput(false); setShowCancelInput(false); }} className="text-gray-400 hover:text-white text-[20px] font-bold">×</button>
+              <button onClick={() => { setShowDetailModal(false); setShowRejectInput(false); setShowReverseInput(false); setShowCancelInput(false); }} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] text-[20px] font-bold">×</button>
             </div>
 
             <div className="p-6 space-y-6">
               {/* Top Banner details */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 bg-[#14141d] rounded-lg border border-[#2d2d3c]">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 bg-[var(--secondary)] rounded-lg border border-[var(--border)]">
                 <div>
-                  <span className="text-[10px] uppercase font-black text-gray-400">Số chứng từ</span>
-                  <p className="text-[13px] font-bold text-blue-400 font-mono mt-0.5">{selectedDoc.documentNo}</p>
+                  <span className="text-[10px] uppercase font-black text-[var(--text-muted)]">Số chứng từ</span>
+                  <p className="text-[13px] font-bold text-blue-500 font-mono mt-0.5">{selectedDoc.documentNo}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-black text-gray-400">Loại phiếu</span>
-                  <p className="text-[12px] font-semibold text-white mt-0.5">{translateDocType(selectedDoc.documentType)}</p>
+                  <span className="text-[10px] uppercase font-black text-[var(--text-muted)]">Loại phiếu</span>
+                  <p className="text-[12px] font-semibold text-[var(--text-primary)] mt-0.5">{translateDocType(selectedDoc.documentType)}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-black text-gray-400">Ngày hạch toán</span>
-                  <p className="text-[13px] font-mono text-gray-200 mt-0.5">{formatDate(selectedDoc.accountingDate)}</p>
+                  <span className="text-[10px] uppercase font-black text-[var(--text-muted)]">Ngày hạch toán</span>
+                  <p className="text-[13px] font-mono text-[var(--text-primary)] mt-0.5">{formatDate(selectedDoc.accountingDate)}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-black text-gray-400">Trạng thái</span>
+                  <span className="text-[10px] uppercase font-black text-[var(--text-muted)]">Trạng thái</span>
                   <div className="mt-0.5">
                     <span className={`inline-flex rounded-full px-2.5 py-0.5 text-[9px] font-black uppercase ${getStatusBadgeClass(selectedDoc.status)}`}>
                       {translateStatus(selectedDoc.status)}
@@ -775,46 +775,46 @@ export default function CashBankPage() {
               {/* Main parameters details */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-3">
-                  <h4 className="text-[11px] uppercase font-black text-gray-400 tracking-wider border-b border-[#2d2d3c]/50 pb-1">THÔNG TIN GIAO DỊCH</h4>
+                  <h4 className="text-[11px] uppercase font-black text-[var(--text-muted)] tracking-wider border-b border-[var(--border)] pb-1">THÔNG TIN GIAO DỊCH</h4>
                   <div className="space-y-2 text-[12px]">
-                    <div className="flex justify-between"><span className="text-gray-400">Người nộp/nhận:</span><span className="font-bold text-white">{selectedDoc.partnerName || 'N/A'}</span></div>
-                    <div className="flex justify-between"><span className="text-gray-400">Dự án công trình:</span><span className="font-bold text-white">{selectedDoc.project?.name || 'Không thuộc dự án'}</span></div>
-                    <div className="flex justify-between"><span className="text-gray-400">Phương thức:</span><span className="font-bold text-white uppercase">{selectedDoc.paymentMethod}</span></div>
-                    <div className="flex justify-between"><span className="text-gray-400">Số tiền gốc:</span><span className="font-mono font-black text-emerald-400 text-[14px]">{formatVnd(selectedDoc.amount)}</span></div>
-                    <div className="pt-2"><span className="text-gray-400 block mb-1">Lý do thu chi:</span><p className="text-gray-200 bg-[#14141d] p-3 rounded border border-[#2d2d3c] text-[12px] leading-relaxed italic">"{selectedDoc.description}"</p></div>
+                    <div className="flex justify-between"><span className="text-[var(--text-muted)]">Người nộp/nhận:</span><span className="font-bold text-[var(--text-primary)]">{selectedDoc.partnerName || 'N/A'}</span></div>
+                    <div className="flex justify-between"><span className="text-[var(--text-muted)]">Dự án công trình:</span><span className="font-bold text-[var(--text-primary)]">{selectedDoc.project?.name || 'Không thuộc dự án'}</span></div>
+                    <div className="flex justify-between"><span className="text-[var(--text-muted)]">Phương thức:</span><span className="font-bold text-[var(--text-primary)] uppercase">{selectedDoc.paymentMethod}</span></div>
+                    <div className="flex justify-between"><span className="text-[var(--text-muted)]">Số tiền gốc:</span><span className="font-mono font-black text-emerald-500 text-[14px]">{formatVnd(selectedDoc.amount)}</span></div>
+                    <div className="pt-2"><span className="text-[var(--text-muted)] block mb-1">Lý do thu chi:</span><p className="text-[var(--text-primary)] bg-[var(--background)] p-3 rounded border border-[var(--border)] text-[12px] leading-relaxed italic">"{selectedDoc.description}"</p></div>
                   </div>
                 </div>
 
                 <div className="space-y-3">
-                  <h4 className="text-[11px] uppercase font-black text-gray-400 tracking-wider border-b border-[#2d2d3c]/50 pb-1">ĐỊNH KHOẢN KẾ TOÁN (DOUBLE ENTRY)</h4>
-                  <div className="bg-[#14141d] border border-[#2d2d3c] rounded overflow-hidden">
+                  <h4 className="text-[11px] uppercase font-black text-[var(--text-muted)] tracking-wider border-b border-[var(--border)] pb-1">ĐỊNH KHOẢN KẾ TOÁN (DOUBLE ENTRY)</h4>
+                  <div className="bg-[var(--background)] border border-[var(--border)] rounded overflow-hidden">
                     <table className="w-full text-[11px] text-left">
                       <thead>
-                        <tr className="bg-[#242433] text-gray-300 font-bold border-b border-[#2d2d3c]">
-                          <th className="p-2 border-r border-[#2d2d3c] text-center">Tài khoản</th>
-                          <th className="p-2 border-r border-[#2d2d3c] text-center">Bên Nợ (Dr)</th>
+                        <tr className="bg-[var(--secondary)] text-[var(--text-secondary)] font-bold border-b border-[var(--border)]">
+                          <th className="p-2 border-r border-[var(--border)] text-center">Tài khoản</th>
+                          <th className="p-2 border-r border-[var(--border)] text-center">Bên Nợ (Dr)</th>
                           <th className="p-2 text-center">Bên Có (Cr)</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="border-b border-[#2d2d3c]/50">
-                          <td className="p-3 border-r border-[#2d2d3c] text-center font-mono font-bold text-white">{selectedDoc.debitAccount.code} ({selectedDoc.debitAccount.name})</td>
-                          <td className="p-3 border-r border-[#2d2d3c] text-right font-mono text-emerald-400 font-bold">{formatVnd(selectedDoc.amount)}</td>
-                          <td className="p-3 text-right text-gray-400">-</td>
+                        <tr className="border-b border-[var(--border)]/50">
+                          <td className="p-3 border-r border-[var(--border)] text-center font-mono font-bold text-[var(--text-primary)]">{selectedDoc.debitAccount.code} ({selectedDoc.debitAccount.name})</td>
+                          <td className="p-3 border-r border-[var(--border)] text-right font-mono text-emerald-500 font-bold">{formatVnd(selectedDoc.amount)}</td>
+                          <td className="p-3 text-right text-[var(--text-muted)]">-</td>
                         </tr>
                         <tr>
-                          <td className="p-3 border-r border-[#2d2d3c] text-center font-mono font-bold text-white">{selectedDoc.creditAccount.code} ({selectedDoc.creditAccount.name})</td>
-                          <td className="p-3 border-r border-[#2d2d3c] text-right text-gray-400">-</td>
-                          <td className="p-3 text-right font-mono text-rose-400 font-bold">{formatVnd(selectedDoc.amount)}</td>
+                          <td className="p-3 border-r border-[var(--border)] text-center font-mono font-bold text-[var(--text-primary)]">{selectedDoc.creditAccount.code} ({selectedDoc.creditAccount.name})</td>
+                          <td className="p-3 border-r border-[var(--border)] text-right text-[var(--text-muted)]">-</td>
+                          <td className="p-3 text-right font-mono text-rose-500 font-bold">{formatVnd(selectedDoc.amount)}</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
 
                   {selectedDoc.postedJournalEntryId && (
-                    <div className="p-3 bg-emerald-500/5 rounded border border-emerald-500/20 text-[11px] text-emerald-400 flex items-center justify-between">
+                    <div className="p-3 bg-emerald-500/10 rounded border border-emerald-500/20 text-[11px] text-emerald-500 flex items-center justify-between">
                       <span>✓ Đã cập nhật thành công vào Sổ Cái kế toán</span>
-                      <span className="font-mono text-emerald-300 font-bold">Bút toán Sổ Cái: {selectedDoc.postedJournalEntryId.slice(0, 8)}</span>
+                      <span className="font-mono text-emerald-400 font-bold">Bút toán Sổ Cái: {selectedDoc.postedJournalEntryId.slice(0, 8)}</span>
                     </div>
                   )}
                 </div>
@@ -822,44 +822,44 @@ export default function CashBankPage() {
 
               {/* DYNAMIC ACTION INPUTS */}
               {showRejectInput && (
-                <div className="p-4 bg-amber-500/5 rounded border border-amber-500/20 space-y-3">
+                <div className="p-4 bg-amber-500/10 rounded border border-amber-500/20 space-y-3">
                   <span className="text-[11px] text-amber-500 font-black uppercase">Nhập lý do từ chối (tối thiểu 5 ký tự)</span>
-                  <input type="text" required value={rejectReason} onChange={e => setRejectReason(e.target.value)} className="w-full h-10 rounded bg-[#101015] border border-amber-500/30 px-3 text-[13px]" placeholder="Ví dụ: Định khoản sai tài khoản đối ứng, yêu cầu kiểm tra lại..." />
+                  <input type="text" required value={rejectReason} onChange={e => setRejectReason(e.target.value)} className="w-full h-10 rounded bg-[var(--background)] border border-amber-500/30 px-3 text-[13px] text-[var(--text-primary)]" placeholder="Ví dụ: Định khoản sai tài khoản đối ứng, yêu cầu kiểm tra lại..." />
                   <div className="flex gap-2 justify-end">
-                    <button onClick={() => setShowRejectInput(false)} className="px-4 py-1.5 rounded text-[12px] bg-gray-700 hover:bg-gray-600 font-bold">Hủy</button>
-                    <button onClick={() => handleLifecycleAction('reject')} className="px-4 py-1.5 rounded text-[12px] bg-amber-600 hover:bg-amber-500 font-bold">Gửi từ chối</button>
+                    <button onClick={() => setShowRejectInput(false)} className="px-4 py-1.5 rounded text-[12px] bg-[var(--secondary)] hover:bg-[var(--muted)] font-bold text-[var(--text-secondary)]">Hủy</button>
+                    <button onClick={() => handleLifecycleAction('reject')} className="px-4 py-1.5 rounded text-[12px] bg-amber-600 hover:bg-amber-500 font-bold text-white">Gửi từ chối</button>
                   </div>
                 </div>
               )}
 
               {showReverseInput && (
-                <div className="p-4 bg-rose-500/5 rounded border border-rose-500/20 space-y-3">
+                <div className="p-4 bg-rose-500/10 rounded border border-rose-500/20 space-y-3">
                   <span className="text-[11px] text-rose-500 font-black uppercase">Nhập lý do hủy ghi sổ / bút toán đảo (tối thiểu 5 ký tự)</span>
-                  <input type="text" required value={reverseReason} onChange={e => setReverseReason(e.target.value)} className="w-full h-10 rounded bg-[#101015] border border-rose-500/30 px-3 text-[13px]" placeholder="Ví dụ: Đối tác thanh toán nhầm, hủy bút toán..." />
+                  <input type="text" required value={reverseReason} onChange={e => setReverseReason(e.target.value)} className="w-full h-10 rounded bg-[var(--background)] border border-rose-500/30 px-3 text-[13px] text-[var(--text-primary)]" placeholder="Ví dụ: Đối tác thanh toán nhầm, hủy bút toán..." />
                   <div className="flex gap-2 justify-end">
-                    <button onClick={() => setShowReverseInput(false)} className="px-4 py-1.5 rounded text-[12px] bg-gray-700 hover:bg-gray-600 font-bold">Hủy</button>
-                    <button onClick={() => handleLifecycleAction('reverse')} className="px-4 py-1.5 rounded text-[12px] bg-rose-600 hover:bg-rose-500 font-bold">Hủy ghi sổ & Đảo bút toán</button>
+                    <button onClick={() => setShowReverseInput(false)} className="px-4 py-1.5 rounded text-[12px] bg-[var(--secondary)] hover:bg-[var(--muted)] font-bold text-[var(--text-secondary)]">Hủy</button>
+                    <button onClick={() => handleLifecycleAction('reverse')} className="px-4 py-1.5 rounded text-[12px] bg-rose-600 hover:bg-rose-500 font-bold text-white">Hủy ghi sổ & Đảo bút toán</button>
                   </div>
                 </div>
               )}
 
               {showCancelInput && (
-                <div className="p-4 bg-amber-500/5 rounded border border-amber-500/20 space-y-3">
+                <div className="p-4 bg-amber-500/10 rounded border border-amber-500/20 space-y-3">
                   <span className="text-[11px] text-amber-500 font-black uppercase">Nhập lý do hủy bỏ chứng từ (tối thiểu 5 ký tự)</span>
-                  <input type="text" required value={cancelReason} onChange={e => setCancelReason(e.target.value)} className="w-full h-10 rounded bg-[#101015] border border-amber-500/30 px-3 text-[13px]" placeholder="Ví dụ: Chứng từ nháp bị sai, hủy phiếu..." />
+                  <input type="text" required value={cancelReason} onChange={e => setCancelReason(e.target.value)} className="w-full h-10 rounded bg-[var(--background)] border border-amber-500/30 px-3 text-[13px] text-[var(--text-primary)]" placeholder="Ví dụ: Chứng từ nháp bị sai, hủy phiếu..." />
                   <div className="flex gap-2 justify-end">
-                    <button onClick={() => setShowCancelInput(false)} className="px-4 py-1.5 rounded text-[12px] bg-gray-700 hover:bg-gray-600 font-bold">Hủy</button>
-                    <button onClick={() => handleLifecycleAction('cancel')} className="px-4 py-1.5 rounded text-[12px] bg-amber-600 hover:bg-amber-500 font-bold">Xác nhận hủy phiếu</button>
+                    <button onClick={() => setShowCancelInput(false)} className="px-4 py-1.5 rounded text-[12px] bg-[var(--secondary)] hover:bg-[var(--muted)] font-bold text-[var(--text-secondary)]">Hủy</button>
+                    <button onClick={() => handleLifecycleAction('cancel')} className="px-4 py-1.5 rounded text-[12px] bg-amber-600 hover:bg-amber-500 font-bold text-white">Xác nhận hủy phiếu</button>
                   </div>
                 </div>
               )}
 
               {/* ACTION MENU CONTROLLER */}
-              <div className="p-4 border-t border-[#2d2d3c] flex flex-wrap justify-end gap-2 pt-6">
+              <div className="p-4 border-t border-[var(--border)] flex flex-wrap justify-end gap-2 pt-6">
                 {selectedDoc.status === 'DRAFT' && (
                   <>
                     <button onClick={() => handleLifecycleAction('submit')} className="h-[36px] px-5 rounded bg-blue-600 text-[12px] font-black text-white hover:bg-blue-500 shadow-md">TRÌNH DUYỆT</button>
-                    <button onClick={() => setShowCancelInput(true)} className="h-[36px] px-5 rounded border border-[#2d2d3c] bg-gray-700 text-[12px] font-bold text-white hover:bg-gray-600">HỦY PHIẾU</button>
+                    <button onClick={() => setShowCancelInput(true)} className="h-[36px] px-5 rounded border border-[var(--border)] bg-[var(--secondary)] text-[12px] font-bold text-[var(--text-secondary)] hover:bg-[var(--muted)]">HỦY PHIẾU</button>
                   </>
                 )}
 
@@ -881,9 +881,9 @@ export default function CashBankPage() {
                   <button onClick={() => setShowReverseInput(true)} className="h-[36px] px-5 rounded bg-rose-600 text-[12px] font-black text-white hover:bg-rose-500 shadow-md">⟲ HỦY GHI SỔ / BÚT TOÁN ĐẢO</button>
                 )}
 
-                <button onClick={() => handlePrint(selectedDoc.id, selectedDoc.documentType)} className="h-[36px] px-5 rounded border border-purple-500/30 bg-purple-500/10 text-purple-400 text-[12px] font-black hover:bg-purple-500/20">IN CHỨNG TỪ A4</button>
+                <button onClick={() => handlePrint(selectedDoc.id, selectedDoc.documentType)} className="h-[36px] px-5 rounded border border-purple-500/30 bg-purple-500/10 text-purple-500 text-[12px] font-black hover:bg-purple-500/20">IN CHỨNG TỪ A4</button>
                 
-                <button onClick={() => { setShowDetailModal(false); setShowRejectInput(false); setShowReverseInput(false); setShowCancelInput(false); }} className="h-[36px] px-5 rounded border border-[#2d2d3c] bg-[#1c1c24] text-[12px] font-bold text-gray-300 hover:bg-[#252533]">Đóng</button>
+                <button onClick={() => { setShowDetailModal(false); setShowRejectInput(false); setShowReverseInput(false); setShowCancelInput(false); }} className="h-[36px] px-5 rounded border border-[var(--border)] bg-[var(--secondary)] text-[12px] font-bold text-[var(--text-secondary)] hover:bg-[var(--muted)]">Đóng</button>
               </div>
             </div>
           </div>

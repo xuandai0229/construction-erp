@@ -89,21 +89,21 @@ export function InventoryDocumentLinesTable({ lines, onChange, readOnly = false,
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-bold text-white uppercase tracking-wider">Chi tiết vật tư hạch toán</h4>
+        <h4 className="text-sm font-bold text-[var(--text-primary)] uppercase tracking-wider">Chi tiết vật tư hạch toán</h4>
         {!readOnly && (
           <button
             type="button"
             onClick={handleAddLine}
-            className="px-3 py-1.5 text-xs font-bold rounded bg-blue-600 hover:bg-blue-500 text-white flex items-center gap-1.5 transition-all"
+            className="px-3 py-1.5 text-xs font-bold rounded bg-[var(--primary)] hover:bg-[var(--primary)]/95 text-[var(--primary-foreground)] flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
           >
-            Thêm dòng vật tư
+            + Thêm dòng vật tư
           </button>
         )}
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-900/40">
+      <div className="overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--card)]">
         <table className="w-full text-left text-xs">
-          <thead className="bg-zinc-900 border-b border-zinc-800 text-zinc-400 font-bold uppercase tracking-wider">
+          <thead className="bg-[var(--secondary)] border-b border-[var(--border)] text-[var(--text-secondary)] font-bold uppercase tracking-wider">
             <tr>
               <th className="p-3 w-8">#</th>
               <th className="p-3 min-w-[200px]">Vật tư *</th>
@@ -111,31 +111,31 @@ export function InventoryDocumentLinesTable({ lines, onChange, readOnly = false,
               {docType !== 'ISSUE_TO_PROJECT' && <th className="p-3 min-w-[150px]">Kho đích</th>}
               <th className="p-3 w-24">Số lượng *</th>
               <th className="p-3 w-32 text-right">Đơn giá *</th>
-              <th className="p-3 w-20">VAT (%)</th>
+              <th className="p-3 w-20 text-center">VAT (%)</th>
               <th className="p-3 min-w-[150px]">Hạng mục WBS</th>
               <th className="p-3 w-32 text-right">Thành tiền</th>
               {!readOnly && <th className="p-3 w-10"></th>}
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-800 text-zinc-200">
+          <tbody className="divide-y divide-[var(--border)] text-[var(--text-primary)]">
             {lines.length === 0 ? (
               <tr>
-                <td colSpan={10} className="p-8 text-center text-zinc-500 italic">
-                  Chưa có dòng vật tư nào được chọn. Nhấp &quot;Thêm dòng vật tư&quot; để lập chi tiết.
+                <td colSpan={10} className="p-8 text-center text-[var(--text-muted)] italic bg-[var(--card)]">
+                  Chưa có dòng vật tư nào được chọn. Nhấp "Thêm dòng vật tư" để lập chi tiết.
                 </td>
               </tr>
             ) : (
               lines.map((line, idx) => {
                 const total = Number(line.quantity || 0) * Number(line.unitCost || 0);
                 return (
-                  <tr key={idx} className="hover:bg-zinc-800/20">
-                    <td className="p-3 text-zinc-500 font-medium">{idx + 1}</td>
+                  <tr key={idx} className="hover:bg-[var(--secondary)]/25 transition-colors">
+                    <td className="p-3 text-[var(--text-muted)] font-medium">{idx + 1}</td>
                     <td className="p-2">
                       <select
                         disabled={readOnly}
                         value={line.materialItemId}
                         onChange={(e) => handleLineChange(idx, 'materialItemId', e.target.value)}
-                        className="w-full h-8 px-2 rounded border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500 disabled:opacity-65"
+                        className="w-full h-8 px-2 rounded border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] disabled:opacity-65 text-xs"
                       >
                         <option value="">-- Chọn vật tư --</option>
                         {materials.map((m: any) => (
@@ -152,7 +152,7 @@ export function InventoryDocumentLinesTable({ lines, onChange, readOnly = false,
                           disabled={readOnly}
                           value={line.sourceWarehouseId || ''}
                           onChange={(e) => handleLineChange(idx, 'sourceWarehouseId', e.target.value)}
-                          className="w-full h-8 px-2 rounded border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500 disabled:opacity-65"
+                          className="w-full h-8 px-2 rounded border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] disabled:opacity-65 text-xs"
                         >
                           <option value="">-- Chọn kho nguồn --</option>
                           {warehouses.map((w: any) => (
@@ -170,7 +170,7 @@ export function InventoryDocumentLinesTable({ lines, onChange, readOnly = false,
                           disabled={readOnly}
                           value={line.targetWarehouseId || ''}
                           onChange={(e) => handleLineChange(idx, 'targetWarehouseId', e.target.value)}
-                          className="w-full h-8 px-2 rounded border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500 disabled:opacity-65"
+                          className="w-full h-8 px-2 rounded border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] disabled:opacity-65 text-xs"
                         >
                           <option value="">-- Chọn kho đích --</option>
                           {warehouses.map((w: any) => (
@@ -189,7 +189,7 @@ export function InventoryDocumentLinesTable({ lines, onChange, readOnly = false,
                         min="1"
                         value={line.quantity}
                         onChange={(e) => handleLineChange(idx, 'quantity', Number(e.target.value) || 0)}
-                        className="w-full h-8 px-2 rounded border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500 disabled:opacity-65 text-center"
+                        className="w-full h-8 px-2 rounded border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] disabled:opacity-65 text-center font-mono text-xs"
                       />
                     </td>
 
@@ -199,7 +199,7 @@ export function InventoryDocumentLinesTable({ lines, onChange, readOnly = false,
                         type="number"
                         value={line.unitCost}
                         onChange={(e) => handleLineChange(idx, 'unitCost', Number(e.target.value) || 0)}
-                        className="w-full h-8 px-2 rounded border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500 disabled:opacity-65 text-right font-mono"
+                        className="w-full h-8 px-2 rounded border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] disabled:opacity-65 text-right font-mono text-xs"
                       />
                     </td>
 
@@ -209,7 +209,7 @@ export function InventoryDocumentLinesTable({ lines, onChange, readOnly = false,
                         type="number"
                         value={line.vatRate || 0}
                         onChange={(e) => handleLineChange(idx, 'vatRate', Number(e.target.value) || 0)}
-                        className="w-full h-8 px-2 rounded border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500 disabled:opacity-65 text-center"
+                        className="w-full h-8 px-2 rounded border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] disabled:opacity-65 text-center font-mono text-xs"
                       />
                     </td>
 
@@ -218,7 +218,7 @@ export function InventoryDocumentLinesTable({ lines, onChange, readOnly = false,
                         disabled={readOnly}
                         value={line.wbsId || ''}
                         onChange={(e) => handleLineChange(idx, 'wbsId', e.target.value)}
-                        className="w-full h-8 px-2 rounded border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500 disabled:opacity-65"
+                        className="w-full h-8 px-2 rounded border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] disabled:opacity-65 text-xs"
                       >
                         <option value="">-- Hạng mục WBS --</option>
                         {wbsItems.map((w: any) => (
@@ -229,7 +229,7 @@ export function InventoryDocumentLinesTable({ lines, onChange, readOnly = false,
                       </select>
                     </td>
 
-                    <td className="p-3 text-right font-bold font-mono text-blue-400">
+                    <td className="p-3 text-right font-bold font-mono text-[var(--primary)]">
                       {total.toLocaleString('vi-VN')} đ
                     </td>
 
@@ -238,7 +238,8 @@ export function InventoryDocumentLinesTable({ lines, onChange, readOnly = false,
                         <button
                           type="button"
                           onClick={() => handleRemoveLine(idx)}
-                          className="text-red-500 hover:text-red-400 font-bold text-sm"
+                          className="text-rose-500 hover:text-rose-400 font-bold text-sm cursor-pointer"
+                          aria-label="Xóa dòng"
                         >
                           ✕
                         </button>

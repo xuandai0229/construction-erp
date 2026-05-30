@@ -1,10 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Sidebar from "@/app/components/Sidebar";
+import Header from "@/app/components/Header";
+import { useERPStore } from "@/store/erpStore";
 import PermissionMatrixView from "../components/approvals/PermissionMatrixView";
 import { ApprovalInboxTable } from "../components/approvals/ApprovalInboxTable";
 import { ApprovalDetailDrawer } from "../components/approvals/ApprovalDetailDrawer";
 import { RejectReasonModal } from "../components/approvals/RejectReasonModal";
+import { 
+  EnterpriseLoadingState, 
+  EnterpriseErrorState 
+} from "@/app/components/ui-enterprise";
 
 interface PendingDoc {
   id: string;
@@ -20,6 +27,7 @@ interface PendingDoc {
 }
 
 export default function ApprovalsPage() {
+  const sidebarCollapsed = useERPStore((state) => state.sidebarCollapsed);
   const [activeTab, setActiveTab] = useState<"pending" | "processed" | "created" | "overdue" | "matrix">("pending");
   const [pendingDocs, setPendingDocs] = useState<PendingDoc[]>([]);
   const [processedDocs, setProcessedDocs] = useState<PendingDoc[]>([]);
@@ -179,7 +187,6 @@ export default function ApprovalsPage() {
       case "created":
         return getFilteredDocs(createdDocs);
       case "overdue":
-        // Overdue simulated as pending documents older than 3 days
         return getFilteredDocs(
           pendingDocs.filter((d) => {
             const age = Date.now() - new Date(d.createdAt).getTime();
@@ -192,112 +199,128 @@ export default function ApprovalsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50/50 p-6 space-y-6">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-black text-zinc-950 tracking-tight">Bàn Phê Duyệt Kế Toán (Approval Inbox)</h1>
-          <p className="text-zinc-500 text-sm mt-1">Xử lý phê duyệt hóa đơn, tạm ứng, quyết toán và chi phí tập trung.</p>
-        </div>
-      </header>
-
-      {/* Tabs */}
-      <div className="border-b border-zinc-200 flex gap-6">
-        {[
-          { key: "pending", label: "Chờ tôi duyệt" },
-          { key: "processed", label: "Tôi đã xử lý" },
-          { key: "created", label: "Tôi đã tạo" },
-          { key: "overdue", label: "Quá hạn duyệt" },
-          { key: "matrix", label: "Permission Matrix" }
-        ].map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key as any)}
-            className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
-              activeTab === tab.key
-                ? "text-blue-600 border-blue-600"
-                : "text-zinc-500 hover:text-zinc-800 border-transparent"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {activeTab === "matrix" ? (
-        <PermissionMatrixView />
-      ) : (
-        <div className="space-y-6 animate-in fade-in duration-200">
-          {/* Advanced Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-5 bg-white rounded-2xl border border-zinc-100 shadow-xs">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex overflow-hidden">
+      <Sidebar activeItem="approvals" />
+      <main className={`erp-page-main flex-1 flex flex-col h-screen overflow-hidden ${sidebarCollapsed ? 'pl-[var(--erp-sidebar-collapsed)]' : 'pl-[var(--erp-sidebar-width)]'}`}>
+        <Header />
+        
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin">
+          <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
             <div>
-              <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1.5">Từ khóa tìm kiếm</label>
-              <input
-                type="text"
-                placeholder="Số chứng từ..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-3 py-2 border border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-              />
+              <h1 className="text-base font-bold text-[var(--text-primary)]">Bàn Phê Duyệt Kế Toán (Approval Inbox)</h1>
+              <p className="text-[var(--text-muted)] text-xs mt-1">
+                Xử lý phê duyệt hóa đơn, tạm ứng, quyết toán và chi phí tập trung theo luồng nghiệp vụ liên kết.
+              </p>
             </div>
-            <div>
-              <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1.5">Phân hệ</label>
-              <select
-                value={selectedModule}
-                onChange={(e) => setSelectedModule(e.target.value)}
-                className="w-full px-3 py-2 border border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          </header>
+
+          {/* Tabs */}
+          <div className="border-b border-[var(--border)] flex gap-6 overflow-x-auto scrollbar-none select-none">
+            {[
+              { key: "pending", label: "Chờ tôi duyệt" },
+              { key: "processed", label: "Tôi đã xử lý" },
+              { key: "created", label: "Tôi đã tạo" },
+              { key: "overdue", label: "Quá hạn duyệt" },
+              { key: "matrix", label: "Quy trình phân quyền" }
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key as any)}
+                className={`pb-3 text-xs font-bold uppercase tracking-wider transition-all border-b-2 -mb-0.5 whitespace-nowrap cursor-pointer ${
+                  activeTab === tab.key
+                    ? "text-[var(--primary)] border-[var(--primary)] font-extrabold"
+                    : "text-[var(--text-muted)] hover:text-[var(--text-primary)] border-transparent"
+                }`}
               >
-                <option value="">Tất cả</option>
-                <option value="INVOICE">Hóa đơn</option>
-                <option value="COST">Chi phí</option>
-                <option value="ADVANCE">Tạm ứng</option>
-                <option value="SETTLEMENT">Quyết toán</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1.5">Người đề xuất</label>
-              <input
-                type="text"
-                placeholder="Họ tên người tạo..."
-                value={creatorQuery}
-                onChange={(e) => setCreatorQuery(e.target.value)}
-                className="w-full px-3 py-2 border border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1.5">Khoảng giá trị tối thiểu (VND)</label>
-              <input
-                type="number"
-                placeholder="Ví dụ: 10000000"
-                value={minAmount}
-                onChange={(e) => setMinAmount(e.target.value)}
-                className="w-full px-3 py-2 border border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-              />
-            </div>
+                {tab.label}
+              </button>
+            ))}
           </div>
 
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-24 space-y-4">
-              <div className="w-10 h-10 border-4 border-blue-600/30 border-t-blue-600 rounded-full animate-spin" />
-              <span className="text-zinc-500 text-sm font-semibold">Đang tải hộp thư...</span>
-            </div>
-          ) : error ? (
-            <div className="p-4 bg-rose-50 border border-rose-100 text-rose-700 rounded-2xl text-sm font-medium">
-              ⚠ Lỗi: {error}
-            </div>
+          {activeTab === "matrix" ? (
+            <PermissionMatrixView />
           ) : (
-            <ApprovalInboxTable
-              documents={getActiveTabDocs()}
-              currentUserId={currentUserId}
-              onSelect={(doc) => {
-                setSelectedDoc(doc);
-                setIsDrawerOpen(true);
-              }}
-              onApprove={handleApprove}
-              onRejectClick={handleRejectClick}
-            />
+            <div className="space-y-6 animate-in fade-in duration-200">
+              {/* Advanced Filters */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-5 bg-[var(--card)] rounded-xl border border-[var(--border)] text-xs">
+                <div>
+                  <label className="block text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
+                    Từ khóa tìm kiếm
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Số chứng từ..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full h-[38px] px-3 border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] placeholder-[var(--text-muted)] rounded-lg text-sm focus:outline-none focus:border-[var(--primary)]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
+                    Phân hệ
+                  </label>
+                  <select
+                    value={selectedModule}
+                    onChange={(e) => setSelectedModule(e.target.value)}
+                    className="w-full h-[38px] px-3 border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] rounded-lg text-sm focus:outline-none focus:border-[var(--primary)]"
+                  >
+                    <option value="">Tất cả</option>
+                    <option value="INVOICE">Hóa đơn</option>
+                    <option value="COST">Chi phí</option>
+                    <option value="ADVANCE">Tạm ứng</option>
+                    <option value="SETTLEMENT">Quyết toán</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
+                    Người đề xuất
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Họ tên người tạo..."
+                    value={creatorQuery}
+                    onChange={(e) => setCreatorQuery(e.target.value)}
+                    className="w-full h-[38px] px-3 border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] placeholder-[var(--text-muted)] rounded-lg text-sm focus:outline-none focus:border-[var(--primary)]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
+                    Khoảng giá trị tối thiểu (VND)
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="Ví dụ: 10000000"
+                    value={minAmount}
+                    onChange={(e) => setMinAmount(e.target.value)}
+                    className="w-full h-[38px] px-3 border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] placeholder-[var(--text-muted)] rounded-lg text-sm focus:outline-none focus:border-[var(--primary)] font-mono"
+                  />
+                </div>
+              </div>
+
+              {loading ? (
+                <EnterpriseLoadingState message="Đang tải hộp thư phê duyệt..." />
+              ) : error ? (
+                <EnterpriseErrorState 
+                  title="Lỗi tải dữ liệu" 
+                  description={error} 
+                  onRetry={fetchInboxData} 
+                />
+              ) : (
+                <ApprovalInboxTable
+                  documents={getActiveTabDocs()}
+                  currentUserId={currentUserId}
+                  onSelect={(doc) => {
+                    setSelectedDoc(doc);
+                    setIsDrawerOpen(true);
+                  }}
+                  onApprove={handleApprove}
+                  onRejectClick={handleRejectClick}
+                />
+              )}
+            </div>
           )}
         </div>
-      )}
+      </main>
 
       {/* Drawer & Modal integration */}
       <ApprovalDetailDrawer

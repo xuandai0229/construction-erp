@@ -6,6 +6,11 @@ import { InventoryDocumentLinesTable } from './InventoryDocumentLinesTable';
 import { InventoryStatusTimeline } from './InventoryStatusTimeline';
 import { InventoryJournalPreview } from './InventoryJournalPreview';
 import { useERPStore } from '@/store/erpStore';
+import { 
+  EnterpriseModal, 
+  EnterpriseLoadingState,
+  getStatusLabel 
+} from '@/app/components/ui-enterprise';
 
 interface InventoryDocumentFormProps {
   docId: string | null; // null for creating new
@@ -211,12 +216,7 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
   };
 
   if (docId && isLoadingDoc) {
-    return (
-      <div className="space-y-6">
-        <div className="h-10 w-full animate-pulse bg-zinc-800 rounded-lg" />
-        <div className="h-64 w-full animate-pulse bg-zinc-850 rounded-xl" />
-      </div>
-    );
+    return <EnterpriseLoadingState message="Đang tải chi tiết chứng từ..." />;
   }
 
   const totalPayment = lines.reduce((sum, line) => {
@@ -229,7 +229,7 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
     <div className="space-y-6">
       {/* Readonly Banner for Posted/Reversed */}
       {doc && (doc.status === 'POSTED' || doc.status === 'REVERSED') && (
-        <div className={`p-4 rounded-xl border flex items-center justify-between ${doc.status === 'POSTED' ? 'bg-blue-950/20 border-blue-900/60 text-blue-400' : 'bg-red-950/20 border-red-900/60 text-red-400'}`}>
+        <div className={`p-4 rounded-xl border flex items-center justify-between ${doc.status === 'POSTED' ? 'bg-blue-500/10 border-blue-500/20 text-blue-500' : 'bg-rose-500/10 border-rose-500/20 text-rose-500'}`}>
           <div className="flex items-center gap-3">
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
               {doc.status === 'POSTED' ? (
@@ -240,33 +240,33 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
             </svg>
             <div className="text-xs font-bold uppercase tracking-wider">
               {doc.status === 'POSTED'
-                ? 'CHỨNG TỪ KHO ĐÃ GHI SỔ CÁI (READ-ONLY MODE) - KHÔNG THỂ CHỈNH SỬA'
-                : 'CHỨNG TỪ KHO ĐÃ HỦY GHI SỔ CÁI (REVERSED) - NGHIÊM CẤM TÁC ĐỘNG'}
+                ? 'CHỨNG TỪ KHO ĐÃ GHI SỔ CÁI (CHỈ XEM) - KHÔNG THỂ CHỈNH SỬA'
+                : 'CHỨNG TỪ KHO ĐÃ HỦY GHI SỔ CÁI (ĐÃ ĐẢO CHỨNG TỪ) - NGHIÊM CẤM TÁC ĐỘNG'}
             </div>
           </div>
           <div className="flex gap-2">
             <button
               onClick={handlePrint}
-              className="px-3 py-1.5 text-xs font-bold rounded bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700"
+              className="px-3 py-1.5 text-xs font-bold rounded bg-[var(--secondary)] hover:bg-[var(--secondary)]/80 text-[var(--text-primary)] border border-[var(--border)] transition-colors"
             >
               In phiếu (A4)
             </button>
             <button
               onClick={handleExport}
-              className="px-3 py-1.5 text-xs font-bold rounded bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700"
+              className="px-3 py-1.5 text-xs font-bold rounded bg-[var(--secondary)] hover:bg-[var(--secondary)]/80 text-[var(--text-primary)] border border-[var(--border)] transition-colors"
             >
-              Xuất CSV
+              Xuất dữ liệu
             </button>
           </div>
         </div>
       )}
 
       {/* Toolbar / Actions */}
-      <div className="flex items-center justify-between bg-zinc-900/30 p-4 rounded-xl border border-zinc-800/80">
+      <div className="flex items-center justify-between bg-[var(--card)] p-4 rounded-xl border border-[var(--border)]">
         <button
           type="button"
           onClick={onBack}
-          className="px-4 py-2 text-sm font-semibold rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-white"
+          className="px-4 py-2 text-sm font-semibold rounded-lg bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--secondary)]/80 transition-colors cursor-pointer"
         >
           ← Quay lại danh sách
         </button>
@@ -278,7 +278,7 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
               type="button"
               onClick={() => saveMutation.mutate()}
               disabled={saveMutation.isPending}
-              className="px-4 py-2 text-sm font-bold rounded-lg bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/10"
+              className="px-4 py-2 text-sm font-bold rounded-lg bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-[var(--primary-foreground)] shadow-md transition-colors cursor-pointer"
             >
               {saveMutation.isPending ? 'Đang lưu...' : 'Lưu nháp'}
             </button>
@@ -288,7 +288,7 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
             <button
               type="button"
               onClick={() => handleAction('submit')}
-              className="px-4 py-2 text-sm font-bold rounded-lg bg-yellow-600 hover:bg-yellow-500 text-white"
+              className="px-4 py-2 text-sm font-bold rounded-lg bg-amber-600 hover:bg-amber-500 text-white transition-colors cursor-pointer"
             >
               Trình duyệt (Submit)
             </button>
@@ -300,14 +300,14 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
               <button
                 type="button"
                 onClick={() => handleAction('approve')}
-                className="px-4 py-2 text-sm font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white"
+                className="px-4 py-2 text-sm font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition-colors cursor-pointer"
               >
                 Phê duyệt (Approve)
               </button>
               <button
                 type="button"
                 onClick={() => handleAction('reject')}
-                className="px-4 py-2 text-sm font-bold rounded-lg bg-red-600 hover:bg-red-500 text-white"
+                className="px-4 py-2 text-sm font-bold rounded-lg bg-rose-600 hover:bg-rose-500 text-white transition-colors cursor-pointer"
               >
                 Từ chối (Reject)
               </button>
@@ -319,7 +319,7 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
             <button
               type="button"
               onClick={() => handleAction('post')}
-              className="px-4 py-2 text-sm font-bold rounded-lg bg-blue-600 hover:bg-blue-500 text-white"
+              className="px-4 py-2 text-sm font-bold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors cursor-pointer"
             >
               Ghi sổ cái (Post Ledger)
             </button>
@@ -330,7 +330,7 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
             <button
               type="button"
               onClick={() => handleAction('reverse')}
-              className="px-4 py-2 text-sm font-bold rounded-lg bg-orange-600 hover:bg-orange-500 text-white"
+              className="px-4 py-2 text-sm font-bold rounded-lg bg-orange-600 hover:bg-orange-500 text-white transition-colors cursor-pointer"
             >
               Hủy ghi sổ (Reverse)
             </button>
@@ -339,41 +339,41 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
       </div>
 
       {/* Header Fields Form Card */}
-      <div className="bg-zinc-900/30 p-6 rounded-xl border border-zinc-800/80 space-y-6">
-        <h3 className="text-sm font-black text-white uppercase tracking-wider">
+      <div className="bg-[var(--card)] p-6 rounded-xl border border-[var(--border)] space-y-6">
+        <h3 className="text-sm font-black text-[var(--text-primary)] uppercase tracking-wider">
           {docId ? `CHI TIẾT CHỨNG TỪ KHO ${documentNo}` : 'LẬP CHỨNG TỪ KHO MỚI'}
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
           <div>
-            <label className="block text-xs font-bold text-zinc-400 uppercase mb-2">Số chứng từ *</label>
+            <label className="block text-xs font-bold text-[var(--text-secondary)] uppercase mb-2">Số chứng từ *</label>
             <input
               type="text"
               disabled={isReadOnly}
               value={documentNo}
               onChange={(e) => setDocumentNo(e.target.value)}
-              className="w-full h-10 px-3 rounded-lg border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500 disabled:opacity-65"
+              className="w-full h-10 px-3 rounded-lg border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] disabled:opacity-65 font-mono"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-zinc-400 uppercase mb-2">Ngày hạch toán *</label>
+            <label className="block text-xs font-bold text-[var(--text-secondary)] uppercase mb-2">Ngày hạch toán *</label>
             <input
               type="date"
               disabled={isReadOnly}
               value={documentDate}
               onChange={(e) => setDocumentDate(e.target.value)}
-              className="w-full h-10 px-3 rounded-lg border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500 disabled:opacity-65"
+              className="w-full h-10 px-3 rounded-lg border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] disabled:opacity-65 font-mono"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-zinc-400 uppercase mb-2">Loại chứng từ *</label>
+            <label className="block text-xs font-bold text-[var(--text-secondary)] uppercase mb-2">Loại chứng từ *</label>
             <select
               disabled={isReadOnly || !!docId}
               value={documentType}
               onChange={(e) => setDocumentType(e.target.value)}
-              className="w-full h-10 px-3 rounded-lg border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500 disabled:opacity-65"
+              className="w-full h-10 px-3 rounded-lg border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] disabled:opacity-65"
             >
               <option value="PURCHASE_RECEIPT">Nhập kho mua hàng (Receipt)</option>
               <option value="ISSUE_TO_PROJECT">Xuất kho công trình (Issue)</option>
@@ -383,14 +383,14 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
           <div>
-            <label className="block text-xs font-bold text-zinc-400 uppercase mb-2">Dự án công trình</label>
+            <label className="block text-xs font-bold text-[var(--text-secondary)] uppercase mb-2">Dự án công trình</label>
             <select
               disabled={isReadOnly}
               value={projectId}
               onChange={(e) => setProjectId(e.target.value)}
-              className="w-full h-10 px-3 rounded-lg border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500 disabled:opacity-65"
+              className="w-full h-10 px-3 rounded-lg border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] disabled:opacity-65"
             >
               <option value="">Không liên kết (Kho tổng)</option>
               {projects.map((p: any) => (
@@ -403,12 +403,12 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
 
           {documentType === 'PURCHASE_RECEIPT' && (
             <div>
-              <label className="block text-xs font-bold text-zinc-400 uppercase mb-2">Nhà cung cấp (Supplier)</label>
+              <label className="block text-xs font-bold text-[var(--text-secondary)] uppercase mb-2">Nhà cung cấp *</label>
               <select
                 disabled={isReadOnly}
                 value={supplierId}
                 onChange={(e) => setSupplierId(e.target.value)}
-                className="w-full h-10 px-3 rounded-lg border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500 disabled:opacity-65"
+                className="w-full h-10 px-3 rounded-lg border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] disabled:opacity-65"
               >
                 <option value="">-- Chọn nhà cung cấp --</option>
                 {suppliers.map((s: any) => (
@@ -422,19 +422,19 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-zinc-400 uppercase mb-2">Diễn giải nghiệp vụ</label>
+          <label className="block text-xs font-bold text-[var(--text-secondary)] uppercase mb-2">Diễn giải nghiệp vụ</label>
           <textarea
             disabled={isReadOnly}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Mô tả lý do nhập xuất hoặc nguồn vật tư..."
-            className="w-full h-20 p-3 rounded-lg border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500 disabled:opacity-65 text-sm"
+            className="w-full h-20 p-3 rounded-lg border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--primary)] disabled:opacity-65 text-sm"
           />
         </div>
       </div>
 
       {/* Grid Lines Table */}
-      <div className="bg-zinc-900/30 p-6 rounded-xl border border-zinc-800/80">
+      <div className="bg-[var(--card)] p-6 rounded-xl border border-[var(--border)]">
         <InventoryDocumentLinesTable
           lines={lines}
           onChange={setLines}
@@ -442,13 +442,13 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
           docType={documentType}
         />
 
-        <div className="mt-6 flex flex-col items-end gap-2 border-t border-zinc-800/80 pt-4 pr-4">
-          <div className="text-sm font-semibold text-zinc-400">
-            Tổng trị giá hạch toán: <span className="font-mono font-bold text-white text-base">{lines.reduce((sum, l) => sum + (Number(l.quantity) * Number(l.unitCost)), 0).toLocaleString('vi-VN')} đ</span>
+        <div className="mt-6 flex flex-col items-end gap-2 border-t border-[var(--border)] pt-4 pr-4">
+          <div className="text-sm font-semibold text-[var(--text-secondary)]">
+            Tổng trị giá hạch toán: <span className="font-mono font-bold text-[var(--text-primary)] text-base">{lines.reduce((sum, l) => sum + (Number(l.quantity) * Number(l.unitCost)), 0).toLocaleString('vi-VN')} đ</span>
           </div>
           {documentType === 'PURCHASE_RECEIPT' && (
-            <div className="text-sm font-semibold text-zinc-400">
-              Tổng thanh toán gồm VAT: <span className="font-mono font-bold text-blue-400 text-lg">{totalPayment.toLocaleString('vi-VN')} đ</span>
+            <div className="text-sm font-semibold text-[var(--text-secondary)]">
+              Tổng thanh toán gồm VAT: <span className="font-mono font-bold text-[var(--primary)] text-lg">{totalPayment.toLocaleString('vi-VN')} đ</span>
             </div>
           )}
         </div>
@@ -464,44 +464,43 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
         <InventoryStatusTimeline status={doc.status} auditLogs={doc.auditLogs} />
       )}
 
-      {/* Reject Modal */}
-      {showRejectModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-xl border border-zinc-700 bg-zinc-900 p-6 shadow-2xl animate-fade-in text-[var(--foreground)]">
-            <h3 className="text-sm font-black text-white uppercase tracking-wider mb-4">NHẬP LÝ DO TỪ CHỐI DUYỆT CHỨNG TỪ</h3>
-
-            <form onSubmit={handleRejectSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-zinc-400 uppercase mb-2">Lý do từ chối (Tối thiểu 5 ký tự) *</label>
-                <textarea
-                  required
-                  value={rejectReason}
-                  onChange={(e) => setRejectReason(e.target.value)}
-                  placeholder="vd: Sai thông số đơn giá thép hoặc sai mã WBS công trình."
-                  className="w-full h-24 p-3 rounded-lg border border-zinc-700 bg-zinc-850 text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 text-sm"
-                />
-              </div>
-
-              <div className="flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setShowRejectModal(false)}
-                  className="px-4 py-2 text-sm font-semibold rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-750"
-                >
-                  Hủy bỏ
-                </button>
-                <button
-                  type="submit"
-                  disabled={transitionMutation.isPending}
-                  className="px-4 py-2 text-sm font-bold rounded-lg bg-red-600 hover:bg-red-500 text-white disabled:opacity-50"
-                >
-                  {transitionMutation.isPending ? 'Đang từ chối...' : 'Xác nhận từ chối'}
-                </button>
-              </div>
-            </form>
+      {/* Reject Reason Modal */}
+      <EnterpriseModal
+        isOpen={showRejectModal}
+        onClose={() => setShowRejectModal(false)}
+        title="NHẬP LÝ DO TỪ CHỐI DUYỆT CHỨNG TỪ"
+        maxWidth="md"
+      >
+        <form onSubmit={handleRejectSubmit} className="space-y-4 text-xs">
+          <div>
+            <label className="block text-xs font-bold text-[var(--text-secondary)] uppercase mb-2">Lý do từ chối (Tối thiểu 5 ký tự) *</label>
+            <textarea
+              required
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+              placeholder="vd: Sai thông số đơn giá thép hoặc sai mã WBS công trình."
+              className="w-full h-24 p-3 rounded-lg border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--primary)] text-sm"
+            />
           </div>
-        </div>
-      )}
+
+          <div className="flex justify-end gap-3 pt-3 border-t border-[var(--border)]">
+            <button
+              type="button"
+              onClick={() => setShowRejectModal(false)}
+              className="px-4 py-2 text-sm font-semibold rounded-lg bg-[var(--secondary)] text-[var(--text-primary)] hover:bg-[var(--secondary)]/80 transition-colors"
+            >
+              Hủy bỏ
+            </button>
+            <button
+              type="submit"
+              disabled={transitionMutation.isPending}
+              className="px-4 py-2 text-sm font-bold rounded-lg bg-rose-600 hover:bg-rose-500 text-white disabled:opacity-50 transition-colors"
+            >
+              {transitionMutation.isPending ? 'Đang từ chối...' : 'Xác nhận từ chối'}
+            </button>
+          </div>
+        </form>
+      </EnterpriseModal>
     </div>
   );
 }
