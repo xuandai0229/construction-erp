@@ -59,6 +59,8 @@ export default function ProjectTable({
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+
   const openDashboard = (projectId: string) => {
     setCurrentProject(projectId);
     router.push('/');
@@ -91,12 +93,13 @@ export default function ProjectTable({
       accessor: row => rows.indexOf(row) + 1,
       align: 'center',
       width: '72px',
+      minWidth: '72px'
     },
     {
       header: 'Hồ sơ công trình',
       accessor: row => (
         <div className="flex min-w-0 items-center gap-3">
-          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-md border border-blue-500/20 bg-blue-500/10 text-blue-400">
+          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-md border border-[var(--primary)]/20 bg-[var(--primary)]/10 text-[var(--primary)]">
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.7">
               <path d="M3 21h18M3 7v14M12 3v18M21 7v14M7 7h2M7 11h2M7 15h2M15 7h2M15 11h2M15 15h2" />
             </svg>
@@ -112,35 +115,41 @@ export default function ProjectTable({
         </div>
       ),
       width: '300px',
+      minWidth: '260px'
     },
     {
       header: 'Chủ đầu tư',
       accessor: row => row.investor || '---',
       width: '220px',
+      minWidth: '180px'
     },
     {
       header: 'Bắt đầu',
       accessor: row => row.startDate ? formatDate(row.startDate) : '---',
       align: 'center',
       width: '128px',
+      minWidth: '110px'
     },
     {
       header: 'Kết thúc',
       accessor: row => row.endDate ? formatDate(row.endDate) : '---',
       align: 'center',
       width: '128px',
+      minWidth: '110px'
     },
     {
       header: 'Ngân sách',
       accessor: row => formatVnd(Number(row.totalBudget || 0)),
       align: 'right',
       width: '160px',
+      minWidth: '140px'
     },
     {
       header: 'Thực chi',
       accessor: row => formatVnd(row.actualCost),
       align: 'right',
       width: '160px',
+      minWidth: '140px'
     },
     {
       header: 'Tiến độ',
@@ -149,7 +158,7 @@ export default function ProjectTable({
           <span className="text-center font-bold tabular-nums text-[var(--text-primary)]">{row.progress}%</span>
           <span className="h-1.5 overflow-hidden rounded-full bg-[var(--secondary)]">
             <span
-              className={`block h-full rounded-full ${row.progress >= 100 ? 'bg-green-500' : row.progress >= 50 ? 'bg-blue-500' : 'bg-amber-500'}`}
+              className={`block h-full rounded-full ${row.progress >= 100 ? 'bg-green-500' : row.progress >= 50 ? 'bg-[var(--primary)]' : 'bg-amber-500'}`}
               style={{ width: `${Math.min(row.progress, 100)}%` }}
             />
           </span>
@@ -157,42 +166,79 @@ export default function ProjectTable({
       ),
       align: 'center',
       width: '140px',
+      minWidth: '115px'
     },
     {
       header: 'Trạng thái',
       accessor: row => {
         const status = statusConfig[row.status] || { text: row.status, className: 'bg-slate-500/10 text-slate-400' };
         return (
-          <span className={`inline-flex rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${status.className}`}>
+          <span className={`inline-flex rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${status.className} whitespace-nowrap`}>
             {status.text}
           </span>
         );
       },
       align: 'center',
       width: '150px',
+      minWidth: '130px'
     },
     {
       header: 'Thao tác',
-      accessor: row => (
-        <div className="flex items-center justify-center gap-1" onClick={event => event.stopPropagation()}>
-          <button className="erp-btn h-8 px-1.5 text-[11px]" onClick={() => router.push(`/projects/${row.id}`)}>
-            Chi tiết
-          </button>
-          <button className="erp-btn h-8 px-1.5 text-[11px]" onClick={() => onEdit(row)}>
-            Sửa
-          </button>
-          {row.status !== 'CLOSED' && (
-            <button className="erp-btn h-8 px-1.5 text-[11px]" onClick={() => setConfirmAction({ id: row.id, name: row.name, type: 'CLOSE' })}>
-              Đóng
+      accessor: row => {
+        const isMenuOpen = activeMenuId === row.id;
+        return (
+          <div className="relative flex items-center justify-center gap-1.5" onClick={event => event.stopPropagation()}>
+            <button 
+              className="h-7 px-3 bg-[var(--primary)] text-white hover:bg-[var(--primary)]/90 rounded-[var(--radius-sm)] text-[10px] font-black uppercase tracking-wider transition-colors cursor-pointer"
+              onClick={() => openDashboard(row.id)}
+            >
+              Chi tiết
             </button>
-          )}
-          <button className="erp-btn h-8 px-1.5 text-[11px] text-rose-500" onClick={() => setConfirmAction({ id: row.id, name: row.name, type: 'DELETE' })}>
-            Xóa
-          </button>
-        </div>
-      ),
+            <div className="relative">
+              <button 
+                className="h-7 w-7 flex items-center justify-center bg-[var(--secondary)] hover:bg-[var(--muted)] text-[var(--text-primary)] rounded-[var(--radius-sm)] transition-colors cursor-pointer border border-[var(--border)]"
+                onClick={() => setActiveMenuId(isMenuOpen ? null : row.id)}
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="5" r="1.5" />
+                  <circle cx="12" cy="12" r="1.5" />
+                  <circle cx="12" cy="19" r="1.5" />
+                </svg>
+              </button>
+              {isMenuOpen && (
+                <>
+                  <div className="fixed inset-0 z-20" onClick={() => setActiveMenuId(null)} />
+                  <div className="absolute right-0 mt-1.5 w-32 rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 shadow-lg z-30 animate-fade-in text-left">
+                    <button
+                      className="w-full text-left h-8 px-2.5 hover:bg-[var(--muted)] rounded-md text-[11px] font-semibold text-[var(--text-primary)] transition-colors cursor-pointer flex items-center gap-2"
+                      onClick={() => { onEdit(row); setActiveMenuId(null); }}
+                    >
+                      <span>Sửa</span>
+                    </button>
+                    {row.status !== 'CLOSED' && (
+                      <button
+                        className="w-full text-left h-8 px-2.5 hover:bg-[var(--muted)] rounded-md text-[11px] font-semibold text-[var(--text-primary)] transition-colors cursor-pointer flex items-center gap-2"
+                        onClick={() => { setConfirmAction({ id: row.id, name: row.name, type: 'CLOSE' }); setActiveMenuId(null); }}
+                      >
+                        <span>Đóng</span>
+                      </button>
+                    )}
+                    <button
+                      className="w-full text-left h-8 px-2.5 hover:bg-rose-500/10 text-rose-500 rounded-md text-[11px] font-bold transition-colors cursor-pointer flex items-center gap-2"
+                      onClick={() => { setConfirmAction({ id: row.id, name: row.name, type: 'DELETE' }); setActiveMenuId(null); }}
+                    >
+                      <span>Xóa</span>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        );
+      },
       align: 'center',
-      width: '300px',
+      width: '140px',
+      minWidth: '140px'
     },
   ];
 
@@ -210,7 +256,7 @@ export default function ProjectTable({
       <EnterpriseTable
         data={rows}
         columns={columns}
-        minWidth="1750px"
+        minWidth="1360px"
         getRowKey={row => row.id}
         onRowClick={row => openDashboard(row.id)}
         emptyState={

@@ -16,7 +16,8 @@ import {
   EnterpriseBadge,
   EnterpriseEmptyState,
   Select,
-  Column
+  Column,
+  EnterpriseModal
 } from '@/app/components/ui-enterprise';
 
 import { 
@@ -256,36 +257,42 @@ export default function ReportsPage() {
         </div>
       ),
       align: "center",
-      width: "15%"
+      width: "15%",
+      minWidth: "90px"
     },
     {
       header: "Tên Tài Khoản Sổ Cái",
       accessor: (row) => row.name,
-      width: "40%"
+      width: "40%",
+      minWidth: "220px"
     },
     {
       header: "Loại TK",
       accessor: (row) => <span className="text-[10px] font-black uppercase text-violet-400">{row.type}</span>,
       align: "center",
-      width: "12%"
+      width: "12%",
+      minWidth: "90px"
     },
     {
       header: "Phát Sinh Nợ (Debit)",
       accessor: (row) => <span className="text-emerald-500 font-semibold">{formatVnd(row.debitSum)}</span>,
       align: "right",
-      width: "16%"
+      width: "16%",
+      minWidth: "150px"
     },
     {
       header: "Phát Sinh Có (Credit)",
       accessor: (row) => <span className="text-rose-500 font-semibold">{formatVnd(row.creditSum)}</span>,
       align: "right",
-      width: "16%"
+      width: "16%",
+      minWidth: "150px"
     },
     {
       header: "Dư Cuối Kỳ (Balance)",
       accessor: (row) => <span className="text-blue-500 font-extrabold">{formatVnd(row.balance)}</span>,
       align: "right",
-      width: "16%"
+      width: "16%",
+      minWidth: "160px"
     }
   ];
 
@@ -332,7 +339,6 @@ export default function ReportsPage() {
       width: "180px"
     }
   ];
-
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex overflow-hidden">
       <Sidebar activeItem="reports" />
@@ -345,7 +351,7 @@ export default function ReportsPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between select-none pb-4 border-b border-[var(--border)] print:hidden">
             <div>
               <h1 className="text-base font-bold tracking-tight text-[var(--text-primary)]">Hệ thống Báo cáo Kế toán & Tài chính</h1>
-              <p className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wide mt-1">Accounting-grade dynamic ledger aggregation and tax governance</p>
+              <p className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wide mt-1">Tổng hợp sổ cái động cấp kế toán và quản trị thuế doanh nghiệp</p>
             </div>
 
             <div className="flex items-center gap-2 mt-4 sm:mt-0">
@@ -359,7 +365,7 @@ export default function ReportsPage() {
 
               <button
                 onClick={handlePrint}
-                className="h-[38px] px-4 text-xs font-semibold text-white bg-violet-600 hover:bg-violet-500 rounded-[var(--radius-sm)] flex items-center gap-1.5 transition-colors duration-150 cursor-pointer shadow-sm"
+                className="h-[38px] px-4 text-xs font-semibold text-white bg-[var(--primary)] hover:bg-[var(--primary)]/90 rounded-[var(--radius-sm)] flex items-center gap-1.5 transition-colors duration-150 cursor-pointer shadow-sm"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <polyline points="6 9 6 2 18 2 18 9" />
@@ -394,7 +400,7 @@ export default function ReportsPage() {
                 onClick={() => setActiveTab(tab.id as ReportTab)}
                 className={`py-2 px-4 font-bold text-xs uppercase tracking-wider transition-all border-b-2 -mb-0.5 whitespace-nowrap cursor-pointer ${
                   activeTab === tab.id
-                    ? 'border-violet-500 text-violet-400 font-extrabold'
+                    ? 'border-[var(--primary)] text-[var(--primary)] font-extrabold'
                     : 'border-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)]'
                 }`}
               >
@@ -628,133 +634,108 @@ export default function ReportsPage() {
           )}
 
           {/* CFO GRANULAR DRILL-DOWN LEDGER LINES MODAL */}
-          {drillAccount && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-fade-in print:hidden">
-              <div 
-                className="bg-[#12121e] border border-violet-500/30 rounded-2xl max-w-5xl w-full max-h-[85vh] flex flex-col shadow-[0_0_50px_rgba(139,92,246,0.25)] animate-slide-up"
-                onClick={e => e.stopPropagation()}
-              >
-                {/* Modal Header */}
-                <div className="flex items-center justify-between px-6 py-4 border-b border-violet-500/20">
-                  <div>
-                    <h3 className="text-sm font-black text-violet-400 uppercase tracking-wider">
-                      Sổ Chi Tiết Tài Khoản Sổ Cái
-                    </h3>
-                    <p className="text-[11px] text-[var(--text-muted)] font-medium mt-0.5">
-                      Tài khoản: <span className="text-white font-bold">{drillAccount.code}</span> — {drillAccount.name}
-                    </p>
+          <EnterpriseModal
+            isOpen={!!drillAccount}
+            onClose={() => setDrillAccount(null)}
+            title="Sổ Chi Tiết Tài Khoản Sổ Cái"
+            subtitle={drillAccount ? `Tài khoản: ${drillAccount.code} — ${drillAccount.name}` : ""}
+            maxWidth="5xl"
+            footer={
+              <div className="flex items-center justify-between w-full text-xs">
+                <div className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-wider">
+                  Tổng cộng: {drillLines.length} phát sinh trên trang này
+                </div>
+                
+                {/* Pagination */}
+                {drillTotalPages > 1 && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setDrillPage(p => Math.max(1, p - 1))}
+                      disabled={drillPage === 1 || loadingDrill}
+                      className="h-8 w-8 flex items-center justify-center border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--secondary)] rounded-md cursor-pointer disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+                    >
+                      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                    </button>
+                    <span className="text-[11px] font-bold text-[var(--text-primary)] tabular-nums">
+                      Trang {drillPage} / {drillTotalPages}
+                    </span>
+                    <button
+                      onClick={() => setDrillPage(p => Math.min(drillTotalPages, p + 1))}
+                      disabled={drillPage === drillTotalPages || loadingDrill}
+                      className="h-8 w-8 flex items-center justify-center border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--secondary)] rounded-md cursor-pointer disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+                    >
+                      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </button>
                   </div>
-                  <button 
-                    onClick={() => setDrillAccount(null)}
-                    className="p-1 rounded-lg hover:bg-white/10 text-[var(--text-muted)] hover:text-white transition-colors cursor-pointer"
-                  >
-                    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <line x1="18" y1="6" x2="6" y2="18" />
-                      <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                  </button>
-                </div>
-
-                {/* Modal Content */}
-                <div className="flex-1 overflow-y-auto p-6 scrollbar-thin min-h-[300px]">
-                  {loadingDrill ? (
-                    <div className="flex flex-col items-center justify-center h-48 space-y-3">
-                      <div className="h-8 w-8 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-violet-400/70">
-                        Đang đối soát Sổ cái thời gian thực...
-                      </p>
-                    </div>
-                  ) : drillLines.length === 0 ? (
-                    <EnterpriseEmptyState
-                      title="Không có phát sinh phát sinh"
-                      description="Hệ thống chưa ghi nhận dòng tiền hay bút toán hạch toán nào của tài khoản này."
-                      iconType="report"
-                    />
-                  ) : (
-                    <EnterpriseTable
-                      data={drillLines}
-                      columns={[
-                        {
-                          header: "Ngày hạch toán",
-                          accessor: (row) => new Date(row.journalEntry.date).toLocaleDateString('vi-VN'),
-                          align: "center",
-                          width: "15%"
-                        },
-                        {
-                          header: "Số chứng từ (Ref)",
-                          accessor: (row) => <span className="font-bold text-violet-400">{row.journalEntry.reference}</span>,
-                          align: "center",
-                          width: "15%"
-                        },
-                        {
-                          header: "Diễn giải / Nội dung chi tiết",
-                          accessor: (row) => row.description || row.journalEntry.description,
-                          width: "40%"
-                        },
-                        {
-                          header: "Phát sinh Nợ (Debit)",
-                          accessor: (row) => row.type === 'DEBIT' ? formatVnd(row.amount) : '—',
-                          align: "right",
-                          width: "15%"
-                        },
-                        {
-                          header: "Phát sinh Có (Credit)",
-                          accessor: (row) => row.type === 'CREDIT' ? formatVnd(row.amount) : '—',
-                          align: "right",
-                          width: "15%"
-                        },
-                        {
-                          header: "Nguồn nghiệp vụ",
-                          accessor: (row) => (
-                            <span className="inline-block px-2 py-0.5 rounded text-[9px] font-black tracking-wider uppercase bg-violet-500/10 text-violet-400 border border-violet-500/20">
-                              {row.journalEntry.sourceType}
-                            </span>
-                          ),
-                          align: "center",
-                          width: "15%"
-                        }
-                      ]}
-                      loading={loadingDrill}
-                    />
-                  )}
-                </div>
-
-                {/* Modal Footer */}
-                <div className="flex items-center justify-between px-6 py-4 border-t border-violet-500/20">
-                  <div className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-wider">
-                    Tổng cộng: {drillLines.length} phát sinh trên trang này
-                  </div>
-                  
-                  {/* Pagination */}
-                  {drillTotalPages > 1 && (
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => setDrillPage(p => Math.max(1, p - 1))}
-                        disabled={drillPage === 1 || loadingDrill}
-                        className="h-8 w-8 flex items-center justify-center border border-violet-500/30 text-violet-400 hover:bg-violet-500/10 rounded-[var(--radius-sm)] cursor-pointer disabled:opacity-30 disabled:hover:bg-transparent"
-                      >
-                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                          <polyline points="15 18 9 12 15 6" />
-                        </svg>
-                      </button>
-                      <span className="text-[11px] font-bold text-white tabular-nums">
-                        Trang {drillPage} / {drillTotalPages}
-                      </span>
-                      <button
-                        onClick={() => setDrillPage(p => Math.min(drillTotalPages, p + 1))}
-                        disabled={drillPage === drillTotalPages || loadingDrill}
-                        className="h-8 w-8 flex items-center justify-center border border-violet-500/30 text-violet-400 hover:bg-violet-500/10 rounded-[var(--radius-sm)] cursor-pointer disabled:opacity-30 disabled:hover:bg-transparent"
-                      >
-                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                          <polyline points="9 18 15 12 9 6" />
-                        </svg>
-                      </button>
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
-            </div>
-          )}
+            }
+          >
+            {loadingDrill ? (
+              <div className="flex flex-col items-center justify-center h-48 space-y-3">
+                <div className="h-8 w-8 rounded-full border-2 border-[var(--primary)] border-t-transparent animate-spin" />
+                <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)]">
+                  Đang đối soát Sổ cái thời gian thực...
+                </p>
+              </div>
+            ) : drillLines.length === 0 ? (
+              <EnterpriseEmptyState
+                title="Không có phát sinh phát sinh"
+                description="Hệ thống chưa ghi nhận dòng tiền hay bút toán hạch toán nào của tài khoản này."
+                iconType="report"
+              />
+            ) : (
+              <EnterpriseTable
+                data={drillLines}
+                columns={[
+                  {
+                    header: "Ngày hạch toán",
+                    accessor: (row) => new Date(row.journalEntry.date).toLocaleDateString('vi-VN'),
+                    align: "center",
+                    width: "15%"
+                  },
+                  {
+                    header: "Số chứng từ (Ref)",
+                    accessor: (row) => <span className="font-bold text-[var(--primary)]">{row.journalEntry.reference}</span>,
+                    align: "center",
+                    width: "15%"
+                  },
+                  {
+                    header: "Diễn giải / Nội dung chi tiết",
+                    accessor: (row) => row.description || row.journalEntry.description,
+                    width: "40%"
+                  },
+                  {
+                    header: "Phát sinh Nợ (Debit)",
+                    accessor: (row) => row.type === 'DEBIT' ? formatVnd(row.amount) : '—',
+                    align: "right",
+                    width: "15%"
+                  },
+                  {
+                    header: "Phát sinh Có (Credit)",
+                    accessor: (row) => row.type === 'CREDIT' ? formatVnd(row.amount) : '—',
+                    align: "right",
+                    width: "15%"
+                  },
+                  {
+                    header: "Nguồn nghiệp vụ",
+                    accessor: (row) => (
+                      <span className="inline-block px-2 py-0.5 rounded text-[9px] font-black tracking-wider uppercase bg-[var(--primary)]/10 text-[var(--primary)] border border-[var(--primary)]/20">
+                        {row.journalEntry.sourceType}
+                      </span>
+                    ),
+                    align: "center",
+                    width: "15%"
+                  }
+                ]}
+                loading={loadingDrill}
+              />
+            )}
+          </EnterpriseModal>
 
         </div>
       </main>

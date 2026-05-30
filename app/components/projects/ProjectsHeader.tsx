@@ -15,7 +15,7 @@ export default function ProjectsHeader({ onAdd }: { onAdd: () => void }) {
         </div>
         <button
           onClick={onAdd}
-          className="erp-btn bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 gap-2 px-5"
+          className="h-10 px-5 rounded-lg bg-[var(--primary)] text-white shadow-sm hover:bg-[var(--primary)]/90 gap-2 flex items-center justify-center font-bold text-xs cursor-pointer transition-colors"
         >
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M12 5v14M5 12h14" />

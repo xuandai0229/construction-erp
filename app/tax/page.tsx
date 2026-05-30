@@ -603,8 +603,8 @@ export default function TaxDashboard() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 overflow-y-auto">
           <div className="bg-[var(--secondary)] border border-[var(--border)] rounded-2xl w-full max-w-2xl p-6 shadow-2xl space-y-6">
             <div className="flex justify-between items-center border-b border-[var(--border)] pb-3">
-              <h3 className="text-[14px] font-black uppercase text-blue-500">{selectedInvoice ? 'Cập Nhật Hóa Đơn VAT' : 'Tạo Mới Hóa Đơn VAT'}</h3>
-              <button onClick={() => { setShowAddModal(false); resetForm(); }} className="text-gray-400 hover:text-white">&times;</button>
+              <h3 className="text-[14px] font-black uppercase text-[var(--primary)]">{selectedInvoice ? 'Cập Nhật Hóa Đơn VAT' : 'Tạo Mới Hóa Đơn VAT'}</h3>
+              <button onClick={() => { setShowAddModal(false); resetForm(); }} className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)] text-lg cursor-pointer">&times;</button>
             </div>
 
             <form onSubmit={handleSaveInvoice} className="space-y-4 text-[12px]">
@@ -773,8 +773,8 @@ export default function TaxDashboard() {
               </div>
 
               <div className="flex justify-end gap-3 pt-3 border-t border-[var(--border)]">
-                <button type="button" onClick={() => { setShowAddModal(false); resetForm(); }} className="h-10 px-5 rounded-lg bg-gray-500/10 hover:bg-gray-500/20 text-gray-300 font-bold">Hủy</button>
-                <button type="submit" className="h-10 px-6 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg">Lưu lại</button>
+                <button type="button" onClick={() => { setShowAddModal(false); resetForm(); }} className="h-10 px-5 rounded-lg bg-[var(--secondary)] hover:bg-[var(--muted)] text-[var(--text-primary)] font-bold cursor-pointer transition-colors">Hủy</button>
+                <button type="submit" className="h-10 px-6 rounded-lg bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white font-bold shadow-sm cursor-pointer transition-colors">Lưu lại</button>
               </div>
             </form>
           </div>
@@ -803,14 +803,14 @@ export default function TaxDashboard() {
               <button
                 type="button"
                 onClick={() => { setShowReasonModal(null); setReasonInvoiceId(null); setActionReason(''); }}
-                className="px-4 py-2 rounded bg-gray-500/10 text-gray-300 hover:bg-gray-500/20 text-[11px]"
+                className="px-4 py-2 rounded bg-[var(--secondary)] hover:bg-[var(--muted)] text-[var(--text-primary)] text-[11px] font-bold cursor-pointer transition-colors"
               >
                 Hủy bỏ
               </button>
               <button
                 type="button"
                 onClick={handleReasonAction}
-                className="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold"
+                className="px-4 py-2 rounded bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold cursor-pointer transition-colors"
               >
                 Xác nhận
               </button>

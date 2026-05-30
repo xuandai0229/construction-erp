@@ -82,10 +82,10 @@ export default function WBSListScreen() {
   };
 
   const columns: Column<any>[] = [
-    { header: 'Mã', accessor: row => row.rowIndex, align: 'center', width: '90px' },
-    { header: 'Hạng mục thi công', accessor: row => row.name, width: '380px' },
-    { header: 'Ngân sách', accessor: row => formatVnd(row.budget || 0), align: 'right', width: '170px' },
-    { header: 'Thực tế', accessor: row => formatVnd(row.actual || 0), align: 'right', width: '170px' },
+    { header: 'Mã', accessor: row => row.rowIndex, align: 'center', width: '90px', minWidth: '70px' },
+    { header: 'Hạng mục thi công', accessor: row => row.name, width: '380px', minWidth: '260px' },
+    { header: 'Ngân sách', accessor: row => formatVnd(row.budget || 0), align: 'right', width: '170px', minWidth: '130px' },
+    { header: 'Thực tế', accessor: row => formatVnd(row.actual || 0), align: 'right', width: '170px', minWidth: '130px' },
     {
       header: 'Chênh lệch',
       accessor: row => {
@@ -94,12 +94,14 @@ export default function WBSListScreen() {
       },
       align: 'right',
       width: '170px',
+      minWidth: '130px'
     },
     {
       header: 'Tiến độ',
       accessor: row => `${row.percentage?.toFixed?.(1) || 0}%`,
       align: 'right',
       width: '130px',
+      minWidth: '90px'
     },
     {
       header: 'Trạng thái',
@@ -110,17 +112,19 @@ export default function WBSListScreen() {
       ),
       align: 'center',
       width: '140px',
+      minWidth: '110px'
     },
     {
       header: 'Nghiệp vụ',
       accessor: row => (
         <div className="flex justify-center gap-2">
-          <button onClick={() => setEditingWBS(row)} className="h-7 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--card)] px-3 text-[10px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)]">Sửa</button>
-          <button onClick={() => { setInitialParentId(row.id); setIsAddingWBS(true); }} className="h-7 rounded-[var(--radius-sm)] bg-blue-600 px-3 text-[10px] font-bold text-white hover:bg-blue-500">Thêm</button>
+          <button onClick={() => setEditingWBS(row)} className="h-7 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--card)] px-3 text-[10px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer">Sửa</button>
+          <button onClick={() => { setInitialParentId(row.id); setIsAddingWBS(true); }} className="h-7 rounded-[var(--radius-sm)] bg-[var(--primary)] px-3 text-[10px] font-bold text-white hover:bg-[var(--primary)]/90 cursor-pointer transition-colors">Thêm</button>
         </div>
       ),
       align: 'center',
       width: '160px',
+      minWidth: '130px'
     },
   ];
 
@@ -147,8 +151,8 @@ export default function WBSListScreen() {
             title="BỘ LỌC WBS"
             actions={
               <div className="flex gap-2">
-                <button onClick={handleExport} className="h-[36px] rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)]">Xuất CSV</button>
-                <button onClick={() => { setInitialParentId(null); setIsAddingWBS(true); }} className="h-[36px] rounded-[var(--radius-sm)] bg-blue-600 px-4 text-[12px] font-bold text-white hover:bg-blue-500">Thêm WBS</button>
+                <button onClick={handleExport} className="h-[36px] rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer">Xuất CSV</button>
+                <button onClick={() => { setInitialParentId(null); setIsAddingWBS(true); }} className="h-[36px] rounded-[var(--radius-sm)] bg-[var(--primary)] px-4 text-[12px] font-bold text-white hover:bg-[var(--primary)]/90 cursor-pointer transition-colors">Thêm WBS</button>
               </div>
             }
           >

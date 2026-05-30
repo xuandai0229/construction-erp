@@ -139,15 +139,16 @@ export default function BudgetPage() {
   };
 
   const columns: Column<any>[] = [
-    { header: 'Mã', accessor: row => row.rowIndex, align: 'center', width: '80px' },
-    { header: 'Hạng mục WBS / CBS', accessor: row => row.name, width: '360px' },
-    { header: 'Dự toán', accessor: row => formatVnd(row.budget), align: 'right', width: '170px' },
-    { header: 'Thực tế', accessor: row => formatVnd(row.actual), align: 'right', width: '170px' },
+    { header: 'Mã', accessor: row => row.rowIndex, align: 'center', width: '80px', minWidth: '70px' },
+    { header: 'Hạng mục WBS / CBS', accessor: row => row.name, width: '360px', minWidth: '260px' },
+    { header: 'Dự toán', accessor: row => formatVnd(row.budget), align: 'right', width: '170px', minWidth: '130px' },
+    { header: 'Thực tế', accessor: row => formatVnd(row.actual), align: 'right', width: '170px', minWidth: '130px' },
     {
       header: 'Chênh lệch',
       accessor: row => <span className={row.variance >= 0 ? 'text-emerald-500' : 'text-rose-500'}>{formatVnd(row.variance)}</span>,
       align: 'right',
       width: '170px',
+      minWidth: '130px'
     },
     {
       header: 'Trạng thái',
@@ -158,16 +159,17 @@ export default function BudgetPage() {
       ),
       align: 'center',
       width: '160px',
+      minWidth: '120px'
     },
     {
       header: 'Nghiệp vụ',
       accessor: row => (
         <div className="flex justify-center gap-2">
-          <button onClick={() => { setInitialWbsIdForAdd(row.id); setIsAddModalOpen(true); }} className="h-7 rounded-[var(--radius-sm)] bg-purple-600 px-3 text-[10px] font-bold text-white hover:bg-purple-500">
+          <button onClick={() => { setInitialWbsIdForAdd(row.id); setIsAddModalOpen(true); }} className="h-7 rounded-[var(--radius-sm)] bg-[var(--primary)] px-3 text-[10px] font-bold text-white hover:bg-[var(--primary)]/90 cursor-pointer transition-colors">
             Lập
           </button>
           {row.budgetRecords[0] && (
-            <button onClick={() => { setEditingBudget(row.budgetRecords[0]); setIsEditModalOpen(true); }} className="h-7 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--card)] px-3 text-[10px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)]">
+            <button onClick={() => { setEditingBudget(row.budgetRecords[0]); setIsEditModalOpen(true); }} className="h-7 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--card)] px-3 text-[10px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer">
               Sửa
             </button>
           )}
@@ -175,6 +177,7 @@ export default function BudgetPage() {
       ),
       align: 'center',
       width: '150px',
+      minWidth: '110px'
     },
   ];
 
@@ -223,7 +226,7 @@ export default function BudgetPage() {
                 </Select>
               </FormGroup>
               <div className="flex items-end">
-                <button onClick={() => { setInitialWbsIdForAdd(undefined); setIsAddModalOpen(true); }} className="h-[38px] rounded-[var(--radius-sm)] bg-purple-600 px-4 text-[12px] font-bold text-white hover:bg-purple-500">
+                <button onClick={() => { setInitialWbsIdForAdd(undefined); setIsAddModalOpen(true); }} className="h-[38px] rounded-[var(--radius-sm)] bg-[var(--primary)] px-4 text-[12px] font-bold text-white hover:bg-[var(--primary)]/90 cursor-pointer transition-colors">
                   Lập dự toán
                 </button>
               </div>
