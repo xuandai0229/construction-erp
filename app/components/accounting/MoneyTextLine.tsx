@@ -9,20 +9,20 @@ interface MoneyTextLineProps {
 export function MoneyTextLine({ amount }: MoneyTextLineProps) {
   const words = numberToVietnameseWords(amount);
   return (
-    <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-4 space-y-2">
+    <div className="bg-[var(--secondary)]/40 border border-[var(--border)] rounded-xl p-4 space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-bold text-zinc-700 uppercase">
+        <span className="text-xs font-bold text-[var(--text-secondary)] uppercase">
           Tổng số tiền thanh toán:
         </span>
-        <span className="text-base font-extrabold text-zinc-900 tabular-nums">
+        <span className="text-base font-extrabold text-[var(--text-primary)] font-mono tabular-nums">
           {formatVnd(Number(amount))}
         </span>
       </div>
-      <div className="text-xs text-zinc-600 font-semibold italic border-t border-zinc-200 pt-2 flex items-start gap-1">
-        <span className="text-zinc-700 shrink-0 font-bold not-italic">
+      <div className="text-xs text-[var(--text-muted)] font-semibold italic border-t border-[var(--border)] pt-2 flex items-start gap-1">
+        <span className="text-[var(--text-secondary)] shrink-0 font-bold not-italic">
           Bằng chữ:
         </span>
-        <span className="text-zinc-900">{words}</span>
+        <span className="text-[var(--text-primary)]">{words}</span>
       </div>
     </div>
   );

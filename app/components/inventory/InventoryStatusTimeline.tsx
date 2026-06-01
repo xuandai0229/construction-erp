@@ -27,9 +27,9 @@ export function InventoryStatusTimeline({ status, auditLogs = [] }: InventorySta
   };
 
   return (
-    <div className="space-y-6 bg-zinc-900/30 p-6 rounded-xl border border-zinc-800/80">
+    <div className="space-y-6 bg-[var(--secondary)]/40 p-6 rounded-xl border border-[var(--border)]">
       <div className="flex items-center justify-between">
-        <h4 className="text-xs font-black text-zinc-400 uppercase tracking-wider">Tiến trình chứng từ (Voucher Timeline)</h4>
+        <h4 className="text-xs font-black text-[var(--text-secondary)] uppercase tracking-wider">Tiến trình chứng từ (Voucher Timeline)</h4>
         {status === 'REVERSED' && (
           <span className="px-2.5 py-1 text-xs font-bold rounded-lg bg-red-950/40 text-red-400 border border-red-900/50 uppercase">
             HỦY GHI SỔ (REVERSED)
@@ -38,12 +38,12 @@ export function InventoryStatusTimeline({ status, auditLogs = [] }: InventorySta
       </div>
 
       <div className="flex items-center justify-between w-full relative pt-4 pb-2">
-        <div className="absolute top-1/2 left-[5%] right-[5%] h-[2px] bg-zinc-800 -translate-y-1/2 z-0" />
+        <div className="absolute top-1/2 left-[5%] right-[5%] h-[2px] bg-[var(--border)] -translate-y-1/2 z-0" />
 
         {steps.map((step, idx) => {
           const stepStatus = getStepStatus(step.value);
-          let dotColor = 'bg-zinc-800 border-zinc-700 text-zinc-500';
-          let textColor = 'text-zinc-500';
+          let dotColor = 'bg-[var(--secondary)] border-[var(--border)] text-[var(--text-muted)]';
+          let textColor = 'text-[var(--text-muted)]';
 
           if (stepStatus === 'completed') {
             dotColor = 'bg-blue-600 border-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.4)]';
@@ -70,13 +70,13 @@ export function InventoryStatusTimeline({ status, auditLogs = [] }: InventorySta
       </div>
 
       {auditLogs && auditLogs.length > 0 && (
-        <div className="pt-4 border-t border-zinc-800/80">
-          <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest block mb-3">Nhật ký tác vụ (Audit Trail)</span>
+        <div className="pt-4 border-t border-[var(--border)]">
+          <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest block mb-3">Nhật ký tác vụ (Audit Trail)</span>
           <div className="space-y-2 max-h-[120px] overflow-y-auto scrollbar-thin">
             {auditLogs.map((log: any, index: number) => (
-              <div key={index} className="flex items-center justify-between text-xs text-zinc-400 py-1 border-b border-zinc-800/40 last:border-0">
-                <span className="font-semibold text-zinc-300">{log.action} bởi {log.user?.name || log.userId}</span>
-                <span className="text-[10px] text-zinc-500 font-mono">{new Date(log.createdAt).toLocaleString('vi-VN')}</span>
+              <div key={index} className="flex items-center justify-between text-xs text-[var(--text-secondary)] py-1 border-b border-[var(--border)]/40 last:border-0">
+                <span className="font-semibold text-[var(--text-primary)]">{log.action} bởi {log.user?.name || log.userId}</span>
+                <span className="text-[10px] text-[var(--text-muted)] font-mono">{new Date(log.createdAt).toLocaleString('vi-VN')}</span>
               </div>
             ))}
           </div>

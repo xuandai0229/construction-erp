@@ -59,20 +59,9 @@ export function InventoryReportFilterBar({ onFilterChange, showMaterialSelect = 
     }
   });
 
-  // Fetch WBS
-  const { data: wbsRes } = useQuery({
-    queryKey: ['wbs'],
-    queryFn: async () => {
-      const res = await fetch('/api/wbs');
-      const json = await res.json();
-      return json.success ? json.data : [];
-    }
-  });
-
   const materials = Array.isArray(materialsRes) ? materialsRes : [];
   const warehouses = Array.isArray(warehousesRes) ? warehousesRes : [];
   const projects = Array.isArray(projectsRes) ? projectsRes : [];
-  const wbsItems = Array.isArray(wbsRes) ? wbsRes : [];
 
   const handleApply = (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,19 +75,21 @@ export function InventoryReportFilterBar({ onFilterChange, showMaterialSelect = 
     });
   };
 
+  const inputClass = "w-full h-10 px-3 rounded-lg border border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all outline-none text-xs";
+
   return (
-    <form onSubmit={handleApply} className="bg-zinc-900/30 p-5 rounded-xl border border-zinc-800/80 space-y-4">
+    <form onSubmit={handleApply} className="bg-[var(--secondary)]/40 p-5 rounded-xl border border-[var(--border)] space-y-4">
       <div className="flex flex-wrap items-end gap-4 text-xs">
         <div className="flex-1 min-w-[150px]">
-          <label className="block text-[10px] font-black text-zinc-400 uppercase mb-2">Chọn kho bãi *</label>
+          <label className="block text-[10px] font-black text-[var(--text-secondary)] uppercase mb-2">Chọn kho bãi *</label>
           <select
             value={warehouseId}
             onChange={(e) => setWarehouseId(e.target.value)}
-            className="w-full h-10 px-3 rounded-lg border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500"
+            className={inputClass}
           >
-            <option value="">-- Tất cả kho bãi --</option>
+            <option value="" className="bg-[var(--card)] text-[var(--text-primary)]">-- Tất cả kho bãi --</option>
             {warehouses.map((w: any) => (
-              <option key={w.id} value={w.id}>
+              <option key={w.id} value={w.id} className="bg-[var(--card)] text-[var(--text-primary)]">
                 [{w.code}] {w.name}
               </option>
             ))}
@@ -107,16 +98,16 @@ export function InventoryReportFilterBar({ onFilterChange, showMaterialSelect = 
 
         {showMaterialSelect && (
           <div className="flex-1 min-w-[150px]">
-            <label className="block text-[10px] font-black text-zinc-400 uppercase mb-2">Chọn vật tư *</label>
+            <label className="block text-[10px] font-black text-[var(--text-secondary)] uppercase mb-2">Chọn vật tư *</label>
             <select
               required
               value={materialItemId}
               onChange={(e) => setMaterialItemId(e.target.value)}
-              className="w-full h-10 px-3 rounded-lg border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500"
+              className={inputClass}
             >
-              <option value="">-- Chọn vật tư --</option>
+              <option value="" className="bg-[var(--card)] text-[var(--text-primary)]">-- Chọn vật tư --</option>
               {materials.map((m: any) => (
-                <option key={m.id} value={m.id}>
+                <option key={m.id} value={m.id} className="bg-[var(--card)] text-[var(--text-primary)]">
                   [{m.code}] {m.name}
                 </option>
               ))}
@@ -125,15 +116,15 @@ export function InventoryReportFilterBar({ onFilterChange, showMaterialSelect = 
         )}
 
         <div className="flex-1 min-w-[150px]">
-          <label className="block text-[10px] font-black text-zinc-400 uppercase mb-2">Công trình / Dự án</label>
+          <label className="block text-[10px] font-black text-[var(--text-secondary)] uppercase mb-2">Công trình / Dự án</label>
           <select
             value={projectId}
             onChange={(e) => setProjectId(e.target.value)}
-            className="w-full h-10 px-3 rounded-lg border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500"
+            className={inputClass}
           >
-            <option value="">-- Tất cả công trình --</option>
+            <option value="" className="bg-[var(--card)] text-[var(--text-primary)]">-- Tất cả công trình --</option>
             {projects.map((p: any) => (
-              <option key={p.id} value={p.id}>
+              <option key={p.id} value={p.id} className="bg-[var(--card)] text-[var(--text-primary)]">
                 {p.name}
               </option>
             ))}
@@ -141,28 +132,28 @@ export function InventoryReportFilterBar({ onFilterChange, showMaterialSelect = 
         </div>
 
         <div className="w-[120px]">
-          <label className="block text-[10px] font-black text-zinc-400 uppercase mb-2">Từ ngày</label>
+          <label className="block text-[10px] font-black text-[var(--text-secondary)] uppercase mb-2">Từ ngày</label>
           <input
             type="date"
             value={fromDate}
             onChange={(e) => setFromDate(e.target.value)}
-            className="w-full h-10 px-3 rounded-lg border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500"
+            className={inputClass}
           />
         </div>
 
         <div className="w-[120px]">
-          <label className="block text-[10px] font-black text-zinc-400 uppercase mb-2">Đến ngày</label>
+          <label className="block text-[10px] font-black text-[var(--text-secondary)] uppercase mb-2">Đến ngày</label>
           <input
             type="date"
             value={toDate}
             onChange={(e) => setToDate(e.target.value)}
-            className="w-full h-10 px-3 rounded-lg border border-zinc-750 bg-zinc-850 text-white focus:outline-none focus:border-blue-500"
+            className={inputClass}
           />
         </div>
 
         <button
           type="submit"
-          className="h-10 px-5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-lg hover:shadow-blue-500/10 transition-all flex items-center gap-2 whitespace-nowrap"
+          className="h-10 px-5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg hover:shadow-blue-500/10 transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer"
         >
           Chạy báo cáo
         </button>

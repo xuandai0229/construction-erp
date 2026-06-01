@@ -865,7 +865,7 @@ export default function CashBankPage() {
                 {selectedDoc.status === 'APPROVED' && (
                   <>
                     <button onClick={() => handleLifecycleAction('post')} className="h-[36px] px-5 rounded bg-gradient-to-r from-indigo-600 to-blue-600 text-[12px] font-black text-white hover:from-indigo-500 hover:to-blue-500 shadow-md">✓ GHI SỔ CÁI (POST)</button>
-                    <button onClick={() => setShowCancelInput(true)} className="h-[36px] px-5 rounded border border-[#2d2d3c] bg-gray-700 text-[12px] font-bold text-white hover:bg-gray-600">HỦY PHIẾU</button>
+                    <button onClick={() => setShowCancelInput(true)} className="h-[36px] px-5 rounded border border-rose-500/20 bg-rose-500/10 text-rose-500 text-[12px] font-black hover:bg-rose-500/20 cursor-pointer transition-colors">HỦY PHIẾU</button>
                   </>
                 )}
 

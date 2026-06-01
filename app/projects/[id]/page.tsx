@@ -1,19 +1,21 @@
-
 'use client';
 
-import { use, useEffect, useState } from 'react';
+import { use, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Sidebar from '@/app/components/Sidebar';
-import Header from '@/app/components/Header';
 import { useERPStore } from '@/store/erpStore';
 import { useProjectStatsQuery } from '@/services/queries/useProjects';
-import { formatVnd, formatDate } from '@/app/components/dashboard-data';
+import { formatVnd } from '@/app/components/dashboard-data';
+
+import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
+import EnterpriseHeader from '@/app/components/layout/EnterpriseHeader';
+import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
+
 import { EnterpriseCard } from '@/app/components/ui-enterprise';
 
 export default function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
-  const { sidebarCollapsed, setCurrentProject } = useERPStore();
+  const { setCurrentProject } = useERPStore();
   const { data: stats, isLoading } = useProjectStatsQuery(id);
 
   useEffect(() => {
@@ -22,131 +24,140 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
   if (isLoading) {
     return (
-      <div className="erp-page">
-        <Sidebar activeItem="projects" />
-        <main className={`erp-page-main flex items-center justify-center ${sidebarCollapsed ? 'md:ml-[var(--erp-sidebar-collapsed)]' : 'md:ml-[var(--erp-sidebar-width)]'}`}>
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
-        </main>
-      </div>
+      <EnterpriseAppShell activeItem="projects">
+        <EnterpriseHeader title="Chi tiết hồ sơ dự án" subtitle="Quản lý chuyên sâu và phân tích tài chính" />
+        <EnterprisePageContainer>
+          <div className="flex items-center justify-center p-12">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+          </div>
+        </EnterprisePageContainer>
+      </EnterpriseAppShell>
     );
   }
 
   if (!stats) {
     return (
-      <div className="erp-page">
-        <Sidebar activeItem="projects" />
-        <main className={`erp-page-main flex flex-col items-center justify-center ${sidebarCollapsed ? 'md:ml-[var(--erp-sidebar-collapsed)]' : 'md:ml-[var(--erp-sidebar-width)]'}`}>
-          <h2 className="text-xl font-bold text-white mb-4">Không tìm thấy thông tin dự án</h2>
-          <button onClick={() => router.push('/projects')} className="erp-btn bg-blue-600 text-white px-6">Quay lại danh sách</button>
-        </main>
-      </div>
+      <EnterpriseAppShell activeItem="projects">
+        <EnterpriseHeader title="Chi tiết hồ sơ dự án" subtitle="Quản lý chuyên sâu và phân tích tài chính" />
+        <EnterprisePageContainer>
+          <div className="flex flex-col items-center justify-center p-12 space-y-4">
+            <h2 className="text-xs font-bold text-[var(--text-primary)]">Không tìm thấy thông tin dự án</h2>
+            <button
+              onClick={() => router.push('/projects')}
+              className="h-[36px] px-5 rounded-[var(--radius-sm)] bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs cursor-pointer transition-colors"
+            >
+              Quay lại danh sách
+            </button>
+          </div>
+        </EnterprisePageContainer>
+      </EnterpriseAppShell>
     );
   }
 
   return (
-    <div className="erp-page">
-      <Sidebar activeItem="projects" />
-      
-      <main className={`erp-page-main transition-all duration-500 ${sidebarCollapsed ? 'md:ml-[var(--erp-sidebar-collapsed)]' : 'md:ml-[var(--erp-sidebar-width)]'}`}>
-        <Header />
+    <EnterpriseAppShell activeItem="projects">
+      <EnterpriseHeader
+        title={`CHI TIẾT HỒ SƠ DỰ ÁN: ${stats.name || id}`}
+        subtitle="Quản lý chuyên sâu, theo dõi định mức BOQ và chi tiết phân bổ tài chính công trình"
+      />
+      <EnterprisePageContainer>
         
-        <div className="p-8 space-y-8 animate-fade-in">
-          <div className="flex items-center justify-between">
-            <div className="accent-line border-l-4 border-blue-500 pl-4">
-              <h1 className="text-2xl font-black text-[var(--text-primary)]">Chi tiết hồ sơ dự án</h1>
-              <p className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-1">Quản lý chuyên sâu và phân tích tài chính</p>
-            </div>
-            <button 
-              onClick={() => router.push('/')}
-              className="erp-btn bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-600/20"
-            >
-              Xem Dashboard Dự án
-            </button>
+        {/* Accent Header row */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-[var(--border)]">
+          <div>
+            <h1 className="text-sm font-bold tracking-tight text-[var(--text-primary)]">Chi tiết hồ sơ dự án</h1>
+            <p className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wide mt-1">Mã định danh dự án: {id}</p>
+          </div>
+          <button 
+            onClick={() => router.push('/')}
+            className="h-[36px] px-4 rounded-[var(--radius-sm)] bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs cursor-pointer shadow-sm transition-colors self-start md:self-auto"
+          >
+            Xem Dashboard Dự án
+          </button>
+        </div>
+
+        {/* Dynamic Cards Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
+          {/* Project Info Card */}
+          <div className="lg:col-span-2 space-y-6">
+            <EnterpriseCard title="CHỈ TIÊU KINH DOANH CHÍNH">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+                <div>
+                  <label className="text-[11px] font-black text-[var(--text-muted)] uppercase tracking-wider block mb-1">Giá trị Hợp đồng</label>
+                  <div className="text-[18px] font-mono font-black text-blue-500 tabular-nums">{formatVnd(stats.totalRevenue || 0)} <span className="text-[10px] text-[var(--text-muted)]">VNĐ</span></div>
+                </div>
+                <div>
+                  <label className="text-[11px] font-black text-[var(--text-muted)] uppercase tracking-wider block mb-1">Tổng chi phí thực tế</label>
+                  <div className="text-[18px] font-mono font-black text-rose-500 tabular-nums">{formatVnd(stats.totalCost || 0)} <span className="text-[10px] text-[var(--text-muted)]">VNĐ</span></div>
+                </div>
+                <div>
+                  <label className="text-[11px] font-black text-[var(--text-muted)] uppercase tracking-wider block mb-1">Tiến độ công việc</label>
+                  <div className="flex items-center gap-3 mt-1">
+                    <div className="flex-1 h-2.5 bg-[var(--secondary)] rounded-full overflow-hidden border border-[var(--border)]">
+                      <div className="h-full bg-emerald-500" style={{ width: `${stats.taskProgress}%` }} />
+                    </div>
+                    <span className="text-[12px] font-black text-emerald-500 font-mono tabular-nums">{stats.taskProgress}%</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[11px] font-black text-[var(--text-muted)] uppercase tracking-wider block mb-1">Số lượng hạng mục (WBS)</label>
+                  <div className="text-[16px] font-mono font-black text-[var(--text-primary)] tabular-nums">{stats.wbsCount} <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest ml-1">Hạng mục</span></div>
+                </div>
+              </div>
+            </EnterpriseCard>
+
+            <EnterpriseCard title="PHÂN BỔ CHI PHÍ THEO LOẠI VẬT TƯ / NHÂN CÔNG">
+              <div className="space-y-3 mt-2">
+                {Object.entries(stats.costByType || {}).map(([type, value]: [string, any]) => (
+                  <div key={type} className="flex items-center justify-between p-3 rounded-lg bg-[var(--secondary)]/40 border border-[var(--border)]">
+                    <span className="text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-tight">{type}</span>
+                    <span className="text-[12px] font-mono font-black text-[var(--text-primary)] tabular-nums">{formatVnd(value)}</span>
+                  </div>
+                ))}
+              </div>
+            </EnterpriseCard>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Project Info Card */}
-            <div className="lg:col-span-2 space-y-6">
-              <EnterpriseCard bodyClassName="p-8">
-                <div className="grid grid-cols-2 gap-8">
-                  <div>
-                    <label className="erp-label">Giá trị Hợp đồng</label>
-                    <div className="text-2xl font-black text-blue-500 tabular-nums">{formatVnd(stats.totalRevenue || 0)} <span className="text-[10px] text-[var(--text-muted)]">VNĐ</span></div>
+          {/* Sidebar Stats */}
+          <div className="space-y-6">
+            <EnterpriseCard title="TÌNH TRẠNG THANH TOÁN HÓA ĐƠN">
+              <div className="space-y-4 mt-2">
+                <div>
+                  <div className="flex justify-between text-[11px] font-bold mb-1.5">
+                    <span className="text-[var(--text-secondary)]">Đã thanh toán</span>
+                    <span className="text-emerald-500 font-mono">{formatVnd(stats.totalPaidInvoice)}</span>
                   </div>
-                  <div>
-                    <label className="erp-label">Tổng chi phí thực tế</label>
-                    <div className="text-2xl font-black text-rose-500 tabular-nums">{formatVnd(stats.totalCost || 0)} <span className="text-[10px] text-[var(--text-muted)]">VNĐ</span></div>
-                  </div>
-                  <div>
-                    <label className="erp-label">Tiến độ công việc</label>
-                    <div className="flex items-center gap-4">
-                      <div className="flex-1 h-2 bg-[var(--secondary)] rounded-full overflow-hidden">
-                        <div className="h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" style={{ width: `${stats.taskProgress}%` }} />
-                      </div>
-                      <span className="text-sm font-black text-emerald-500 tabular-nums">{stats.taskProgress}%</span>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="erp-label">Số lượng hạng mục (WBS)</label>
-                    <div className="text-xl font-black text-[var(--text-primary)] tabular-nums">{stats.wbsCount} <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest ml-1">Hạng mục</span></div>
+                  <div className="h-2 bg-[var(--secondary)] rounded-full overflow-hidden border border-[var(--border)]">
+                    <div className="h-full bg-emerald-500" style={{ width: `${(stats.totalPaidInvoice / stats.totalInvoiced) * 100 || 0}%` }} />
                   </div>
                 </div>
-              </EnterpriseCard>
+                <div>
+                  <div className="flex justify-between text-[11px] font-bold mb-1.5">
+                    <span className="text-[var(--text-secondary)]">Còn nợ phải trả</span>
+                    <span className="text-rose-500 font-mono">{formatVnd(stats.totalRemainingInvoice)}</span>
+                  </div>
+                  <div className="h-2 bg-[var(--secondary)] rounded-full overflow-hidden border border-[var(--border)]">
+                    <div className="h-full bg-rose-500" style={{ width: `${(stats.totalRemainingInvoice / stats.totalInvoiced) * 100 || 0}%` }} />
+                  </div>
+                </div>
+              </div>
+            </EnterpriseCard>
 
-              <EnterpriseCard bodyClassName="p-8">
-                <h3 className="text-xs font-black text-[var(--text-muted)] uppercase tracking-widest mb-6">Phân bổ chi phí theo loại</h3>
-                <div className="space-y-4">
-                  {Object.entries(stats.costByType || {}).map(([type, value]: [string, any]) => (
-                    <div key={type} className="flex items-center justify-between p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
-                      <span className="text-[12px] font-bold text-[var(--text-primary)] uppercase tracking-tight">{type}</span>
-                      <span className="text-[13px] font-black text-[var(--text-secondary)] tabular-nums">{formatVnd(value)}</span>
-                    </div>
-                  ))}
+            <EnterpriseCard title="HOẠT ĐỘNG TÀI CHÍNH PHỤ TRỢ">
+              <div className="space-y-3 mt-2 text-[11px]">
+                <div className="flex items-center justify-between py-2 border-b border-[var(--border)]">
+                  <span className="font-bold text-[var(--text-muted)]">Hóa đơn quá hạn</span>
+                  <span className="h-5 px-2 rounded bg-rose-500/10 text-rose-500 text-[10px] font-black grid place-items-center">{stats.overdueInvoices} hóa đơn</span>
                 </div>
-              </EnterpriseCard>
-            </div>
-
-            {/* Sidebar Stats */}
-            <div className="space-y-6">
-              <EnterpriseCard bodyClassName="p-6" className="bg-[var(--secondary)]">
-                <h3 className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-4">Tình trạng thanh toán</h3>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-[11px] font-bold mb-1.5">
-                      <span className="text-[var(--text-secondary)]">Đã thanh toán</span>
-                      <span className="text-emerald-500">{formatVnd(stats.totalPaidInvoice)}</span>
-                    </div>
-                    <div className="h-1.5 bg-black/20 rounded-full overflow-hidden">
-                      <div className="h-full bg-emerald-500" style={{ width: `${(stats.totalPaidInvoice / stats.totalInvoiced) * 100 || 0}%` }} />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-[11px] font-bold mb-1.5">
-                      <span className="text-[var(--text-secondary)]">Còn nợ</span>
-                      <span className="text-rose-500">{formatVnd(stats.totalRemainingInvoice)}</span>
-                    </div>
-                    <div className="h-1.5 bg-black/20 rounded-full overflow-hidden">
-                      <div className="h-full bg-rose-500" style={{ width: `${(stats.totalRemainingInvoice / stats.totalInvoiced) * 100 || 0}%` }} />
-                    </div>
-                  </div>
+                <div className="flex items-center justify-between py-2">
+                  <span className="font-bold text-[var(--text-muted)]">Cam kết chi phí (PO)</span>
+                  <span className="text-[11px] font-black text-blue-400 font-mono">{formatVnd(stats.committedCost)}</span>
                 </div>
-              </EnterpriseCard>
-
-              <EnterpriseCard bodyClassName="p-6" className="bg-blue-600/5 border-blue-500/20">
-                <h3 className="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-4">Hoạt động tài chính</h3>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-bold text-[var(--text-muted)]">Hóa đơn quá hạn</span>
-                  <span className="h-6 px-2 rounded bg-rose-500/20 text-rose-500 text-[10px] font-black grid place-items-center">{stats.overdueInvoices}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-[var(--text-muted)]">Cam kết chi phí (PO)</span>
-                  <span className="text-[11px] font-black text-blue-400">{formatVnd(stats.committedCost)}</span>
-                </div>
-              </EnterpriseCard>
-            </div>
+              </div>
+            </EnterpriseCard>
           </div>
         </div>
-      </main>
-    </div>
+      </EnterprisePageContainer>
+    </EnterpriseAppShell>
   );
 }
