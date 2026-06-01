@@ -6,7 +6,9 @@ import {
   EnterpriseEmptyState, 
   EnterpriseModal, 
   EnterpriseLoadingState, 
-  EnterpriseErrorState 
+  EnterpriseErrorState,
+  EnterpriseDataTable,
+  EnterpriseColumn
 } from '@/app/components/ui-enterprise';
 
 export function MaterialTable() {
@@ -35,6 +37,27 @@ export function MaterialTable() {
     m.code.toLowerCase().includes(search.toLowerCase()) || 
     m.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const columns: EnterpriseColumn<any>[] = [
+    { key: 'code', header: 'Mã vật tư', render: row => <span className="font-bold text-[var(--primary)]">{row.code}</span>, width: '130px' },
+    { key: 'name', header: 'Tên vật tư', render: row => row.name, minWidth: '220px' },
+    { key: 'unit', header: 'ĐVT', render: row => row.unit, width: '90px', align: 'center' },
+    { key: 'category', header: 'Loại', render: row => row.category === 'MATERIAL' ? 'Nguyên vật liệu' : row.category === 'EQUIPMENT' ? 'Thiết bị/Công cụ' : row.category, width: '140px' },
+    { key: 'defaultAccount', header: 'TK kho', render: row => (
+      <span className="px-1.5 py-0.5 rounded bg-[var(--secondary)] text-[var(--text-secondary)] font-mono text-[10px] border border-[var(--border)]">
+        {row.defaultAccount}
+      </span>
+    ), width: '100px', align: 'center' },
+    { key: 'minStock', header: 'Tồn tối thiểu', render: row => <span className="font-mono">{row.minStock || 0}</span>, width: '120px', align: 'right' },
+    { key: 'actions', header: 'Thao tác', render: row => (
+      <button 
+        onClick={() => handleEdit(row)} 
+        className="px-2.5 py-1 text-[10px] font-semibold rounded bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--secondary)]/70 transition-colors cursor-pointer"
+      >
+        Sửa
+      </button>
+    ), width: '100px', align: 'center' }
+  ];
 
   const saveMutation = useMutation({
     mutationFn: async (data: any) => {
@@ -129,45 +152,12 @@ export function MaterialTable() {
           iconType="generic"
         />
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--card)]">
-          <table className="w-full text-xs text-left">
-            <thead className="bg-[var(--secondary)] border-b border-[var(--border)] text-[var(--text-secondary)] font-bold uppercase tracking-wider">
-              <tr>
-                <th className="p-3">Mã vật tư</th>
-                <th className="p-3">Tên vật tư</th>
-                <th className="p-3">ĐVT</th>
-                <th className="p-3">Loại</th>
-                <th className="p-3">TK kho</th>
-                <th className="p-3 text-right">Tồn tối thiểu</th>
-                <th className="p-3 w-20">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[var(--border)] text-[var(--text-primary)]">
-              {filteredMaterials.map((m: any) => (
-                <tr key={m.id} className="hover:bg-[var(--secondary)]/25 transition-colors">
-                  <td className="p-3 font-bold text-[var(--primary)]">{m.code}</td>
-                  <td className="p-3">{m.name}</td>
-                  <td className="p-3">{m.unit}</td>
-                  <td className="p-3">{m.category === 'MATERIAL' ? 'Nguyên vật liệu' : m.category === 'EQUIPMENT' ? 'Thiết bị/Công cụ' : m.category}</td>
-                  <td className="p-3">
-                    <span className="px-1.5 py-0.5 rounded bg-[var(--secondary)] text-[var(--text-secondary)] font-mono text-[10px] border border-[var(--border)]">
-                      {m.defaultAccount}
-                    </span>
-                  </td>
-                  <td className="p-3 text-right font-mono">{m.minStock || 0}</td>
-                  <td className="p-3">
-                    <button 
-                      onClick={() => handleEdit(m)} 
-                      className="px-2.5 py-1 text-[10px] font-semibold rounded bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--secondary)]/70 transition-colors"
-                    >
-                      Sửa
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <EnterpriseDataTable
+          data={filteredMaterials}
+          columns={columns}
+          getRowKey={row => row.id}
+          minWidth="900px"
+        />
       )}
 
       <EnterpriseModal

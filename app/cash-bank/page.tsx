@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
-import Sidebar from '@/app/components/Sidebar';
-import Header from '@/app/components/Header';
-import { Column, EnterpriseCard, EnterpriseEmptyState, EnterpriseMetric, EnterpriseSection, EnterpriseTable, EnterpriseTabs } from '@/app/components/ui-enterprise';
+import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
+import EnterpriseHeader from '@/app/components/layout/EnterpriseHeader';
+import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
+import { EnterpriseCard, EnterpriseEmptyState, EnterpriseMetric, EnterpriseSection, EnterpriseDataTable, EnterpriseColumn, EnterpriseTabs } from '@/app/components/ui-enterprise';
 import { formatDate, formatVnd } from '@/app/components/dashboard-data';
 import { CashBankDocumentType, CashBankDocumentStatus } from '@/generated/prisma-client';
 
@@ -355,253 +356,244 @@ export default function CashBankPage() {
   };
 
   // Table Columns config for Documents
-  const columns: Column<any>[] = [
-    { header: 'Số chứng từ', accessor: row => <span className="font-mono font-bold text-blue-400 cursor-pointer hover:underline" onClick={() => { setSelectedDoc(row); setShowDetailModal(true); }}>{row.documentNo}</span>, width: '150px' },
-    { header: 'Ngày hạch toán', accessor: row => formatDate(row.accountingDate), align: 'center', width: '130px' },
-    { header: 'Loại chứng từ', accessor: row => <span className="text-[12px]">{translateDocType(row.documentType)}</span>, width: '160px' },
-    { header: 'Đối tượng', accessor: row => row.partnerName || '-', width: '200px' },
-    { header: 'Diễn giải / Lý do', accessor: row => <div className="max-w-[300px] truncate">{row.description}</div>, width: '280px' },
-    { header: 'Tài khoản Nợ', accessor: row => <span className="font-mono text-gray-300 font-semibold">{row.debitAccount.code}</span>, align: 'center', width: '120px' },
-    { header: 'Tài khoản Có', accessor: row => <span className="font-mono text-gray-300 font-semibold">{row.creditAccount.code}</span>, align: 'center', width: '120px' },
-    { header: 'Số tiền', accessor: row => <span className={`font-mono font-black ${row.documentType.includes('PAYMENT') || row.documentType.includes('TRANSFER') || row.documentType === 'BANK_DEBIT_NOTICE' ? 'text-rose-400' : 'text-emerald-400'}`}>{formatVnd(row.amount)}</span>, align: 'right', width: '160px' },
-    { header: 'Trạng thái', accessor: row => <span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold uppercase ${getStatusBadgeClass(row.status)}`}>{translateStatus(row.status)}</span>, align: 'center', width: '140px' },
-    { header: 'Thao tác', accessor: row => (
+  const columns: EnterpriseColumn<any>[] = [
+    { key: 'documentNo', header: 'Số chứng từ', render: row => <span className="font-mono font-bold text-[var(--primary)] cursor-pointer hover:underline" onClick={() => { setSelectedDoc(row); setShowDetailModal(true); }}>{row.documentNo}</span>, width: '150px' },
+    { key: 'accountingDate', header: 'Ngày hạch toán', render: row => formatDate(row.accountingDate), align: 'center', width: '130px' },
+    { key: 'documentType', header: 'Loại chứng từ', render: row => <span className="text-[12px]">{translateDocType(row.documentType)}</span>, width: '160px' },
+    { key: 'partnerName', header: 'Đối tượng', render: row => row.partnerName || '-', width: '200px' },
+    { key: 'description', header: 'Diễn giải / Lý do', render: row => row.description, truncate: true, width: '280px' },
+    { key: 'debitAccount', header: 'Tài khoản Nợ', render: row => <span className="font-mono text-[var(--text-secondary)] font-semibold">{row.debitAccount.code}</span>, align: 'center', width: '120px' },
+    { key: 'creditAccount', header: 'Tài khoản Có', render: row => <span className="font-mono text-[var(--text-secondary)] font-semibold">{row.creditAccount.code}</span>, align: 'center', width: '120px' },
+    { key: 'amount', header: 'Số tiền', render: row => <span className={`font-mono font-black ${row.documentType.includes('PAYMENT') || row.documentType.includes('TRANSFER') || row.documentType === 'BANK_DEBIT_NOTICE' ? 'text-rose-500' : 'text-emerald-500'}`}>{formatVnd(row.amount)}</span>, align: 'right', width: '160px' },
+    { key: 'status', header: 'Trạng thái', render: row => <span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold uppercase ${getStatusBadgeClass(row.status)}`}>{translateStatus(row.status)}</span>, align: 'center', width: '140px' },
+    { key: 'actions', header: 'Thao tác', render: row => (
       <div className="flex gap-2 justify-center">
-        <button onClick={() => { setSelectedDoc(row); setShowDetailModal(true); }} className="text-blue-500 font-bold hover:underline text-[12px]">Chi tiết</button>
+        <button onClick={() => { setSelectedDoc(row); setShowDetailModal(true); }} className="text-blue-500 font-bold hover:underline text-[12px] cursor-pointer">Chi tiết</button>
         {(row.status === 'POSTED' || row.status === 'APPROVED') && (
-          <button onClick={() => handlePrint(row.id, row.documentType)} className="text-purple-500 font-bold hover:underline text-[12px]">In A4</button>
+          <button onClick={() => handlePrint(row.id, row.documentType)} className="text-purple-500 font-bold hover:underline text-[12px] cursor-pointer">In A4</button>
         )}
       </div>
     ), align: 'center', width: '140px' }
   ];
 
   return (
-    <div className="erp-page">
-      <Sidebar activeItem="cash-bank" />
-      <main className="erp-page-main with-sidebar-expanded">
-        <Header />
-        
-        <div className="erp-content-container animate-fade-in space-y-6">
-          {/* Header page component */}
-          <div className="flex flex-col gap-4 border-b border-[var(--border)] pb-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h1 className="text-[20px] font-black text-[var(--text-primary)]">QUỸ TIỀN MẶT & TIỀN GỬI NGÂN HÀNG</h1>
-              <p className="mt-1 text-[11px] font-bold uppercase tracking-wider text-[var(--text-tertiary)]">Phân hệ quản lý Thu/Chi tiền mặt, Ủy nhiệm chi, Báo Có, Báo Nợ ngân hàng</p>
-            </div>
-            
-            <div className="flex gap-2">
-              <button 
-                onClick={() => setShowCreateModal(true)} 
-                className="h-[38px] rounded-[var(--radius-sm)] bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 px-5 text-[12px] font-black text-white shadow-lg transition-transform"
-              >
-                + LẬP CHỨNG TỪ QUỸ & NH
-              </button>
-            </div>
+    <EnterpriseAppShell activeItem="cash-bank">
+      <EnterpriseHeader
+        title="QUỸ TIỀN MẶT & TIỀN GỬI NGÂN HÀNG"
+        subtitle="Phân hệ quản lý Thu/Chi tiền mặt, Ủy nhiệm chi, Báo Có, Báo Nợ ngân hàng"
+        actions={
+          <div className="flex gap-2">
+            <button 
+              onClick={() => setShowCreateModal(true)} 
+              className="h-[38px] rounded-lg bg-[var(--primary)] text-white hover:opacity-90 px-5 text-[12px] font-bold shadow-md transition-all cursor-pointer"
+            >
+              + LẬP CHỨNG TỪ QUỸ & NH
+            </button>
           </div>
+        }
+      />
+      <EnterprisePageContainer>
+        {/* Tab switches */}
+        <EnterpriseTabs
+          tabs={[
+            { id: 'documents', label: 'Danh sách chứng từ' },
+            { id: 'cashBook', label: 'Sổ Quỹ Tiền Mặt' },
+            { id: 'bankBook', label: 'Sổ Tiền Gửi Ngân Hàng' }
+          ]}
+          activeTab={activeTab}
+          onTabChange={(id) => setActiveTab(id as any)}
+        />
 
-          {/* Tab switches */}
-          <EnterpriseTabs
-            tabs={[
-              { id: 'documents', label: 'Danh sách chứng từ' },
-              { id: 'cashBook', label: 'Sổ Quỹ Tiền Mặt' },
-              { id: 'bankBook', label: 'Sổ Tiền Gửi Ngân Hàng' }
-            ]}
-            activeTab={activeTab}
-            onTabChange={(id) => setActiveTab(id as any)}
-          />
-
-          {/* METRICS PANEL */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <EnterpriseMetric title="Tổng Thu tiền mặt (POSTED)" value={formatVnd(metrics.cashIn)} />
-            <EnterpriseMetric title="Tổng Chi tiền mặt (POSTED)" value={formatVnd(metrics.cashOut)} />
-            <EnterpriseMetric title="Tồn Quỹ tiền mặt cuối kỳ" value={formatVnd(metrics.cashBalance)} />
-            <EnterpriseMetric title="Số dư tiền gửi ngân hàng" value={formatVnd(metrics.bankBalance)} />
-          </div>
-
-          {/* ENTERPRISE FILTERS */}
-          <div className="bg-[var(--card)] p-4 rounded-xl border border-[var(--border)] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
-            <div>
-              <label className="block text-[10px] font-black text-[var(--text-muted)] uppercase mb-1">Loại chứng từ</label>
-              <select value={filterType} onChange={e => setFilterType(e.target.value)} className="w-full h-9 rounded-md bg-[var(--background)] border border-[var(--border)] text-[12px] text-[var(--text-primary)] px-3">
-                <option value="ALL">Tất cả loại phiếu</option>
-                <option value="CASH_RECEIPT">Phiếu thu tiền mặt</option>
-                <option value="CASH_PAYMENT">Phiếu chi tiền mặt</option>
-                <option value="BANK_TRANSFER">Ủy nhiệm chi (UNC)</option>
-                <option value="BANK_CREDIT_NOTICE">Giấy báo Có</option>
-                <option value="BANK_DEBIT_NOTICE">Giấy báo Nợ</option>
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-[10px] font-black text-[var(--text-muted)] uppercase mb-1">Trạng thái duyệt</label>
-              <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="w-full h-9 rounded-md bg-[var(--background)] border border-[var(--border)] text-[12px] text-[var(--text-primary)] px-3">
-                <option value="ALL">Tất cả trạng thái</option>
-                <option value="DRAFT">Nháp</option>
-                <option value="SUBMITTED">Chờ duyệt</option>
-                <option value="APPROVED">Đã duyệt (Chờ ghi sổ)</option>
-                <option value="POSTED">Đã ghi sổ cái</option>
-                <option value="REVERSED">Đã đảo bút toán</option>
-                <option value="CANCELLED">Đã hủy</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-[10px] font-black text-[var(--text-muted)] uppercase mb-1">Dự án công trình</label>
-              <select value={filterProject} onChange={e => setFilterProject(e.target.value)} className="w-full h-9 rounded-md bg-[var(--background)] border border-[var(--border)] text-[12px] text-[var(--text-primary)] px-3">
-                <option value="ALL">Tất cả dự án</option>
-                {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-[10px] font-black text-[var(--text-muted)] uppercase mb-1">Tìm kiếm nội dung</label>
-              <input type="text" placeholder="Số chứng từ, lý do, đối tác..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="w-full h-9 rounded-md bg-[var(--background)] border border-[var(--border)] text-[12px] text-[var(--text-primary)] px-3" />
-            </div>
-
-            <div>
-              <label className="block text-[10px] font-black text-[var(--text-muted)] uppercase mb-1">Từ ngày</label>
-              <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full h-9 rounded-md bg-[var(--background)] border border-[var(--border)] text-[12px] text-[var(--text-primary)] px-3" />
-            </div>
-
-            <div>
-              <label className="block text-[10px] font-black text-[var(--text-muted)] uppercase mb-1">Đến ngày</label>
-              <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-full h-9 rounded-md bg-[var(--background)] border border-[var(--border)] text-[12px] text-[var(--text-primary)] px-3" />
-            </div>
-          </div>
-
-          {/* TAB 1: DOCUMENTS TABLE */}
-          {activeTab === 'documents' && (
-            <EnterpriseSection title="DANH SÁCH CHỨNG TỪ QUỸ & NGÂN HÀNG" subtitle={`${documents.length} phiếu hạch toán`}>
-              <EnterpriseCard bodyClassName="p-0">
-                <EnterpriseTable
-                  data={documents}
-                  columns={columns}
-                  loading={loading}
-                  minWidth="1400px"
-                  getRowKey={row => row.id}
-                  emptyState={<EnterpriseEmptyState title="Không tìm thấy chứng từ" description="Chưa lập chứng từ quỹ nào hoặc bộ lọc không khớp với kết quả nào." iconType="report" />}
-                />
-              </EnterpriseCard>
-            </EnterpriseSection>
-          )}
-
-          {activeTab === 'cashBook' && (
-            <EnterpriseSection title="SỔ QUỸ TIỀN MẶT (CASH BOOK)" subtitle="Theo mẫu Sổ kế toán chuẩn Việt Nam">
-              <EnterpriseCard bodyClassName="p-0">
-                <div className="text-center space-y-1 p-6 pb-2">
-                  <h2 className="text-[18px] font-black tracking-wide uppercase text-[var(--text-primary)]">SỔ QUỸ TIỀN MẶT</h2>
-                  <p className="text-[11px] text-[var(--text-secondary)] italic">Dành cho Tài khoản 111 (Tiền mặt Việt Nam đồng)</p>
-                  {(startDate || endDate) && <p className="text-[11px] text-blue-500">Kỳ báo cáo: {startDate ? formatDate(startDate) : 'Đầu kỳ'} - {endDate ? formatDate(endDate) : 'Hiện tại'}</p>}
-                </div>
-                
-                <div className="overflow-x-auto mt-4">
-                  <table className="w-full text-[12px] border-collapse">
-                    <thead>
-                      <tr className="bg-[var(--secondary)] text-[var(--text-secondary)] font-bold border-y border-[var(--border)]">
-                        <th className="p-3 border-r border-[var(--border)] text-center w-[120px]">Ngày hạch toán</th>
-                        <th className="p-3 border-r border-[var(--border)] text-center w-[120px]">Số chứng từ</th>
-                        <th className="p-3 border-r border-[var(--border)] text-left w-[180px]">Người nộp/Nhận</th>
-                        <th className="p-3 border-r border-[var(--border)] text-left">Diễn giải</th>
-                        <th className="p-3 border-r border-[var(--border)] text-center w-[80px]">TK ĐC</th>
-                        <th className="p-3 border-r border-[var(--border)] text-right w-[140px]">Số tiền Thu</th>
-                        <th className="p-3 border-r border-[var(--border)] text-right w-[140px]">Số tiền Chi</th>
-                        <th className="p-3 text-right w-[150px]">Tồn quỹ</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {loadingBook ? (
-                        <tr><td colSpan={8} className="p-10 text-center text-[var(--text-muted)]">Đang tạo sổ quỹ...</td></tr>
-                      ) : cashBookData.lines.length === 0 ? (
-                        <tr><td colSpan={8} className="p-10 text-center text-[var(--text-muted)]">Không có giao dịch tiền mặt đã ghi sổ nào trong kỳ.</td></tr>
-                      ) : (
-                        cashBookData.lines.map((l: any, idx: number) => (
-                          <tr key={idx} className="border-b border-[var(--border)] hover:bg-[var(--secondary)] transition-colors text-[var(--text-primary)]">
-                            <td className="p-3 border-r border-[var(--border)] text-center font-mono">{formatDate(l.accountingDate)}</td>
-                            <td className="p-3 border-r border-[var(--border)] text-center font-mono font-bold text-blue-500">{l.documentNo}</td>
-                            <td className="p-3 border-r border-[var(--border)]">{l.partnerName}</td>
-                            <td className="p-3 border-r border-[var(--border)] text-[var(--text-secondary)]">{l.description}</td>
-                            <td className="p-3 border-r border-[var(--border)] text-center font-mono text-[var(--text-muted)]">{l.debitAccountCode.startsWith('111') ? l.creditAccountCode : l.debitAccountCode}</td>
-                            <td className="p-3 border-r border-[var(--border)] text-right font-mono text-emerald-500">{l.debitAmount > 0 ? formatVnd(l.debitAmount) : '-'}</td>
-                            <td className="p-3 border-r border-[var(--border)] text-right font-mono text-rose-500">{l.creditAmount > 0 ? formatVnd(l.creditAmount) : '-'}</td>
-                            <td className="p-3 text-right font-mono font-bold">{formatVnd(l.balance)}</td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                    <tfoot className="bg-[var(--secondary)] font-bold text-[var(--text-primary)] border-t border-[var(--border)]">
-                      <tr>
-                        <td colSpan={5} className="p-3 text-right uppercase text-[var(--text-secondary)]">Tổng phát sinh trong kỳ</td>
-                        <td className="p-3 text-right border-r border-[var(--border)] font-mono text-emerald-500">{formatVnd(cashBookData.totalReceipts)}</td>
-                        <td className="p-3 text-right border-r border-[var(--border)] font-mono text-rose-500">{formatVnd(cashBookData.totalPayments)}</td>
-                        <td className="p-3 text-right font-mono text-blue-500">{formatVnd(cashBookData.endingBalance)}</td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-              </EnterpriseCard>
-            </EnterpriseSection>
-          )}
-
-          {/* TAB 3: BANK BOOK */}
-          {activeTab === 'bankBook' && (
-            <EnterpriseSection title="SỔ TIỀN GỬI NGÂN HÀNG (BANK BOOK)" subtitle="Theo mẫu Sổ chi tiết tiền gửi ngân hàng">
-              <EnterpriseCard bodyClassName="p-0">
-                <div className="text-center space-y-1 p-6 pb-2">
-                  <h2 className="text-[18px] font-black tracking-wide uppercase text-[var(--text-primary)]">SỔ TIỀN GỬI NGÂN HÀNG</h2>
-                  <p className="text-[11px] text-[var(--text-secondary)] italic">Dành cho Tài khoản 112 (Tiền gửi ngân hàng bằng Việt Nam đồng)</p>
-                  {(startDate || endDate) && <p className="text-[11px] text-blue-500">Kỳ báo cáo: {startDate ? formatDate(startDate) : 'Đầu kỳ'} - {endDate ? formatDate(endDate) : 'Hiện tại'}</p>}
-                </div>
-                
-                <div className="overflow-x-auto mt-4">
-                  <table className="w-full text-[12px] border-collapse">
-                    <thead>
-                      <tr className="bg-[var(--secondary)] text-[var(--text-secondary)] font-bold border-y border-[var(--border)]">
-                        <th className="p-3 border-r border-[var(--border)] text-center w-[120px]">Ngày hạch toán</th>
-                        <th className="p-3 border-r border-[var(--border)] text-center w-[120px]">Số chứng từ</th>
-                        <th className="p-3 border-r border-[var(--border)] text-left w-[180px]">Người nộp/Nhận</th>
-                        <th className="p-3 border-r border-[var(--border)] text-left">Diễn giải</th>
-                        <th className="p-3 border-r border-[var(--border)] text-center w-[80px]">TK ĐC</th>
-                        <th className="p-3 border-r border-[var(--border)] text-right w-[140px]">Số tiền Nợ (Gửi)</th>
-                        <th className="p-3 border-r border-[var(--border)] text-right w-[140px]">Số tiền Có (Rút)</th>
-                        <th className="p-3 text-right w-[150px]">Số dư tồn</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {loadingBook ? (
-                        <tr><td colSpan={8} className="p-10 text-center text-[var(--text-muted)]">Đang tạo sổ tiền gửi ngân hàng...</td></tr>
-                      ) : bankBookData.lines.length === 0 ? (
-                        <tr><td colSpan={8} className="p-10 text-center text-[var(--text-muted)]">Không có giao dịch gửi/rút ngân hàng đã ghi sổ nào trong kỳ.</td></tr>
-                      ) : (
-                        bankBookData.lines.map((l: any, idx: number) => (
-                          <tr key={idx} className="border-b border-[var(--border)] hover:bg-[var(--secondary)] transition-colors text-[var(--text-primary)]">
-                            <td className="p-3 border-r border-[var(--border)] text-center font-mono">{formatDate(l.accountingDate)}</td>
-                            <td className="p-3 border-r border-[var(--border)] text-center font-mono font-bold text-blue-500">{l.documentNo}</td>
-                            <td className="p-3 border-r border-[var(--border)]">{l.partnerName}</td>
-                            <td className="p-3 border-r border-[var(--border)] text-[var(--text-secondary)]">{l.description}</td>
-                            <td className="p-3 border-r border-[var(--border)] text-center font-mono text-[var(--text-muted)]">{l.debitAccountCode.startsWith('112') ? l.creditAccountCode : l.debitAccountCode}</td>
-                            <td className="p-3 border-r border-[var(--border)] text-right font-mono text-emerald-500">{l.debitAmount > 0 ? formatVnd(l.debitAmount) : '-'}</td>
-                            <td className="p-3 border-r border-[var(--border)] text-right font-mono text-rose-500">{l.creditAmount > 0 ? formatVnd(l.creditAmount) : '-'}</td>
-                            <td className="p-3 text-right font-mono font-bold">{formatVnd(l.balance)}</td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                    <tfoot className="bg-[var(--secondary)] font-bold text-[var(--text-primary)] border-t border-[var(--border)]">
-                      <tr>
-                        <td colSpan={5} className="p-3 text-right uppercase text-[var(--text-secondary)]">Tổng phát sinh ngân gửi</td>
-                        <td className="p-3 text-right border-r border-[var(--border)] font-mono text-emerald-500">{formatVnd(bankBookData.totalReceipts)}</td>
-                        <td className="p-3 text-right border-r border-[var(--border)] font-mono text-rose-500">{formatVnd(bankBookData.totalPayments)}</td>
-                        <td className="p-3 text-right font-mono text-blue-500">{formatVnd(bankBookData.endingBalance)}</td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-              </EnterpriseCard>
-            </EnterpriseSection>
-          )}
-
+        {/* METRICS PANEL */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <EnterpriseMetric title="Tổng Thu tiền mặt (POSTED)" value={formatVnd(metrics.cashIn)} />
+          <EnterpriseMetric title="Tổng Chi tiền mặt (POSTED)" value={formatVnd(metrics.cashOut)} />
+          <EnterpriseMetric title="Tồn Quỹ tiền mặt cuối kỳ" value={formatVnd(metrics.cashBalance)} />
+          <EnterpriseMetric title="Số dư tiền gửi ngân hàng" value={formatVnd(metrics.bankBalance)} />
         </div>
-      </main>
+
+        {/* ENTERPRISE FILTERS */}
+        <div className="bg-[var(--card)] p-4 rounded-xl border border-[var(--border)] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 text-xs">
+          <div>
+            <label className="block text-[10px] font-black text-[var(--text-muted)] uppercase mb-1">Loại chứng từ</label>
+            <select value={filterType} onChange={e => setFilterType(e.target.value)} className="w-full h-9 rounded-md bg-[var(--background)] border border-[var(--border)] text-[12px] text-[var(--text-primary)] px-3 outline-none">
+              <option value="ALL">Tất cả loại phiếu</option>
+              <option value="CASH_RECEIPT">Phiếu thu tiền mặt</option>
+              <option value="CASH_PAYMENT">Phiếu chi tiền mặt</option>
+              <option value="BANK_TRANSFER">Ủy nhiệm chi (UNC)</option>
+              <option value="BANK_CREDIT_NOTICE">Giấy báo Có</option>
+              <option value="BANK_DEBIT_NOTICE">Giấy báo Nợ</option>
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-[10px] font-black text-[var(--text-muted)] uppercase mb-1">Trạng thái duyệt</label>
+            <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="w-full h-9 rounded-md bg-[var(--background)] border border-[var(--border)] text-[12px] text-[var(--text-primary)] px-3 outline-none">
+              <option value="ALL">Tất cả trạng thái</option>
+              <option value="DRAFT">Nháp</option>
+              <option value="SUBMITTED">Chờ duyệt</option>
+              <option value="APPROVED">Đã duyệt (Chờ ghi sổ)</option>
+              <option value="POSTED">Đã ghi sổ cái</option>
+              <option value="REVERSED">Đã đảo bút toán</option>
+              <option value="CANCELLED">Đã hủy</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-black text-[var(--text-muted)] uppercase mb-1">Dự án công trình</label>
+            <select value={filterProject} onChange={e => setFilterProject(e.target.value)} className="w-full h-9 rounded-md bg-[var(--background)] border border-[var(--border)] text-[12px] text-[var(--text-primary)] px-3 outline-none">
+              <option value="ALL">Tất cả dự án</option>
+              {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-black text-[var(--text-muted)] uppercase mb-1">Tìm kiếm nội dung</label>
+            <input type="text" placeholder="Số chứng từ, lý do..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="w-full h-9 rounded-md bg-[var(--background)] border border-[var(--border)] text-[12px] text-[var(--text-primary)] px-3 outline-none" />
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-black text-[var(--text-muted)] uppercase mb-1">Từ ngày</label>
+            <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full h-9 rounded-md bg-[var(--background)] border border-[var(--border)] text-[12px] text-[var(--text-primary)] px-3 outline-none" />
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-black text-[var(--text-muted)] uppercase mb-1">Đến ngày</label>
+            <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-full h-9 rounded-md bg-[var(--background)] border border-[var(--border)] text-[12px] text-[var(--text-primary)] px-3 outline-none" />
+          </div>
+        </div>
+
+        {/* TAB 1: DOCUMENTS TABLE */}
+        {activeTab === 'documents' && (
+          <EnterpriseSection title="DANH SÁCH CHỨNG TỪ QUỸ & NGÂN HÀNG" subtitle={`${documents.length} phiếu hạch toán`}>
+            <EnterpriseCard bodyClassName="p-0">
+              <EnterpriseDataTable
+                data={documents}
+                columns={columns}
+                loading={loading}
+                minWidth="1400px"
+                getRowKey={row => row.id}
+                emptyState={<EnterpriseEmptyState title="Không tìm thấy chứng từ" description="Chưa lập chứng từ quỹ nào hoặc bộ lọc không khớp với kết quả nào." iconType="report" />}
+              />
+            </EnterpriseCard>
+          </EnterpriseSection>
+        )}
+
+        {/* TAB 2: CASH BOOK */}
+        {activeTab === 'cashBook' && (
+          <EnterpriseSection title="SỔ QUỸ TIỀN MẶT (CASH BOOK)" subtitle="Theo mẫu Sổ kế toán chuẩn Việt Nam">
+            <EnterpriseCard bodyClassName="p-0">
+              <div className="text-center space-y-1 p-6 pb-2">
+                <h2 className="text-[18px] font-black tracking-wide uppercase text-[var(--text-primary)]">SỔ QUỸ TIỀN MẶT</h2>
+                <p className="text-[11px] text-[var(--text-secondary)] italic">Dành cho Tài khoản 111 (Tiền mặt Việt Nam đồng)</p>
+                {(startDate || endDate) && <p className="text-[11px] text-blue-500 font-semibold">Kỳ báo cáo: {startDate ? formatDate(startDate) : 'Đầu kỳ'} - {endDate ? formatDate(endDate) : 'Hiện tại'}</p>}
+              </div>
+              
+              <div className="overflow-x-auto mt-4">
+                <table className="w-full text-[12px] border-collapse min-w-[1100px]">
+                  <thead>
+                    <tr className="bg-[var(--secondary)] text-[var(--text-secondary)] font-bold border-y border-[var(--border)]">
+                      <th className="p-3 border-r border-[var(--border)] text-center w-[120px]">Ngày hạch toán</th>
+                      <th className="p-3 border-r border-[var(--border)] text-center w-[120px]">Số chứng từ</th>
+                      <th className="p-3 border-r border-[var(--border)] text-left w-[180px]">Người nộp/Nhận</th>
+                      <th className="p-3 border-r border-[var(--border)] text-left">Diễn giải</th>
+                      <th className="p-3 border-r border-[var(--border)] text-center w-[80px]">TK ĐC</th>
+                      <th className="p-3 border-r border-[var(--border)] text-right w-[140px]">Số tiền Thu</th>
+                      <th className="p-3 border-r border-[var(--border)] text-right w-[140px]">Số tiền Chi</th>
+                      <th className="p-3 text-right w-[150px]">Tồn quỹ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loadingBook ? (
+                      <tr><td colSpan={8} className="p-10 text-center text-[var(--text-muted)]">Đang tạo sổ quỹ...</td></tr>
+                    ) : cashBookData.lines.length === 0 ? (
+                      <tr><td colSpan={8} className="p-10 text-center text-[var(--text-muted)]">Không có giao dịch tiền mặt đã ghi sổ nào trong kỳ.</td></tr>
+                    ) : (
+                      cashBookData.lines.map((l: any, idx: number) => (
+                        <tr key={idx} className="border-b border-[var(--border)] hover:bg-[var(--secondary)]/30 transition-colors text-[var(--text-primary)]">
+                          <td className="p-3 border-r border-[var(--border)] text-center font-mono">{formatDate(l.accountingDate)}</td>
+                          <td className="p-3 border-r border-[var(--border)] text-center font-mono font-bold text-[var(--primary)]">{l.documentNo}</td>
+                          <td className="p-3 border-r border-[var(--border)]">{l.partnerName}</td>
+                          <td className="p-3 border-r border-[var(--border)] text-[var(--text-secondary)]">{l.description}</td>
+                          <td className="p-3 border-r border-[var(--border)] text-center font-mono text-[var(--text-muted)]">{l.debitAccountCode.startsWith('111') ? l.creditAccountCode : l.debitAccountCode}</td>
+                          <td className="p-3 border-r border-[var(--border)] text-right font-mono text-emerald-500 font-bold">{l.debitAmount > 0 ? formatVnd(l.debitAmount) : '-'}</td>
+                          <td className="p-3 border-r border-[var(--border)] text-right font-mono text-rose-500 font-bold">{l.creditAmount > 0 ? formatVnd(l.creditAmount) : '-'}</td>
+                          <td className="p-3 text-right font-mono font-bold">{formatVnd(l.balance)}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                  <tfoot className="bg-[var(--secondary)] font-bold text-[var(--text-primary)] border-t border-[var(--border)]">
+                    <tr>
+                      <td colSpan={5} className="p-3 text-right uppercase text-[var(--text-secondary)]">Tổng phát sinh trong kỳ</td>
+                      <td className="p-3 text-right border-r border-[var(--border)] font-mono text-emerald-500">{formatVnd(cashBookData.totalReceipts)}</td>
+                      <td className="p-3 text-right border-r border-[var(--border)] font-mono text-rose-500">{formatVnd(cashBookData.totalPayments)}</td>
+                      <td className="p-3 text-right font-mono text-[var(--primary)]">{formatVnd(cashBookData.endingBalance)}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </EnterpriseCard>
+          </EnterpriseSection>
+        )}
+
+        {/* TAB 3: BANK BOOK */}
+        {activeTab === 'bankBook' && (
+          <EnterpriseSection title="SỔ TIỀN GỬI NGÂN HÀNG (BANK BOOK)" subtitle="Theo mẫu Sổ chi tiết tiền gửi ngân hàng">
+            <EnterpriseCard bodyClassName="p-0">
+              <div className="text-center space-y-1 p-6 pb-2">
+                <h2 className="text-[18px] font-black tracking-wide uppercase text-[var(--text-primary)]">SỔ TIỀN GỬI NGÂN HÀNG</h2>
+                <p className="text-[11px] text-[var(--text-secondary)] italic">Dành cho Tài khoản 112 (Tiền gửi ngân hàng bằng Việt Nam đồng)</p>
+                {(startDate || endDate) && <p className="text-[11px] text-blue-500 font-semibold">Kỳ báo cáo: {startDate ? formatDate(startDate) : 'Đầu kỳ'} - {endDate ? formatDate(endDate) : 'Hiện tại'}</p>}
+              </div>
+              
+              <div className="overflow-x-auto mt-4">
+                <table className="w-full text-[12px] border-collapse min-w-[1100px]">
+                  <thead>
+                    <tr className="bg-[var(--secondary)] text-[var(--text-secondary)] font-bold border-y border-[var(--border)]">
+                      <th className="p-3 border-r border-[var(--border)] text-center w-[120px]">Ngày hạch toán</th>
+                      <th className="p-3 border-r border-[var(--border)] text-center w-[120px]">Số chứng từ</th>
+                      <th className="p-3 border-r border-[var(--border)] text-left w-[180px]">Người nộp/Nhận</th>
+                      <th className="p-3 border-r border-[var(--border)] text-left">Diễn giải</th>
+                      <th className="p-3 border-r border-[var(--border)] text-center w-[80px]">TK ĐC</th>
+                      <th className="p-3 border-r border-[var(--border)] text-right w-[140px]">Số tiền Nợ (Gửi)</th>
+                      <th className="p-3 border-r border-[var(--border)] text-right w-[140px]">Số tiền Có (Rút)</th>
+                      <th className="p-3 text-right w-[150px]">Số dư tồn</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loadingBook ? (
+                      <tr><td colSpan={8} className="p-10 text-center text-[var(--text-muted)]">Đang tạo sổ tiền gửi ngân hàng...</td></tr>
+                    ) : bankBookData.lines.length === 0 ? (
+                      <tr><td colSpan={8} className="p-10 text-center text-[var(--text-muted)]">Không có giao dịch gửi/rút ngân hàng đã ghi sổ nào trong kỳ.</td></tr>
+                    ) : (
+                      bankBookData.lines.map((l: any, idx: number) => (
+                        <tr key={idx} className="border-b border-[var(--border)] hover:bg-[var(--secondary)]/30 transition-colors text-[var(--text-primary)]">
+                          <td className="p-3 border-r border-[var(--border)] text-center font-mono">{formatDate(l.accountingDate)}</td>
+                          <td className="p-3 border-r border-[var(--border)] text-center font-mono font-bold text-[var(--primary)]">{l.documentNo}</td>
+                          <td className="p-3 border-r border-[var(--border)]">{l.partnerName}</td>
+                          <td className="p-3 border-r border-[var(--border)] text-[var(--text-secondary)]">{l.description}</td>
+                          <td className="p-3 border-r border-[var(--border)] text-center font-mono text-[var(--text-muted)]">{l.debitAccountCode.startsWith('112') ? l.creditAccountCode : l.debitAccountCode}</td>
+                          <td className="p-3 border-r border-[var(--border)] text-right font-mono text-emerald-500 font-bold">{l.debitAmount > 0 ? formatVnd(l.debitAmount) : '-'}</td>
+                          <td className="p-3 border-r border-[var(--border)] text-right font-mono text-rose-500 font-bold">{l.creditAmount > 0 ? formatVnd(l.creditAmount) : '-'}</td>
+                          <td className="p-3 text-right font-mono font-bold">{formatVnd(l.balance)}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                  <tfoot className="bg-[var(--secondary)] font-bold text-[var(--text-primary)] border-t border-[var(--border)]">
+                    <tr>
+                      <td colSpan={5} className="p-3 text-right uppercase text-[var(--text-secondary)]">Tổng phát sinh ngân gửi</td>
+                      <td className="p-3 text-right border-r border-[var(--border)] font-mono text-emerald-500">{formatVnd(bankBookData.totalReceipts)}</td>
+                      <td className="p-3 text-right border-r border-[var(--border)] font-mono text-rose-500">{formatVnd(bankBookData.totalPayments)}</td>
+                      <td className="p-3 text-right font-mono text-[var(--primary)]">{formatVnd(bankBookData.endingBalance)}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </EnterpriseCard>
+          </EnterpriseSection>
+        )}
 
       {/* CREATE MODAL */}
       {showCreateModal && (
@@ -889,6 +881,7 @@ export default function CashBankPage() {
           </div>
         </div>
       )}
-    </div>
+      </EnterprisePageContainer>
+    </EnterpriseAppShell>
   );
 }

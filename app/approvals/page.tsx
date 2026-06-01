@@ -1,16 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Sidebar from "@/app/components/Sidebar";
-import Header from "@/app/components/Header";
-import { useERPStore } from "@/store/erpStore";
+import EnterpriseAppShell from "@/app/components/layout/EnterpriseAppShell";
+import EnterpriseHeader from "@/app/components/layout/EnterpriseHeader";
+import EnterprisePageContainer from "@/app/components/layout/EnterprisePageContainer";
 import PermissionMatrixView from "../components/approvals/PermissionMatrixView";
 import { ApprovalInboxTable } from "../components/approvals/ApprovalInboxTable";
 import { ApprovalDetailDrawer } from "../components/approvals/ApprovalDetailDrawer";
 import { RejectReasonModal } from "../components/approvals/RejectReasonModal";
 import { 
   EnterpriseLoadingState, 
-  EnterpriseErrorState 
+  EnterpriseErrorState,
+  EnterpriseTabs
 } from "@/app/components/ui-enterprise";
 
 interface PendingDoc {
@@ -27,7 +28,6 @@ interface PendingDoc {
 }
 
 export default function ApprovalsPage() {
-  const sidebarCollapsed = useERPStore((state) => state.sidebarCollapsed);
   const [activeTab, setActiveTab] = useState<"pending" | "processed" | "created" | "overdue" | "matrix">("pending");
   const [pendingDocs, setPendingDocs] = useState<PendingDoc[]>([]);
   const [processedDocs, setProcessedDocs] = useState<PendingDoc[]>([]);
@@ -199,151 +199,131 @@ export default function ApprovalsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex overflow-hidden">
-      <Sidebar activeItem="approvals" />
-      <main className={`erp-page-main flex-1 flex flex-col h-screen overflow-hidden ${sidebarCollapsed ? 'pl-[var(--erp-sidebar-collapsed)]' : 'pl-[var(--erp-sidebar-width)]'}`}>
-        <Header />
-        
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin">
-          <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
-            <div>
-              <h1 className="text-base font-bold text-[var(--text-primary)]">Bàn Phê Duyệt Kế Toán (Approval Inbox)</h1>
-              <p className="text-[var(--text-muted)] text-xs mt-1">
-                Xử lý phê duyệt hóa đơn, tạm ứng, quyết toán và chi phí tập trung theo luồng nghiệp vụ liên kết.
-              </p>
-            </div>
-          </header>
+    <EnterpriseAppShell activeItem="approvals">
+      <EnterpriseHeader
+        title="BÀN PHÊ DUYỆT PHÒNG KẾ TOÁN"
+        subtitle="Xử lý phê duyệt hóa đơn, tạm ứng, quyết toán và chi phí tập trung theo luồng nghiệp vụ liên kết"
+      />
+      <EnterprisePageContainer>
+        {/* Standardized Tabs */}
+        <EnterpriseTabs
+          tabs={[
+            { id: "pending", label: "Chờ tôi duyệt" },
+            { id: "processed", label: "Tôi đã xử lý" },
+            { id: "created", label: "Tôi đã tạo" },
+            { id: "overdue", label: "Quá hạn duyệt" },
+            { id: "matrix", label: "Luồng phân quyền" }
+          ]}
+          activeTab={activeTab}
+          onTabChange={(id) => setActiveTab(id as any)}
+        />
 
-          {/* Tabs */}
-          <div className="border-b border-[var(--border)] flex gap-6 overflow-x-auto scrollbar-none select-none">
-            {[
-              { key: "pending", label: "Chờ tôi duyệt" },
-              { key: "processed", label: "Tôi đã xử lý" },
-              { key: "created", label: "Tôi đã tạo" },
-              { key: "overdue", label: "Quá hạn duyệt" },
-              { key: "matrix", label: "Quy trình phân quyền" }
-            ].map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key as any)}
-                className={`pb-3 text-xs font-bold uppercase tracking-wider transition-all border-b-2 -mb-0.5 whitespace-nowrap cursor-pointer ${
-                  activeTab === tab.key
-                    ? "text-[var(--primary)] border-[var(--primary)] font-extrabold"
-                    : "text-[var(--text-muted)] hover:text-[var(--text-primary)] border-transparent"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          {activeTab === "matrix" ? (
-            <PermissionMatrixView />
-          ) : (
-            <div className="space-y-6 animate-in fade-in duration-200">
-              {/* Advanced Filters */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-5 bg-[var(--card)] rounded-xl border border-[var(--border)] text-xs">
-                <div>
-                  <label className="block text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
-                    Từ khóa tìm kiếm
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Số chứng từ..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full h-[38px] px-3 border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] placeholder-[var(--text-muted)] rounded-lg text-sm focus:outline-none focus:border-[var(--primary)]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
-                    Phân hệ
-                  </label>
-                  <select
-                    value={selectedModule}
-                    onChange={(e) => setSelectedModule(e.target.value)}
-                    className="w-full h-[38px] px-3 border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] rounded-lg text-sm focus:outline-none focus:border-[var(--primary)]"
-                  >
-                    <option value="">Tất cả</option>
-                    <option value="INVOICE">Hóa đơn</option>
-                    <option value="COST">Chi phí</option>
-                    <option value="ADVANCE">Tạm ứng</option>
-                    <option value="SETTLEMENT">Quyết toán</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
-                    Người đề xuất
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Họ tên người tạo..."
-                    value={creatorQuery}
-                    onChange={(e) => setCreatorQuery(e.target.value)}
-                    className="w-full h-[38px] px-3 border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] placeholder-[var(--text-muted)] rounded-lg text-sm focus:outline-none focus:border-[var(--primary)]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
-                    Khoảng giá trị tối thiểu (VND)
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="Ví dụ: 10000000"
-                    value={minAmount}
-                    onChange={(e) => setMinAmount(e.target.value)}
-                    className="w-full h-[38px] px-3 border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] placeholder-[var(--text-muted)] rounded-lg text-sm focus:outline-none focus:border-[var(--primary)] font-mono"
-                  />
-                </div>
+        {activeTab === "matrix" ? (
+          <PermissionMatrixView />
+        ) : (
+          <div className="space-y-6 animate-in fade-in duration-200">
+            {/* Advanced Filters */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-5 bg-[var(--card)] rounded-xl border border-[var(--border)] text-xs text-[var(--text-primary)]">
+              <div>
+                <label className="block text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
+                  Từ khóa tìm kiếm
+                </label>
+                <input
+                  type="text"
+                  placeholder="Số chứng từ..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full h-[38px] px-3 border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] placeholder-[var(--text-muted)] rounded-lg text-sm focus:outline-none focus:border-[var(--primary)] outline-none"
+                />
               </div>
-
-              {loading ? (
-                <EnterpriseLoadingState message="Đang tải hộp thư phê duyệt..." />
-              ) : error ? (
-                <EnterpriseErrorState 
-                  title="Lỗi tải dữ liệu" 
-                  description={error} 
-                  onRetry={fetchInboxData} 
+              <div>
+                <label className="block text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
+                  Phân hệ
+                </label>
+                <select
+                  value={selectedModule}
+                  onChange={(e) => setSelectedModule(e.target.value)}
+                  className="w-full h-[38px] px-3 border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] rounded-lg text-sm focus:outline-none focus:border-[var(--primary)] outline-none"
+                >
+                  <option value="">Tất cả</option>
+                  <option value="INVOICE">Hóa đơn</option>
+                  <option value="COST">Chi phí</option>
+                  <option value="ADVANCE">Tạm ứng</option>
+                  <option value="SETTLEMENT">Quyết toán</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
+                  Người đề xuất
+                </label>
+                <input
+                  type="text"
+                  placeholder="Họ tên người tạo..."
+                  value={creatorQuery}
+                  onChange={(e) => setCreatorQuery(e.target.value)}
+                  className="w-full h-[38px] px-3 border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] placeholder-[var(--text-muted)] rounded-lg text-sm focus:outline-none focus:border-[var(--primary)] outline-none"
                 />
-              ) : (
-                <ApprovalInboxTable
-                  documents={getActiveTabDocs()}
-                  currentUserId={currentUserId}
-                  onSelect={(doc) => {
-                    setSelectedDoc(doc);
-                    setIsDrawerOpen(true);
-                  }}
-                  onApprove={handleApprove}
-                  onRejectClick={handleRejectClick}
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
+                  Khoảng giá trị tối thiểu (VND)
+                </label>
+                <input
+                  type="number"
+                  placeholder="Ví dụ: 10000000"
+                  value={minAmount}
+                  onChange={(e) => setMinAmount(e.target.value)}
+                  className="w-full h-[38px] px-3 border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] placeholder-[var(--text-muted)] rounded-lg text-sm focus:outline-none focus:border-[var(--primary)] font-mono outline-none"
                 />
-              )}
+              </div>
             </div>
-          )}
-        </div>
-      </main>
 
-      {/* Drawer & Modal integration */}
-      <ApprovalDetailDrawer
-        isOpen={isDrawerOpen}
-        document={selectedDoc}
-        currentUserId={currentUserId}
-        onClose={() => {
-          setIsDrawerOpen(false);
-          setSelectedDoc(null);
-        }}
-        onApprove={handleApprove}
-        onRejectClick={handleRejectClick}
-      />
+            {loading ? (
+              <EnterpriseLoadingState message="Đang tải hộp thư phê duyệt..." />
+            ) : error ? (
+              <EnterpriseErrorState 
+                title="Lỗi tải dữ liệu" 
+                description={error} 
+                onRetry={fetchInboxData} 
+              />
+            ) : (
+              <ApprovalInboxTable
+                documents={getActiveTabDocs()}
+                currentUserId={currentUserId}
+                onSelect={(doc) => {
+                  setSelectedDoc(doc);
+                  setIsDrawerOpen(true);
+                }}
+                onApprove={handleApprove}
+                onRejectClick={handleRejectClick}
+              />
+            )}
+          </div>
+        )}
 
-      <RejectReasonModal
-        isOpen={isRejectModalOpen}
-        docNo={rejectingDoc?.docNo || ""}
-        onClose={() => {
-          setIsRejectModalOpen(false);
-          setRejectingDoc(null);
-        }}
-        onSubmit={handleRejectSubmit}
-      />
-    </div>
+        {/* Drawer & Modal integration */}
+        <ApprovalDetailDrawer
+          isOpen={isDrawerOpen}
+          document={selectedDoc}
+          currentUserId={currentUserId}
+          onClose={() => {
+            setIsDrawerOpen(false);
+            setSelectedDoc(null);
+          }}
+          onApprove={handleApprove}
+          onRejectClick={handleRejectClick}
+        />
+
+        <RejectReasonModal
+          isOpen={isRejectModalOpen}
+          docNo={rejectingDoc?.docNo || ""}
+          onClose={() => {
+            setIsRejectModalOpen(false);
+            setRejectingDoc(null);
+          }}
+          onSubmit={handleRejectSubmit}
+        />
+      </EnterprisePageContainer>
+    </EnterpriseAppShell>
   );
 }

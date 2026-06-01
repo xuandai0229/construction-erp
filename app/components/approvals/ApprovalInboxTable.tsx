@@ -1,7 +1,12 @@
-"use client";
+'use client';
 
-import React from "react";
-import { getStatusLabel, getStatusStyleClass } from "@/app/components/ui-enterprise";
+import React from 'react';
+import { 
+  getStatusLabel, 
+  getStatusStyleClass,
+  EnterpriseDataTable,
+  EnterpriseColumn
+} from '@/app/components/ui-enterprise';
 
 interface PendingDoc {
   id: string;
@@ -32,110 +37,118 @@ export const ApprovalInboxTable: React.FC<ApprovalInboxTableProps> = ({
   onRejectClick
 }) => {
   const formatVND = (num: number) => {
-    return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(num);
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(num);
   };
 
   const getModuleBadge = (mod: string) => {
     switch (mod) {
-      case "INVOICE":
-        return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Hóa đơn</span>;
-      case "COST":
-        return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">Chi phí</span>;
-      case "ADVANCE":
-        return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20">Tạm ứng</span>;
-      case "SETTLEMENT":
-        return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-purple-500/10 text-purple-500 border border-purple-500/20">Quyết toán</span>;
+      case 'INVOICE':
+        return <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Hóa đơn</span>;
+      case 'COST':
+        return <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-amber-500/10 text-amber-500 border border-amber-500/20">Chi phí</span>;
+      case 'ADVANCE':
+        return <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-blue-500/10 text-blue-500 border border-blue-500/20">Tạm ứng</span>;
+      case 'SETTLEMENT':
+        return <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-purple-500/10 text-purple-500 border border-purple-500/20">Quyết toán</span>;
       default:
-        return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)]">{mod}</span>;
+        return <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-[var(--secondary)] text-[var(--text-secondary)] border border-[var(--border)]">{mod}</span>;
     }
   };
 
-  if (documents.length === 0) {
-    return (
-      <div className="text-center py-12 bg-[var(--card)] rounded-xl border border-[var(--border)]">
-        <p className="text-[var(--text-muted)] text-sm">Không tìm thấy chứng từ nào phù hợp với bộ lọc.</p>
-      </div>
-    );
-  }
+  const columns: EnterpriseColumn<PendingDoc>[] = [
+    { 
+      key: 'docNo', 
+      header: 'Số chứng từ', 
+      render: row => <span className="font-bold text-[var(--primary)]">{row.docNo}</span>, 
+      width: '130px' 
+    },
+    { 
+      key: 'module', 
+      header: 'Phân hệ', 
+      render: row => getModuleBadge(row.module), 
+      width: '120px' 
+    },
+    { 
+      key: 'projectName', 
+      header: 'Công trình / Dự án', 
+      render: row => row.projectName, 
+      minWidth: '200px', 
+      truncate: true 
+    },
+    { 
+      key: 'amount', 
+      header: 'Giá trị', 
+      render: row => <span className="font-mono font-semibold">{formatVND(row.amount)}</span>, 
+      width: '160px', 
+      align: 'right' 
+    },
+    { 
+      key: 'creatorName', 
+      header: 'Người đề xuất', 
+      render: row => row.creatorName, 
+      width: '140px' 
+    },
+    { 
+      key: 'createdAt', 
+      header: 'Ngày tạo', 
+      render: row => new Date(row.createdAt).toLocaleDateString('vi-VN'), 
+      width: '110px', 
+      align: 'center' 
+    },
+    { 
+      key: 'status', 
+      header: 'Trạng thái', 
+      render: row => (
+        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${getStatusStyleClass(row.status)}`}>
+          {getStatusLabel(row.status)}
+        </span>
+      ), 
+      width: '130px', 
+      align: 'center' 
+    },
+    { 
+      key: 'actions', 
+      header: 'Thao tác nhanh', 
+      render: row => {
+        const isCreator = row.createdById === currentUserId;
+        const canAction = row.status === 'PENDING' || row.status === 'SUBMITTED';
+        if (!canAction) return <span className="text-[var(--text-muted)] text-[11px]">-</span>;
+        if (isCreator) {
+          return (
+            <span className="text-[10px] text-amber-500 font-semibold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 whitespace-nowrap">
+              Bất kiêm nhiệm
+            </span>
+          );
+        }
+        return (
+          <div className="flex items-center justify-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => onApprove(row)}
+              className="px-2.5 py-1 text-[10px] font-bold text-white bg-emerald-600 hover:bg-emerald-500 rounded border border-emerald-700/30 transition-colors cursor-pointer"
+            >
+              Duyệt
+            </button>
+            <button
+              onClick={() => onRejectClick(row)}
+              className="px-2.5 py-1 text-[10px] font-bold text-[var(--text-primary)] bg-[var(--secondary)] hover:bg-[var(--secondary)]/70 rounded border border-[var(--border)] transition-colors cursor-pointer"
+            >
+              Từ chối
+            </button>
+          </div>
+        );
+      }, 
+      width: '160px', 
+      align: 'center' 
+    }
+  ];
 
   return (
-    <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-[var(--border)]">
-          <thead className="bg-[var(--secondary)] text-[var(--text-secondary)]">
-            <tr>
-              <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Số chứng từ</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Phân hệ</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Công trình / Dự án</th>
-              <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider">Giá trị (VND)</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Người đề xuất</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Ngày tạo</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Trạng thái</th>
-              <th className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Thao tác</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[var(--border)] text-[var(--text-primary)]">
-            {documents.map((doc) => {
-              const isCreator = doc.createdById === currentUserId;
-              const canAction = doc.status === "PENDING" || doc.status === "SUBMITTED";
-
-              return (
-                <tr 
-                  key={doc.id} 
-                  className="hover:bg-[var(--secondary)]/25 transition-colors group cursor-pointer" 
-                  onClick={() => onSelect(doc)}
-                >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[var(--primary)] group-hover:underline">
-                    {doc.docNo}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">{getModuleBadge(doc.module)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-secondary)] max-w-[200px] truncate">
-                    {doc.projectName}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-right font-mono font-semibold">
-                    {formatVND(doc.amount)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-secondary)]">{doc.creatorName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-muted)]">
-                    {new Date(doc.createdAt).toLocaleDateString("vi-VN")}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium uppercase tracking-wider ${getStatusStyleClass(doc.status)}`}>
-                      {getStatusLabel(doc.status)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-center" onClick={(e) => e.stopPropagation()}>
-                    {canAction ? (
-                      isCreator ? (
-                        <span className="text-xs text-amber-500 font-medium bg-amber-500/10 px-2.5 py-1 rounded-md border border-amber-500/20">
-                          Bất kiêm nhiệm chặn duyệt
-                        </span>
-                      ) : (
-                        <div className="flex items-center justify-center gap-2">
-                          <button
-                            onClick={() => onApprove(doc)}
-                            className="px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition-colors cursor-pointer"
-                          >
-                            Duyệt
-                          </button>
-                          <button
-                            onClick={() => onRejectClick(doc)}
-                            className="px-3 py-1.5 text-xs font-semibold text-[var(--text-primary)] bg-[var(--secondary)] hover:bg-[var(--secondary)]/70 rounded-lg border border-[var(--border)] transition-colors cursor-pointer"
-                          >
-                            Từ chối
-                          </button>
-                        </div>
-                      )
-                    ) : (
-                      <span className="text-[var(--text-muted)] text-xs">-</span>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <EnterpriseDataTable
+      data={documents}
+      columns={columns}
+      getRowKey={row => row.id}
+      onRowClick={onSelect}
+      minWidth="1150px"
+    />
   );
 };

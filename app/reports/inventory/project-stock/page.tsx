@@ -2,19 +2,19 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import Sidebar from '@/app/components/Sidebar';
-import Header from '@/app/components/Header';
-import { useERPStore } from '@/store/erpStore';
+import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
+import EnterpriseHeader from '@/app/components/layout/EnterpriseHeader';
+import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
 import { 
-  EnterpriseSection, 
   EnterpriseEmptyState,
   EnterpriseLoadingState,
-  EnterpriseErrorState
+  EnterpriseErrorState,
+  EnterpriseDataTable,
+  EnterpriseColumn
 } from '@/app/components/ui-enterprise';
 
 export default function ProjectStockReportPage() {
   const [projectId, setProjectId] = useState('');
-  const sidebarCollapsed = useERPStore((state) => state.sidebarCollapsed);
 
   const { data: projectsRes } = useQuery({
     queryKey: ['projects'],
@@ -45,45 +45,57 @@ export default function ProjectStockReportPage() {
     window.open(`/api/export/inventory/project-stock?projectId=${projectId}`, '_blank');
   };
 
+  const columns: EnterpriseColumn<any>[] = [
+    { key: 'warehouseCode', header: 'Mã kho', render: row => row.warehouseCode, width: '110px' },
+    { key: 'warehouseName', header: 'Tên kho bãi', render: row => row.warehouseName, minWidth: '150px' },
+    { key: 'materialCode', header: 'Mã vật tư', render: row => <span className="font-bold text-[var(--primary)]">{row.materialCode}</span>, width: '120px' },
+    { key: 'materialName', header: 'Tên vật tư', render: row => row.materialName, minWidth: '200px' },
+    { key: 'unit', header: 'ĐVT', render: row => row.unit, width: '70px', align: 'center' },
+    { key: 'quantity', header: 'Số lượng tồn', render: row => row.quantity?.toLocaleString('vi-VN'), width: '120px', align: 'right', className: 'font-semibold' },
+    { key: 'avgCost', header: 'Đơn giá BQ', render: row => `${row.avgCost?.toLocaleString('vi-VN')} đ`, width: '140px', align: 'right', className: 'text-[var(--text-muted)] font-mono' },
+    { key: 'totalCost', header: 'Tổng giá trị', render: row => `${row.totalCost?.toLocaleString('vi-VN')} đ`, width: '150px', align: 'right', className: 'font-bold text-[var(--primary)] font-mono' }
+  ];
+
+  const footerElement = (
+    <tr className="bg-[var(--secondary)] border-t border-[var(--border)] font-bold text-[var(--text-primary)] h-[40px] text-[11px]">
+      <td className="px-4 py-2" colSpan={7}>TỔNG CỘNG GIÁ TRỊ VẬT TƯ TỒN BÃI CÔNG TRÌNH</td>
+      <td className="px-4 py-2 text-right font-mono text-[var(--primary)]">{totalValue.toLocaleString('vi-VN')} đ</td>
+    </tr>
+  );
+
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex overflow-hidden">
-      <Sidebar activeItem="reports" />
-      <main className={`erp-page-main flex-1 flex flex-col h-screen overflow-hidden ${sidebarCollapsed ? 'pl-[var(--erp-sidebar-collapsed)]' : 'pl-[var(--erp-sidebar-width)]'}`}>
-        <Header data={{ project: { name: "Báo cáo Tồn Kho Theo Công Trình" } } as any} />
-        
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin">
-          <EnterpriseSection 
-            title="BÁO CÁO TỒN KHO THEO CÔNG TRÌNH / DỰ ÁN" 
-            subtitle="Kiểm soát chi tiết tồn bãi tại công trường để tránh thất thoát nguyên vật liệu xây dựng"
-          >
-            {null}
-          </EnterpriseSection>
-
-          {/* Selector panel */}
-          <div className="bg-[var(--card)] p-5 rounded-xl border border-[var(--border)] flex items-end gap-4 text-xs">
-            <div className="w-[300px]">
-              <label className="block text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Chọn công trình *</label>
-              <select 
-                value={projectId} 
-                onChange={(e) => setProjectId(e.target.value)} 
-                className="w-full h-10 px-3 rounded-lg border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] focus:border-[var(--primary)] outline-none text-xs font-bold"
-              >
-                <option value="">-- Chọn công trình --</option>
-                {projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
-              </select>
-            </div>
-            {projectId && (
-              <button 
-                onClick={handleExportCsv} 
-                className="h-10 px-4 rounded-lg bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white text-xs font-bold ml-auto transition-colors cursor-pointer"
-              >
-                Xuất dữ liệu CSV
-              </button>
-            )}
+    <EnterpriseAppShell activeItem="reports">
+      <EnterpriseHeader
+        title="BÁO CÁO TỒN KHO THEO CÔNG TRÌNH"
+        subtitle="Kiểm soát chi tiết tồn bãi tại công trường để tránh thất thoát nguyên vật liệu xây dựng"
+      />
+      <EnterprisePageContainer>
+        {/* Selector panel */}
+        <div className="bg-[var(--card)] p-5 rounded-xl border border-[var(--border)] flex items-end gap-4 text-xs">
+          <div className="w-[300px]">
+            <label className="block text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-2">Chọn công trình *</label>
+            <select 
+              value={projectId} 
+              onChange={(e) => setProjectId(e.target.value)} 
+              className="w-full h-10 px-3 rounded-lg border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] focus:border-[var(--primary)] outline-none text-xs font-bold"
+            >
+              <option value="">-- Chọn công trình --</option>
+              {projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
+            </select>
           </div>
+          {projectId && (
+            <button 
+              onClick={handleExportCsv} 
+              className="h-10 px-4 rounded-lg bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white text-xs font-bold ml-auto transition-colors cursor-pointer"
+            >
+              Xuất dữ liệu CSV
+            </button>
+          )}
+        </div>
 
+        <div className="mt-4">
           {!projectId ? (
-            <div className="p-8 text-center text-[var(--text-muted)] bg-[var(--card)] rounded-xl border border-[var(--border)] text-sm">
+            <div className="p-8 text-center text-[var(--text-secondary)] bg-[var(--secondary)] rounded-xl border border-[var(--border)] text-xs italic">
               Vui lòng chọn Công trình/Dự án để tra cứu tồn bãi.
             </div>
           ) : isLoading ? (
@@ -95,47 +107,22 @@ export default function ProjectStockReportPage() {
               onRetry={refetch}
             />
           ) : items.length === 0 ? (
-            <EnterpriseEmptyState title="Không có tồn bãi" description="Dự án/Công trình chưa có vật liệu tồn bãi nào hạch toán." />
+            <EnterpriseEmptyState 
+              title="Không có tồn bãi" 
+              description="Dự án/Công trình chưa có vật liệu tồn bãi nào hạch toán." 
+              iconType="report"
+            />
           ) : (
-            <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left border-collapse">
-                  <thead className="bg-[var(--secondary)] border-b border-[var(--border)] text-[var(--text-secondary)] font-bold uppercase tracking-wider">
-                    <tr>
-                      <th className="p-3">Mã kho</th>
-                      <th className="p-3">Tên kho</th>
-                      <th className="p-3">Mã vật tư</th>
-                      <th className="p-3">Tên vật tư</th>
-                      <th className="p-3">ĐVT</th>
-                      <th className="p-3 text-right">Số lượng</th>
-                      <th className="p-3 text-right">Đơn giá BQ</th>
-                      <th className="p-3 text-right">Tổng giá trị</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[var(--border)] text-[var(--text-primary)]">
-                    {items.map((item: any, idx: number) => (
-                      <tr key={idx} className="hover:bg-[var(--secondary)]/25 transition-colors">
-                        <td className="p-3">{item.warehouseCode}</td>
-                        <td className="p-3">{item.warehouseName}</td>
-                        <td className="p-3 font-semibold text-[var(--primary)]">{item.materialCode}</td>
-                        <td className="p-3">{item.materialName}</td>
-                        <td className="p-3">{item.unit}</td>
-                        <td className="p-3 text-right font-mono font-semibold">{item.quantity?.toLocaleString('vi-VN')}</td>
-                        <td className="p-3 text-right font-mono text-[var(--text-secondary)]">{item.avgCost?.toLocaleString('vi-VN')} đ</td>
-                        <td className="p-3 text-right font-mono font-bold text-[var(--primary)]">{item.totalCost?.toLocaleString('vi-VN')} đ</td>
-                      </tr>
-                    ))}
-                    <tr className="bg-[var(--secondary)] font-black">
-                      <td colSpan={7} className="p-4 text-right">TỔNG CỘNG GIÁ TRỊ TỒN BÃI:</td>
-                      <td className="p-4 text-right font-mono text-[var(--primary)] text-sm">{totalValue.toLocaleString('vi-VN')} đ</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <EnterpriseDataTable
+              data={items}
+              columns={columns}
+              getRowKey={(row, idx) => idx}
+              minWidth="1100px"
+              footer={footerElement}
+            />
           )}
         </div>
-      </main>
-    </div>
+      </EnterprisePageContainer>
+    </EnterpriseAppShell>
   );
 }

@@ -7,7 +7,9 @@ import {
   EnterpriseEmptyState, 
   EnterpriseLoadingState, 
   EnterpriseErrorState,
-  getStatusLabel
+  getStatusLabel,
+  EnterpriseDataTable,
+  EnterpriseColumn
 } from '@/app/components/ui-enterprise';
 
 interface InventoryDocumentTableProps {
@@ -59,6 +61,38 @@ export function InventoryDocumentTable({ currentProjectId, onViewDetails, onCrea
     d.documentNo.toLowerCase().includes(search.toLowerCase()) || 
     (d.description && d.description.toLowerCase().includes(search.toLowerCase()))
   );
+
+  const columns: EnterpriseColumn<any>[] = [
+    { key: 'documentNo', header: 'Số phiếu', render: row => (
+      <span 
+        className={`font-bold text-[var(--primary)] cursor-pointer hover:underline ${row.status === 'REVERSED' ? 'line-through opacity-60 text-[var(--text-muted)]' : ''}`} 
+        onClick={() => onViewDetails(row.id)}
+      >
+        {row.documentNo}
+      </span>
+    ), width: '150px' },
+    { key: 'documentDate', header: 'Ngày HT', render: row => new Date(row.documentDate).toLocaleDateString('vi-VN'), width: '120px', align: 'center' },
+    { key: 'documentType', header: 'Loại chứng từ', render: row => getDocTypeLabel(row.documentType), width: '180px' },
+    { key: 'project', header: 'Dự án', render: row => row.project?.name || <span className="text-[var(--text-muted)] italic">Kho tổng</span>, minWidth: '180px' },
+    { key: 'description', header: 'Diễn giải', render: row => row.description || '-', truncate: true, minWidth: '240px' },
+    { key: 'totalAmount', header: 'Tổng tiền', render: row => {
+      const totalAmt = row.lines?.reduce((s: number, l: any) => s + (Number(l.quantity) * Number(l.unitCost)), 0) || 0;
+      return <span className="font-mono font-semibold">{totalAmt.toLocaleString('vi-VN')} đ</span>;
+    }, width: '160px', align: 'right' },
+    { key: 'status', header: 'Trạng thái', render: row => (
+      <EnterpriseBadge variant={getStatusVariant(row.status)}>
+        {getStatusLabel(row.status)}
+      </EnterpriseBadge>
+    ), width: '140px', align: 'center' },
+    { key: 'actions', header: 'Thao tác', render: row => (
+      <button 
+        onClick={() => onViewDetails(row.id)} 
+        className="px-2.5 py-1 text-[10px] font-semibold rounded bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--secondary)]/70 transition-colors cursor-pointer"
+      >
+        Chi tiết
+      </button>
+    ), width: '100px', align: 'center' }
+  ];
 
   return (
     <div className="space-y-4">
@@ -116,57 +150,12 @@ export function InventoryDocumentTable({ currentProjectId, onViewDetails, onCrea
           iconType="voucher"
         />
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--card)]">
-          <table className="w-full text-xs text-left">
-            <thead className="bg-[var(--secondary)] border-b border-[var(--border)] text-[var(--text-secondary)] font-bold uppercase tracking-wider">
-              <tr>
-                <th className="p-3">Số phiếu</th>
-                <th className="p-3">Ngày HT</th>
-                <th className="p-3">Loại chứng từ</th>
-                <th className="p-3">Dự án</th>
-                <th className="p-3">Diễn giải</th>
-                <th className="p-3 text-right">Tổng tiền</th>
-                <th className="p-3 text-center">Trạng thái</th>
-                <th className="p-3 w-20">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[var(--border)] text-[var(--text-primary)]">
-              {filtered.map((d: any) => {
-                const totalAmt = d.lines?.reduce((s: number, l: any) => s + (Number(l.quantity) * Number(l.unitCost)), 0) || 0;
-                return (
-                  <tr key={d.id} className="hover:bg-[var(--secondary)]/25 transition-colors">
-                    <td className="p-3">
-                      <span 
-                        className={`font-bold text-[var(--primary)] cursor-pointer hover:underline ${d.status === 'REVERSED' ? 'line-through opacity-60 text-[var(--text-muted)]' : ''}`} 
-                        onClick={() => onViewDetails(d.id)}
-                      >
-                        {d.documentNo}
-                      </span>
-                    </td>
-                    <td className="p-3 font-mono">{new Date(d.documentDate).toLocaleDateString('vi-VN')}</td>
-                    <td className="p-3">{getDocTypeLabel(d.documentType)}</td>
-                    <td className="p-3">{d.project?.name || <span className="text-[var(--text-muted)] italic">Kho tổng</span>}</td>
-                    <td className="p-3 max-w-[200px] truncate">{d.description || '-'}</td>
-                    <td className="p-3 text-right font-mono font-semibold">{totalAmt.toLocaleString('vi-VN')} đ</td>
-                    <td className="p-3 text-center">
-                      <EnterpriseBadge variant={getStatusVariant(d.status)}>
-                        {getStatusLabel(d.status)}
-                      </EnterpriseBadge>
-                    </td>
-                    <td className="p-3">
-                      <button 
-                        onClick={() => onViewDetails(d.id)} 
-                        className="px-2.5 py-1 text-[10px] font-semibold rounded bg-[var(--secondary)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--secondary)]/70 transition-colors"
-                      >
-                        Chi tiết
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <EnterpriseDataTable
+          data={filtered}
+          columns={columns}
+          getRowKey={row => row.id}
+          minWidth="1200px"
+        />
       )}
     </div>
   );
