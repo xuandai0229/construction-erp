@@ -248,9 +248,9 @@ export default function ReportsPage() {
     {
       header: "Mã TK",
       accessor: (row) => (
-        <div className="flex items-center justify-center gap-1.5 font-bold text-violet-400 group-hover:text-violet-300">
+        <div className="flex items-center justify-center gap-1.5 font-bold text-violet-600 dark:text-violet-400 group-hover:text-violet-500 dark:group-hover:text-violet-300">
           {row.code}
-          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 opacity-20 group-hover:opacity-100 transition-opacity text-violet-400" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 opacity-20 group-hover:opacity-100 transition-opacity text-violet-600 dark:text-violet-400" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0z" />
             <circle cx="12" cy="12" r="3" />
           </svg>
@@ -268,7 +268,7 @@ export default function ReportsPage() {
     },
     {
       header: "Loại TK",
-      accessor: (row) => <span className="text-[10px] font-black uppercase text-violet-400">{row.type}</span>,
+      accessor: (row) => <span className="text-[10px] font-black uppercase text-violet-600 dark:text-violet-400">{row.type}</span>,
       align: "center",
       width: "12%",
       minWidth: "90px"

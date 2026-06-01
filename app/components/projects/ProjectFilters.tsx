@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { projectApi } from '@/services/api/project.api';
@@ -17,12 +17,12 @@ interface ProjectFiltersProps {
 
 const STATUS_OPTIONS = [
   { value: '', label: 'Tất cả trạng thái', icon: '◉', color: 'text-[var(--text-muted)]', bg: '' },
-  { value: 'PLANNED', label: 'Lập kế hoạch', icon: '📋', color: 'text-slate-400', bg: 'bg-slate-500/10' },
-  { value: 'IN_PROGRESS', label: 'Đang thi công', icon: '🚧', color: 'text-blue-400', bg: 'bg-blue-500/10' },
-  { value: 'ACTIVE', label: 'Đang vận hành', icon: '⚡', color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-  { value: 'COMPLETED', label: 'Hoàn thành', icon: '✅', color: 'text-green-400', bg: 'bg-green-500/10' },
-  { value: 'CANCELLED', label: 'Tạm dừng', icon: '⏸', color: 'text-amber-400', bg: 'bg-amber-500/10' },
-  { value: 'CLOSED', label: 'Đã đóng', icon: '🔒', color: 'text-rose-400', bg: 'bg-rose-500/10' },
+  { value: 'PLANNED', label: 'Lập kế hoạch', icon: '📋', color: 'text-slate-600 dark:text-slate-400', bg: 'bg-slate-500/10' },
+  { value: 'IN_PROGRESS', label: 'Đang thi công', icon: '🚧', color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-500/10' },
+  { value: 'ACTIVE', label: 'Đang vận hành', icon: '⚡', color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-500/10' },
+  { value: 'COMPLETED', label: 'Hoàn thành', icon: '✅', color: 'text-green-600 dark:text-green-400', bg: 'bg-green-500/10' },
+  { value: 'CANCELLED', label: 'Tạm dừng', icon: '⏸', color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-500/10' },
+  { value: 'CLOSED', label: 'Đã đóng', icon: '🔒', color: 'text-rose-600 dark:text-rose-400', bg: 'bg-rose-500/10' },
 ];
 
 const STATUS_DESCRIPTIONS: Record<string, string> = {

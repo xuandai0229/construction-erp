@@ -67,7 +67,7 @@ export default function Dashboard() {
       />
       <EnterprisePageContainer>
         {/* 1. EXECUTIVE SUMMARY */}
-        <EnterpriseSection title="TỔNG QUAN TÀI CHÍNH (EXECUTIVE SUMMARY)" subtitle="Chỉ tiêu tài chính thời gian thực từ Hệ thống Sổ cái & Phân bổ gốc">
+        <EnterpriseSection title="Tổng hợp Chỉ tiêu Tài chính (Executive Summary)" subtitle="Chỉ tiêu tài chính thời gian thực từ Hệ thống Sổ cái & Phân bổ gốc">
           <ExecutiveSummaryCards 
             data={execSummary} 
             isLoading={loadingExec} 
@@ -83,19 +83,19 @@ export default function Dashboard() {
           
           {/* 2. CÔNG NỢ & DÒNG TIỀN (DEBT & CASHFLOW) */}
           <div className="xl:col-span-2 space-y-6">
-            <EnterpriseCard title="PHÂN TÍCH TUỔI NỢ & QUẢN TRỊ DÒNG TIỀN (DEBT AGING)" subtitle="Theo dõi hóa đơn đến hạn và quá hạn để tối ưu vốn lưu động">
+            <EnterpriseCard title="Phân tích Tuổi nợ & Quản trị Dòng tiền (Debt Aging)" subtitle="Theo dõi hóa đơn đến hạn và quá hạn để tối ưu vốn lưu động">
               <DebtAgingPanel data={debtMgmt} isLoading={loadingDebt} />
             </EnterpriseCard>
 
             {/* 3. HIỆU QUẢ DỰ ÁN (PROJECT PROFITABILITY) */}
-            <EnterpriseCard title="BÁO CÁO HIỆU QUẢ CÔNG TRÌNH (PROJECT PROFITABILITY)" subtitle="Đánh giá doanh thu, chi phí, và tỷ suất lợi nhuận từng dự án (P&L)">
+            <EnterpriseCard title="Hiệu quả Công trình & Dự án (P&L)" subtitle="Đánh giá doanh thu, chi phí, và tỷ suất lợi nhuận từng dự án (P&L)">
               <ProjectProfitabilityTable data={projectProfit} isLoading={loadingProfit} />
             </EnterpriseCard>
           </div>
 
           {/* 4. CẢNH BÁO RỦI RO (EXCEPTION / RISK ALERTS) */}
           <div className="space-y-6">
-            <EnterpriseCard title="CẢNH BÁO RỦI RO (EXCEPTION ALERTS)" subtitle="Các ngoại lệ, chứng từ quá hạn, và cảnh báo kiểm soát nội bộ">
+            <EnterpriseCard title="Cảnh báo Rủi ro Kiểm soát (Exception Alerts)" subtitle="Các ngoại lệ, chứng từ quá hạn, và cảnh báo kiểm soát nội bộ">
               <RiskAlertsPanel data={riskAlerts} isLoading={loadingRisk} />
             </EnterpriseCard>
           </div>

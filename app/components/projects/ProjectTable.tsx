@@ -17,12 +17,12 @@ type ProjectRow = Project & {
 };
 
 const statusConfig: Record<string, { text: string; className: string }> = {
-  PLANNED: { text: 'Lập kế hoạch', className: 'bg-slate-500/10 text-slate-400 ring-1 ring-slate-500/20' },
-  IN_PROGRESS: { text: 'Đang thi công', className: 'bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20' },
-  ACTIVE: { text: 'Đang vận hành', className: 'bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20' },
-  COMPLETED: { text: 'Hoàn thành', className: 'bg-green-500/10 text-green-400 ring-1 ring-green-500/20' },
-  CLOSED: { text: 'Đã đóng', className: 'bg-rose-500/10 text-rose-400 ring-1 ring-rose-500/20' },
-  CANCELLED: { text: 'Tạm dừng', className: 'bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/20' },
+  PLANNED: { text: 'Lập kế hoạch', className: 'bg-slate-500/10 text-slate-600 dark:text-slate-400 ring-1 ring-slate-500/20' },
+  IN_PROGRESS: { text: 'Đang thi công', className: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 ring-1 ring-blue-500/20' },
+  ACTIVE: { text: 'Đang vận hành', className: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 ring-1 ring-emerald-500/20' },
+  COMPLETED: { text: 'Hoàn thành', className: 'bg-green-500/10 text-green-600 dark:text-green-400 ring-1 ring-green-500/20' },
+  CLOSED: { text: 'Đã đóng', className: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 ring-1 ring-rose-500/20' },
+  CANCELLED: { text: 'Tạm dừng', className: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-1 ring-amber-500/20' },
 };
 
 function enrichProject(project: Project): ProjectRow {
