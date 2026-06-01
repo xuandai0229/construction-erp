@@ -15,7 +15,7 @@ export function EnterpriseForm({ children, className = "", ...props }: Enterpris
 }
 
 interface FormGroupProps {
-  label?: string;
+  label?: React.ReactNode;
   error?: string;
   required?: boolean;
   children: React.ReactNode;

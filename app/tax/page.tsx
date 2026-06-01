@@ -3,8 +3,26 @@
 import { useState, useEffect } from 'react';
 import { useERPStore } from '@/store/erpStore';
 import { useProjectsQuery } from '@/services/queries/useProjects';
-import Header from '../components/Header';
-import Sidebar from '../components/Sidebar';
+
+import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
+import EnterpriseHeader from '@/app/components/layout/EnterpriseHeader';
+import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
+
+import {
+  EnterpriseDataTable,
+  EnterpriseColumn,
+  EnterpriseCard,
+  EnterpriseSection,
+  EnterpriseMetric,
+  EnterpriseTabs,
+  EnterpriseEmptyState,
+  EnterpriseFilterBar,
+  EnterpriseBadge,
+  EnterpriseModal,
+  FormGroup,
+  Input,
+  Select
+} from '@/app/components/ui-enterprise';
 
 interface TaxInvoice {
   id: string;
@@ -38,7 +56,7 @@ interface VatSummary {
 }
 
 export default function TaxDashboard() {
-  const { currentProjectId, sidebarCollapsed } = useERPStore();
+  const { currentProjectId } = useERPStore();
   const { data: paginatedData } = useProjectsQuery();
   const projects = paginatedData?.data || [];
   const currentProject = projects.find((p: any) => p.id === currentProjectId);
@@ -302,12 +320,12 @@ export default function TaxDashboard() {
   };
 
   const getStatusBadge = (status: string) => {
-    const badges = {
-      DRAFT: 'bg-gray-500/10 text-gray-400 border-gray-500/20',
-      ISSUED: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-      POSTED: 'bg-green-500/10 text-green-400 border-green-500/20',
-      CANCELLED: 'bg-red-500/10 text-red-400 border-red-500/20',
-      REVERSED: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+    const variants: Record<string, 'success' | 'warning' | 'info' | 'error' | 'neutral'> = {
+      DRAFT: 'neutral',
+      ISSUED: 'info',
+      POSTED: 'success',
+      CANCELLED: 'error',
+      REVERSED: 'warning',
     };
     const labels = {
       DRAFT: 'Nháp',
@@ -316,508 +334,503 @@ export default function TaxDashboard() {
       CANCELLED: 'Đã hủy',
       REVERSED: 'Đã đảo',
     };
-    const style = badges[status as keyof typeof badges] || 'bg-gray-500/10 text-gray-400';
+    const variant = variants[status] || 'neutral';
     const label = labels[status as keyof typeof labels] || status;
-    return <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase border ${style}`}>{label}</span>;
+    return <EnterpriseBadge variant={variant}>{label}</EnterpriseBadge>;
   };
 
+  // DataTable column definitions for VAT invoices
+  const columns: EnterpriseColumn<TaxInvoice>[] = [
+    {
+      key: 'invoiceDate',
+      header: 'Ngày HĐ',
+      width: '120px',
+      render: (row) => new Date(row.invoiceDate).toLocaleDateString('vi-VN')
+    },
+    {
+      key: 'template_series',
+      header: 'Mẫu số / Ký hiệu',
+      width: '160px',
+      render: (row) => <span className="font-mono text-[10px] text-[var(--text-secondary)]">{row.invoiceTemplate} / {row.invoiceSeries}</span>
+    },
+    {
+      key: 'invoiceNumber',
+      header: 'Số HĐ',
+      width: '130px',
+      render: (row) => <span className="font-bold text-blue-500 font-mono">{row.invoiceNumber}</span>
+    },
+    {
+      key: 'partner',
+      header: 'Đối tác / MST',
+      minWidth: '260px',
+      render: (row) => (
+        <div>
+          <div className="font-bold text-[var(--text-primary)]">{row.partnerName}</div>
+          <div className="text-[10px] text-[var(--text-muted)] font-mono">MST: {row.partnerTaxCode}</div>
+        </div>
+      )
+    },
+    {
+      key: 'netAmount',
+      header: 'Tiền trước thuế (Net)',
+      width: '170px',
+      align: 'right',
+      render: (row) => <span className="font-mono tabular-nums">{Number(row.netAmount).toLocaleString()}</span>
+    },
+    {
+      key: 'vatRate',
+      header: 'Thuế suất',
+      width: '110px',
+      align: 'center',
+      render: (row) => <span className="font-semibold text-amber-500">{row.vatRate}%</span>
+    },
+    {
+      key: 'vatAmount',
+      header: 'Tiền thuế (VAT)',
+      width: '150px',
+      align: 'right',
+      render: (row) => <span className="font-mono tabular-nums text-emerald-500">{Number(row.vatAmount).toLocaleString()}</span>
+    },
+    {
+      key: 'status',
+      header: 'Trạng thái',
+      width: '140px',
+      align: 'center',
+      render: (row) => getStatusBadge(row.status)
+    },
+    {
+      key: 'actions',
+      header: 'Hành động',
+      width: '180px',
+      align: 'right',
+      render: (row) => (
+        <div className="space-x-1.5 whitespace-nowrap">
+          {row.status === 'DRAFT' && (
+            <>
+              <button onClick={() => handleEditClick(row)} className="px-2.5 py-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 text-[10px] font-bold cursor-pointer transition-colors">Sửa</button>
+              <button onClick={() => handleDelete(row.id)} className="px-2.5 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 text-[10px] font-bold cursor-pointer transition-colors">Xóa</button>
+              <button onClick={() => handleIssue(row.id)} className="px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 text-[10px] font-black cursor-pointer transition-colors">Phát hành</button>
+            </>
+          )}
+          {row.status === 'ISSUED' && (
+            <>
+              <button onClick={() => handlePost(row.id)} className="px-2.5 py-1 rounded bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20 text-[10px] font-black cursor-pointer transition-colors">Ghi sổ</button>
+              <button
+                onClick={() => { setReasonInvoiceId(row.id); setShowReasonModal('cancel'); }}
+                className="px-2.5 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 text-[10px] font-bold cursor-pointer transition-colors"
+              >
+                Hủy HĐ
+              </button>
+            </>
+          )}
+          {row.status === 'POSTED' && (
+            <button
+              onClick={() => { setReasonInvoiceId(row.id); setShowReasonModal('reverse'); }}
+              className="px-2.5 py-1 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 text-[10px] font-black cursor-pointer transition-colors"
+            >
+              Đảo bút toán
+            </button>
+          )}
+        </div>
+      )
+    }
+  ];
+
+  // Columns for sales VAT report book 01-1
+  const columnsSalesBook: EnterpriseColumn<TaxInvoice>[] = [
+    { key: 'invoiceNumber', header: 'Số HĐ', width: '130px', render: (row) => <span className="font-bold text-blue-500 font-mono">{row.invoiceNumber}</span> },
+    { key: 'invoiceSeries', header: 'Ký hiệu', width: '110px', render: (row) => <span className="font-mono">{row.invoiceSeries}</span> },
+    { key: 'invoiceDate', header: 'Ngày HĐ', width: '120px', render: (row) => new Date(row.invoiceDate).toLocaleDateString('vi-VN') },
+    { key: 'partnerName', header: 'Khách hàng', minWidth: '260px', render: (row) => row.partnerName },
+    { key: 'partnerTaxCode', header: 'Mã số thuế', width: '150px', render: (row) => <span className="font-mono">{row.partnerTaxCode}</span> },
+    { key: 'netAmount', header: 'Doanh số chưa thuế', width: '170px', align: 'right', render: (row) => <span className="font-mono tabular-nums">{Number(row.netAmount).toLocaleString()}</span> },
+    { key: 'vatRate', header: 'Thuế suất', width: '110px', align: 'center', render: (row) => <span className="font-semibold text-amber-500">{row.vatRate}%</span> },
+    { key: 'vatAmount', header: 'Thuế đầu ra', width: '160px', align: 'right', render: (row) => <span className="font-mono tabular-nums text-emerald-500 font-bold">{Number(row.vatAmount).toLocaleString()}</span> }
+  ];
+
   return (
-    <div className="flex min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-      <Sidebar activeItem="tax-invoice" />
-      
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${sidebarCollapsed ? 'md:pl-[var(--erp-sidebar-collapsed)]' : 'md:pl-[var(--erp-sidebar-width)]'}`}>
-        <Header />
-        
-        <main className="flex-1 p-6 space-y-6 overflow-y-auto max-w-7xl w-full mx-auto">
-          {/* Top KPI Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-            <div className="erp-card p-5 relative overflow-hidden bg-gradient-to-br from-blue-500/5 to-transparent border border-blue-500/10 rounded-xl">
-              <div className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider">Doanh số bán ra trước thuế</div>
-              <div className="text-[20px] font-black text-blue-500 mt-2">{(summary.totalSalesNet || 0).toLocaleString()} <span className="text-[12px] font-normal">VND</span></div>
-              <div className="text-[10px] font-semibold text-blue-400/70 mt-1">Thuế đầu ra: {(summary.totalSalesVat || 0).toLocaleString()} VND</div>
-            </div>
-            
-            <div className="erp-card p-5 relative overflow-hidden bg-gradient-to-br from-emerald-500/5 to-transparent border border-emerald-500/10 rounded-xl">
-              <div className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider">Doanh số mua vào trước thuế</div>
-              <div className="text-[20px] font-black text-emerald-500 mt-2">{(summary.totalPurchasesNet || 0).toLocaleString()} <span className="text-[12px] font-normal">VND</span></div>
-              <div className="text-[10px] font-semibold text-emerald-400/70 mt-1">Thuế khấu trừ: {(summary.totalPurchasesVat || 0).toLocaleString()} VND</div>
-            </div>
-
-            <div className="erp-card p-5 relative overflow-hidden bg-gradient-to-br from-amber-500/5 to-transparent border border-amber-500/10 rounded-xl">
-              <div className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider">Thuế GTGT phải nộp</div>
-              <div className="text-[20px] font-black text-amber-500 mt-2">{(summary.vatPayable || 0).toLocaleString()} <span className="text-[12px] font-normal">VND</span></div>
-              <div className="text-[10px] font-semibold text-amber-400/70 mt-1">Do số bán ra lớn hơn mua vào</div>
-            </div>
-
-            <div className="erp-card p-5 relative overflow-hidden bg-gradient-to-br from-purple-500/5 to-transparent border border-purple-500/10 rounded-xl">
-              <div className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider">Thuế GTGT được hoàn / khấu trừ chuyển tiếp</div>
-              <div className="text-[20px] font-black text-purple-400 mt-2">{(summary.vatRefundable || 0).toLocaleString()} <span className="text-[12px] font-normal">VND</span></div>
-              <div className="text-[10px] font-semibold text-purple-400/70 mt-1">Do mua vào lớn hơn bán ra</div>
-            </div>
+    <EnterpriseAppShell activeItem="tax-invoice">
+      <EnterpriseHeader
+        title="QUẢN LÝ THUẾ & HÓA ĐƠN ĐIỆN TỬ VAT"
+        subtitle="Hệ thống tự động đồng bộ hóa đơn đầu vào, đầu ra, hạch toán tờ khai thuế 01/GTGT"
+      />
+      <EnterprisePageContainer>
+        {/* Top KPI Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+          <div className="p-5 relative overflow-hidden bg-gradient-to-br from-blue-500/5 to-transparent border border-blue-500/10 rounded-xl bg-[var(--card)] shadow-sm">
+            <div className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">Doanh số bán ra trước thuế</div>
+            <div className="text-[20px] font-black text-blue-500 mt-2 font-mono tabular-nums">{(summary.totalSalesNet || 0).toLocaleString()} <span className="text-[11px] font-normal text-[var(--text-muted)]">VND</span></div>
+            <div className="text-[10px] font-semibold text-blue-400/80 mt-1">Thuế đầu ra: {(summary.totalSalesVat || 0).toLocaleString()} VND</div>
+          </div>
+          
+          <div className="p-5 relative overflow-hidden bg-gradient-to-br from-emerald-500/5 to-transparent border border-emerald-500/10 rounded-xl bg-[var(--card)] shadow-sm">
+            <div className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">Doanh số mua vào trước thuế</div>
+            <div className="text-[20px] font-black text-emerald-500 mt-2 font-mono tabular-nums">{(summary.totalPurchasesNet || 0).toLocaleString()} <span className="text-[11px] font-normal text-[var(--text-muted)]">VND</span></div>
+            <div className="text-[10px] font-semibold text-emerald-400/80 mt-1">Thuế khấu trừ: {(summary.totalPurchasesVat || 0).toLocaleString()} VND</div>
           </div>
 
-          {/* Tab Navigation */}
-          <div className="flex border-b border-[var(--border)] gap-6">
-            <button
-              onClick={() => setActiveTab('registry')}
-              className={`pb-3 text-[13px] font-bold tracking-wider uppercase border-b-2 transition-all ${activeTab === 'registry' ? 'border-blue-500 text-blue-500' : 'border-transparent text-[var(--text-secondary)] hover:text-[var(--foreground)]'}`}
-            >
-              Sổ Đăng Ký Hóa Đơn VAT
-            </button>
-            <button
-              onClick={() => setActiveTab('reports')}
-              className={`pb-3 text-[13px] font-bold tracking-wider uppercase border-b-2 transition-all ${activeTab === 'reports' ? 'border-blue-500 text-blue-500' : 'border-transparent text-[var(--text-secondary)] hover:text-[var(--foreground)]'}`}
-            >
-              Báo cáo Thuế VAT (01-1 & 01-2)
-            </button>
+          <div className="p-5 relative overflow-hidden bg-gradient-to-br from-amber-500/5 to-transparent border border-amber-500/10 rounded-xl bg-[var(--card)] shadow-sm">
+            <div className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">Thuế GTGT phải nộp</div>
+            <div className="text-[20px] font-black text-amber-500 mt-2 font-mono tabular-nums">{(summary.vatPayable || 0).toLocaleString()} <span className="text-[11px] font-normal text-[var(--text-muted)]">VND</span></div>
+            <div className="text-[10px] font-semibold text-amber-400/80 mt-1">Do số bán ra lớn hơn mua vào</div>
           </div>
 
-          {activeTab === 'registry' ? (
-            <div className="space-y-4">
-              {/* Filter Area */}
-              <div className="erp-card p-4 flex flex-wrap items-center gap-4 bg-[var(--secondary)] border border-[var(--border)] rounded-xl">
-                <div className="flex-1 min-w-[200px]">
-                  <input
-                    type="text"
-                    placeholder="Tìm theo Số HĐ, MST, Tên đối tác..."
-                    value={search}
-                    onChange={(e) => { setSearch(e.target.value); fetchData(); }}
-                    className="w-full h-10 px-4 rounded-lg bg-[var(--background)] border border-[var(--border)] text-[12px] focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-                
-                <div className="w-[150px]">
-                  <select
-                    value={filterType}
-                    onChange={(e) => setFilterType(e.target.value)}
-                    className="w-full h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)] text-[12px] focus:outline-none"
-                  >
-                    <option value="ALL">Tất cả loại HĐ</option>
-                    <option value="OUTBOUND">Bán ra (Output)</option>
-                    <option value="INBOUND">Mua vào (Input)</option>
-                  </select>
-                </div>
+          <div className="p-5 relative overflow-hidden bg-gradient-to-br from-purple-500/5 to-transparent border border-purple-500/10 rounded-xl bg-[var(--card)] shadow-sm">
+            <div className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">Thuế GTGT được khấu trừ tiếp</div>
+            <div className="text-[20px] font-black text-purple-400 mt-2 font-mono tabular-nums">{(summary.vatRefundable || 0).toLocaleString()} <span className="text-[11px] font-normal text-[var(--text-muted)]">VND</span></div>
+            <div className="text-[10px] font-semibold text-purple-400/80 mt-1">Do mua vào lớn hơn bán ra</div>
+          </div>
+        </div>
 
-                <div className="w-[150px]">
-                  <select
-                    value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
-                    className="w-full h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)] text-[12px] focus:outline-none"
-                  >
-                    <option value="ALL">Tất cả trạng thái</option>
-                    <option value="DRAFT">Nháp (DRAFT)</option>
-                    <option value="ISSUED">Phát hành (ISSUED)</option>
-                    <option value="POSTED">Đã ghi sổ (POSTED)</option>
-                    <option value="CANCELLED">Đã hủy (CANCELLED)</option>
-                    <option value="REVERSED">Đã đảo (REVERSED)</option>
-                  </select>
-                </div>
+        {/* Tab Navigation Wrapper */}
+        <EnterpriseSection
+          title="TỜ KHAI VÀ SỔ HÓA ĐƠN"
+          subtitle="Đối chiếu và quản lý chứng từ thuế GTGT"
+        >
+          <EnterpriseTabs
+            activeTab={activeTab}
+            onTabChange={(id) => setActiveTab(id as any)}
+            tabs={[
+              { id: 'registry', label: 'Sổ Đăng Ký Hóa Đơn VAT' },
+              { id: 'reports', label: 'Báo cáo Thuế VAT (01-1 & 01-2)' }
+            ]}
+          />
+        </EnterpriseSection>
 
-                <div className="flex items-center gap-2">
-                  <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)] text-[12px] focus:outline-none"
-                  />
-                  <span className="text-[12px] text-[var(--text-tertiary)]">đến</span>
-                  <input
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)] text-[12px] focus:outline-none"
-                  />
-                </div>
+        {activeTab === 'registry' ? (
+          <div className="space-y-6">
+            {/* Filter Area using EnterpriseFilterBar */}
+            <EnterpriseFilterBar>
+              <FormGroup label="Tìm kiếm đối tác hoặc số HĐ" className="flex-1 min-w-[200px]">
+                <Input
+                  type="text"
+                  placeholder="Tìm Số HĐ, MST, Tên..."
+                  value={search}
+                  onChange={(e) => { setSearch(e.target.value); fetchData(); }}
+                />
+              </FormGroup>
 
+              <FormGroup label="Loại hóa đơn" className="w-[160px]">
+                <Select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
+                  <option value="ALL">Tất cả loại HĐ</option>
+                  <option value="OUTBOUND">Bán ra (Output)</option>
+                  <option value="INBOUND">Mua vào (Input)</option>
+                </Select>
+              </FormGroup>
+
+              <FormGroup label="Trạng thái hạch toán" className="w-[160px]">
+                <Select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                  <option value="ALL">Tất cả trạng thái</option>
+                  <option value="DRAFT">Nháp (DRAFT)</option>
+                  <option value="ISSUED">Phát hành (ISSUED)</option>
+                  <option value="POSTED">Đã ghi sổ (POSTED)</option>
+                  <option value="CANCELLED">Đã hủy (CANCELLED)</option>
+                  <option value="REVERSED">Đã đảo (REVERSED)</option>
+                </Select>
+              </FormGroup>
+
+              <FormGroup label="Từ ngày" className="w-[150px]">
+                <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+              </FormGroup>
+
+              <FormGroup label="Đến ngày" className="w-[150px]">
+                <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+              </FormGroup>
+
+              <div className="flex items-end pb-0.5">
                 <button
                   onClick={() => { resetForm(); setShowAddModal(true); }}
-                  className="h-10 px-5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[12px] font-bold shadow-lg transition-all"
+                  className="h-[38px] px-5 rounded-[var(--radius-sm)] bg-blue-600 hover:bg-blue-700 text-white text-[12px] font-bold shadow-sm transition-all cursor-pointer whitespace-nowrap"
                 >
                   + Lập hóa đơn VAT
                 </button>
               </div>
+            </EnterpriseFilterBar>
 
-              {/* Data Table */}
-              <div className="erp-card overflow-hidden bg-[var(--secondary)] border border-[var(--border)] rounded-xl">
-                {loading ? (
-                  <div className="p-8 text-center text-[12px] text-[var(--text-tertiary)]">Đang tải dữ liệu...</div>
-                ) : invoices.length === 0 ? (
-                  <div className="p-8 text-center text-[12px] text-[var(--text-tertiary)]">Không có hóa đơn nào khớp bộ lọc.</div>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="border-b border-[var(--border)] text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider bg-black/10">
-                          <th className="p-4">Ngày HĐ</th>
-                          <th className="p-4">Mẫu số / Ký hiệu</th>
-                          <th className="p-4">Số HĐ</th>
-                          <th className="p-4">Đối tác / MST</th>
-                          <th className="p-4 text-right">Tiền trước thuế (Net)</th>
-                          <th className="p-4 text-center">Thuế suất</th>
-                          <th className="p-4 text-right">Tiền thuế (VAT)</th>
-                          <th className="p-4 text-center">Trạng thái</th>
-                          <th className="p-4 text-right">Hành động</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {invoices.map((inv) => (
-                          <tr key={inv.id} className="border-b border-[var(--border)] hover:bg-black/5 text-[11px] transition-all">
-                            <td className="p-4 whitespace-nowrap">{new Date(inv.invoiceDate).toLocaleDateString('vi-VN')}</td>
-                            <td className="p-4 whitespace-nowrap font-mono text-[10px] text-[var(--text-secondary)]">{inv.invoiceTemplate} / {inv.invoiceSeries}</td>
-                            <td className="p-4 whitespace-nowrap font-bold text-blue-500 font-mono">{inv.invoiceNumber}</td>
-                            <td className="p-4">
-                              <div className="font-bold">{inv.partnerName}</div>
-                              <div className="text-[10px] text-[var(--text-tertiary)] font-mono">MST: {inv.partnerTaxCode}</div>
-                            </td>
-                            <td className="p-4 text-right font-semibold font-mono">{Number(inv.netAmount).toLocaleString()}</td>
-                            <td className="p-4 text-center font-semibold text-amber-500">{inv.vatRate}%</td>
-                            <td className="p-4 text-right font-semibold font-mono text-emerald-500">{Number(inv.vatAmount).toLocaleString()}</td>
-                            <td className="p-4 text-center whitespace-nowrap">{getStatusBadge(inv.status)}</td>
-                            <td className="p-4 text-right space-x-1.5 whitespace-nowrap">
-                              {inv.status === 'DRAFT' && (
-                                <>
-                                  <button onClick={() => handleEditClick(inv)} className="px-2.5 py-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 text-[10px]">Sửa</button>
-                                  <button onClick={() => handleDelete(inv.id)} className="px-2.5 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 text-[10px]">Xóa</button>
-                                  <button onClick={() => handleIssue(inv.id)} className="px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 text-[10px] font-bold">Phát hành</button>
-                                </>
-                              )}
-                              {inv.status === 'ISSUED' && (
-                                <>
-                                  <button onClick={() => handlePost(inv.id)} className="px-2.5 py-1 rounded bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20 text-[10px] font-bold">Ghi sổ (Post)</button>
-                                  <button
-                                    onClick={() => { setReasonInvoiceId(inv.id); setShowReasonModal('cancel'); }}
-                                    className="px-2.5 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 text-[10px]"
-                                  >
-                                    Hủy HĐ
-                                  </button>
-                                </>
-                              )}
-                              {inv.status === 'POSTED' && (
-                                <button
-                                  onClick={() => { setReasonInvoiceId(inv.id); setShowReasonModal('reverse'); }}
-                                  className="px-2.5 py-1 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 text-[10px] font-bold"
-                                >
-                                  Đảo bút toán (Reverse)
-                                </button>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            /* VAT Reports view */
-            <div className="space-y-6">
-              {/* Sales VAT Book (01-1) */}
-              <div className="erp-card p-6 bg-[var(--secondary)] border border-[var(--border)] rounded-xl space-y-4">
-                <div className="flex justify-between items-center border-b border-[var(--border)] pb-3">
-                  <div>
-                    <h3 className="text-[14px] font-black text-blue-500 uppercase">Bảng Kê Hóa Đơn Hàng Hóa Dịch Vụ Bán Ra (Mẫu 01-1/GTGT)</h3>
-                    <p className="text-[10px] text-[var(--text-tertiary)] mt-1">Chỉ hiển thị các hóa đơn bán ra đã ghi sổ (POSTED)</p>
-                  </div>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-[11px]">
-                    <thead>
-                      <tr className="border-b border-[var(--border)] text-[10px] font-bold text-[var(--text-tertiary)] uppercase bg-black/10">
-                        <th className="p-3">Số HĐ</th>
-                        <th className="p-3">Ký hiệu</th>
-                        <th className="p-3">Ngày HĐ</th>
-                        <th className="p-3">Khách hàng</th>
-                        <th className="p-3">Mã số thuế</th>
-                        <th className="p-3 text-right">Doanh số chưa thuế</th>
-                        <th className="p-3 text-center">Thuế suất</th>
-                        <th className="p-3 text-right">Thuế đầu ra</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {invoices.filter(i => i.invoiceType === 'OUTBOUND' && i.status === 'POSTED').map(i => (
-                        <tr key={i.id} className="border-b border-[var(--border)]">
-                          <td className="p-3 font-bold font-mono text-blue-500">{i.invoiceNumber}</td>
-                          <td className="p-3 font-mono">{i.invoiceSeries}</td>
-                          <td className="p-3">{new Date(i.invoiceDate).toLocaleDateString('vi-VN')}</td>
-                          <td className="p-3">{i.partnerName}</td>
-                          <td className="p-3 font-mono">{i.partnerTaxCode}</td>
-                          <td className="p-3 text-right font-mono font-semibold">{Number(i.netAmount).toLocaleString()}</td>
-                          <td className="p-3 text-center font-semibold text-amber-500">{i.vatRate}%</td>
-                          <td className="p-3 text-right font-mono font-bold text-emerald-500">{Number(i.vatAmount).toLocaleString()}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Purchases VAT Book (01-2) */}
-              <div className="erp-card p-6 bg-[var(--secondary)] border border-[var(--border)] rounded-xl space-y-4">
-                <div className="flex justify-between items-center border-b border-[var(--border)] pb-3">
-                  <div>
-                    <h3 className="text-[14px] font-black text-emerald-500 uppercase">Bảng Kê Hóa Đơn Hàng Hóa Dịch Vụ Mua Vào (Mẫu 01-2/GTGT)</h3>
-                    <p className="text-[10px] text-[var(--text-tertiary)] mt-1">Chỉ hiển thị các hóa đơn mua vào đã ghi sổ (POSTED)</p>
-                  </div>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-[11px]">
-                    <thead>
-                      <tr className="border-b border-[var(--border)] text-[10px] font-bold text-[var(--text-tertiary)] uppercase bg-black/10">
-                        <th className="p-3">Số HĐ</th>
-                        <th className="p-3">Ký hiệu</th>
-                        <th className="p-3">Ngày HĐ</th>
-                        <th className="p-3">Nhà cung cấp</th>
-                        <th className="p-3">Mã số thuế</th>
-                        <th className="p-3 text-right">Doanh số chưa thuế</th>
-                        <th className="p-3 text-center">Thuế suất</th>
-                        <th className="p-3 text-right">Thuế được khấu trừ</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {invoices.filter(i => i.invoiceType === 'INBOUND' && i.status === 'POSTED').map(i => (
-                        <tr key={i.id} className="border-b border-[var(--border)]">
-                          <td className="p-3 font-bold font-mono text-blue-500">{i.invoiceNumber}</td>
-                          <td className="p-3 font-mono">{i.invoiceSeries}</td>
-                          <td className="p-3">{new Date(i.invoiceDate).toLocaleDateString('vi-VN')}</td>
-                          <td className="p-3">{i.partnerName}</td>
-                          <td className="p-3 font-mono">{i.partnerTaxCode}</td>
-                          <td className="p-3 text-right font-mono font-semibold">{Number(i.netAmount).toLocaleString()}</td>
-                          <td className="p-3 text-center font-semibold text-amber-500">{i.vatRate}%</td>
-                          <td className="p-3 text-right font-mono font-bold text-emerald-500">{Number(i.vatAmount).toLocaleString()}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-        </main>
-      </div>
-
-      {/* Write Invoice Form Modal */}
-      {showAddModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 overflow-y-auto">
-          <div className="bg-[var(--secondary)] border border-[var(--border)] rounded-2xl w-full max-w-2xl p-6 shadow-2xl space-y-6">
-            <div className="flex justify-between items-center border-b border-[var(--border)] pb-3">
-              <h3 className="text-[14px] font-black uppercase text-[var(--primary)]">{selectedInvoice ? 'Cập Nhật Hóa Đơn VAT' : 'Tạo Mới Hóa Đơn VAT'}</h3>
-              <button onClick={() => { setShowAddModal(false); resetForm(); }} className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)] text-lg cursor-pointer">&times;</button>
-            </div>
-
-            <form onSubmit={handleSaveInvoice} className="space-y-4 text-[12px]">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block mb-1.5 font-semibold text-[var(--text-secondary)]">Loại Hóa Đơn</label>
-                  <select
-                    value={invoiceType}
-                    onChange={(e) => setInvoiceType(e.target.value as any)}
-                    className="w-full h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)] focus:outline-none"
-                  >
-                    <option value="OUTBOUND">Bán ra (Output VAT)</option>
-                    <option value="INBOUND">Mua vào (Input VAT)</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block mb-1.5 font-semibold text-[var(--text-secondary)]">Ngày Hóa Đơn</label>
-                  <input
-                    type="date"
-                    value={invoiceDate}
-                    onChange={(e) => setInvoiceDate(e.target.value)}
-                    required
-                    className="w-full h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)] focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <label className="block mb-1.5 font-semibold text-[var(--text-secondary)]">Mẫu Số</label>
-                  <input
-                    type="text"
-                    value={invoiceTemplate}
-                    onChange={(e) => setInvoiceTemplate(e.target.value)}
-                    required
-                    className="w-full h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)] font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="block mb-1.5 font-semibold text-[var(--text-secondary)]">Ký Hiệu</label>
-                  <input
-                    type="text"
-                    placeholder="ví dụ: C26TBB"
-                    value={invoiceSeries}
-                    onChange={(e) => setInvoiceSeries(e.target.value)}
-                    required
-                    className="w-full h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)] font-mono uppercase"
-                  />
-                </div>
-
-                <div>
-                  <label className="block mb-1.5 font-semibold text-[var(--text-secondary)]">Số Hóa Đơn</label>
-                  <input
-                    type="text"
-                    placeholder="7 chữ số"
-                    value={invoiceNumber}
-                    onChange={(e) => setInvoiceNumber(e.target.value)}
-                    required
-                    className="w-full h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)] font-mono"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block mb-1.5 font-semibold text-[var(--text-secondary)]">Tên Đối Tác (Khách hàng/NCC)</label>
-                  <input
-                    type="text"
-                    value={partnerName}
-                    onChange={(e) => setPartnerName(e.target.value)}
-                    required
-                    className="w-full h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block mb-1.5 font-semibold text-[var(--text-secondary)]">Mã Số Thuế Đối Tác</label>
-                  <input
-                    type="text"
-                    value={partnerTaxCode}
-                    onChange={(e) => setPartnerTaxCode(e.target.value)}
-                    required
-                    className="w-full h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)] font-mono"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block mb-1.5 font-semibold text-[var(--text-secondary)]">Địa Chỉ Thuế Đối Tác</label>
-                <input
-                  type="text"
-                  value={partnerAddress}
-                  onChange={(e) => setPartnerAddress(e.target.value)}
-                  className="w-full h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)]"
+            {/* Main EnterpriseDataTable */}
+            <EnterpriseSection title="DANH SÁCH HÓA ĐƠN VAT PHÁT SINH">
+              <EnterpriseCard bodyClassName="p-0">
+                <EnterpriseDataTable
+                  data={invoices}
+                  columns={columns}
+                  loading={loading}
+                  minWidth="1480px"
+                  emptyState={
+                    <EnterpriseEmptyState
+                      title="Chưa có hóa đơn tài chính"
+                      description="Hãy lập hóa đơn VAT mới để quản lý thuế đầu vào và đầu ra của công trình."
+                      iconType="report"
+                    />
+                  }
                 />
-              </div>
+              </EnterpriseCard>
+            </EnterpriseSection>
+          </div>
+        ) : (
+          /* VAT Reports view (01-1 and 01-2) */
+          <div className="space-y-6 animate-fade-in">
+            {/* Sales VAT Book (01-1) */}
+            <EnterpriseSection 
+              title="1. BẢNG KÊ HÓA ĐƠN HÀNG HÓA DỊCH VỤ BÁN RA (MẪU 01-1/GTGT)"
+              subtitle="Chỉ thống kê các hóa đơn bán ra ở trạng thái ĐÃ GHI SỔ (POSTED)"
+            >
+              <EnterpriseCard bodyClassName="p-0">
+                <EnterpriseDataTable
+                  data={invoices.filter(i => i.invoiceType === 'OUTBOUND' && i.status === 'POSTED')}
+                  columns={columnsSalesBook}
+                  loading={loading}
+                  minWidth="1200px"
+                  emptyState={
+                    <EnterpriseEmptyState
+                      title="Chưa có hóa đơn bán ra được ghi sổ"
+                      description="Các hóa đơn bán ra sau khi ghi sổ kế toán (POSTED) sẽ được lập vào bảng kê này."
+                      iconType="report"
+                    />
+                  }
+                />
+              </EnterpriseCard>
+            </EnterpriseSection>
 
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <label className="block mb-1.5 font-semibold text-[var(--text-secondary)]">Tiền hàng chưa thuế (Net)</label>
-                  <input
-                    type="number"
-                    value={netAmount || ''}
-                    onChange={(e) => setNetAmount(Number(e.target.value))}
-                    required
-                    className="w-full h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)] font-mono"
-                  />
-                </div>
+            {/* Purchases VAT Book (01-2) */}
+            <EnterpriseSection 
+              title="2. BẢNG KÊ HÓA ĐƠN HÀNG HÓA DỊCH VỤ MUA VÀO (MẪU 01-2/GTGT)"
+              subtitle="Chỉ thống kê các hóa đơn mua vào ở trạng thái ĐÃ GHI SỔ (POSTED)"
+            >
+              <EnterpriseCard bodyClassName="p-0">
+                <EnterpriseDataTable
+                  data={invoices.filter(i => i.invoiceType === 'INBOUND' && i.status === 'POSTED')}
+                  columns={columnsSalesBook.map(col => {
+                    if (col.key === 'partnerName') return { ...col, header: 'Nhà cung cấp' };
+                    if (col.key === 'vatAmount') return { ...col, header: 'Thuế được khấu trừ' };
+                    return col;
+                  })}
+                  loading={loading}
+                  minWidth="1200px"
+                  emptyState={
+                    <EnterpriseEmptyState
+                      title="Chưa có hóa đơn mua vào được ghi sổ"
+                      description="Các hóa đơn mua vào sau khi ghi sổ kế toán (POSTED) sẽ được lập vào bảng kê này."
+                      iconType="report"
+                    />
+                  }
+                />
+              </EnterpriseCard>
+            </EnterpriseSection>
+          </div>
+        )}
 
-                <div>
-                  <label className="block mb-1.5 font-semibold text-[var(--text-secondary)]">Thuế Suất</label>
-                  <select
-                    value={vatRate}
-                    onChange={(e) => setVatRate(Number(e.target.value))}
-                    className="w-full h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)]"
-                  >
-                    <option value={0}>0%</option>
-                    <option value={5}>5%</option>
-                    <option value={8}>8% (Giảm thuế)</option>
-                    <option value={10}>10%</option>
-                  </select>
-                </div>
+        {/* Modal: Write Invoice Form */}
+        <EnterpriseModal
+          isOpen={showAddModal}
+          onClose={() => { setShowAddModal(false); resetForm(); }}
+          title={selectedInvoice ? 'Cập Nhật Hóa Đơn VAT' : 'Tạo Mới Hóa Đơn VAT'}
+          maxWidth="3xl"
+        >
+          <form onSubmit={handleSaveInvoice} className="space-y-4 text-xs">
+            <div className="grid grid-cols-2 gap-4">
+              <FormGroup label="Loại Hóa Đơn">
+                <Select
+                  value={invoiceType}
+                  onChange={(e) => setInvoiceType(e.target.value as any)}
+                >
+                  <option value="OUTBOUND">Bán ra (Output VAT)</option>
+                  <option value="INBOUND">Mua vào (Input VAT)</option>
+                </Select>
+              </FormGroup>
+              
+              <FormGroup label="Ngày Hóa Đơn">
+                <Input
+                  type="date"
+                  value={invoiceDate}
+                  onChange={(e) => setInvoiceDate(e.target.value)}
+                  required
+                />
+              </FormGroup>
+            </div>
 
-                <div>
-                  <label className="block mb-1.5 font-semibold text-[var(--text-secondary)] flex justify-between">
+            <div className="grid grid-cols-3 gap-4">
+              <FormGroup label="Mẫu Số">
+                <Input
+                  type="text"
+                  value={invoiceTemplate}
+                  onChange={(e) => setInvoiceTemplate(e.target.value)}
+                  required
+                  className="font-mono"
+                />
+              </FormGroup>
+
+              <FormGroup label="Ký Hiệu">
+                <Input
+                  type="text"
+                  placeholder="C26TBB"
+                  value={invoiceSeries}
+                  onChange={(e) => setInvoiceSeries(e.target.value)}
+                  required
+                  className="font-mono uppercase"
+                />
+              </FormGroup>
+
+              <FormGroup label="Số Hóa Đơn">
+                <Input
+                  type="text"
+                  placeholder="7 chữ số"
+                  value={invoiceNumber}
+                  onChange={(e) => setInvoiceNumber(e.target.value)}
+                  required
+                  className="font-mono"
+                />
+              </FormGroup>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormGroup label="Tên Đối Tác (Khách hàng/NCC)">
+                <Input
+                  type="text"
+                  value={partnerName}
+                  onChange={(e) => setPartnerName(e.target.value)}
+                  required
+                />
+              </FormGroup>
+
+              <FormGroup label="Mã Số Thuế Đối Tác">
+                <Input
+                  type="text"
+                  value={partnerTaxCode}
+                  onChange={(e) => setPartnerTaxCode(e.target.value)}
+                  required
+                  className="font-mono"
+                />
+              </FormGroup>
+            </div>
+
+            <FormGroup label="Địa Chỉ Thuế Đối Tác">
+              <Input
+                type="text"
+                value={partnerAddress}
+                onChange={(e) => setPartnerAddress(e.target.value)}
+              />
+            </FormGroup>
+
+            <div className="grid grid-cols-3 gap-4">
+              <FormGroup label="Tiền hàng chưa thuế (Net)">
+                <Input
+                  type="number"
+                  value={netAmount || ''}
+                  onChange={(e) => setNetAmount(Number(e.target.value))}
+                  required
+                  className="font-mono text-right"
+                />
+              </FormGroup>
+
+              <FormGroup label="Thuế Suất">
+                <Select
+                  value={vatRate}
+                  onChange={(e) => setVatRate(Number(e.target.value))}
+                >
+                  <option value={0}>0%</option>
+                  <option value={5}>5%</option>
+                  <option value={8}>8% (Giảm thuế)</option>
+                  <option value={10}>10%</option>
+                </Select>
+              </FormGroup>
+
+              <FormGroup
+                label={
+                  <div className="flex justify-between items-center w-full">
                     <span>Tiền Thuế VAT</span>
                     <label className="flex items-center gap-1 text-[10px] text-amber-500 cursor-pointer select-none">
                       <input type="checkbox" checked={manualVat} onChange={(e) => setManualVat(e.target.checked)} className="rounded" />
                       Ghi đè
                     </label>
-                  </label>
-                  <input
-                    type="number"
-                    value={vatAmount || ''}
-                    onChange={(e) => setVatAmount(Number(e.target.value))}
-                    disabled={!manualVat}
-                    required
-                    className="w-full h-10 px-3 rounded-lg bg-[var(--background)] border border-[var(--border)] disabled:opacity-60 font-mono"
-                  />
-                </div>
-              </div>
+                  </div>
+                }
+              >
+                <Input
+                  type="number"
+                  value={vatAmount || ''}
+                  onChange={(e) => setVatAmount(Number(e.target.value))}
+                  disabled={!manualVat}
+                  required
+                  className="font-mono text-right disabled:opacity-60"
+                />
+              </FormGroup>
+            </div>
 
-              {manualVat && (
-                <div className="bg-amber-500/10 border border-amber-500/20 p-3 rounded-lg space-y-2">
-                  <label className="block font-bold text-amber-500 text-[10px] uppercase tracking-wider">Lý do giải trình ghi đè thuế GTGT</label>
-                  <input
-                    type="text"
-                    placeholder="Mô tả lý do lệch thuế suất tiêu chuẩn (tối thiểu 5 ký tự)..."
-                    value={overrideReason}
-                    onChange={(e) => setOverrideReason(e.target.value)}
-                    required
-                    className="w-full h-10 px-3 rounded-lg bg-[var(--background)] border border-amber-500/20 focus:outline-none"
-                  />
-                </div>
-              )}
-
-              <div>
-                <label className="block mb-1.5 font-semibold text-[var(--text-secondary)]">Nội Dung Hàng Hóa Dịch Vụ</label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="w-full p-3 rounded-lg bg-[var(--background)] border border-[var(--border)] h-20"
+            {manualVat && (
+              <div className="bg-amber-500/10 border border-amber-500/20 p-3 rounded-lg space-y-2 animate-fade-in">
+                <label className="block font-bold text-amber-500 text-[10px] uppercase tracking-wider">Lý do giải trình ghi đè thuế GTGT</label>
+                <Input
+                  type="text"
+                  placeholder="Mô tả lý do lệch thuế suất tiêu chuẩn (tối thiểu 5 ký tự)..."
+                  value={overrideReason}
+                  onChange={(e) => setOverrideReason(e.target.value)}
+                  required
                 />
               </div>
+            )}
 
-              <div className="flex justify-end gap-3 pt-3 border-t border-[var(--border)]">
-                <button type="button" onClick={() => { setShowAddModal(false); resetForm(); }} className="h-10 px-5 rounded-lg bg-[var(--secondary)] hover:bg-[var(--muted)] text-[var(--text-primary)] font-bold cursor-pointer transition-colors">Hủy</button>
-                <button type="submit" className="h-10 px-6 rounded-lg bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white font-bold shadow-sm cursor-pointer transition-colors">Lưu lại</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+            <FormGroup label="Nội Dung Hàng Hóa Dịch Vụ">
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full p-2.5 rounded-lg bg-[var(--background)] border border-[var(--border)] h-20 text-xs focus:outline-none focus:border-[var(--primary)] text-[var(--text-primary)]"
+              />
+            </FormGroup>
 
-      {/* Reason Modal (Cancel / Reverse) */}
-      {showReasonModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-          <div className="bg-[var(--secondary)] border border-[var(--border)] rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4">
-            <h3 className="text-[13px] font-black uppercase text-red-500">
-              {showReasonModal === 'cancel' ? 'Yêu cầu Hủy Hóa Đơn VAT' : 'Yêu cầu Đảo Bút Toán Hóa Đơn'}
-            </h3>
-            
-            <div className="space-y-3">
-              <label className="block text-[11px] font-semibold text-[var(--text-secondary)]">Nhập lý do giải trình (tối thiểu 5 ký tự):</label>
+            <div className="flex justify-end gap-3 pt-3 border-t border-[var(--border)]">
+              <button
+                type="button"
+                onClick={() => { setShowAddModal(false); resetForm(); }}
+                className="h-[38px] px-5 rounded-[var(--radius-sm)] bg-[var(--secondary)] hover:bg-[var(--muted)] text-[var(--text-primary)] font-bold cursor-pointer transition-colors"
+              >
+                Hủy
+              </button>
+              <button
+                type="submit"
+                className="h-[38px] px-6 rounded-[var(--radius-sm)] bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white font-bold shadow-sm cursor-pointer transition-colors"
+              >
+                Lưu lại
+              </button>
+            </div>
+          </form>
+        </EnterpriseModal>
+
+        {/* Modal: Reason for Cancel / Reverse */}
+        <EnterpriseModal
+          isOpen={showReasonModal !== null}
+          onClose={() => { setShowReasonModal(null); setReasonInvoiceId(null); setActionReason(''); }}
+          title={showReasonModal === 'cancel' ? 'Yêu cầu Hủy Hóa Đơn VAT' : 'Yêu cầu Đảo Bút Toán Hơn Đơn'}
+          maxWidth="md"
+        >
+          <div className="space-y-4">
+            <FormGroup label="Nhập lý do chi tiết giải trình (tối thiểu 5 ký tự):">
               <textarea
                 value={actionReason}
                 onChange={(e) => setActionReason(e.target.value)}
-                placeholder="Nhập lý do chi tiết..."
-                className="w-full p-3 rounded-lg bg-[var(--background)] border border-[var(--border)] text-[12px] h-24"
+                placeholder="Ví dụ: Hóa đơn sai thông tin tên đối tác/mã số thuế..."
+                className="w-full p-2.5 rounded-lg bg-[var(--background)] border border-[var(--border)] text-xs h-24 focus:outline-none focus:border-[var(--primary)] text-[var(--text-primary)]"
               />
-            </div>
+            </FormGroup>
 
             <div className="flex justify-end gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => { setShowReasonModal(null); setReasonInvoiceId(null); setActionReason(''); }}
-                className="px-4 py-2 rounded bg-[var(--secondary)] hover:bg-[var(--muted)] text-[var(--text-primary)] text-[11px] font-bold cursor-pointer transition-colors"
+                className="h-[36px] px-4 rounded-[var(--radius-sm)] bg-[var(--secondary)] hover:bg-[var(--muted)] text-[var(--text-primary)] text-xs font-bold cursor-pointer transition-colors"
               >
                 Hủy bỏ
               </button>
               <button
                 type="button"
                 onClick={handleReasonAction}
-                className="px-4 py-2 rounded bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold cursor-pointer transition-colors"
+                className="h-[36px] px-5 rounded-[var(--radius-sm)] bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold cursor-pointer transition-colors"
               >
                 Xác nhận
               </button>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        </EnterpriseModal>
+      </EnterprisePageContainer>
+    </EnterpriseAppShell>
   );
 }
