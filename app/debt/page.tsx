@@ -13,8 +13,8 @@ import {
   EnterpriseEmptyState,
   EnterpriseMetric,
   EnterpriseSection,
-  EnterpriseTable,
-  Column,
+  EnterpriseDataTable,
+  EnterpriseColumn,
   EnterpriseActionMenu
 } from '@/app/components/ui-enterprise';
 import { exportToCsv } from '@/app/services/export.service';
@@ -62,58 +62,89 @@ export default function DebtPage() {
 
   const totalPayable = useMemo(() => unpaidCosts.reduce((sum, cost) => sum + Number(cost.amount || 0), 0), [unpaidCosts]);
 
-  const invoiceColumns: Column<any>[] = [
+  const invoiceColumns: EnterpriseColumn<any>[] = [
     {
+      key: 'invoiceId',
       header: 'Mã HĐ',
-      accessor: invoice => (
-        <button onClick={() => setHistoryInvoice(invoice.id)} className="font-mono font-bold text-[var(--text-accent)] hover:underline">
+      render: invoice => (
+        <button onClick={() => setHistoryInvoice(invoice.id)} className="font-mono font-bold text-[var(--text-accent)] hover:underline cursor-pointer">
           {invoice.id.substring(0, 8).toUpperCase()}
         </button>
       ),
       align: 'center',
-      width: '100px',
-      minWidth: '80px'
+      width: '120px',
+      minWidth: '100px'
     },
-    { header: 'Ngày phát hành', accessor: invoice => formatDate(invoice.issuedDate), align: 'center', width: '128px', minWidth: '100px' },
-    { header: 'Tổng tiền', accessor: invoice => formatVnd(invoice.amount), align: 'right', width: '140px', minWidth: '110px' },
-    { header: 'Đã thu', accessor: invoice => <span className="text-emerald-500">{formatVnd(invoice.paidAmount)}</span>, align: 'right', width: '140px', minWidth: '110px' },
+    { 
+      key: 'issuedDate',
+      header: 'Ngày phát hành', 
+      render: invoice => formatDate(invoice.issuedDate), 
+      align: 'center', 
+      width: '150px', 
+      minWidth: '130px' 
+    },
+    { 
+      key: 'amount',
+      header: 'Tổng tiền', 
+      render: invoice => formatVnd(invoice.amount), 
+      align: 'right', 
+      width: '170px', 
+      minWidth: '150px' 
+    },
+    { 
+      key: 'paidAmount',
+      header: 'Đã thu hồi', 
+      render: invoice => <span className="text-emerald-500 font-bold">{formatVnd(invoice.paidAmount)}</span>, 
+      align: 'right', 
+      width: '170px', 
+      minWidth: '150px' 
+    },
     {
+      key: 'remainingAmount',
       header: 'Còn nợ',
-      accessor: invoice => {
+      render: invoice => {
         const isOverdue = Number(invoice.remainingAmount || 0) > 0 && invoice.dueDate && new Date() > new Date(invoice.dueDate);
         return <span className={isOverdue ? 'text-rose-500 font-bold' : 'text-amber-500 font-bold'}>{formatVnd(invoice.remainingAmount)}</span>;
       },
       align: 'right',
-      width: '140px',
-      minWidth: '110px'
+      width: '170px',
+      minWidth: '150px'
     },
     {
+      key: 'status',
       header: 'Tình trạng',
-      accessor: invoice => {
+      render: invoice => {
         const paid = Number(invoice.remainingAmount || 0) === 0;
         const overdue = !paid && invoice.dueDate && new Date() > new Date(invoice.dueDate);
         return (
-          <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold uppercase ${paid ? 'bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/30' : overdue ? 'bg-rose-500/10 text-rose-500 ring-1 ring-rose-500/30' : 'bg-blue-500/10 text-blue-500 ring-1 ring-blue-500/30'}`}>
-            {paid ? 'Hoàn tất' : overdue ? 'Quá hạn' : 'Trong hạn'}
+          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase ${
+            paid 
+              ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' 
+              : overdue 
+              ? 'bg-rose-500/10 text-rose-500 border border-rose-500/20' 
+              : 'bg-blue-500/10 text-blue-500 border border-blue-500/20'
+          }`}>
+            {paid ? 'Đã thanh toán' : overdue ? 'Quá hạn' : 'Trong hạn'}
           </span>
         );
       },
       align: 'center',
-      width: '120px',
-      minWidth: '100px'
+      width: '150px',
+      minWidth: '130px'
     },
     {
-      header: 'Nghiệp vụ',
-      accessor: invoice => {
+      key: 'actions',
+      header: 'Thao tác',
+      render: invoice => {
         const menuActions: any[] = [];
         if (Number(invoice.remainingAmount || 0) > 0) {
-          menuActions.push({ label: 'Thu tiền', onClick: () => setSelectedInvoice(invoice.id) });
+          menuActions.push({ label: 'Ghi nhận thu tiền', onClick: () => setSelectedInvoice(invoice.id) });
         }
-        menuActions.push({ label: 'Lịch sử thu', onClick: () => setHistoryInvoice(invoice.id) });
+        menuActions.push({ label: 'Lịch sử thu tiền', onClick: () => setHistoryInvoice(invoice.id) });
         menuActions.push({ label: 'Truy vết định khoản', onClick: () => setTraceInvoiceId(invoice.id) });
         if (Number(invoice.paidAmount || 0) === 0) {
           menuActions.push({
-            label: 'Xóa hóa đơn',
+            label: 'Hủy/Xóa hóa đơn',
             onClick: () => {
               if (window.confirm('Bạn có chắc chắn muốn xóa hóa đơn này?')) {
                 setDeletingId(invoice.id);
@@ -130,36 +161,59 @@ export default function DebtPage() {
         );
       },
       align: 'center',
-      width: '100px',
-      minWidth: '90px'
+      width: '120px',
+      minWidth: '110px'
     },
   ];
 
-  const costColumns: Column<any>[] = [
-    { header: 'Ngày', accessor: cost => formatDate(cost.date), align: 'center', width: '140px', minWidth: '110px' },
-    { header: 'Nhà cung cấp', accessor: cost => cost.supplier || 'Chưa rõ', width: '260px', minWidth: '180px' },
+  const costColumns: EnterpriseColumn<any>[] = [
+    { 
+      key: 'date',
+      header: 'Ngày hạch toán', 
+      render: cost => formatDate(cost.date), 
+      align: 'center', 
+      width: '140px', 
+      minWidth: '130px' 
+    },
+    { 
+      key: 'supplier',
+      header: 'Nhà cung cấp', 
+      render: cost => <span className="font-bold text-[var(--text-primary)]">{cost.supplier || 'Chưa rõ'}</span>, 
+      width: '260px', 
+      minWidth: '240px' 
+    },
     {
-      header: 'Loại',
-      accessor: cost => (
-        <span className="inline-flex rounded-md border border-[var(--border)] bg-[var(--secondary)] px-2 py-0.5 text-[10px] font-bold uppercase text-[var(--text-muted)]">
+      key: 'costType',
+      header: 'Loại chi phí',
+      render: cost => (
+        <span className="inline-flex rounded border border-[var(--border)] bg-[var(--secondary)] px-2 py-0.5 text-[10px] font-bold uppercase text-[var(--text-secondary)]">
           {cost.costType === 'material' ? 'Vật tư' : cost.costType === 'labor' ? 'Nhân công' : 'Dịch vụ'}
         </span>
       ),
       align: 'center',
-      width: '140px',
-      minWidth: '110px'
+      width: '150px',
+      minWidth: '140px'
     },
-    { header: 'Số tiền', accessor: cost => <span className="text-rose-500 font-bold">{formatVnd(cost.amount)}</span>, align: 'right', width: '160px', minWidth: '120px' },
+    { 
+      key: 'amount',
+      header: 'Số tiền nợ', 
+      render: cost => <span className="text-rose-500 font-bold">{formatVnd(cost.amount)}</span>, 
+      align: 'right', 
+      width: '170px', 
+      minWidth: '160px' 
+    },
     {
+      key: 'status',
       header: 'Tình trạng',
-      accessor: () => <span className="inline-flex rounded-full bg-rose-500/10 px-2.5 py-1 text-[10px] font-bold uppercase text-rose-500 ring-1 ring-rose-500/30">Chưa trả</span>,
+      render: () => <span className="inline-flex rounded-full bg-rose-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase text-rose-500 border border-rose-500/20">Chưa trả</span>,
       align: 'center',
-      width: '140px',
-      minWidth: '110px'
+      width: '150px',
+      minWidth: '140px'
     },
     {
-      header: 'Nghiệp vụ',
-      accessor: cost => (
+      key: 'actions',
+      header: 'Thao tác',
+      render: cost => (
         <div className="flex justify-center" onClick={e => e.stopPropagation()}>
           <EnterpriseActionMenu 
             actions={[
@@ -169,8 +223,8 @@ export default function DebtPage() {
         </div>
       ),
       align: 'center',
-      width: '100px',
-      minWidth: '90px'
+      width: '120px',
+      minWidth: '110px'
     },
   ];
 
@@ -183,36 +237,36 @@ export default function DebtPage() {
 
       <EnterprisePageContainer>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <EnterpriseMetric title="Công nợ phải thu" value={formatVnd(debtTotals.totalReceivable)} />
-          <EnterpriseMetric title="Đã thu" value={formatVnd(debtTotals.totalPaid)} />
-          <EnterpriseMetric title="Còn phải thu" value={formatVnd(debtTotals.totalRemaining)} />
-          <EnterpriseMetric title="Công nợ phải trả" value={formatVnd(totalPayable)} />
+          <EnterpriseMetric title="Tổng công nợ phải thu" value={formatVnd(debtTotals.totalReceivable)} />
+          <EnterpriseMetric title="Tổng đã thu hồi" value={formatVnd(debtTotals.totalPaid)} />
+          <EnterpriseMetric title="Còn lại phải thu" value={formatVnd(debtTotals.totalRemaining)} />
+          <EnterpriseMetric title="Tổng công nợ phải trả" value={formatVnd(totalPayable)} />
         </div>
 
         <EnterpriseSection
-          title="PHẢI THU (INVOICES / DOANH THU)"
-          subtitle={`${invoices.length} hóa đơn, quá hạn ${formatVnd(debtTotals.totalOverdue)}`}
+          title="Khoản công nợ phải thu (Hóa đơn / Doanh thu)"
+          subtitle={`${invoices.length} hóa đơn phát hành, quá hạn ${formatVnd(debtTotals.totalOverdue)}`}
           actions={
             <button
               onClick={() => exportToCsv('Cong_No_Phai_Thu.csv', invoices)}
-              className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer shadow-sm"
+              className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer transition-all shadow-sm"
             >
-              Xuất CSV
+              Xuất dữ liệu
             </button>
           }
         >
           <EnterpriseCard bodyClassName="p-0">
-            <EnterpriseTable
+            <EnterpriseDataTable
               data={invoices}
               columns={invoiceColumns}
               loading={isLoadingInvoices}
-              minWidth="948px"
+              minWidth="1050px"
               getRowKey={invoice => invoice.id}
               emptyState={<EnterpriseEmptyState title="Chưa có công nợ phải thu" description="Tạo hóa đơn hoặc ghi nhận doanh thu để theo dõi các khoản phải thu." iconType="debt" />}
               footer={
-                <tr className="h-[40px] font-bold text-[12px] text-[var(--text-primary)]">
-                  <td colSpan={2} className="px-4 text-right uppercase text-[var(--text-secondary)]">Tổng phải thu</td>
-                  <td className="px-4 text-right tabular-nums font-mono">{formatVnd(debtTotals.totalReceivable)}</td>
+                <tr className="h-[40px] font-bold text-[12px] text-[var(--text-primary)] bg-[var(--secondary)]">
+                  <td colSpan={2} className="px-4 text-right uppercase text-[var(--text-secondary)] font-bold">Tổng phải thu</td>
+                  <td className="px-4 text-right tabular-nums font-mono text-[var(--text-primary)]">{formatVnd(debtTotals.totalReceivable)}</td>
                   <td className="px-4 text-right tabular-nums font-mono text-emerald-500">{formatVnd(debtTotals.totalPaid)}</td>
                   <td className="px-4 text-right tabular-nums font-mono text-rose-500">{formatVnd(debtTotals.totalRemaining)}</td>
                   <td colSpan={2} />
@@ -223,28 +277,28 @@ export default function DebtPage() {
         </EnterpriseSection>
 
         <EnterpriseSection
-          title="PHẢI TRẢ (SUB-CONTRACTOR / SUPPLIER DEBT)"
-          subtitle={`${unpaidCosts.length} khoản chưa thanh toán`}
+          title="Khoản công nợ phải trả (Nhà thầu phụ / Nhà cung cấp)"
+          subtitle={`${unpaidCosts.length} khoản chi phí chưa thanh toán`}
           actions={
             <button
               onClick={() => exportToCsv('Cong_No_Phai_Tra.csv', unpaidCosts)}
-              className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer shadow-sm"
+              className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer transition-all shadow-sm"
             >
-              Xuất CSV
+              Xuất dữ liệu
             </button>
           }
         >
           <EnterpriseCard bodyClassName="p-0">
-            <EnterpriseTable
+            <EnterpriseDataTable
               data={unpaidCosts}
               columns={costColumns}
               loading={isLoadingCosts}
-              minWidth="920px"
+              minWidth="990px"
               getRowKey={cost => cost.id}
               emptyState={<EnterpriseEmptyState title="Chưa có công nợ phải trả" description="Các chi phí chưa thanh toán sẽ xuất hiện tại đây để lập ủy nhiệm chi." iconType="debt" />}
               footer={
-                <tr className="h-[40px] font-bold text-[12px] text-[var(--text-primary)]">
-                  <td colSpan={3} className="px-4 text-right uppercase text-[var(--text-secondary)]">Tổng phải trả</td>
+                <tr className="h-[40px] font-bold text-[12px] text-[var(--text-primary)] bg-[var(--secondary)]">
+                  <td colSpan={3} className="px-4 text-right uppercase text-[var(--text-secondary)] font-bold">Tổng phải trả</td>
                   <td className="px-4 text-right tabular-nums font-mono text-rose-500">{formatVnd(totalPayable)}</td>
                   <td colSpan={2} />
                 </tr>

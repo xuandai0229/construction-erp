@@ -8,13 +8,13 @@ import EnterprisePageContainer from '@/app/components/layout/EnterprisePageConta
 import AddCostModal from '@/app/components/modals/AddCostModal';
 import { formatDate, formatVnd } from '@/app/components/dashboard-data';
 import {
-  Column,
   EnterpriseCard,
   EnterpriseEmptyState,
   EnterpriseFilterBar,
   EnterpriseMetric,
   EnterpriseSection,
-  EnterpriseTable,
+  EnterpriseDataTable,
+  EnterpriseColumn,
   FormGroup,
   Input,
   Select,
@@ -98,22 +98,65 @@ export default function CostsPage() {
     }
   };
 
-  const columns: Column<CostRecord>[] = [
-    { header: 'Ngày', accessor: cost => formatDate(cost.date), align: 'center', width: '128px', minWidth: '100px' },
-    { header: 'Nhà cung cấp & nội dung', accessor: cost => `${cost.supplier || 'Nhiều nhà CC'} - ${cost.note || ''}`, width: '320px', minWidth: '240px' },
-    { header: 'Hạng mục WBS', accessor: cost => wbsList.find(w => w.id === cost.wbsId)?.name || 'N/A', width: '240px', minWidth: '180px' },
+  const columns: EnterpriseColumn<CostRecord>[] = [
+    { 
+      key: 'date',
+      header: 'Ngày', 
+      render: cost => formatDate(cost.date), 
+      align: 'center', 
+      width: '128px', 
+      minWidth: '100px' 
+    },
+    { 
+      key: 'supplier_note',
+      header: 'Nhà cung cấp & nội dung', 
+      render: cost => (
+        <div className="truncate max-w-[280px]" title={`${cost.supplier || 'Nhiều nhà CC'} - ${cost.note || ''}`}>
+          <span className="font-bold text-[var(--text-primary)] block truncate">{cost.supplier || 'Nhiều nhà CC'}</span>
+          <span className="text-[var(--text-secondary)] text-[11px] block truncate">{cost.note || '-'}</span>
+        </div>
+      ), 
+      width: '320px', 
+      minWidth: '240px' 
+    },
+    { 
+      key: 'wbs',
+      header: 'Hạng mục WBS', 
+      render: cost => {
+        const wbsName = wbsList.find(w => w.id === cost.wbsId)?.name || 'N/A';
+        return <span className="truncate block" title={wbsName}>{wbsName}</span>;
+      }, 
+      width: '240px', 
+      minWidth: '180px' 
+    },
     {
+      key: 'type',
       header: 'Loại',
-      accessor: cost => <span className="inline-flex rounded-md border border-[var(--border)] bg-[var(--secondary)] px-2 py-0.5 text-[10px] font-bold uppercase text-[var(--text-muted)]">{costType_LABELS[cost.costType] || cost.costType}</span>,
+      render: cost => <span className="inline-flex rounded border border-[var(--border)] bg-[var(--secondary)] px-2 py-0.5 text-[10px] font-bold uppercase text-[var(--text-secondary)]">{costType_LABELS[cost.costType] || cost.costType}</span>,
       align: 'center',
       width: '150px',
       minWidth: '110px'
     },
-    { header: 'SL', accessor: cost => cost.quantity || 1, align: 'right', width: '80px', minWidth: '60px' },
-    { header: 'Đơn giá', accessor: cost => formatVnd(cost.unitPrice || cost.amount), align: 'right', width: '140px', minWidth: '110px' },
+    { 
+      key: 'quantity',
+      header: 'SL', 
+      render: cost => cost.quantity || 1, 
+      align: 'right', 
+      width: '80px', 
+      minWidth: '60px' 
+    },
+    { 
+      key: 'unitPrice',
+      header: 'Đơn giá', 
+      render: cost => formatVnd(cost.unitPrice || cost.amount), 
+      align: 'right', 
+      width: '140px', 
+      minWidth: '110px' 
+    },
     {
+      key: 'netAmount',
       header: 'Chưa thuế',
-      accessor: cost => {
+      render: cost => {
         const vatRate = cost.vatRate !== undefined ? cost.vatRate : 10;
         return formatVnd(Math.round(cost.netAmount || cost.amount / (1 + vatRate / 100)));
       },
@@ -122,8 +165,9 @@ export default function CostsPage() {
       minWidth: '120px'
     },
     {
+      key: 'vatAmount',
       header: 'VAT',
-      accessor: cost => {
+      render: cost => {
         const vatRate = cost.vatRate !== undefined ? cost.vatRate : 10;
         const net = Math.round(cost.netAmount || cost.amount / (1 + vatRate / 100));
         return formatVnd(Math.round(cost.vatAmount || (cost.amount - net)));
@@ -132,32 +176,63 @@ export default function CostsPage() {
       width: '130px',
       minWidth: '100px'
     },
-    { header: 'Bảo hành', accessor: cost => <span className="text-rose-500 font-semibold">-{formatVnd(Math.round(cost.retentionAmount || 0))}</span>, align: 'right', width: '140px', minWidth: '110px' },
-    { header: 'Hạch toán', accessor: cost => <span className="font-bold">{formatVnd(cost.amount)}</span>, align: 'right', width: '150px', minWidth: '120px' },
-    { header: 'Thực thanh toán', accessor: cost => <span className="font-bold text-emerald-500">{formatVnd(Math.round(cost.amount - (cost.retentionAmount || 0)))}</span>, align: 'right', width: '160px', minWidth: '130px' },
+    { 
+      key: 'retentionAmount',
+      header: 'Bảo hành', 
+      render: cost => <span className="text-rose-500 font-bold">-{formatVnd(Math.round(cost.retentionAmount || 0))}</span>, 
+      align: 'right', 
+      width: '140px', 
+      minWidth: '110px' 
+    },
+    { 
+      key: 'amount',
+      header: 'Hạch toán', 
+      render: cost => <span className="font-bold">{formatVnd(cost.amount)}</span>, 
+      align: 'right', 
+      width: '150px', 
+      minWidth: '120px' 
+    },
+    { 
+      key: 'payable',
+      header: 'Thực thanh toán', 
+      render: cost => <span className="font-bold text-emerald-500">{formatVnd(Math.round(cost.amount - (cost.retentionAmount || 0)))}</span>, 
+      align: 'right', 
+      width: '160px', 
+      minWidth: '130px' 
+    },
     {
+      key: 'status',
       header: 'Trạng thái',
-      accessor: cost => <span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold uppercase ${cost.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/30' : 'bg-rose-500/10 text-rose-500 ring-1 ring-rose-500/30'}`}>{cost.status === 'paid' ? 'Đã trả' : 'Công nợ'}</span>,
+      render: cost => (
+        <span className={`inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase ${
+          cost.status === 'paid' 
+            ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' 
+            : 'bg-rose-500/10 text-rose-500 border border-rose-500/20'
+        }`}>
+          {cost.status === 'paid' ? 'Đã trả' : 'Công nợ'}
+        </span>
+      ),
       align: 'center',
       width: '140px',
       minWidth: '110px'
     },
     {
-      header: 'Nghiệp vụ',
-      accessor: cost => (
+      key: 'actions',
+      header: 'Thao tác',
+      render: cost => (
         <div className="flex justify-center" onClick={e => e.stopPropagation()}>
           <EnterpriseActionMenu 
             actions={[
               { label: 'Xem chi tiết', onClick: () => setSelectedCost(cost) },
-              { label: 'Chỉnh sửa', onClick: () => { setEditingCost(cost); setShowAddModal(true); } },
-              { label: 'Xóa bỏ', onClick: () => handleDelete(cost), variant: 'danger' }
+              { label: 'Chỉnh sửa chi phí', onClick: () => { setEditingCost(cost); setShowAddModal(true); } },
+              { label: 'Xóa chi phí', onClick: () => handleDelete(cost), variant: 'danger' }
             ]}
           />
         </div>
       ),
       align: 'center',
-      width: '100px',
-      minWidth: '90px'
+      width: '120px',
+      minWidth: '100px'
     },
   ];
 
@@ -165,14 +240,14 @@ export default function CostsPage() {
     <EnterpriseAppShell activeItem="costs">
       <EnterpriseHeader 
         title="Quản lý chi phí công trình" 
-        subtitle="Phân tích dòng tiền chi ra và theo dõi hạch toán công nợ phải trả"
+        subtitle="Hạch toán chi phí chi tiết, theo dõi thuế VAT đầu vào và bảo lưu bảo hành"
         actions={
           <div className="flex flex-wrap items-center gap-2">
-            <button onClick={() => exportToCsv('ERP_Costs.csv', filteredCosts)} className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer shadow-sm">
-              Xuất CSV
+            <button onClick={() => exportToCsv('ERP_Costs.csv', filteredCosts)} className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer transition-all shadow-sm">
+              Xuất dữ liệu
             </button>
-            <button onClick={() => { setEditingCost(null); setShowAddModal(true); }} className="h-9 rounded-md bg-[var(--primary)] px-4 text-[12px] font-bold text-white hover:bg-[var(--primary)]/90 cursor-pointer shadow-sm">
-              + THÊM CHI PHÍ
+            <button onClick={() => { setEditingCost(null); setShowAddModal(true); }} className="h-9 rounded-md bg-[var(--primary)] px-4 text-[12px] font-bold text-white hover:opacity-90 cursor-pointer transition-all shadow-sm">
+              + Thêm Chi phí
             </button>
           </div>
         }
@@ -180,41 +255,41 @@ export default function CostsPage() {
 
       <EnterprisePageContainer>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <EnterpriseMetric title="Chi phí hạch toán" value={formatVnd(totals.amount)} />
-          <EnterpriseMetric title="Trước thuế" value={formatVnd(totals.net)} />
-          <EnterpriseMetric title="VAT đầu vào" value={formatVnd(totals.vat)} />
-          <EnterpriseMetric title="Thực thanh toán" value={formatVnd(totals.payable)} />
+          <EnterpriseMetric title="Tổng chi phí hạch toán" value={formatVnd(totals.amount)} />
+          <EnterpriseMetric title="Tổng tiền trước thuế" value={formatVnd(totals.net)} />
+          <EnterpriseMetric title="Thuế VAT đầu vào" value={formatVnd(totals.vat)} />
+          <EnterpriseMetric title="Thực tế phải trả" value={formatVnd(totals.payable)} />
         </div>
 
-        <EnterpriseSection title="BỘ LỌC CHI PHÍ">
+        <EnterpriseSection title="Bộ lọc chi phí công trình">
           <EnterpriseFilterBar>
-            <FormGroup label="Tìm kiếm" className="min-w-[240px] flex-1">
-              <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Nhà cung cấp, nội dung..." />
+            <FormGroup label="Tìm kiếm chi phí" className="min-w-[240px] flex-1">
+              <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Nhà cung cấp, nội dung chi phí..." />
             </FormGroup>
             <FormGroup label="Loại chi phí" className="min-w-[180px]">
               <Select value={typeFilter} onChange={(event) => setTypeFilter(event.target.value)}>
-                <option value="ALL">Tất cả loại</option>
+                <option value="ALL">Tất cả loại chi phí</option>
                 {costTypes.map(type => <option key={type} value={type}>{costType_LABELS[type]}</option>)}
               </Select>
             </FormGroup>
-            <FormGroup label="Trạng thái" className="min-w-[180px]">
+            <FormGroup label="Trạng thái hạch toán" className="min-w-[180px]">
               <Select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
                 <option value="ALL">Tất cả trạng thái</option>
                 <option value="paid">Đã thanh toán</option>
-                <option value="unpaid">Chưa thanh toán</option>
+                <option value="unpaid">Chưa thanh toán (Công nợ)</option>
               </Select>
             </FormGroup>
             <div className="flex items-end">
-              <button onClick={() => { setSearch(''); setTypeFilter('ALL'); setStatusFilter('ALL'); }} className="h-[38px] rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer shadow-sm">
+              <button onClick={() => { setSearch(''); setTypeFilter('ALL'); setStatusFilter('ALL'); }} className="h-[38px] rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer transition-all shadow-sm">
                 Xóa bộ lọc
               </button>
             </div>
           </EnterpriseFilterBar>
         </EnterpriseSection>
 
-        <EnterpriseSection title="BẢNG CHI TIẾT GHI NHẬN CHI PHÍ (COST RECORD)" subtitle={`Hiển thị ${filteredCosts.length} / ${costs.length} bản ghi`}>
+        <EnterpriseSection title="Sổ nhật ký ghi nhận chi phí (Cost Record)" subtitle={`Hiển thị ${filteredCosts.length} / ${costs.length} bản ghi chi phí`}>
           <EnterpriseCard bodyClassName="p-0">
-            <EnterpriseTable
+            <EnterpriseDataTable
               data={filteredCosts}
               columns={columns}
               loading={isLoadingCosts}
@@ -223,12 +298,12 @@ export default function CostsPage() {
               onRowClick={setSelectedCost}
               emptyState={<EnterpriseEmptyState title="Chưa có chi phí" description="Ghi nhận chi phí đầu tiên để theo dõi công nợ phải trả và chi phí công trình." iconType="debt" />}
               footer={
-                <tr className="h-[40px] text-[12px] font-bold text-[var(--text-primary)]">
-                  <td colSpan={6} className="px-4 text-right uppercase text-[var(--text-secondary)]">Tổng cộng</td>
-                  <td className="px-4 text-right font-mono tabular-nums">{formatVnd(totals.net)}</td>
-                  <td className="px-4 text-right font-mono tabular-nums">{formatVnd(totals.vat)}</td>
+                <tr className="h-[40px] text-[12px] font-bold text-[var(--text-primary)] bg-[var(--secondary)]">
+                  <td colSpan={6} className="px-4 text-right uppercase text-[var(--text-secondary)] font-bold">Tổng cộng chi phí</td>
+                  <td className="px-4 text-right font-mono tabular-nums text-[var(--text-primary)]">{formatVnd(totals.net)}</td>
+                  <td className="px-4 text-right font-mono tabular-nums text-[var(--text-primary)]">{formatVnd(totals.vat)}</td>
                   <td className="px-4 text-right font-mono tabular-nums text-rose-500">-{formatVnd(totals.retention)}</td>
-                  <td className="px-4 text-right font-mono tabular-nums">{formatVnd(totals.amount)}</td>
+                  <td className="px-4 text-right font-mono tabular-nums text-[var(--text-primary)]">{formatVnd(totals.amount)}</td>
                   <td className="px-4 text-right font-mono tabular-nums text-emerald-500">{formatVnd(totals.payable)}</td>
                   <td colSpan={2} />
                 </tr>
@@ -241,7 +316,7 @@ export default function CostsPage() {
       {selectedCost && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={() => setSelectedCost(null)}>
           <div className="w-full max-w-xl" onClick={(event) => event.stopPropagation()}>
-            <EnterpriseCard title="CHI TIẾT CHI PHÍ THỜI GIAN THỰC">
+            <EnterpriseCard title="CHI TIẾT CHỨNG TỪ CHI PHÍ THỜI GIAN THỰC">
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -257,23 +332,23 @@ export default function CostsPage() {
                     <div className="mt-1 text-[14px] font-bold text-[var(--text-primary)]">{costType_LABELS[selectedCost.costType] || selectedCost.costType}</div>
                   </div>
                   <div>
-                    <div className="text-[10px] font-bold uppercase text-[var(--text-tertiary)]">Số tiền</div>
+                    <div className="text-[10px] font-bold uppercase text-[var(--text-tertiary)]">Số tiền thanh toán</div>
                     <div className="mt-1 font-mono text-[16px] font-bold tabular-nums text-[var(--text-accent)]">{formatVnd(selectedCost.amount)}</div>
                   </div>
                 </div>
                 <div>
-                  <div className="text-[10px] font-bold uppercase text-[var(--text-tertiary)]">Diễn giải</div>
+                  <div className="text-[10px] font-bold uppercase text-[var(--text-tertiary)]">Nội dung diễn giải</div>
                   <div className="mt-1 text-[14px] text-[var(--text-secondary)]">{selectedCost.note || '-'}</div>
                 </div>
                 <div className="flex gap-3 border-t border-[var(--border)] pt-4">
-                  <button onClick={() => { setEditingCost(selectedCost); setShowAddModal(true); setSelectedCost(null); }} className="h-[36px] flex-1 rounded-md bg-[var(--primary)] text-white hover:bg-[var(--primary)]/90 transition-all cursor-pointer font-bold text-[12px]">
-                    Chỉnh sửa
+                  <button onClick={() => { setEditingCost(selectedCost); setShowAddModal(true); setSelectedCost(null); }} className="h-[36px] flex-1 rounded-md bg-[var(--primary)] text-white hover:opacity-95 transition-all cursor-pointer font-bold text-[12px]">
+                    Chỉnh sửa chi phí
                   </button>
                   <button disabled={isProcessing} onClick={() => handleDelete(selectedCost)} className="h-[36px] flex-1 rounded-md bg-rose-600 px-4 text-[12px] font-bold text-white hover:bg-rose-500 disabled:opacity-50 transition-all cursor-pointer">
-                    Xóa bỏ
+                    Xóa bỏ chi phí
                   </button>
                   <button onClick={() => setSelectedCost(null)} className="h-[36px] flex-1 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] transition-all cursor-pointer">
-                    Đóng
+                    Đóng lại
                   </button>
                 </div>
               </div>

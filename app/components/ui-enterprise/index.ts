@@ -1,4 +1,5 @@
 export * from "./EnterpriseTable";
+export * from "./EnterpriseDataTable";
 export * from "./EnterpriseForm";
 export * from "./EnterpriseCard";
 export * from "./EnterpriseSection";
