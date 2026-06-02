@@ -1,7 +1,6 @@
-import path from "node:path";
-import { prisma, readCsv, reconciliationDir, writeAuditJson } from "./reconciliation-utils";
+import { mappingPathFromEnv, prisma, readCsv, writeAuditJson } from "./reconciliation-utils";
 
-const mappingPath = path.join(reconciliationDir, "project-company-mapping.draft.csv");
+const mappingPath = mappingPathFromEnv("PROJECT_COMPANY_MAPPING_PATH", "project-company-mapping.draft.csv");
 
 async function main() {
   const rows = readCsv(mappingPath);
@@ -39,7 +38,7 @@ async function main() {
     skipped,
     updates,
     rollbackNote: "Rollback thủ công bằng updates[].before.companyId; mọi thay đổi đã ghi AuditLog DATA_RECONCILIATION_BACKFILL.",
-    backupNote: "Mapping explicit nằm tại docs/reconciliation/project-company-mapping.draft.csv.",
+    backupNote: `Mapping explicit nằm tại ${mappingPath}.`,
   };
   writeAuditJson("phase26-project-company-apply-result.json", result);
   console.log(JSON.stringify({ status: "PASS", updated: updates.length, skipped }, null, 2));

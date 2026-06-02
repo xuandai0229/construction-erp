@@ -1,8 +1,7 @@
 import fs from "node:fs";
-import path from "node:path";
-import { prisma, readCsv, reconciliationDir } from "./reconciliation-utils";
+import { mappingPathFromEnv, prisma, readCsv } from "./reconciliation-utils";
 
-const mappingPath = path.join(reconciliationDir, "journal-project-mapping.draft.csv");
+const mappingPath = mappingPathFromEnv("JOURNAL_PROJECT_MAPPING_PATH", "journal-project-mapping.draft.csv");
 const validDecisions = new Set(["APPROVED_FOR_BACKFILL", "NON_PROJECT_FINANCE", "MANUAL_REVIEW", "EXCLUDE_FROM_PROJECT_REPORTING"]);
 const validActions = new Set(["BACKFILL_PROJECT", "MARK_NON_PROJECT", "NO_ACTION", "REVIEW_LATER"]);
 const projectSourceTypes = new Set(["COST", "INVOICE", "PAYMENT", "ADVANCE", "ADVANCE_SETTLEMENT", "CONTRACT"]);

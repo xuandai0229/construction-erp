@@ -1,8 +1,7 @@
 import fs from "node:fs";
-import path from "node:path";
-import { readCsv, reconciliationDir } from "./reconciliation-utils";
+import { mappingPathFromEnv, readCsv } from "./reconciliation-utils";
 
-const mappingPath = path.join(reconciliationDir, "project-battrang-ap-reconciliation.draft.csv");
+const mappingPath = mappingPathFromEnv("BATTRANG_AP_MAPPING_PATH", "project-battrang-ap-reconciliation.draft.csv");
 const validDecisions = new Set([
   "LEDGER_CORRECT_OPERATIONAL_MISSING",
   "OPERATIONAL_CORRECT_LEDGER_NEEDS_REVIEW",

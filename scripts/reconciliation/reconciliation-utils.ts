@@ -5,6 +5,11 @@ import { prisma } from "../../lib/prisma";
 export const reconciliationDir = path.join(process.cwd(), "docs", "reconciliation");
 export const auditDir = path.join(process.cwd(), "docs", "audit");
 
+export function mappingPathFromEnv(envName: string, defaultFilename: string) {
+  const configured = process.env[envName] || process.env.RECONCILIATION_MAPPING_PATH;
+  return configured ? path.resolve(process.cwd(), configured) : path.join(reconciliationDir, defaultFilename);
+}
+
 export function ensureDirs() {
   fs.mkdirSync(reconciliationDir, { recursive: true });
   fs.mkdirSync(auditDir, { recursive: true });

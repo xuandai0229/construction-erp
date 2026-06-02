@@ -1,0 +1,2 @@
+journalEntryId,journalDate,sourceType,sourceId,description,amountDebit,amountCredit,currentProjectId,suggestedProjectId,cashBankDocumentId,cashBankDocumentNo,counterparty,evidence,ownerDecision,approvedProjectId,nonProjectReason,decisionReason,approvedBy,approvedAt,action
+example-journal-id,2026-01-01,PAYMENT,example-source-id,But toan mau khong dung du lieu that,0,0,,example-project-id,,,Nha cung cap mau,Vi du doi soat,MANUAL_REVIEW,,,,,

@@ -49,3 +49,41 @@ next-env.d.ts
 # test output
 /playwright-report
 /test-results
+
+# Local audit quarantine - sensitive reconciliation artifacts
+.local-audit-quarantine/
+
+# Database dumps / forensic temporary files
+scripts/reconciliation/dump-db.json
+**/dump-db.json
+**/*dump*.json
+
+# Temporary reconciliation debug scripts
+scripts/reconciliation/dump-db.ts
+scripts/reconciliation/search-*.ts
+scripts/reconciliation/check-*.ts
+scripts/reconciliation/list-*.ts
+scripts/reconciliation/test-*.ts
+scripts/reconciliation/view-*.ts
+scripts/reconciliation/write-*.ts
+
+# Reconciliation mapping drafts may contain accounting data
+docs/reconciliation/*.draft.csv
+docs/reconciliation/*.accountant-proposed.csv
+docs/reconciliation/*mapping*.csv
+!docs/reconciliation/templates/
+!docs/reconciliation/templates/*.template.csv
+
+# Forensic JSON artifacts may contain internal data
+docs/audit/*forensic*.json
+docs/audit/*apply-result*.json
+docs/audit/phase*-*-apply-result.json
+docs/audit/phase27r-forensic-data.json
+
+# Test/build artifacts
+playwright-report/
+test-results/
+.next/
+generated/prisma-client/query_engine-windows.dll.node.tmp*
+*.tmp
+*.log

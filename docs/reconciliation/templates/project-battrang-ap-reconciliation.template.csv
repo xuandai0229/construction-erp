@@ -1,0 +1,2 @@
+sourceType,sourceId,journalEntryId,journalDate,accountCode,debitCredit,amount,signedAmount,isReversed,description,linkedCostId,linkedPaymentId,linkedContractId,linkedSupplierId,operationalRecordExists,operationalAmount,ledgerAmount,variance,ownerDecision,mappingAction,decisionReason,approvedBy,approvedAt
+PAYMENT,example-source-id,example-journal-id,2026-01-01,331,CREDIT,0,0,false,Vi du AP reconciliation khong dung du lieu that,,,,,false,0,0,0,MANUAL_REVIEW,NO_ACTION,,,

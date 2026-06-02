@@ -1,7 +1,6 @@
-import path from "node:path";
-import { prisma, readCsv, reconciliationDir, writeAuditJson } from "./reconciliation-utils";
+import { mappingPathFromEnv, prisma, readCsv, writeAuditJson } from "./reconciliation-utils";
 
-const mappingPath = path.join(reconciliationDir, "journal-project-mapping.draft.csv");
+const mappingPath = mappingPathFromEnv("JOURNAL_PROJECT_MAPPING_PATH", "journal-project-mapping.draft.csv");
 
 async function main() {
   const rows = readCsv(mappingPath);
@@ -53,7 +52,7 @@ async function main() {
     updates,
     nonProjectRows,
     rollbackNote: "Rollback thủ công bằng updates[].before.projectId; dòng NON_PROJECT_FINANCE không update projectId, chỉ ghi AuditLog.",
-    backupNote: "Mapping explicit nằm tại docs/reconciliation/journal-project-mapping.draft.csv.",
+    backupNote: `Mapping explicit nằm tại ${mappingPath}.`,
   };
   writeAuditJson("phase26-journal-project-apply-result.json", result);
   console.log(JSON.stringify({ status: "PASS", updated: updates.length, markedNonProject: nonProjectRows.length, skipped: result.skipped }, null, 2));
