@@ -1,0 +1,260 @@
+{
+  "mode": "apply",
+  "generatedAt": "2026-06-01T08:22:15.475Z",
+  "updated": 0,
+  "skipped": 25,
+  "updates": [],
+  "manualReview": [
+    {
+      "journalEntryId": "040db1fa-eb92-447f-ad11-ffe54072ff8d",
+      "sourceType": "CASH_BANK",
+      "sourceId": "485cbce9-0b11-42b2-bb0a-1216f90b488e",
+      "journalDate": "2026-05-29T06:58:38.712Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "614a5b40-caa6-4507-93c6-25343ada2867",
+      "sourceType": "CASH_BANK",
+      "sourceId": "87ed70f0-ebf3-4496-98fe-a8f1ffebc562",
+      "journalDate": "2026-05-29T06:58:38.772Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "7cb41422-7d89-40d0-a1d4-912b46945164",
+      "sourceType": "CASH_BANK",
+      "sourceId": "b3a04aea-a91b-4eaf-a4ac-f401d4953668",
+      "journalDate": "2026-05-29T06:58:38.800Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "d278db09-9d83-4033-ae3e-0aca49d17e29",
+      "sourceType": "CASH_BANK",
+      "sourceId": "71e4ab79-cdaa-4a31-89a1-b44b8ffa11a3",
+      "journalDate": "2026-05-29T06:58:57.720Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "8beaff35-e697-4637-adba-504a912e6a00",
+      "sourceType": "CASH_BANK",
+      "sourceId": "f79d4004-b619-4b21-afee-fe3b9454d4e3",
+      "journalDate": "2026-05-29T06:58:57.801Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "3e80b32a-fb46-4ee2-9662-77bb3ec5de70",
+      "sourceType": "CASH_BANK",
+      "sourceId": "7f8717e2-6b25-4229-a3c9-c03be4d60dea",
+      "journalDate": "2026-05-29T06:58:57.830Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "e7a30dd5-e292-4476-92dc-173034479387",
+      "sourceType": "CASH_BANK",
+      "sourceId": "dff2fe3b-0323-4d1e-81f1-11b63af897dd",
+      "journalDate": "2026-05-29T06:59:24.449Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "0ce9f109-eb30-4c95-b59e-3e23bd0e7d54",
+      "sourceType": "CASH_BANK",
+      "sourceId": "2f2fc7d8-2378-41c2-9f07-064009c1147d",
+      "journalDate": "2026-05-29T06:59:24.501Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "77532cf2-c7eb-4762-a552-8869e654670b",
+      "sourceType": "CASH_BANK",
+      "sourceId": "aaa6de03-dcb3-4428-9d3b-93eebdc1cf45",
+      "journalDate": "2026-05-29T06:59:24.525Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "fc8ee38d-1a53-46d7-8049-d9b2141e80f0",
+      "sourceType": "CASH_BANK",
+      "sourceId": "f8e29c95-6b0c-4d25-be0c-82a81b805ffa",
+      "journalDate": "2026-05-29T07:07:08.223Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "b27afbed-ab4b-4afa-8318-63fad78fed99",
+      "sourceType": "CASH_BANK",
+      "sourceId": "be0a51e3-99f5-4e57-bed4-19380a287a3f",
+      "journalDate": "2026-05-29T07:07:08.292Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "88f7ff9b-e0ea-4c3f-8aae-3ae906e846e7",
+      "sourceType": "CASH_BANK",
+      "sourceId": "e1486306-184a-4023-a34b-e58b23806536",
+      "journalDate": "2026-05-29T07:07:08.323Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "2be833ea-76a0-4d63-869e-9f8107433939",
+      "sourceType": "CASH_BANK",
+      "sourceId": "01cffe89-22af-4787-b5d6-6e9dc51c6143",
+      "journalDate": "2026-05-29T07:07:27.958Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "3fe8846b-f95f-4e6e-bb8a-8aabf5700e4f",
+      "sourceType": "CASH_BANK",
+      "sourceId": "48cb3c92-f71e-491f-ae2e-f007a13d430b",
+      "journalDate": "2026-05-29T07:07:28.007Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "c1340dab-69e7-4689-a3fa-f974eb030223",
+      "sourceType": "CASH_BANK",
+      "sourceId": "254df8bb-1a07-438f-81df-90cbf2b41e4b",
+      "journalDate": "2026-05-29T07:07:28.038Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "a6a7bf20-6a2d-4321-92eb-c6034b4d1745",
+      "sourceType": "CASH_BANK",
+      "sourceId": "0aa7041d-d891-4f93-b25c-034bd6fe4b99",
+      "journalDate": "2026-05-29T07:32:53.816Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "28ad3040-2c3d-48d5-8eb9-9ac1f89fa827",
+      "sourceType": "CASH_BANK",
+      "sourceId": "7861cec5-3e6f-452b-8324-fe7ef8dfd580",
+      "journalDate": "2026-05-29T07:32:53.863Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "ba9b487c-c4d0-4dae-9829-dac6aba39f81",
+      "sourceType": "CASH_BANK",
+      "sourceId": "2b8247ac-9c83-439a-8199-7b11e0860996",
+      "journalDate": "2026-05-29T07:32:53.889Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "8e6ae69b-86cd-4974-9d41-edcf0fc0e69b",
+      "sourceType": "CASH_BANK",
+      "sourceId": "7ff55ba9-4fe1-4e83-8b04-6a63cd2f181f",
+      "journalDate": "2026-05-29T07:38:53.801Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "db1e0e64-0919-4d5a-b0b8-3c195eac98f9",
+      "sourceType": "CASH_BANK",
+      "sourceId": "7902c0e5-1cb1-4672-bec0-18ee18787fc4",
+      "journalDate": "2026-05-29T07:38:53.858Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "031006f7-70a7-4919-a768-06b735107f95",
+      "sourceType": "CASH_BANK",
+      "sourceId": "490f9ee8-10eb-4feb-9776-bcc42fefbe1c",
+      "journalDate": "2026-05-29T07:38:53.884Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "d2ab2846-1062-48f4-b18a-efb1b8d87c49",
+      "sourceType": "CASH_BANK",
+      "sourceId": "a92e3e5c-49aa-4330-b3ad-ec43cba61180",
+      "journalDate": "2026-05-29T08:13:16.565Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "c04290f5-75b7-4ce8-b50a-86d1e5a70cde",
+      "sourceType": "CASH_BANK",
+      "sourceId": "a92e3e5c-49aa-4330-b3ad-ec43cba61180",
+      "journalDate": "2026-05-29T08:13:16.593Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "bb7f99a7-f9c8-4cb2-8f43-fc4b8f89c127",
+      "sourceType": "CASH_BANK",
+      "sourceId": "a1e92408-8861-4a48-997f-f7aaf3d56812",
+      "journalDate": "2026-05-29T08:13:16.616Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "journalEntryId": "9433b9d2-6ec6-4117-99a6-84df333bd11f",
+      "sourceType": "CASH_BANK",
+      "sourceId": "a3072dcf-fa4a-4039-8957-4b5fdace7762",
+      "journalDate": "2026-05-29T08:13:16.639Z",
+      "inferredProjectId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Suy luận từ CashBankDocument.projectId.",
+      "action": "MANUAL_REVIEW"
+    }
+  ],
+  "rollbackNote": "Rollback thủ công: dùng updates[].before.projectId trong file này để set lại JournalEntry.projectId; mọi thay đổi đã có AuditLog action DATA_BACKFILL."
+}

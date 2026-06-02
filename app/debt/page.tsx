@@ -17,7 +17,7 @@ import {
   EnterpriseColumn,
   EnterpriseActionMenu
 } from '@/app/components/ui-enterprise';
-import { exportToCsv } from '@/app/services/export.service';
+import { auditedCsvExport } from '@/app/services/audited-export.service';
 import { useERPStore } from '@/store/erpStore';
 import { useCostsQuery } from '@/services/queries/useCosts';
 import { useDeleteInvoiceMutation, useInvoicesQuery } from '@/services/queries/useDebts';
@@ -37,6 +37,13 @@ export default function DebtPage() {
   const [selectedCost, setSelectedCost] = useState<any | null>(null);
 
   const unpaidCosts = useMemo(() => costs.filter(cost => cost.status === 'unpaid'), [costs]);
+  const handleAuditedExport = async (reportType: 'DEBT_RECEIVABLE' | 'DEBT_PAYABLE') => {
+    try {
+      await auditedCsvExport({ reportType, projectId: currentProjectId, reason: `Xuất báo cáo ${reportType === 'DEBT_RECEIVABLE' ? 'công nợ phải thu' : 'công nợ phải trả'}` });
+    } catch (error: any) {
+      alert(error.message || 'Không thể xuất báo cáo công nợ.');
+    }
+  };
 
   const debtTotals = useMemo(() => {
     const now = new Date();
@@ -248,7 +255,7 @@ export default function DebtPage() {
           subtitle={`${invoices.length} hóa đơn phát hành, quá hạn ${formatVnd(debtTotals.totalOverdue)}`}
           actions={
             <button
-              onClick={() => exportToCsv('Cong_No_Phai_Thu.csv', invoices)}
+              onClick={() => handleAuditedExport('DEBT_RECEIVABLE')}
               className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer transition-all shadow-sm"
             >
               Xuất dữ liệu
@@ -281,7 +288,7 @@ export default function DebtPage() {
           subtitle={`${unpaidCosts.length} khoản chi phí chưa thanh toán`}
           actions={
             <button
-              onClick={() => exportToCsv('Cong_No_Phai_Tra.csv', unpaidCosts)}
+              onClick={() => handleAuditedExport('DEBT_PAYABLE')}
               className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer transition-all shadow-sm"
             >
               Xuất dữ liệu

@@ -4,9 +4,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useERPStore } from '@/store/erpStore';
 import { formatVnd } from '@/app/components/dashboard-data';
-import { exportToCsv } from '@/app/services/export.service';
+import { auditedCsvExport } from '@/app/services/audited-export.service';
 
 import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
 import EnterpriseHeader from '@/app/components/layout/EnterpriseHeader';
@@ -150,6 +149,13 @@ export default function AccountingPage() {
   };
 
   const selectedProject = workspace.projects.find(project => project.id === projectId);
+  const handleAuditedExport = async () => {
+    try {
+      await auditedCsvExport({ reportType: 'DEBT_PAYABLE', projectId, reason: 'Xuất tổng hợp tạm ứng và thanh toán theo hợp đồng' });
+    } catch (error: any) {
+      alert(error.message || 'Không thể xuất tổng hợp tạm ứng và thanh toán.');
+    }
+  };
   const warnings = ledger?.warnings || [];
   const redCount = warnings.filter((warning: any) => warning.severity === 'RED').length;
   const yellowCount = warnings.filter((warning: any) => warning.severity === 'YELLOW').length;
@@ -245,7 +251,7 @@ export default function AccountingPage() {
             </Select>
             <button
               className="h-[38px] px-4 text-xs font-semibold border border-[var(--border)] bg-[var(--card)] hover:bg-[var(--muted)] text-[var(--text-primary)] rounded-[var(--radius-sm)] transition-colors duration-150 cursor-pointer whitespace-nowrap"
-              onClick={() => exportToCsv('Tong_Hop_Tam_Ung_Thanh_Toan.csv', ledger?.reports?.payableByContract || [])}
+              onClick={handleAuditedExport}
             >
               Xuất Excel/CSV
             </button>

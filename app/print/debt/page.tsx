@@ -6,17 +6,24 @@ import { PrintLayout } from "@/app/components/accounting/PrintLayout";
 import { AccountingDocumentHeader } from "@/app/components/accounting/AccountingDocumentHeader";
 import { SignatureBlock } from "@/app/components/accounting/SignatureBlock";
 import { formatVnd } from "@/app/components/dashboard-data";
+import { AuditedPrintStatus, useAuditedPrint } from "@/app/components/accounting/AuditedPrintGate";
 
 function DebtPrintContent() {
   const searchParams = useSearchParams();
   const projectId = searchParams?.get("projectId") || "";
+  const audit = useAuditedPrint({
+    printType: "DEBT",
+    entityId: projectId,
+    route: `/print/debt?projectId=${projectId}`,
+    reason: "In báo cáo công nợ phải thu",
+  });
 
   const [invoices, setInvoices] = useState<any[]>([]);
   const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (projectId) {
+    if (projectId && audit.status === "APPROVED") {
       Promise.all([
         fetch(`/api/invoices?projectId=${projectId}`).then(res => res.json()),
         fetch(`/api/projects/${projectId}`).then(res => res.json())
@@ -28,7 +35,11 @@ function DebtPrintContent() {
         .catch(err => console.error("Failed to load debt for printing", err))
         .finally(() => setLoading(false));
     }
-  }, [projectId]);
+  }, [projectId, audit.status]);
+
+  if (audit.status !== "APPROVED") {
+    return <AuditedPrintStatus status={audit.status} error={audit.error} />;
+  }
 
   if (loading) {
     return (
@@ -131,7 +142,7 @@ function DebtPrintContent() {
       {/* Print Trigger */}
       <div className="flex justify-end gap-2 pt-4 border-t border-zinc-200 print:hidden select-none">
         <button
-          onClick={() => window.print()}
+          onClick={audit.print}
           className="px-4 py-2 text-xs font-bold text-white bg-zinc-900 hover:bg-zinc-800 rounded shadow transition-colors cursor-pointer"
         >
           Thực hiện In Phiếu

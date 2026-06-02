@@ -158,6 +158,7 @@ export type CreateInvoiceDTO = z.infer<typeof createInvoiceSchema>;
 // ─────────────────────────────────────────────
 
 export const createPaymentSchema = z.object({
+  requestId: z.string().uuid("Mã idempotency của thanh toán không hợp lệ"),
   projectId: z.string().uuid("Dự án là bắt buộc"),
   invoiceId: z.string().uuid("Hóa đơn là bắt buộc"),
   amount: z.number().positive("Số tiền thanh toán phải lớn hơn 0"),

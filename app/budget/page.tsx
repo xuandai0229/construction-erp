@@ -23,10 +23,9 @@ import {
   Select,
   EnterpriseActionMenu
 } from '@/app/components/ui-enterprise';
-import { exportToCsv } from '@/app/services/export.service';
+import { auditedCsvExport } from '@/app/services/audited-export.service';
 import { useERPStore } from '@/store/erpStore';
 import { useBudgetsQuery, useDeleteBudgetMutation, useImportBudgetMutation } from '@/services/queries/useBudgets';
-import { useCostsQuery } from '@/services/queries/useCosts';
 import { useWBSQuery } from '@/services/queries/useWBS';
 
 const COST_TYPE_LABELS: Record<string, string> = {
@@ -51,12 +50,16 @@ export default function BudgetPage() {
   const [filterCostType, setFilterCostType] = useState('ALL');
 
   const { data: budgets = [] } = useBudgetsQuery(currentProjectId);
-  const { data: costsData = [] } = useCostsQuery(currentProjectId);
   const { data: wbsData } = useWBSQuery(currentProjectId);
   const { mutateAsync: deleteBudget } = useDeleteBudgetMutation(currentProjectId);
   const { mutateAsync: importBudgets } = useImportBudgetMutation(currentProjectId);
-
-  const costs = Array.isArray(costsData) ? costsData.filter((cost: any) => cost.approvalStatus === 'APPROVED') : [];
+  const handleAuditedExport = async () => {
+    try {
+      await auditedCsvExport({ reportType: 'BUDGET', projectId: currentProjectId, reason: 'Xuất báo cáo dự toán công trình' });
+    } catch (error: any) {
+      alert(error.message || 'Không thể xuất báo cáo dự toán.');
+    }
+  };
 
   const wbsRows = useMemo(() => {
     const nodes = wbsData?.tree || [];
@@ -239,7 +242,7 @@ export default function BudgetPage() {
           <div className="flex gap-2">
             <input type="file" accept=".csv" ref={fileInputRef} className="hidden" onChange={handleImport} />
             <button onClick={() => fileInputRef.current?.click()} className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer transition-all shadow-sm">Nhập Excel/CSV</button>
-            <button onClick={() => exportToCsv(`ERP_Budget_Breakdown_${currentProjectId}.csv`, budgets)} className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer transition-all shadow-sm">Xuất dữ liệu</button>
+            <button onClick={handleAuditedExport} className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer transition-all shadow-sm">Xuất dữ liệu</button>
             <button onClick={() => { setInitialWbsIdForAdd(undefined); setIsAddModalOpen(true); }} className="h-9 rounded-md bg-[var(--primary)] px-4 text-[12px] font-bold text-white hover:opacity-90 cursor-pointer transition-colors shadow-sm">+ Lập Dự toán (CBS)</button>
           </div>
         }

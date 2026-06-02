@@ -366,6 +366,8 @@ export class TaxInvoiceService {
         reference: refCode,
         sourceType: "TAX_INVOICE",
         sourceId: existing.id,
+        accountingDate: existing.invoiceDate,
+        companyId,
         lines,
       });
 
@@ -483,6 +485,8 @@ export class TaxInvoiceService {
         reference: `REV-${existing.invoiceNumber}`,
         sourceType: "TAX_INVOICE_REVERSAL",
         sourceId: existing.id,
+        accountingDate: new Date(),
+        companyId,
         lines,
       });
 

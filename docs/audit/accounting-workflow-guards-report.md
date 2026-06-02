@@ -1,6 +1,6 @@
 # Accounting Workflow Guards Report
 
-Generated: 2026-05-29T08:13:04.547Z
+Generated: 2026-06-01T03:42:13.625Z
 
 | Test | Result | Notes |
 | ---- | ------ | ----- |
@@ -8,7 +8,7 @@ Generated: 2026-05-29T08:13:04.547Z
 | User without permission cannot approve payment | PASS | Role VIEWER has no PAYMENT APPROVE. |
 | Authorized user can approve payment | PASS | Role CFO has PAYMENT APPROVE. |
 | DRAFT payment does not post ledger | PASS | No active posted journal exists while payment is DRAFT. |
-| APPROVED payment posts ledger once | PASS | Posted journal 796d35e1-f819-4818-904a-d3a57df2b109. |
+| APPROVED payment posts ledger once | PASS | Posted journal 3e2ee47e-df46-4812-ad4c-1a5dc2ef6023. |
 | Posted payment cannot post again | PASS | Duplicate post guard rejected existing active journal. |
 | Payment in locked period cannot post | PASS | Locked period guard rejected posting. |
 | Payment without invoice cannot post | PASS | Source document guard rejected posting. |

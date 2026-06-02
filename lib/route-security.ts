@@ -133,6 +133,7 @@ export async function auditExportOrThrow(params: {
   reportType: string;
   format: string;
   reason?: string;
+  filters?: Record<string, unknown>;
 }) {
   const head = await headers();
   return prisma.auditLog.create({
@@ -149,9 +150,44 @@ export async function auditExportOrThrow(params: {
         companyId: params.companyId,
         projectId: params.projectId,
         reportType: params.reportType,
+        filters: params.filters as Prisma.InputJsonValue | undefined,
         format: params.format,
         timestamp: new Date().toISOString(),
-      },
+      } as Prisma.InputJsonValue,
+    },
+  });
+}
+
+export async function auditPrintOrThrow(params: {
+  userId: string;
+  companyId?: string | null;
+  projectId?: string | null;
+  printType: string;
+  entityId: string;
+  route: string;
+  reason?: string;
+  format?: string;
+}) {
+  const head = await headers();
+  return prisma.auditLog.create({
+    data: {
+      userId: params.userId,
+      action: "SECURITY_ALERT",
+      entity: "FinancialPrint",
+      entityId: params.entityId,
+      severity: "WARNING",
+      reason: params.reason || `In chứng từ tài chính ${params.printType}`,
+      ipAddress: head.get("x-forwarded-for") || "unknown",
+      userAgent: head.get("user-agent") || "unknown",
+      newData: {
+        companyId: params.companyId,
+        projectId: params.projectId,
+        printType: params.printType,
+        entityId: params.entityId,
+        route: params.route,
+        format: params.format || "HTML",
+        timestamp: new Date().toISOString(),
+      } as Prisma.InputJsonValue,
     },
   });
 }

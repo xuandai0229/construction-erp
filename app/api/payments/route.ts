@@ -63,7 +63,7 @@ export async function POST(request: Request) {
     });
 
     if (!invoice) {
-      throw new ApiError(403, "Invoice is not accessible for the current tenant/project context.");
+      throw new ApiError(403, "Hóa đơn không thuộc dự án hoặc công ty hiện tại.");
     }
 
     const result = await RevenueService.createPayment(data, user.id);
@@ -73,6 +73,7 @@ export async function POST(request: Request) {
       invoiceId: result.invoiceId,
       projectId: result.projectId,
       amount: result.amount,
+      requestId: result.requestId,
       date: result.date.toISOString(),
       description: result.description,
       createdAt: result.createdAt.toISOString(),

@@ -129,8 +129,8 @@ exports.Prisma.UserScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
-  role: 'role',
-  companyId: 'companyId'
+  companyId: 'companyId',
+  role: 'role'
 };
 
 exports.Prisma.CategoryScalarFieldEnum = {
@@ -150,16 +150,16 @@ exports.Prisma.ProjectScalarFieldEnum = {
   ownerId: 'ownerId',
   status: 'status',
   updatedAt: 'updatedAt',
-  contractValue: 'contractValue',
-  endDate: 'endDate',
-  startDate: 'startDate',
-  totalBudget: 'totalBudget',
-  deletedById: 'deletedById',
-  version: 'version',
   branchId: 'branchId',
   companyId: 'companyId',
+  contractValue: 'contractValue',
+  deletedById: 'deletedById',
+  endDate: 'endDate',
   investor: 'investor',
-  projectType: 'projectType'
+  projectType: 'projectType',
+  startDate: 'startDate',
+  totalBudget: 'totalBudget',
+  version: 'version'
 };
 
 exports.Prisma.TaskScalarFieldEnum = {
@@ -186,10 +186,10 @@ exports.Prisma.WBSItemScalarFieldEnum = {
   updatedAt: 'updatedAt',
   budgetAmount: 'budgetAmount',
   code: 'code',
-  level: 'level',
-  sortOrder: 'sortOrder',
   deletedAt: 'deletedAt',
-  deletedById: 'deletedById'
+  deletedById: 'deletedById',
+  level: 'level',
+  sortOrder: 'sortOrder'
 };
 
 exports.Prisma.CostRecordScalarFieldEnum = {
@@ -206,20 +206,20 @@ exports.Prisma.CostRecordScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  approvalStatus: 'approvalStatus',
+  branchId: 'branchId',
+  companyId: 'companyId',
   createdById: 'createdById',
+  deletedAt: 'deletedAt',
+  deletedById: 'deletedById',
+  netAmount: 'netAmount',
   purchaseOrderId: 'purchaseOrderId',
   requestId: 'requestId',
-  deletedAt: 'deletedAt',
-  approvalStatus: 'approvalStatus',
-  deletedById: 'deletedById',
-  version: 'version',
-  netAmount: 'netAmount',
   retentionAmount: 'retentionAmount',
   retentionRate: 'retentionRate',
   vatAmount: 'vatAmount',
   vatRate: 'vatRate',
-  branchId: 'branchId',
-  companyId: 'companyId',
+  version: 'version',
   workflowStatus: 'workflowStatus'
 };
 
@@ -260,42 +260,42 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   remainingAmount: 'remainingAmount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  approvalStatus: 'approvalStatus',
+  branchId: 'branchId',
+  certifiedProgress: 'certifiedProgress',
+  companyId: 'companyId',
+  contractId: 'contractId',
   createdById: 'createdById',
+  deletedAt: 'deletedAt',
+  deletedById: 'deletedById',
   dueDate: 'dueDate',
   invoiceNumber: 'invoiceNumber',
-  note: 'note',
-  status: 'status',
-  contractId: 'contractId',
-  requestId: 'requestId',
-  deletedAt: 'deletedAt',
-  version: 'version',
-  certifiedProgress: 'certifiedProgress',
-  retentionAmount: 'retentionAmount',
-  approvalStatus: 'approvalStatus',
-  deletedById: 'deletedById',
   netAmount: 'netAmount',
+  note: 'note',
+  requestId: 'requestId',
+  retentionAmount: 'retentionAmount',
   retentionRate: 'retentionRate',
   vatAmount: 'vatAmount',
   vatRate: 'vatRate',
-  branchId: 'branchId',
-  companyId: 'companyId'
+  version: 'version',
+  status: 'status'
 };
 
 exports.Prisma.PaymentScalarFieldEnum = {
   id: 'id',
   invoiceId: 'invoiceId',
-  contractId: 'contractId',
   projectId: 'projectId',
   amount: 'amount',
   date: 'date',
   description: 'description',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  requestId: 'requestId',
-  deletedAt: 'deletedAt',
   approvalStatus: 'approvalStatus',
+  deletedAt: 'deletedAt',
   deletedById: 'deletedById',
-  version: 'version'
+  requestId: 'requestId',
+  version: 'version',
+  contractId: 'contractId'
 };
 
 exports.Prisma.LedgerAccountScalarFieldEnum = {
@@ -305,10 +305,10 @@ exports.Prisma.LedgerAccountScalarFieldEnum = {
   type: 'type',
   description: 'description',
   isActive: 'isActive',
-  parentId: 'parentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  parentId: 'parentId'
 };
 
 exports.Prisma.JournalEntryScalarFieldEnum = {
@@ -320,14 +320,14 @@ exports.Prisma.JournalEntryScalarFieldEnum = {
   sourceType: 'sourceType',
   sourceId: 'sourceId',
   isPosted: 'isPosted',
-  isClosing: 'isClosing',
-  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
   isReversed: 'isReversed',
   reversalRef: 'reversalRef',
-  reversedById: 'reversedById'
+  reversedById: 'reversedById',
+  isClosing: 'isClosing',
+  status: 'status'
 };
 
 exports.Prisma.TransactionLineScalarFieldEnum = {
@@ -403,9 +403,7 @@ exports.Prisma.GoodsReceiptScalarFieldEnum = {
 exports.Prisma.ContractScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
-  supplierId: 'supplierId',
   contractNumber: 'contractNumber',
-  contractCode: 'contractCode',
   title: 'title',
   description: 'description',
   contractorName: 'contractorName',
@@ -418,7 +416,9 @@ exports.Prisma.ContractScalarFieldEnum = {
   createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  contractCode: 'contractCode',
+  supplierId: 'supplierId'
 };
 
 exports.Prisma.ContractChangeScalarFieldEnum = {
@@ -1170,21 +1170,21 @@ exports.Prisma.VendorPaymentScalarFieldEnum = {
 
 exports.Prisma.PaymentAllocationScalarFieldEnum = {
   id: 'id',
-  companyId: 'companyId',
   paymentId: 'paymentId',
   invoiceId: 'invoiceId',
   vendorPaymentId: 'vendorPaymentId',
-  contractId: 'contractId',
   amount: 'amount',
-  status: 'status',
   allocatedAt: 'allocatedAt',
   isReversed: 'isReversed',
+  companyId: 'companyId',
+  contractId: 'contractId',
+  createdAt: 'createdAt',
+  createdBy: 'createdBy',
+  deletedAt: 'deletedAt',
   reversalReason: 'reversalReason',
   reversedAt: 'reversedAt',
-  createdBy: 'createdBy',
-  createdAt: 'createdAt',
+  status: 'status',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt',
   version: 'version'
 };
 

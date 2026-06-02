@@ -27,7 +27,7 @@ loadEnvFiles();
 
 import { prisma } from "../lib/prisma";
 import { CostService } from "../services/cost.service";
-import { Decimal } from "../generated/prisma-client/runtime/library";
+import { Decimal } from "../../../generated/prisma-client/runtime/library";
 
 async function runAudit() {
   console.log("\n================================================================================");

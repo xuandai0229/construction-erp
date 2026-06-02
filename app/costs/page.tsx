@@ -20,7 +20,7 @@ import {
   Select,
   EnterpriseActionMenu
 } from '@/app/components/ui-enterprise';
-import { exportToCsv } from '@/app/services/export.service';
+import { auditedCsvExport } from '@/app/services/audited-export.service';
 import { CostRecord, CostType, costType_LABELS } from '@/app/types';
 import { useDebounce } from '@/app/hooks/useDebounce';
 import { queryKeys } from '@/lib/query-keys';
@@ -46,6 +46,13 @@ export default function CostsPage() {
   const [editingCost, setEditingCost] = useState<CostRecord | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const handleAuditedExport = async () => {
+    try {
+      await auditedCsvExport({ reportType: 'COSTS', projectId: currentProjectId, reason: 'Xuất báo cáo chi phí công trình' });
+    } catch (error: any) {
+      alert(error.message || 'Không thể xuất báo cáo chi phí.');
+    }
+  };
 
   const filteredCosts = useMemo(() => {
     const searchLower = debouncedSearch.toLowerCase();
@@ -243,7 +250,7 @@ export default function CostsPage() {
         subtitle="Hạch toán chi phí chi tiết, theo dõi thuế VAT đầu vào và bảo lưu bảo hành"
         actions={
           <div className="flex flex-wrap items-center gap-2">
-            <button onClick={() => exportToCsv('ERP_Costs.csv', filteredCosts)} className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer transition-all shadow-sm">
+            <button onClick={handleAuditedExport} className="h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer transition-all shadow-sm">
               Xuất dữ liệu
             </button>
             <button onClick={() => { setEditingCost(null); setShowAddModal(true); }} className="h-9 rounded-md bg-[var(--primary)] px-4 text-[12px] font-bold text-white hover:opacity-90 cursor-pointer transition-all shadow-sm">

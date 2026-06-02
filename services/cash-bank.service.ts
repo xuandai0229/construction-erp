@@ -270,6 +270,7 @@ export class CashBankService {
         reference: doc.documentNo,
         sourceType: "CASH_BANK",
         sourceId: doc.id,
+        accountingDate: doc.accountingDate,
         lines,
       });
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from "@/lib/prisma";
 import { ApiError } from "@/lib/api-error";
-import { InvoiceStatus, PaymentStatus, ApprovalStatus } from "@prisma/client";
+import { ApprovalStatus, Prisma } from "@prisma/client";
 import { assertValidEntity } from "@/lib/assertion";
 import { round } from "@/lib/math";
 import { PostingEngine } from "@/lib/accounting/postingEngine";
@@ -133,24 +133,41 @@ export class RevenueService {
     await assertPeriodNotLocked(data.date || new Date());
 
     const { requestId } = data;
-    if (requestId) {
-      const existing = await prisma.payment.findUnique({ where: { requestId } });
-      if (existing) return existing;
+    if (!requestId) {
+      throw new ApiError(400, "Mã idempotency của thanh toán là bắt buộc.");
     }
+    const existing = await prisma.payment.findUnique({ where: { requestId } });
+    if (existing) return existing;
 
     return prisma.$transaction(async (tx) => {
-      const invoice = await tx.invoice.findUnique({ where: { id: data.invoiceId } });
-      if (!invoice) throw new ApiError(404, "Không tìm thấy hóa đơn");
+      const duplicateInTx = await tx.payment.findUnique({ where: { requestId } });
+      if (duplicateInTx) return duplicateInTx;
 
-      // Validate remaining amount against active allocations
-      const allActiveAllocations = await tx.paymentAllocation.findMany({
-        where: { invoiceId: data.invoiceId, status: "ACTIVE", isReversed: false },
+      await tx.$queryRaw`SELECT id FROM "Invoice" WHERE id = ${data.invoiceId} FOR UPDATE`;
+      const invoice = await tx.invoice.findUnique({ where: { id: data.invoiceId } });
+      if (!invoice || invoice.deletedAt) throw new ApiError(404, "Không tìm thấy hóa đơn");
+      if (invoice.approvalStatus === ApprovalStatus.REJECTED || invoice.approvalStatus === ApprovalStatus.CANCELLED) {
+        throw new ApiError(400, "Không thể thanh toán cho hóa đơn đã bị từ chối hoặc đã hủy.");
+      }
+
+      // DRAFT allocations reserve the invoice limit to prevent double submit/overpay.
+      const reservedAllocations = await tx.paymentAllocation.findMany({
+        where: {
+          invoiceId: data.invoiceId,
+          status: { in: ["DRAFT", "ACTIVE"] },
+          isReversed: false,
+          deletedAt: null,
+          OR: [
+            { paymentId: null },
+            { payment: { deletedAt: null, approvalStatus: { in: ["DRAFT", "PENDING", "APPROVED"] } } }
+          ]
+        },
       });
-      const activePaid = allActiveAllocations.reduce((sum, a) => sum + Number(a.amount), 0);
-      const activeRemaining = Math.max(0, Number(invoice.amount) - activePaid);
+      const reservedPaid = reservedAllocations.reduce((sum, a) => sum + Number(a.amount), 0);
+      const activeRemaining = Math.max(0, Number(invoice.amount) - reservedPaid);
 
       if (amount > round(activeRemaining) + 0.01) { 
-        throw new ApiError(400, `Số tiền thanh toán (${amount}) vượt quá số tiền còn lại (${round(activeRemaining)})`);
+        throw new ApiError(400, "Số tiền thanh toán vượt giá trị còn phải thu/còn phải trả.");
       }
 
       const payment = await tx.payment.create({
@@ -178,18 +195,8 @@ export class RevenueService {
         }
       });
 
-      // Create a revenue record for project tracking
-      await tx.revenue.create({
-        data: {
-          projectId: invoice.projectId,
-          wbsId: invoice.wbsId,
-          invoiceId: invoice.id,
-          amount: amount,
-          date: new Date(),
-          status: "paid" as PaymentStatus,
-          description: `Thanh toán cho hóa đơn ${invoice.invoiceNumber || invoice.id}`
-        }
-      });
+      // Revenue là bảng legacy/operational. Báo cáo tài chính chính thức dùng ledger posted
+      // và không được cộng payment DRAFT.
 
       // Audit Logging
       await AuditService.log({
@@ -216,8 +223,13 @@ export class RevenueService {
       });
 
       return payment;
+    }, {
+      isolationLevel: Prisma.TransactionIsolationLevel.Serializable
     }).catch(error => {
-      if (error.code === 'P2025') {
+      if (error.code === "P2002") {
+        throw new ApiError(409, "Yêu cầu thanh toán đã được xử lý trước đó.");
+      }
+      if (error.code === "P2025" || error.code === "P2034") {
         throw new ApiError(409, "Xung đột dữ liệu (Concurrency): Hóa đơn đã được cập nhật bởi một phiên giao dịch khác. Vui lòng tải lại trang.");
       }
       throw error;

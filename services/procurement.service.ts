@@ -88,7 +88,8 @@ export class ProcurementService {
             projectId: po.projectId,
             amount: Number(item.amount),
             costType: item.costType as any,
-            description: `Nhập kho từ PO ${po.poNumber || po.id}: ${item.description}`
+            description: `Nhập kho từ PO ${po.poNumber || po.id}: ${item.description}`,
+            accountingDate: gr.receivedDate
           });
         }
       }

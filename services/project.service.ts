@@ -145,6 +145,15 @@ export class ProjectService {
   static async create(data: CreateProjectDTO, userId?: string, companyId?: string | null) {
     assertValidEntity(data, "CreateProjectDTO");
 
+    if (!companyId) {
+      throw new ApiError(400, "Không thể tạo công trình vì thiếu phạm vi công ty.");
+    }
+
+    const company = await prisma.company.findUnique({ where: { id: companyId } });
+    if (!company) {
+      throw new ApiError(400, "Công trình phải thuộc một công ty hợp lệ.");
+    }
+
     if (data.ownerId) {
       const user = await prisma.user.findUnique({ where: { id: data.ownerId } });
       if (!user) throw new ApiError(404, "Không tìm thấy người phụ trách dự án");

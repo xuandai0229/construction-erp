@@ -1,10 +1,46 @@
 
 /**
- * Standardized CSV export service for Construction ERP
- * Handles both Array of Objects and [Headers, Rows] formats.
- * Ensures Excel compatibility (UTF-8 BOM) and proper CSV escaping.
+ * Legacy CSV export service.
+ * Chỉ dùng cho dữ liệu phi tài chính. Báo cáo/chứng từ kế toán bắt buộc dùng auditedCsvExport hoặc endpoint server-side.
  */
-export function exportToCsv(filename: string, arg2: any[] | string[], arg3?: any[][]) {
+const FINANCIAL_EXPORT_KEYWORDS = [
+  "financial",
+  "accounting",
+  "debt",
+  "payment",
+  "cost",
+  "revenue",
+  "budget",
+  "ledger",
+  "invoice",
+  "advance",
+  "cash",
+  "bank",
+  "journal",
+  "trial-balance",
+  "balance-sheet",
+  "profit",
+  "loss",
+  "công nợ",
+  "thanh toán",
+  "chi phí",
+  "doanh thu",
+  "dự toán",
+  "sổ cái",
+  "hóa đơn",
+  "tạm ứng",
+];
+
+export function assertNonFinancialClientExport(metadata: { filename?: string; reportType?: string; reason?: string }) {
+  const haystack = `${metadata.filename || ""} ${metadata.reportType || ""} ${metadata.reason || ""}`.toLowerCase();
+  const matched = FINANCIAL_EXPORT_KEYWORDS.find(keyword => haystack.includes(keyword));
+  if (matched) {
+    throw new Error(`Không được xuất dữ liệu tài chính bằng export client-side legacy (${matched}). Vui lòng dùng auditedCsvExport hoặc endpoint server-side đã audit.`);
+  }
+}
+
+export function legacyExportCsvNonFinancialOnly(filename: string, arg2: any[] | string[], arg3?: any[][]) {
+  assertNonFinancialClientExport({ filename });
   if (!arg2 || (Array.isArray(arg2) && arg2.length === 0)) return;
 
   // Add BOM for Excel UTF-8 support (Ensures Vietnamese characters display correctly)
@@ -58,4 +94,11 @@ export function exportToCsv(filename: string, arg2: any[] | string[], arg3?: any
   link.click();
   document.body.removeChild(link);
   window.URL.revokeObjectURL(url);
+}
+
+/**
+ * @deprecated Chỉ giữ để tương thích màn hình phi tài chính cũ. Không dùng cho báo cáo/chứng từ kế toán.
+ */
+export function exportToCsv(filename: string, arg2: any[] | string[], arg3?: any[][]) {
+  return legacyExportCsvNonFinancialOnly(filename, arg2, arg3);
 }

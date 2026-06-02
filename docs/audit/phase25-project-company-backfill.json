@@ -1,0 +1,181 @@
+{
+  "mode": "apply",
+  "generatedAt": "2026-06-01T08:22:13.719Z",
+  "updated": 0,
+  "skipped": 19,
+  "updates": [],
+  "manualReview": [
+    {
+      "projectId": "project-battrang",
+      "projectCode": "project-battrang",
+      "projectName": "Trường mầm non Bát Tràng",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "091ba671-4cdf-4b8d-84c7-240d21692824",
+      "projectCode": "091ba671-4cdf-4b8d-84c7-240d21692824",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779953123540",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "7c8fa82c-1344-4a49-881d-7e0d38267b63",
+      "projectCode": "7c8fa82c-1344-4a49-881d-7e0d38267b63",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779953160979",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "c1f8d981-2be1-438f-8eec-82dea6ac687e",
+      "projectCode": "c1f8d981-2be1-438f-8eec-82dea6ac687e",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779953268719",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "975c1f22-5aaa-418f-9696-c68cbc3cd283",
+      "projectCode": "975c1f22-5aaa-418f-9696-c68cbc3cd283",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779953401728",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "b36f16ef-0419-4aba-a405-6e174f475d8f",
+      "projectCode": "b36f16ef-0419-4aba-a405-6e174f475d8f",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779953501203",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "51644eab-34d4-446d-8843-a3c69b593e4a",
+      "projectCode": "51644eab-34d4-446d-8843-a3c69b593e4a",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779953734199",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "f2ee65a1-d338-4cef-9cc5-2cc3c453f2e8",
+      "projectCode": "f2ee65a1-d338-4cef-9cc5-2cc3c453f2e8",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779953871854",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "89dfb5f8-330c-434c-a12a-a78c81267158",
+      "projectCode": "89dfb5f8-330c-434c-a12a-a78c81267158",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779954022218",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "6986c4d0-8eb0-4f43-96cc-a9463e86c5ab",
+      "projectCode": "6986c4d0-8eb0-4f43-96cc-a9463e86c5ab",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779954051332",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "c6ebeb6b-dfec-43fb-ae9e-282d266a3deb",
+      "projectCode": "c6ebeb6b-dfec-43fb-ae9e-282d266a3deb",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779954487869",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "d5c0b467-fdb9-4668-8d12-796fff4288cf",
+      "projectCode": "d5c0b467-fdb9-4668-8d12-796fff4288cf",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779954531626",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "b0d32c00-1711-4e0e-8ae5-917905eb6d47",
+      "projectCode": "b0d32c00-1711-4e0e-8ae5-917905eb6d47",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779954729510",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "3f579fe6-5aad-4348-b49d-411f121e6cb1",
+      "projectCode": "3f579fe6-5aad-4348-b49d-411f121e6cb1",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779954769748",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "3d61f59a-e7e6-40d1-8be7-8c44f7ee0916",
+      "projectCode": "3d61f59a-e7e6-40d1-8be7-8c44f7ee0916",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779954828451",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "eb50f4aa-09bb-433b-8049-4ae44a3b7b5c",
+      "projectCode": "eb50f4aa-09bb-433b-8049-4ae44a3b7b5c",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779954914482",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "8056bf95-1055-4e81-84e6-08bd2d5bb35b",
+      "projectCode": "8056bf95-1055-4e81-84e6-08bd2d5bb35b",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779954934653",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "2d5210bd-e265-4632-82cc-526cc204ef1f",
+      "projectCode": "2d5210bd-e265-4632-82cc-526cc204ef1f",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779955180462",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    },
+    {
+      "projectId": "54efc369-7a16-4bd8-adba-b1938585c19b",
+      "projectCode": "54efc369-7a16-4bd8-adba-b1938585c19b",
+      "projectName": "Project TEST_PHASE2_3B_HARDENING_1779955247648",
+      "inferredCompanyId": null,
+      "confidence": "MANUAL_REVIEW",
+      "reason": "Không có bằng chứng companyId từ branch hoặc chứng từ liên quan; không dùng default company để tránh đoán dữ liệu.",
+      "action": "MANUAL_REVIEW"
+    }
+  ],
+  "rollbackNote": "Rollback thủ công: dùng updates[].before.companyId trong file này để set lại Project.companyId; mọi thay đổi đã có AuditLog action DATA_BACKFILL."
+}

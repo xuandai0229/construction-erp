@@ -579,12 +579,6 @@ export class FinancialAggregationService {
    * AUTHORITATIVE MONTHLY: Monthly Financial Performance
    */
   static async getProjectMonthlyReport(projectId: string): Promise<MonthlyReportRow[]> {
-    const [costs, invoices, payments] = await Promise.all([
-      prisma.costRecord.findMany({ where: { projectId, deletedAt: null, approvalStatus: { not: "REJECTED" } } }),
-      prisma.invoice.findMany({ where: { projectId, deletedAt: null, approvalStatus: { not: "REJECTED" } } }),
-      prisma.payment.findMany({ where: { projectId, deletedAt: null, approvalStatus: { not: "REJECTED" } } }),
-    ]);
-
     type SafeDecimalType = ReturnType<typeof safeDecimal>;
     const months: Record<string, { month: string; cashIn: SafeDecimalType; cashOut: SafeDecimalType; revenue: SafeDecimalType; cost: SafeDecimalType }> = {};
 
@@ -605,31 +599,40 @@ export class FinancialAggregationService {
       }
     };
 
-    // Accrual logic
-    invoices.forEach(i => {
-      const m = getMonth(i.issuedDate);
-      ensureMonth(m);
-      months[m].revenue = months[m].revenue.add(safeDecimal(i.amount));
+    const lines = await prisma.transactionLine.findMany({
+      where: getPostedLedgerLineFilter({ projectId }),
+      include: {
+        account: { select: { code: true } },
+        journalEntry: { select: { date: true } }
+      }
     });
 
-    costs.forEach(c => {
-      const m = getMonth(c.date);
+    for (const line of lines) {
+      const code = line.account.code;
+      const amount = safeDecimal(line.amount);
+      const m = getMonth(line.journalEntry.date);
       ensureMonth(m);
-      months[m].cost = months[m].cost.add(safeDecimal(c.amount));
-    });
 
-    // Cashflow logic
-    payments.forEach(p => {
-      const m = getMonth(p.date);
-      ensureMonth(m);
-      months[m].cashIn = months[m].cashIn.add(safeDecimal(p.amount));
-    });
+      if (code.startsWith("511")) {
+        months[m].revenue = line.type === "CREDIT"
+          ? months[m].revenue.add(amount)
+          : months[m].revenue.sub(amount);
+      }
 
-    costs.filter(c => c.status === 'paid').forEach(c => {
-      const m = getMonth(c.updatedAt || c.date);
-      ensureMonth(m);
-      months[m].cashOut = months[m].cashOut.add(safeDecimal(c.amount));
-    });
+      if (["621", "622", "623", "627"].some(prefix => code.startsWith(prefix))) {
+        months[m].cost = line.type === "DEBIT"
+          ? months[m].cost.add(amount)
+          : months[m].cost.sub(amount);
+      }
+
+      if (code.startsWith("101") || code.startsWith("102")) {
+        if (line.type === "DEBIT") {
+          months[m].cashIn = months[m].cashIn.add(amount);
+        } else {
+          months[m].cashOut = months[m].cashOut.add(amount);
+        }
+      }
+    }
 
     const sortedMonths = Object.keys(months).sort();
     let balance = safeDecimal(0);

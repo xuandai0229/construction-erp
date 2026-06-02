@@ -4,6 +4,7 @@ import { safeDecimal } from "@/lib/math";
 import { handleApiError } from "@/lib/api-error";
 import { requireAccountingAccess, requireProjectAccess } from "@/lib/route-security";
 import { getPostedLedgerLineFilter } from "@/lib/accounting/ledgerFilters";
+import { ApprovalStatus } from "@prisma/client";
 
 export async function GET(request: Request) {
   try {
@@ -16,7 +17,7 @@ export async function GET(request: Request) {
     const skip = (page - 1) * limit;
 
     if (!projectId) {
-      return NextResponse.json({ success: false, error: "Vui lòng chọn Dự án" }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Vui lòng chọn dự án" }, { status: 400 });
     }
 
     // Tenant Isolation
@@ -25,7 +26,7 @@ export async function GET(request: Request) {
     });
 
     if (!project) {
-      return NextResponse.json({ success: false, error: "Project not found" }, { status: 404 });
+      return NextResponse.json({ success: false, error: "Không tìm thấy dự án" }, { status: 404 });
     }
 
     await requireProjectAccess(user, projectId);
@@ -90,7 +91,13 @@ export async function GET(request: Request) {
 
     // 4. VAT SUMMARY REPORT (Pagination Enabled)
     const costsWithVat = await prisma.costRecord.findMany({
-      where: { projectId, deletedAt: null, vatAmount: { gt: 0 } },
+      where: {
+        projectId,
+        deletedAt: null,
+        vatAmount: { gt: 0 },
+        approvalStatus: ApprovalStatus.APPROVED,
+        workflowStatus: { in: ["APPROVED", "POSTED"] }
+      },
       select: {
         id: true,
         date: true,

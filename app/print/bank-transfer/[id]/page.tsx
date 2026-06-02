@@ -6,16 +6,23 @@ import { PrintLayout } from "@/app/components/accounting/PrintLayout";
 import { AccountingDocumentHeader } from "@/app/components/accounting/AccountingDocumentHeader";
 import { SignatureBlock } from "@/app/components/accounting/SignatureBlock";
 import { MoneyTextLine } from "@/app/components/accounting/MoneyTextLine";
+import { AuditedPrintStatus, useAuditedPrint } from "@/app/components/accounting/AuditedPrintGate";
 
 export default function PrintBankTransferPage() {
   const params = useParams();
   const id = params?.id as string;
+  const audit = useAuditedPrint({
+    printType: "BANK_TRANSFER",
+    entityId: id,
+    route: `/print/bank-transfer/${id}`,
+    reason: "In ủy nhiệm chi",
+  });
 
   const [doc, setDoc] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (id) {
+    if (id && audit.status === "APPROVED") {
       fetch(`/api/cash-bank/documents/${id}`)
         .then(res => res.json())
         .then(res => {
@@ -24,7 +31,11 @@ export default function PrintBankTransferPage() {
         .catch(err => console.error("Failed to load bank document for printing", err))
         .finally(() => setLoading(false));
     }
-  }, [id]);
+  }, [id, audit.status]);
+
+  if (audit.status !== "APPROVED") {
+    return <AuditedPrintStatus status={audit.status} error={audit.error} />;
+  }
 
   if (loading) {
     return (
@@ -114,7 +125,7 @@ export default function PrintBankTransferPage() {
       {/* Print Action Helper */}
       <div className="flex justify-end gap-2 pt-4 border-t border-zinc-200 print:hidden select-none">
         <button
-          onClick={() => window.print()}
+          onClick={audit.print}
           className="px-4 py-2 text-xs font-bold text-white bg-zinc-900 hover:bg-zinc-800 rounded shadow transition-colors cursor-pointer"
         >
           Thực hiện In Phiếu

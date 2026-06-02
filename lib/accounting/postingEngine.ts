@@ -1,19 +1,11 @@
-import { prisma } from "@/lib/prisma";
 import { TransactionType, CostType } from "@prisma/client";
 import { ApiError } from "@/lib/api-error";
 
 /**
- * The Posting Engine automatically generates Double-Entry Journal Entries
- * for various ERP financial events.
+ * Posting Engine sinh bút toán kép cho các nghiệp vụ tài chính.
+ * Ngày khóa kỳ luôn lấy theo ngày chứng từ/ngày hạch toán, không lấy ngày hiện tại.
  */
 export class PostingEngine {
-  
-  /**
-   * Posts a Cost Record to the Ledger.
-   * Logic: 
-   * Debit: Expense (6210, 6220, etc.)
-   * Credit: Accounts Payable (3310)
-   */
   static async postCost(tx: any, params: {
     costId: string;
     projectId: string;
@@ -23,12 +15,10 @@ export class PostingEngine {
     purchaseOrderId?: string;
   }) {
     const expenseCode = this.getExpenseCode(params.costType);
-    const apCode = "3310"; // Accounts Payable
-    const grniCode = "3311"; // GRNI (Phải trả người bán chưa có hóa đơn/Hàng về chưa hóa đơn)
-
+    const apCode = "3310";
+    const grniCode = "3311";
     const debitAccount = params.purchaseOrderId ? grniCode : expenseCode;
 
-    // Fetch CostRecord to split VAT properly
     const cost = await tx.costRecord.findUnique({
       where: { id: params.costId }
     });
@@ -47,32 +37,28 @@ export class PostingEngine {
       lines.push({ accountCode: "1331", amount: vatAmount, type: TransactionType.DEBIT });
     }
     lines.push({ accountCode: apCode, amount: grossAmount, type: TransactionType.CREDIT });
-    
+
     await this.createDoubleEntry(tx, {
       projectId: params.projectId,
       description: `Ghi nhận chi phí: ${params.description}`,
       reference: `COST-${params.costId}`,
       sourceType: "COST",
       sourceId: params.costId,
+      accountingDate: cost.date,
       lines
     });
   }
 
-  /**
-   * Posts a Goods Receipt to the Ledger.
-   * Logic:
-   * Debit: Inventory/WIP (6210/6220/152)
-   * Credit: GRNI (3311)
-   */
   static async postGoodsReceipt(tx: any, params: {
     receiptId: string;
     projectId: string;
     amount: number;
     costType: CostType;
     description: string;
+    accountingDate: Date | string;
   }) {
     const expenseCode = this.getExpenseCode(params.costType);
-    const grniCode = "3311"; 
+    const grniCode = "3311";
 
     await this.createDoubleEntry(tx, {
       projectId: params.projectId,
@@ -80,6 +66,7 @@ export class PostingEngine {
       reference: `GRN-${params.receiptId}`,
       sourceType: "GRN",
       sourceId: params.receiptId,
+      accountingDate: params.accountingDate,
       lines: [
         { accountCode: expenseCode, amount: params.amount, type: TransactionType.DEBIT },
         { accountCode: grniCode, amount: params.amount, type: TransactionType.CREDIT },
@@ -87,54 +74,37 @@ export class PostingEngine {
     });
   }
 
-  /**
-   * Posts an Invoice to the Ledger.
-   * Logic:
-   * Debit: Accounts Receivable (1310)
-   * Credit: Revenue (5110)
-   */
   static async postInvoice(tx: any, params: {
     invoiceId: string;
     projectId: string;
     amount: number;
     description: string;
   }) {
-    // Fetch Invoice to get detailed amounts
     const invoice = await tx.invoice.findUnique({
       where: { id: params.invoiceId }
     });
 
-    if (!invoice) throw new ApiError(404, `Invoice not found for posting: ${params.invoiceId}`);
+    if (!invoice) throw new ApiError(404, `Không tìm thấy hóa đơn để hạch toán: ${params.invoiceId}`);
 
-    const arCode = "1310"; // Accounts Receivable
-    const retentionCode = "1368"; // Phải thu khác (Retention)
-    const revenueCode = "5110"; // Revenue
-    const vatCode = "33311"; // Thuế GTGT đầu ra
-
-    // Fallbacks if missing
+    const arCode = "1310";
+    const retentionCode = "1368";
+    const revenueCode = "5110";
+    const vatCode = "33311";
     const netAmount = Number(invoice.netAmount || invoice.amount);
     const vatAmount = Number(invoice.vatAmount || 0);
     const retentionAmount = Number(invoice.retentionAmount || 0);
     const claimAmount = Number(invoice.amount);
 
     const lines = [];
-
-    // Debit AR
     if (claimAmount > 0) {
       lines.push({ accountCode: arCode, amount: claimAmount - retentionAmount, type: TransactionType.DEBIT });
     }
-
-    // Debit Retention
     if (retentionAmount > 0) {
       lines.push({ accountCode: retentionCode, amount: retentionAmount, type: TransactionType.DEBIT });
     }
-
-    // Credit Revenue
     if (netAmount > 0) {
       lines.push({ accountCode: revenueCode, amount: netAmount, type: TransactionType.CREDIT });
     }
-
-    // Credit VAT
     if (vatAmount > 0) {
       lines.push({ accountCode: vatCode, amount: vatAmount, type: TransactionType.CREDIT });
     }
@@ -145,23 +115,23 @@ export class PostingEngine {
       reference: `INV-${params.invoiceId}`,
       sourceType: "INVOICE",
       sourceId: params.invoiceId,
-      lines: lines
+      accountingDate: invoice.issuedDate,
+      lines
     });
   }
 
-  /**
-   * Posts a Payment to the Ledger.
-   * Logic:
-   * Debit: Cash/Bank (1010/1020)
-   * Credit: Accounts Receivable (1310)
-   */
   static async postPayment(tx: any, params: {
     paymentId: string;
     projectId: string;
     amount: number;
     description: string;
   }) {
-    const cashCode = "1010"; // Assuming cash for now, could be bank
+    const payment = await tx.payment.findUnique({
+      where: { id: params.paymentId }
+    });
+    if (!payment) throw new ApiError(404, `Không tìm thấy thanh toán để hạch toán: ${params.paymentId}`);
+
+    const cashCode = "1010";
     const arCode = "1310";
 
     await this.createDoubleEntry(tx, {
@@ -170,6 +140,7 @@ export class PostingEngine {
       reference: `PAY-${params.paymentId}`,
       sourceType: "PAYMENT",
       sourceId: params.paymentId,
+      accountingDate: payment.date,
       lines: [
         { accountCode: cashCode, amount: params.amount, type: TransactionType.DEBIT },
         { accountCode: arCode, amount: params.amount, type: TransactionType.CREDIT },
@@ -177,14 +148,12 @@ export class PostingEngine {
     });
   }
 
-  // ─── PRIVATE HELPERS ────────────────────────────────
-
   private static getExpenseCode(type: CostType): string {
     switch (type) {
       case "material": return "6210";
       case "labor": return "6220";
       case "machine": return "6230";
-      case "subcontract": return "6270"; // Or separate code
+      case "subcontract": return "6270";
       case "overhead": return "6270";
       default: return "6270";
     }
@@ -196,13 +165,31 @@ export class PostingEngine {
     reference: string;
     sourceType: string;
     sourceId: string;
+    accountingDate: Date | string;
+    companyId?: string | null;
     lines: { accountCode: string, amount: number, type: TransactionType }[];
   }) {
     const startTime = Date.now();
-    // 0. Period Lock Check
-    await this.assertPeriodNotLocked(new Date());
+    const accountingDate = new Date(params.accountingDate);
+    if (Number.isNaN(accountingDate.getTime())) {
+      throw new ApiError(400, "Ngày hạch toán của chứng từ không hợp lệ.");
+    }
 
-    // 0. Verify no duplicate posting for source record
+    const projectRequiredSources = new Set(["COST", "INVOICE", "PAYMENT", "ADVANCE", "ADVANCE_SETTLEMENT", "CONTRACT", "GRN"]);
+    if (projectRequiredSources.has(params.sourceType) && !params.projectId) {
+      throw new ApiError(400, "Không thể ghi sổ chứng từ công trình vì thiếu liên kết công trình.");
+    }
+
+    const companyId = params.companyId ?? await this.resolveCompanyId(tx, params.projectId);
+    try {
+      await this.assertPeriodNotLocked(accountingDate, companyId);
+    } catch (error) {
+      throw new ApiError(400, "Không thể ghi sổ chứng từ vì kỳ kế toán của ngày chứng từ đã bị khóa.", {
+        cause: error instanceof Error ? error.message : String(error),
+        accountingDate: accountingDate.toISOString()
+      });
+    }
+
     if (params.sourceId && params.sourceType) {
       const activeEntry = await tx.journalEntry.findFirst({
         where: { sourceId: params.sourceId, sourceType: params.sourceType, deletedAt: null }
@@ -212,26 +199,23 @@ export class PostingEngine {
       }
     }
 
-    // 1. Verify Debit = Credit
     const debits = params.lines.filter(l => l.type === TransactionType.DEBIT).reduce((s, l) => s + l.amount, 0);
     const credits = params.lines.filter(l => l.type === TransactionType.CREDIT).reduce((s, l) => s + l.amount, 0);
 
     if (Math.abs(debits - credits) > 0.01) {
-      throw new ApiError(500, `Lỗi kế toán: Debit (${debits}) không bằng Credit (${credits})`);
+      throw new ApiError(500, `Lỗi kế toán: Nợ (${debits}) không bằng Có (${credits})`);
     }
 
-    // 2. Resolve account IDs
     const codes = params.lines.map(l => l.accountCode);
     const accounts = await tx.ledgerAccount.findMany({
       where: { code: { in: codes } }
     });
-
     const accountMap = new Map(accounts.map((a: any) => [a.code, a.id]));
 
-    // 3. Create Journal Entry
     const entry = await tx.journalEntry.create({
       data: {
         projectId: params.projectId,
+        date: accountingDate,
         description: params.description,
         reference: params.reference,
         sourceType: params.sourceType,
@@ -240,10 +224,9 @@ export class PostingEngine {
       }
     });
 
-    // 4. Create Transaction Lines
     for (const line of params.lines) {
       const accountId = accountMap.get(line.accountCode);
-      if (!accountId) throw new ApiError(500, `Account code not found: ${line.accountCode}`);
+      if (!accountId) throw new ApiError(500, `Không tìm thấy tài khoản kế toán: ${line.accountCode}`);
 
       await tx.transactionLine.create({
         data: {
@@ -260,41 +243,59 @@ export class PostingEngine {
     MetricsCollector.recordPostingDuration(Date.now() - startTime);
   }
 
-  /**
-   * Reverses an existing Journal Entry (Immutable Ledger approach)
-   */
-  static async reverseJournal(tx: any, sourceId: string, sourceType: string, userId: string) {
+  static async reverseJournal(tx: any, sourceId: string, sourceType: string, userId: string, options: {
+    reversalDate?: Date | string;
+    companyId?: string | null;
+  } = {}) {
     const oldEntry = await tx.journalEntry.findFirst({
-      where: { sourceId, sourceType },
+      where: { sourceId, sourceType, deletedAt: null },
       include: { lines: true }
     });
 
-    if (!oldEntry) return; // Nothing to reverse
-    if (oldEntry.isReversed) throw new Error("Giao dịch đã được hủy trước đó.");
+    if (!oldEntry) return;
+    if (oldEntry.isReversed) throw new ApiError(400, "Giao dịch đã được hủy trước đó.");
 
-    // Period Lock Check for Reversal Entry (Reversals happen in the current period, not the original period)
-    await this.assertPeriodNotLocked(new Date());
+    const companyId = options.companyId ?? await this.resolveCompanyId(tx, oldEntry.projectId);
+    try {
+      await this.assertPeriodNotLocked(oldEntry.date, companyId);
+    } catch (error) {
+      throw new ApiError(400, "Không thể hủy ghi sổ chứng từ thuộc kỳ đã khóa.", {
+        cause: error instanceof Error ? error.message : String(error),
+        accountingDate: oldEntry.date
+      });
+    }
 
-    // Mark old entry as reversed
+    const reversalDate = options.reversalDate ? new Date(options.reversalDate) : new Date();
+    if (Number.isNaN(reversalDate.getTime())) {
+      throw new ApiError(400, "Ngày hủy ghi sổ không hợp lệ.");
+    }
+    try {
+      await this.assertPeriodNotLocked(reversalDate, companyId);
+    } catch (error) {
+      throw new ApiError(400, "Không thể hủy ghi sổ chứng từ vì kỳ kế toán của ngày hủy đã bị khóa.", {
+        cause: error instanceof Error ? error.message : String(error),
+        reversalDate: reversalDate.toISOString()
+      });
+    }
+
     await tx.journalEntry.update({
       where: { id: oldEntry.id },
       data: { isReversed: true, reversedById: userId }
     });
 
-    // Create new reversing entry
     const newEntry = await tx.journalEntry.create({
       data: {
         projectId: oldEntry.projectId,
+        date: reversalDate,
         description: `Hủy giao dịch: ${oldEntry.description}`,
         reference: `REV-${oldEntry.reference}`,
-        sourceType: oldEntry.sourceType,
+        sourceType: `${oldEntry.sourceType}_REVERSAL`,
         sourceId: oldEntry.sourceId,
         reversalRef: oldEntry.id,
         isPosted: true,
       }
     });
 
-    // Reverse lines (Swap DEBIT/CREDIT)
     for (const line of oldEntry.lines) {
       await tx.transactionLine.create({
         data: {
@@ -307,7 +308,6 @@ export class PostingEngine {
       });
     }
 
-    // Update Operational source to reflect reversal in reporting/operations
     if (sourceId && sourceType) {
       const lowerType = sourceType.toLowerCase();
       try {
@@ -333,13 +333,22 @@ export class PostingEngine {
           });
         }
       } catch (err) {
-        console.error(`[PostingEngine] Failed to update operational source ${sourceType}:${sourceId} on reversal:`, err);
+        console.error(`[PostingEngine] Không thể cập nhật chứng từ nguồn ${sourceType}:${sourceId} khi hủy ghi sổ:`, err);
       }
     }
   }
 
-  static async assertPeriodNotLocked(date: Date) {
+  private static async resolveCompanyId(tx: any, projectId?: string | null) {
+    if (!projectId) return undefined;
+    const project = await tx.project.findUnique({
+      where: { id: projectId },
+      select: { companyId: true }
+    });
+    return project?.companyId || undefined;
+  }
+
+  static async assertPeriodNotLocked(date: Date | string, companyId?: string | null) {
     const { assertPeriodNotLocked } = require("@/lib/period");
-    await assertPeriodNotLocked(date);
+    await assertPeriodNotLocked(date, companyId || undefined);
   }
 }

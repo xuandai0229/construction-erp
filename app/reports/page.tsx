@@ -5,7 +5,6 @@ import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
 import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
 import { useERPStore } from '@/store/erpStore';
 import { formatVnd } from '@/app/components/dashboard-data';
-import { exportToCsv } from '@/app/services/export.service';
 import { useProjectsQuery } from '@/services/queries/useProjects';
 import { COL_WIDTHS, ERP_TERMINOLOGY } from '@/app/utils/table-constants';
 import { 
@@ -29,6 +28,18 @@ import {
 import { MonthlyReportRow } from '@/app/types/financial';
 
 type ReportTab = 'cash_aging' | 'trial_balance' | 'balance_sheet' | 'vat_summary';
+
+const auditedReportTypeByTab: Record<ReportTab, string> = {
+  cash_aging: 'CASH_AGING',
+  trial_balance: 'TRIAL_BALANCE',
+  balance_sheet: 'BALANCE_SHEET',
+  vat_summary: 'VAT_SUMMARY',
+};
+
+function getFilenameFromDisposition(disposition: string | null, fallback: string) {
+  const match = disposition?.match(/filename="?([^"]+)"?/i);
+  return match?.[1] || fallback;
+}
 
 export default function ReportsPage() {
   const currentProjectId  = useERPStore(state => state.currentProjectId);
@@ -102,54 +113,65 @@ export default function ReportsPage() {
     '90+ days': 'Trên 90 ngày',
   };
 
-  const handleExport = () => {
-    const project = projects.find(p => p.id === currentProjectId);
-    const dateStr = new Date().toISOString().split('T')[0];
-    
+  const handleExport = async () => {
+    if (!currentProjectId) return;
+    const reportType = auditedReportTypeByTab[activeTab];
+
     fetch("/api/monitoring/performance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ type: "CSV" })
     }).catch(() => {});
 
-    fetch("/api/reports/audit-export", {
+    const response = await fetch("/api/reports/audited-export", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ reportType: `EXPORT_${activeTab.toUpperCase()}`, projectId: currentProjectId })
-    }).catch(() => {});
+      body: JSON.stringify({
+        reportType,
+        projectId: currentProjectId,
+        filters: { projectId: currentProjectId, tab: activeTab },
+        reason: `Xuất báo cáo tài chính ${reportType}`
+      })
+    });
 
-    if (activeTab === 'cash_aging') {
-      const filename = `BC_DongTien_${project?.name || 'DuAn'}_${dateStr}.csv`;
-      exportToCsv(filename, monthlyData);
-    } else if (activeTab === 'trial_balance') {
-      const filename = `BC_CanDoiPhatSinh_${project?.name || 'DuAn'}_${dateStr}.csv`;
-      exportToCsv(filename, financialData?.trialBalance || []);
-    } else if (activeTab === 'balance_sheet') {
-      const filename = `BC_CanDoiKeToan_${project?.name || 'DuAn'}_${dateStr}.csv`;
-      const data = [
-        ...financialData?.balanceSheet.assets.map((a: any) => ({ ...a, section: 'TAI_SAN' })),
-        ...financialData?.balanceSheet.liabilities.map((l: any) => ({ ...l, section: 'NO_PHAI_TRA' })),
-        ...financialData?.balanceSheet.equity.map((e: any) => ({ ...e, section: 'VON_CHU_SOHUU' }))
-      ];
-      exportToCsv(filename, data);
-    } else if (activeTab === 'vat_summary') {
-      const filename = `ToKhaiThueVAT_${project?.name || 'DuAn'}_${dateStr}.csv`;
-      exportToCsv(filename, financialData?.vatSummary || []);
+    if (!response.ok) {
+      const error = await response.json().catch(() => null);
+      alert(error?.error || error?.message || "Không thể xuất báo cáo vì ghi audit log thất bại.");
+      return;
     }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = getFilenameFromDisposition(response.headers.get("content-disposition"), `${reportType}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
   };
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
+    if (!currentProjectId) return;
+    const reportType = `PRINT_${auditedReportTypeByTab[activeTab]}`;
+
     fetch("/api/monitoring/performance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ type: "PDF" })
     }).catch(() => {});
 
-    fetch("/api/reports/audit-export", {
+    const response = await fetch("/api/reports/audit-export", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ reportType: `PRINT_${activeTab.toUpperCase()}`, projectId: currentProjectId })
-    }).catch(() => {});
+      body: JSON.stringify({ reportType, projectId: currentProjectId })
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => null);
+      alert(error?.error || error?.message || "Không thể in báo cáo vì ghi audit log thất bại.");
+      return;
+    }
 
     window.print();
   };

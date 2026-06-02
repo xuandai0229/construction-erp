@@ -8,17 +8,24 @@ import { SignatureBlock } from "@/app/components/accounting/SignatureBlock";
 import { MoneyTextLine } from "@/app/components/accounting/MoneyTextLine";
 import ReadonlyPostedBanner from "@/app/components/accounting/ReadonlyPostedBanner";
 import { formatVnd } from "@/app/components/dashboard-data";
+import { AuditedPrintStatus, useAuditedPrint } from "@/app/components/accounting/AuditedPrintGate";
 
 export default function PrintPaymentPage() {
   const params = useParams();
   const id = params?.id as string;
+  const audit = useAuditedPrint({
+    printType: "PAYMENT",
+    entityId: id,
+    route: `/print/payment/${id}`,
+    reason: "In phiếu thanh toán",
+  });
 
   const [payment, setPayment] = useState<any>(null);
   const [traceData, setTraceData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (id) {
+    if (id && audit.status === "APPROVED") {
       Promise.all([
         fetch(`/api/payments/${id}`).then(res => res.json()),
         fetch(`/api/payments/${id}/financial-trace`).then(res => res.json())
@@ -30,8 +37,11 @@ export default function PrintPaymentPage() {
         .catch(err => console.error("Failed to load payment for printing", err))
         .finally(() => setLoading(false));
     }
-  }, [id]);
+  }, [id, audit.status]);
 
+  if (audit.status !== "APPROVED") {
+    return <AuditedPrintStatus status={audit.status} error={audit.error} />;
+  }
 
   if (loading) {
     return (
@@ -147,7 +157,7 @@ export default function PrintPaymentPage() {
       {/* Print Action Helper (Visible only on screen, hidden in print) */}
       <div className="flex justify-end gap-2 pt-4 border-t border-zinc-200 print:hidden select-none">
         <button
-          onClick={() => window.print()}
+          onClick={audit.print}
           className="px-4 py-2 text-xs font-bold text-white bg-zinc-900 hover:bg-zinc-800 rounded shadow transition-colors cursor-pointer"
         >
           Thực hiện In Phiếu

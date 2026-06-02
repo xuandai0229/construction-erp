@@ -70,6 +70,7 @@ export class PaymentService {
         reference: paymentNo,
         sourceType: "VENDOR_PAYMENT",
         sourceId: vp.id,
+        accountingDate: vp.paymentDate,
         lines: [
           { accountCode: "3310", amount: data.amount, type: "DEBIT" }, // Dr AP
           { accountCode: "1020", amount: data.amount, type: "CREDIT" }, // Cr Bank/Cash
@@ -97,7 +98,7 @@ export class PaymentService {
       if (!vp) throw new ApiError(404, "Không tìm thấy phiếu thanh toán");
       if (vp.isReversed) throw new ApiError(400, "Phiếu thanh toán này đã được Hủy (Reversed) trước đó");
 
-      await assertPeriodNotLocked(new Date()); // Reversal happens in current period
+      await assertPeriodNotLocked(vp.paymentDate);
 
       // Mark as reversed with OCC
       const updatedVp = await tx.vendorPayment.update({

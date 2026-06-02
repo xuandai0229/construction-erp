@@ -7,17 +7,24 @@ import { AccountingDocumentHeader } from "@/app/components/accounting/Accounting
 import { SignatureBlock } from "@/app/components/accounting/SignatureBlock";
 import { MoneyTextLine } from "@/app/components/accounting/MoneyTextLine";
 import ReadonlyPostedBanner from "@/app/components/accounting/ReadonlyPostedBanner";
+import { AuditedPrintStatus, useAuditedPrint } from "@/app/components/accounting/AuditedPrintGate";
 
 
 export default function PrintAdvancePage() {
   const params = useParams();
   const id = params?.id as string;
+  const audit = useAuditedPrint({
+    printType: "ADVANCE",
+    entityId: id,
+    route: `/print/advance/${id}`,
+    reason: "In giấy đề nghị tạm ứng",
+  });
 
   const [advance, setAdvance] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (id) {
+    if (id && audit.status === "APPROVED") {
       fetch(`/api/advances/${id}`)
         .then(res => res.json())
         .then(res => {
@@ -26,7 +33,11 @@ export default function PrintAdvancePage() {
         .catch(err => console.error("Failed to load advance for printing", err))
         .finally(() => setLoading(false));
     }
-  }, [id]);
+  }, [id, audit.status]);
+
+  if (audit.status !== "APPROVED") {
+    return <AuditedPrintStatus status={audit.status} error={audit.error} />;
+  }
 
   if (loading) {
     return (
@@ -113,7 +124,7 @@ export default function PrintAdvancePage() {
       {/* Print Action Helper (Visible only on screen, hidden in print) */}
       <div className="flex justify-end gap-2 pt-4 border-t border-zinc-200 print:hidden select-none">
         <button
-          onClick={() => window.print()}
+          onClick={audit.print}
           className="px-4 py-2 text-xs font-bold text-white bg-zinc-900 hover:bg-zinc-800 rounded shadow transition-colors cursor-pointer"
         >
           Thực hiện In Phiếu

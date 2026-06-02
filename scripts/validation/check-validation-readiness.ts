@@ -120,7 +120,7 @@ async function main() {
   }
   
   // Check 10: Validation scripts exist
-  const validationScriptPath = path.join(process.cwd(), 'scripts', 'master-erp-validation.ts');
+  const validationScriptPath = path.join(process.cwd(), 'scripts', 'validation', 'master-erp-validation.ts');
   if (fs.existsSync(validationScriptPath)) {
     addCheck('Validation Scripts', 'PASS', 'Found');
   } else {

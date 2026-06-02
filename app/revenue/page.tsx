@@ -14,7 +14,7 @@ import {
   EnterpriseMetric,
   EnterpriseSection
 } from '@/app/components/ui-enterprise';
-import { exportToCsv } from '@/app/services/export.service';
+import { auditedCsvExport } from '@/app/services/audited-export.service';
 import { RevenueStatus } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
 import { useRevenuesQuery, useUpdateRevenueMutation } from '@/services/queries/useRevenues';
@@ -32,6 +32,13 @@ export default function RevenueListPage() {
   const { data: wbsData } = useWBSQuery(currentProjectId);
   const { mutate: updateRevenue } = useUpdateRevenueMutation(currentProjectId);
   const wbs = wbsData?.flat || [];
+  const handleAuditedExport = async () => {
+    try {
+      await auditedCsvExport({ reportType: 'REVENUE_OPERATIONAL', projectId: currentProjectId, reason: 'Xuất báo cáo doanh thu operational' });
+    } catch (error: any) {
+      alert(error.message || 'Không thể xuất báo cáo doanh thu.');
+    }
+  };
 
   const getWbsName = (id: string) => wbs.find(item => item.id === id)?.name || '-';
 
@@ -166,7 +173,7 @@ export default function RevenueListPage() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <button
-              onClick={() => exportToCsv('ERP_Revenue.csv', revenues)}
+              onClick={handleAuditedExport}
               className="h-[36px] rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--card)] px-4 text-[12px] font-bold text-[var(--text-primary)] hover:bg-[var(--muted)] cursor-pointer transition-colors"
             >
               Xuất CSV

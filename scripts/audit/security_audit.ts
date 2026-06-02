@@ -1,6 +1,6 @@
 process.env.ALLOW_INTERNAL_ADMIN_BYPASS = "true";
-import { PrismaClient, UserRole } from '../generated/prisma-client';
-import { assertIsManager } from '../lib/auth-guard';
+import { PrismaClient, UserRole } from '../../generated/prisma-client';
+import { assertIsManager } from '../../lib/auth-guard';
 
 const prisma = new PrismaClient();
 

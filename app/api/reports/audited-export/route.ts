@@ -5,6 +5,7 @@ import { FinancialAggregationService } from "@/services/financial-aggregation.se
 import { ReportingService } from "@/services/reporting.service";
 import { auditExportOrThrow, requireAccountingAccess, requireProjectAccess } from "@/lib/route-security";
 import { safeDecimal } from "@/lib/math";
+import { ApprovalStatus } from "@prisma/client";
 
 function escapeCsv(value: unknown) {
   if (value === null || value === undefined) return "";
@@ -95,6 +96,58 @@ async function buildRows(reportType: string, projectId: string) {
         reconciliationStatus: summary.reconciliationStatus
       }];
     }
+    case "COSTS": {
+      const costs = await prisma.costRecord.findMany({
+        where: { projectId, deletedAt: null },
+        include: { wbs: { select: { code: true, name: true } }, vendorPayments: true },
+        orderBy: { date: "desc" }
+      });
+      return costs.map(cost => ({
+        id: cost.id,
+        date: cost.date.toISOString(),
+        wbs: `${cost.wbs.code || ""} ${cost.wbs.name}`,
+        costType: cost.costType,
+        supplier: cost.supplier || "",
+        amount: Number(cost.amount),
+        netAmount: Number(cost.netAmount || 0),
+        vatAmount: Number(cost.vatAmount || 0),
+        status: cost.status,
+        approvalStatus: cost.approvalStatus,
+        workflowStatus: cost.workflowStatus,
+        paidByVendorPayment: cost.vendorPayments.reduce((sum, payment) => sum + Number(payment.amount), 0)
+      }));
+    }
+    case "BUDGET": {
+      const budgets = await prisma.budgetRecord.findMany({
+        where: { projectId, deletedAt: null },
+        include: { wbs: { select: { code: true, name: true } } },
+        orderBy: { createdAt: "desc" }
+      });
+      return budgets.map(budget => ({
+        id: budget.id,
+        wbs: `${budget.wbs.code || ""} ${budget.wbs.name}`,
+        costType: budget.costType,
+        estimatedAmount: Number(budget.estimatedAmount),
+        createdAt: budget.createdAt.toISOString()
+      }));
+    }
+    case "REVENUE_OPERATIONAL": {
+      const revenues = await prisma.revenue.findMany({
+        where: { projectId, deletedAt: null },
+        include: { wbs: { select: { code: true, name: true } }, invoice: true },
+        orderBy: { date: "desc" }
+      });
+      return revenues.map(revenue => ({
+        id: revenue.id,
+        date: revenue.date.toISOString(),
+        wbs: `${revenue.wbs.code || ""} ${revenue.wbs.name}`,
+        invoiceId: revenue.invoiceId || "",
+        invoiceNumber: revenue.invoice?.invoiceNumber || "",
+        amount: Number(revenue.amount),
+        status: revenue.status,
+        note: "Operational/legacy revenue; official revenue comes from posted ledger."
+      }));
+    }
     case "CASH_AGING":
       return (await ReportingService.getProjectMonthlyReport(projectId)) as unknown as Record<string, unknown>[];
     case "TRIAL_BALANCE":
@@ -127,7 +180,13 @@ async function buildRows(reportType: string, projectId: string) {
       if (reportType === "TRIAL_BALANCE") return trialBalance;
       if (reportType === "VAT_SUMMARY") {
         const costsWithVat = await prisma.costRecord.findMany({
-          where: { projectId, deletedAt: null, vatAmount: { gt: 0 } },
+          where: {
+            projectId,
+            deletedAt: null,
+            vatAmount: { gt: 0 },
+            approvalStatus: ApprovalStatus.APPROVED,
+            workflowStatus: { in: ["APPROVED", "POSTED"] }
+          },
           select: { id: true, date: true, supplier: true, note: true, netAmount: true, vatRate: true, vatAmount: true, amount: true },
           orderBy: { date: "desc" }
         });
@@ -155,7 +214,7 @@ async function buildRows(reportType: string, projectId: string) {
       ];
     }
     default:
-      throw new ApiError(400, `Unsupported export reportType: ${reportType}`);
+      throw new ApiError(400, `Loại báo cáo xuất khẩu không được hỗ trợ: ${reportType}`);
   }
 }
 
@@ -166,9 +225,10 @@ export async function POST(request: Request) {
     const reportType = String(body.reportType || "");
     const projectId = String(body.projectId || "");
     const reason = body.reason ? String(body.reason) : undefined;
+    const filters = body.filters && typeof body.filters === "object" ? body.filters : { projectId };
 
     if (!reportType || !projectId) {
-      throw new ApiError(400, "Missing required parameters: reportType, projectId");
+      throw new ApiError(400, "Thiếu tham số bắt buộc: reportType, projectId");
     }
 
     await requireProjectAccess(user, projectId);
@@ -178,7 +238,8 @@ export async function POST(request: Request) {
       projectId,
       reportType,
       format: "csv",
-      reason
+      reason,
+      filters
     });
 
     const rows = await buildRows(reportType, projectId);

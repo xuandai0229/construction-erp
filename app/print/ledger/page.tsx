@@ -6,18 +6,25 @@ import { PrintLayout } from "@/app/components/accounting/PrintLayout";
 import { AccountingDocumentHeader } from "@/app/components/accounting/AccountingDocumentHeader";
 import { SignatureBlock } from "@/app/components/accounting/SignatureBlock";
 import { formatVnd } from "@/app/components/dashboard-data";
+import { AuditedPrintStatus, useAuditedPrint } from "@/app/components/accounting/AuditedPrintGate";
 
 function LedgerPrintContent() {
   const searchParams = useSearchParams();
   const projectId = searchParams?.get("projectId") || "";
   const accountCode = searchParams?.get("accountCode") || "";
+  const audit = useAuditedPrint({
+    printType: "LEDGER",
+    entityId: projectId,
+    route: `/print/ledger?projectId=${projectId}&accountCode=${accountCode}`,
+    reason: "In sổ cái chi tiết",
+  });
 
   const [lines, setLines] = useState<any[]>([]);
   const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (projectId) {
+    if (projectId && audit.status === "APPROVED") {
       // Fetch ledger data and project details
       Promise.all([
         fetch(`/api/reports/ledger-lines?projectId=${projectId}&accountCode=${accountCode}&page=1&limit=500`).then(res => res.json()),
@@ -30,7 +37,11 @@ function LedgerPrintContent() {
         .catch(err => console.error("Failed to load ledger for printing", err))
         .finally(() => setLoading(false));
     }
-  }, [projectId, accountCode]);
+  }, [projectId, accountCode, audit.status]);
+
+  if (audit.status !== "APPROVED") {
+    return <AuditedPrintStatus status={audit.status} error={audit.error} />;
+  }
 
   if (loading) {
     return (
@@ -127,7 +138,7 @@ function LedgerPrintContent() {
       {/* Print Trigger */}
       <div className="flex justify-end gap-2 pt-4 border-t border-zinc-200 print:hidden select-none">
         <button
-          onClick={() => window.print()}
+          onClick={audit.print}
           className="px-4 py-2 text-xs font-bold text-white bg-zinc-900 hover:bg-zinc-800 rounded shadow transition-colors cursor-pointer"
         >
           Thực hiện In Phiếu
