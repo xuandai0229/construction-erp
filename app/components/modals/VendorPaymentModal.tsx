@@ -76,7 +76,7 @@ export default function VendorPaymentModal({ isOpen, onClose, cost }: Props) {
           </div>
           
           <div>
-            <label className="erp-label">Số tiền xuất quỹ (VND)</label>
+            <label className="erp-label">Số tiền xuất quỹ (đ)</label>
             <input
               type="number"
               value={form.amount}

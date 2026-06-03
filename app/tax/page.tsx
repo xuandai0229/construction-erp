@@ -372,10 +372,10 @@ export default function TaxDashboard() {
     },
     {
       key: 'netAmount',
-      header: 'Tiền trước thuế (Net)',
+      header: 'Tiền trước thuế',
       width: '170px',
       align: 'right',
-      render: (row) => <span className="font-mono tabular-nums">{Number(row.netAmount).toLocaleString()}</span>
+      render: (row) => <span className="font-mono tabular-nums">{Number(row.netAmount).toLocaleString('vi-VN')} đ</span>
     },
     {
       key: 'vatRate',
@@ -389,7 +389,7 @@ export default function TaxDashboard() {
       header: 'Tiền thuế (VAT)',
       width: '150px',
       align: 'right',
-      render: (row) => <span className="font-mono tabular-nums text-emerald-500">{Number(row.vatAmount).toLocaleString()}</span>
+      render: (row) => <span className="font-mono tabular-nums text-emerald-500">{Number(row.vatAmount).toLocaleString('vi-VN')} đ</span>
     },
     {
       key: 'status',
@@ -443,9 +443,9 @@ export default function TaxDashboard() {
     { key: 'invoiceDate', header: 'Ngày HĐ', width: '120px', render: (row) => new Date(row.invoiceDate).toLocaleDateString('vi-VN') },
     { key: 'partnerName', header: 'Khách hàng', minWidth: '260px', render: (row) => row.partnerName },
     { key: 'partnerTaxCode', header: 'Mã số thuế', width: '150px', render: (row) => <span className="font-mono">{row.partnerTaxCode}</span> },
-    { key: 'netAmount', header: 'Doanh số chưa thuế', width: '170px', align: 'right', render: (row) => <span className="font-mono tabular-nums">{Number(row.netAmount).toLocaleString()}</span> },
+    { key: 'netAmount', header: 'Doanh số chưa thuế', width: '170px', align: 'right', render: (row) => <span className="font-mono tabular-nums">{Number(row.netAmount).toLocaleString('vi-VN')} đ</span> },
     { key: 'vatRate', header: 'Thuế suất', width: '110px', align: 'center', render: (row) => <span className="font-semibold text-amber-500">{row.vatRate}%</span> },
-    { key: 'vatAmount', header: 'Thuế đầu ra', width: '160px', align: 'right', render: (row) => <span className="font-mono tabular-nums text-emerald-500 font-bold">{Number(row.vatAmount).toLocaleString()}</span> }
+    { key: 'vatAmount', header: 'Thuế đầu ra', width: '160px', align: 'right', render: (row) => <span className="font-mono tabular-nums text-emerald-500 font-bold">{Number(row.vatAmount).toLocaleString('vi-VN')} đ</span> }
   ];
 
   return (
@@ -459,25 +459,25 @@ export default function TaxDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           <div className="p-5 relative overflow-hidden bg-gradient-to-br from-blue-500/5 to-transparent border border-blue-500/10 rounded-xl bg-[var(--card)] shadow-sm">
             <div className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">Doanh số bán ra trước thuế</div>
-            <div className="text-[20px] font-black text-blue-500 mt-2 font-mono tabular-nums">{(summary.totalSalesNet || 0).toLocaleString()} <span className="text-[11px] font-normal text-[var(--text-muted)]">VND</span></div>
-            <div className="text-[10px] font-semibold text-blue-400/80 mt-1">Thuế đầu ra: {(summary.totalSalesVat || 0).toLocaleString()} VND</div>
+            <div className="text-[20px] font-black text-blue-500 mt-2 font-mono tabular-nums">{(summary.totalSalesNet || 0).toLocaleString('vi-VN')} <span className="text-[11px] font-normal text-[var(--text-muted)]">đ</span></div>
+            <div className="text-[10px] font-semibold text-blue-400/80 mt-1">Thuế đầu ra: {(summary.totalSalesVat || 0).toLocaleString('vi-VN')} đ</div>
           </div>
           
           <div className="p-5 relative overflow-hidden bg-gradient-to-br from-emerald-500/5 to-transparent border border-emerald-500/10 rounded-xl bg-[var(--card)] shadow-sm">
             <div className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">Doanh số mua vào trước thuế</div>
-            <div className="text-[20px] font-black text-emerald-500 mt-2 font-mono tabular-nums">{(summary.totalPurchasesNet || 0).toLocaleString()} <span className="text-[11px] font-normal text-[var(--text-muted)]">VND</span></div>
-            <div className="text-[10px] font-semibold text-emerald-400/80 mt-1">Thuế khấu trừ: {(summary.totalPurchasesVat || 0).toLocaleString()} VND</div>
+            <div className="text-[20px] font-black text-emerald-500 mt-2 font-mono tabular-nums">{(summary.totalPurchasesNet || 0).toLocaleString('vi-VN')} <span className="text-[11px] font-normal text-[var(--text-muted)]">đ</span></div>
+            <div className="text-[10px] font-semibold text-emerald-400/80 mt-1">Thuế khấu trừ: {(summary.totalPurchasesVat || 0).toLocaleString('vi-VN')} đ</div>
           </div>
 
           <div className="p-5 relative overflow-hidden bg-gradient-to-br from-amber-500/5 to-transparent border border-amber-500/10 rounded-xl bg-[var(--card)] shadow-sm">
             <div className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">Thuế GTGT phải nộp</div>
-            <div className="text-[20px] font-black text-amber-500 mt-2 font-mono tabular-nums">{(summary.vatPayable || 0).toLocaleString()} <span className="text-[11px] font-normal text-[var(--text-muted)]">VND</span></div>
+            <div className="text-[20px] font-black text-amber-500 mt-2 font-mono tabular-nums">{(summary.vatPayable || 0).toLocaleString('vi-VN')} <span className="text-[11px] font-normal text-[var(--text-muted)]">đ</span></div>
             <div className="text-[10px] font-semibold text-amber-400/80 mt-1">Do số bán ra lớn hơn mua vào</div>
           </div>
 
           <div className="p-5 relative overflow-hidden bg-gradient-to-br from-purple-500/5 to-transparent border border-purple-500/10 rounded-xl bg-[var(--card)] shadow-sm">
             <div className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">Thuế GTGT được khấu trừ tiếp</div>
-            <div className="text-[20px] font-black text-purple-400 mt-2 font-mono tabular-nums">{(summary.vatRefundable || 0).toLocaleString()} <span className="text-[11px] font-normal text-[var(--text-muted)]">VND</span></div>
+            <div className="text-[20px] font-black text-purple-400 mt-2 font-mono tabular-nums">{(summary.vatRefundable || 0).toLocaleString('vi-VN')} <span className="text-[11px] font-normal text-[var(--text-muted)]">đ</span></div>
             <div className="text-[10px] font-semibold text-purple-400/80 mt-1">Do mua vào lớn hơn bán ra</div>
           </div>
         </div>
@@ -513,19 +513,19 @@ export default function TaxDashboard() {
               <FormGroup label="Loại hóa đơn" className="w-[160px]">
                 <Select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
                   <option value="ALL">Tất cả loại HĐ</option>
-                  <option value="OUTBOUND">Bán ra (Output)</option>
-                  <option value="INBOUND">Mua vào (Input)</option>
+                  <option value="OUTBOUND">Bán ra</option>
+                  <option value="INBOUND">Mua vào</option>
                 </Select>
               </FormGroup>
 
               <FormGroup label="Trạng thái hạch toán" className="w-[160px]">
                 <Select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                   <option value="ALL">Tất cả trạng thái</option>
-                  <option value="DRAFT">Nháp (DRAFT)</option>
-                  <option value="ISSUED">Phát hành (ISSUED)</option>
-                  <option value="POSTED">Đã ghi sổ (POSTED)</option>
-                  <option value="CANCELLED">Đã hủy (CANCELLED)</option>
-                  <option value="REVERSED">Đã đảo (REVERSED)</option>
+                  <option value="DRAFT">Nháp</option>
+                  <option value="ISSUED">Đã phát hành</option>
+                  <option value="POSTED">Đã ghi sổ</option>
+                  <option value="CANCELLED">Đã hủy</option>
+                  <option value="REVERSED">Đã đảo chứng từ</option>
                 </Select>
               </FormGroup>
 
@@ -572,7 +572,7 @@ export default function TaxDashboard() {
             {/* Sales VAT Book (01-1) */}
             <EnterpriseSection 
               title="1. BẢNG KÊ HÓA ĐƠN HÀNG HÓA DỊCH VỤ BÁN RA (MẪU 01-1/GTGT)"
-              subtitle="Chỉ thống kê các hóa đơn bán ra ở trạng thái ĐÃ GHI SỔ (POSTED)"
+              subtitle="Chỉ thống kê các hóa đơn bán ra đã ghi sổ"
             >
               <EnterpriseCard bodyClassName="p-0">
                 <EnterpriseDataTable
@@ -583,7 +583,7 @@ export default function TaxDashboard() {
                   emptyState={
                     <EnterpriseEmptyState
                       title="Chưa có hóa đơn bán ra được ghi sổ"
-                      description="Các hóa đơn bán ra sau khi ghi sổ kế toán (POSTED) sẽ được lập vào bảng kê này."
+                      description="Các hóa đơn bán ra sau khi ghi sổ kế toán sẽ được lập vào bảng kê này."
                       iconType="report"
                     />
                   }
@@ -594,7 +594,7 @@ export default function TaxDashboard() {
             {/* Purchases VAT Book (01-2) */}
             <EnterpriseSection 
               title="2. BẢNG KÊ HÓA ĐƠN HÀNG HÓA DỊCH VỤ MUA VÀO (MẪU 01-2/GTGT)"
-              subtitle="Chỉ thống kê các hóa đơn mua vào ở trạng thái ĐÃ GHI SỔ (POSTED)"
+              subtitle="Chỉ thống kê các hóa đơn mua vào đã ghi sổ"
             >
               <EnterpriseCard bodyClassName="p-0">
                 <EnterpriseDataTable
@@ -609,7 +609,7 @@ export default function TaxDashboard() {
                   emptyState={
                     <EnterpriseEmptyState
                       title="Chưa có hóa đơn mua vào được ghi sổ"
-                      description="Các hóa đơn mua vào sau khi ghi sổ kế toán (POSTED) sẽ được lập vào bảng kê này."
+                      description="Các hóa đơn mua vào sau khi ghi sổ kế toán sẽ được lập vào bảng kê này."
                       iconType="report"
                     />
                   }

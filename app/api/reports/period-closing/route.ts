@@ -79,7 +79,7 @@ export async function GET(request: Request) {
 
     if (!period) throw new ApiError(404, "Accounting period not found.");
     if (period.fiscalYear.companyId !== user.companyId) {
-      throw new ApiError(403, "Access denied: accounting period belongs to another company.");
+      throw new ApiError(403, "Không có quyền thao tác kỳ kế toán của công ty khác.");
     }
 
     return successResponse(period);

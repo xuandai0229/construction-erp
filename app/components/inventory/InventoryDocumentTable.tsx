@@ -121,11 +121,11 @@ export function InventoryDocumentTable({ currentProjectId, onViewDetails, onCrea
           className="w-[180px] h-10 px-3 rounded-lg border border-[var(--border)] bg-[var(--background)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--primary)]"
         >
           <option value="">-- Tất cả trạng thái --</option>
-          <option value="DRAFT">Nháp (DRAFT)</option>
-          <option value="SUBMITTED">Chờ duyệt (SUBMITTED)</option>
-          <option value="APPROVED">Đã duyệt (APPROVED)</option>
-          <option value="POSTED">Đã ghi sổ (POSTED)</option>
-          <option value="REVERSED">Đã đảo (REVERSED)</option>
+          <option value="DRAFT">Nháp</option>
+          <option value="SUBMITTED">Chờ duyệt</option>
+          <option value="APPROVED">Đã duyệt</option>
+          <option value="POSTED">Đã ghi sổ</option>
+          <option value="REVERSED">Đã đảo chứng từ</option>
         </select>
         <button 
           onClick={onCreateNew} 

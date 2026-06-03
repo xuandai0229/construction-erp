@@ -16,7 +16,7 @@ export async function GET(request: Request) {
       const project = await prisma.project.findUnique({
         where: { id: projectId, deletedAt: null }
       });
-      if (!project) throw new ApiError(404, "Project not found");
+      if (!project) throw new ApiError(404, "Không tìm thấy dự án.");
       if (user.companyId && project.companyId !== user.companyId) {
         throw new ApiError(403, "Cross-tenant access denied");
       }

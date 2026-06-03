@@ -52,7 +52,7 @@ export function EnterpriseMetric({
                   : "text-[var(--text-tertiary)]"
               }`}
             >
-              {trend.direction === "up" ? "↑" : trend.direction === "down" ? "↓" : "•"} {trend.value}
+              {trend.direction === "up" ? "?" : trend.direction === "down" ? "?" : "?"} {trend.value}
             </span>
           )}
         </div>

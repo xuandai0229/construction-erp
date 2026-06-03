@@ -330,7 +330,7 @@ export class InventoryService {
 
     if (!doc || doc.deletedAt) throw new ApiError(404, "Không tìm thấy chứng từ.");
     if (doc.status !== "DRAFT") {
-      throw new ApiError(400, "Chỉ chứng từ ở trạng thái Nháp (DRAFT) mới có thể chỉnh sửa.");
+      throw new ApiError(400, "Chỉ chứng từ ở trạng thái Nháp mới có thể chỉnh sửa.");
     }
 
     const accDate = input.accountingDate ? new Date(input.accountingDate) : doc.accountingDate;
@@ -449,7 +449,7 @@ export class InventoryService {
 
     if (!doc || doc.deletedAt) throw new ApiError(404, "Không tìm thấy chứng từ.");
     if (doc.status !== "DRAFT") {
-      throw new ApiError(400, "Chỉ chứng từ ở trạng thái Nháp (DRAFT) mới có thể trình duyệt.");
+      throw new ApiError(400, "Chỉ chứng từ ở trạng thái Nháp mới có thể trình duyệt.");
     }
 
     await assertPeriodNotLocked(doc.accountingDate);
@@ -484,7 +484,7 @@ export class InventoryService {
 
     if (!doc || doc.deletedAt) throw new ApiError(404, "Không tìm thấy chứng từ.");
     if (doc.status !== "SUBMITTED") {
-      throw new ApiError(400, "Chỉ chứng từ ở trạng thái Chờ duyệt (SUBMITTED) mới có thể từ chối.");
+      throw new ApiError(400, "Chỉ chứng từ ở trạng thái Chờ duyệt mới có thể từ chối.");
     }
 
     // Segregation of Duties - Creator cannot approve/reject
@@ -523,7 +523,7 @@ export class InventoryService {
 
     if (!doc || doc.deletedAt) throw new ApiError(404, "Không tìm thấy chứng từ.");
     if (doc.status !== "SUBMITTED") {
-      throw new ApiError(400, "Chỉ chứng từ ở trạng thái Chờ duyệt (SUBMITTED) mới có thể duyệt.");
+      throw new ApiError(400, "Chỉ chứng từ ở trạng thái Chờ duyệt mới có thể duyệt.");
     }
 
     // Segregation of Duties - Creator cannot approve
@@ -570,7 +570,7 @@ export class InventoryService {
 
     if (!doc || doc.deletedAt) throw new ApiError(404, "Không tìm thấy chứng từ.");
     if (doc.status !== "APPROVED") {
-      throw new ApiError(400, "Chỉ chứng từ đã duyệt (APPROVED) mới có thể hạch toán ghi sổ.");
+      throw new ApiError(400, "Chỉ chứng từ đã duyệt mới có thể hạch toán ghi sổ.");
     }
 
     await assertPeriodNotLocked(doc.accountingDate);
@@ -830,7 +830,7 @@ export class InventoryService {
 
     if (!doc || doc.deletedAt) throw new ApiError(404, "Không tìm thấy chứng từ.");
     if (doc.status !== "POSTED") {
-      throw new ApiError(400, "Chỉ chứng từ đã ghi sổ (POSTED) mới có thể thực hiện hủy ghi sổ/bút toán đảo.");
+      throw new ApiError(400, "Chỉ chứng từ đã ghi sổ mới có thể thực hiện hủy ghi sổ/bút toán đảo.");
     }
 
     await assertPeriodNotLocked(doc.accountingDate);
@@ -1028,7 +1028,7 @@ export class InventoryService {
     if (!doc || doc.deletedAt) throw new ApiError(404, "Không tìm thấy chứng từ.");
     if (doc.companyId !== companyId) throw new ApiError(403, "Lỗi phân quyền: Không được phép truy cập.");
     if (doc.status !== "DRAFT" && doc.status !== "CANCELLED") {
-      throw new ApiError(400, "Chỉ chứng từ bản nháp (DRAFT) hoặc Đã hủy (CANCELLED) mới được xóa.");
+      throw new ApiError(400, "Chỉ chứng từ bản nháp hoặc đã hủy mới được xóa.");
     }
 
     const updated = await prisma.inventoryDocument.update({

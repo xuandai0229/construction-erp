@@ -109,7 +109,7 @@ export default function AddInvoiceModal({ isOpen, onClose }: Props) {
             </select>
           </div>
           <div>
-            <label className="erp-label">Giá trị hóa đơn (VND)</label>
+            <label className="erp-label">Giá trị hóa đơn (đ)</label>
             <input
               type="number"
               value={form.amount}

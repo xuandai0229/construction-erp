@@ -109,7 +109,7 @@ export default function AddRevenueModal({ isOpen, onClose }: Props) {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="erp-label">Số tiền (VND)</label>
+              <label className="erp-label">Số tiền (đ)</label>
               <input
                 type="number"
                 value={form.amount}

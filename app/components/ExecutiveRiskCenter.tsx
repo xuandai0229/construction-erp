@@ -61,7 +61,7 @@ export default function ExecutiveRiskCenter({ risks }: ExecutiveRiskCenterProps)
     {
       type: 'FINANCIAL',
       severity: 'WARNING' as const,
-      message: 'Công nợ phải thu của Khách hàng A quá hạn thanh toán 86 tỷ VNĐ',
+      message: 'Công nợ phải thu của Khách hàng A quá hạn thanh toán 86 tỷ đ',
       details: [
         'Hóa đơn INV-004 đã quá hạn thanh toán 22 ngày.',
         'Mức độ ảnh hưởng dòng tiền: Trung bình - Cao.',

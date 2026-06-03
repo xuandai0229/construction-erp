@@ -22,7 +22,7 @@ export class AdvanceSettlementPolicy {
 
   static validateAdvancePaymentPost(currentStatus: string, isPeriodLocked: boolean) {
     if (currentStatus === "DRAFT") {
-      throw new Error("LỖI NGHIỆP VỤ: Không thể chi tiền/ghi sổ tạm ứng đang ở nháp (DRAFT).");
+      throw new Error("LỖI NGHIỆP VỤ: Không thể chi tiền hoặc ghi sổ tạm ứng đang ở trạng thái Nháp.");
     }
     if (currentStatus === "PAID") {
       throw new Error("LỖI NGHIỆP VỤ: Tạm ứng này đã được chi tiền (PAID), không được ghi sổ lại.");

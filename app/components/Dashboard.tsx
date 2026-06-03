@@ -13,11 +13,18 @@ import { ExecutiveSummaryCards } from "./reports/ExecutiveSummaryCards";
 import { ProjectProfitabilityTable } from "./reports/ProjectProfitabilityTable";
 import { DebtAgingPanel } from "./reports/DebtAgingPanel";
 import { RiskAlertsPanel } from "./reports/RiskAlertsPanel";
-import FinancialTracePanel from "./accounting/FinancialTracePanel";
+import FinancialDrilldownDrawer, { FinancialMetricKey } from "./accounting/FinancialDrilldownDrawer";
+
+type DrilldownRequest = {
+  metric: FinancialMetricKey;
+  title: string;
+  amount: number;
+  projectId?: string | null;
+  projectName?: string | null;
+};
 
 export default function Dashboard() {
-  const [traceType, setTraceType] = useState<'contract' | 'invoice' | 'payment' | 'advance' | 'cost'>('invoice');
-  const [traceId, setTraceId] = useState<string | null>(null);
+  const [drilldown, setDrilldown] = useState<DrilldownRequest | null>(null);
   
   const { currentProjectId } = useERPStore();
   const router = useRouter();
@@ -37,7 +44,7 @@ export default function Dashboard() {
     queryFn: async () => {
       const res = await fetch(`/api/reports/management/project-profitability`);
       const json = await res.json();
-      return json.success ? json.data : [];
+      return json.success ? (Array.isArray(json.data?.data) ? json.data.data : []) : [];
     }
   });
 
@@ -55,7 +62,7 @@ export default function Dashboard() {
     queryFn: async () => {
       const res = await fetch(`/api/reports/management/risk-alerts`);
       const json = await res.json();
-      return json.success ? json.data : [];
+      return json.success ? (Array.isArray(json.data?.data) ? json.data.data : []) : [];
     }
   });
 
@@ -71,9 +78,13 @@ export default function Dashboard() {
           <ExecutiveSummaryCards 
             data={execSummary} 
             isLoading={loadingExec} 
-            onDrillDown={(type) => {
-              setTraceType(type);
-              setTraceId(""); // Trigger Financial Trace Panel
+            onDrillDown={(metric, title, amount) => {
+              setDrilldown({
+                metric,
+                title,
+                amount,
+                projectId: currentProjectId || null
+              });
             }}
             onNavigateApprovals={() => router.push('/approvals')}
           />
@@ -89,7 +100,19 @@ export default function Dashboard() {
 
             {/* 3. HIỆU QUẢ DỰ ÁN (PROJECT PROFITABILITY) */}
             <EnterpriseCard title="Hiệu quả Công trình & Dự án (P&L)" subtitle="Đánh giá doanh thu, chi phí, và tỷ suất lợi nhuận từng dự án (P&L)">
-              <ProjectProfitabilityTable data={projectProfit} isLoading={loadingProfit} />
+              <ProjectProfitabilityTable
+                data={projectProfit}
+                isLoading={loadingProfit}
+                onDrillDown={(project, metric, title, amount) =>
+                  setDrilldown({
+                    metric,
+                    title,
+                    amount,
+                    projectId: project.projectId,
+                    projectName: project.projectName
+                  })
+                }
+              />
             </EnterpriseCard>
           </div>
 
@@ -103,12 +126,7 @@ export default function Dashboard() {
         </div>
       </EnterprisePageContainer>
       
-      <FinancialTracePanel
-        type={traceType}
-        id={traceId || ""}
-        isOpen={traceId !== null}
-        onClose={() => setTraceId(null)}
-      />
+      <FinancialDrilldownDrawer request={drilldown} onClose={() => setDrilldown(null)} />
     </EnterpriseAppShell>
   );
 }

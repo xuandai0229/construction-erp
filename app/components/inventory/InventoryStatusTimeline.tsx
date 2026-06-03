@@ -7,10 +7,10 @@ interface InventoryStatusTimelineProps {
 
 export function InventoryStatusTimeline({ status, auditLogs = [] }: InventoryStatusTimelineProps) {
   const steps = [
-    { label: 'DỰ THẢO (DRAFT)', value: 'DRAFT' },
-    { label: 'CHỜ DUYỆT (SUBMITTED)', value: 'SUBMITTED' },
-    { label: 'ĐÃ DUYỆT (APPROVED)', value: 'APPROVED' },
-    { label: 'GHI SỔ (POSTED)', value: 'POSTED' }
+    { label: 'NHÁP', value: 'DRAFT' },
+    { label: 'CHỜ DUYỆT', value: 'SUBMITTED' },
+    { label: 'ĐÃ DUYỆT', value: 'APPROVED' },
+    { label: 'ĐÃ GHI SỔ', value: 'POSTED' }
   ];
 
   const getStepStatus = (stepVal: string) => {
@@ -29,10 +29,10 @@ export function InventoryStatusTimeline({ status, auditLogs = [] }: InventorySta
   return (
     <div className="space-y-6 bg-[var(--secondary)]/40 p-6 rounded-xl border border-[var(--border)]">
       <div className="flex items-center justify-between">
-        <h4 className="text-xs font-black text-[var(--text-secondary)] uppercase tracking-wider">Tiến trình chứng từ (Voucher Timeline)</h4>
+        <h4 className="text-xs font-black text-[var(--text-secondary)] uppercase tracking-wider">Tiến trình chứng từ</h4>
         {status === 'REVERSED' && (
           <span className="px-2.5 py-1 text-xs font-bold rounded-lg bg-red-950/40 text-red-400 border border-red-900/50 uppercase">
-            HỦY GHI SỔ (REVERSED)
+            ĐÃ HỦY GHI SỔ
           </span>
         )}
       </div>
@@ -71,7 +71,7 @@ export function InventoryStatusTimeline({ status, auditLogs = [] }: InventorySta
 
       {auditLogs && auditLogs.length > 0 && (
         <div className="pt-4 border-t border-[var(--border)]">
-          <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest block mb-3">Nhật ký tác vụ (Audit Trail)</span>
+          <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest block mb-3">Nhật ký tác vụ</span>
           <div className="space-y-2 max-h-[120px] overflow-y-auto scrollbar-thin">
             {auditLogs.map((log: any, index: number) => (
               <div key={index} className="flex items-center justify-between text-xs text-[var(--text-secondary)] py-1 border-b border-[var(--border)]/40 last:border-0">

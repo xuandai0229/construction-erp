@@ -26,10 +26,10 @@ interface EnterpriseTableProps<T> {
   rowClassName?: (row: T, index: number) => string;
 }
 
-function getAlignClass(align?: Column<unknown>["align"], isHeader = false) {
+function getAlignClass(align?: Column<unknown>["align"]) {
   if (align === "right") return "text-right";
   if (align === "center") return "text-center";
-  return isHeader ? "text-left" : "text-left";
+  return "text-left";
 }
 
 export function EnterpriseTable<T>({
@@ -46,22 +46,23 @@ export function EnterpriseTable<T>({
   rowClassName
 }: EnterpriseTableProps<T>) {
   return (
-    <div className={`relative overflow-x-auto overflow-y-hidden w-full border border-[var(--border)] rounded-[var(--radius-sm)] bg-[var(--card)] scrollbar-thin ${className}`}>
+    <div className={`relative w-full overflow-x-auto overflow-y-hidden rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--card)] scrollbar-thin ${className}`}>
       <table className="w-full table-fixed border-collapse text-left text-xs" style={{ minWidth }}>
         <colgroup>
-          {columns.map((col, idx) => (
-            <col key={idx} style={{ width: col.width, minWidth: col.minWidth || col.width }} />
+          {columns.map((column, index) => (
+            <col key={index} style={{ width: column.width, minWidth: column.minWidth || column.width }} />
           ))}
         </colgroup>
-        <thead className={`${stickyHeader ? "sticky top-0 z-10" : ""} bg-[var(--table-head-bg)] border-b border-[var(--border)]`}>
-          <tr className="h-[40px]">
-            {columns.map((col, idx) => (
+        <thead className={`${stickyHeader ? "sticky top-0 z-20" : ""} border-b border-[var(--border)] bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)]`}>
+          <tr className="h-10">
+            {columns.map((column, index) => (
               <th
-                key={idx}
-                className={`px-4 text-[12px] font-bold text-[var(--text-tertiary)] uppercase select-none whitespace-nowrap ${getAlignClass(col.align, true)} ${col.headerClassName || ""}`}
-                style={{ width: col.width, minWidth: col.minWidth || col.width }}
+                key={index}
+                className={`px-4 align-middle text-[12px] font-bold uppercase text-[var(--text-tertiary)] select-none whitespace-nowrap ${getAlignClass(column.align)} ${column.headerClassName || ""}`}
+                style={{ width: column.width, minWidth: column.minWidth || column.width }}
+                title={column.header}
               >
-                {col.header}
+                <span className="block truncate">{column.header}</span>
               </th>
             ))}
           </tr>
@@ -69,50 +70,45 @@ export function EnterpriseTable<T>({
         <tbody>
           {loading ? (
             <tr className="h-40">
-              <td colSpan={columns.length} className="text-center text-[var(--text-tertiary)] bg-[var(--card)]">
-                <div className="sticky left-0 mx-auto w-full flex items-center justify-center space-x-2 p-4">
-                  <div className="w-4 h-4 rounded-full border-2 border-[var(--primary)] border-t-transparent animate-spin" />
+              <td colSpan={columns.length} className="bg-[var(--card)] text-center text-[var(--text-tertiary)]">
+                <div className="sticky left-0 mx-auto flex w-full items-center justify-center gap-2 p-4">
+                  <div className="h-4 w-4 rounded-full border-2 border-[var(--primary)] border-t-transparent animate-spin" />
                   <span className="text-[12px]">Đang tải dữ liệu...</span>
                 </div>
               </td>
             </tr>
           ) : data.length === 0 ? (
             <tr className="h-40">
-              <td colSpan={columns.length} className="text-center bg-[var(--card)]">
-                <div className="sticky left-0 mx-auto w-full flex items-center justify-center p-4">
+              <td colSpan={columns.length} className="bg-[var(--card)] text-center">
+                <div className="sticky left-0 mx-auto flex w-full items-center justify-center p-4">
                   {emptyState || (
                     <div className="flex flex-col items-center justify-center p-8 text-[var(--text-tertiary)]">
-                      <span className="text-[12px]">Chưa có giao dịch để hiển thị</span>
+                      <span className="text-[12px]">Chưa có dữ liệu để hiển thị.</span>
                     </div>
                   )}
                 </div>
               </td>
             </tr>
           ) : (
-            data.map((row, rowIdx) => (
+            data.map((row, rowIndex) => (
               <tr
-                key={getRowKey ? getRowKey(row, rowIdx) : rowIdx}
+                key={getRowKey ? getRowKey(row, rowIndex) : rowIndex}
                 onClick={() => onRowClick?.(row)}
-                className={`h-[40px] border-b border-[var(--divider)] last:border-b-0 transition-colors duration-[var(--motion-duration-instant)] ease-[var(--motion-easing-standard)] hover:bg-[var(--table-row-hover)] ${
-                  onRowClick ? "cursor-pointer" : ""
-                } ${rowClassName?.(row, rowIdx) || ""}`}
+                className={`h-10 border-b border-[var(--divider)] last:border-b-0 transition-colors duration-[var(--motion-duration-instant)] ease-[var(--motion-easing-standard)] hover:bg-[var(--table-row-hover)] ${onRowClick ? "cursor-pointer" : ""} ${rowClassName?.(row, rowIndex) || ""}`}
               >
-                {columns.map((col, colIdx) => {
-                  const value = col.accessor(row);
-                  const isRight = col.align === "right";
-                  const isCenter = col.align === "center";
-                  const alignClass = isRight
+                {columns.map((column, columnIndex) => {
+                  const value = column.accessor(row);
+                  const alignClass = column.align === "right"
                     ? "text-right tabular-nums font-mono font-medium text-[var(--text-primary)] whitespace-nowrap"
-                    : isCenter
+                    : column.align === "center"
                     ? "text-center text-[var(--text-secondary)] whitespace-nowrap"
-                    : "text-left text-[var(--text-secondary)]";
-                  const overflowClass = isRight || isCenter ? "" : "truncate overflow-hidden";
+                    : "text-left text-[var(--text-secondary)] truncate overflow-hidden";
 
                   return (
                     <td
-                      key={colIdx}
-                      className={`px-4 align-middle text-[12px] leading-5 ${alignClass} ${overflowClass} ${col.className || ""}`}
-                      style={{ width: col.width, minWidth: col.minWidth || col.width }}
+                      key={columnIndex}
+                      className={`px-4 align-middle text-[12px] leading-5 ${alignClass} ${column.className || ""}`}
+                      style={{ width: column.width, minWidth: column.minWidth || column.width }}
                       title={typeof value === "string" ? value : undefined}
                     >
                       {value}
@@ -124,7 +120,7 @@ export function EnterpriseTable<T>({
           )}
         </tbody>
         {footer && (
-          <tfoot className="sticky bottom-0 z-10 bg-[var(--table-head-bg)] border-t border-[var(--border)]">
+          <tfoot className="sticky bottom-0 z-20 border-t border-[var(--border)] bg-[var(--table-head-bg)] shadow-[0_-1px_0_var(--border)]">
             {footer}
           </tfoot>
         )}

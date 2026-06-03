@@ -14,7 +14,7 @@ export async function POST(
       where: { id, deletedAt: null },
       select: { projectId: true },
     });
-    if (!invoice) throw new ApiError(404, "Invoice not found.");
+    if (!invoice) throw new ApiError(404, "Không tìm thấy hóa đơn.");
     const user = await requireProjectPermission(invoice.projectId, "INVOICE", "APPROVE");
     
     const result = await RevenueService.updateInvoiceApproval(id, status, user.id);

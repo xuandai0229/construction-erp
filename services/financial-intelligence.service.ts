@@ -92,7 +92,7 @@ export class FinancialIntelligenceService {
         id: anomalyId,
         type: 'COST_SPIKE',
         severity: 'WARNING',
-        message: `Chi phí đột biến: ${round(Number(c.amount)).toLocaleString()} VND.`,
+        message: `Chi phí đột biến: ${round(Number(c.amount)).toLocaleString("vi-VN")} đ.`,
         detectedAt: new Date(),
         metadata: { costId: c.id, amount: c.amount, average: avgCost },
         isAcknowledged: false,
@@ -100,7 +100,7 @@ export class FinancialIntelligenceService {
         escalationLevel: 1,
         rootCause: {
           driver: 'UNUSUAL_TRANSACTION',
-          explanation: `Giao dịch cao hơn 250% so với mức trung bình của dự án (${round(avgCost).toLocaleString()} VND).`,
+          explanation: `Giao dịch cao hơn 250% so với mức trung bình của dự án (${round(avgCost).toLocaleString("vi-VN")} đ).`,
           operationalImpact: 'Gây áp lực lên ngân sách giai đoạn hiện tại.',
           financialImpact: 'Làm sai lệch dự báo dòng tiền tháng.',
           evidence: [c.id]
@@ -116,7 +116,7 @@ export class FinancialIntelligenceService {
             operationalRisk: 'LOW',
             financialRisk: 'LOW',
             confidenceLevel: 95,
-            confidenceReason: 'Giao dịch vượt mức bình thường 2.5 lần và trên 2.000.000 VND.',
+            confidenceReason: 'Giao dịch vượt mức bình thường 2.5 lần và trên 2.000.000 đ.',
             blockingSeverity: 'NON_BLOCKER',
             suggestedBy: 'SpikeDetector',
             traceability: [c.id]

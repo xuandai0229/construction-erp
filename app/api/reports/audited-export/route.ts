@@ -7,6 +7,8 @@ import { auditExportOrThrow, requireAccountingAccess, requireProjectAccess } fro
 import { safeDecimal } from "@/lib/math";
 import { ApprovalStatus } from "@prisma/client";
 
+const PILOT_COMPANY_NAME = "CÔNG TY CP THƯƠNG MẠI VÀ XÂY DỰNG SỐ 2 HN";
+
 function escapeCsv(value: unknown) {
   if (value === null || value === undefined) return "";
   const text = value instanceof Date ? value.toISOString() : String(value);
@@ -22,12 +24,191 @@ function toCsv(rows: Record<string, unknown>[]) {
   ].join("\r\n");
 }
 
-function csvResponse(filename: string, rows: Record<string, unknown>[]) {
-  return new NextResponse(`\uFEFF${toCsv(rows)}`, {
+function formatDate(value?: Date | string | null) {
+  if (!value) return "";
+  return new Date(value).toLocaleDateString("vi-VN");
+}
+
+function formatMoney(value: unknown) {
+  return `${Number(value || 0).toLocaleString("vi-VN")} đ`;
+}
+
+function csvResponse(filename: string, rows: Record<string, unknown>[], options?: { title?: string; filters?: Record<string, unknown>; csvFallback?: boolean }) {
+  const metadata = options?.title
+    ? [
+        [PILOT_COMPANY_NAME],
+        [options.title],
+        [`Ngày xuất: ${formatDate(new Date())}`],
+        [options.csvFallback ? "Định dạng: CSV fallback, chưa phải file Excel .xlsx." : "Định dạng: CSV"],
+        [options.filters ? `Bộ lọc: ${JSON.stringify(options.filters)}` : ""],
+        []
+      ].map(row => row.map(escapeCsv).join(",")).join("\r\n")
+    : "";
+  const table = rows.length > 0 ? toCsv(rows) : toCsv([{ "Trạng thái": "Không có dữ liệu phù hợp với bộ lọc hiện tại." }]);
+
+  return new NextResponse(`\uFEFF${metadata}${metadata ? "\r\n" : ""}${table}`, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": `attachment; filename="${filename}"`
     }
+  });
+}
+
+async function buildAdvancePaymentSummary(projectId: string) {
+  const advances = await prisma.advanceRequest.findMany({
+    where: { projectId, deletedAt: null },
+    include: {
+      project: { select: { id: true, name: true } },
+      supplier: { select: { code: true, name: true } },
+      contract: { select: { contractCode: true, contractNumber: true, title: true, originalValue: true, currentValue: true } },
+      settlements: { where: { deletedAt: null } }
+    },
+    orderBy: { createdAt: "desc" }
+  });
+
+  return advances.map((advance, index) => ({
+    "STT": index + 1,
+    "Tên nhà cung cấp/Người nhận": advance.supplier?.name || advance.employeeId || "Chưa xác định",
+    "Mã NCC/Nhân viên": advance.supplier?.code || advance.employeeId || "",
+    "Mã công trình": advance.project?.id || advance.projectId || "",
+    "Tên công trình": advance.project?.name || "",
+    "Hợp đồng": advance.contract?.contractCode || advance.contract?.contractNumber || advance.contract?.title || "",
+    "Giá trị hợp đồng": formatMoney(advance.contract?.currentValue || advance.contract?.originalValue || 0),
+    "Giá trị nghiệm thu": "",
+    "Tạm ứng": formatMoney(advance.amount),
+    "Đã thanh toán": formatMoney(advance.paidAmount),
+    "Hoàn ứng/Đối trừ": formatMoney(advance.settledAmount),
+    "Còn lại": formatMoney(advance.remainingAmount),
+    "Ngày chứng từ": formatDate(advance.createdAt),
+    "Số chứng từ": advance.advanceNo || advance.id,
+    "Số tiền": formatMoney(advance.amount),
+    "Diễn giải": advance.purpose || "",
+    "Trạng thái": advance.status,
+    "Ghi chú": "Báo cáo pilot; dữ liệu reconciliation Phase 2.8 vẫn cần human approval nếu liên quan mapping."
+  }));
+}
+
+async function buildDebtArApSummary(projectId: string) {
+  const [project, invoices, costs] = await Promise.all([
+    prisma.project.findUnique({ where: { id: projectId }, select: { name: true } }),
+    prisma.invoice.findMany({
+      where: {
+        projectId,
+        deletedAt: null,
+        status: { in: [...FinancialAggregationService.VALID_INVOICE_STATUSES] },
+        approvalStatus: { notIn: ["REJECTED", "CANCELLED"] }
+      },
+      include: { contract: { select: { title: true, contractCode: true, supplier: true } } },
+      orderBy: { issuedDate: "desc" }
+    }),
+    prisma.costRecord.findMany({
+      where: { projectId, deletedAt: null, approvalStatus: ApprovalStatus.APPROVED, workflowStatus: { in: ["APPROVED", "POSTED"] } },
+      include: { wbs: { select: { project: { select: { name: true } } } }, vendorPayments: { where: { deletedAt: null, isReversed: false } } },
+      orderBy: { date: "desc" }
+    })
+  ]);
+
+  const arRows = invoices.map((invoice, index) => ({
+    "STT": index + 1,
+    "Đối tượng": invoice.contract?.supplier?.name || invoice.contract?.title || "Chủ đầu tư/khách hàng",
+    "Loại công nợ": "Phải thu",
+    "Công trình": project?.name || projectId,
+    "Hợp đồng": invoice.contract?.contractCode || invoice.contract?.title || "",
+    "Số chứng từ": invoice.invoiceNumber || invoice.id,
+    "Ngày chứng từ": formatDate(invoice.issuedDate),
+    "Ngày đến hạn": formatDate(invoice.dueDate),
+    "Tổng phát sinh": formatMoney(invoice.amount),
+    "Đã thu/Đã trả": formatMoney(invoice.paidAmount),
+    "Còn lại": formatMoney(invoice.remainingAmount),
+    "Quá hạn": invoice.dueDate && Number(invoice.remainingAmount) > 0 && invoice.dueDate < new Date() ? "Có" : "Không",
+    "Trạng thái": invoice.status,
+    "Ghi chú": "AR từ hóa đơn hợp lệ, không cộng chứng từ REJECTED/CANCELLED."
+  }));
+
+  const apRows = costs.map((cost, index) => {
+    const paid = cost.vendorPayments.reduce((sum, payment) => sum + Number(payment.amount), 0);
+    const remaining = Math.max(Number(cost.amount) - paid, 0);
+    return {
+      "STT": arRows.length + index + 1,
+      "Đối tượng": cost.supplier || "Nhà cung cấp",
+      "Loại công nợ": "Phải trả",
+      "Công trình": cost.wbs.project.name || projectId,
+      "Hợp đồng": "",
+      "Số chứng từ": cost.id,
+      "Ngày chứng từ": formatDate(cost.date),
+      "Ngày đến hạn": "",
+      "Tổng phát sinh": formatMoney(cost.amount),
+      "Đã thu/Đã trả": formatMoney(paid),
+      "Còn lại": formatMoney(remaining),
+      "Quá hạn": "",
+      "Trạng thái": cost.workflowStatus || cost.approvalStatus,
+      "Ghi chú": "AP từ chi phí APPROVED/POSTED, không cộng DRAFT/PENDING."
+    };
+  });
+
+  return [...arRows, ...apRows];
+}
+
+async function buildCostByProjectWbs(projectId: string) {
+  const costs = await prisma.costRecord.findMany({
+    where: { projectId, deletedAt: null, approvalStatus: ApprovalStatus.APPROVED, workflowStatus: { in: ["APPROVED", "POSTED"] } },
+    include: { wbs: { select: { code: true, name: true, project: { select: { id: true, name: true } } } }, vendorPayments: { where: { deletedAt: null, isReversed: false } } },
+    orderBy: [{ date: "desc" }, { createdAt: "desc" }]
+  });
+
+  return costs.map((cost, index) => ({
+    "STT": index + 1,
+    "Mã công trình": cost.wbs.project.id,
+    "Tên công trình": cost.wbs.project.name,
+    "WBS/Hạng mục": `${cost.wbs.code || ""} ${cost.wbs.name}`.trim(),
+    "Loại chi phí": cost.costType,
+    "Nhà cung cấp": cost.supplier || "",
+    "Hợp đồng": "",
+    "Số chứng từ": cost.id,
+    "Ngày chứng từ": formatDate(cost.date),
+    "Số tiền": formatMoney(cost.amount),
+    "Trạng thái duyệt": cost.approvalStatus,
+    "Trạng thái ghi sổ": cost.workflowStatus,
+    "Ghi chú": cost.note || ""
+  }));
+}
+
+async function buildBudgetVsActual(projectId: string) {
+  const [budgets, costs] = await Promise.all([
+    prisma.budgetRecord.findMany({
+      where: { projectId, deletedAt: null },
+      include: { wbs: { select: { code: true, name: true, project: { select: { id: true, name: true } } } } }
+    }),
+    prisma.costRecord.findMany({
+      where: { projectId, deletedAt: null, approvalStatus: ApprovalStatus.APPROVED, workflowStatus: { in: ["APPROVED", "POSTED"] } },
+      include: { wbs: { select: { code: true, name: true, project: { select: { id: true, name: true } } } } }
+    })
+  ]);
+
+  const actualByKey = new Map<string, number>();
+  for (const cost of costs) {
+    const key = `${cost.wbsId}:${cost.costType}`;
+    actualByKey.set(key, (actualByKey.get(key) || 0) + Number(cost.amount));
+  }
+
+  return budgets.map((budget, index) => {
+    const actual = actualByKey.get(`${budget.wbsId}:${budget.costType}`) || 0;
+    const estimated = Number(budget.estimatedAmount);
+    const variance = estimated - actual;
+    const ratio = estimated > 0 ? `${Math.round((actual / estimated) * 100)}%` : "";
+    return {
+      "STT": index + 1,
+      "Mã công trình": budget.wbs.project.id,
+      "Tên công trình": budget.wbs.project.name,
+      "WBS/Hạng mục": `${budget.wbs.code || ""} ${budget.wbs.name}`.trim(),
+      "Loại chi phí": budget.costType,
+      "Dự toán": formatMoney(estimated),
+      "Thực chi": formatMoney(actual),
+      "Chênh lệch": formatMoney(variance),
+      "Tỷ lệ sử dụng": ratio,
+      "Trạng thái cảnh báo": estimated > 0 && actual > estimated ? "Vượt dự toán" : "Trong hạn mức",
+      "Ghi chú": "Thực chi chỉ tính chi phí APPROVED/POSTED."
+    };
   });
 }
 
@@ -213,6 +394,14 @@ async function buildRows(reportType: string, projectId: string) {
         ...(bs.equity || []).map((row: Record<string, unknown>) => ({ ...row, section: "EQUITY" }))
       ];
     }
+    case "ADVANCE_PAYMENT_SUMMARY":
+      return buildAdvancePaymentSummary(projectId);
+    case "DEBT_AR_AP_SUMMARY":
+      return buildDebtArApSummary(projectId);
+    case "COST_BY_PROJECT_WBS":
+      return buildCostByProjectWbs(projectId);
+    case "BUDGET_VS_ACTUAL":
+      return buildBudgetVsActual(projectId);
     default:
       throw new ApiError(400, `Loại báo cáo xuất khẩu không được hỗ trợ: ${reportType}`);
   }
@@ -244,7 +433,11 @@ export async function POST(request: Request) {
 
     const rows = await buildRows(reportType, projectId);
     const filename = `${reportType}_${projectId}_${new Date().toISOString().slice(0, 10)}.csv`;
-    return csvResponse(filename, rows);
+    return csvResponse(filename, rows, {
+      title: `Báo cáo ${reportType}`,
+      filters,
+      csvFallback: true
+    });
   } catch (error) {
     return handleApiError(error);
   }

@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!project) {
-      throw new ApiError(404, 'Project not found');
+      throw new ApiError(404, "Không tìm thấy dự án.");
     }
 
     if (user.companyId && project.companyId !== user.companyId) {

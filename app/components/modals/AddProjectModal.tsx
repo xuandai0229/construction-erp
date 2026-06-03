@@ -155,7 +155,7 @@ export default function AddProjectModal({ isOpen, onClose, project }: Props) {
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1.5 block">Giá trị HĐ (VND) <span className="text-rose-500">*</span></label>
+              <label className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1.5 block">Giá trị hợp đồng (đ) <span className="text-rose-500">*</span></label>
               <input
                 type="text"
                 value={form.totalValue}

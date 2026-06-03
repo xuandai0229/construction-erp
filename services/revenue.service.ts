@@ -287,7 +287,7 @@ export class RevenueService {
         throw new ApiError(400, `LỖI NGHIỆP VỤ KẾ TOÁN: Không thể sửa hóa đơn khi trạng thái là ${existing.status}. Dữ liệu kế toán đã Immutable.`);
       }
       if (existing.approvalStatus === "APPROVED") {
-        throw new ApiError(400, "LỖI NGHIỆP VỤ KẾ TOÁN: Hóa đơn đã được phê duyệt (APPROVED) không thể chỉnh sửa trực tiếp. Vui lòng sử dụng quy trình điều chỉnh.");
+        throw new ApiError(400, "LỖI NGHIỆP VỤ KẾ TOÁN: Hóa đơn đã được phê duyệt không thể chỉnh sửa trực tiếp. Vui lòng sử dụng quy trình điều chỉnh.");
       }
 
       const { assertPeriodNotLocked } = await import("@/lib/period");

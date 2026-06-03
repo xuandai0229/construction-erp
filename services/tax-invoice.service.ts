@@ -199,7 +199,7 @@ export class TaxInvoiceService {
   ) {
     const existing = await this.getInvoiceById(id, companyId);
     if (existing.status !== TaxInvoiceStatus.DRAFT) {
-      throw new ApiError(400, "LỖI HÓA ĐƠN: Chỉ được sửa hóa đơn ở trạng thái Nháp (DRAFT).");
+      throw new ApiError(400, "LỖI HÓA ĐƠN: Chỉ được sửa hóa đơn ở trạng thái Nháp.");
     }
 
     const invDate = input.invoiceDate ? new Date(input.invoiceDate) : new Date();
@@ -262,7 +262,7 @@ export class TaxInvoiceService {
   static async deleteInvoice(id: string, companyId: string, userId: string) {
     const existing = await this.getInvoiceById(id, companyId);
     if (existing.status !== TaxInvoiceStatus.DRAFT) {
-      throw new ApiError(400, "LỖI HÓA ĐƠN: Chỉ được xóa hóa đơn ở trạng thái Nháp (DRAFT).");
+      throw new ApiError(400, "LỖI HÓA ĐƠN: Chỉ được xóa hóa đơn ở trạng thái Nháp.");
     }
 
     await assertPeriodNotLocked(existing.invoiceDate, companyId);
@@ -293,7 +293,7 @@ export class TaxInvoiceService {
   static async issueInvoice(id: string, companyId: string, userId: string) {
     const existing = await this.getInvoiceById(id, companyId);
     if (existing.status !== TaxInvoiceStatus.DRAFT) {
-      throw new ApiError(400, "LỖI HÓA ĐƠN: Chỉ phát hành được hóa đơn ở trạng thái Nháp (DRAFT).");
+      throw new ApiError(400, "LỖI HÓA ĐƠN: Chỉ phát hành được hóa đơn ở trạng thái Nháp.");
     }
 
     await assertPeriodNotLocked(existing.invoiceDate, companyId);
@@ -412,7 +412,7 @@ export class TaxInvoiceService {
 
     const existing = await this.getInvoiceById(id, companyId);
     if (existing.status !== TaxInvoiceStatus.DRAFT && existing.status !== TaxInvoiceStatus.ISSUED) {
-      throw new ApiError(400, "LỖI HỦY HÓA ĐƠN: Chỉ được hủy hóa đơn ở trạng thái Nháp (DRAFT) hoặc Đã phát hành (ISSUED).");
+      throw new ApiError(400, "LỖI HỦY HÓA ĐƠN: Chỉ được hủy hóa đơn ở trạng thái Nháp hoặc Đã phát hành.");
     }
 
     await assertPeriodNotLocked(existing.invoiceDate, companyId);
@@ -448,7 +448,7 @@ export class TaxInvoiceService {
 
     const existing = await this.getInvoiceById(id, companyId);
     if (existing.status !== TaxInvoiceStatus.POSTED) {
-      throw new ApiError(400, "LỖI ĐẢO BÚT TOÁN: Chỉ được đảo bút toán cho hóa đơn đã ghi sổ (POSTED).");
+      throw new ApiError(400, "LỖI ĐẢO BÚT TOÁN: Chỉ được đảo bút toán cho hóa đơn đã ghi sổ.");
     }
 
     await assertPeriodNotLocked(existing.invoiceDate, companyId);

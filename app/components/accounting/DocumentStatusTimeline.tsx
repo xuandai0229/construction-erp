@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { getStatusLabel } from '../ui-enterprise/status-labels';
 
 interface DocumentStatusTimelineProps {
   status: string;
@@ -49,7 +50,9 @@ export default function DocumentStatusTimeline({ status, className = "" }: Docum
                 {idx + 1}
               </div>
               <span className={`text-[9px] font-bold uppercase tracking-wider ${isActive ? "text-blue-500 font-extrabold" : isReversedStep ? "text-rose-500 font-extrabold" : "text-[var(--text-secondary)]"}`}>
-                {step === "POSTED" && (status.toUpperCase() === "PAID" || status.toUpperCase() === "FULLY_SETTLED") ? "POSTED/PAID" : step}
+                {step === "POSTED" && (status.toUpperCase() === "PAID" || status.toUpperCase() === "FULLY_SETTLED")
+                  ? "Đã ghi sổ/Thanh toán"
+                  : getStatusLabel(step)}
               </span>
             </div>
           </React.Fragment>

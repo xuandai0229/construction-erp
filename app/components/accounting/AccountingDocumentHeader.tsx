@@ -11,7 +11,7 @@ interface AccountingDocumentHeaderProps {
 
 export function AccountingDocumentHeader({
   companyName,
-  address = "123 Đường Láng, Đống Đa, Hà Nội",
+  address = "Hà Nội",
   documentTitle,
   documentNo,
   dateStr,
@@ -46,7 +46,7 @@ export function AccountingDocumentHeader({
           Ngày lập: {dateStr}
         </p>
         <p className="text-[9px] text-zinc-500 font-bold border border-zinc-300 px-1 py-0.5 inline-block rounded">
-          Mẫu biểu Thông tư 200/2014/TT-BTC
+          Mẫu biểu pilot nội bộ, tham chiếu Thông tư 200/2014/TT-BTC
         </p>
       </div>
     </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
 import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
+import ReportAuditHistoryPanel from '@/app/components/reports/ReportAuditHistoryPanel';
 import { useERPStore } from '@/store/erpStore';
 import { formatVnd } from '@/app/components/dashboard-data';
 import { useProjectsQuery } from '@/services/queries/useProjects';
@@ -28,13 +29,77 @@ import {
 import { MonthlyReportRow } from '@/app/types/financial';
 
 type ReportTab = 'cash_aging' | 'trial_balance' | 'balance_sheet' | 'vat_summary';
+type ExportReportType =
+  | 'ADVANCE_PAYMENT_SUMMARY'
+  | 'DEBT_AR_AP_SUMMARY'
+  | 'COST_BY_PROJECT_WBS'
+  | 'BUDGET_VS_ACTUAL'
+  | 'CASH_AGING'
+  | 'TRIAL_BALANCE'
+  | 'BALANCE_SHEET'
+  | 'VAT_SUMMARY';
 
-const auditedReportTypeByTab: Record<ReportTab, string> = {
+const auditedReportTypeByTab: Record<ReportTab, ExportReportType> = {
   cash_aging: 'CASH_AGING',
   trial_balance: 'TRIAL_BALANCE',
   balance_sheet: 'BALANCE_SHEET',
   vat_summary: 'VAT_SUMMARY',
 };
+
+const reportGroups: Array<{
+  group: string;
+  description: string;
+  reports: Array<{ title: string; reportType: ExportReportType; note: string; printReady?: boolean }>;
+}> = [
+  {
+    group: 'Tạm ứng / thanh toán',
+    description: 'Theo dõi tạm ứng, đã thanh toán, hoàn ứng/đối trừ và số còn lại theo công trình.',
+    reports: [
+      {
+        title: 'Tổng hợp tạm ứng / thanh toán',
+        reportType: 'ADVANCE_PAYMENT_SUMMARY',
+        note: 'CSV fallback có header công ty, tổng hợp theo chứng từ tạm ứng hiện có.',
+        printReady: true,
+      },
+    ],
+  },
+  {
+    group: 'Công nợ phải thu / phải trả',
+    description: 'Phân biệt AR/AP, ngày chứng từ, ngày đến hạn, còn lại và trạng thái quá hạn.',
+    reports: [
+      {
+        title: 'Công nợ phải thu / phải trả',
+        reportType: 'DEBT_AR_AP_SUMMARY',
+        note: 'Không cộng chứng từ DRAFT/PENDING vào phần chi phí phải trả chính thức.',
+        printReady: true,
+      },
+    ],
+  },
+  {
+    group: 'Chi phí / ngân sách công trình',
+    description: 'Phân tích chi phí theo công trình, WBS và so sánh dự toán với thực chi.',
+    reports: [
+      {
+        title: 'Chi phí theo công trình / hạng mục',
+        reportType: 'COST_BY_PROJECT_WBS',
+        note: 'Thực chi pilot lấy chi phí APPROVED/POSTED theo dữ liệu hiện có.',
+      },
+      {
+        title: 'Dự toán vs thực tế',
+        reportType: 'BUDGET_VS_ACTUAL',
+        note: 'So sánh ngân sách WBS với chi phí đã duyệt/ghi sổ, không đổi công thức.',
+      },
+    ],
+  },
+  {
+    group: 'Sổ cái / báo cáo tài chính',
+    description: 'Các báo cáo tài chính hiện hữu đi qua audited export server-side.',
+    reports: [
+      { title: 'Dòng tiền & công nợ', reportType: 'CASH_AGING', note: 'Export theo tab hiện hữu.' },
+      { title: 'Bảng cân đối phát sinh', reportType: 'TRIAL_BALANCE', note: 'Dữ liệu từ ledger posted.' },
+    ],
+  },
+];
 
 function getFilenameFromDisposition(disposition: string | null, fallback: string) {
   const match = disposition?.match(/filename="?([^"]+)"?/i);
@@ -113,9 +178,9 @@ export default function ReportsPage() {
     '90+ days': 'Trên 90 ngày',
   };
 
-  const handleExport = async () => {
+  const handleExport = async (requestedReportType?: ExportReportType, label?: string) => {
     if (!currentProjectId) return;
-    const reportType = auditedReportTypeByTab[activeTab];
+    const reportType = requestedReportType || auditedReportTypeByTab[activeTab];
 
     fetch("/api/monitoring/performance", {
       method: "POST",
@@ -129,8 +194,8 @@ export default function ReportsPage() {
       body: JSON.stringify({
         reportType,
         projectId: currentProjectId,
-        filters: { projectId: currentProjectId, tab: activeTab },
-        reason: `Xuất báo cáo tài chính ${reportType}`
+        filters: { projectId: currentProjectId, tab: activeTab, label: label || reportType },
+        reason: `Xuất báo cáo tài chính ${label || reportType}`
       })
     });
 
@@ -394,7 +459,7 @@ export default function ReportsPage() {
               </button>
 
               <button
-                onClick={handleExport}
+                onClick={() => handleExport()}
                 className="h-[38px] px-4 text-xs font-semibold text-[var(--text-primary)] border border-[var(--border)] bg-[var(--card)] hover:bg-[var(--muted)] rounded-[var(--radius-sm)] flex items-center gap-1.5 transition-colors duration-150 cursor-pointer shadow-sm"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
@@ -404,6 +469,51 @@ export default function ReportsPage() {
               </button>
             </div>
           </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 print:hidden">
+            {reportGroups.map((group) => (
+              <EnterpriseCard
+                key={group.group}
+                title={group.group}
+                subtitle={group.description}
+                headerActions={
+                  <span className="text-[9px] font-black uppercase tracking-wider text-amber-600 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded">
+                    CSV fallback A4
+                  </span>
+                }
+              >
+                <div className="space-y-3">
+                  {group.reports.map((report) => (
+                    <div
+                      key={report.reportType}
+                      className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--secondary)] p-3"
+                    >
+                      <div className="min-w-0">
+                        <div className="text-[12px] font-black text-[var(--text-primary)] uppercase tracking-wide">
+                          {report.title}
+                        </div>
+                        <div className="mt-1 text-[11px] leading-5 text-[var(--text-secondary)]">
+                          {report.note}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleExport(report.reportType, report.title)}
+                        className="h-9 shrink-0 px-3 rounded-[var(--radius-sm)] text-[11px] font-bold border border-[var(--border)] bg-[var(--card)] text-[var(--text-primary)] hover:bg-[var(--muted)] transition-colors cursor-pointer"
+                      >
+                        Xuất CSV audited
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </EnterpriseCard>
+            ))}
+            <div className="xl:col-span-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-[11px] leading-5 text-amber-700 dark:text-amber-300">
+              Header công ty đang dùng cấu hình pilot: CÔNG TY CP THƯƠNG MẠI VÀ XÂY DỰNG SỐ 2 HN. Dữ liệu liên quan reconciliation Phase 2.8 vẫn cần người thật phê duyệt trước khi dùng làm số liệu kế toán chính thức.
+            </div>
+          </div>
+
+          <ReportAuditHistoryPanel />
 
           {/* Dynamic Tab Switcher (Hidden in Print Mode) */}
           <div className="flex border-b border-[var(--border)] gap-2 print:hidden overflow-x-auto scrollbar-hide select-none">
@@ -431,7 +541,7 @@ export default function ReportsPage() {
           <div className="hidden print:block text-center space-y-2 border-b-2 border-zinc-800 pb-4">
             <h2 className="text-xl font-bold uppercase tracking-wider text-black">BÁO CÁO TÀI CHÍNH DOANH NGHIỆP THỜI GIAN THỰC</h2>
             <p className="text-[12px] text-zinc-600">Dự án: {projects.find(p => p.id === currentProjectId)?.name || currentProjectId}</p>
-            <p className="text-[10px] text-zinc-500">Thời gian lập: {new Date().toLocaleString('vi-VN')}</p>
+            <p className="text-[10px] text-zinc-500" suppressHydrationWarning>Thời gian lập: {new Date().toLocaleString('vi-VN')}</p>
           </div>
 
           {/* TAB CONTENT 1: CASH FLOW & AGING */}

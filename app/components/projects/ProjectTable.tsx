@@ -2,18 +2,32 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Project } from '@/app/types';
+import { Project, ProjectStatus } from '@/app/types';
 import ConfirmModal from '@/app/components/modals/ConfirmModal';
-import { Column, EnterpriseEmptyState, EnterpriseTable } from '@/app/components/ui-enterprise';
+import { Column, EnterpriseActionMenu, EnterpriseEmptyState, EnterpriseTable } from '@/app/components/ui-enterprise';
 import { formatDate, formatVnd } from '@/app/components/dashboard-data';
 import { useERPStore } from '@/store/erpStore';
 import { useDeleteProjectMutation, useUpdateProjectMutation } from '@/services/queries/useProjects';
+import FinancialDrilldownDrawer, { FinancialMetricKey } from '@/app/components/accounting/FinancialDrilldownDrawer';
 
 type ProjectRow = Project & {
   code: string;
   type: string;
   progress: number;
   actualCost: number;
+};
+
+type ProjectMetrics = {
+  progress?: number | string | null;
+  actualCost?: number | string | null;
+};
+
+type ProjectDrilldownRequest = {
+  metric: FinancialMetricKey;
+  title: string;
+  amount: number;
+  projectId: string;
+  projectName: string;
 };
 
 const statusConfig: Record<string, { text: string; className: string }> = {
@@ -26,12 +40,13 @@ const statusConfig: Record<string, { text: string; className: string }> = {
 };
 
 function enrichProject(project: Project): ProjectRow {
+  const metrics = project as Project & ProjectMetrics;
   return {
     ...project,
     code: `PRJ-${project.id.substring(0, 4).toUpperCase()}`,
     type: project.projectType || 'Dân dụng',
-    progress: Number((project as any).progress || 0),
-    actualCost: Number((project as any).actualCost || 0),
+    progress: Number(metrics.progress || 0),
+    actualCost: Number(metrics.actualCost || 0),
   };
 }
 
@@ -56,14 +71,23 @@ export default function ProjectTable({
     name: string;
     type: 'DELETE' | 'CLOSE';
   } | null>(null);
+  const [drilldown, setDrilldown] = useState<ProjectDrilldownRequest | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
 
   const openDashboard = (projectId: string) => {
     setCurrentProject(projectId);
     router.push('/');
+  };
+
+  const openProjectDrilldown = (row: ProjectRow, metric: FinancialMetricKey, title: string, amount: number) => {
+    setDrilldown({
+      metric,
+      title,
+      amount,
+      projectId: row.id,
+      projectName: row.name
+    });
   };
 
   const executeAction = async () => {
@@ -76,11 +100,12 @@ export default function ProjectTable({
         await deleteProject(confirmAction.id);
         if (currentProjectId === confirmAction.id) setCurrentProject('');
       } else {
-        await updateProject({ id: confirmAction.id, updates: { status: 'CLOSED' as any } });
+        await updateProject({ id: confirmAction.id, updates: { status: ProjectStatus.CLOSED } });
       }
       setConfirmAction(null);
-    } catch (err: any) {
-      setError(err.message || 'Không thể thực hiện thao tác. Vui lòng kiểm tra lại hệ thống.');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : null;
+      setError(message || 'Không thể thực hiện thao tác. Vui lòng kiểm tra lại hệ thống.');
       setConfirmAction(null);
     } finally {
       setIsLoading(false);
@@ -139,14 +164,38 @@ export default function ProjectTable({
     },
     {
       header: 'Ngân sách',
-      accessor: row => formatVnd(Number(row.totalBudget || 0)),
+      accessor: row => (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            openProjectDrilldown(row, 'budget', `Truy vết ngân sách: ${row.name}`, Number(row.totalBudget || 0));
+          }}
+          className="font-mono font-bold tabular-nums text-[var(--primary)] underline-offset-2 hover:underline"
+          title="Xem chi tiết ngân sách"
+        >
+          {formatVnd(Number(row.totalBudget || 0))}
+        </button>
+      ),
       align: 'right',
       width: '160px',
       minWidth: '140px'
     },
     {
       header: 'Thực chi',
-      accessor: row => formatVnd(row.actualCost),
+      accessor: row => (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            openProjectDrilldown(row, 'cost', `Truy vết thực chi: ${row.name}`, row.actualCost);
+          }}
+          className="font-mono font-bold tabular-nums text-[var(--primary)] underline-offset-2 hover:underline"
+          title="Xem chi tiết thực chi"
+        >
+          {formatVnd(row.actualCost)}
+        </button>
+      ),
       align: 'right',
       width: '160px',
       minWidth: '140px'
@@ -184,58 +233,29 @@ export default function ProjectTable({
     },
     {
       header: 'Thao tác',
-      accessor: row => {
-        const isMenuOpen = activeMenuId === row.id;
-        return (
-          <div className="relative flex items-center justify-center gap-1.5" onClick={event => event.stopPropagation()}>
-            <button 
-              className="h-7 px-3 bg-[var(--primary)] text-white hover:bg-[var(--primary)]/90 rounded-[var(--radius-sm)] text-[10px] font-black uppercase tracking-wider transition-colors cursor-pointer"
-              onClick={() => openDashboard(row.id)}
-            >
-              Chi tiết
-            </button>
-            <div className="relative">
-              <button 
-                className="h-7 w-7 flex items-center justify-center bg-[var(--secondary)] hover:bg-[var(--muted)] text-[var(--text-primary)] rounded-[var(--radius-sm)] transition-colors cursor-pointer border border-[var(--border)]"
-                onClick={() => setActiveMenuId(isMenuOpen ? null : row.id)}
-              >
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="5" r="1.5" />
-                  <circle cx="12" cy="12" r="1.5" />
-                  <circle cx="12" cy="19" r="1.5" />
-                </svg>
-              </button>
-              {isMenuOpen && (
-                <>
-                  <div className="fixed inset-0 z-20" onClick={() => setActiveMenuId(null)} />
-                  <div className="absolute right-0 mt-1.5 w-32 rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 shadow-lg z-30 animate-fade-in text-left">
-                    <button
-                      className="w-full text-left h-8 px-2.5 hover:bg-[var(--muted)] rounded-md text-[11px] font-semibold text-[var(--text-primary)] transition-colors cursor-pointer flex items-center gap-2"
-                      onClick={() => { onEdit(row); setActiveMenuId(null); }}
-                    >
-                      <span>Sửa</span>
-                    </button>
-                    {row.status !== 'CLOSED' && (
-                      <button
-                        className="w-full text-left h-8 px-2.5 hover:bg-[var(--muted)] rounded-md text-[11px] font-semibold text-[var(--text-primary)] transition-colors cursor-pointer flex items-center gap-2"
-                        onClick={() => { setConfirmAction({ id: row.id, name: row.name, type: 'CLOSE' }); setActiveMenuId(null); }}
-                      >
-                        <span>Đóng</span>
-                      </button>
-                    )}
-                    <button
-                      className="w-full text-left h-8 px-2.5 hover:bg-rose-500/10 text-rose-500 rounded-md text-[11px] font-bold transition-colors cursor-pointer flex items-center gap-2"
-                      onClick={() => { setConfirmAction({ id: row.id, name: row.name, type: 'DELETE' }); setActiveMenuId(null); }}
-                    >
-                      <span>Xóa</span>
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        );
-      },
+      accessor: row => (
+        <div className="flex items-center justify-center gap-1.5" onClick={event => event.stopPropagation()}>
+          <button
+            className="h-7 px-3 bg-[var(--primary)] text-white hover:bg-[var(--primary)]/90 rounded-[var(--radius-sm)] text-[10px] font-black uppercase tracking-wider transition-colors cursor-pointer"
+            onClick={() => openDashboard(row.id)}
+          >
+            Chi tiết
+          </button>
+          <EnterpriseActionMenu
+            actions={[
+              { label: 'Sửa hồ sơ', onClick: () => onEdit(row) },
+              ...(row.status !== 'CLOSED'
+                ? [{ label: 'Đóng công trình', onClick: () => setConfirmAction({ id: row.id, name: row.name, type: 'CLOSE' }) }]
+                : []),
+              {
+                label: 'Xóa hồ sơ',
+                onClick: () => setConfirmAction({ id: row.id, name: row.name, type: 'DELETE' }),
+                variant: 'danger' as const
+              }
+            ]}
+          />
+        </div>
+      ),
       align: 'center',
       width: '140px',
       minWidth: '140px'
@@ -278,6 +298,8 @@ export default function ProjectTable({
           </p>
         </div>
       </div>
+
+      <FinancialDrilldownDrawer request={drilldown} onClose={() => setDrilldown(null)} />
 
       <ConfirmModal
         isOpen={!!confirmAction}

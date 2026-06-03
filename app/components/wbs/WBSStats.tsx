@@ -18,19 +18,19 @@ export default function WBSStats({ totalItems, totalBudget, totalActual, varianc
       icon: <><polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 17 12 22 22 17" /><polyline points="2 12 12 17 22 12" /></>,
     },
     {
-      title: 'Tổng dự toán', value: totalBudget.toLocaleString(), label: 'VNĐ',
+      title: 'Tổng dự toán', value: totalBudget.toLocaleString('vi-VN'), label: 'đ',
       accent: 'text-emerald-400', gradientFrom: 'from-emerald-500/8', gradientTo: 'to-transparent',
       ringColor: 'ring-emerald-500/20',
       icon: <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />,
     },
     {
-      title: 'Chi phí thực tế', value: totalActual.toLocaleString(), label: 'VNĐ',
+      title: 'Chi phí thực tế', value: totalActual.toLocaleString('vi-VN'), label: 'đ',
       accent: 'text-rose-400', gradientFrom: 'from-rose-500/8', gradientTo: 'to-transparent',
       ringColor: 'ring-rose-500/20',
       icon: <path d="M17 9V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2m2 4h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm7-5a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" />,
     },
     {
-      title: 'Chênh lệch', value: variance < 0 ? '' + variance.toLocaleString() : '+' + variance.toLocaleString(), label: 'VNĐ',
+      title: 'Chênh lệch', value: variance < 0 ? '' + variance.toLocaleString('vi-VN') : '+' + variance.toLocaleString('vi-VN'), label: 'đ',
       accent: variance >= 0 ? 'text-emerald-400' : 'text-rose-400',
       gradientFrom: variance >= 0 ? 'from-emerald-500/8' : 'from-rose-500/8', gradientTo: 'to-transparent',
       ringColor: variance >= 0 ? 'ring-emerald-500/20' : 'ring-rose-500/20',

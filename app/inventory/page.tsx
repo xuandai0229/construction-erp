@@ -16,22 +16,33 @@ import { StockCardTable } from '@/app/components/inventory/StockCardTable';
 import { InOutBalanceTable } from '@/app/components/inventory/InOutBalanceTable';
 import { InventoryReportFilterBar } from '@/app/components/inventory/InventoryReportFilterBar';
 
+type InventoryTab = 'dashboard' | 'materials' | 'warehouses' | 'documents' | 'reports';
+type InventoryReportType = 'stock-card' | 'in-out-balance';
+type InventoryReportFilters = {
+  warehouseId?: string;
+  materialItemId?: string;
+  projectId?: string;
+  wbsId?: string;
+  fromDate: string;
+  toDate: string;
+};
+
 export default function InventoryPage() {
-  const { currentProjectId, sidebarCollapsed } = useERPStore();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'materials' | 'warehouses' | 'documents' | 'reports'>('dashboard');
+  const { currentProjectId } = useERPStore();
+  const [activeTab, setActiveTab] = useState<InventoryTab>('dashboard');
 
   const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
   const [showDocForm, setShowDocForm] = useState(false);
 
-  const [reportType, setReportType] = useState<'stock-card' | 'in-out-balance'>('in-out-balance');
-  const [reportFilters, setReportFilters] = useState<any>(null);
+  const [reportType, setReportType] = useState<InventoryReportType>('in-out-balance');
+  const [reportFilters, setReportFilters] = useState<InventoryReportFilters | null>(null);
 
   const tabs = [
     { id: 'dashboard', label: 'Tổng quan kho' },
     { id: 'documents', label: 'Chứng từ kho' },
     { id: 'materials', label: 'Danh mục vật tư' },
     { id: 'warehouses', label: 'Danh mục kho bãi' },
-    { id: 'reports', label: 'Báo cáo kho' }
+    { id: 'reports', label: 'Báo cáo kho' },
   ];
 
   const handleViewDocDetail = (id: string) => {
@@ -50,17 +61,20 @@ export default function InventoryPage() {
   };
 
   const handleDrillDownFromReport = (docNo: string) => {
-    fetch(`/api/inventory/documents`)
-      .then(res => res.json())
-      .then(json => {
-        if (json.success) {
-          const matched = json.data.find((d: any) => d.documentNo === docNo);
-          if (matched) {
+    fetch('/api/inventory/documents')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && Array.isArray(json.data)) {
+          const matched = json.data.find((document: { documentNo?: string; id?: string }) => document.documentNo === docNo);
+          if (matched?.id) {
             setSelectedDocId(matched.id);
             setActiveTab('documents');
             setShowDocForm(true);
           }
         }
+      })
+      .catch(() => {
+        // Read-only drilldown fallback: keep the user on the report when the API is unavailable.
       });
   };
 
@@ -72,16 +86,16 @@ export default function InventoryPage() {
       />
       <EnterprisePageContainer>
         <EnterpriseSection
-          title="HỆ THỐNG KẾ TOÁN KHO & VẬT TƯ (INVENTORY COMMAND)"
+          title="HỆ THỐNG KẾ TOÁN KHO & VẬT TƯ"
           subtitle="Theo dõi xuất nhập tồn, giá bình quân gia quyền di động, đối chiếu sổ cái TK 152"
         >
-          <EnterpriseTabs 
-            tabs={tabs} 
-            activeTab={activeTab} 
+          <EnterpriseTabs
+            tabs={tabs}
+            activeTab={activeTab}
             onTabChange={(id) => {
-              setActiveTab(id as any);
+              setActiveTab(id as InventoryTab);
               if (id === 'documents') setShowDocForm(false);
-            }} 
+            }}
           />
         </EnterpriseSection>
 
@@ -90,7 +104,7 @@ export default function InventoryPage() {
             <InventoryDashboardCards
               currentProjectId={currentProjectId}
               onNavigateTab={(tab) => {
-                setActiveTab(tab as any);
+                setActiveTab(tab as InventoryTab);
                 if (tab === 'documents') setShowDocForm(false);
               }}
             />
@@ -100,15 +114,15 @@ export default function InventoryPage() {
                 subtitle="Tự động đối chiếu số liệu kho hàng với Sổ cái phát sinh"
               >
                 <div className="p-4 rounded-xl border border-[var(--border)] bg-[var(--secondary)] text-[var(--text-secondary)] text-[12px] space-y-3">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-4">
                     <span>Trạng thái chốt chặn xuất âm kho:</span>
-                    <span className="font-bold text-emerald-500">ĐANG BẬT (ACTIVE)</span>
+                    <span className="font-bold text-emerald-500">ĐANG BẬT</span>
                   </div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-4">
                     <span>Phương pháp tính giá xuất kho:</span>
                     <span className="font-bold text-[var(--primary)]">GIÁ BÌNH QUÂN DI ĐỘNG (AVCO)</span>
                   </div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-4">
                     <span>Cơ chế hạch toán sổ cái:</span>
                     <span className="font-bold text-indigo-500">BÚT TOÁN KÉP TỰ ĐỘNG (TK 152/153)</span>
                   </div>
@@ -116,7 +130,7 @@ export default function InventoryPage() {
               </EnterpriseCard>
               <EnterpriseCard
                 title="TÁC VỤ KHO CHỜ XỬ LÝ"
-                subtitle="Xem danh sách tài liệu cần được CFO/Kế toán trưởng phê duyệt hoặc ghi sổ"
+                subtitle="Xem danh sách chứng từ cần được kế toán trưởng phê duyệt hoặc ghi sổ"
               >
                 <div className="p-4 rounded-xl border border-[var(--border)] bg-[var(--secondary)] text-[12px] text-[var(--text-tertiary)] italic text-center py-8">
                   Không có chứng từ kho nào bị treo hoặc cảnh báo quá hạn.
@@ -163,13 +177,19 @@ export default function InventoryPage() {
             <div className="flex flex-wrap items-center gap-3 bg-[var(--card)] p-4 rounded-xl border border-[var(--border)]">
               <span className="text-[12px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider">CHỌN LOẠI BÁO CÁO:</span>
               <button
-                onClick={() => { setReportType('in-out-balance'); setReportFilters(null); }}
+                onClick={() => {
+                  setReportType('in-out-balance');
+                  setReportFilters(null);
+                }}
                 className={`px-4 py-2 rounded-lg text-[12px] font-bold transition-all cursor-pointer ${reportType === 'in-out-balance' ? 'bg-[var(--primary)] text-white' : 'bg-[var(--secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
               >
                 Báo cáo Nhập Xuất Tồn
               </button>
               <button
-                onClick={() => { setReportType('stock-card'); setReportFilters(null); }}
+                onClick={() => {
+                  setReportType('stock-card');
+                  setReportFilters(null);
+                }}
                 className={`px-4 py-2 rounded-lg text-[12px] font-bold transition-all cursor-pointer ${reportType === 'stock-card' ? 'bg-[var(--primary)] text-white' : 'bg-[var(--secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
               >
                 Thẻ kho chi tiết

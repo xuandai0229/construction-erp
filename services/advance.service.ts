@@ -37,7 +37,7 @@ export class AdvanceService {
   static async submitAdvance(id: string, userId: string) {
     return prisma.$transaction(async (tx) => {
       const advance = await tx.advanceRequest.findUnique({ where: { id } });
-      if (!advance) throw new Error("Not found");
+      if (!advance) throw new Error("Không tìm thấy đề nghị tạm ứng.");
       
       if (advance.status !== "DRAFT") {
         throw new Error("Chỉ DRAFT mới được submit");
@@ -63,7 +63,7 @@ export class AdvanceService {
   static async approveAdvance(id: string, userId: string) {
     return prisma.$transaction(async (tx) => {
       const advance = await tx.advanceRequest.findUnique({ where: { id } });
-      if (!advance) throw new Error("Not found");
+      if (!advance) throw new Error("Không tìm thấy đề nghị tạm ứng.");
 
       AdvanceSettlementPolicy.validateAdvanceApprove(advance.status, advance.requestedBy === userId);
 
@@ -91,7 +91,7 @@ export class AdvanceService {
   static async postAdvancePayment(id: string, userId: string, journalEntryId?: string) {
     return prisma.$transaction(async (tx) => {
       const advance = await tx.advanceRequest.findUnique({ where: { id } });
-      if (!advance) throw new Error("Not found");
+      if (!advance) throw new Error("Không tìm thấy đề nghị tạm ứng.");
 
       AdvanceSettlementPolicy.validateAdvancePaymentPost(advance.status, false); // Mock period lock = false for now
 
@@ -121,7 +121,7 @@ export class AdvanceService {
   static async reverseAdvance(id: string, userId: string) {
     return prisma.$transaction(async (tx) => {
       const advance = await tx.advanceRequest.findUnique({ where: { id } });
-      if (!advance) throw new Error("Not found");
+      if (!advance) throw new Error("Không tìm thấy đề nghị tạm ứng.");
 
       const updated = await tx.advanceRequest.update({
         where: { id },

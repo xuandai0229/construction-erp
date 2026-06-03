@@ -188,7 +188,7 @@ export default function AddBudgetModal({ isOpen, onClose, editingBudget, initial
           </div>
 
           <div>
-            <label className="erp-label">Số tiền dự toán (VND) <span className="text-red-500">*</span></label>
+            <label className="erp-label">Số tiền dự toán (đ) <span className="text-red-500">*</span></label>
             <input
               type="number"
               min="0"

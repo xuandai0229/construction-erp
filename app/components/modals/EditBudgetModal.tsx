@@ -167,7 +167,7 @@ export default function EditBudgetModal({ isOpen, onClose, editingBudget }: Prop
                 autoFocus
               />
               <div className="mt-2 text-right text-[12px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-500/10 px-3 py-1.5 rounded-md inline-block float-right">
-                = {form.estimatedAmount && !isNaN(parseFloat(form.estimatedAmount)) ? parseFloat(form.estimatedAmount).toLocaleString('vi-VN') : '0'} VNĐ
+                = {form.estimatedAmount && !isNaN(parseFloat(form.estimatedAmount)) ? parseFloat(form.estimatedAmount).toLocaleString('vi-VN') : '0'} đ
               </div>
               <div className="clear-both"></div>
             </div>

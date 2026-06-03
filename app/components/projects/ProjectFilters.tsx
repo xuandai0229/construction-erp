@@ -116,7 +116,7 @@ export default function ProjectFilters({ filters, onFilterChange }: ProjectFilte
       }
 
       const projects = res.data;
-      const headers = ['Mã dự án', 'Tên dự án', 'Chủ đầu tư', 'Giá trị HĐ (VND)', 'Loại', 'Trạng thái', 'Ngày bắt đầu', 'Ngày kết thúc'];
+      const headers = ['Mã dự án', 'Tên dự án', 'Chủ đầu tư', 'Giá trị hợp đồng (đ)', 'Loại', 'Trạng thái', 'Ngày bắt đầu', 'Ngày kết thúc'];
       const rows = projects.map(p => [
         p.id.slice(0, 8).toUpperCase(),
         p.name,

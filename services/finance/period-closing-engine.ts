@@ -81,7 +81,7 @@ export class PeriodClosingEngine {
 
       if (imbalance >= 1.0) {
         throw new ApiError(422,
-          `Khóa sổ thất bại: Sổ cái không cân bằng. Tổng Nợ: ${totalDebit.toLocaleString()}, Tổng Có: ${totalCredit.toLocaleString()}, Lệch: ${imbalance.toLocaleString()} VND.`
+          `Khóa sổ thất bại: Sổ cái không cân bằng. Tổng Nợ: ${totalDebit.toLocaleString("vi-VN")} đ, Tổng Có: ${totalCredit.toLocaleString("vi-VN")} đ, Lệch: ${imbalance.toLocaleString("vi-VN")} đ.`
         );
       }
 

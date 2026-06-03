@@ -20,7 +20,7 @@ export async function requireAuth() {
 export async function requireRole(allowedRoles: UserRole[]) {
   const user = await requireAuth();
   if (!allowedRoles.includes(user.role)) {
-    throw new ApiError(403, `Role ${user.role} is not allowed for this route.`);
+    throw new ApiError(403, `Vai trò ${user.role} không được phép truy cập chức năng này.`);
   }
   return user;
 }
@@ -55,29 +55,29 @@ export async function requireAccountingAccess(action: Action = "READ") {
   const exportRoles: UserRole[] = [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CFO, UserRole.ACCOUNTANT, UserRole.AUDITOR, UserRole.GROUP_DIRECTOR];
   const allowedRoles = action === "EXPORT" ? exportRoles : readRoles;
   if (!allowedRoles.includes(user.role)) {
-    throw new ApiError(403, `Role ${user.role} is not allowed to access accounting data.`);
+    throw new ApiError(403, `Vai trò ${user.role} không được phép truy cập dữ liệu kế toán.`);
   }
   return user;
 }
 
 export async function requireCompanyScope(user: AuthenticatedUser, companyId?: string | null) {
   if (isSuperAdmin(user) && !user.companyId) return true;
-  if (!user.companyId) throw new ApiError(403, "User is not assigned to a company.");
+  if (!user.companyId) throw new ApiError(403, "Tài khoản chưa được gán công ty/pháp nhân.");
   if (companyId && companyId !== user.companyId) {
-    throw new ApiError(403, "Access denied: tenant isolation violation.");
+    throw new ApiError(403, "Không được truy cập dữ liệu của công ty/pháp nhân khác.");
   }
   return true;
 }
 
 export async function requireProjectAccess(user: AuthenticatedUser, projectId?: string | null) {
-  if (!projectId) throw new ApiError(400, "projectId is required.");
+  if (!projectId) throw new ApiError(400, "Thiếu mã công trình để kiểm tra quyền truy cập.");
 
   const project = await prisma.project.findFirst({
     where: { id: projectId, deletedAt: null },
     select: { id: true, companyId: true, branchId: true },
   });
 
-  if (!project) throw new ApiError(404, "Project not found.");
+  if (!project) throw new ApiError(404, "Không tìm thấy công trình.");
   await requireCompanyScope(user, project.companyId);
   return project;
 }
@@ -91,13 +91,13 @@ export async function requireProjectPermission(projectId: string | null | undefi
 export async function requireSystemInternalToken() {
   const token = process.env.INTERNAL_SYSTEM_TOKEN;
   if (!token) {
-    throw new ApiError(503, "Internal system token is not configured.");
+    throw new ApiError(503, "Chưa cấu hình khóa xác thực nội bộ của hệ thống.");
   }
 
   const head = await headers();
   const provided = head.get(SYSTEM_INTERNAL_HEADER);
   if (!provided || provided !== token) {
-    throw new ApiError(401, "Internal system authentication required.");
+    throw new ApiError(401, "Yêu cầu xác thực nội bộ của hệ thống.");
   }
 }
 

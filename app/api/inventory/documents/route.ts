@@ -4,11 +4,20 @@ import { handleApiError, ApiError } from "@/lib/api-error";
 import { InventoryService } from "@/services/inventory.service";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const user = await requirePermission("DOCUMENT", "READ");
     if (!user.companyId) {
-      throw new ApiError(403, "Người dùng không có context công ty");
+      if (user.role === "SUPER_ADMIN") {
+        return NextResponse.json({
+          success: true,
+          data: [],
+          metadata: {
+            warning: "Tài khoản SUPER_ADMIN chưa được gán công ty; chưa có dữ liệu kho vật tư để hiển thị."
+          }
+        });
+      }
+      throw new ApiError(403, "Bạn không có quyền xem dữ liệu kho vật tư. Vui lòng liên hệ quản trị hệ thống nếu cần truy cập.");
     }
 
     const docs = await prisma.inventoryDocument.findMany({

@@ -22,7 +22,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       }
     });
 
-    if (!contract) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (!contract) return NextResponse.json({ error: "Không tìm thấy hợp đồng." }, { status: 404 });
 
     // Validate Tenant
     if (user.companyId && contract.projectId) {

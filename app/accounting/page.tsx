@@ -352,7 +352,7 @@ export default function AccountingPage() {
                 <FormGroup label="Tên hợp đồng" required>
                   <Input placeholder="Tên gói thầu / vật tư" value={form.contractTitle} onChange={e => setForm({ ...form, contractTitle: e.target.value })} />
                 </FormGroup>
-                <FormGroup label="Giá trị hợp đồng (VND)" required>
+                <FormGroup label="Giá trị hợp đồng (đ)" required>
                   <Input placeholder="Giá trị hợp đồng" type="number" value={form.contractValue} onChange={e => setForm({ ...form, contractValue: e.target.value })} />
                 </FormGroup>
                 <button
@@ -378,7 +378,7 @@ export default function AccountingPage() {
                 <FormGroup label="Số nghiệm thu">
                   <Input placeholder="Số biên bản nghiệm thu" value={form.acceptanceNumber} onChange={e => setForm({ ...form, acceptanceNumber: e.target.value })} />
                 </FormGroup>
-                <FormGroup label="Giá trị nghiệm thu (VND)">
+                <FormGroup label="Giá trị nghiệm thu (đ)">
                   <Input placeholder="Số tiền nghiệm thu" type="number" value={form.acceptanceAmount} onChange={e => setForm({ ...form, acceptanceAmount: e.target.value })} />
                 </FormGroup>
                 <button
@@ -393,7 +393,7 @@ export default function AccountingPage() {
                     <Input placeholder="Số ký hiệu hóa đơn VAT" value={form.invoiceNumber} onChange={e => setForm({ ...form, invoiceNumber: e.target.value })} />
                   </FormGroup>
                 </div>
-                <FormGroup label="Giá trị hóa đơn (VND)">
+                <FormGroup label="Giá trị hóa đơn (đ)">
                   <Input placeholder="Tổng tiền trước thuế" type="number" value={form.invoiceAmount} onChange={e => setForm({ ...form, invoiceAmount: e.target.value })} />
                 </FormGroup>
                 <button
@@ -415,7 +415,7 @@ export default function AccountingPage() {
                     {selectedContract?.invoices.map((invoice: any) => <option key={invoice.id} value={invoice.id}>{invoice.invoiceNumber || invoice.id.slice(0, 8)} - {formatVnd(invoice.amount)}</option>)}
                   </Select>
                 </FormGroup>
-                <FormGroup label="Số tiền thanh toán (VND)">
+                <FormGroup label="Số tiền thanh toán (đ)">
                   <Input placeholder="Số tiền thanh toán thực tế" type="number" value={form.paymentAmount} onChange={e => setForm({ ...form, paymentAmount: e.target.value })} />
                 </FormGroup>
                 <button

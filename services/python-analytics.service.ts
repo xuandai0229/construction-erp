@@ -695,7 +695,7 @@ export class PythonAnalyticsService {
         severity: (cpi < 0.85 || overrunItems.length > 2) ? 'CRITICAL' : 'WARNING',
         message: `Chỉ số CPI đạt ${cpi.toFixed(2)}. Có ${overrunItems.length} hạng mục WBS vượt dự toán BOQ.`,
         details: overrunItems.length > 0 
-          ? overrunItems.slice(0, 3).map((item: any) => `Hạng mục '${item.name}' vượt ${Math.abs(item.variance).toLocaleString('vi-VN')} VND`)
+          ? overrunItems.slice(0, 3).map((item: any) => `Hạng mục '${item.name}' vượt ${Math.abs(item.variance).toLocaleString('vi-VN')} đ`)
           : ["Dự án đang tiêu hao chi phí vượt mức hoàn thành."]
       });
     }
@@ -717,7 +717,7 @@ export class PythonAnalyticsService {
       risks_detected.push({
         type: 'RECEIVABLE_OVERDUE',
         severity: ratio > 15 ? 'CRITICAL' : 'WARNING',
-        message: `Công nợ quá hạn từ khách hàng là ${overdueReceivable.toLocaleString('vi-VN')} VND.`,
+        message: `Công nợ quá hạn từ khách hàng là ${overdueReceivable.toLocaleString('vi-VN')} đ.`,
         details: [`Chiếm ${ratio.toFixed(1)}% tổng giá trị hợp đồng, gây rủi ro đứt gãy dòng tiền thi công.`]
       });
     }
@@ -743,8 +743,8 @@ export class PythonAnalyticsService {
         severity: grossMargin < 0 ? 'CRITICAL' : 'WARNING',
         message: `Biên lợi nhuận gộp bất thường (${grossMargin.toFixed(2)}%)`,
         details: [
-          `Doanh thu ghi nhận: ${kpis.totalRevenue.toLocaleString('vi-VN')} VND.`,
-          `Chi phí thực tế: ${kpis.totalCost.toLocaleString('vi-VN')} VND.`,
+          `Doanh thu ghi nhận: ${kpis.totalRevenue.toLocaleString('vi-VN')} đ.`,
+          `Chi phí thực tế: ${kpis.totalCost.toLocaleString('vi-VN')} đ.`,
           `Khuyến nghị: Rà soát lại việc hạch toán chi phí hoặc đôn đốc nghiệm thu (Doanh thu đang thấp hơn chi phí).`
         ]
       });
@@ -850,7 +850,7 @@ export class PythonAnalyticsService {
       insights.push({
         id: 'ins-budget-overrun',
         title: 'Chênh lệch ngân sách thi công',
-        explanation: `Chỉ số hiệu suất chi phí (CPI) là ${cpi.toFixed(2)} với mức vượt ngân sách ${Math.abs(budgetVariance).toLocaleString('vi-VN')} VND. Dự án đang tiêu hao nhiều chi phí hơn mức giới hạn được phép hoàn thành.`,
+        explanation: `Chỉ số hiệu suất chi phí (CPI) là ${cpi.toFixed(2)} với mức vượt ngân sách ${Math.abs(budgetVariance).toLocaleString('vi-VN')} đ. Dự án đang tiêu hao nhiều chi phí hơn mức giới hạn được phép hoàn thành.`,
         impact: 'NEGATIVE',
         suggestion: 'Rà soát lại khối lượng cấp phát vật tư và tạm dừng thanh toán cho các khối lượng phát sinh chưa có Variation Order (VO).'
       });
@@ -861,7 +861,7 @@ export class PythonAnalyticsService {
       insights.push({
         id: 'ins-cashflow-debt',
         title: 'Rủi ro tắc nghẽn thanh khoản dòng tiền',
-        explanation: `Công nợ phải thu quá hạn từ Chủ đầu tư đạt mức ${overdueReceivable.toLocaleString('vi-VN')} VND, gây áp lực trực tiếp lên nguồn vốn lưu động để thanh toán cho thầu phụ.`,
+        explanation: `Công nợ phải thu quá hạn từ Chủ đầu tư đạt mức ${overdueReceivable.toLocaleString('vi-VN')} đ, gây áp lực trực tiếp lên nguồn vốn lưu động để thanh toán cho thầu phụ.`,
         impact: 'NEGATIVE',
         suggestion: 'Khởi động quy trình đôn đốc thu hồi nợ cấp bách và chuẩn bị hồ sơ pháp lý đối chiếu công nợ.'
       });
@@ -939,21 +939,21 @@ export class PythonAnalyticsService {
     if (q.includes('lỗ') || q.includes('lợi nhuận âm') || q.includes('gross profit') || q.includes('lãi lỗ') || q.includes('giải thích lỗ')) {
       if (grossProfit < 0) {
         answer = `### 🔴 Báo cáo Phân tích Tài chính — Nguyên nhân Lợi nhuận âm:\n\n` +
-                 `Dự án hiện đang ghi nhận **Lợi nhuận gộp âm: ${grossProfit.toLocaleString('vi-VN')} VND** với **Biên lợi nhuận gộp: ${grossMargin.toFixed(1)}%**.\n\n` +
+                 `Dự án hiện đang ghi nhận **Lợi nhuận gộp âm: ${grossProfit.toLocaleString('vi-VN')} đ** với **Biên lợi nhuận gộp: ${grossMargin.toFixed(1)}%**.\n\n` +
                  `**Phân tích Nguyên nhân Cốt lõi:**\n` +
-                 `1. **Bản chất Ghi nhận Doanh thu (Accrual basis):** Doanh thu ghi nhận thực tế chỉ đạt **${recognizedRevenue.toLocaleString('vi-VN')} VND** ` +
+                 `1. **Bản chất Ghi nhận Doanh thu (Accrual basis):** Doanh thu ghi nhận thực tế chỉ đạt **${recognizedRevenue.toLocaleString('vi-VN')} đ** ` +
                  `(được hạch toán dựa trên Hóa đơn/Đợt thanh toán nghiệm thu đã phát hành cho Chủ đầu tư).\n` +
-                 `2. **Giá trị Hợp đồng chưa được chuyển hóa:** Mặc dù tổng Giá trị Hợp đồng ký kết lên tới **${contractValue.toLocaleString('vi-VN')} VND**, ` +
+                 `2. **Giá trị Hợp đồng chưa được chuyển hóa:** Mặc dù tổng Giá trị Hợp đồng ký kết lên tới **${contractValue.toLocaleString('vi-VN')} đ**, ` +
                  `nhưng do tiến độ nghiệm thu hoàn công đợt đầu chậm, dòng doanh thu chưa thể hạch toán.\n` +
-                 `3. **Tập trung Chi phí thi công sớm (Front-loaded Cost):** Dự án đã phát sinh **${actualCost.toLocaleString('vi-VN')} VND** chi phí thực tế ` +
+                 `3. **Tập trung Chi phí thi công sớm (Front-loaded Cost):** Dự án đã phát sinh **${actualCost.toLocaleString('vi-VN')} đ** chi phí thực tế ` +
                  `(mua vật tư thép thô, thi công móng cọc). Tỷ lệ chi phí so với Doanh thu nghiệm thu vượt quá giới hạn an toàn.\n\n` +
                  `**Hành động Khắc phục Đề xuất:**\n` +
                  `• **Đẩy nhanh Billing:** Yêu cầu ban quản lý dự án phối hợp ban QS hoàn thiện hồ sơ nghiệm thu đợt thi công móng để phát hành hóa đơn thanh toán tiếp theo.\n` +
                  `• **Kiểm soát chi phí WBS:** Thắt chặt định mức tiêu hao vật liệu thép thô để ngăn chặn thất thoát hiện trường.`;
       } else {
         answer = `### 🟢 Báo cáo Lợi nhuận Dự án:\n\n` +
-                 `Dự án đang ghi nhận lợi nhuận dương **${grossProfit.toLocaleString('vi-VN')} VND** với **Biên lợi nhuận gộp đạt ${grossMargin.toFixed(1)}%**.\n\n` +
-                 `Doanh thu ghi nhận nghiệm thu đạt **${recognizedRevenue.toLocaleString('vi-VN')} VND** kiểm soát tốt so với chi phí thực tế đã phát sinh **${actualCost.toLocaleString('vi-VN')} VND**.`;
+                 `Dự án đang ghi nhận lợi nhuận dương **${grossProfit.toLocaleString('vi-VN')} đ** với **Biên lợi nhuận gộp đạt ${grossMargin.toFixed(1)}%**.\n\n` +
+                 `Doanh thu ghi nhận nghiệm thu đạt **${recognizedRevenue.toLocaleString('vi-VN')} đ** kiểm soát tốt so với chi phí thực tế đã phát sinh **${actualCost.toLocaleString('vi-VN')} đ**.`;
       }
     }
     // CASE 2: COST OVERRUN / BOQ VARIANCE (Chi phí tăng / Vượt BOQ)
@@ -965,18 +965,18 @@ export class PythonAnalyticsService {
           `(Vượt hạn mức: <span class="text-rose-500 font-bold">${(item.actual - item.budget).toLocaleString('vi-VN')} đ</span> | Sử dụng ${item.percentUsed.toFixed(1)}%)`
         ).join('\n');
         answer = `### 📊 Phân tích Chênh lệch Dự toán (BOQ vs Actual Variance):\n\n` +
-                 `Tổng chi phí thực tế phát sinh là **${actualCost.toLocaleString('vi-VN')} VND** so với Tổng dự toán BOQ được duyệt là **${totalBudget.toLocaleString('vi-VN')} VND** ` +
+                 `Tổng chi phí thực tế phát sinh là **${actualCost.toLocaleString('vi-VN')} đ** so với Tổng dự toán BOQ được duyệt là **${totalBudget.toLocaleString('vi-VN')} đ** ` +
                  `(Tỷ lệ sử dụng ngân sách: **${costOverrunPct.toFixed(1)}%**).\n\n` +
                  `Phát hiện các hạng mục WBS cấp cao vượt dự toán hạn mức:\n${listItems}\n\n` +
                  `**Đánh giá rủi ro vượt ngân sách:**\n` +
-                 `• **Dự báo Chi phí khi hoàn thành (EAC):** **${eac.toLocaleString('vi-VN')} VND** (dựa trên CPI = ${cpi.toFixed(2)}).\n` +
-                 `• **Dự toán bổ sung để hoàn thành (ETC):** **${etc.toLocaleString('vi-VN')} VND**.\n` +
-                 `• Chênh lệch ngân sách tổng thể đạt **${budgetVariance.toLocaleString('vi-VN')} VND**.\n\n` +
+                 `• **Dự báo Chi phí khi hoàn thành (EAC):** **${eac.toLocaleString('vi-VN')} đ** (dựa trên CPI = ${cpi.toFixed(2)}).\n` +
+                 `• **Dự toán bổ sung để hoàn thành (ETC):** **${etc.toLocaleString('vi-VN')} đ**.\n` +
+                 `• Chênh lệch ngân sách tổng thể đạt **${budgetVariance.toLocaleString('vi-VN')} đ**.\n\n` +
                  `**Khuyến nghị:** Yêu cầu ban QS rà soát lại khối lượng thép, bê tông đã cấp phát cho thầu phụ của các hạng mục vượt BOQ trên.`;
       } else {
         answer = `### 📊 Phân tích Ngân sách & Chênh lệch BOQ:\n\n` +
-                 `Tổng chi phí thực tế phát sinh **${actualCost.toLocaleString('vi-VN')} VND** hoàn toàn nằm dưới ngân sách BOQ **${totalBudget.toLocaleString('vi-VN')} VND**.\n` +
-                 `Mọi hạng mục WBS chính đều đang chạy dưới định mức ngân sách quy định (Chênh lệch tích cực: **+${budgetVariance.toLocaleString('vi-VN')} VND**).`;
+                 `Tổng chi phí thực tế phát sinh **${actualCost.toLocaleString('vi-VN')} đ** hoàn toàn nằm dưới ngân sách BOQ **${totalBudget.toLocaleString('vi-VN')} đ**.\n` +
+                 `Mọi hạng mục WBS chính đều đang chạy dưới định mức ngân sách quy định (Chênh lệch tích cực: **+${budgetVariance.toLocaleString('vi-VN')} đ**).`;
       }
     }
     // CASE 3: SCHEDULE DELAY / PROGRESS / EVM (Tiến độ chậm / trễ)
@@ -1006,17 +1006,17 @@ export class PythonAnalyticsService {
     else if (q.includes('công nợ') || q.includes('phải thu') || q.includes('phải trả') || q.includes('debt') || q.includes('quá hạn')) {
       answer = `### 💳 Báo cáo Kiểm toán Công nợ & Vốn Lưu Động:\n\n` +
                `1. **Phải thu Khách hàng (Accounts Receivable — A/R):**\n` +
-               `   - Tổng Doanh thu hóa đơn nghiệm thu đã xuất: **${recognizedRevenue.toLocaleString('vi-VN')} VND**\n` +
-               `   - Thực tế đã thu hồi (Cash Collected): **${collectedCash.toLocaleString('vi-VN')} VND**\n` +
-               `   - Công nợ phải thu tồn đọng (Outstanding): **${outstandingReceivable.toLocaleString('vi-VN')} VND**\n` +
-               `   - Trong đó **Quá hạn thanh toán (Overdue):** <span class="text-rose-500 font-bold">${overdueReceivable.toLocaleString('vi-VN')} VND</span>\n\n` +
+               `   - Tổng Doanh thu hóa đơn nghiệm thu đã xuất: **${recognizedRevenue.toLocaleString('vi-VN')} đ**\n` +
+               `   - Thực tế đã thu hồi (Cash Collected): **${collectedCash.toLocaleString('vi-VN')} đ**\n` +
+               `   - Công nợ phải thu tồn đọng (Outstanding): **${outstandingReceivable.toLocaleString('vi-VN')} đ**\n` +
+               `   - Trong đó **Quá hạn thanh toán (Overdue):** <span class="text-rose-500 font-bold">${overdueReceivable.toLocaleString('vi-VN')} đ</span>\n\n` +
                `2. **Phải trả Nhà thầu phụ/NCC (Accounts Payable — A/P):**\n` +
-               `   - Chi phí thực tế đã phát sinh: **${actualCost.toLocaleString('vi-VN')} VND**\n` +
-               `   - Thực tế đã thanh toán giải ngân: **${paidCost.toLocaleString('vi-VN')} VND**\n` +
-               `   - Công nợ phải trả tồn đọng (Accrued liabilities): **${accruedCost.toLocaleString('vi-VN')} VND**\n\n` +
+               `   - Chi phí thực tế đã phát sinh: **${actualCost.toLocaleString('vi-VN')} đ**\n` +
+               `   - Thực tế đã thanh toán giải ngân: **${paidCost.toLocaleString('vi-VN')} đ**\n` +
+               `   - Công nợ phải trả tồn đọng (Accrued liabilities): **${accruedCost.toLocaleString('vi-VN')} đ**\n\n` +
                `**Phân tích thanh khoản & Vòng quay tiền:**\n` +
-               `• Việc Chủ đầu tư chậm thanh toán lượng hóa đơn trị giá **${overdueReceivable.toLocaleString('vi-VN')} VND** quá hạn đang gây tắc nghẽn dòng tiền ròng.\n` +
-               `• Điều này buộc dự án phải giãn tiến độ trả thầu phụ (**${accruedCost.toLocaleString('vi-VN')} VND** chưa trả), tăng nguy cơ dừng thi công từ phía các thầu phụ cốt lõi.\n\n` +
+               `• Việc Chủ đầu tư chậm thanh toán lượng hóa đơn trị giá **${overdueReceivable.toLocaleString('vi-VN')} đ** quá hạn đang gây tắc nghẽn dòng tiền ròng.\n` +
+               `• Điều này buộc dự án phải giãn tiến độ trả thầu phụ (**${accruedCost.toLocaleString('vi-VN')} đ** chưa trả), tăng nguy cơ dừng thi công từ phía các thầu phụ cốt lõi.\n\n` +
                `**Hành động khẩn cấp:** Ban Giám đốc cần trực tiếp đàm phán với đại diện Chủ đầu tư để thu hồi tối thiểu 50% nợ quá hạn trong tuần này.`;
     }
     // CASE 5: CASH FLOW (Dòng tiền / Dòng tiền âm / Thu chi)
@@ -1026,9 +1026,9 @@ export class PythonAnalyticsService {
       const totalCashOut = kpis.totalCashOut ?? paidCost;
       
       answer = `### 💸 Báo cáo Thực tế Dòng tiền (Cashflow Audit):\n\n` +
-               `• **Tổng dòng thu thực tế (Cash Inflow):** **${totalCashIn.toLocaleString('vi-VN')} VND**\n` +
-               `• **Tổng dòng chi thực tế (Cash Outflow):** **${totalCashOut.toLocaleString('vi-VN')} VND**\n` +
-               `• **Dòng tiền ròng (Net Cashflow):** <span class="font-bold ${ netCashflow >= 0 ? 'text-emerald-500' : 'text-rose-500' }">${netCashflow.toLocaleString('vi-VN')} VND</span>\n\n`;
+               `• **Tổng dòng thu thực tế (Cash Inflow):** **${totalCashIn.toLocaleString('vi-VN')} đ**\n` +
+               `• **Tổng dòng chi thực tế (Cash Outflow):** **${totalCashOut.toLocaleString('vi-VN')} đ**\n` +
+               `• **Dòng tiền ròng (Net Cashflow):** <span class="font-bold ${ netCashflow >= 0 ? 'text-emerald-500' : 'text-rose-500' }">${netCashflow.toLocaleString('vi-VN')} đ</span>\n\n`;
       if (netCashflow < 0) {
         answer += `**Cảnh báo dòng tiền âm:** Dòng tiền ròng đang bị thâm hụt. Nguyên nhân là tốc độ chi trả vật tư phần thô nhanh hơn tốc độ nghiệm thu thanh toán từ Chủ đầu tư.\n\n` +
                   `**Kế hoạch cân đối tài chính:**\n` +
@@ -1043,7 +1043,7 @@ export class PythonAnalyticsService {
       const topContractors = boq.topContractors || [];
       if (topContractors.length > 0) {
         const listC = topContractors.map((c: any, idx: number) => 
-          `${idx + 1}. **${c.name}**: ${c.value.toLocaleString('vi-VN')} VND (Chiếm ${c.pct.toFixed(1)}% tổng chi phí)`
+          `${idx + 1}. **${c.name}**: ${c.value.toLocaleString('vi-VN')} đ (Chiếm ${c.pct.toFixed(1)}% tổng chi phí)`
         ).join('\n');
         answer = `### 🤝 Phân tích tập trung chi phí theo Nhà thầu & Thầu phụ:\n\n` +
                  `Top các đơn vị có phát sinh chi phí thi công cao nhất:\n${listC}\n\n` +
@@ -1060,9 +1060,9 @@ export class PythonAnalyticsService {
                `• **Chỉ số Sức khỏe Dự án:** **${kpis.healthScore || 100}/100** (${kpis.healthStatus || 'STABLE'})\n` +
                `• **Tiến độ Thực tế:** **${actualProgress.toFixed(1)}%** vs **Kế hoạch: ${plannedProgress.toFixed(1)}%**\n` +
                `• **Chỉ số SPI:** **${spi.toFixed(2)}** | **Chỉ số CPI:** **${cpi.toFixed(2)}**\n` +
-               `• **Doanh thu ghi nhận (Accrual):** **${recognizedRevenue.toLocaleString('vi-VN')} VND**\n` +
-               `• **Chi phí thực tế phát sinh:** **${actualCost.toLocaleString('vi-VN')} VND**\n` +
-               `• **Lợi nhuận gộp:** <span class="font-bold ${ grossProfit >= 0 ? 'text-emerald-500' : 'text-rose-500' }">${grossProfit.toLocaleString('vi-VN')} VND</span> (${grossMargin.toFixed(1)}% Margin)\n\n` +
+               `• **Doanh thu ghi nhận (Accrual):** **${recognizedRevenue.toLocaleString('vi-VN')} đ**\n` +
+               `• **Chi phí thực tế phát sinh:** **${actualCost.toLocaleString('vi-VN')} đ**\n` +
+               `• **Lợi nhuận gộp:** <span class="font-bold ${ grossProfit >= 0 ? 'text-emerald-500' : 'text-rose-500' }">${grossProfit.toLocaleString('vi-VN')} đ</span> (${grossMargin.toFixed(1)}% Margin)\n\n` +
                `**Bạn có thể hỏi tôi phân tích chuyên sâu về:**\n` +
                `1. *\"Giải thích vì sao lỗ?\"* (Phân tích Doanh thu nghiệm thu vs Chi phí thực tế)\n` +
                `2. *\"Vì sao chi phí tăng vượt BOQ?\"* (Chỉ số EAC/ETC và WBS vượt định mức)\n` +

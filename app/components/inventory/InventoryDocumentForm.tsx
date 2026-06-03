@@ -290,7 +290,7 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
               onClick={() => handleAction('submit')}
               className="px-4 py-2 text-sm font-bold rounded-lg bg-amber-600 hover:bg-amber-500 text-white transition-colors cursor-pointer"
             >
-              Trình duyệt (Submit)
+              Gửi duyệt
             </button>
           )}
 
@@ -302,14 +302,14 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
                 onClick={() => handleAction('approve')}
                 className="px-4 py-2 text-sm font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition-colors cursor-pointer"
               >
-                Phê duyệt (Approve)
+                Phê duyệt
               </button>
               <button
                 type="button"
                 onClick={() => handleAction('reject')}
                 className="px-4 py-2 text-sm font-bold rounded-lg bg-rose-600 hover:bg-rose-500 text-white transition-colors cursor-pointer"
               >
-                Từ chối (Reject)
+                Từ chối
               </button>
             </>
           )}
@@ -321,7 +321,7 @@ export function InventoryDocumentForm({ docId, onBack }: InventoryDocumentFormPr
               onClick={() => handleAction('post')}
               className="px-4 py-2 text-sm font-bold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors cursor-pointer"
             >
-              Ghi sổ cái (Post Ledger)
+              Ghi sổ cái
             </button>
           )}
 

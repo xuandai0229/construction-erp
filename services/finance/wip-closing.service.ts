@@ -152,7 +152,7 @@ export class WorkInProgressClosingService {
       voucherId: voucher.id,
       reference: voucher.reference || "",
       totalAmount: preview.totalAmount,
-      message: `Đã lập thành công chứng từ kết chuyển chi phí dở dang tự động ${voucher.reference || ""} với tổng số tiền ${preview.totalAmount.toLocaleString()} VND.`
+      message: `Đã lập thành công chứng từ kết chuyển chi phí dở dang tự động ${voucher.reference || ""} với tổng số tiền ${preview.totalAmount.toLocaleString("vi-VN")} đ.`
     };
   }
 }

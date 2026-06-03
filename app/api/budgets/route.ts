@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     const token = cookieStore.get("erp-session")?.value;
     const session = SessionManager.verifySession(token || null);
     const userId = session?.userId;
-    if (!userId) throw new ApiError(401, "Authentication required");
+    if (!userId) throw new ApiError(401, "Bạn cần đăng nhập để lập dự toán.");
 
     const body = await request.json();
     const data = createBudgetSchema.parse({ ...body, createdById: userId });

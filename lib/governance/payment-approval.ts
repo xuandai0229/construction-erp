@@ -30,7 +30,7 @@ export class PaymentApprovalGovernance {
     const enterpriseRole = toEnterpriseRole(role);
     const requiredSteps = this.getRequiredSteps(amount);
     if (!requiredSteps.includes(enterpriseRole as PaymentApprovalStep)) {
-      throw new ApiError(403, `Vai trò hiện tại không thuộc luồng duyệt thanh toán ${amount.toLocaleString("vi-VN")} VND.`);
+      throw new ApiError(403, `Vai trò hiện tại không thuộc luồng duyệt thanh toán ${amount.toLocaleString("vi-VN")} đ.`);
     }
     return requiredSteps;
   }

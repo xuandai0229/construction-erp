@@ -75,7 +75,7 @@ export default function SettingsPage() {
 
   const handleTogglePeriod = async (month: string, currentLockState: boolean) => {
     if (currentLockState) {
-      // Reopening a locked period requires a reason for the Audit Trail! (Batch 5.3)
+      // Mở lại kỳ đã khóa phải có lý do để ghi nhật ký kiểm toán.
       setShowReopenModal(month);
     } else {
       // Locking can be done directly with system notification
@@ -103,7 +103,7 @@ export default function SettingsPage() {
   const handleReopenPeriodSubmit = async () => {
     if (!showReopenModal) return;
     if (!reopenReason.trim()) {
-      alert('Vui lòng nhập lý do mở lại kỳ kế toán để ghi nhận nhật ký kiểm toán (Audit Trail)!');
+      alert('Vui lòng nhập lý do mở lại kỳ kế toán để ghi nhận nhật ký kiểm toán!');
       return;
     }
     const month = showReopenModal;
@@ -229,7 +229,7 @@ export default function SettingsPage() {
 
                 <FormGroup label="Định dạng tiền tệ tiêu chuẩn">
                   <Select>
-                    <option>VNĐ (đ) - Tiền Đồng Việt Nam</option>
+                    <option>đ - Tiền Đồng Việt Nam</option>
                     <option>USD ($) - Đô La Mỹ</option>
                   </Select>
                 </FormGroup>
@@ -344,7 +344,7 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  <FormGroup label="Lý do mở lại sổ kế toán (Bắt buộc để ghi Audit Trail):">
+                  <FormGroup label="Lý do mở lại sổ kế toán (bắt buộc để ghi nhật ký kiểm toán):">
                     <textarea
                       rows={3}
                       value={reopenReason}

@@ -84,11 +84,11 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
                 <div>
                   <label className="text-[11px] font-black text-[var(--text-muted)] uppercase tracking-wider block mb-1">Giá trị Hợp đồng</label>
-                  <div className="text-[18px] font-mono font-black text-blue-500 tabular-nums">{formatVnd(stats.totalRevenue || 0)} <span className="text-[10px] text-[var(--text-muted)]">VNĐ</span></div>
+                  <div className="text-[18px] font-mono font-black text-blue-500 tabular-nums">{formatVnd(stats.totalRevenue || 0)}</div>
                 </div>
                 <div>
                   <label className="text-[11px] font-black text-[var(--text-muted)] uppercase tracking-wider block mb-1">Tổng chi phí thực tế</label>
-                  <div className="text-[18px] font-mono font-black text-rose-500 tabular-nums">{formatVnd(stats.totalCost || 0)} <span className="text-[10px] text-[var(--text-muted)]">VNĐ</span></div>
+                  <div className="text-[18px] font-mono font-black text-rose-500 tabular-nums">{formatVnd(stats.totalCost || 0)}</div>
                 </div>
                 <div>
                   <label className="text-[11px] font-black text-[var(--text-muted)] uppercase tracking-wider block mb-1">Tiến độ công việc</label>

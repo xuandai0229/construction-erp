@@ -34,7 +34,7 @@ export async function PUT(
 
     if (user.companyId) {
       const project = await prisma.project.findFirst({ where: { id, companyId: user.companyId, deletedAt: null }, select: { id: true } });
-      if (!project) throw new ApiError(404, "Project not found for current tenant.");
+      if (!project) throw new ApiError(404, "Không tìm thấy dự án trong phạm vi công ty hiện tại.");
     }
     
     const project = await ProjectService.update(id, validatedData, user.id);
@@ -55,7 +55,7 @@ export async function DELETE(
     const { id } = await params;
     if (user.companyId) {
       const project = await prisma.project.findFirst({ where: { id, companyId: user.companyId, deletedAt: null }, select: { id: true } });
-      if (!project) throw new ApiError(404, "Project not found for current tenant.");
+      if (!project) throw new ApiError(404, "Không tìm thấy dự án trong phạm vi công ty hiện tại.");
     }
 
     await ProjectService.delete(id, user.id);

@@ -26,12 +26,12 @@ const fmtShort = (v: number) => {
   if (absV >= 1e9) {
     const billVal = Math.round(absV / 1e9);
     const formatted = new Intl.NumberFormat('vi-VN').format(billVal);
-    return `${sign}${formatted} tỷ VNĐ`;
+    return `${sign}${formatted} tỷ đ`;
   }
   if (absV >= 1e6) {
     const millVal = Math.round(absV / 1e6);
     const formatted = new Intl.NumberFormat('vi-VN').format(millVal);
-    return `${sign}${formatted} triệu VNĐ`;
+    return `${sign}${formatted} triệu đ`;
   }
   return `${sign}${new Intl.NumberFormat('vi-VN').format(absV)} ₫`;
 };
@@ -42,12 +42,12 @@ const fmtParts = (v: number) => {
   if (absV >= 1e9) {
     const billVal = Math.round(absV / 1e9);
     const formatted = new Intl.NumberFormat('vi-VN').format(billVal);
-    return { value: `${sign}${formatted}`, unit: 'Tỷ VNĐ' };
+    return { value: `${sign}${formatted}`, unit: 'Tỷ đ' };
   }
   if (absV >= 1e6) {
     const millVal = Math.round(absV / 1e6);
     const formatted = new Intl.NumberFormat('vi-VN').format(millVal);
-    return { value: `${sign}${formatted}`, unit: 'Triệu VNĐ' };
+    return { value: `${sign}${formatted}`, unit: 'Triệu đ' };
   }
   return { value: `${sign}${new Intl.NumberFormat('vi-VN').format(absV)}`, unit: '₫' };
 };
@@ -154,7 +154,7 @@ export function CashflowTrendChart({ data }: { data: any }) {
   return (
     <div className="relative group/chart">
       <div className="flex items-center justify-between mb-2">
-        <h4 className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-[0.15em]">Dòng tiền thu chi (triệu VNĐ)</h4>
+        <h4 className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-[0.15em]">Dòng tiền thu chi (triệu đ)</h4>
         <div className="flex items-center gap-3 text-[8px] font-black uppercase tracking-wider">
           <span className="flex items-center gap-1 text-emerald-500"><i className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> THU THỰC TẾ</span>
           <span className="flex items-center gap-1 text-emerald-500/60"><i className="h-1.5 w-1.5 rounded-full border border-emerald-500/40 bg-transparent stroke-dash" /> THU DỰ BÁO</span>
@@ -387,7 +387,7 @@ export function DebtPaymentChart({ kpis }: { kpis: any }) {
           {recOverdue > 0 && (
             <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-500 text-[8px] font-black uppercase tracking-wider animate-pulse">
               <span className="w-1 h-1 rounded-full bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.5)]" />
-              QUÁ HẠN: {fmtShort(recOverdue)} VNĐ
+              QUÁ HẠN: {fmtShort(recOverdue)}
             </div>
           )}
         </div>

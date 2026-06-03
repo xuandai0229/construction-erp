@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { getStatusLabel } from '../ui-enterprise/status-labels';
 
 interface ReadonlyPostedBannerProps {
   status: string;
@@ -22,9 +23,9 @@ export default function ReadonlyPostedBanner({ status, className = "" }: Readonl
         <path d="M7 11V7a5 5 0 0110 0v4" />
       </svg>
       <div className="flex-1">
-        <span className="text-[13px] font-black uppercase block tracking-wider mb-0.5">Chứng từ đã ghi sổ ({status})</span>
+        <span className="text-[13px] font-black uppercase block tracking-wider mb-0.5">Chứng từ đã khóa: {getStatusLabel(status)}</span>
         <span className="text-[11px] text-amber-400 font-semibold block leading-relaxed">
-          Chế độ xem chỉ đọc (Read-only) đã được kích hoạt để bảo vệ tính toàn vẹn của Sổ Cái. Không thể chỉnh sửa trực tiếp số liệu tài chính. Vui lòng dùng nghiệp vụ đảo/hủy nếu cần điều chỉnh.
+          Chế độ chỉ xem đã được kích hoạt để bảo vệ tính toàn vẹn của Sổ cái. Không thể chỉnh sửa trực tiếp số liệu tài chính. Vui lòng dùng nghiệp vụ đảo/hủy nếu cần điều chỉnh.
         </span>
       </div>
     </div>

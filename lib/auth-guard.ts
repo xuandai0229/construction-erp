@@ -48,7 +48,7 @@ export async function assertAuthenticated() {
       return {
         id: INTERNAL_ADMIN_ID,
         role: UserRole.SUPER_ADMIN,
-        name: "System Administrator",
+        name: "Quản trị viên hệ thống",
         companyId: null,
       };
     }
@@ -56,15 +56,15 @@ export async function assertAuthenticated() {
       action: "AUTH_FAILED",
       entity: "Security",
       entityId: "ANONYMOUS",
-      reason: "API access without a valid signed ERP session token.",
+      reason: "Truy cập API khi không có phiên đăng nhập ERP hợp lệ.",
       severity: "CRITICAL",
     });
-    throw new ApiError(401, "Authentication required: invalid or expired ERP session.");
+    throw new ApiError(401, "Bạn cần đăng nhập lại: phiên ERP không hợp lệ hoặc đã hết hạn.");
   }
 
   const user = await prisma.user.findUnique({ where: { id: session.userId } });
   if (!user || user.deletedAt !== null) {
-    throw new ApiError(401, "User does not exist or has been disabled.");
+    throw new ApiError(401, "Tài khoản không tồn tại hoặc đã bị vô hiệu hóa.");
   }
 
   return user;
@@ -79,27 +79,27 @@ export async function assertHasRole(userId: string | undefined, allowedRoles: Us
       action: "AUTH_FAILED",
       entity: "Security",
       entityId: userId || "ANONYMOUS",
-      reason: "API access without a valid signed ERP session token.",
+      reason: "Truy cập API khi không có phiên đăng nhập ERP hợp lệ.",
       severity: "CRITICAL",
     });
-    throw new ApiError(401, "Authentication required: invalid or expired ERP session.");
+    throw new ApiError(401, "Bạn cần đăng nhập lại: phiên ERP không hợp lệ hoặc đã hết hạn.");
   }
 
   if (!authoritativeUserId || authoritativeUserId === INTERNAL_ADMIN_ID) {
     if (!isInternalAdminBypassEnabled()) {
-      throw new ApiError(401, "Internal administrator bypass is disabled.");
+      throw new ApiError(401, "Cơ chế đăng nhập quản trị nội bộ đang bị tắt.");
     }
     return {
       id: INTERNAL_ADMIN_ID,
       role: UserRole.SUPER_ADMIN,
-      name: "System Administrator",
+      name: "Quản trị viên hệ thống",
       companyId: null,
     };
   }
 
   const user = await prisma.user.findUnique({ where: { id: authoritativeUserId } });
   if (!user || user.deletedAt !== null) {
-    throw new ApiError(401, "User does not exist or has been disabled.");
+    throw new ApiError(401, "Tài khoản không tồn tại hoặc đã bị vô hiệu hóa.");
   }
 
   if (!allowedRoles.includes(user.role)) {
@@ -108,10 +108,10 @@ export async function assertHasRole(userId: string | undefined, allowedRoles: Us
       action: "SECURITY_ALERT",
       entity: "RBAC",
       entityId: user.id,
-      reason: `Privilege escalation attempt: role ${user.role} requested action limited to [${allowedRoles.join(", ")}].`,
+      reason: `Phát hiện yêu cầu vượt quyền: vai trò ${user.role} gọi thao tác chỉ dành cho [${allowedRoles.join(", ")}].`,
       severity: "CRITICAL",
     });
-    throw new ApiError(403, `Role ${user.role} is not allowed to perform this action.`);
+    throw new ApiError(403, `Vai trò ${user.role} không được phép thực hiện thao tác này.`);
   }
 
   return user;

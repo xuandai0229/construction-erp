@@ -1,36 +1,32 @@
 /**
- * Formats a number as Vietnamese Dong (VNĐ)
- * Example: 1500000 -> 1.500.000 VNĐ
+ * Định dạng số tiền Việt Nam theo chuẩn hiển thị ERP.
+ * Ví dụ: 1500000 -> 1.500.000 đ
  */
 export const formatVND = (amount: number | string): string => {
   const value = typeof amount === 'string' ? parseFloat(amount) : amount;
-  if (isNaN(value)) return '0 VNĐ';
+  if (!Number.isFinite(value)) return '0 đ';
   
   return new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(value).replace('₫', 'VNĐ');
+  }).format(value) + ' đ';
 };
 
 /**
  * Formats a date string to DD/MM/YYYY
  */
 export const formatDate = (dateString?: string): string => {
-  if (!dateString) return 'N/A';
+  if (!dateString) return 'Chưa có ngày';
   try {
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return 'N/A';
-    return new Intl.NumberFormat('en-GB', {
-      minimumIntegerDigits: 2,
-    }).format(date.getDate()) + '/' + 
-    new Intl.NumberFormat('en-GB', {
-      minimumIntegerDigits: 2,
-    }).format(date.getMonth() + 1) + '/' + 
-    date.getFullYear();
+    if (isNaN(date.getTime())) return 'Ngày không hợp lệ';
+    return new Intl.DateTimeFormat('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(date);
   } catch (e) {
-    return 'N/A';
+    return 'Ngày không hợp lệ';
   }
 };
 
@@ -43,17 +39,17 @@ export const truncate = (text: string, maxLength: number): string => {
 };
 
 /**
- * Formats a number to a short currency string (e.g., 1.2B, 500M)
+ * Định dạng tiền rút gọn, dùng cho dashboard.
  */
 export const formatShortVND = (amount: number): string => {
   if (Math.abs(amount) >= 1_000_000_000) {
-    return (amount / 1_000_000_000).toFixed(1) + 'B';
+    return (amount / 1_000_000_000).toFixed(1).replace('.', ',') + ' tỷ';
   }
   if (Math.abs(amount) >= 1_000_000) {
-    return (amount / 1_000_000).toFixed(0) + 'M';
+    return (amount / 1_000_000).toFixed(0) + ' triệu';
   }
   if (Math.abs(amount) >= 1_000) {
-    return (amount / 1_000).toFixed(0) + 'K';
+    return (amount / 1_000).toFixed(0) + ' nghìn';
   }
-  return amount.toString();
+  return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(amount) + ' đ';
 };

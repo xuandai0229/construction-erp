@@ -23,14 +23,14 @@ export default function AuditTimeline({ logs, className = "" }: AuditTimelinePro
   if (!logs || logs.length === 0) {
     return (
       <div className="text-center py-6 text-xs text-[var(--text-tertiary)] bg-[var(--card)] border border-[var(--border)] rounded-lg">
-        Chưa ghi nhận lịch sử kiểm toán (Audit Trail) nào.
+        Chưa ghi nhận lịch sử kiểm toán nào.
       </div>
     );
   }
 
   return (
     <div className={`space-y-4 select-none ${className}`}>
-      <h4 className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider">Lịch sử tác động (Audit Trail)</h4>
+      <h4 className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider">Lịch sử tác động</h4>
       <div className="relative border-l border-[var(--border)] ml-3 pl-4 space-y-4 py-2">
         {logs.map((log, idx) => {
           const email = log.user?.email || log.userId || "Hệ thống";

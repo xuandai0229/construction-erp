@@ -59,8 +59,8 @@ function LedgerPrintContent() {
     <PrintLayout>
       {/* 1. Header */}
       <AccountingDocumentHeader
-        companyName="CÔNG TY CỔ PHẦN XÂY DỰNG ERPAUTHORITY"
-        address="123 Đường Láng, Đống Đa, Hà Nội"
+        companyName="CÔNG TY CP THƯƠNG MẠI VÀ XÂY DỰNG SỐ 2 HN"
+        address="Hà Nội"
         documentTitle={`SỔ CÁI CHI TIẾT TÀI KHOẢN: ${accountCode || "TẤT CẢ"}`}
         documentNo={`SC-${accountCode || "ALL"}-${new Date().getFullYear()}`}
         dateStr={dateStr}

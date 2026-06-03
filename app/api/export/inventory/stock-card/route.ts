@@ -37,25 +37,25 @@ export async function GET(request: Request) {
     const material = await prisma.materialItem.findUnique({ where: { id: materialItemId } });
 
     const headers = [
-      "Ngay di chuyen",
-      "Loai chung tu",
-      "So chung tu",
-      "Dien giai",
-      "So luong nhap",
-      "Gia tri nhap",
-      "So luong xuat",
-      "Gia tri xuat",
-      "So luong ton",
-      "Don gia binh quan luy ke"
+      "Ngày di chuyển",
+      "Loại chứng từ",
+      "Số chứng từ",
+      "Diễn giải",
+      "Số lượng nhập",
+      "Giá trị nhập",
+      "Số lượng xuất",
+      "Giá trị xuất",
+      "Số lượng tồn",
+      "Đơn giá bình quân lũy kế"
     ];
 
     const rows = [
       // Opening row
       [
         new Date(fromDate).toLocaleDateString("vi-VN"),
-        "DU_DAU_KY",
+        "Dư đầu kỳ",
         "-",
-        "So du dau ky",
+        "Số dư đầu kỳ",
         "0",
         "0",
         "0",
@@ -78,7 +78,7 @@ export async function GET(request: Request) {
       ])
     ];
 
-    const filename = `TheKho_${warehouse?.code || "Kho"}_${material?.code || "VatTu"}.csv`;
+    const filename = `The_kho_${warehouse?.code || "Kho"}_${material?.code || "Vat_tu"}.csv`;
 
     return await generateCsvResponse({
       userId: user.id,
@@ -88,7 +88,7 @@ export async function GET(request: Request) {
       filename,
       headers,
       rows,
-      reason: `Xuat the kho vat tu ${material?.name} tai kho ${warehouse?.name}`
+      reason: `Xuất thẻ kho vật tư ${material?.name || materialItemId} tại kho ${warehouse?.name || warehouseId}`
     });
 
   } catch (error) {

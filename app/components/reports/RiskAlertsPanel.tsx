@@ -20,7 +20,7 @@ export function RiskAlertsPanel({ data, isLoading }: { data: any[], isLoading: b
     },
     { header: "Phân hệ", accessor: (row) => row.module, width: "15%" },
     { header: "Mã chứng từ", accessor: (row) => row.documentNo, width: "20%" },
-    { header: "Giá trị (VND)", accessor: (row) => formatVnd(row.amount), align: "right", width: "15%" },
+    { header: "Giá trị (đ)", accessor: (row) => formatVnd(row.amount), align: "right", width: "15%" },
     { header: "Nguyên nhân rủi ro", accessor: (row) => row.reason, width: "35%" }
   ];
 

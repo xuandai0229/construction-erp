@@ -22,7 +22,7 @@ interface ValidationPhase {
 const phases: ValidationPhase[] = [
   {
     name: 'Database & Business Logic Validation',
-    command: 'tsx scripts/master-erp-validation.ts',
+    command: 'tsx scripts/validation/master-erp-validation.ts',
     required: true,
     timeout: 300000 // 5 minutes
   },

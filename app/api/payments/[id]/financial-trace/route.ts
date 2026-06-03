@@ -19,7 +19,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       }
     });
 
-    if (!payment) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (!payment) return NextResponse.json({ error: "Không tìm thấy phiếu thanh toán." }, { status: 404 });
 
     const journals = await prisma.journalEntry.findMany({
       where: {

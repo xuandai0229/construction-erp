@@ -17,7 +17,7 @@ export class ReconciliationService {
       FinancialAggregationService.getProjectSnapshot(projectId)
     ]);
 
-    if (!project) throw new Error("Project not found");
+    if (!project) throw new Error("Không tìm thấy dự án.");
 
     const issues = [];
     

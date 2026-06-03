@@ -151,7 +151,7 @@ export default function SystemPage() {
     BRANCH_DIRECTOR: 'Quản lý phê duyệt các dự án thuộc phạm vi chi nhánh phụ trách.',
     MANAGER: 'Quản lý dự án, theo dõi định mức BOQ/WBS, lập đề xuất chi phí.',
     ACCOUNTANT: 'Lập đề xuất chi phí, hóa đơn, thanh toán. Chặn sửa sổ cái trực tiếp.',
-    AUDITOR: 'Quyền xem duy nhất (Read-only), đối soát báo cáo và xem Audit Trail.',
+    AUDITOR: 'Quyền chỉ xem, đối soát báo cáo và xem lịch sử kiểm toán.',
     VIEWER: 'Chỉ xem dữ liệu hoạt động cơ bản của dự án.',
   };
 

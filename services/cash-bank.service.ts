@@ -139,7 +139,7 @@ export class CashBankService {
       });
       if (!doc || doc.deletedAt) throw new ApiError(404, "Không tìm thấy chứng từ");
       if (doc.status !== "DRAFT") {
-        throw new ApiError(400, "Chỉ chứng từ ở trạng thái Nháp (DRAFT) mới có thể trình duyệt.");
+        throw new ApiError(400, "Chỉ chứng từ ở trạng thái Nháp mới có thể trình duyệt.");
       }
 
       await assertPeriodNotLocked(doc.accountingDate);
@@ -170,7 +170,7 @@ export class CashBankService {
       });
       if (!doc || doc.deletedAt) throw new ApiError(404, "Không tìm thấy chứng từ");
       if (doc.status !== "SUBMITTED") {
-        throw new ApiError(400, "Chỉ chứng từ ở trạng thái Trình duyệt (SUBMITTED) mới có thể phê duyệt.");
+        throw new ApiError(400, "Chỉ chứng từ ở trạng thái Chờ duyệt mới có thể phê duyệt.");
       }
 
       // Segregation of Duties (SoD) check
@@ -214,7 +214,7 @@ export class CashBankService {
       });
       if (!doc || doc.deletedAt) throw new ApiError(404, "Không tìm thấy chứng từ");
       if (doc.status !== "SUBMITTED") {
-        throw new ApiError(400, "Chỉ chứng từ ở trạng thái Trình duyệt (SUBMITTED) mới có thể từ chối.");
+        throw new ApiError(400, "Chỉ chứng từ ở trạng thái Chờ duyệt mới có thể từ chối.");
       }
 
       // Segregation of Duties (SoD) check
@@ -252,7 +252,7 @@ export class CashBankService {
       });
       if (!doc || doc.deletedAt) throw new ApiError(404, "Không tìm thấy chứng từ");
       if (doc.status !== "APPROVED") {
-        throw new ApiError(400, "Chỉ chứng từ ở trạng thái Đã Duyệt (APPROVED) mới được phép ghi sổ cái.");
+        throw new ApiError(400, "Chỉ chứng từ ở trạng thái Đã duyệt mới được phép ghi sổ cái.");
       }
 
       await assertPeriodNotLocked(doc.accountingDate);
@@ -319,7 +319,7 @@ export class CashBankService {
       });
       if (!doc || doc.deletedAt) throw new ApiError(404, "Không tìm thấy chứng từ");
       if (doc.status !== "POSTED") {
-        throw new ApiError(400, "Chỉ chứng từ Đã Ghi Sổ (POSTED) mới có thể tạo bút toán đảo.");
+        throw new ApiError(400, "Chỉ chứng từ Đã ghi sổ mới có thể tạo bút toán đảo.");
       }
 
       await assertPeriodNotLocked(doc.accountingDate);

@@ -16,7 +16,7 @@ export class AdvanceSettlementService {
 
       if (data.invoiceId) {
         const invoice = await tx.invoice.findUnique({ where: { id: data.invoiceId }, include: { contract: true } });
-        if (!invoice) throw new Error("Invoice not found");
+        if (!invoice) throw new Error("Không tìm thấy hóa đơn.");
         invoiceRemaining = Number(invoice.remainingAmount);
         invoiceStatus = invoice.approvalStatus;
 
@@ -55,7 +55,7 @@ export class AdvanceSettlementService {
   static async submitSettlement(id: string, userId: string) {
     return prisma.$transaction(async (tx) => {
       const doc = await tx.advanceSettlement.findUnique({ where: { id } });
-      if (!doc) throw new Error("Not found");
+      if (!doc) throw new Error("Không tìm thấy chứng từ hoàn ứng.");
       if (doc.status !== "DRAFT") throw new Error("Must be DRAFT");
 
       const updated = await tx.advanceSettlement.update({
@@ -71,7 +71,7 @@ export class AdvanceSettlementService {
   static async approveSettlement(id: string, userId: string) {
     return prisma.$transaction(async (tx) => {
       const doc = await tx.advanceSettlement.findUnique({ where: { id } });
-      if (!doc) throw new Error("Not found");
+      if (!doc) throw new Error("Không tìm thấy chứng từ hoàn ứng.");
       if (doc.status !== "SUBMITTED") throw new Error("Must be SUBMITTED");
       if (doc.createdBy === userId) throw new Error("Cannot self-approve");
 
@@ -88,7 +88,7 @@ export class AdvanceSettlementService {
   static async postSettlement(id: string, userId: string) {
     return prisma.$transaction(async (tx) => {
       const doc = await tx.advanceSettlement.findUnique({ where: { id }, include: { advanceRequest: true } });
-      if (!doc) throw new Error("Not found");
+      if (!doc) throw new Error("Không tìm thấy chứng từ hoàn ứng.");
       if (doc.status !== "APPROVED") throw new Error("Must be APPROVED");
 
       const advance = doc.advanceRequest;
@@ -120,7 +120,7 @@ export class AdvanceSettlementService {
   static async reverseSettlement(id: string, userId: string) {
     return prisma.$transaction(async (tx) => {
       const doc = await tx.advanceSettlement.findUnique({ where: { id }, include: { advanceRequest: true } });
-      if (!doc) throw new Error("Not found");
+      if (!doc) throw new Error("Không tìm thấy chứng từ hoàn ứng.");
 
       const updated = await tx.advanceSettlement.update({
         where: { id },

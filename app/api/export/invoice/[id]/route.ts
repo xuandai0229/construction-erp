@@ -3,6 +3,22 @@ import { prisma } from "@/lib/prisma";
 import { requireAccountingAccess, requireProjectAccess } from "@/lib/route-security";
 import { generateCsvResponse } from "@/lib/export/accountingExport";
 
+const statusLabel = (status?: string | null) => ({
+  DRAFT: "Nháp",
+  PENDING: "Chờ duyệt",
+  SUBMITTED: "Chờ duyệt",
+  APPROVED: "Đã duyệt",
+  POSTED: "Đã ghi sổ",
+  PAID: "Đã thanh toán",
+  PARTIAL: "Thanh toán một phần",
+  OVERDUE: "Quá hạn",
+  CANCELLED: "Đã hủy",
+  CANCELED: "Đã hủy",
+  REJECTED: "Từ chối",
+}[status || ""] || status || "");
+
+const formatVnd = (value: unknown) => `${Number(value || 0).toLocaleString("vi-VN")} đ`;
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -17,7 +33,7 @@ export async function GET(
     });
 
     if (!invoice || invoice.deletedAt) {
-      throw new ApiError(404, "Invoice not found");
+      throw new ApiError(404, "Không tìm thấy hóa đơn.");
     }
 
     await requireProjectAccess(user, invoice.projectId);
@@ -27,28 +43,28 @@ export async function GET(
     });
 
     const headers = [
-      "Thuoc tinh",
-      "Gia tri chi tiet"
+      "Thuộc tính",
+      "Giá trị chi tiết"
     ];
 
     const rows = [
-      ["Ma hoa don", invoice.invoiceNumber || invoice.id],
-      ["Du an", project?.name || ""],
-      ["Hang muc WBS", invoice.wbs?.name || ""],
-      ["Ngay phat hanh", invoice.issuedDate.toISOString().split("T")[0]],
-      ["Ngay dao han", invoice.dueDate ? invoice.dueDate.toISOString().split("T")[0] : "—"],
-      ["Gia tri truoc thue", String(Number(invoice.amount) - Number(invoice.vatAmount))],
-      ["Thue suat VAT (%)", String(invoice.vatRate)],
-      ["Tien thue VAT", String(invoice.vatAmount)],
-      ["Tong gia tri hoa don", String(invoice.amount)],
-      ["Da thanh toan", String(invoice.paidAmount)],
-      ["Con lai phai thu", String(invoice.remainingAmount)],
-      ["Trang thai duyet", invoice.approvalStatus],
-      ["Trang thai thanh toan", invoice.status],
-      ["Ngay tao", invoice.createdAt.toISOString()]
+      ["Mã hóa đơn", invoice.invoiceNumber || invoice.id],
+      ["Dự án", project?.name || ""],
+      ["Hạng mục WBS", invoice.wbs?.name || ""],
+      ["Ngày phát hành", invoice.issuedDate.toLocaleDateString("vi-VN")],
+      ["Ngày đáo hạn", invoice.dueDate ? invoice.dueDate.toLocaleDateString("vi-VN") : "-"],
+      ["Giá trị trước thuế", formatVnd(Number(invoice.amount) - Number(invoice.vatAmount))],
+      ["Thuế suất VAT (%)", String(invoice.vatRate)],
+      ["Tiền thuế VAT", formatVnd(invoice.vatAmount)],
+      ["Tổng giá trị hóa đơn", formatVnd(invoice.amount)],
+      ["Đã thanh toán", formatVnd(invoice.paidAmount)],
+      ["Còn lại phải thu", formatVnd(invoice.remainingAmount)],
+      ["Trạng thái duyệt", statusLabel(invoice.approvalStatus)],
+      ["Trạng thái thanh toán", statusLabel(invoice.status)],
+      ["Ngày tạo", invoice.createdAt.toLocaleString("vi-VN")]
     ];
 
-    const filename = `ChiTietHoaDon_${invoice.invoiceNumber || invoice.id}.csv`;
+    const filename = `Chi_tiet_hoa_don_${invoice.invoiceNumber || invoice.id}.csv`;
 
     return await generateCsvResponse({
       userId: user.id,
@@ -58,7 +74,7 @@ export async function GET(
       filename,
       headers,
       rows,
-      reason: `Xuat chi tiet hoa don ${invoice.invoiceNumber || invoice.id}`
+      reason: `Xuất chi tiết hóa đơn ${invoice.invoiceNumber || invoice.id}`
     });
 
   } catch (error) {

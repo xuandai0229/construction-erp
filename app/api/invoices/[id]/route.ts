@@ -20,13 +20,13 @@ export async function DELETE(
         ...(user.companyId && { companyId: user.companyId }),
       },
     });
-    if (!existing) throw new ApiError(404, "Invoice not found");
+    if (!existing) throw new ApiError(404, "Không tìm thấy hóa đơn.");
 
     const { searchParams } = new URL(request.url);
     const reason =
       searchParams.get("reason") ||
       request.headers.get("x-audit-reason") ||
-      "Invoice cancelled via API endpoint.";
+      "Hóa đơn được hủy qua API và ghi nhận nhật ký kiểm toán.";
 
     await RevenueService.deleteInvoice(id, user.id, reason);
     return successResponse({ deleted: true });
@@ -53,7 +53,7 @@ export async function PUT(
       },
       select: { id: true },
     });
-    if (!existing) throw new ApiError(404, "Invoice not found");
+    if (!existing) throw new ApiError(404, "Không tìm thấy hóa đơn.");
 
     const updated = await RevenueService.updateInvoice(id, body, user.id);
     return successResponse(updated);

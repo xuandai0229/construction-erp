@@ -406,8 +406,8 @@ export default function CashBankPage() {
 
         {/* METRICS PANEL */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <EnterpriseMetric title="Tổng Thu tiền mặt (POSTED)" value={formatVnd(metrics.cashIn)} />
-          <EnterpriseMetric title="Tổng Chi tiền mặt (POSTED)" value={formatVnd(metrics.cashOut)} />
+          <EnterpriseMetric title="Tổng thu tiền mặt đã ghi sổ" value={formatVnd(metrics.cashIn)} />
+          <EnterpriseMetric title="Tổng chi tiền mặt đã ghi sổ" value={formatVnd(metrics.cashOut)} />
           <EnterpriseMetric title="Tồn Quỹ tiền mặt cuối kỳ" value={formatVnd(metrics.cashBalance)} />
           <EnterpriseMetric title="Số dư tiền gửi ngân hàng" value={formatVnd(metrics.bankBalance)} />
         </div>
@@ -622,7 +622,7 @@ export default function CashBankPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-black text-[var(--text-muted)] uppercase mb-1">Số tiền (VND)</label>
+                  <label className="block text-[11px] font-black text-[var(--text-muted)] uppercase mb-1">Số tiền (đ)</label>
                   <input 
                     type="number" 
                     required 

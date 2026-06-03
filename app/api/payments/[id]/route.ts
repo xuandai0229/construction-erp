@@ -23,7 +23,7 @@ export async function DELETE(
         ...(user.companyId && { invoice: { companyId: user.companyId } }),
       },
     });
-    if (!existing) throw new ApiError(404, "Payment not found");
+    if (!existing) throw new ApiError(404, "Không tìm thấy phiếu thanh toán.");
 
     await assertPeriodNotLocked(existing.date);
 
@@ -89,7 +89,7 @@ export async function GET(
     });
 
     if (!payment || payment.deletedAt) {
-      throw new ApiError(404, "Payment not found");
+      throw new ApiError(404, "Không tìm thấy phiếu thanh toán.");
     }
 
     const project = await prisma.project.findUnique({
@@ -123,7 +123,7 @@ export async function PUT(
       },
       select: { id: true },
     });
-    if (!existing) throw new ApiError(404, "Payment not found");
+    if (!existing) throw new ApiError(404, "Không tìm thấy phiếu thanh toán.");
 
     const updated = await RevenueService.updatePayment(id, body);
     return successResponse(updated);

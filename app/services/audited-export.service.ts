@@ -7,7 +7,7 @@ function filenameFromDisposition(disposition: string | null, fallback: string) {
 
 export async function auditedCsvExport(params: { reportType: string; projectId?: string | null; reason?: string }) {
   if (!params.projectId) {
-    throw new Error('Vui lòng chọn dự án trước khi xuất dữ liệu tài chính.');
+    throw new Error('Vui lòng chọn công trình/dự án trước khi xuất dữ liệu tài chính.');
   }
 
   const res = await fetch('/api/reports/audited-export', {
@@ -16,7 +16,7 @@ export async function auditedCsvExport(params: { reportType: string; projectId?:
     body: JSON.stringify({
       reportType: params.reportType,
       projectId: params.projectId,
-      reason: params.reason || `Financial export ${params.reportType}`
+      reason: params.reason || `Xuất dữ liệu tài chính ${params.reportType}`
     })
   });
 

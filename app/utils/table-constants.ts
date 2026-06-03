@@ -56,7 +56,7 @@ export const ERP_TERMINOLOGY = {
     VARIANCE: 'Chênh lệch (Tiết kiệm/Vượt)',
     REVENUE: 'Doanh thu ghi nhận',
     DEBT: 'Công nợ tồn đọng',
-    CURRENCY: 'VNĐ',
+    CURRENCY: 'đ',
   },
   WBS: {
     TITLE: 'Theo dõi hạng mục thi công (WBS)',

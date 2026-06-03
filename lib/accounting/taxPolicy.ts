@@ -3,8 +3,8 @@ import { prisma } from "@/lib/prisma";
 
 export class TaxPolicy {
   /**
-   * Validates the math of a VAT invoice: vatAmount must be within a tolerance of 10 VND of netAmount * (vatRate / 100).
-   * If not, an overrideReason of at least 5 characters is required.
+   * Kiểm tra tiền thuế GTGT: vatAmount được lệch tối đa 10 đ so với netAmount * vatRate.
+   * Nếu vượt dung sai, người dùng phải nhập lý do ghi đè.
    */
   static validateTaxMath(
     netAmount: number,
@@ -19,14 +19,14 @@ export class TaxPolicy {
       if (!overrideReason || overrideReason.trim().length < 5) {
         throw new ApiError(
           400,
-          `LỖI TÍNH TOÁN THUẾ: Tiền thuế GTGT thực tế (${vatAmount.toLocaleString()} VND) lệch quá dung sai cho phép (10 VND) so với tiền thuế lý thuyết (${expectedVat.toLocaleString()} VND - mức ${vatRate}%). Bạn bắt buộc phải cung cấp lý do giải trình ghi đè (tối thiểu 5 ký tự).`
+          `LỖI TÍNH TOÁN THUẾ: Tiền thuế GTGT thực tế (${vatAmount.toLocaleString("vi-VN")} đ) lệch quá dung sai cho phép (10 đ) so với tiền thuế lý thuyết (${expectedVat.toLocaleString("vi-VN")} đ - mức ${vatRate}%). Bạn phải nhập lý do giải trình ghi đè, tối thiểu 5 ký tự.`
         );
       }
     }
   }
 
   /**
-   * Asserts that a tax invoice number + series is unique for a given company and invoice type.
+   * Kiểm tra trùng số hóa đơn và ký hiệu hóa đơn trong cùng công ty.
    */
   static async assertUniqueInvoice(
     companyId: string,

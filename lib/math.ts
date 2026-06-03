@@ -95,12 +95,12 @@ export function safeNumber(val: any): number {
 }
 
 /**
- * Formats a number as VND currency.
+ * Formats a number as Vietnamese dong for user-facing ERP screens.
  */
 export function formatCurrency(amount: number | any): string {
   const value = safeMoney(amount);
   return new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-  }).format(value);
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value) + ' đ';
 }

@@ -30,7 +30,7 @@ export class ApprovalInboxService {
       targetCompanyId = cmp?.id || null;
     }
     if (!targetCompanyId) {
-      throw new ApiError(400, "User must belong to a company");
+      throw new ApiError(400, "Người dùng phải thuộc một công ty để xem chứng từ chờ duyệt.");
     }
 
     // 1. Lấy Invoices chờ duyệt
@@ -177,7 +177,7 @@ export class ApprovalInboxService {
       targetCompanyId = cmp?.id || null;
     }
     if (!targetCompanyId) {
-      throw new ApiError(400, "User must belong to a company");
+      throw new ApiError(400, "Người dùng phải thuộc một công ty để xem lịch sử duyệt.");
     }
 
     // Truy vấn lịch sử duyệt qua AuditLog
@@ -214,7 +214,7 @@ export class ApprovalInboxService {
       targetCompanyId = cmp?.id || null;
     }
     if (!targetCompanyId) {
-      throw new ApiError(400, "User must belong to a company");
+      throw new ApiError(400, "Người dùng phải thuộc một công ty để xem chứng từ đã tạo.");
     }
 
     // 1. Lấy Invoices

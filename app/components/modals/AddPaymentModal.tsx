@@ -79,12 +79,12 @@ export default function AddPaymentModal({ isOpen, onClose, invoiceId }: Props) {
               </div>
               <div className="flex justify-between">
                 <span className="text-[var(--text-muted)] font-bold uppercase tracking-wider">Còn lại:</span>
-                <span className="font-black text-emerald-500">{new Intl.NumberFormat('vi-VN').format(invoice.remainingAmount)} VND</span>
+                <span className="font-black text-emerald-500">{new Intl.NumberFormat('vi-VN').format(invoice.remainingAmount)} đ</span>
               </div>
             </div>
           )}
           <div>
-            <label className="erp-label">Số tiền thanh toán (VND)</label>
+            <label className="erp-label">Số tiền thanh toán (đ)</label>
             <input
               type="number"
               value={form.amount}
