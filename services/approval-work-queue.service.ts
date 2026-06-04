@@ -20,8 +20,8 @@ export interface ApprovalQueueItem {
   submittedAt: string | null;
   amount: number;
   status: string;
-  priority: "Bình thường" | "Cao" | "Cần cấp cao";
-  dueStatus: "Đúng hạn" | "Sắp đến hạn" | "Quá hạn";
+  priority: "B\u00ecnh th\u01b0\u1eddng" | "Cao" | "C\u1ea7n c\u1ea5p cao";
+  dueStatus: "\u0110\u00fang h\u1ea1n" | "S\u1eafp \u0111\u1ebfn h\u1ea1n" | "Qu\u00e1 h\u1ea1n";
   dueAt: string;
   assignedRole: string;
   currentHandler: string;
@@ -64,9 +64,9 @@ function getTargetCompanyId(user: WorkQueueUser, fallbackCompanyId?: string | nu
 
 function getDueStatus(createdAt: Date) {
   const ageHours = (Date.now() - createdAt.getTime()) / (1000 * 60 * 60);
-  if (ageHours >= OVERDUE_HOURS) return "Quá hạn";
-  if (ageHours >= DUE_SOON_HOURS) return "Sắp đến hạn";
-  return "Đúng hạn";
+  if (ageHours >= OVERDUE_HOURS) return "Qu\u00e1 h\u1ea1n";
+  if (ageHours >= DUE_SOON_HOURS) return "S\u1eafp \u0111\u1ebfn h\u1ea1n";
+  return "\u0110\u00fang h\u1ea1n";
 }
 
 function getDueAt(createdAt: Date) {
@@ -74,9 +74,9 @@ function getDueAt(createdAt: Date) {
 }
 
 function getPriority(amount: number) {
-  if (amount >= HIGH_VALUE_THRESHOLD * 5) return "Cần cấp cao";
+  if (amount >= HIGH_VALUE_THRESHOLD * 5) return "C\u1ea7n c\u1ea5p cao";
   if (amount >= HIGH_VALUE_THRESHOLD) return "Cao";
-  return "Bình thường";
+  return "B\u00ecnh th\u01b0\u1eddng";
 }
 
 function isPendingStatus(status: string) {
@@ -96,17 +96,16 @@ function isRejectedStatus(status: string) {
 }
 
 function getAssignedRole(amount: number) {
-  if (amount >= HIGH_VALUE_THRESHOLD * 5) return "Giám đốc";
-  if (amount >= HIGH_VALUE_THRESHOLD) return "Kế toán trưởng";
-  return "Kế toán trưởng";
+  if (amount >= HIGH_VALUE_THRESHOLD * 5) return "Gi\u00e1m \u0111\u1ed1c";
+  return "K\u1ebf to\u00e1n tr\u01b0\u1edfng";
 }
 
 function getCurrentHandler(status: string, amount: number) {
   if (isPendingStatus(status)) return getAssignedRole(amount);
-  if (isRejectedStatus(status)) return "Người tạo bổ sung";
-  if (isPostedStatus(status)) return "Sổ kế toán";
-  if (isApprovedStatus(status)) return "Kế toán ghi sổ";
-  return "Người tạo";
+  if (isRejectedStatus(status)) return "Ng\u01b0\u1eddi t\u1ea1o b\u1ed5 sung";
+  if (isPostedStatus(status)) return "S\u1ed5 k\u1ebf to\u00e1n";
+  if (isApprovedStatus(status)) return "K\u1ebf to\u00e1n ghi s\u1ed5";
+  return "Ng\u01b0\u1eddi t\u1ea1o";
 }
 
 function canUserApprove(user: WorkQueueUser, creatorId: string | null, amount: number, module: ApprovalQueueModule, status: string) {
@@ -159,7 +158,7 @@ export class ApprovalWorkQueueService {
     const fallbackCompany = user.companyId ? null : await prisma.company.findFirst({ select: { id: true } });
     const targetCompanyId = getTargetCompanyId(user, fallbackCompany?.id);
     if (!targetCompanyId) {
-      throw new ApiError(400, "Chưa xác định được công ty để tải hộp việc phê duyệt.");
+      throw new ApiError(400, "Ch\u01b0a x\u00e1c \u0111\u1ecbnh \u0111\u01b0\u1ee3c c\u00f4ng ty \u0111\u1ec3 t\u1ea3i h\u1ed9p vi\u1ec7c ph\u00ea duy\u1ec7t.");
     }
 
     const dateFilter = {
@@ -227,13 +226,13 @@ export class ApprovalWorkQueueService {
       items.push({
         id: invoice.id,
         module: "INVOICE",
-        documentType: "Hóa đơn",
+        documentType: "H\u00f3a \u0111\u01a1n",
         docNo: invoice.invoiceNumber || invoice.id.slice(0, 8).toUpperCase(),
         projectId: invoice.projectId,
-        projectName: invoice.contract?.project?.name || invoice.wbs?.project?.name || "Chưa có công trình",
-        partnerName: invoice.contract?.supplier?.name || "Chưa có khách hàng/NCC",
+        projectName: invoice.contract?.project?.name || invoice.wbs?.project?.name || "Ch\u01b0a c\u00f3 c\u00f4ng tr\u00ecnh",
+        partnerName: invoice.contract?.supplier?.name || "Ch\u01b0a c\u00f3 kh\u00e1ch h\u00e0ng/NCC",
         creatorId,
-        creatorName: invoice.createdBy?.name || invoice.createdBy?.email || "Chưa có dữ liệu",
+        creatorName: invoice.createdBy?.name || invoice.createdBy?.email || "Ch\u01b0a c\u00f3 d\u1eef li\u1ec7u",
         createdAt: invoice.createdAt.toISOString(),
         submittedAt: invoice.updatedAt.toISOString(),
         amount,
@@ -256,13 +255,13 @@ export class ApprovalWorkQueueService {
       items.push({
         id: cost.id,
         module: "COST",
-        documentType: "Chi phí",
+        documentType: "Chi ph\u00ed",
         docNo: cost.id.slice(0, 8).toUpperCase(),
         projectId: cost.projectId,
-        projectName: cost.wbs?.project?.name || "Chưa có công trình",
-        partnerName: cost.supplier || "Chưa có nhà cung cấp",
+        projectName: cost.wbs?.project?.name || "Ch\u01b0a c\u00f3 c\u00f4ng tr\u00ecnh",
+        partnerName: cost.supplier || "Ch\u01b0a c\u00f3 nh\u00e0 cung c\u1ea5p",
         creatorId,
-        creatorName: cost.createdBy?.name || cost.createdBy?.email || "Chưa có dữ liệu",
+        creatorName: cost.createdBy?.name || cost.createdBy?.email || "Ch\u01b0a c\u00f3 d\u1eef li\u1ec7u",
         createdAt: cost.createdAt.toISOString(),
         submittedAt: cost.updatedAt.toISOString(),
         amount,
@@ -285,13 +284,13 @@ export class ApprovalWorkQueueService {
       items.push({
         id: advance.id,
         module: "ADVANCE",
-        documentType: "Tạm ứng",
+        documentType: "T\u1ea1m \u1ee9ng",
         docNo: advance.advanceNo || advance.id.slice(0, 8).toUpperCase(),
         projectId: advance.projectId,
-        projectName: advance.project?.name || "Chưa có công trình",
-        partnerName: advance.supplier?.name || "Nhân viên/NCC",
+        projectName: advance.project?.name || "Ch\u01b0a c\u00f3 c\u00f4ng tr\u00ecnh",
+        partnerName: advance.supplier?.name || "Nh\u00e2n vi\u00ean/NCC",
         creatorId,
-        creatorName: advance.requester?.name || advance.requester?.email || "Chưa có dữ liệu",
+        creatorName: advance.requester?.name || advance.requester?.email || "Ch\u01b0a c\u00f3 d\u1eef li\u1ec7u",
         createdAt: advance.createdAt.toISOString(),
         submittedAt: advance.updatedAt.toISOString(),
         amount,
@@ -314,13 +313,13 @@ export class ApprovalWorkQueueService {
       items.push({
         id: settlement.id,
         module: "SETTLEMENT",
-        documentType: "Hoàn ứng",
+        documentType: "Ho\u00e0n \u1ee9ng",
         docNo: settlement.id.slice(0, 8).toUpperCase(),
         projectId: settlement.advanceRequest?.projectId || null,
-        projectName: settlement.advanceRequest?.project?.name || "Chưa có công trình",
-        partnerName: settlement.advanceRequest?.supplier?.name || "Nhân viên/NCC",
+        projectName: settlement.advanceRequest?.project?.name || "Ch\u01b0a c\u00f3 c\u00f4ng tr\u00ecnh",
+        partnerName: settlement.advanceRequest?.supplier?.name || "Nh\u00e2n vi\u00ean/NCC",
         creatorId,
-        creatorName: settlement.creator?.name || settlement.creator?.email || "Chưa có dữ liệu",
+        creatorName: settlement.creator?.name || settlement.creator?.email || "Ch\u01b0a c\u00f3 d\u1eef li\u1ec7u",
         createdAt: settlement.createdAt.toISOString(),
         submittedAt: settlement.updatedAt.toISOString(),
         amount,
@@ -341,13 +340,12 @@ export class ApprovalWorkQueueService {
       .filter((item) => !filters.documentType || item.module === filters.documentType)
       .filter((item) => !filters.assignedToMe || item.canApprove || item.creatorId === user.id);
 
-    const today = new Date();
-    const todayPrefix = today.toISOString().slice(0, 10);
+    const todayPrefix = new Date().toISOString().slice(0, 10);
     const summaryBase = roleVisibleItems;
     const summary = {
       pendingForMe: summaryBase.filter((item) => isPendingStatus(item.status) && (item.canApprove || item.creatorId === user.id)).length,
-      overdue: summaryBase.filter((item) => item.dueStatus === "Quá hạn" && isPendingStatus(item.status)).length,
-      dueSoon: summaryBase.filter((item) => item.dueStatus === "Sắp đến hạn" && isPendingStatus(item.status)).length,
+      overdue: summaryBase.filter((item) => item.dueStatus === "Qu\u00e1 h\u1ea1n" && isPendingStatus(item.status)).length,
+      dueSoon: summaryBase.filter((item) => item.dueStatus === "S\u1eafp \u0111\u1ebfn h\u1ea1n" && isPendingStatus(item.status)).length,
       rejectedNeedsFix: summaryBase.filter((item) => isRejectedStatus(item.status)).length,
       approvedToday: summaryBase.filter((item) => isApprovedStatus(item.status) && (item.submittedAt || item.createdAt).startsWith(todayPrefix)).length,
       postedToday: summaryBase.filter((item) => isPostedStatus(item.status) && (item.submittedAt || item.createdAt).startsWith(todayPrefix)).length,
@@ -355,8 +353,8 @@ export class ApprovalWorkQueueService {
     };
 
     const tabbed = applyTabFilter(roleVisibleItems, filters.tab, user).sort((a, b) => {
-      if (a.dueStatus === "Quá hạn" && b.dueStatus !== "Quá hạn") return -1;
-      if (a.dueStatus !== "Quá hạn" && b.dueStatus === "Quá hạn") return 1;
+      if (a.dueStatus === "Qu\u00e1 h\u1ea1n" && b.dueStatus !== "Qu\u00e1 h\u1ea1n") return -1;
+      if (a.dueStatus !== "Qu\u00e1 h\u1ea1n" && b.dueStatus === "Qu\u00e1 h\u1ea1n") return 1;
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
 
@@ -369,7 +367,7 @@ export class ApprovalWorkQueueService {
       role: user.role,
       roleBehavior: {
         canApprove: RBAC.hasPermission(user.role, "VOUCHER", "APPROVE") || RBAC.hasPermission(user.role, "COST", "APPROVE") || RBAC.hasPermission(user.role, "INVOICE", "APPROVE"),
-        mode: user.role === "SUPER_ADMIN" || user.role === "ADMIN" ? "Xem toàn bộ trong phạm vi công ty" : "Xem theo vai trò và chứng từ liên quan",
+        mode: user.role === "SUPER_ADMIN" || user.role === "ADMIN" ? "Xem to\u00e0n b\u1ed9 trong ph\u1ea1m vi c\u00f4ng ty" : "Xem theo vai tr\u00f2 v\u00e0 ch\u1ee9ng t\u1eeb li\u00ean quan",
       },
       total: tabbed.length,
       hasMore: tabbed.length > limited.length,
