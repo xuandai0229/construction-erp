@@ -4,17 +4,17 @@
     "users": 2281,
     "companies": 50,
     "projects": 1,
-    "wbs": 10,
-    "costs": 5,
+    "wbs": 18,
+    "costs": 7,
     "invoices": 2,
     "payments": 1,
     "revenues": 1,
-    "contracts": 5,
-    "journalEntries": 9,
-    "transactionLines": 20
+    "contracts": 7,
+    "journalEntries": 11,
+    "transactionLines": 28
   },
   "integrity": {
-    "sampledPostedJournalEntries": 9,
+    "sampledPostedJournalEntries": 11,
     "unbalancedPostedJournalEntries": 0,
     "orphanCostWbs": 0,
     "orphanInvoiceWbs": 0,

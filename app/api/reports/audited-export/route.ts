@@ -17,7 +17,14 @@ function escapeCsv(value: unknown) {
 
 function toCsv(rows: Record<string, unknown>[]) {
   if (rows.length === 0) return "";
-  const headers = Object.keys(rows[0]);
+  // Thu thập tất cả các key độc nhất từ toàn bộ các hàng để hỗ trợ các đối tượng không đồng nhất (heterogeneous objects)
+  const headersSet = new Set<string>();
+  for (const row of rows) {
+    for (const key of Object.keys(row)) {
+      headersSet.add(key);
+    }
+  }
+  const headers = Array.from(headersSet);
   return [
     headers.map(escapeCsv).join(","),
     ...rows.map(row => headers.map(header => escapeCsv(row[header])).join(","))
