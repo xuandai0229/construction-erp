@@ -176,7 +176,7 @@ export default function ProjectTable({
           type="button"
           onClick={(event) => {
             event.stopPropagation();
-            openProjectDrilldown(row, 'budget', `Truy vết ngân sách: ${row.name}`, Number(row.totalBudget || 0));
+            openProjectDrilldown(row, 'budget', `Chi tiết ngân sách: ${row.name}`, Number(row.totalBudget || 0));
           }}
           className="font-mono font-bold tabular-nums text-[var(--primary)] underline-offset-2 hover:underline"
           title="Xem chi tiết ngân sách"
@@ -195,7 +195,7 @@ export default function ProjectTable({
           type="button"
           onClick={(event) => {
             event.stopPropagation();
-            openProjectDrilldown(row, 'cost', `Truy vết thực chi: ${row.name}`, row.actualCost);
+            openProjectDrilldown(row, 'cost', `Chi tiết thực chi: ${row.name}`, row.actualCost);
           }}
           className="font-mono font-bold tabular-nums text-[var(--primary)] underline-offset-2 hover:underline"
           title="Xem chi tiết thực chi"

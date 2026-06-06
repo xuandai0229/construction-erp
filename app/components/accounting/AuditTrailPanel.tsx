@@ -194,7 +194,7 @@ export default function AuditTrailPanel({
         <div>
           <h3 className="text-sm font-black text-[var(--text-primary)]">{title}</h3>
           <p className="mt-1 text-xs leading-5 text-[var(--text-secondary)]">
-            {description || "Dữ liệu audit chỉ đọc, phục vụ truy vết thao tác và đối chiếu trách nhiệm."}
+            {description || "Dữ liệu audit chỉ đọc, phục vụ theo dõi thao tác và đối chiếu trách nhiệm."}
           </p>
         </div>
         <span className="w-fit rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-[10px] font-black uppercase text-emerald-700 dark:text-emerald-300">

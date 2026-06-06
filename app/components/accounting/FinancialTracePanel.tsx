@@ -50,7 +50,7 @@ export default function FinancialTracePanel({ type, id, isOpen, onClose }: Finan
         const json = await res.json();
         setData(json);
       } catch (err: any) {
-        setError(err.message || 'Có lỗi xảy ra khi tải dữ liệu truy vết.');
+        setError(err.message || 'Có lỗi xảy ra khi tải dữ liệu chi tiết.');
       } finally {
         setLoading(false);
       }
@@ -73,7 +73,7 @@ export default function FinancialTracePanel({ type, id, isOpen, onClose }: Finan
             <svg viewBox="0 0 24 24" className="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
-            TRUY VẾT TÀI CHÍNH KẾ TOÁN (FINANCIAL TRACE)
+            CHI TIẾT TÀI CHÍNH KẾ TOÁN
           </h2>
           <p className="text-[11px] font-bold uppercase text-[var(--text-tertiary)] tracking-wider">
             Đối chiếu kiểm toán từ chứng từ nguồn {type.toUpperCase()} ID: {id.substring(0, 8).toUpperCase()}
@@ -103,7 +103,7 @@ export default function FinancialTracePanel({ type, id, isOpen, onClose }: Finan
               <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <div>
-              <span className="font-bold block mb-1">Không thể tải dữ liệu truy vết:</span>
+              <span className="font-bold block mb-1">Không thể tải dữ liệu chi tiết:</span>
               <span>{error}</span>
             </div>
           </div>

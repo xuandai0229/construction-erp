@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
 
 export interface ReportFilters {
   companyId: string;
@@ -149,11 +148,11 @@ export class ManagementReportService {
    * B. Báo cáo Hiệu quả Dự án (Project Profitability)
    */
   static async getProjectProfitability(filters: ReportFilters) {
-    const { companyId } = filters;
+    const { companyId, projectId } = filters;
     
     // Fetch all active projects
     const projects = await prisma.project.findMany({
-      where: { companyId, deletedAt: null },
+      where: { companyId, ...(projectId ? { id: projectId } : {}), deletedAt: null },
       include: {
         contracts: {
           where: { deletedAt: null }
@@ -225,18 +224,20 @@ export class ManagementReportService {
    * C. Quản trị Công nợ (Debt Management)
    */
   static async getDebtManagement(filters: ReportFilters) {
-    const { companyId } = filters;
+    const { companyId, projectId } = filters;
     const now = new Date();
 
     const invoices = await prisma.invoice.findMany({
       where: { 
         companyId, 
+        ...(projectId ? { projectId } : {}),
         approvalStatus: "APPROVED",
         remainingAmount: { gt: 0 },
         deletedAt: null 
       },
       include: {
-        contract: true
+        contract: { include: { supplier: true, project: true } },
+        wbs: { include: { project: true } }
       }
     });
 
@@ -269,9 +270,13 @@ export class ManagementReportService {
         overdueInvoices.push({
           id: inv.id,
           invoiceNumber: inv.invoiceNumber,
+          projectCode: `PRJ-${inv.projectId.slice(0, 4).toUpperCase()}`,
+          projectName: inv.contract?.project?.name || inv.wbs?.project?.name || "Chưa có công trình",
+          customerName: inv.contract?.supplier?.name || inv.contract?.project?.investor || "Chưa có khách hàng/chủ đầu tư",
           remainingAmount: remaining,
           daysOverdue: diffDays,
-          contractName: inv.contract?.title || "N/A"
+          contractName: inv.contract?.title || inv.contract?.contractNumber || "Chưa gắn hợp đồng",
+          status: inv.status
         });
       }
     }
@@ -283,6 +288,7 @@ export class ManagementReportService {
     const unpaidCosts = await prisma.costRecord.findMany({
       where: {
         companyId,
+        ...(projectId ? { projectId } : {}),
         status: "unpaid",
         approvalStatus: "APPROVED",
         deletedAt: null
@@ -374,7 +380,7 @@ export class ManagementReportService {
    * E. Cảnh báo Rủi ro (Risk Alerts)
    */
   static async getRiskAlerts(filters: ReportFilters) {
-    const { companyId } = filters;
+    const { companyId, projectId } = filters;
     const now = new Date();
     const alerts = [];
 
@@ -382,12 +388,16 @@ export class ManagementReportService {
     const overdueInvoices = await prisma.invoice.findMany({
       where: {
         companyId,
+        ...(projectId ? { projectId } : {}),
         remainingAmount: { gt: 0 },
         dueDate: { lt: now },
         deletedAt: null,
         approvalStatus: "APPROVED"
       },
-      select: { id: true, invoiceNumber: true, remainingAmount: true, dueDate: true }
+      include: {
+        contract: { include: { project: true } },
+        wbs: { include: { project: true } }
+      }
     });
 
     for (const inv of overdueInvoices) {
@@ -397,6 +407,8 @@ export class ManagementReportService {
         module: "INVOICE",
         documentId: inv.id,
         documentNo: inv.invoiceNumber || inv.id,
+        projectCode: `PRJ-${inv.projectId.slice(0, 4).toUpperCase()}`,
+        projectName: inv.contract?.project?.name || inv.wbs?.project?.name || "Chưa có tên công trình",
         amount: Number(inv.remainingAmount),
         daysOverdue: diffDays,
         reason: "Hóa đơn quá hạn chưa thu tiền",
@@ -409,12 +421,13 @@ export class ManagementReportService {
     const overdueAdvances = await prisma.advanceRequest.findMany({
       where: {
         companyId,
+        ...(projectId ? { projectId } : {}),
         remainingAmount: { gt: 0 },
         createdAt: { lt: thirtyDaysAgo },
         status: { in: ["APPROVED", "PARTIALLY_SETTLED"] },
         deletedAt: null
       },
-      select: { id: true, advanceNo: true, remainingAmount: true, createdAt: true }
+      include: { project: true }
     });
 
     for (const adv of overdueAdvances) {
@@ -424,9 +437,11 @@ export class ManagementReportService {
         module: "ADVANCE",
         documentId: adv.id,
         documentNo: adv.advanceNo || adv.id,
+        projectCode: adv.projectId ? `PRJ-${adv.projectId.slice(0, 4).toUpperCase()}` : null,
+        projectName: adv.project?.name || "Chưa có tên công trình",
         amount: Number(adv.remainingAmount),
         daysOverdue: diffDays,
-        reason: "Tạm ứng quá hạn hoàn ứng (>30 ngày)",
+        reason: "Tạm ứng quá hạn hoàn ứng trên 30 ngày",
         action: `/settings?tab=advance&id=${adv.id}`
       });
     }

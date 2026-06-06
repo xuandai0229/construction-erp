@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { formatVnd } from "@/app/components/dashboard-data";
-import { EnterpriseDataTable, EnterpriseTabs } from "@/app/components/ui-enterprise";
-import AuditTrailPanel from "@/app/components/accounting/AuditTrailPanel";
+import { formatVnd, formatProjectName } from "@/app/components/dashboard-data";
+import { EnterpriseBadge, EnterpriseDataTable, EnterpriseTabs } from "@/app/components/ui-enterprise";
 
 export type FinancialMetricKey =
   | "revenue"
@@ -22,7 +21,6 @@ interface FinancialDrilldownRequest {
   projectId?: string | null;
   projectName?: string | null;
   amount?: number;
-  sourceOfTruth?: string;
 }
 
 interface SourceDocumentRow {
@@ -53,8 +51,6 @@ interface JournalEntryRow {
   reference: string;
   description: string;
   status: string;
-  sourceType?: string | null;
-  sourceId?: string | null;
   projectName?: string;
   lines: JournalLineRow[];
 }
@@ -62,12 +58,9 @@ interface JournalEntryRow {
 interface DrilldownData {
   title: string;
   totalAmount: number;
-  sourceOfTruth: string;
   project?: { id: string; name: string } | null;
   sourceDocuments: SourceDocumentRow[];
   journalEntries: JournalEntryRow[];
-  auditTrail: unknown[];
-  warnings: string[];
 }
 
 interface FinancialDrilldownDrawerProps {
@@ -77,16 +70,15 @@ interface FinancialDrilldownDrawerProps {
 
 const tabs = [
   { id: "overview", label: "Tổng quan" },
-  { id: "documents", label: "Chứng từ nguồn" },
+  { id: "documents", label: "Chứng từ" },
   { id: "journals", label: "Bút toán" },
-  { id: "contracts", label: "Hợp đồng/NCC" },
-  { id: "audit", label: "Lịch sử thao tác" }
+  { id: "contracts", label: "Đối tượng" },
 ];
 
 function formatDate(value?: string | Date | null) {
-  if (!value) return "---";
+  if (!value) return "Chưa có";
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "---";
+  if (Number.isNaN(date.getTime())) return "Chưa có";
   return new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" }).format(date);
 }
 
@@ -101,30 +93,40 @@ function statusLabel(value?: string | null) {
     PARTIAL: "Thanh toán một phần",
     PAID: "Đã thanh toán",
     OVERDUE: "Quá hạn",
-    REJECTED: "Từ chối",
+    REJECTED: "Bị trả lại",
     CANCELLED: "Đã hủy",
-    DA_CAT: "Đã ghi sổ",
     POSTED: "Đã ghi sổ",
+    DA_CAT: "Đã ghi sổ",
     FULLY_SETTLED: "Đã hoàn ứng",
-    PARTIALLY_SETTLED: "Hoàn ứng một phần"
+    PARTIALLY_SETTLED: "Hoàn ứng một phần",
   };
-  return map[normalized] || value || "---";
+  return map[normalized] || value || "Chưa xác định";
+}
+
+function statusVariant(value?: string | null): "success" | "warning" | "error" | "neutral" {
+  const normalized = (value || "").toUpperCase();
+  if (["APPROVED", "PAID", "POSTED", "FULLY_SETTLED", "SENT"].includes(normalized)) return "success";
+  if (["PENDING", "SUBMITTED", "PARTIAL", "PARTIALLY_SETTLED"].includes(normalized)) return "warning";
+  if (["OVERDUE", "REJECTED", "CANCELLED"].includes(normalized)) return "error";
+  return "neutral";
 }
 
 function sourceTypeLabel(value?: string | null) {
   const normalized = (value || "").toUpperCase();
   const map: Record<string, string> = {
     INVOICE: "Hóa đơn",
-    PAYMENT: "Thanh toán",
+    TAX_INVOICE: "Hóa đơn thuế",
+    PAYMENT: "Phiếu thu/chi",
     COST: "Chi phí",
     ADVANCE: "Tạm ứng",
     ADVANCE_SETTLEMENT: "Hoàn ứng",
     BUDGET: "Dự toán",
     CONTRACT: "Hợp đồng",
-    VENDOR_PAYMENT: "Thanh toán NCC",
-    CASH_BANK: "Thu/chi tiền"
+    VENDOR_PAYMENT: "Thanh toán nhà cung cấp",
+    CASH: "Thu/chi tiền mặt",
+    BANK: "Thu/chi ngân hàng",
   };
-  return map[normalized] || value || "---";
+  return map[normalized] || "Chứng từ";
 }
 
 function buildSourceUrl(row: SourceDocumentRow) {
@@ -135,11 +137,31 @@ function buildSourceUrl(row: SourceDocumentRow) {
   return "";
 }
 
+function EmptyPanel({ title, description }: { title: string; description: string }) {
+  return (
+    <div className="rounded-lg border border-dashed border-[var(--border)] bg-[var(--secondary)]/45 p-8 text-center">
+      <div className="mx-auto grid h-10 w-10 place-items-center rounded-full bg-[var(--primary)]/10 text-lg font-black text-[var(--primary)]">i</div>
+      <h3 className="mt-3 text-sm font-black text-[var(--text-primary)]">{title}</h3>
+      <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-[var(--text-secondary)]">{description}</p>
+    </div>
+  );
+}
+
+function SummaryTile({ label, value, accent }: { label: string; value: string; accent?: string }) {
+  return (
+    <div className={`rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 shadow-sm ${accent || ""}`}>
+      <div className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-tertiary)]">{label}</div>
+      <div className="mt-2 break-words font-mono text-xl font-black tabular-nums text-[var(--text-primary)]">{value}</div>
+    </div>
+  );
+}
+
 export default function FinancialDrilldownDrawer({ request, onClose }: FinancialDrilldownDrawerProps) {
   const [activeTab, setActiveTab] = useState("overview");
   const [data, setData] = useState<DrilldownData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [detailModalDoc, setDetailModalDoc] = useState<any>(null);
 
   useEffect(() => {
     if (!request) return;
@@ -149,6 +171,7 @@ export default function FinancialDrilldownDrawer({ request, onClose }: Financial
       setLoading(true);
       setError(null);
       setData(null);
+      setActiveTab("overview");
 
       try {
         const params = new URLSearchParams({ metric: request.metric });
@@ -156,12 +179,12 @@ export default function FinancialDrilldownDrawer({ request, onClose }: Financial
         const response = await fetch(`/api/trace/financial-drilldown?${params.toString()}`, { signal: controller.signal });
         const json = await response.json();
         if (!response.ok || !json.success) {
-          throw new Error(json.error || "Không thể tải dữ liệu truy vết.");
+          throw new Error(json.error || "Không thể tải dữ liệu chi tiết.");
         }
         setData(json.data);
       } catch (err) {
         if (controller.signal.aborted) return;
-        setError(err instanceof Error ? err.message : "Không thể tải dữ liệu truy vết.");
+        setError(err instanceof Error ? err.message : "Không thể tải dữ liệu chi tiết.");
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
@@ -188,9 +211,8 @@ export default function FinancialDrilldownDrawer({ request, onClose }: Financial
           journalDate: entry.date,
           journalCode: entry.reference,
           journalDescription: entry.description,
+          projectName: entry.projectName,
           status: entry.status,
-          sourceType: entry.sourceType || "",
-          sourceId: entry.sourceId || ""
         }))
       ),
     [data]
@@ -199,172 +221,219 @@ export default function FinancialDrilldownDrawer({ request, onClose }: Financial
   if (!request) return null;
 
   const totalAmount = data?.totalAmount ?? request.amount ?? 0;
-  const projectName = data?.project?.name || request.projectName || "Toàn bộ phạm vi được phép";
-  const sourceOfTruth = data?.sourceOfTruth || request.sourceOfTruth || "Pilot read-only";
+  // Ưu tiên request.projectName vì thường có dấu và chuẩn hơn từ màn hình Dashboard
+  const projectName = formatProjectName(request.projectName || data?.project?.name);
+  const sourceDocuments = data?.sourceDocuments || [];
+  const journalEntries = data?.journalEntries || [];
+  const relatedObjects = sourceDocuments.filter((row) => row.contractName || row.partnerName);
+
+  const metricFormulas: Record<string, string> = {
+    profit: "Lợi nhuận gộp tạm tính = Doanh thu hạch toán - Chi phí sản xuất trực tiếp.",
+    revenue: "Doanh thu hạch toán = Tổng giá trị các Biên bản nghiệm thu đã được phê duyệt.",
+    cost: "Chi phí sản xuất = Tổng giá trị chi phí vật tư, nhân công, máy thi công đã tập hợp.",
+    receivables: "Công nợ phải thu (AR) = Doanh thu hạch toán - Thu tiền khách hàng.",
+    payables: "Công nợ phải trả (AP) = Chi phí sản xuất (hóa đơn) - Chi tiền cho nhà cung cấp.",
+    payments: "Dòng tiền thuần = Tiền thu vào - Tiền chi ra thực tế.",
+    advances: "Tạm ứng tồn đọng = Tổng tạm ứng đã chi - Các khoản hoàn ứng đã duyệt.",
+    budget: "Ngân sách = Tổng dự toán chi phí được duyệt ban đầu cho dự án."
+  };
+  const currentFormula = metricFormulas[request.metric];
 
   return (
     <div className="fixed inset-0 z-[600]">
-      <div className="absolute inset-0 bg-black/45 backdrop-blur-sm" onClick={onClose} />
-      <aside className="absolute inset-y-0 right-0 flex w-full max-w-6xl flex-col border-l border-[var(--border)] bg-[var(--background)] shadow-2xl">
-        <header className="border-b border-[var(--border)] bg-[var(--card)] px-6 py-4">
+      <div className="absolute inset-0 bg-slate-950/45 backdrop-blur-sm" onClick={onClose} />
+      <aside className="absolute inset-y-0 right-0 flex w-full max-w-5xl flex-col border-l border-[var(--border)] bg-[var(--background)] shadow-2xl">
+        <header className="border-b border-[var(--border)] bg-[var(--card)] px-4 py-4 sm:px-6">
           <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0 space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="text-base font-black text-[var(--text-primary)]">{request.title}</h2>
-                <span className="rounded-md border border-blue-500/20 bg-blue-500/10 px-2 py-1 text-[10px] font-bold uppercase text-blue-600 dark:text-blue-400">
-                  Pilot trace
-                </span>
-              </div>
-              <div className="grid gap-2 text-[11px] font-semibold text-[var(--text-secondary)] sm:grid-cols-2 lg:grid-cols-4">
-                <span>Công trình: {projectName}</span>
-                <span>Kỳ/filter: Theo màn hình hiện tại</span>
-                <span className="font-mono tabular-nums">Tổng tiền: {formatVnd(totalAmount)}</span>
-                <span>Nguồn số liệu: {sourceOfTruth}</span>
+            <div className="min-w-0">
+              <div className="text-[11px] font-bold uppercase tracking-wide text-[var(--text-tertiary)]">Phân tích chỉ tiêu kế toán</div>
+              <h2 className="mt-1 text-lg font-black leading-7 text-[var(--text-primary)]">{request.title}</h2>
+              <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold text-[var(--text-secondary)]">
+                <span className="rounded-md border border-[var(--border)] bg-[var(--secondary)] px-2.5 py-1">Công trình: {projectName}</span>
+                <span className="rounded-md border border-[var(--border)] bg-[var(--secondary)] px-2.5 py-1">Theo bộ lọc hiện tại</span>
+                <span className="rounded-md border border-[var(--border)] bg-[var(--secondary)] px-2.5 py-1 font-mono tabular-nums">{formatVnd(totalAmount)}</span>
               </div>
             </div>
             <button
+              type="button"
               onClick={onClose}
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-[var(--border)] bg-[var(--secondary)] text-lg font-black text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-              aria-label="Đóng truy vết tài chính"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-[var(--border)] bg-[var(--secondary)] text-lg font-black text-[var(--text-secondary)] transition hover:bg-[var(--muted)] hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]/60"
+              aria-label="Đóng chi tiết chỉ tiêu"
             >
               x
             </button>
           </div>
-          {(data?.warnings || []).map((warning) => (
-            <div key={warning} className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] font-bold text-amber-700 dark:text-amber-300">
-              {warning}
-            </div>
-          ))}
         </header>
 
         <EnterpriseTabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
 
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           {loading && (
-            <div className="flex h-64 flex-col items-center justify-center gap-3 text-[var(--text-secondary)]">
-              <div className="h-8 w-8 rounded-full border-4 border-[var(--primary)]/20 border-t-[var(--primary)] animate-spin" />
-              <span className="text-xs font-bold">Đang tải dữ liệu truy vết...</span>
+            <div className="grid gap-4 md:grid-cols-3">
+              {[0, 1, 2].map((item) => (
+                <div key={item} className="h-28 animate-pulse rounded-lg border border-[var(--border)] bg-[var(--secondary)]" />
+              ))}
+              <div className="h-56 animate-pulse rounded-lg border border-[var(--border)] bg-[var(--secondary)] md:col-span-3" />
             </div>
           )}
 
           {error && (
-            <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 p-4 text-sm font-semibold text-rose-600 dark:text-rose-400">
-              {error}
-            </div>
+            <EmptyPanel
+              title="Chưa tải được dữ liệu chi tiết"
+              description={`${error} Vui lòng làm mới màn hình hoặc kiểm tra lại bộ lọc công trình và thời gian đang áp dụng.`}
+            />
           )}
 
           {!loading && !error && activeTab === "overview" && (
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-4">
-                <div className="text-[10px] font-bold uppercase text-[var(--text-tertiary)]">Tổng tiền</div>
-                <div className="mt-2 font-mono text-xl font-black text-[var(--text-primary)] tabular-nums">{formatVnd(totalAmount)}</div>
+            <div className="space-y-5">
+              {currentFormula && (
+                <div className="rounded-lg border border-sky-500/20 bg-sky-500/5 p-4">
+                  <h3 className="text-xs font-bold uppercase tracking-wide text-sky-700 dark:text-sky-300">Công thức & Định nghĩa</h3>
+                  <p className="mt-1 text-sm font-medium text-sky-800 dark:text-sky-200">{currentFormula}</p>
+                </div>
+              )}
+              <div className="grid gap-4 md:grid-cols-3">
+                <SummaryTile label="Giá trị đang xem" value={formatVnd(totalAmount)} accent="border-l-4 border-l-[var(--primary)]" />
+                <SummaryTile label="Chứng từ gốc tham chiếu" value={(sourceDocuments.length || 0).toLocaleString("vi-VN")} />
+                <SummaryTile label="Bút toán ghi nhận" value={(journalEntries.length || 0).toLocaleString("vi-VN")} />
               </div>
-              <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-4">
-                <div className="text-[10px] font-bold uppercase text-[var(--text-tertiary)]">Chứng từ nguồn</div>
-                <div className="mt-2 text-xl font-black text-[var(--text-primary)]">{data?.sourceDocuments?.length || 0}</div>
-              </div>
-              <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-4">
-                <div className="text-[10px] font-bold uppercase text-[var(--text-tertiary)]">Bút toán liên quan</div>
-                <div className="mt-2 text-xl font-black text-[var(--text-primary)]">{data?.journalEntries?.length || 0}</div>
-              </div>
-              <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 md:col-span-3">
-                <div className="text-[10px] font-bold uppercase text-[var(--text-tertiary)]">Ghi chú pilot</div>
-                <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-                  Drawer này chỉ dùng để truy vết nhanh chỉ tiêu tài chính. Nếu chưa có trace chi tiết cho chỉ tiêu này trong pilot, vui lòng xem báo cáo sổ cái hoặc chứng từ liên quan.
-                </p>
+              <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-5">
+                <h3 className="text-sm font-black text-[var(--text-primary)]">Hướng dẫn rà soát số liệu</h3>
+                <ul className="mt-3 list-inside list-disc space-y-2 text-sm leading-6 text-[var(--text-secondary)]">
+                  <li>Số liệu chi tiết được tổng hợp từ chứng từ đã phê duyệt và các bút toán đã ghi nhận.</li>
+                  <li>Nếu số liệu bị thiếu, hãy kiểm tra <span className="font-bold">Hộp việc phê duyệt</span> xem có chứng từ nào đang chờ duyệt hay không.</li>
+                  <li>Sử dụng tab <span className="font-bold">Chứng từ</span> để đối chiếu chứng từ gốc và xem bản in.</li>
+                  <li>Sử dụng tab <span className="font-bold">Bút toán</span> để xem các định khoản nợ/có chi tiết.</li>
+                </ul>
               </div>
             </div>
           )}
 
           {!loading && !error && activeTab === "documents" && (
             <EnterpriseDataTable
-              data={data?.sourceDocuments || []}
-              minWidth="1180px"
+              data={sourceDocuments}
+              minWidth="980px"
               columns={[
-                { key: "date", header: "Ngày", render: (row) => formatDate(row.date), width: "120px" },
-                { key: "sourceType", header: "Loại chứng từ", render: (row) => sourceTypeLabel(row.sourceType), width: "140px" },
-                { key: "number", header: "Số chứng từ", render: (row) => row.number, width: "140px" },
-                { key: "projectName", header: "Công trình", render: (row) => row.projectName || projectName, width: "180px" },
-                { key: "partnerName", header: "Nhà cung cấp/Khách hàng", render: (row) => row.partnerName || "---", width: "190px" },
-                { key: "contractName", header: "Hợp đồng", render: (row) => row.contractName || "---", width: "180px" },
-                { key: "description", header: "Diễn giải", render: (row) => row.description || "---", width: "220px" },
+                { key: "date", header: "Ngày", render: (row) => formatDate(row.date), width: "110px" },
+                { key: "sourceType", header: "Loại chứng từ", render: (row) => sourceTypeLabel(row.sourceType), width: "145px" },
+                { key: "number", header: "Số chứng từ", render: (row) => row.number || "Chưa có", width: "140px" },
+                { key: "projectName", header: "Công trình", render: (row) => formatProjectName(row.projectName) || projectName, width: "190px" },
+                { key: "partnerName", header: "Nhà cung cấp/Khách hàng", render: (row) => row.partnerName || "Chưa có", width: "210px" },
+                { key: "contractName", header: "Hợp đồng", render: (row) => row.contractName || "Chưa gắn", width: "180px" },
                 { key: "amount", header: "Số tiền", render: (row) => formatVnd(row.amount), align: "right", width: "150px" },
-                { key: "status", header: "Trạng thái", render: (row) => statusLabel(row.status), align: "center", width: "140px" },
+                {
+                  key: "status",
+                  header: "Trạng thái",
+                  render: (row) => <EnterpriseBadge variant={statusVariant(row.status)}>{statusLabel(row.status)}</EnterpriseBadge>,
+                  align: "center",
+                  width: "140px",
+                },
                 {
                   key: "action",
-                  header: "Thao tác",
+                  header: "Hành động",
                   render: (row) => {
                     const url = buildSourceUrl(row);
-                    return url ? (
-                      <a className="text-[11px] font-bold text-[var(--primary)] hover:underline" href={url} target="_blank" rel="noreferrer">
-                        Mở chứng từ
-                      </a>
-                    ) : (
-                      <span className="text-[11px] text-[var(--text-tertiary)]">Chưa có route in</span>
+                    if (url) {
+                      return (
+                        <a className="text-xs font-bold text-[var(--primary)] hover:underline" href={url} target="_blank" rel="noreferrer">
+                          Mở chứng từ
+                        </a>
+                      );
+                    }
+                    return (
+                      <button type="button" onClick={() => setDetailModalDoc(row)} className="text-xs font-bold text-[var(--primary)] hover:underline">
+                        Xem chi tiết
+                      </button>
                     );
                   },
                   align: "center",
-                  width: "130px"
-                }
+                  width: "130px",
+                },
               ]}
-              emptyState={<div className="text-sm font-semibold text-[var(--text-secondary)]">Chưa tìm thấy chứng từ nguồn phù hợp với số liệu này.</div>}
+              emptyState={<EmptyPanel title="Chưa có chứng từ phù hợp" description="Không tìm thấy chứng từ đã phê duyệt cho chỉ tiêu này trong phạm vi đang xem. Hãy kiểm tra lại công trình, thời gian hoặc trạng thái phê duyệt." />}
             />
           )}
 
           {!loading && !error && activeTab === "journals" && (
             <EnterpriseDataTable
               data={journalLines}
-              minWidth="1040px"
+              minWidth="980px"
               columns={[
                 { key: "journalDate", header: "Ngày ghi sổ", render: (row) => formatDate(row.journalDate), width: "120px" },
-                { key: "journalCode", header: "Mã bút toán", render: (row) => row.journalCode, width: "140px" },
-                { key: "debit", header: "Tài khoản Nợ", render: (row) => (row.type === "DEBIT" ? `${row.accountCode} - ${row.accountName}` : "---"), width: "180px" },
-                { key: "credit", header: "Tài khoản Có", render: (row) => (row.type === "CREDIT" ? `${row.accountCode} - ${row.accountName}` : "---"), width: "180px" },
-                { key: "journalDescription", header: "Diễn giải", render: (row) => row.description || row.journalDescription || "---", width: "260px" },
+                { key: "journalCode", header: "Số bút toán", render: (row) => row.journalCode || "Chưa có", width: "140px" },
+                { key: "debit", header: "Tài khoản Nợ", render: (row) => (row.type === "DEBIT" ? `${row.accountCode} - ${row.accountName}` : "Không phát sinh"), width: "210px" },
+                { key: "credit", header: "Tài khoản Có", render: (row) => (row.type === "CREDIT" ? `${row.accountCode} - ${row.accountName}` : "Không phát sinh"), width: "210px" },
+                { key: "journalDescription", header: "Diễn giải", render: (row) => row.description || row.journalDescription || "Chưa có diễn giải", width: "260px" },
                 { key: "amount", header: "Số tiền", render: (row) => formatVnd(row.amount), align: "right", width: "150px" },
-                { key: "status", header: "Trạng thái", render: (row) => statusLabel(row.status), align: "center", width: "120px" },
-                { key: "sourceType", header: "SourceType", render: (row) => row.sourceType || "---", width: "130px" },
-                { key: "sourceId", header: "SourceId", render: (row) => row.sourceId || "---", width: "180px" }
+                {
+                  key: "status",
+                  header: "Trạng thái",
+                  render: (row) => <EnterpriseBadge variant={statusVariant(row.status)}>{statusLabel(row.status)}</EnterpriseBadge>,
+                  align: "center",
+                  width: "130px",
+                },
               ]}
-              emptyState={<div className="text-sm font-semibold text-[var(--text-secondary)]">Chưa tìm thấy bút toán sổ cái phù hợp với chỉ tiêu này.</div>}
+              emptyState={<EmptyPanel title="Chưa có bút toán liên quan" description="Chưa tìm thấy bút toán đã ghi nhận cho chỉ tiêu này. Nếu chứng từ vừa được duyệt, dữ liệu có thể xuất hiện sau khi sổ kế toán được cập nhật." />}
             />
           )}
 
           {!loading && !error && activeTab === "contracts" && (
             <EnterpriseDataTable
-              data={data?.sourceDocuments.filter((row) => row.contractName || row.partnerName) || []}
+              data={relatedObjects}
               minWidth="760px"
               columns={[
-                { key: "sourceType", header: "Nguồn", render: (row) => sourceTypeLabel(row.sourceType), width: "150px" },
-                { key: "contractName", header: "Hợp đồng", render: (row) => row.contractName || "---", width: "260px" },
-                { key: "partnerName", header: "Nhà cung cấp/Khách hàng", render: (row) => row.partnerName || "---", width: "240px" },
+                { key: "sourceType", header: "Nguồn nghiệp vụ", render: (row) => sourceTypeLabel(row.sourceType), width: "160px" },
+                { key: "contractName", header: "Hợp đồng", render: (row) => row.contractName || "Chưa gắn", width: "250px" },
+                { key: "partnerName", header: "Nhà cung cấp/Khách hàng", render: (row) => row.partnerName || "Chưa có", width: "240px" },
                 { key: "amount", header: "Giá trị", render: (row) => formatVnd(row.amount), align: "right", width: "150px" },
-                { key: "status", header: "Trạng thái", render: (row) => statusLabel(row.status), align: "center", width: "140px" }
+                {
+                  key: "status",
+                  header: "Trạng thái",
+                  render: (row) => <EnterpriseBadge variant={statusVariant(row.status)}>{statusLabel(row.status)}</EnterpriseBadge>,
+                  align: "center",
+                  width: "140px",
+                },
               ]}
-              emptyState={<div className="text-sm font-semibold text-[var(--text-secondary)]">Chưa có dữ liệu hợp đồng/NCC cho chỉ tiêu này trong pilot.</div>}
+              emptyState={<EmptyPanel title="Chưa có đối tượng liên quan" description="Chỉ tiêu này chưa có hợp đồng, nhà cung cấp hoặc khách hàng đủ thông tin để hiển thị trong phạm vi đang xem." />}
             />
-          )}
-
-          {!loading && !error && activeTab === "audit" && (
-            <AuditTrailPanel
-              entityType={data?.project?.id || request.projectId ? "Project" : undefined}
-              entityId={data?.project?.id || request.projectId}
-              recent={!data?.project?.id && !request.projectId}
-              limit={20}
-              title="Lịch sử thao tác liên quan"
-              description="Hiển thị audit log đọc-only theo công trình đang truy vết. Nếu chưa có bản ghi audit, hệ thống giữ empty state và không tạo dữ liệu giả."
-            />
-          )}
-
-          {!loading && !error && activeTab === "__legacy_audit" && (
-            <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-5">
-              <div className="text-sm font-bold text-[var(--text-primary)]">Audit/Trace</div>
-              <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
-                Chưa có trace chi tiết cho chỉ tiêu này trong pilot. Vui lòng xem báo cáo sổ cái hoặc chứng từ liên quan.
-              </p>
-            </div>
           )}
         </main>
+      
+          {/* Fallback Document Modal */}
+          {detailModalDoc && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
+              <div className="w-full max-w-lg rounded-lg border border-[var(--border)] bg-[var(--card)] p-6 shadow-2xl">
+                <h3 className="text-lg font-black text-[var(--text-primary)]">Chi tiết chứng từ</h3>
+                <p className="mt-1 text-sm text-[var(--text-secondary)]">Không có bản in trực tiếp cho loại chứng từ này.</p>
+                
+                <div className="mt-6 space-y-3 text-sm">
+                  <div className="grid grid-cols-3 gap-2 border-b border-[var(--border)] pb-2">
+                    <span className="font-semibold text-[var(--text-secondary)]">Loại chứng từ:</span>
+                    <span className="col-span-2 font-bold text-[var(--text-primary)]">{sourceTypeLabel(detailModalDoc.sourceType)}</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 border-b border-[var(--border)] pb-2">
+                    <span className="font-semibold text-[var(--text-secondary)]">Số chứng từ:</span>
+                    <span className="col-span-2 font-mono text-[var(--text-primary)]">{detailModalDoc.number || 'Chưa có'}</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 border-b border-[var(--border)] pb-2">
+                    <span className="font-semibold text-[var(--text-secondary)]">Số tiền:</span>
+                    <span className="col-span-2 font-mono font-bold text-emerald-600">{formatVnd(detailModalDoc.amount)}</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 border-b border-[var(--border)] pb-2">
+                    <span className="font-semibold text-[var(--text-secondary)]">Trạng thái:</span>
+                    <span className="col-span-2 font-bold">{detailModalDoc.status}</span>
+                  </div>
+                </div>
+
+                <div className="mt-8 flex justify-end">
+                  <button type="button" onClick={() => setDetailModalDoc(null)} className="h-9 rounded-md bg-[var(--primary)] px-4 text-xs font-bold text-white transition hover:bg-[var(--primary-hover)]">
+                    Đóng
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
       </aside>
     </div>
   );

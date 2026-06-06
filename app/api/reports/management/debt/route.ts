@@ -1,8 +1,9 @@
 import { requireAccountingAccess } from "@/lib/route-security";
 import { ApiError, handleApiError, successResponse } from "@/lib/api-error";
 import { ManagementReportService, ReportFilters } from "@/services/management-report.service";
+import { NextRequest } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const user = await requireAccountingAccess("READ");
     
@@ -26,8 +27,10 @@ export async function GET() {
       });
     }
 
+    const { searchParams } = new URL(request.url);
     const filters: ReportFilters = {
-      companyId: user.companyId
+      companyId: user.companyId,
+      projectId: searchParams.get("projectId") || undefined
     };
 
     const data = await ManagementReportService.getDebtManagement(filters);

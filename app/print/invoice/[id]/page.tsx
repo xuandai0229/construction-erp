@@ -55,14 +55,37 @@ export default function PrintInvoicePage() {
 
   if (!invoice) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white text-rose-500 font-bold">
-        Không tìm thấy chứng từ hóa đơn hoặc có lỗi phát sinh.
+      <div className="flex min-h-screen items-center justify-center bg-[var(--background)] p-4">
+        <div className="w-full max-w-md rounded-xl border border-[var(--border)] bg-[var(--card)] p-8 text-center shadow-2xl">
+          <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-rose-500/10 text-xl font-black text-rose-500">!</div>
+          <h2 className="mt-4 text-lg font-black text-[var(--text-primary)]">Không tìm thấy hóa đơn</h2>
+          <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">Chứng từ có thể đã bị xóa, chưa được ghi nhận hoặc đường dẫn không hợp lệ.</p>
+          <div className="mt-4 rounded-md border border-[var(--border)] bg-[var(--secondary)] p-2">
+            <span className="text-xs text-[var(--text-tertiary)]">Mã/ID đang mở: </span>
+            <span className="font-mono text-xs font-bold text-[var(--text-primary)]">{id}</span>
+          </div>
+          <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
+            <button type="button" onClick={() => window.history.back()} className="rounded-md border border-[var(--border)] bg-[var(--background)] px-4 py-2 text-xs font-bold text-[var(--text-primary)] transition hover:bg-[var(--secondary)]">Quay lại</button>
+            <a href="/" className="rounded-md bg-[var(--primary)] px-4 py-2 text-xs font-bold text-white transition hover:bg-[var(--primary-hover)]">Về Tổng quan</a>
+          </div>
+        </div>
       </div>
     );
   }
 
   const isPosted = invoice.status === "PAID" || invoice.approvalStatus === "APPROVED";
-  const dateStr = new Date(invoice.issuedDate).toLocaleDateString("vi-VN");
+  
+  let dateStr = "—";
+  if (invoice.issuedDate) {
+    const d = new Date(invoice.issuedDate);
+    if (!isNaN(d.getTime())) dateStr = d.toLocaleDateString("vi-VN");
+  }
+  
+  let dueDateStr = "—";
+  if (invoice.dueDate) {
+    const d = new Date(invoice.dueDate);
+    if (!isNaN(d.getTime())) dueDateStr = d.toLocaleDateString("vi-VN");
+  }
 
   return (
     <PrintLayout>
@@ -91,10 +114,8 @@ export default function PrintInvoicePage() {
             <span className="text-zinc-900 font-semibold">{invoice.wbs?.name || "Chung"}</span>
           </div>
           <div>
-            <span className="font-bold text-zinc-700">Thời hạn thanh toán:</span>{" "}
-            <span className="text-zinc-900 font-semibold">
-              {invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString("vi-VN") : "—"}
-            </span>
+            <span className="font-bold text-zinc-700">Ngày đến hạn thanh toán:</span>{" "}
+            <span className="text-zinc-900 font-semibold">{dueDateStr}</span>
           </div>
         </div>
 

@@ -4,6 +4,45 @@ import { RevenueService } from "@/services/revenue.service";
 import { assertAuthenticated } from "@/lib/auth-guard";
 import { RBAC } from "@/lib/rbac";
 
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const user = await assertAuthenticated();
+    const { id } = await params;
+    
+    const invoice = await prisma.invoice.findFirst({
+      where: {
+        id,
+        deletedAt: null,
+        ...(user.companyId && { companyId: user.companyId }),
+      },
+      include: {
+        contract: {
+          include: {
+            project: true,
+            supplier: true,
+            customer: true
+          }
+        },
+        creator: {
+          select: { name: true, email: true }
+        }
+      }
+    });
+    
+    if (!invoice) {
+      throw new ApiError(404, "Không tìm thấy hóa đơn.");
+    }
+    return successResponse(invoice);
+  } catch (error: any) {
+    console.error("GET ERROR:", error);
+    require('fs').writeFileSync('api_error.txt', error.stack || String(error));
+    return handleApiError(error);
+  }
+}
+
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }

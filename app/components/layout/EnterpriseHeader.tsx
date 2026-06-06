@@ -27,7 +27,7 @@ export default function EnterpriseHeader({ title, subtitle, breadcrumbs, actions
         </button>
         <div className="min-w-0">
           {breadcrumbs && breadcrumbs.length > 0 && (
-            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)] mb-1">
+            <div className="hidden items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)] mb-1 sm:flex">
               {breadcrumbs.map((bc, idx) => (
                 <React.Fragment key={idx}>
                   {bc.href ? (

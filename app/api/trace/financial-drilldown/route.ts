@@ -15,15 +15,15 @@ type MetricKey =
   | "budget";
 
 const METRIC_LABELS: Record<MetricKey, string> = {
-  revenue: "Doanh thu",
-  cost: "Chi phí",
-  profit: "Lãi/lỗ",
+  revenue: "Doanh thu hạch toán",
+  cost: "Chi phí sản xuất",
+  profit: "Lợi nhuận gộp tạm tính",
   receivables: "Công nợ phải thu",
   payables: "Công nợ phải trả",
-  payments: "Thanh toán",
-  advances: "Tạm ứng",
+  payments: "Dòng tiền thuần",
+  advances: "Tạm ứng công trình",
   contractValue: "Giá trị hợp đồng",
-  budget: "Ngân sách"
+  budget: "Dự toán",
 };
 
 function isMetricKey(value: string): value is MetricKey {
@@ -43,14 +43,6 @@ function getSourceTypes(metric: MetricKey) {
   return ["COST", "INVOICE", "PAYMENT", "ADVANCE", "CONTRACT"];
 }
 
-function hasHumanApprovalWarning(metric: MetricKey, journalEntries: Array<{ sourceType: string | null; description: string }>) {
-  if (metric === "payables" || metric === "advances") return true;
-  return journalEntries.some((entry) => {
-    const text = `${entry.sourceType || ""} ${entry.description || ""}`.toUpperCase();
-    return text.includes("CASH_BANK") || text.includes("BÁT TRÀNG") || text.includes("BAT TRANG") || text.includes("RECONCILIATION");
-  });
-}
-
 export async function GET(request: NextRequest) {
   try {
     const user = await requireAccountingAccess("READ");
@@ -59,58 +51,49 @@ export async function GET(request: NextRequest) {
     const projectId = searchParams.get("projectId") || undefined;
 
     if (!isMetricKey(metricInput)) {
-      throw new ApiError(400, "Thiếu hoặc sai chỉ tiêu truy vết tài chính.");
+      throw new ApiError(400, "Thiếu hoặc sai chỉ tiêu tài chính.");
     }
 
     const metric = metricInput;
     const companyId = user.companyId || undefined;
-    const project = projectId ? await requireProjectAccess(user, projectId) : null;
+    if (projectId) await requireProjectAccess(user, projectId);
+    const projectRecord = projectId ? await prisma.project.findFirst({ where: { id: projectId, deletedAt: null }, select: { id: true, name: true } }) : null;
 
-    const projectWhere = projectId
-      ? { projectId }
-      : companyId
-      ? { companyId }
-      : {};
-
-    const journalProjectWhere = projectId
-      ? { projectId }
-      : companyId
-      ? { project: { companyId } }
-      : {};
-
+    const projectWhere = projectId ? { projectId } : companyId ? { companyId } : {};
+    const journalProjectWhere = projectId ? { projectId } : companyId ? { project: { companyId } } : {};
     const sourceTypes = getSourceTypes(metric);
 
     const [invoices, payments, costs, advances, contracts, budgets, journalEntries] = await Promise.all([
       metric === "revenue" || metric === "receivables" || metric === "profit"
         ? prisma.invoice.findMany({
             where: { ...projectWhere, deletedAt: null, OR: [{ status: { in: ["SENT", "PARTIAL", "PAID", "OVERDUE"] } }, { approvalStatus: "APPROVED" }] },
-            include: { contract: { include: { supplier: true } }, wbs: true },
+            include: { contract: { include: { supplier: true, project: true } }, wbs: { include: { project: true } } },
             orderBy: { issuedDate: "desc" },
-            take: 25
+            take: 25,
           })
         : Promise.resolve([]),
       metric === "payments" || metric === "receivables" || metric === "payables"
         ? prisma.payment.findMany({
             where: { ...projectWhere, deletedAt: null, approvalStatus: "APPROVED" },
-            include: { invoice: true, contract: { include: { supplier: true } } },
+            include: { invoice: true, contract: { include: { supplier: true, project: true } } },
             orderBy: { date: "desc" },
-            take: 25
+            take: 25,
           })
         : Promise.resolve([]),
       metric === "cost" || metric === "payables" || metric === "profit"
         ? prisma.costRecord.findMany({
             where: { ...projectWhere, deletedAt: null, approvalStatus: "APPROVED" },
-            include: { wbs: true },
+            include: { wbs: { include: { project: true } } },
             orderBy: { date: "desc" },
-            take: 25
+            take: 25,
           })
         : Promise.resolve([]),
       metric === "advances"
         ? prisma.advanceRequest.findMany({
             where: { ...projectWhere, deletedAt: null, status: { in: ["APPROVED", "PAID", "PARTIALLY_SETTLED", "FULLY_SETTLED"] } },
-            include: { contract: { include: { supplier: true } }, supplier: true, settlements: true },
+            include: { contract: { include: { supplier: true, project: true } }, supplier: true, settlements: true, project: true },
             orderBy: { createdAt: "desc" },
-            take: 25
+            take: 25,
           })
         : Promise.resolve([]),
       metric === "contractValue"
@@ -118,15 +101,15 @@ export async function GET(request: NextRequest) {
             where: { ...projectWhere, deletedAt: null },
             include: { supplier: true, project: true },
             orderBy: { createdAt: "desc" },
-            take: 25
+            take: 25,
           })
         : Promise.resolve([]),
       metric === "budget"
         ? prisma.budgetRecord.findMany({
             where: { ...projectWhere, deletedAt: null },
-            include: { wbs: true },
+            include: { wbs: { include: { project: true } } },
             orderBy: { createdAt: "desc" },
-            take: 25
+            take: 25,
           })
         : Promise.resolve([]),
       prisma.journalEntry.findMany({
@@ -135,18 +118,18 @@ export async function GET(request: NextRequest) {
           deletedAt: null,
           isPosted: true,
           isReversed: false,
-          sourceType: { in: sourceTypes }
+          sourceType: { in: sourceTypes },
         },
         include: {
           lines: {
             where: { deletedAt: null },
-            include: { account: true }
+            include: { account: true },
           },
-          project: { select: { id: true, name: true } }
+          project: { select: { id: true, name: true } },
         },
         orderBy: { date: "desc" },
-        take: 25
-      })
+        take: 25,
+      }),
     ]);
 
     const sourceDocuments = [
@@ -156,12 +139,12 @@ export async function GET(request: NextRequest) {
         date: item.issuedDate,
         number: item.invoiceNumber || item.id.slice(0, 8),
         projectId: item.projectId,
-        projectName: project?.id === item.projectId ? undefined : null,
-        partnerName: item.contract?.supplier?.name || "Chủ đầu tư/khách hàng",
+        projectName: item.contract?.project?.name || item.wbs?.project?.name || projectRecord?.name || null,
+        partnerName: item.contract?.supplier?.name || item.contract?.project?.investor || "Khách hàng/chủ đầu tư",
         contractName: item.contract?.title || item.contractId || "",
         description: item.note || "Hóa đơn/giá trị nghiệm thu",
         amount: money(item.amount),
-        status: item.status || item.approvalStatus
+        status: item.status || item.approvalStatus,
       })),
       ...payments.map((item) => ({
         id: item.id,
@@ -169,11 +152,12 @@ export async function GET(request: NextRequest) {
         date: item.date,
         number: item.id.slice(0, 8),
         projectId: item.projectId,
-        partnerName: item.contract?.supplier?.name || "Khách hàng/NCC",
+        projectName: item.contract?.project?.name || projectRecord?.name || null,
+        partnerName: item.contract?.supplier?.name || "Khách hàng/Nhà cung cấp",
         contractName: item.contract?.title || item.invoice?.invoiceNumber || "",
         description: item.description || "Thanh toán",
         amount: money(item.amount),
-        status: item.approvalStatus
+        status: item.approvalStatus,
       })),
       ...costs.map((item) => ({
         id: item.id,
@@ -181,11 +165,12 @@ export async function GET(request: NextRequest) {
         date: item.date,
         number: item.id.slice(0, 8),
         projectId: item.projectId,
+        projectName: item.wbs?.project?.name || projectRecord?.name || null,
         partnerName: item.supplier || "",
         contractName: item.wbs?.name || "",
         description: item.note || "Chi phí công trình",
         amount: money(item.amount),
-        status: item.approvalStatus
+        status: item.approvalStatus,
       })),
       ...advances.map((item) => ({
         id: item.id,
@@ -193,11 +178,12 @@ export async function GET(request: NextRequest) {
         date: item.createdAt,
         number: item.advanceNo || item.id.slice(0, 8),
         projectId: item.projectId,
+        projectName: item.project?.name || item.contract?.project?.name || projectRecord?.name || null,
         partnerName: item.supplier?.name || item.contract?.supplier?.name || "",
         contractName: item.contract?.title || "",
         description: item.purpose || "Tạm ứng",
         amount: money(item.amount),
-        status: item.status
+        status: item.status,
       })),
       ...contracts.map((item) => ({
         id: item.id,
@@ -210,7 +196,7 @@ export async function GET(request: NextRequest) {
         contractName: item.title,
         description: item.description || "Hợp đồng",
         amount: money(item.currentValue || item.originalValue),
-        status: item.status
+        status: item.status,
       })),
       ...budgets.map((item) => ({
         id: item.id,
@@ -218,12 +204,13 @@ export async function GET(request: NextRequest) {
         date: item.createdAt,
         number: item.id.slice(0, 8),
         projectId: item.projectId,
+        projectName: item.wbs?.project?.name || projectRecord?.name || null,
         partnerName: "",
         contractName: item.wbs?.name || "",
         description: `Dự toán ${item.costType}`,
         amount: money(item.estimatedAmount),
-        status: "APPROVED"
-      }))
+        status: "APPROVED",
+      })),
     ].slice(0, 25);
 
     const totalAmount = sourceDocuments.reduce((sum, item) => {
@@ -231,18 +218,11 @@ export async function GET(request: NextRequest) {
       return sum + item.amount;
     }, 0);
 
-    const warnings = hasHumanApprovalWarning(metric, journalEntries)
-      ? [
-          "Dữ liệu đối soát này đang chờ kế toán/owner xác nhận. Không dùng làm sổ kế toán thật.",
-          "Cần rà soát project/company mapping, CASH_BANK journal mapping và AP Bát Tràng nếu chỉ tiêu liên quan."
-        ]
-      : [];
-
     return successResponse({
       metric,
       title: METRIC_LABELS[metric],
-      project: projectId ? await prisma.project.findFirst({ where: { id: projectId, deletedAt: null }, select: { id: true, name: true } }) : null,
-      sourceOfTruth: "Pilot read-only: ledger posted và chứng từ đã duyệt/đã ghi sổ theo dữ liệu hiện có",
+      project: projectRecord,
+      sourceOfTruth: "Chứng từ đã phê duyệt và bút toán đã ghi nhận",
       totalAmount,
       sourceDocuments,
       journalEntries: journalEntries.map((entry) => ({
@@ -251,8 +231,6 @@ export async function GET(request: NextRequest) {
         reference: entry.reference || entry.id.slice(0, 8),
         description: entry.description,
         status: entry.status,
-        sourceType: entry.sourceType,
-        sourceId: entry.sourceId,
         projectName: entry.project?.name || "",
         lines: entry.lines.map((line) => ({
           id: line.id,
@@ -260,11 +238,11 @@ export async function GET(request: NextRequest) {
           accountName: line.account.name,
           type: line.type,
           amount: money(line.amount),
-          description: line.description || ""
-        }))
+          description: line.description || "",
+        })),
       })),
       auditTrail: [],
-      warnings
+      warnings: [],
     });
   } catch (error) {
     return handleApiError(error);

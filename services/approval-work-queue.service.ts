@@ -12,6 +12,7 @@ export interface ApprovalQueueItem {
   documentType: string;
   docNo: string;
   projectId: string | null;
+  projectCode: string;
   projectName: string;
   partnerName: string;
   creatorId: string | null;
@@ -153,6 +154,10 @@ function toIsoOrNull(value: Date | null | undefined) {
   return value ? value.toISOString() : null;
 }
 
+function getProjectCode(projectId: string | null | undefined) {
+  return projectId ? `PRJ-${projectId.slice(0, 4).toUpperCase()}` : "CT-NA";
+}
+
 export class ApprovalWorkQueueService {
   static async getWorkQueue(user: WorkQueueUser, filters: WorkQueueFilters = {}) {
     const fallbackCompany = user.companyId ? null : await prisma.company.findFirst({ select: { id: true } });
@@ -229,6 +234,7 @@ export class ApprovalWorkQueueService {
         documentType: "H\u00f3a \u0111\u01a1n",
         docNo: invoice.invoiceNumber || invoice.id.slice(0, 8).toUpperCase(),
         projectId: invoice.projectId,
+        projectCode: getProjectCode(invoice.projectId),
         projectName: invoice.contract?.project?.name || invoice.wbs?.project?.name || "Ch\u01b0a c\u00f3 c\u00f4ng tr\u00ecnh",
         partnerName: invoice.contract?.supplier?.name || "Ch\u01b0a c\u00f3 kh\u00e1ch h\u00e0ng/NCC",
         creatorId,
@@ -258,6 +264,7 @@ export class ApprovalWorkQueueService {
         documentType: "Chi ph\u00ed",
         docNo: cost.id.slice(0, 8).toUpperCase(),
         projectId: cost.projectId,
+        projectCode: getProjectCode(cost.projectId),
         projectName: cost.wbs?.project?.name || "Ch\u01b0a c\u00f3 c\u00f4ng tr\u00ecnh",
         partnerName: cost.supplier || "Ch\u01b0a c\u00f3 nh\u00e0 cung c\u1ea5p",
         creatorId,
@@ -287,6 +294,7 @@ export class ApprovalWorkQueueService {
         documentType: "T\u1ea1m \u1ee9ng",
         docNo: advance.advanceNo || advance.id.slice(0, 8).toUpperCase(),
         projectId: advance.projectId,
+        projectCode: getProjectCode(advance.projectId),
         projectName: advance.project?.name || "Ch\u01b0a c\u00f3 c\u00f4ng tr\u00ecnh",
         partnerName: advance.supplier?.name || "Nh\u00e2n vi\u00ean/NCC",
         creatorId,
@@ -316,6 +324,7 @@ export class ApprovalWorkQueueService {
         documentType: "Ho\u00e0n \u1ee9ng",
         docNo: settlement.id.slice(0, 8).toUpperCase(),
         projectId: settlement.advanceRequest?.projectId || null,
+        projectCode: getProjectCode(settlement.advanceRequest?.projectId),
         projectName: settlement.advanceRequest?.project?.name || "Ch\u01b0a c\u00f3 c\u00f4ng tr\u00ecnh",
         partnerName: settlement.advanceRequest?.supplier?.name || "Nh\u00e2n vi\u00ean/NCC",
         creatorId,

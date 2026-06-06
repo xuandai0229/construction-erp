@@ -16,7 +16,7 @@ import {
   getStatusLabel,
   getStatusStyleClass,
 } from "@/app/components/ui-enterprise";
-import { formatVnd } from "@/app/components/dashboard-data";
+import { formatVnd, formatProjectName } from "@/app/components/dashboard-data";
 import { ApprovalSlaInfo, calculateApprovalSla, getApprovalSlaClass } from "@/lib/approval-sla";
 
 type QueueTab = "pending" | "created" | "rejected" | "approved" | "posted" | "all";
@@ -247,6 +247,7 @@ export default function ApprovalsPage() {
       averageWaiting: waiting.length ? Math.round(waiting.reduce((sum, value) => sum + value, 0) / waiting.length) : null,
     };
   }, [itemsWithSla]);
+  const allKpisZero = summary.pendingForMe === 0 && slaSummary.dueSoon === 0 && slaSummary.overdue === 0 && slaSummary.highValue === 0 && slaSummary.needsFix === 0;
 
   const filteredItems = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -427,23 +428,32 @@ export default function ApprovalsPage() {
 
   return (
     <EnterpriseAppShell activeItem="approvals">
-      <EnterpriseHeader title={"H\u1ed9p vi\u1ec7c ph\u00ea duy\u1ec7t k\u1ebf to\u00e1n"} subtitle={"Theo d\u00f5i SLA, nh\u1eafc h\u1ea1n, th\u00f4ng b\u00e1o v\u00e0 \u1ee7y quy\u1ec1n pilot cho quy tr\u00ecnh duy\u1ec7t"} />
+      <EnterpriseHeader title={"H\u1ed9p vi\u1ec7c ph\u00ea duy\u1ec7t k\u1ebf to\u00e1n"} subtitle={"Theo dõi chứng từ chờ duyệt, thời hạn xử lý và các hồ sơ cần ưu tiên."} />
       <EnterprisePageContainer>
         <div className="min-w-0 space-y-6 overflow-hidden" data-approval-page>
           <ApprovalWorkflowStepper status={summary.pendingForMe > 0 ? "SUBMITTED" : summary.approvedToday > 0 ? "APPROVED" : "DRAFT"} pendingCount={summary.pendingForMe} processedCount={summary.approvedToday + summary.postedToday} />
 
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+          {!allKpisZero && (
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
             <KpiCard label="S\u1eafp qu\u00e1 h\u1ea1n" value={slaSummary.dueSoon.toLocaleString("vi-VN")} tone="amber" />
             <KpiCard label="\u0110\u00e3 qu\u00e1 h\u1ea1n" value={slaSummary.overdue.toLocaleString("vi-VN")} tone="rose" />
             <KpiCard label="C\u1ea7n c\u1ea5p cao x\u1eed l\u00fd" value={slaSummary.highValue.toLocaleString("vi-VN")} tone="violet" />
             <KpiCard label="B\u1ecb t\u1eeb ch\u1ed1i c\u1ea7n b\u1ed5 sung" value={slaSummary.needsFix.toLocaleString("vi-VN")} tone="blue" />
             <KpiCard label="Th\u1eddi gian ch\u1edd trung b\u00ecnh" value={slaSummary.averageWaiting === null ? "\u2014" : `${slaSummary.averageWaiting.toLocaleString("vi-VN")} gi\u1edd`} tone="slate" />
           </div>
+          )}
+
+          {allKpisZero && (
+            <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 text-center">
+              <p className="text-sm font-semibold text-[var(--text-secondary)]">Không có công việc nào đang chờ bạn xử lý lúc này.</p>
+            </div>
+          )}
 
           <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
             <div className="min-w-0 space-y-4">
-              <div className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs leading-5 text-amber-700 dark:text-amber-300">
-                D\u1eef li\u1ec7u \u0111\u1ed1i so\u00e1t c\u00f4ng tr\u00ecnh/c\u00f4ng n\u1ee3 c\u00f2n ch\u1edd k\u1ebf to\u00e1n x\u00e1c nh\u1eadn. Kh\u00f4ng d\u00f9ng l\u00e0m s\u1ed5 k\u1ebf to\u00e1n th\u1eadt.
+              <div className="flex items-center gap-2 rounded-md border border-blue-500/25 bg-blue-500/10 px-3 py-2 text-xs leading-5 text-blue-700 dark:text-blue-300">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-500/20 font-bold">i</span>
+                <span>Dữ liệu được lọc theo vai trò kế toán hiện tại. Dùng phím <kbd className="mx-1 rounded bg-blue-500/20 px-1 font-mono font-bold">/</kbd> để tìm kiếm nhanh chứng từ.</span>
               </div>
 
               <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-4">
@@ -451,7 +461,7 @@ export default function ApprovalsPage() {
                   <div>
                     <div className="text-sm font-black text-[var(--text-primary)]">H\u00e0ng \u0111\u1ee3i theo vai tr\u00f2</div>
                     <div className="mt-1 text-xs text-[var(--text-secondary)]">
-                      Vai tr\u00f2 hi\u1ec7n t\u1ea1i: <span className="font-bold">{data?.role || "\u0110ang t\u1ea3i"}</span> - {data?.roleBehavior?.mode || "\u0110ang x\u00e1c \u0111\u1ecbnh ph\u1ea1m vi x\u1eed l\u00fd"}
+                      Vai tr\u00f2 hi\u1ec7n t\u1ea1i: <span className="font-bold">{formatRoleLabel(data?.role)}</span> - {data?.roleBehavior?.mode || "\u0110ang x\u00e1c \u0111\u1ecbnh ph\u1ea1m vi x\u1eed l\u00fd"}
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 sm:flex-row">
@@ -495,7 +505,7 @@ export default function ApprovalsPage() {
                   { key: "selection", header: "", render: (row) => <input type="checkbox" checked={selectedIds.has(row.id)} onClick={(event) => event.stopPropagation()} onChange={() => toggleSelection(row.id)} aria-label={`Ch\u1ecdn ch\u1ee9ng t\u1eeb ${row.docNo}`} className="h-4 w-4" />, width: "44px", align: "center", headerClassName: "text-center" },
                   { key: "documentType", header: "Lo\u1ea1i ch\u1ee9ng t\u1eeb", render: (row) => row.documentType, width: "130px" },
                   { key: "docNo", header: "S\u1ed1 ch\u1ee9ng t\u1eeb", render: (row) => <span className="font-mono font-bold text-[var(--primary)]">{row.docNo}</span>, width: "130px" },
-                  { key: "projectName", header: "C\u00f4ng tr\u00ecnh", render: (row) => row.projectName, minWidth: "190px", truncate: true },
+                  { key: "projectName", header: "C\u00f4ng tr\u00ecnh", render: (row) => formatProjectName(row.projectName), minWidth: "190px", truncate: true },
                   { key: "partnerName", header: "Nh\u00e0 cung c\u1ea5p/Kh\u00e1ch h\u00e0ng", render: (row) => row.partnerName, minWidth: "190px", truncate: true },
                   { key: "creatorName", header: "Ng\u01b0\u1eddi t\u1ea1o", render: (row) => row.creatorName, width: "150px" },
                   { key: "submittedAt", header: "M\u1ed1c t\u00ednh SLA", render: (row) => formatDateTime(row.submittedAt || row.createdAt), width: "145px" },
@@ -519,7 +529,7 @@ export default function ApprovalsPage() {
 
             <aside className="min-w-0 space-y-4">
               <NotificationPanel notifications={notificationItems} derived={notifications.length === 0} />
-              <DelegationPilotPanel role={data?.role || "\u0110ang t\u1ea3i"} />
+              <DelegationPanel role={formatRoleLabel(data?.role)} averageWaiting={slaSummary.averageWaiting} />
             </aside>
           </div>
           <ApprovalWorkQueueDrawer isOpen={Boolean(selectedItem)} item={selectedItem} onClose={() => setSelectedItem(null)} onApprove={setApproveItem} onReject={setRejectItem} />
@@ -572,19 +582,19 @@ function NotificationPanel({ notifications, derived }: { notifications: Notifica
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-sm font-black text-[var(--text-primary)]">Trung t\u00e2m th\u00f4ng b\u00e1o duy\u1ec7t</h2>
-          <p className="mt-1 text-[11px] font-semibold text-[var(--text-secondary)]">{derived ? "Derived pilot notification t\u1eeb work queue, kh\u00f4ng ghi DB." : "D\u1eef li\u1ec7u \u0111\u1ecdc-only t\u1eeb /api/workspace/notifications."}</p>
+          <p className="mt-1 text-[11px] font-semibold text-[var(--text-secondary)]">{derived ? "Thông báo được tổng hợp từ hàng đợi phê duyệt hiện tại." : "Thông báo từ hệ thống."}</p>
         </div>
         <span className="rounded bg-blue-500/10 px-2 py-1 text-[10px] font-black text-blue-600">{notifications.length}</span>
       </div>
       <div className="mt-3 space-y-2">
         {notifications.length === 0 ? (
-          <div className="rounded-md border border-dashed border-[var(--border)] p-4 text-center text-xs font-semibold text-[var(--text-secondary)]">Kh\u00f4ng c\u00f3 th\u00f4ng b\u00e1o approval/workflow ph\u00f9 h\u1ee3p.</div>
+          <div className="rounded-md border border-dashed border-[var(--border)] p-4 text-center text-xs font-semibold text-[var(--text-secondary)]">Không có thông báo phê duyệt cần xử lý.</div>
         ) : (
           notifications.slice(0, 5).map((item) => (
             <div key={item.id} className="rounded-md border border-[var(--border)] bg-[var(--background)] p-3">
               <div className={`text-xs font-black ${severityClass[item.severity] || "text-[var(--text-primary)]"}`}>{item.title}</div>
               <p className="mt-1 text-[11px] leading-5 text-[var(--text-secondary)]">{item.message}</p>
-              <div className="mt-2 text-[10px] font-semibold text-[var(--text-tertiary)]">{item.derived ? "Th\u00f4ng b\u00e1o pilot suy lu\u1eadn" : formatDateTime(item.createdAt)}</div>
+              <div className="mt-2 text-[10px] font-semibold text-[var(--text-tertiary)]">{item.derived ? "Tổng hợp từ hàng đợi" : formatDateTime(item.createdAt)}</div>
             </div>
           ))
         )}
@@ -593,18 +603,18 @@ function NotificationPanel({ notifications, derived }: { notifications: Notifica
   );
 }
 
-function DelegationPilotPanel({ role }: { role: string }) {
+function DelegationPanel({ role, averageWaiting }: { role: string; averageWaiting: number | null }) {
   return (
     <section className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-4">
       <h2 className="text-sm font-black text-[var(--text-primary)]">\u1ee6y quy\u1ec1n x\u1eed l\u00fd</h2>
       <div className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/10 p-3 text-xs leading-5 text-amber-700 dark:text-amber-300">
-        \u1ee6y quy\u1ec1n duy\u1ec7t \u0111ang \u1edf ch\u1ebf \u0111\u1ed9 pilot. Ch\u01b0a k\u00edch ho\u1ea1t x\u1eed l\u00fd th\u1eadt v\u00ec c\u1ea7n c\u1ea5u h\u00ecnh workflow assignment v\u00e0 audit \u0111\u1ea7y \u0111\u1ee7.
+        Ưu tiên xử lý chứng từ quá hạn, chứng từ giá trị lớn và hồ sơ bị trả lại để giảm tồn đọng cuối ngày.
       </div>
       <div className="mt-3 grid gap-2 text-xs">
         <InfoLine label="Ng\u01b0\u1eddi x\u1eed l\u00fd hi\u1ec7n t\u1ea1i" value={role} />
         <InfoLine label="Ng\u01b0\u1eddi \u0111\u01b0\u1ee3c \u0111\u1ec1 xu\u1ea5t thay th\u1ebf" value="K\u1ebf to\u00e1n tr\u01b0\u1edfng/Gi\u00e1m \u0111\u1ed1c theo gi\u00e1 tr\u1ecb ch\u1ee9ng t\u1eeb" />
         <InfoLine label="Th\u1eddi gian \u1ee7y quy\u1ec1n" value="Ch\u01b0a k\u00edch ho\u1ea1t" />
-        <InfoLine label="Tr\u1ea1ng th\u00e1i" value="Read-only/disabled pilot" />
+        <InfoLine label="Tr\u1ea1ng th\u00e1i" value="Chưa kích hoạt" />
       </div>
       <button type="button" disabled className="mt-3 h-9 w-full cursor-not-allowed rounded-md border border-[var(--border)] bg-[var(--secondary)] px-3 text-xs font-bold text-[var(--text-secondary)] opacity-70">
         Ch\u01b0a cho ph\u00e9p \u1ee7y quy\u1ec1n th\u1eadt
@@ -687,4 +697,19 @@ function BulkResultModal({ results, onClose }: { results: BulkResultRow[] | null
 function ShortcutHelpModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const rows = [["J / ArrowDown", "Xu\u1ed1ng d\u00f2ng ti\u1ebfp theo"], ["K / ArrowUp", "L\u00ean d\u00f2ng tr\u01b0\u1edbc"], ["Enter", "M\u1edf chi ti\u1ebft d\u00f2ng \u0111ang focus"], ["Esc", "\u0110\u00f3ng drawer ho\u1eb7c modal"], ["A", "M\u1edf x\u00e1c nh\u1eadn ph\u00ea duy\u1ec7t n\u1ebfu c\u00f3 quy\u1ec1n"], ["R", "M\u1edf modal t\u1eeb ch\u1ed1i n\u1ebfu c\u00f3 quy\u1ec1n"], ["/", "Focus \u00f4 t\u00ecm ki\u1ebfm"], ["Space", "Ch\u1ecdn ho\u1eb7c b\u1ecf ch\u1ecdn d\u00f2ng \u0111ang focus"], ["?", "M\u1edf tr\u1ee3 gi\u00fap ph\u00edm t\u1eaft"]];
   return <EnterpriseModal isOpen={isOpen} onClose={onClose} title="Ph\u00edm t\u1eaft" maxWidth="lg"><div className="space-y-2">{rows.map(([key, desc]) => <div key={key} className="flex items-center justify-between rounded-md border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm"><kbd className="rounded bg-[var(--secondary)] px-2 py-1 font-mono text-xs font-bold">{key}</kbd><span className="text-[var(--text-secondary)]">{desc}</span></div>)}</div></EnterpriseModal>;
+}
+
+
+function formatRoleLabel(role?: string | null) {
+  const labels: Record<string, string> = {
+    "Quản trị hệ thống": "Quản trị hệ thống",
+    ADMIN: "Quản trị doanh nghiệp",
+    CFO: "Giám đốc tài chính",
+    GROUP_DIRECTOR: "Ban giám đốc",
+    ACCOUNTANT: "Kế toán",
+    MANAGER: "Quản lý công trình",
+    AUDITOR: "Kiểm soát nội bộ",
+    VIEWER: "Người xem",
+  };
+  return role ? labels[role] || "Người xử lý" : "Đang tải";
 }

@@ -49,7 +49,7 @@ export default function ApprovalWorkflowStepper({
         <div>
           <h2 className="text-sm font-black text-[var(--text-primary)]">Luồng duyệt chứng từ</h2>
           <p className="mt-1 text-xs leading-5 text-[var(--text-secondary)]">
-            Mô tả trạng thái hiện tại của chứng từ theo luồng nghiệp vụ. Stepper này chỉ hiển thị, không thay đổi logic phê duyệt.
+            Mô tả trạng thái hiện tại của chứng từ theo luồng nghiệp vụ phê duyệt kế toán.
           </p>
         </div>
         <div className="flex flex-wrap gap-2 text-[10px] font-black uppercase">
@@ -90,10 +90,6 @@ export default function ApprovalWorkflowStepper({
           Trạng thái ngoại lệ: {terminalLabel[normalized] || normalized}. Vui lòng kiểm tra lý do trong lịch sử thao tác hoặc chi tiết chứng từ.
         </div>
       )}
-
-      <div className="mt-4 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] leading-5 text-amber-700 dark:text-amber-300">
-        Các mapping Phase 2.8 và dữ liệu đối soát AI vẫn cần người thật phê duyệt trước khi dùng làm số liệu kế toán chính thức.
-      </div>
     </section>
   );
 }

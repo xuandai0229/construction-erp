@@ -130,6 +130,7 @@ export async function POST(request: Request) {
       auditedAt: audit.timestamp,
     });
   } catch (error) {
+    console.error("AUDIT ERROR:", error);
     return handleApiError(error);
   }
 }
