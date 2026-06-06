@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
 import EnterpriseHeader from '@/app/components/layout/EnterpriseHeader';
 import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
+import ProjectContextBar from '@/app/components/workspace/ProjectContextBar';
 import AddPaymentModal from '@/app/components/modals/AddPaymentModal';
 import PaymentHistoryModal from '@/app/components/modals/PaymentHistoryModal';
 import VendorPaymentModal from '@/app/components/modals/VendorPaymentModal';
@@ -241,6 +242,7 @@ export default function DebtPage() {
         title="Công nợ & Thanh toán" 
         subtitle="Quản lý đồng bộ công nợ phải thu, phải trả và lịch sử dòng tiền định khoản"
       />
+      <ProjectContextBar />
 
       <EnterprisePageContainer>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

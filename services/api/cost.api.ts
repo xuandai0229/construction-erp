@@ -6,7 +6,7 @@ export const costApi = {
     const res = await fetch(`/api/costs?projectId=${projectId}`, { headers });
     if (!res.ok) {
       const errorText = await res.text();
-      return { success: false, error: `API Error (${res.status}): ${errorText.substring(0, 100)}` };
+      return { success: false, error: `Không thể tải chi phí (${res.status}): ${errorText.substring(0, 100)}` };
     }
     const json = await res.json();
     if (json.success) {
@@ -19,7 +19,7 @@ export const costApi = {
     const res = await fetch(`/api/budgets?projectId=${projectId}`, { headers });
     if (!res.ok) {
       const errorText = await res.text();
-      return { success: false, error: `API Error (${res.status}): ${errorText.substring(0, 100)}` };
+      return { success: false, error: `Không thể tải dự toán (${res.status}): ${errorText.substring(0, 100)}` };
     }
     const json = await res.json();
     if (json.success) {

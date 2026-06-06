@@ -7,7 +7,7 @@ export function useAgingReportQuery(projectId?: string, type: 'receivable' | 'pa
     queryFn: async () => {
       const res = await fetch(`/api/reports/aging?projectId=${projectId || ''}&type=${type}`);
       const json = await res.json();
-      if (!json.success) throw new Error(json.error || 'Failed to fetch aging report');
+      if (!json.success) throw new Error(json.error || 'Không thể tải báo cáo tuổi nợ.');
       return json.data;
     },
     enabled: true, // Company-wide if no projectId
@@ -21,7 +21,7 @@ export function useMonthlyReportQuery(projectId: string) {
       if (!projectId) return [];
       const res = await fetch(`/api/reports/monthly?projectId=${projectId}`);
       const json = await res.json();
-      if (!json.success) throw new Error(json.error || 'Failed to fetch monthly report');
+      if (!json.success) throw new Error(json.error || 'Không thể tải báo cáo tháng.');
       return json.data;
     },
     enabled: !!projectId,
@@ -34,7 +34,7 @@ export function useFiscalPeriodsQuery() {
     queryFn: async () => {
       const res = await fetch('/api/reports/periods');
       const json = await res.json();
-      if (!json.success) throw new Error(json.error || 'Failed to fetch fiscal periods');
+      if (!json.success) throw new Error(json.error || 'Không thể tải kỳ kế toán.');
       return json.data as string[];
     }
   });

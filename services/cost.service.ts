@@ -221,6 +221,26 @@ export class CostService {
     await assertPeriodNotLocked(existing.date);
 
     return prisma.$transaction(async (tx) => {
+      const amountD = data.amount !== undefined ? safeDecimal(data.amount) : safeDecimal(existing.amount);
+      const vatRateD = data.vatRate !== undefined ? safeDecimal(data.vatRate) : safeDecimal(existing.vatRate);
+      const retentionRateD = data.retentionRate !== undefined ? safeDecimal(data.retentionRate) : safeDecimal(existing.retentionRate);
+      const netAmountD = data.netAmount !== undefined
+        ? safeDecimal(data.netAmount)
+        : data.amount !== undefined || data.vatRate !== undefined
+          ? amountD.div(vatRateD.div(100).add(1))
+          : safeDecimal(existing.netAmount);
+      const vatAmountD = data.vatAmount !== undefined
+        ? safeDecimal(data.vatAmount)
+        : data.amount !== undefined || data.vatRate !== undefined || data.netAmount !== undefined
+          ? amountD.sub(netAmountD)
+          : safeDecimal(existing.vatAmount);
+      const finalAmountD = netAmountD.add(vatAmountD);
+      const retentionAmountD = data.retentionAmount !== undefined
+        ? safeDecimal(data.retentionAmount)
+        : data.amount !== undefined || data.vatRate !== undefined || data.retentionRate !== undefined
+          ? finalAmountD.mul(retentionRateD.div(100))
+          : safeDecimal(existing.retentionAmount);
+
       // AP PAYMENT FOUNDATION (FAKE ACCOUNTING MITIGATION)
       if (data.status === "paid" && existing.status !== "paid") {
         // Create an explicit Audit Log simulating an AP Payment
@@ -247,14 +267,27 @@ export class CostService {
         });
       }
 
-      const updated = await tx.costRecord.update({
-        where: { id, version: existing.version }, // Optimistic locking
+      const updateResult = await tx.costRecord.updateMany({
+        where: { id, version: existing.version, deletedAt: null },
         data: {
           ...data,
+          amount: finalAmountD.toNumber(),
+          netAmount: netAmountD.toNumber(),
+          vatAmount: vatAmountD.toNumber(),
+          vatRate: vatRateD.toNumber(),
+          retentionAmount: retentionAmountD.toNumber(),
+          retentionRate: retentionRateD.toNumber(),
           date: data.date ? new Date(data.date) : undefined,
           version: { increment: 1 }
         }
       });
+
+      if (updateResult.count !== 1) {
+        throw new ApiError(409, "Dữ liệu chi phí đã bị thay đổi bởi người dùng khác. Vui lòng tải lại trang.");
+      }
+
+      const updated = await tx.costRecord.findUnique({ where: { id } });
+      if (!updated) throw new ApiError(404, "Không tìm thấy chi phí sau khi cập nhật.");
 
       await AuditService.log({
         userId,

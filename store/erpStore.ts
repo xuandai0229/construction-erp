@@ -38,20 +38,48 @@ export const useERPStore = create<ERPState>((set, get) => ({
 
   init: async () => {
     if (get().initialized) return;
-    
-    // STABILIZATION MODE: Fixed Internal Admin
-    const internalUser: UserProfile = {
-      name: 'Quản trị viên hệ thống',
-      email: 'admin@erp.internal',
-      role: 'SUPER_ADMIN',
-      createdAt: new Date().toISOString()
-    };
 
-    set({ 
-      user: internalUser, 
-      userRole: 'SUPER_ADMIN',
-      initialized: true 
-    });
+    try {
+      const response = await fetch('/api/auth/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ role: 'SUPER_ADMIN' }),
+      });
+      const json = await response.json().catch(() => null);
+
+      if (response.ok && json?.success && json.data?.user) {
+        const user: UserProfile = {
+          name: json.data.user.name || 'Quản trị viên hệ thống',
+          email: json.data.user.email,
+          role: json.data.user.role,
+          createdAt: new Date().toISOString(),
+        };
+
+        set({
+          user,
+          userRole: user.role,
+          initialized: true,
+        });
+      }
+    } catch (e) {
+      console.warn('[Auth] Không thể khởi tạo phiên ERP phát triển:', e);
+    }
+
+    if (!get().initialized) {
+      const internalUser: UserProfile = {
+        name: 'Quản trị viên hệ thống',
+        email: 'admin@erp.internal',
+        role: 'SUPER_ADMIN',
+        createdAt: new Date().toISOString()
+      };
+
+      set({
+        user: internalUser,
+        userRole: 'SUPER_ADMIN',
+        initialized: true
+      });
+    }
 
     // Load saved project if any
     try {
@@ -60,7 +88,7 @@ export const useERPStore = create<ERPState>((set, get) => ({
         set({ currentProjectId: savedProjectId });
       }
     } catch (e) {
-      console.warn('[Store] Failed to read saved project:', e);
+      console.warn('[Store] Không thể đọc công trình đã lưu:', e);
     }
   },
 

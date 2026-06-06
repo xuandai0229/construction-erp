@@ -16,19 +16,36 @@ export async function POST(request: Request) {
 
   let user = email
     ? await prisma.user.findUnique({ where: { email } })
-    : await prisma.user.findFirst({ where: { role: UserRole.SUPER_ADMIN, companyId: null } });
+    : await prisma.user.findFirst({
+        where: {
+          companyId: { not: null },
+          deletedAt: null,
+          role: { in: [UserRole.SUPER_ADMIN, UserRole.ADMIN] },
+        },
+        orderBy: { createdAt: "asc" },
+      });
+
+  const company = user?.companyId
+    ? null
+    : await prisma.company.findFirst({ orderBy: { createdAt: "asc" } });
 
   if (!user) {
     user = await prisma.user.create({
       data: {
         email: email || "dev.superadmin@erp.local",
-        name: "Development Super Admin",
+        name: "Quản trị viên phát triển",
         role: requestedRole in UserRole ? requestedRole as UserRole : UserRole.SUPER_ADMIN,
+        companyId: company?.id,
       },
+    });
+  } else if (!user.companyId && company?.id) {
+    user = await prisma.user.update({
+      where: { id: user.id },
+      data: { companyId: company.id },
     });
   }
 
-  const token = SessionManager.createSession(user.id, user.role);
+  const token = SessionManager.createSession(user.id, user.role, user.companyId);
   const response = NextResponse.json({
     success: true,
     data: {

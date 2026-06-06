@@ -138,7 +138,7 @@ export class ProjectService {
       },
     });
 
-    if (!project) throw new ApiError(404, "Không tìm thấy dự án");
+    if (!project) throw new ApiError(404, "Không tìm thấy công trình.");
     return project;
   }
 
@@ -256,7 +256,10 @@ export class ProjectService {
       return { wbs, budgets, costs, revenues, contracts, invoices, payments, vendorPayments, journals, transactionLines, auditLogs, approvalRequests, documentChecklist };
     });
 
-    const hasRelatedUsage = Object.values(relatedUsage).some((count) => count > 0);
+    const blockingUsage = Object.fromEntries(
+      Object.entries(relatedUsage).filter(([key]) => key !== "auditLogs"),
+    );
+    const hasRelatedUsage = Object.values(blockingUsage).some((count) => count > 0);
 
     if (hasRelatedUsage) {
       await AuditService.log({
@@ -269,7 +272,7 @@ export class ProjectService {
         severity: "WARNING",
       });
 
-      throw new ApiError(400, "Khong the xoa cong trinh da co du lieu lien quan. Vui long dung quy trinh luu tru/vo hieu hoa co kiem soat.", {
+      throw new ApiError(400, "Không thể xóa công trình đã có dữ liệu liên quan. Vui lòng dùng quy trình lưu trữ/vô hiệu hóa có kiểm soát.", {
         relatedUsage,
       });
     }

@@ -8,7 +8,7 @@ export function useInvoicesQuery(projectId: string) {
     queryFn: async () => {
       if (!projectId) return [];
       const res = await revenueApi.getInvoicesByProject(projectId);
-      if (!res.success) throw new Error(res.error || 'Failed to fetch invoices');
+      if (!res.success) throw new Error(res.error || 'Không thể tải công nợ phải thu.');
       return res.data || [];
     },
     enabled: !!projectId,
@@ -21,7 +21,7 @@ export function usePaymentsQuery(projectId: string) {
     queryFn: async () => {
       if (!projectId) return [];
       const res = await revenueApi.getPaymentsByProject(projectId);
-      if (!res.success) throw new Error(res.error || 'Failed to fetch payments');
+      if (!res.success) throw new Error(res.error || 'Không thể tải lịch sử thanh toán.');
       return res.data || [];
     },
     enabled: !!projectId,
@@ -32,9 +32,16 @@ export function useDeleteInvoiceMutation(projectId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => revenueApi.deleteInvoice(id),
+    mutationFn: async (id: string) => {
+      const res = await revenueApi.deleteInvoice(id);
+      if (!res.success) throw new Error(res.error || 'Không thể xóa hóa đơn.');
+      return res;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.debts.receivables() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.invoices.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.payments.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
     },
   });
 }

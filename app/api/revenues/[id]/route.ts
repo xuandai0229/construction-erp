@@ -32,9 +32,9 @@ export async function PUT(
         ...(user.companyId && { wbs: { project: { companyId: user.companyId } } }),
       },
     });
-    if (!existing) throw new ApiError(404, "Revenue record not found");
+    if (!existing) throw new ApiError(404, "Không tìm thấy khoản doanh thu.");
     if (existing.invoiceId) {
-      throw new ApiError(400, "Invoice-linked revenue is immutable. Use payment/invoice reversal workflow instead.");
+      throw new ApiError(400, "Doanh thu gắn với hóa đơn không được sửa trực tiếp. Vui lòng dùng quy trình điều chỉnh/hủy hóa đơn hoặc thanh toán.");
     }
 
     await assertPeriodNotLocked(existing.date, user.companyId || undefined);
@@ -73,6 +73,50 @@ export async function PUT(
       description: item.description,
       createdAt: item.createdAt.toISOString(),
     });
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const user = await assertAuthenticated();
+    RBAC.assertPermission(user.role, "REVENUE", "DELETE");
+
+    const { id } = await params;
+    const existing = await prisma.revenue.findFirst({
+      where: {
+        id,
+        deletedAt: null,
+        ...(user.companyId && { wbs: { project: { companyId: user.companyId } } }),
+      },
+    });
+    if (!existing) throw new ApiError(404, "Không tìm thấy khoản doanh thu.");
+    if (existing.invoiceId) {
+      throw new ApiError(400, "Doanh thu gắn với hóa đơn không được xóa trực tiếp. Vui lòng dùng quy trình hủy hóa đơn hoặc hoàn thanh toán.");
+    }
+
+    await assertPeriodNotLocked(existing.date, user.companyId || undefined);
+
+    const item = await prisma.revenue.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
+
+    await AuditService.log({
+      userId: user.id,
+      action: "DELETE",
+      entity: "Revenue",
+      entityId: id,
+      oldData: existing,
+      newData: item,
+      reason: "Manual revenue record soft-deleted through guarded API.",
+    });
+
+    return successResponse({ deleted: true });
   } catch (error) {
     return handleApiError(error);
   }

@@ -163,6 +163,13 @@ export default function ProjectTable({
       minWidth: '110px'
     },
     {
+      header: 'Giá trị hợp đồng',
+      accessor: row => formatVnd(Number(row.contractValue || row.totalValue || 0)),
+      align: 'right',
+      width: '170px',
+      minWidth: '150px'
+    },
+    {
       header: 'Ngân sách',
       accessor: row => (
         <button
@@ -276,7 +283,7 @@ export default function ProjectTable({
       <EnterpriseTable
         data={rows}
         columns={columns}
-        minWidth="1360px"
+        minWidth="1530px"
         getRowKey={row => row.id}
         onRowClick={row => openDashboard(row.id)}
         emptyState={
@@ -291,7 +298,7 @@ export default function ProjectTable({
       <div className="mt-4 flex items-center justify-between px-2">
         <div className="flex items-center gap-6">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)]">
-            Tổng <span className="font-bold tabular-nums text-[var(--text-primary)]">{totalGlobal}</span> hồ sơ dự án
+            Tổng <span className="font-bold tabular-nums text-[var(--text-primary)]">{totalGlobal}</span> hồ sơ công trình
           </p>
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)]">
             Hiển thị <span className="font-bold tabular-nums text-[var(--text-primary)]">{rows.length}</span> hồ sơ
@@ -309,14 +316,14 @@ export default function ProjectTable({
         }}
         onConfirm={executeAction}
         isLoading={isLoading}
-        title={confirmAction?.type === 'DELETE' ? 'Xác nhận xóa vĩnh viễn' : 'Đóng hồ sơ dự án'}
-        message={`Bạn có chắc chắn muốn ${confirmAction?.type === 'DELETE' ? 'xóa vĩnh viễn' : 'đóng'} hồ sơ "${confirmAction?.name}"?`}
+        title={confirmAction?.type === 'DELETE' ? 'Xác nhận lưu trữ hồ sơ' : 'Đóng hồ sơ công trình'}
+        message={`Bạn có chắc chắn muốn ${confirmAction?.type === 'DELETE' ? 'lưu trữ/xóa hồ sơ chưa phát sinh' : 'đóng'} hồ sơ "${confirmAction?.name}"?`}
         variant={confirmAction?.type === 'DELETE' ? 'danger' : 'close'}
-        confirmLabel={confirmAction?.type === 'DELETE' ? 'Xóa vĩnh viễn' : 'Đóng hồ sơ'}
+        confirmLabel={confirmAction?.type === 'DELETE' ? 'Lưu trữ hồ sơ' : 'Đóng hồ sơ'}
         businessContext={
           confirmAction?.type === 'DELETE'
-            ? 'Hành động này sẽ xóa toàn bộ dữ liệu liên quan của dự án và không thể khôi phục.'
-            : 'Hành động này sẽ chuyển hồ sơ sang trạng thái đã đóng.'
+            ? 'Hệ thống chỉ cho phép xóa/lưu trữ khi công trình chưa có WBS, dự toán, chi phí, hóa đơn, thanh toán hoặc chứng từ liên quan.'
+            : 'Hành động này sẽ chuyển hồ sơ công trình sang trạng thái đã đóng.'
         }
       />
     </>

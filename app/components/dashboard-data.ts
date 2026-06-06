@@ -57,27 +57,27 @@ export function ensureDashboardData() {
 
 export function formatVnd(value: any) {
   const num = typeof value === 'number' ? value : parseFloat(value);
-  if (isNaN(num)) return '0';
-  return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(num);
+  if (isNaN(num)) return '0 đ';
+  return `${new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(num)} đ`;
 }
 
 export function formatShortVnd(value: any) {
   const num = typeof value === 'number' ? value : parseFloat(value);
-  if (isNaN(num)) return '0 ₫';
+  if (isNaN(num)) return '0 đ';
   const absNum = Math.abs(num);
   const sign = num < 0 ? '-' : '';
-  return `${sign}${new Intl.NumberFormat('vi-VN').format(absNum)} ₫`;
+  return `${sign}${new Intl.NumberFormat('vi-VN').format(absNum)} đ`;
 }
 
 export function formatKpiValue(value: any) {
   const num = typeof value === 'number' ? value : parseFloat(value);
-  if (isNaN(num)) return { valueStr: '0', unitStr: '₫' };
+  if (isNaN(num)) return { valueStr: '0', unitStr: 'đ' };
   
   const absNum = Math.abs(num);
   const sign = num < 0 ? '-' : '';
   return {
     valueStr: `${sign}${new Intl.NumberFormat('vi-VN').format(absNum)}`,
-    unitStr: '₫'
+    unitStr: 'đ'
   };
 }
 

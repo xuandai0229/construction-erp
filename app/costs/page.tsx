@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
 import EnterpriseHeader from '@/app/components/layout/EnterpriseHeader';
 import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
+import ProjectContextBar from '@/app/components/workspace/ProjectContextBar';
 import AddCostModal from '@/app/components/modals/AddCostModal';
 import { formatDate, formatVnd } from '@/app/components/dashboard-data';
 import {
@@ -130,7 +131,7 @@ export default function CostsPage() {
       key: 'wbs',
       header: 'Hạng mục WBS', 
       render: cost => {
-        const wbsName = wbsList.find(w => w.id === cost.wbsId)?.name || 'N/A';
+        const wbsName = wbsList.find(w => w.id === cost.wbsId)?.name || 'Chưa xác định';
         return <span className="truncate block" title={wbsName}>{wbsName}</span>;
       }, 
       width: '240px', 
@@ -259,6 +260,7 @@ export default function CostsPage() {
           </div>
         }
       />
+      <ProjectContextBar />
 
       <EnterprisePageContainer>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -294,7 +296,7 @@ export default function CostsPage() {
           </EnterpriseFilterBar>
         </EnterpriseSection>
 
-        <EnterpriseSection title="Sổ nhật ký ghi nhận chi phí (Cost Record)" subtitle={`Hiển thị ${filteredCosts.length} / ${costs.length} bản ghi chi phí`}>
+        <EnterpriseSection title="Sổ nhật ký ghi nhận chi phí" subtitle={`Hiển thị ${filteredCosts.length} / ${costs.length} bản ghi chi phí`}>
           <EnterpriseCard bodyClassName="p-0">
             <EnterpriseDataTable
               data={filteredCosts}

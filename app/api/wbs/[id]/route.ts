@@ -15,7 +15,7 @@ async function requireWBSMutationAccess(id: string) {
     where: { id, deletedAt: null },
     select: { projectId: true },
   });
-  if (!item) throw new ApiError(404, "WBS item not found.");
+  if (!item) throw new ApiError(404, "Không tìm thấy hạng mục WBS.");
   return requireProjectPermission(item.projectId, "PROJECT", "UPDATE");
 }
 

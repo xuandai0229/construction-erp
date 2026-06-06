@@ -22,7 +22,7 @@ export const projectApi = {
         }
       };
     }
-    return { success: false, error: json.error };
+    return { success: false, error: json.error || 'Không thể tải danh sách công trình.' };
   },
 
   async getAllFiltered(params: any = {}): Promise<ServiceResponse<Project[]>> {
@@ -36,7 +36,7 @@ export const projectApi = {
         data: json.data.map(mapProjectFromApi)
       };
     }
-    return { success: false, error: json.error };
+    return { success: false, error: json.error || 'Không thể tải danh sách công trình.' };
   },
 
   async create(data: Partial<Project>, headers: any = {}): Promise<ServiceResponse<Project>> {
@@ -49,7 +49,7 @@ export const projectApi = {
     if (json.success) {
       return { success: true, data: mapProjectFromApi(json.data) };
     }
-    return { success: false, error: json.error };
+    return { success: false, error: json.error || 'Không thể tạo công trình.' };
   },
 
   async update(id: string, updates: Partial<Project>, headers: any = {}): Promise<ServiceResponse<void>> {
@@ -59,13 +59,13 @@ export const projectApi = {
       body: JSON.stringify(mapProjectToApi(updates)),
     });
     const json = await res.json();
-    return { success: json.success, error: json.error };
+    return { success: json.success, error: json.error || (!json.success ? 'Không thể cập nhật công trình.' : undefined) };
   },
 
   async delete(id: string, headers: any = {}): Promise<ServiceResponse<void>> {
     const res = await fetch(`/api/projects/${id}`, { method: 'DELETE', headers });
     const json = await res.json();
-    return { success: json.success, error: json.error, metadata: json.metadata };
+    return { success: json.success, error: json.error || (!json.success ? 'Không thể xóa công trình.' : undefined), metadata: json.metadata };
   },
 
   async getStats(projectId: string, headers: any = {}): Promise<ServiceResponse<any>> {

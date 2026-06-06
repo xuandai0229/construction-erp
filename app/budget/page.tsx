@@ -5,6 +5,7 @@ import { useMemo, useRef, useState } from 'react';
 import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
 import EnterpriseHeader from '@/app/components/layout/EnterpriseHeader';
 import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
+import ProjectContextBar from '@/app/components/workspace/ProjectContextBar';
 import AddBudgetModal from '@/app/components/modals/AddBudgetModal';
 import ConfirmModal from '@/app/components/modals/ConfirmModal';
 import EditBudgetModal from '@/app/components/modals/EditBudgetModal';
@@ -247,6 +248,7 @@ export default function BudgetPage() {
           </div>
         }
       />
+      <ProjectContextBar />
 
       <EnterprisePageContainer>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-6">

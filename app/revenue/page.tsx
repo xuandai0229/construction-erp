@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
 import EnterpriseHeader from '@/app/components/layout/EnterpriseHeader';
 import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
+import ProjectContextBar from '@/app/components/workspace/ProjectContextBar';
 import AddRevenueModal from '@/app/components/modals/AddRevenueModal';
 import { formatDate, formatVnd } from '@/app/components/dashboard-data';
 import {
@@ -17,7 +18,7 @@ import {
 import { auditedCsvExport } from '@/app/services/audited-export.service';
 import { RevenueStatus } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
-import { useRevenuesQuery, useUpdateRevenueMutation } from '@/services/queries/useRevenues';
+import { useDeleteRevenueMutation, useRevenuesQuery, useUpdateRevenueMutation } from '@/services/queries/useRevenues';
 import { useWBSQuery } from '@/services/queries/useWBS';
 
 import FinancialTracePanel from '@/app/components/accounting/FinancialTracePanel';
@@ -31,6 +32,7 @@ export default function RevenueListPage() {
   const { data: revenues = [], isLoading: isLoadingRevenues } = useRevenuesQuery(currentProjectId);
   const { data: wbsData } = useWBSQuery(currentProjectId);
   const { mutate: updateRevenue } = useUpdateRevenueMutation(currentProjectId);
+  const { mutate: deleteRevenue } = useDeleteRevenueMutation(currentProjectId);
   const wbs = wbsData?.flat || [];
   const handleAuditedExport = async () => {
     try {
@@ -68,6 +70,13 @@ export default function RevenueListPage() {
       { id, updates: { status: current === 'paid' ? 'unpaid' : 'paid' } },
       { onSettled: () => setProcessingId(null) },
     );
+  };
+
+  const handleDelete = (id: string) => {
+    if (processingId) return;
+    if (!confirm('Bạn có chắc chắn muốn xóa khoản doanh thu này?')) return;
+    setProcessingId(id);
+    deleteRevenue(id, { onSettled: () => setProcessingId(null) });
   };
 
   const columns: EnterpriseColumn<any>[] = [
@@ -141,6 +150,22 @@ export default function RevenueListPage() {
       )
     },
     {
+      key: 'delete',
+      header: 'Xóa',
+      width: '110px',
+      align: 'center',
+      render: (row) => (
+        <button
+          disabled={!!processingId || !!row.invoiceId}
+          onClick={() => handleDelete(row.id)}
+          className="text-[12px] font-bold text-rose-500 hover:text-rose-600 hover:underline disabled:cursor-not-allowed disabled:opacity-40"
+          title={row.invoiceId ? 'Doanh thu gắn hóa đơn không được xóa trực tiếp' : 'Xóa doanh thu'}
+        >
+          Xóa
+        </button>
+      )
+    },
+    {
       key: 'trace',
       header: 'Truy vết',
       width: '140px',
@@ -164,6 +189,7 @@ export default function RevenueListPage() {
         title="QUẢN LÝ DOANH THU & NGUỒN THU CÔNG TRÌNH"
         subtitle="Quản lý và theo dõi các khoản thu tiền thầu, nghiệm thu chủ đầu tư và hạch toán dòng tiền vào"
       />
+      <ProjectContextBar />
       <AddRevenueModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} />
       <EnterprisePageContainer>
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
@@ -217,7 +243,7 @@ export default function RevenueListPage() {
                   <td className="px-4 text-right font-mono tabular-nums">{formatVnd(totals.net)}</td>
                   <td className="px-4 text-right font-mono tabular-nums">{formatVnd(totals.vat)}</td>
                   <td className="px-4 text-right font-mono tabular-nums text-emerald-500">{formatVnd(totals.amount)}</td>
-                  <td colSpan={3} />
+                  <td colSpan={4} />
                 </tr>
               }
             />

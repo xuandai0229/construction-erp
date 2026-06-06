@@ -8,7 +8,7 @@ export function useRevenuesQuery(projectId: string) {
     queryFn: async () => {
       if (!projectId) return [];
       const res = await revenueApi.getRevenuesByProject(projectId);
-      if (!res.success) throw new Error(res.error || 'Failed to fetch revenues');
+      if (!res.success) throw new Error(res.error || 'Không thể tải doanh thu.');
       return res.data || [];
     },
     enabled: !!projectId,
@@ -22,6 +22,8 @@ export function useCreateRevenueMutation(projectId: string) {
     mutationFn: (data: Record<string, unknown>) => revenueApi.createRevenue(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.revenues.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.debts.all() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
     },
   });
 }
@@ -34,6 +36,25 @@ export function useUpdateRevenueMutation(projectId: string) {
       revenueApi.updateRevenue(id, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.revenues.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.debts.all() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
+    },
+  });
+}
+
+export function useDeleteRevenueMutation(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await revenueApi.deleteRevenue(id);
+      if (!res.success) throw new Error(res.error || 'Không thể xóa doanh thu.');
+      return res;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.revenues.byProject(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.debts.all() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
     },
   });
 }
@@ -44,7 +65,7 @@ export function useInvoicesQuery(projectId: string) {
     queryFn: async () => {
       if (!projectId) return [];
       const res = await revenueApi.getInvoicesByProject(projectId);
-      if (!res.success) throw new Error(res.error || 'Failed to fetch invoices');
+      if (!res.success) throw new Error(res.error || 'Không thể tải hóa đơn.');
       return res.data || [];
     },
     enabled: !!projectId,
@@ -59,6 +80,7 @@ export function useCreateInvoiceMutation(projectId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.invoices.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(projectId), 'stats'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.debts.all() });
     },
   });
 }
@@ -69,7 +91,7 @@ export function usePaymentsQuery(projectId: string) {
     queryFn: async () => {
       if (!projectId) return [];
       const res = await revenueApi.getPaymentsByProject(projectId);
-      if (!res.success) throw new Error(res.error || 'Failed to fetch payments');
+      if (!res.success) throw new Error(res.error || 'Không thể tải thanh toán.');
       return res.data || [];
     },
     enabled: !!projectId,
@@ -85,6 +107,7 @@ export function useCreatePaymentMutation(projectId: string) {
       queryClient.invalidateQueries({ queryKey: queryKeys.payments.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.invoices.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(projectId), 'stats'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.debts.all() });
     },
   });
 }
@@ -95,13 +118,14 @@ export function useDeletePaymentMutation(projectId: string) {
   return useMutation({
     mutationFn: async (id: string) => {
       const res = await revenueApi.deletePayment(id);
-      if (!res.success) throw new Error(res.error || 'Failed to delete payment');
+      if (!res.success) throw new Error(res.error || 'Không thể xóa thanh toán.');
       return res;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.payments.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.invoices.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: [...queryKeys.projects.detail(projectId), 'stats'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.debts.all() });
     },
   });
 }

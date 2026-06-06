@@ -9,7 +9,7 @@ export function useWBSQuery(projectId: string) {
     queryFn: async () => {
       if (!projectId) return { flat: [], tree: [], stats: {} };
       const res = await wbsApi.getByProject(projectId);
-      if (!res.success) throw new Error(res.error || 'Failed to fetch WBS');
+      if (!res.success) throw new Error(res.error || 'Không thể tải hạng mục WBS.');
       return res.data || { flat: [], tree: [], stats: {} };
     },
     enabled: !!projectId,
@@ -22,7 +22,7 @@ export function useCreateWBSMutation(projectId: string) {
   return useMutation({
     mutationFn: async (data: Partial<WBSItem>) => {
       const res = await wbsApi.create(data);
-      if (!res.success) throw new Error(res.error || 'Failed to create WBS');
+      if (!res.success) throw new Error(res.error || 'Không thể tạo hạng mục WBS.');
       return res.data;
     },
     onSuccess: (_, variables) => {
@@ -41,7 +41,7 @@ export function useUpdateWBSMutation(projectId: string) {
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<WBSItem> }) => {
       const res = await wbsApi.update(id, updates);
-      if (!res.success) throw new Error(res.error || 'Failed to update WBS');
+      if (!res.success) throw new Error(res.error || 'Không thể cập nhật hạng mục WBS.');
       return res.data;
     },
     onSuccess: (_, variables) => {
@@ -61,7 +61,7 @@ export function useDeleteWBSMutation(projectId: string) {
     mutationFn: async (id: string) => {
       const res = await wbsApi.delete(id);
       if (!res.success) {
-        const err: any = new Error(res.error || 'Failed to delete WBS');
+        const err: any = new Error(res.error || 'Không thể xóa hạng mục WBS.');
         err.metadata = res.metadata;
         throw err;
       }

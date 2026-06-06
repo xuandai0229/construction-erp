@@ -8,7 +8,7 @@ export function useProjectsQuery(params: any = {}) {
     queryKey: queryKeys.projects.list(JSON.stringify(params)),
     queryFn: async () => {
       const res = await projectApi.getAll(params);
-      if (!res.success) throw new Error(res.error || 'Failed to fetch projects');
+      if (!res.success) throw new Error(res.error || 'Không thể tải danh sách công trình.');
       return res.data; // Return { data, metadata }
     },
     placeholderData: keepPreviousData,
@@ -21,7 +21,7 @@ export function useProjectStatsQuery(projectId: string) {
     queryFn: async () => {
       if (!projectId) return null;
       const res = await projectApi.getStats(projectId);
-      if (!res.success) throw new Error(res.error || 'Failed to fetch stats');
+      if (!res.success) throw new Error(res.error || 'Không thể tải chỉ tiêu công trình.');
       return res.data;
     },
     enabled: !!projectId,
@@ -34,7 +34,7 @@ export function useCreateProjectMutation() {
   return useMutation({
     mutationFn: async (newProject: Partial<Project>) => {
       const res = await projectApi.create(newProject);
-      if (!res.success) throw new Error(res.error || 'Failed to create project');
+      if (!res.success) throw new Error(res.error || 'Không thể tạo công trình.');
       return res.data;
     },
     onSuccess: () => {
@@ -49,7 +49,7 @@ export function useUpdateProjectMutation() {
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<Project> }) => {
       const res = await projectApi.update(id, updates);
-      if (!res.success) throw new Error(res.error || 'Failed to update project');
+      if (!res.success) throw new Error(res.error || 'Không thể cập nhật công trình.');
       return res.data;
     },
     onSuccess: () => {
@@ -65,7 +65,7 @@ export function useDeleteProjectMutation() {
     mutationFn: async (id: string) => {
       const res = await projectApi.delete(id);
       if (!res.success) {
-        const err: any = new Error(res.error || 'Failed to delete project');
+        const err: any = new Error(res.error || 'Không thể xóa công trình.');
         err.metadata = res.metadata;
         throw err;
       }

@@ -4,7 +4,9 @@ import { useMemo, useState } from 'react';
 import EnterpriseAppShell from '@/app/components/layout/EnterpriseAppShell';
 import EnterpriseHeader from '@/app/components/layout/EnterpriseHeader';
 import EnterprisePageContainer from '@/app/components/layout/EnterprisePageContainer';
+import ProjectContextBar from '@/app/components/workspace/ProjectContextBar';
 import AddWBSModal from '@/app/components/modals/AddWBSModal';
+import ConfirmModal from '@/app/components/modals/ConfirmModal';
 import { formatVnd } from '@/app/components/dashboard-data';
 import {
   EnterpriseBadge,
@@ -21,17 +23,20 @@ import {
 } from '@/app/components/ui-enterprise';
 import { EnrichedWBSNode, WBSItem } from '@/app/types';
 import { useERPStore } from '@/store/erpStore';
-import { useWBSQuery } from '@/services/queries/useWBS';
+import { useDeleteWBSMutation, useWBSQuery } from '@/services/queries/useWBS';
 
 export default function WBSListScreen() {
   const currentProjectId = useERPStore(state => state.currentProjectId);
   const { data, isLoading } = useWBSQuery(currentProjectId);
+  const { mutateAsync: deleteWBS } = useDeleteWBSMutation(currentProjectId);
   const rawTree = data?.tree || [];
   const flatWbs = data?.flat || [];
 
   const [editingWBS, setEditingWBS] = useState<WBSItem | null>(null);
   const [isAddingWBS, setIsAddingWBS] = useState(false);
   const [initialParentId, setInitialParentId] = useState<string | null>(null);
+  const [deletingWBS, setDeletingWBS] = useState<WBSItem | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   const rows = useMemo(() => {
@@ -165,7 +170,8 @@ export default function WBSListScreen() {
           <EnterpriseActionMenu 
             actions={[
               { label: 'Chỉnh sửa hạng mục', onClick: () => setEditingWBS(row) },
-              { label: 'Thêm hạng mục con', onClick: () => { setInitialParentId(row.id); setIsAddingWBS(true); } }
+              { label: 'Thêm hạng mục con', onClick: () => { setInitialParentId(row.id); setIsAddingWBS(true); } },
+              { label: 'Xóa hạng mục', onClick: () => { setDeleteError(null); setDeletingWBS(row); }, variant: 'danger' }
             ]}
           />
         </div>
@@ -188,6 +194,7 @@ export default function WBSListScreen() {
           </div>
         }
       />
+      <ProjectContextBar />
       <EnterprisePageContainer>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
           <EnterpriseMetric title="Tổng số hạng mục" value={stats.totalItems} />
@@ -234,6 +241,22 @@ export default function WBSListScreen() {
         onClose={() => { setIsAddingWBS(false); setEditingWBS(null); setInitialParentId(null); }}
         wbsItem={editingWBS}
         initialParentId={initialParentId}
+      />
+      <ConfirmModal
+        isOpen={!!deletingWBS}
+        onClose={() => { setDeletingWBS(null); setDeleteError(null); }}
+        onConfirm={async () => {
+          if (!deletingWBS) return;
+          try {
+            await deleteWBS(deletingWBS.id);
+            setDeletingWBS(null);
+            setDeleteError(null);
+          } catch (error) {
+            setDeleteError(error instanceof Error ? error.message : 'Không thể xóa hạng mục WBS.');
+          }
+        }}
+        title="Xác nhận xóa hạng mục WBS"
+        message={deleteError || 'Hạng mục chỉ được xóa khi chưa phát sinh dự toán, chi phí hoặc hạng mục con liên quan.'}
       />
     </EnterpriseAppShell>
   );

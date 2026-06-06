@@ -49,6 +49,12 @@ export const revenueApi = {
     return { success: json.success, error: json.error };
   },
 
+  async deleteRevenue(id: string, headers: any = {}): Promise<ServiceResponse<void>> {
+    const res = await fetch(`/api/revenues/${id}`, { method: 'DELETE', headers });
+    const json = await res.json();
+    return { success: json.success, error: json.error || (!json.success ? 'Không thể xóa doanh thu.' : undefined) };
+  },
+
   async createInvoice(data: any, headers: any = {}): Promise<ServiceResponse<InvoiceRecord>> {
     const res = await fetch('/api/invoices', {
       method: 'POST',

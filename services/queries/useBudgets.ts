@@ -9,7 +9,7 @@ export function useBudgetsQuery(projectId: string) {
       if (!projectId) return [];
       const res = await fetch(`/api/budgets?projectId=${projectId}`);
       const json = await res.json();
-      if (!json.success) throw new Error(json.error || 'Failed to fetch budgets');
+      if (!json.success) throw new Error(json.error || 'Không thể tải dữ liệu dự toán.');
       return json.data as Budget[];
     },
     enabled: !!projectId,
@@ -27,7 +27,7 @@ export function useCreateBudgetMutation(projectId: string) {
         body: JSON.stringify(data),
       });
       const json = await res.json();
-      if (!json.success) throw new Error(json.error || 'Failed to create budget');
+      if (!json.success) throw new Error(json.error || 'Không thể lập dự toán.');
       return json.data;
     },
     onSuccess: (_, variables) => {
@@ -51,7 +51,7 @@ export function useUpdateBudgetMutation(projectId: string) {
         body: JSON.stringify(updates),
       });
       const json = await res.json();
-      if (!json.success) throw new Error(json.error || 'Failed to update budget');
+      if (!json.success) throw new Error(json.error || 'Không thể cập nhật dự toán.');
       return json.data;
     },
     onSuccess: (_, variables) => {
@@ -73,7 +73,7 @@ export function useDeleteBudgetMutation(projectId: string) {
         method: 'DELETE',
       });
       const json = await res.json();
-      if (!json.success) throw new Error(json.error || 'Failed to delete budget');
+      if (!json.success) throw new Error(json.error || 'Không thể xóa dự toán.');
       return json.data;
     },
     onSuccess: () => {
@@ -96,7 +96,7 @@ export function useImportBudgetMutation(projectId: string) {
         body: JSON.stringify(data),
       });
       const json = await res.json();
-      if (!json.success) throw new Error(json.error || 'Failed to import budgets');
+      if (!json.success) throw new Error(json.error || 'Không thể nhập dữ liệu dự toán.');
       return json;
     },
     onSuccess: () => {

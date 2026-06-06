@@ -9,7 +9,7 @@ export function useCostsQuery(projectId: string) {
     queryFn: async () => {
       if (!projectId) return [];
       const res = await costApi.getCostsByProject(projectId);
-      if (!res.success) throw new Error(res.error || 'Failed to fetch costs');
+      if (!res.success) throw new Error(res.error || 'Không thể tải chi phí công trình.');
       return res.data || [];
     },
     enabled: !!projectId,
@@ -22,7 +22,7 @@ export function useCreateCostMutation() {
   return useMutation({
     mutationFn: async (data: any) => {
       const res = await costApi.createCost(data);
-      if (!res.success) throw new Error(res.error || 'Failed to create cost');
+      if (!res.success) throw new Error(res.error || 'Không thể ghi nhận chi phí.');
       return res.data;
     },
     onSuccess: (_, variables) => {
@@ -30,6 +30,7 @@ export function useCreateCostMutation() {
       queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.debts.all() });
     },
   });
 }
@@ -40,13 +41,14 @@ export function useUpdateCostMutation(projectId: string) {
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<CostRecord> }) => {
       const res = await costApi.updateCost(id, updates);
-      if (!res.success) throw new Error(res.error || 'Failed to update cost');
+      if (!res.success) throw new Error(res.error || 'Không thể cập nhật chi phí.');
       return res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.debts.all() });
     },
   });
 }
@@ -58,7 +60,7 @@ export function useTransitionCostMutation(projectId: string) {
     mutationFn: async ({ id, status, reason }: { id: string; status: string; reason?: string }) => {
       const res = await costApi.transitionCost(id, status, reason);
       if (!res.success) {
-        const err: any = new Error(res.error || 'Failed to transition cost');
+        const err: any = new Error(res.error || 'Không thể chuyển trạng thái chi phí.');
         err.metadata = res.metadata;
         throw err;
       }
@@ -79,7 +81,7 @@ export function useDeleteCostMutation(projectId: string) {
     mutationFn: async (id: string) => {
       const res = await costApi.deleteCost(id);
       if (!res.success) {
-        const err: any = new Error(res.error || 'Failed to delete cost');
+        const err: any = new Error(res.error || 'Không thể xóa chi phí.');
         err.metadata = res.metadata;
         throw err;
       }
@@ -89,6 +91,7 @@ export function useDeleteCostMutation(projectId: string) {
       queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.wbs.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.debts.all() });
     },
   });
 }
@@ -105,12 +108,13 @@ export function useCreateVendorPaymentMutation(projectId: string) {
         body: JSON.stringify(payload)
       });
       const json = await res.json();
-      if (!json.success) throw new Error(json.error || 'Failed to create vendor payment');
+      if (!json.success) throw new Error(json.error || 'Không thể ghi nhận thanh toán cho nhà cung cấp.');
       return json.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.costs.byProject(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.debts.all() });
     },
   });
 }

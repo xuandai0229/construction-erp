@@ -9,7 +9,7 @@ async function requireBudgetMutationAccess(id: string) {
     where: { id, deletedAt: null },
     select: { projectId: true },
   });
-  if (!budget) throw new ApiError(404, "Budget item not found.");
+  if (!budget) throw new ApiError(404, "Không tìm thấy dòng dự toán.");
   return requireProjectPermission(budget.projectId, "PROJECT", "UPDATE");
 }
 
