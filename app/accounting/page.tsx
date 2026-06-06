@@ -165,7 +165,7 @@ export default function AccountingPage() {
       key: 'projectName',
       header: "Công trình",
       width: "160px",
-      render: (row) => row.projectName || "N/A"
+      render: (row) => row.projectName || "Chưa gắn công trình"
     },
     {
       key: 'supplier',

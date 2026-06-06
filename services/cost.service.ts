@@ -108,20 +108,20 @@ export class CostService {
           if (!po) throw new ApiError(404, "Không tìm thấy Đơn mua hàng (PO) để đối chiếu");
           
           if (po.goodsReceipts.length === 0) {
-            throw new ApiError(400, "3-WAY MATCH ERROR: Không thể ghi nhận hóa đơn khi chưa có Phiếu Nhập Kho (GRN).");
+            throw new ApiError(400, "Lỗi đối chiếu 3 bên: Không thể ghi nhận hóa đơn khi chưa có phiếu nhập kho.");
           }
 
           const poItem = po.items.find(i => i.wbsId === data.wbsId && i.costType === data.costType);
-          if (!poItem) throw new ApiError(400, "3-WAY MATCH ERROR: Hạng mục hóa đơn không khớp với Đơn mua hàng (PO).");
+          if (!poItem) throw new ApiError(400, "Lỗi đối chiếu 3 bên: Hạng mục hóa đơn không khớp với đơn mua hàng.");
           
           // Price matching (allow max 5% tolerance)
           if (finalAmountD.toNumber() > Number(poItem.amount) * 1.05) {
-             throw new ApiError(400, `3-WAY MATCH ERROR: Giá trị hóa đơn (${finalAmountD.toNumber()}) vượt quá giá trị PO (${poItem.amount}) hơn mức cho phép.`);
+             throw new ApiError(400, `Lỗi đối chiếu 3 bên: Giá trị hóa đơn (${finalAmountD.toNumber()}) vượt quá giá trị đơn mua hàng (${poItem.amount}) hơn mức cho phép.`);
           }
           
           // Quantity check
           if (data.quantity && data.quantity > Number(poItem.quantity)) {
-             throw new ApiError(400, `3-WAY MATCH ERROR: Số lượng hóa đơn (${data.quantity}) vượt quá số lượng đặt mua (${poItem.quantity}).`);
+             throw new ApiError(400, `Lỗi đối chiếu 3 bên: Số lượng hóa đơn (${data.quantity}) vượt quá số lượng đặt mua (${poItem.quantity}).`);
           }
         }
 

@@ -398,7 +398,7 @@ export default function ReportsPage() {
     },
     {
       header: "Nội dung chi tiết chứng từ",
-      accessor: (row) => row.note || "N/A",
+      accessor: (row) => row.note || "Chưa có diễn giải",
       width: "320px"
     },
     {
