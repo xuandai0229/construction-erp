@@ -769,7 +769,7 @@ export default function CashBankPage() {
                 <div className="space-y-3">
                   <h4 className="text-[11px] uppercase font-black text-[var(--text-muted)] tracking-wider border-b border-[var(--border)] pb-1">THÔNG TIN GIAO DỊCH</h4>
                   <div className="space-y-2 text-[12px]">
-                    <div className="flex justify-between"><span className="text-[var(--text-muted)]">Người nộp/nhận:</span><span className="font-bold text-[var(--text-primary)]">{selectedDoc.partnerName || 'N/A'}</span></div>
+                    <div className="flex justify-between"><span className="text-[var(--text-muted)]">Người nộp/nhận:</span><span className="font-bold text-[var(--text-primary)]">{selectedDoc.partnerName || 'Chưa khai báo'}</span></div>
                     <div className="flex justify-between"><span className="text-[var(--text-muted)]">Dự án công trình:</span><span className="font-bold text-[var(--text-primary)]">{selectedDoc.project?.name || 'Không thuộc dự án'}</span></div>
                     <div className="flex justify-between"><span className="text-[var(--text-muted)]">Phương thức:</span><span className="font-bold text-[var(--text-primary)] uppercase">{selectedDoc.paymentMethod}</span></div>
                     <div className="flex justify-between"><span className="text-[var(--text-muted)]">Số tiền gốc:</span><span className="font-mono font-black text-emerald-500 text-[14px]">{formatVnd(selectedDoc.amount)}</span></div>

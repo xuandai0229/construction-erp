@@ -33,7 +33,7 @@ export default function VendorPaymentModal({ isOpen, onClose, cost }: Props) {
     e.preventDefault();
     const amount = parseFloat(form.amount.toString());
     if (!form.amount || isNaN(amount) || amount <= 0) return setError('LỖI KẾ TOÁN: Số tiền phải là số dương');
-    if (amount > cost.amount) return setError('LỖI KẾ TOÁN: Không được thanh toán vượt số tiền phải trả (Overpayment)');
+    if (amount > cost.amount) return setError('LỖI KẾ TOÁN: Không được thanh toán vượt số tiền phải trả.');
 
     setLoading(true);
     try {
@@ -59,7 +59,7 @@ export default function VendorPaymentModal({ isOpen, onClose, cost }: Props) {
         <div className="flex items-center justify-between border-b border-[var(--divider)] px-6 py-4">
           <div>
             <h2 className="text-[15px] font-bold text-[var(--text-primary)]">Ủy nhiệm chi / Thanh toán NCC</h2>
-            <p className="text-[11px] text-[var(--text-muted)] mt-1">CFO Workspace • True Ledger Posting</p>
+            <p className="text-[11px] text-[var(--text-muted)] mt-1">Không gian xử lý thanh toán và ghi sổ</p>
           </div>
           <button onClick={onClose} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">✕</button>
         </div>
@@ -67,7 +67,7 @@ export default function VendorPaymentModal({ isOpen, onClose, cost }: Props) {
           <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-[11px] shadow-inner">
             <div className="flex justify-between mb-1">
               <span className="text-[var(--text-muted)] font-bold uppercase tracking-wider">Nhà cung cấp:</span>
-              <span className="font-black text-[var(--text-primary)]">{cost.supplier || 'N/A'}</span>
+              <span className="font-black text-[var(--text-primary)]">{cost.supplier || 'Chưa khai báo'}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[var(--text-muted)] font-bold uppercase tracking-wider">Tổng nợ:</span>
@@ -96,7 +96,7 @@ export default function VendorPaymentModal({ isOpen, onClose, cost }: Props) {
               />
             </div>
             <div>
-              <label className="erp-label">Số chứng từ (Ref)</label>
+              <label className="erp-label">Số chứng từ tham chiếu</label>
               <input
                 type="text"
                 value={form.reference}
@@ -118,10 +118,10 @@ export default function VendorPaymentModal({ isOpen, onClose, cost }: Props) {
           </div>
 
           <div className="bg-[var(--secondary)] p-3 rounded text-[10px] text-[var(--text-secondary)] font-mono border border-[var(--border)]">
-            <div className="font-bold mb-1 text-[var(--text-primary)]">Ledger Preview:</div>
+            <div className="font-bold mb-1 text-[var(--text-primary)]">Bút toán dự kiến:</div>
             <div>Dr 3310 - Phải trả người bán (AP)</div>
             <div>Cr 1020 - Tiền gửi ngân hàng</div>
-            <div className="mt-1 text-emerald-500">Auto-post to Ledger enabled</div>
+            <div className="mt-1 text-emerald-500">Hệ thống sẽ tự động ghi sổ khi đủ điều kiện</div>
           </div>
 
           {error && <div className="text-rose-500 text-xs mt-2 font-bold bg-rose-500/10 p-2 rounded">{error}</div>}

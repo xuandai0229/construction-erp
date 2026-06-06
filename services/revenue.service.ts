@@ -63,7 +63,7 @@ export class RevenueService {
     const alreadyInvoiced = Number(invoiceAgg._sum?.netAmount || 0);
 
     if (alreadyInvoiced + netAmount > approvedProgress + 0.01) {
-      throw new ApiError(400, `3-WAY MATCH ERROR (Billing): Lũy kế yêu cầu thanh toán (${(alreadyInvoiced + netAmount).toLocaleString()} ₫) vượt quá khối lượng dở dang nghiệm thu được duyệt (${approvedProgress.toLocaleString()} ₫).`);
+      throw new ApiError(400, `Không thể lập hóa đơn do chưa đủ khối lượng nghiệm thu được duyệt. Lũy kế yêu cầu thanh toán (${(alreadyInvoiced + netAmount).toLocaleString("vi-VN")} đ) vượt quá giá trị nghiệm thu đã duyệt (${approvedProgress.toLocaleString("vi-VN")} đ). Vui lòng tạo hoặc phê duyệt nghiệm thu/khối lượng cho hạng mục WBS trước khi lập hóa đơn.`);
     }
 
     const { requestId } = data;

@@ -120,7 +120,7 @@ export default function SystemPage() {
   const roles: UserRole[] = ['SUPER_ADMIN', 'ADMIN', 'GROUP_DIRECTOR', 'CFO', 'BRANCH_DIRECTOR', 'MANAGER', 'ACCOUNTANT', 'AUDITOR', 'VIEWER'];
   
   const roleLabels: Record<UserRole, string> = {
-    SUPER_ADMIN: 'Super Admin',
+    SUPER_ADMIN: 'Quản trị cấp cao',
     ADMIN: 'Quản trị viên',
     GROUP_DIRECTOR: 'Giám đốc tập đoàn',
     CFO: 'Giám đốc tài chính (CFO)',
@@ -128,7 +128,7 @@ export default function SystemPage() {
     MANAGER: 'Quản lý dự án (PM)',
     ACCOUNTANT: 'Kế toán tổng hợp',
     AUDITOR: 'Kiểm toán độc lập',
-    VIEWER: 'Người xem (Viewer)',
+    VIEWER: 'Người xem',
   };
 
   const roleStyles: Record<UserRole, string> = {
@@ -159,24 +159,24 @@ export default function SystemPage() {
     <EnterpriseAppShell activeItem="system">
       <EnterpriseHeader
         title="TRUNG TÂM GIÁM SÁT HỆ THỐNG & ĐIỀU HÀNH AN NINH"
-        subtitle="Governance, Compliance, Operational Observability & Disaster Recovery Cockpit"
+        subtitle="Điều hành tuân thủ, giám sát vận hành và phục hồi sau sự cố"
       />
       <EnterprisePageContainer>
         
         {/* Accent Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-[var(--border)]">
           <div>
-            <h1 className="text-sm font-bold tracking-tight text-[var(--text-primary)]">Governance & Telemetry Cockpit</h1>
+            <h1 className="text-sm font-bold tracking-tight text-[var(--text-primary)]">Bảng điều hành tuân thủ và giám sát</h1>
             <p className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wide mt-1">Giám sát tài nguyên, an ninh, phân quyền và phục hồi sau sự cố</p>
           </div>
           <div className="flex items-center gap-2 rounded-xl border border-rose-500/25 bg-rose-500/5 px-4 py-2 text-[10px] text-rose-500 font-bold uppercase tracking-wider select-none shrink-0 self-start md:self-auto">
             <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
-            Chế độ bảo mật Enterprise Active
+            Chế độ bảo mật doanh nghiệp đang bật
           </div>
         </div>
 
         {/* Interactive Role Switcher Panel for Testing permissions */}
-        <EnterpriseSection title="1. TRÌNH GIẢ LẬP QUYỀN HẠN (SIMULATE GOVERNANCE MATRIX)">
+        <EnterpriseSection title="1. TRÌNH GIẢ LẬP QUYỀN HẠN">
           <EnterpriseCard title="MA TRẬN VAI TRÒ HỆ THỐNG" subtitle="Lựa chọn vai trò để kiểm thử phân quyền Module/Hành động và Hạn mức Tài chính ngay lập tức">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
               {roles.map(role => {
@@ -213,8 +213,8 @@ export default function SystemPage() {
         </EnterpriseSection>
 
         {/* Real-time Telemetry & Performance Observability Cockpit (Batch 7.5) */}
-        <EnterpriseSection title="2. SỐ LIỆU ĐO LƯỜNG HIỆU NĂNG & AN NINH (REAL-TIME TELEMETRY COCKPIT)">
-          <EnterpriseCard title="ĐO LƯỜNG TỨ THỜI (IN-MEMORY TELEMETRY)" subtitle="Độ trễ API, bộ nhớ RAM heap, tần suất lỗi đối soát, và phòng chống tấn công an ninh">
+        <EnterpriseSection title="2. SỐ LIỆU ĐO LƯỜNG HIỆU NĂNG & AN NINH">
+          <EnterpriseCard title="ĐO LƯỜNG TỨ THỜI" subtitle="Độ trễ API, bộ nhớ RAM heap, tần suất lỗi đối soát, và phòng chống tấn công an ninh">
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-2">
               {[
                 { 
@@ -228,17 +228,17 @@ export default function SystemPage() {
                   color: 'text-emerald-400'
                 },
                 { 
-                  label: 'Tấn công an ninh (Failed Auth)', 
+                  label: 'Đăng nhập thất bại', 
                   value: `${metrics?.performanceMetrics?.security?.failedAuthAttemptsCount ?? 0} lần`,
                   color: (metrics?.performanceMetrics?.security?.failedAuthAttemptsCount ?? 0) > 0 ? 'text-rose-500 animate-pulse font-black' : 'text-[var(--text-primary)]'
                 },
                 { 
-                  label: 'Số dư hạch toán (Postings)', 
+                  label: 'Số bút toán đã ghi nhận', 
                   value: `${metrics?.performanceMetrics?.posting?.totalPostings ?? 0} bút toán`,
                   color: 'text-violet-400'
                 },
                 { 
-                  label: 'Sai lệch đối soát (Recon Fails)', 
+                  label: 'Sai lệch đối soát', 
                   value: `${metrics?.performanceMetrics?.reconciliation?.failuresCount ?? 0} lỗi`,
                   color: (metrics?.performanceMetrics?.reconciliation?.failuresCount ?? 0) > 0 ? 'text-amber-500 font-black' : 'text-emerald-400'
                 }
@@ -252,7 +252,7 @@ export default function SystemPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 text-[11px] mt-2">
               <div className="rounded-xl bg-[var(--secondary)]/30 border border-[var(--border)] p-4 space-y-2">
-                <div className="font-bold text-[var(--text-secondary)] uppercase text-[9.5px] tracking-wider mb-1">Lịch sử xuất báo cáo (Data Export Usage)</div>
+                <div className="font-bold text-[var(--text-secondary)] uppercase text-[9.5px] tracking-wider mb-1">Lịch sử xuất báo cáo</div>
                 <div className="flex justify-between items-center py-1 border-b border-[var(--border)]">
                   <span>Tệp excel / CSV:</span>
                   <span className="font-bold text-[var(--text-primary)] font-mono">{metrics?.performanceMetrics?.exports?.CSV ?? 0} lần</span>
@@ -266,12 +266,12 @@ export default function SystemPage() {
               <div className="rounded-xl bg-[var(--secondary)]/30 border border-[var(--border)] p-4 space-y-2">
                 <div className="font-bold text-[var(--text-secondary)] uppercase text-[9.5px] tracking-wider mb-1">Cấu trúc bộ nhớ heap máy chủ</div>
                 <div className="flex justify-between items-center py-1 border-b border-[var(--border)]">
-                  <span>Heap Total Allocated:</span>
-                  <span className="font-bold text-[var(--text-primary)] font-mono">{metrics?.performanceMetrics?.memory?.heapTotal ?? 'N/A'}</span>
+                  <span>Dung lượng heap đã cấp phát:</span>
+                  <span className="font-bold text-[var(--text-primary)] font-mono">{metrics?.performanceMetrics?.memory?.heapTotal ?? 'Chưa có dữ liệu'}</span>
                 </div>
                 <div className="flex justify-between items-center py-1">
-                  <span>External Buffers:</span>
-                  <span className="font-bold text-[var(--text-primary)] font-mono">{metrics?.performanceMetrics?.memory?.external ?? 'N/A'}</span>
+                  <span>Bộ đệm ngoài:</span>
+                  <span className="font-bold text-[var(--text-primary)] font-mono">{metrics?.performanceMetrics?.memory?.external ?? 'Chưa có dữ liệu'}</span>
                 </div>
               </div>
             </div>
@@ -341,7 +341,7 @@ export default function SystemPage() {
 
           {/* Backup & Recovery Section */}
           <EnterpriseSection title="4. PHỤC HỒI SAU SỰ CỐ">
-            <EnterpriseCard title="DISASTER RECOVERY SAO LƯU" subtitle="Sao lưu và khôi phục cơ sở dữ liệu nhanh chóng">
+            <EnterpriseCard title="SAO LƯU VÀ PHỤC HỒI SAU SỰ CỐ" subtitle="Sao lưu và khôi phục cơ sở dữ liệu nhanh chóng">
               <div className="space-y-4 mt-2">
                 <button
                   disabled={loadingBackup}
@@ -366,7 +366,7 @@ export default function SystemPage() {
                 </button>
 
                 <div className="pt-4 border-t border-[var(--border)] text-xs">
-                  <label className="text-[11.5px] font-bold text-[var(--text-secondary)] mb-2 block">Phục hồi cơ sở dữ liệu (Import JSON)</label>
+                  <label className="text-[11.5px] font-bold text-[var(--text-secondary)] mb-2 block">Phục hồi cơ sở dữ liệu từ tệp JSON</label>
                   <textarea
                     value={backupJson}
                     onChange={(e) => setBackupJson(e.target.value)}
@@ -405,7 +405,7 @@ export default function SystemPage() {
               { label: 'Phiên bản lõi', value: 'v3.5.0 Enterprise' },
               { label: 'Vai trò hoạt động', value: roleLabels[userRole] || userRole },
               { label: 'Hệ quản trị DB', value: 'PostgreSQL (Prisma Shared Pool)' },
-              { label: 'Trạng thái kết nối', value: 'Ổn định (Active)' },
+              { label: 'Trạng thái kết nối', value: 'Ổn định' },
             ].map(item => (
               <div key={item.label} className="rounded-xl bg-[var(--secondary)] border border-[var(--border)] p-4 bg-[var(--card)] shadow-sm">
                 <div className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-wider mb-1">{item.label}</div>

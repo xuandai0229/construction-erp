@@ -429,7 +429,7 @@ export default function ApprovalsPage() {
     <EnterpriseAppShell activeItem="approvals">
       <EnterpriseHeader title={"H\u1ed9p vi\u1ec7c ph\u00ea duy\u1ec7t k\u1ebf to\u00e1n"} subtitle={"Theo d\u00f5i SLA, nh\u1eafc h\u1ea1n, th\u00f4ng b\u00e1o v\u00e0 \u1ee7y quy\u1ec1n pilot cho quy tr\u00ecnh duy\u1ec7t"} />
       <EnterprisePageContainer>
-        <div className="space-y-6" data-approval-page>
+        <div className="min-w-0 space-y-6 overflow-hidden" data-approval-page>
           <ApprovalWorkflowStepper status={summary.pendingForMe > 0 ? "SUBMITTED" : summary.approvedToday > 0 ? "APPROVED" : "DRAFT"} pendingCount={summary.pendingForMe} processedCount={summary.approvedToday + summary.postedToday} />
 
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
@@ -440,8 +440,8 @@ export default function ApprovalsPage() {
             <KpiCard label="Th\u1eddi gian ch\u1edd trung b\u00ecnh" value={slaSummary.averageWaiting === null ? "\u2014" : `${slaSummary.averageWaiting.toLocaleString("vi-VN")} gi\u1edd`} tone="slate" />
           </div>
 
-          <div className="grid gap-4 xl:grid-cols-[1fr_360px]">
-            <div className="space-y-4">
+          <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
+            <div className="min-w-0 space-y-4">
               <div className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs leading-5 text-amber-700 dark:text-amber-300">
                 D\u1eef li\u1ec7u \u0111\u1ed1i so\u00e1t c\u00f4ng tr\u00ecnh/c\u00f4ng n\u1ee3 c\u00f2n ch\u1edd k\u1ebf to\u00e1n x\u00e1c nh\u1eadn. Kh\u00f4ng d\u00f9ng l\u00e0m s\u1ed5 k\u1ebf to\u00e1n th\u1eadt.
               </div>
@@ -517,7 +517,7 @@ export default function ApprovalsPage() {
               )}
             </div>
 
-            <aside className="space-y-4">
+            <aside className="min-w-0 space-y-4">
               <NotificationPanel notifications={notificationItems} derived={notifications.length === 0} />
               <DelegationPilotPanel role={data?.role || "\u0110ang t\u1ea3i"} />
             </aside>

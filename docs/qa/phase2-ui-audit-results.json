@@ -1,0 +1,1175 @@
+{
+  "generatedAt": "2026-06-06T02:12:48.821Z",
+  "results": [
+    {
+      "route": {
+        "name": "dashboard",
+        "path": "/"
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\dashboard.png",
+      "metrics": {
+        "title": "Construction ERP - Quản lý dự án xây dựng",
+        "url": "/",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nBàn làm việc\n\nTrung tâm Chỉ huy Kế toán (Financial Command Center)\n\nTỔNG HỢP CHỈ TIÊU TÀI CHÍNH (EXECUTIVE SUMMARY)\nChỉ tiêu tài chính thời gian thực từ ",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [],
+        "projectContextPresent": false,
+        "tableCount": 3,
+        "tables": [
+          {
+            "width": 960,
+            "parentWidth": 655,
+            "hasHorizontalScroll": true
+          },
+          {
+            "width": 960,
+            "parentWidth": 655,
+            "hasHorizontalScroll": true
+          },
+          {
+            "width": 960,
+            "parentWidth": 295,
+            "hasHorizontalScroll": true
+          }
+        ],
+        "actionMenus": 0,
+        "overflowingElements": [
+          {
+            "tag": "TABLE",
+            "className": "w-full table-fixed border-collapse text-left text-xs",
+            "text": "Mức độPhân hệMã chứng từGiá trị (đ)Nguyên nhân rủi roĐang tải dữ liệu...",
+            "right": 1987,
+            "width": 960
+          },
+          {
+            "tag": "COLGROUP",
+            "className": "",
+            "text": "",
+            "right": 1987,
+            "width": 960
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1507,
+            "width": 192
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1651,
+            "width": 144
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1987,
+            "width": 336
+          },
+          {
+            "tag": "THEAD",
+            "className": "sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)]",
+            "text": "Mức độPhân hệMã chứng từGiá trị (đ)Nguyên nhân rủi ro",
+            "right": 1987,
+            "width": 960
+          },
+          {
+            "tag": "TR",
+            "className": "h-10",
+            "text": "Mức độPhân hệMã chứng từGiá trị (đ)Nguyên nhân rủi ro",
+            "right": 1987,
+            "width": 960
+          },
+          {
+            "tag": "TH",
+            "className": "px-4 align-middle text-[12px] font-bold uppercase text-[var(--text-tertiary)] select-none whitespace-nowrap text-left ",
+            "text": "Mã chứng từ",
+            "right": 1507,
+            "width": 192
+          },
+          {
+            "tag": "SPAN",
+            "className": "block truncate",
+            "text": "Mã chứng từ",
+            "right": 1491,
+            "width": 160
+          },
+          {
+            "tag": "TH",
+            "className": "px-4 align-middle text-[12px] font-bold uppercase text-[var(--text-tertiary)] select-none whitespace-nowrap text-right ",
+            "text": "Giá trị (đ)",
+            "right": 1651,
+            "width": 144
+          }
+        ]
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=UIPGQOU3jZOb5_aEMC7VR' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=UIPGQOU3jZOb5_aEMC7VR' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ]
+    },
+    {
+      "route": {
+        "name": "projects",
+        "path": "/projects"
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\projects.png",
+      "metrics": {
+        "title": "Dự án | Construction ERP",
+        "url": "/projects",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nĐang tải hệ thống...",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [],
+        "projectContextPresent": false,
+        "tableCount": 0,
+        "tables": [],
+        "actionMenus": 0,
+        "overflowingElements": []
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=C-4jN1ehYi2D2q_GKyev_' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=C-4jN1ehYi2D2q_GKyev_' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ]
+    },
+    {
+      "route": {
+        "name": "wbs",
+        "path": "/wbs",
+        "expectsProjectContext": true
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\wbs.png",
+      "metrics": {
+        "title": "Hạng mục công trình (WBS) | Construction ERP",
+        "url": "/wbs",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nHạng mục thi công (WBS)\n\nQuản lý cấu trúc hạng mục và giám sát ngân sách, thực tế dự án\n\nXuất dữ liệu\n+ Thêm Hạng mục (WBS)\nChưa chọn công trình. Vui lòn",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [],
+        "projectContextPresent": false,
+        "tableCount": 1,
+        "tables": [
+          {
+            "width": 1460,
+            "parentWidth": 1016,
+            "hasHorizontalScroll": true
+          }
+        ],
+        "actionMenus": 0,
+        "overflowingElements": [
+          {
+            "tag": "TABLE",
+            "className": "w-full table-fixed border-collapse text-left text-xs",
+            "text": "MãHạng mục thi côngNgân sáchThực tếChênh lệchTiến độTrạng tháiThao tácChưa có hạ",
+            "right": 1766,
+            "width": 1460
+          },
+          {
+            "tag": "COLGROUP",
+            "className": "",
+            "text": "",
+            "right": 1766,
+            "width": 1460
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1386,
+            "width": 180
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1506,
+            "width": 120
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1646,
+            "width": 140
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1766,
+            "width": 120
+          },
+          {
+            "tag": "THEAD",
+            "className": "sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--secondary)] shadow-[0_1px_0_var(--border)]",
+            "text": "MãHạng mục thi côngNgân sáchThực tếChênh lệchTiến độTrạng tháiThao tác",
+            "right": 1766,
+            "width": 1460
+          },
+          {
+            "tag": "TR",
+            "className": "h-10",
+            "text": "MãHạng mục thi côngNgân sáchThực tếChênh lệchTiến độTrạng tháiThao tác",
+            "right": 1766,
+            "width": 1460
+          },
+          {
+            "tag": "TH",
+            "className": "px-4 align-middle text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] select-none whitespace-now",
+            "text": "Chênh lệch",
+            "right": 1386,
+            "width": 180
+          },
+          {
+            "tag": "SPAN",
+            "className": "block truncate",
+            "text": "Chênh lệch",
+            "right": 1370,
+            "width": 148
+          }
+        ]
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=to0iHxgVKroqdVOkUBas3' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=to0iHxgVKroqdVOkUBas3' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ]
+    },
+    {
+      "route": {
+        "name": "budget",
+        "path": "/budget",
+        "expectsProjectContext": true
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\budget.png",
+      "metrics": {
+        "title": "Construction ERP - Quản lý dự án xây dựng",
+        "url": "/budget",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nDự toán & Ngân sách công trình (CBS)\n\nThiết lập, theo dõi và quản lý dự toán chi tiết theo cấu trúc phân rã công việc\n\nNhập Excel/CSV\nXuất dữ liệu\n+ Lập ",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [],
+        "projectContextPresent": false,
+        "tableCount": 1,
+        "tables": [
+          {
+            "width": 1360,
+            "parentWidth": 1016,
+            "hasHorizontalScroll": true
+          }
+        ],
+        "actionMenus": 0,
+        "overflowingElements": [
+          {
+            "tag": "TABLE",
+            "className": "w-full table-fixed border-collapse text-left text-xs",
+            "text": "MãHạng mục WBS / CBSDự toánThực tếChênh lệchTrạng tháiThao tácChưa có dự toánLập",
+            "right": 1666,
+            "width": 1360
+          },
+          {
+            "tag": "COLGROUP",
+            "className": "",
+            "text": "",
+            "right": 1666,
+            "width": 1360
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1386,
+            "width": 180
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1546,
+            "width": 160
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1666,
+            "width": 120
+          },
+          {
+            "tag": "THEAD",
+            "className": "sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--secondary)] shadow-[0_1px_0_var(--border)]",
+            "text": "MãHạng mục WBS / CBSDự toánThực tếChênh lệchTrạng tháiThao tác",
+            "right": 1666,
+            "width": 1360
+          },
+          {
+            "tag": "TR",
+            "className": "h-10",
+            "text": "MãHạng mục WBS / CBSDự toánThực tếChênh lệchTrạng tháiThao tác",
+            "right": 1666,
+            "width": 1360
+          },
+          {
+            "tag": "TH",
+            "className": "px-4 align-middle text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] select-none whitespace-now",
+            "text": "Chênh lệch",
+            "right": 1386,
+            "width": 180
+          },
+          {
+            "tag": "SPAN",
+            "className": "block truncate",
+            "text": "Chênh lệch",
+            "right": 1370,
+            "width": 148
+          },
+          {
+            "tag": "TH",
+            "className": "px-4 align-middle text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] select-none whitespace-now",
+            "text": "Trạng thái",
+            "right": 1546,
+            "width": 160
+          }
+        ]
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=nezhMvBRzn_hramw3CRRq' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=nezhMvBRzn_hramw3CRRq' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ]
+    },
+    {
+      "route": {
+        "name": "costs",
+        "path": "/costs",
+        "expectsProjectContext": true
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\costs.png",
+      "metrics": {
+        "title": "Construction ERP - Quản lý dự án xây dựng",
+        "url": "/costs",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nQuản lý chi phí công trình\n\nHạch toán chi phí chi tiết, theo dõi thuế VAT đầu vào và bảo lưu bảo hành\n\nXuất dữ liệu\n+ Thêm Chi phí\nChưa chọn công trình. ",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [],
+        "projectContextPresent": false,
+        "tableCount": 1,
+        "tables": [
+          {
+            "width": 2048,
+            "parentWidth": 1016,
+            "hasHorizontalScroll": true
+          }
+        ],
+        "actionMenus": 0,
+        "overflowingElements": [
+          {
+            "tag": "TABLE",
+            "className": "w-full table-fixed border-collapse text-left text-xs",
+            "text": "NgàyNhà cung cấp & nội dungHạng mục WBSLoạiSLĐơn giáChưa thuếVATBảo hànhHạch toá",
+            "right": 2354,
+            "width": 2048
+          },
+          {
+            "tag": "COLGROUP",
+            "className": "",
+            "text": "",
+            "right": 2354,
+            "width": 2048
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1514,
+            "width": 150
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1644,
+            "width": 130
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1784,
+            "width": 140
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1934,
+            "width": 150
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 2094,
+            "width": 160
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 2234,
+            "width": 140
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 2354,
+            "width": 120
+          },
+          {
+            "tag": "THEAD",
+            "className": "sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--secondary)] shadow-[0_1px_0_var(--border)]",
+            "text": "NgàyNhà cung cấp & nội dungHạng mục WBSLoạiSLĐơn giáChưa thuếVATBảo hànhHạch toá",
+            "right": 2354,
+            "width": 2048
+          }
+        ]
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=GcrtGNg_Df7bABHnCAi-c' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=GcrtGNg_Df7bABHnCAi-c' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ]
+    },
+    {
+      "route": {
+        "name": "revenue",
+        "path": "/revenue",
+        "expectsProjectContext": true
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\revenue.png",
+      "metrics": {
+        "title": "Construction ERP - Quản lý dự án xây dựng",
+        "url": "/revenue",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nQUẢN LÝ DOANH THU & NGUỒN THU CÔNG TRÌNH\n\nQuản lý và theo dõi các khoản thu tiền thầu, nghiệm thu chủ đầu tư và hạch toán dòng tiền vào\n\nChưa chọn công t",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [],
+        "projectContextPresent": false,
+        "tableCount": 1,
+        "tables": [
+          {
+            "width": 1710,
+            "parentWidth": 1016,
+            "hasHorizontalScroll": true
+          }
+        ],
+        "actionMenus": 0,
+        "overflowingElements": [
+          {
+            "tag": "TABLE",
+            "className": "w-full table-fixed border-collapse text-left text-xs",
+            "text": "NgàyHạng mục WBSDiễn giảiTrước thuếVATTổng doanh thuTrạng tháiNghiệp vụXóaTruy v",
+            "right": 2016,
+            "width": 1710
+          },
+          {
+            "tag": "COLGROUP",
+            "className": "",
+            "text": "",
+            "right": 2016,
+            "width": 1710
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1466,
+            "width": 170
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1606,
+            "width": 140
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1766,
+            "width": 160
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1876,
+            "width": 110
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 2016,
+            "width": 140
+          },
+          {
+            "tag": "THEAD",
+            "className": "sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--secondary)] shadow-[0_1px_0_var(--border)]",
+            "text": "NgàyHạng mục WBSDiễn giảiTrước thuếVATTổng doanh thuTrạng tháiNghiệp vụXóaTruy v",
+            "right": 2016,
+            "width": 1710
+          },
+          {
+            "tag": "TR",
+            "className": "h-10",
+            "text": "NgàyHạng mục WBSDiễn giảiTrước thuếVATTổng doanh thuTrạng tháiNghiệp vụXóaTruy v",
+            "right": 2016,
+            "width": 1710
+          },
+          {
+            "tag": "TH",
+            "className": "px-4 align-middle text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] select-none whitespace-now",
+            "text": "Tổng doanh thu",
+            "right": 1466,
+            "width": 170
+          }
+        ]
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=KVFKw_ludq0skBQHqBPgw' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=KVFKw_ludq0skBQHqBPgw' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ]
+    },
+    {
+      "route": {
+        "name": "debt",
+        "path": "/debt",
+        "expectsProjectContext": true
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\debt.png",
+      "metrics": {
+        "title": "Construction ERP - Quản lý dự án xây dựng",
+        "url": "/debt",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nCông nợ & Thanh toán\n\nQuản lý đồng bộ công nợ phải thu, phải trả và lịch sử dòng tiền định khoản\n\nChưa chọn công trình. Vui lòng chọn công trình ở thanh ",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [],
+        "projectContextPresent": false,
+        "tableCount": 2,
+        "tables": [
+          {
+            "width": 1050,
+            "parentWidth": 1016,
+            "hasHorizontalScroll": true
+          },
+          {
+            "width": 1014,
+            "parentWidth": 1016,
+            "hasHorizontalScroll": false
+          }
+        ],
+        "actionMenus": 0,
+        "overflowingElements": []
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=shA56cQZUe2amzkEVSzZk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ]
+    },
+    {
+      "route": {
+        "name": "accounting",
+        "path": "/accounting"
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\accounting.png",
+      "metrics": {
+        "title": "Construction ERP - Quản lý dự án xây dựng",
+        "url": "/accounting",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nTỔNG HỢP TẠM ỨNG & THANH TOÁN\n\nQuản lý và hạch toán dòng tiền tạm ứng, nghiệm thu, hóa đơn VAT thầu phụ, nhà cung cấp dự án\n\nTổng hợp công nợ nhà thầu\n\nN",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [],
+        "projectContextPresent": false,
+        "tableCount": 1,
+        "tables": [
+          {
+            "width": 1420,
+            "parentWidth": 1016,
+            "hasHorizontalScroll": true
+          }
+        ],
+        "actionMenus": 0,
+        "overflowingElements": [
+          {
+            "tag": "TABLE",
+            "className": "w-full table-fixed border-collapse text-left text-xs",
+            "text": "Công trìnhNhà cung cấpHợp đồngGiá trị HĐNghiệm thuHóa đơnTạm ứng/TTCông nợCảnh b",
+            "right": 1726,
+            "width": 1420
+          },
+          {
+            "tag": "COLGROUP",
+            "className": "",
+            "text": "",
+            "right": 1726,
+            "width": 1420
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1456,
+            "width": 140
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1596,
+            "width": 140
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1726,
+            "width": 130
+          },
+          {
+            "tag": "THEAD",
+            "className": "sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--secondary)] shadow-[0_1px_0_var(--border)]",
+            "text": "Công trìnhNhà cung cấpHợp đồngGiá trị HĐNghiệm thuHóa đơnTạm ứng/TTCông nợCảnh b",
+            "right": 1726,
+            "width": 1420
+          },
+          {
+            "tag": "TR",
+            "className": "h-10",
+            "text": "Công trìnhNhà cung cấpHợp đồngGiá trị HĐNghiệm thuHóa đơnTạm ứng/TTCông nợCảnh b",
+            "right": 1726,
+            "width": 1420
+          },
+          {
+            "tag": "TH",
+            "className": "px-4 align-middle text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] select-none whitespace-now",
+            "text": "Tạm ứng/TT",
+            "right": 1456,
+            "width": 140
+          },
+          {
+            "tag": "SPAN",
+            "className": "block truncate",
+            "text": "Tạm ứng/TT",
+            "right": 1440,
+            "width": 108
+          },
+          {
+            "tag": "TH",
+            "className": "px-4 align-middle text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] select-none whitespace-now",
+            "text": "Công nợ",
+            "right": 1596,
+            "width": 140
+          }
+        ]
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=shA56cQZUe2amzkEVSzZk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=o8QThpr6E4Uac-bHMJC2n' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ]
+    },
+    {
+      "route": {
+        "name": "cash-bank",
+        "path": "/cash-bank"
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\cash-bank.png",
+      "metrics": {
+        "title": "Construction ERP - Quản lý dự án xây dựng",
+        "url": "/cash-bank",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nQUỸ TIỀN MẶT & TIỀN GỬI NGÂN HÀNG\n\nPhân hệ quản lý Thu/Chi tiền mặt, Ủy nhiệm chi, Báo Có, Báo Nợ ngân hàng\n\n+ LẬP CHỨNG TỪ QUỸ & NH\nDANH SÁCH CHỨNG TỪ\nS",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [],
+        "projectContextPresent": false,
+        "tableCount": 1,
+        "tables": [
+          {
+            "width": 1600,
+            "parentWidth": 1016,
+            "hasHorizontalScroll": true
+          }
+        ],
+        "actionMenus": 0,
+        "overflowingElements": [
+          {
+            "tag": "TABLE",
+            "className": "w-full table-fixed border-collapse text-left text-xs",
+            "text": "Số chứng từNgày hạch toánLoại chứng từĐối tượngDiễn giải / Lý doTài khoản NợTài ",
+            "right": 1906,
+            "width": 1600
+          },
+          {
+            "tag": "COLGROUP",
+            "className": "",
+            "text": "",
+            "right": 1906,
+            "width": 1600
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1466,
+            "width": 120
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1626,
+            "width": 160
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1766,
+            "width": 140
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1906,
+            "width": 140
+          },
+          {
+            "tag": "THEAD",
+            "className": "sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--secondary)] shadow-[0_1px_0_var(--border)]",
+            "text": "Số chứng từNgày hạch toánLoại chứng từĐối tượngDiễn giải / Lý doTài khoản NợTài ",
+            "right": 1906,
+            "width": 1600
+          },
+          {
+            "tag": "TR",
+            "className": "h-10",
+            "text": "Số chứng từNgày hạch toánLoại chứng từĐối tượngDiễn giải / Lý doTài khoản NợTài ",
+            "right": 1906,
+            "width": 1600
+          },
+          {
+            "tag": "TH",
+            "className": "px-4 align-middle text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] select-none whitespace-now",
+            "text": "Tài khoản Có",
+            "right": 1466,
+            "width": 120
+          },
+          {
+            "tag": "SPAN",
+            "className": "block truncate",
+            "text": "Tài khoản Có",
+            "right": 1450,
+            "width": 88
+          }
+        ]
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=H20fiUfyQRHThyJEiHmkp' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ]
+    },
+    {
+      "route": {
+        "name": "inventory",
+        "path": "/inventory"
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\inventory.png",
+      "metrics": {
+        "title": "Construction ERP - Quản lý dự án xây dựng",
+        "url": "/inventory",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nQUẢN TRỊ KHO & VẬT TƯ CÔNG TRÌNH\n\nHệ thống theo dõi xuất nhập tồn, giá bình quân di động, đối chiếu sổ cái TK 152\n\nHỆ THỐNG KẾ TOÁN KHO & VẬT TƯ\nTheo dõi",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [],
+        "projectContextPresent": false,
+        "tableCount": 0,
+        "tables": [],
+        "actionMenus": 0,
+        "overflowingElements": []
+      },
+      "consoleErrors": []
+    },
+    {
+      "route": {
+        "name": "tax",
+        "path": "/tax"
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\tax.png",
+      "metrics": {
+        "title": "Construction ERP - Quản lý dự án xây dựng",
+        "url": "/tax",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nQUẢN LÝ THUẾ & HÓA ĐƠN ĐIỆN TỬ VAT\n\nHệ thống tự động đồng bộ hóa đơn đầu vào, đầu ra, hạch toán tờ khai thuế 01/GTGT\n\nDOANH SỐ BÁN RA TRƯỚC THUẾ\n0 đ\nThuế",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [],
+        "projectContextPresent": false,
+        "tableCount": 1,
+        "tables": [
+          {
+            "width": 1480,
+            "parentWidth": 1016,
+            "hasHorizontalScroll": true
+          }
+        ],
+        "actionMenus": 0,
+        "overflowingElements": [
+          {
+            "tag": "TABLE",
+            "className": "w-full table-fixed border-collapse text-left text-xs",
+            "text": "Ngày HĐMẫu số / Ký hiệuSố HĐĐối tác / MSTTiền trước thuếThuế suấtTiền thuế (VAT)",
+            "right": 1786,
+            "width": 1480
+          },
+          {
+            "tag": "COLGROUP",
+            "className": "",
+            "text": "",
+            "right": 1786,
+            "width": 1480
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1466,
+            "width": 150
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1606,
+            "width": 140
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1786,
+            "width": 180
+          },
+          {
+            "tag": "THEAD",
+            "className": "sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--secondary)] shadow-[0_1px_0_var(--border)]",
+            "text": "Ngày HĐMẫu số / Ký hiệuSố HĐĐối tác / MSTTiền trước thuếThuế suấtTiền thuế (VAT)",
+            "right": 1786,
+            "width": 1480
+          },
+          {
+            "tag": "TR",
+            "className": "h-10",
+            "text": "Ngày HĐMẫu số / Ký hiệuSố HĐĐối tác / MSTTiền trước thuếThuế suấtTiền thuế (VAT)",
+            "right": 1786,
+            "width": 1480
+          },
+          {
+            "tag": "TH",
+            "className": "px-4 align-middle text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] select-none whitespace-now",
+            "text": "Tiền thuế (VAT)",
+            "right": 1466,
+            "width": 150
+          },
+          {
+            "tag": "SPAN",
+            "className": "block truncate",
+            "text": "Tiền thuế (VAT)",
+            "right": 1450,
+            "width": 118
+          },
+          {
+            "tag": "TH",
+            "className": "px-4 align-middle text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] select-none whitespace-now",
+            "text": "Trạng thái",
+            "right": 1606,
+            "width": 140
+          }
+        ]
+      },
+      "consoleErrors": []
+    },
+    {
+      "route": {
+        "name": "reports",
+        "path": "/reports"
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\reports.png",
+      "metrics": {
+        "title": "Construction ERP - Quản lý dự án xây dựng",
+        "url": "/reports",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nHệ thống Báo cáo Kế toán & Tài chính\n\nTỔNG HỢP SỔ CÁI ĐỘNG CẤP KẾ TOÁN VÀ QUẢN TRỊ THUẾ DOANH NGHIỆP\n\nIn báo cáo (PDF)\nXuất Excel/CSV\nTẠM ỨNG / THANH TOÁ",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [],
+        "projectContextPresent": false,
+        "tableCount": 1,
+        "tables": [
+          {
+            "width": 1260,
+            "parentWidth": 1016,
+            "hasHorizontalScroll": true
+          }
+        ],
+        "actionMenus": 0,
+        "overflowingElements": [
+          {
+            "tag": "TABLE",
+            "className": "w-full table-fixed border-collapse text-left text-xs",
+            "text": "ThángTổng Thu (Cash In)Tổng Chi (Cash Out)Doanh thu ghi nhậnChi Phí Sổ SáchLợi N",
+            "right": 1566,
+            "width": 1260
+          },
+          {
+            "tag": "COLGROUP",
+            "className": "",
+            "text": "",
+            "right": 1566,
+            "width": 1260
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1446,
+            "width": 160
+          },
+          {
+            "tag": "COL",
+            "className": "",
+            "text": "",
+            "right": 1566,
+            "width": 120
+          },
+          {
+            "tag": "THEAD",
+            "className": "sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--table-head-bg)] shadow-[0_1px_0_var(--border)]",
+            "text": "ThángTổng Thu (Cash In)Tổng Chi (Cash Out)Doanh thu ghi nhậnChi Phí Sổ SáchLợi N",
+            "right": 1566,
+            "width": 1260
+          },
+          {
+            "tag": "TR",
+            "className": "h-10",
+            "text": "ThángTổng Thu (Cash In)Tổng Chi (Cash Out)Doanh thu ghi nhậnChi Phí Sổ SáchLợi N",
+            "right": 1566,
+            "width": 1260
+          },
+          {
+            "tag": "TH",
+            "className": "px-4 align-middle text-[12px] font-bold uppercase text-[var(--text-tertiary)] select-none whitespace-nowrap text-right ",
+            "text": "Số Dư Lũy Kế",
+            "right": 1446,
+            "width": 160
+          },
+          {
+            "tag": "SPAN",
+            "className": "block truncate",
+            "text": "Số Dư Lũy Kế",
+            "right": 1430,
+            "width": 128
+          },
+          {
+            "tag": "TH",
+            "className": "px-4 align-middle text-[12px] font-bold uppercase text-[var(--text-tertiary)] select-none whitespace-nowrap text-center ",
+            "text": "Khóa Sổ",
+            "right": 1566,
+            "width": 120
+          },
+          {
+            "tag": "SPAN",
+            "className": "block truncate",
+            "text": "Khóa Sổ",
+            "right": 1550,
+            "width": 88
+          }
+        ]
+      },
+      "consoleErrors": []
+    },
+    {
+      "route": {
+        "name": "approvals",
+        "path": "/approvals"
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\approvals.png",
+      "metrics": {
+        "title": "Construction ERP - Quản lý dự án xây dựng",
+        "url": "/approvals",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nHộp việc phê duyệt kế toán\n\nTheo dõi SLA, nhắc hạn, thông báo và ủy quyền pilot cho quy trình duyệt\n\nLuồng duyệt chứng từ\n\nMô tả trạng thái hiện tại của ",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [],
+        "projectContextPresent": false,
+        "tableCount": 1,
+        "tables": [
+          {
+            "width": 1659,
+            "parentWidth": 1661,
+            "hasHorizontalScroll": false
+          }
+        ],
+        "actionMenus": 0,
+        "overflowingElements": [
+          {
+            "tag": "DIV",
+            "className": "space-y-4",
+            "text": "D\\u1eef li\\u1ec7u \\u0111\\u1ed1i so\\u00e1t c\\u00f4ng tr\\u00ecnh/c\\u00f4ng n\\u1ee3",
+            "right": 1945,
+            "width": 1661
+          },
+          {
+            "tag": "DIV",
+            "className": "rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs leading-5 text-amber-700 dark:text-amber-300",
+            "text": "D\\u1eef li\\u1ec7u \\u0111\\u1ed1i so\\u00e1t c\\u00f4ng tr\\u00ecnh/c\\u00f4ng n\\u1ee3",
+            "right": 1945,
+            "width": 1661
+          },
+          {
+            "tag": "DIV",
+            "className": "rounded-lg border border-[var(--border)] bg-[var(--card)] p-4",
+            "text": "H\\u00e0ng \\u0111\\u1ee3i theo vai tr\\u00f2Vai tr\\u00f2 hi\\u1ec7n t\\u1ea1i: Đang t",
+            "right": 1945,
+            "width": 1661
+          },
+          {
+            "tag": "DIV",
+            "className": "flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between",
+            "text": "H\\u00e0ng \\u0111\\u1ee3i theo vai tr\\u00f2Vai tr\\u00f2 hi\\u1ec7n t\\u1ea1i: Đang t",
+            "right": 1928,
+            "width": 1627
+          },
+          {
+            "tag": "DIV",
+            "className": "flex flex-col gap-2 sm:flex-row",
+            "text": "Ph\\u00edm t\\u1eaftB\\u1eadt ph\\u00edm t\\u1eaftTất cả phân hệHóa đơnChi phíTạm ứng",
+            "right": 1928,
+            "width": 798
+          },
+          {
+            "tag": "LABEL",
+            "className": "flex h-9 items-center gap-2 rounded-md border border-[var(--border)] bg-[var(--background)] px-3 text-xs font-bold text-",
+            "text": "B\\u1eadt ph\\u00edm t\\u1eaft",
+            "right": 1498,
+            "width": 218
+          },
+          {
+            "tag": "INPUT",
+            "className": "h-9 w-full rounded-md border border-[var(--border)] bg-[var(--background)] px-3 text-xs font-semibold text-[var(--text-p",
+            "text": "",
+            "right": 1794,
+            "width": 288
+          },
+          {
+            "tag": "SELECT",
+            "className": "h-9 rounded-md border border-[var(--border)] bg-[var(--background)] px-3 text-xs font-semibold text-[var(--text-primary)",
+            "text": "Tất cả phân hệHóa đơnChi phíTạm ứngHoàn ứng",
+            "right": 1928,
+            "width": 126
+          },
+          {
+            "tag": "DIV",
+            "className": "flex border-b border-[var(--border)] overflow-x-auto scrollbar-hide ",
+            "text": "Chờ tôi xử lýTôi đã gửiBị từ chốiĐã duyệtĐã ghi sổTất cả",
+            "right": 1945,
+            "width": 1661
+          },
+          {
+            "tag": "DIV",
+            "className": "flex flex-wrap gap-2 rounded-lg border border-[var(--border)] bg-[var(--card)] p-2",
+            "text": "Tất cả SLASắp quá hạnQuá hạnCần cấp caoBị từ chối cần bổ sung",
+            "right": 1945,
+            "width": 1661
+          }
+        ]
+      },
+      "consoleErrors": []
+    },
+    {
+      "route": {
+        "name": "system",
+        "path": "/system"
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\system.png",
+      "metrics": {
+        "title": "Construction ERP - Quản lý dự án xây dựng",
+        "url": "/system",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nTRUNG TÂM GIÁM SÁT HỆ THỐNG & ĐIỀU HÀNH AN NINH\n\nGovernance, Compliance, Operational Observability & Disaster Recovery Cockpit\n\nGovernance & Telemetry Co",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [
+          "N/A"
+        ],
+        "projectContextPresent": false,
+        "tableCount": 0,
+        "tables": [],
+        "actionMenus": 0,
+        "overflowingElements": []
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=g-nBGBRmzZRIavYoepjWp' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ]
+    },
+    {
+      "route": {
+        "name": "settings",
+        "path": "/settings"
+      },
+      "httpOk": true,
+      "screenshotPath": "D:\\construction-erp\\docs\\qa\\screenshots\\phase2-uat\\settings.png",
+      "metrics": {
+        "title": "Construction ERP - Quản lý dự án xây dựng",
+        "url": "/settings",
+        "bodyTextSample": "XÂY DỰNG\nERP DOANH NGHIỆP\nTỔNG QUAN\nBàn làm việc\nCÔNG TRÌNH\nHồ sơ công trình\nHạng mục thi công\nHỢP ĐỒNG & DỰ TOÁN\nHợp đồng / Doanh thu\nDự toán (Budget)\nCHI PHÍ & CÔNG NỢ\nChi phí thi công\nQuản lý công nợ\nQuỹ & Ngân hàng\nKHO & VẬT TƯ\nQuản lý kho\nTHUẾ & HÓA ĐƠN\nThuế VAT\nBÁO CÁO\nBáo cáo tổng hợp\nPHÊ DUYỆT\nDuyệt chứng từ\nChế độ hiển thị\nThu gọn menu\nCÀI ĐẶT CẤU HÌNH HỆ THỐNG\n\nQuản lý tùy chọn cá nhân hóa giao diện, ngôn ngữ, vùng miền và kiểm soát chu kỳ khóa sổ kế toán\n\nCấu hình tham số hệ thống\n\nCẤ",
+        "documentOverflowX": false,
+        "scrollWidth": 1366,
+        "viewportWidth": 1366,
+        "visibleMatches": [],
+        "projectContextPresent": false,
+        "tableCount": 0,
+        "tables": [],
+        "actionMenus": 0,
+        "overflowingElements": []
+      },
+      "consoleErrors": []
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useERPStore } from '@/store/erpStore';
 import { useProjectStatsQuery, useProjectsQuery } from '@/services/queries/useProjects';
 import { formatVnd } from '@/app/components/dashboard-data';
@@ -28,13 +28,36 @@ function CompactMetric({ label, value, tone = 'default' }: { label: string; valu
 
 export default function ProjectContextBar() {
   const currentProjectId = useERPStore(state => state.currentProjectId);
+  const setCurrentProject = useERPStore(state => state.setCurrentProject);
   const { data: paginatedData, isLoading: isLoadingProjects } = useProjectsQuery({ limit: 100 });
   const { data: stats, isLoading: isLoadingStats } = useProjectStatsQuery(currentProjectId);
 
   const projects = paginatedData?.data || [];
   const project = useMemo(() => projects.find(item => item.id === currentProjectId), [projects, currentProjectId]);
 
+  useEffect(() => {
+    if (!currentProjectId && !isLoadingProjects && projects.length > 0) {
+      setCurrentProject(projects[0].id);
+    }
+  }, [currentProjectId, isLoadingProjects, projects, setCurrentProject]);
+
   if (!currentProjectId) {
+    if (isLoadingProjects) {
+      return (
+        <div className="sticky top-[var(--erp-header-height)] z-30 border-b border-[var(--border)] bg-[var(--card)] px-6 py-2.5 text-[12px] font-semibold text-[var(--text-secondary)]">
+          Đang tải danh sách công trình...
+        </div>
+      );
+    }
+
+    if (projects.length > 0) {
+      return (
+        <div className="sticky top-[var(--erp-header-height)] z-30 border-b border-blue-500/20 bg-blue-500/10 px-6 py-2.5 text-[12px] font-semibold text-blue-600">
+          Đang thiết lập công trình làm việc mặc định...
+        </div>
+      );
+    }
+
     return (
       <div className="sticky top-[var(--erp-header-height)] z-30 border-b border-amber-500/20 bg-amber-500/10 px-6 py-2.5 text-[12px] font-semibold text-amber-600">
         Chưa chọn công trình. Vui lòng chọn công trình ở thanh điều hướng trước khi nhập WBS, dự toán, chi phí hoặc công nợ.
